@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="OPENERP_RELATIONS" value="[&apos;Attachments&apos;]"/>
+	<parameter name="STANDARD_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/albert/d/koo/server-modules/jasper_reports/report/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/albert/d/git/nan-openerp/openobject-client-kde-5.0/server-modules/jasper_reports/demo/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EVENTS_DATA_SOURCE" class="java.lang.Object"/>
+	<queryString language="xPath">
+		<![CDATA[/data/record]]>
+	</queryString>
+	<field name="name" class="java.lang.Object">
+		<fieldDescription><![CDATA[name]]></fieldDescription>
+	</field>
+	<field name="ref" class="java.lang.String">
+		<fieldDescription><![CDATA[ref]]></fieldDescription>
+	</field>
+	<field name="attachment_name" class="java.lang.String">
+		<fieldDescription><![CDATA[Attachments/name]]></fieldDescription>
+	</field>
+	<field name="datas" class="java.lang.String">
+		<fieldDescription><![CDATA[Attachments/datas]]></fieldDescription>
+	</field>
+	<field name="datas_fname" class="java.lang.String">
+		<fieldDescription><![CDATA[Attachments/datas_fname]]></fieldDescription>
+	</field>
+	<field name="credit" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[credit]]></fieldDescription>
+	</field>
+	<field name="credit_limit" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[credit_limit]]></fieldDescription>
+	</field>
+	<field name="debit" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[debit]]></fieldDescription>
+	</field>
+	<field name="debit_limit" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[debit_limit]]></fieldDescription>
+	</field>
+	<field name="website" class="java.lang.String">
+		<fieldDescription><![CDATA[website]]></fieldDescription>
+	</field>
+	<field name="date" class="java.util.Date">
+		<fieldDescription><![CDATA[date]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.String">
+		<fieldDescription><![CDATA[Attachments/id]]></fieldDescription>
+	</field>
+	<field name="attachment_id" class="java.lang.String">
+		<fieldDescription><![CDATA[Attachments/id]]></fieldDescription>
+	</field>
+	<sortField name="attachment_name"/>
+	<variable name="attachments" class="java.lang.String" calculation="Count">
+		<variableExpression><![CDATA[$F{attachment_id}]]></variableExpression>
+	</variable>
+	<group name="partner">
+		<groupExpression><![CDATA[$F{name}]]></groupExpression>
+		<groupHeader>
+			<band height="25">
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="73" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{ref}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true" hyperlinkType="Reference">
+					<reportElement x="301" y="0" width="184" height="20" forecolor="#3366FF"/>
+					<textElement verticalAlignment="Middle">
+						<font isUnderline="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{website}]]></textFieldExpression>
+					<hyperlinkReferenceExpression><![CDATA[$F{website}]]></hyperlinkReferenceExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="74" y="0" width="227" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{name}.get( "abc")]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="485" y="0" width="70" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{date}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="281">
+				<line>
+					<reportElement x="18" y="274" width="506" height="1"/>
+				</line>
+				<barChart>
+					<chart isShowLegend="false">
+						<reportElement x="118" y="0" width="266" height="129"/>
+						<chartTitle/>
+						<chartSubtitle/>
+						<chartLegend/>
+					</chart>
+					<categoryDataset>
+						<categorySeries>
+							<seriesExpression><![CDATA["Used"]]></seriesExpression>
+							<categoryExpression><![CDATA["Credit"]]></categoryExpression>
+							<valueExpression><![CDATA[$F{credit}]]></valueExpression>
+							<labelExpression><![CDATA["Used"]]></labelExpression>
+						</categorySeries>
+						<categorySeries>
+							<seriesExpression><![CDATA["Limit"]]></seriesExpression>
+							<categoryExpression><![CDATA["Credit"]]></categoryExpression>
+							<valueExpression><![CDATA[$F{credit_limit}]]></valueExpression>
+							<labelExpression><![CDATA["Limit"]]></labelExpression>
+						</categorySeries>
+						<categorySeries>
+							<seriesExpression><![CDATA["Used"]]></seriesExpression>
+							<categoryExpression><![CDATA["Debit"]]></categoryExpression>
+							<valueExpression><![CDATA[$F{debit}]]></valueExpression>
+							<labelExpression><![CDATA["Used"]]></labelExpression>
+						</categorySeries>
+						<categorySeries>
+							<seriesExpression><![CDATA["Limit"]]></seriesExpression>
+							<categoryExpression><![CDATA["Debit"]]></categoryExpression>
+							<valueExpression><![CDATA[$F{debit_limit}]]></valueExpression>
+							<labelExpression><![CDATA["Limit"]]></labelExpression>
+						</categorySeries>
+					</categoryDataset>
+					<barPlot isShowLabels="false" isShowTickLabels="true" isShowTickMarks="true">
+						<plot>
+							<seriesColor seriesOrder="0" color="#3333FF"/>
+							<seriesColor seriesOrder="1" color="#FF3333"/>
+						</plot>
+						<itemLabel color="#000000" backgroundColor="#FFFFFF"/>
+						<categoryAxisFormat>
+							<axisFormat>
+								<labelFont/>
+								<tickLabelFont/>
+							</axisFormat>
+						</categoryAxisFormat>
+						<valueAxisFormat>
+							<axisFormat>
+								<labelFont/>
+								<tickLabelFont/>
+							</axisFormat>
+						</valueAxisFormat>
+					</barPlot>
+				</barChart>
+				<subreport>
+					<reportElement x="0" y="144" width="555" height="100"/>
+					<dataSourceExpression><![CDATA[$P{EVENTS_DATA_SOURCE}]]></dataSourceExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "subpartner.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="127">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="79"/>
+				<subreportParameter name="TITLE">
+					<subreportParameterExpression><![CDATA["Sample Partner Report"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBTITLE">
+					<subreportParameterExpression><![CDATA["This is a sample JasperReports report"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="COMMENT">
+					<subreportParameterExpression><![CDATA["The report shows information of selected partners, including attachments with their image, if possible."]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[$P{REPORT_DATA_SOURCE}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{STANDARD_DIR} + "report_header.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="0" y="84" width="555" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[tr("TESTING TRANSLATED TEXTS")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="104" width="555" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[tr(new Locale("es","ES"), "SECOND LOCALE TEST {0}", 1)]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band height="31">
+			<staticText>
+				<reportElement x="4" y="11" width="69" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reference]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="74" y="11" width="227" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="301" y="11" width="184" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Website]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="485" y="11" width="70" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="168">
+			<textField isBlankWhenNull="true">
+				<reportElement x="340" y="7" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{datas_fname}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle" onErrorType="Icon">
+				<reportElement x="47" y="46" width="393" height="113"/>
+				<imageExpression class="java.lang.String"><![CDATA[$F{datas}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="118" y="6" width="116" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{attachment_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="18" y="7" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Attachment:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="264" y="7" width="76" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[File Name:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+	<summary>
+		<band height="23">
+			<staticText>
+				<reportElement x="137" y="3" width="160" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Number of attachments listed:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="301" y="3" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{attachments}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

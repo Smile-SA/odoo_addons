@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+	<report string="Jasper Partners"
+		model="res.partner"
+		auto="True"
+		name="res.partner.jaspertest"
+		rml="jasper_reports/demo/partner.jrxml"
+		id="res_partner_jaspertest" 
+		menu="True"
+		header="False"
+		/>
+</data>
+</openerp>

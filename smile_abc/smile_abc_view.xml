@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="abc_symbol_form" model="ir.ui.view">
+			<field name="name">abc.symbol.form</field>
+			<field name="model">abc.symbol</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Levels/Symbols">
+					<separator string="Level/Symbol" colspan="4"/>
+					<field name="level" readonly="1"/>
+					<field name="name" readonly="1"/>
+					<separator string="ABC Indicator" colspan="4"/>
+					<field name="indicator_id" readonly="1"/>
+				</form>
+			</field>
+		</record>	
+
+		<record id="abc_indicator_tree" model="ir.ui.view">
+			<field name="name">abc.indicator.tree</field>
+			<field name="model">abc.indicator</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" select="1"/>
+					<field name="model_id" select="1"/>
+					<field name="field_id" select="1"/>
+					<field name="display_tree" select="1"/>
+					<field name="active" select="2"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="abc_indicator_form" model="ir.ui.view">
+			<field name="name">abc.indicator.form</field>
+			<field name="model">abc.indicator</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>
+					<field name="name" colspan="2"/>
+					<group colspan="2">
+						<field name="active" colspan="1"/>
+						<field name="display_tree" colspan="1"/>
+					</group>
+					<group attrs="{'readonly':[('id','!=',False)]}" colspan="2">
+						<field name="id" invisible="1"/>
+						<field name="model_id"/>
+						<field name="field_id" domain="[('model_id','=',model_id)]" />
+					</group>
+					<button name="action_compute" type="object" string="Compute Now"/>
+					<field name="symbol_ids" nolabel="1" colspan="4">
+						<tree string="Levels/Symbols" editable="top">
+							<field name="level" required="1"/>
+							<field name="name" required="1" string="Symbol"/>
+						</tree>			
+					</field>
+					<field name="last_computation_date" readonly="1"/>
+				</form>
+			</field>
+		</record>
+	
+		<record model="ir.actions.act_window" id="abc_indicator_action">
+			<field name="name">ABC Indicators</field>
+			<field name="res_model">abc.indicator</field>
+			<field name="view_type">form</field>
+		</record>
+		
+		<menuitem action="abc_indicator_action" id="menu_abc_indicator" parent="base.menu_administration"/>
+	
+	</data>
+</openerp>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+	    <record id="group_abc_manager" model="res.groups">
+	        <field name="name">ABC / Manager</field>
+	    </record>
+	    
+	   	<record id="group_abc_user" model="res.groups">
+        	<field name="name">ABC / User</field>
+    	</record>
+    	
+    	
+    	<record id="menu_abc_indicator" model="ir.ui.menu">
+			<field eval="[(6,0,[ref('group_abc_manager')])]" name="groups_id"/>
+		</record>
+    
+    </data>
+</openerp>

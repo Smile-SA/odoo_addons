@@ -1,0 +1,153 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_abc
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.12\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-09-20 09:57:14+0000\n"
+"PO-Revision-Date: 2010-09-20 09:57:14+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_abc
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
+
+#. module: smile_abc
+#: model:ir.model,name:smile_abc.model_abc_indicator
+msgid "abc.indicator"
+msgstr "abc.indicator"
+
+#. module: smile_abc
+#: field:abc.indicator,field_id:0
+msgid "Field"
+msgstr "Champ"
+
+#. module: smile_abc
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Nom de modèle invalide dans la définition de l'action."
+
+#. module: smile_abc
+#: code:addons/smile_abc/smile_abc.py:0
+#, python-format
+msgid "Level must belong to range [1-100]"
+msgstr "Le niveau doit être compris entre 1 et 100 (inclus)"
+
+#. module: smile_abc
+#: model:ir.model,name:smile_abc.model_abc_history
+msgid "abc.history"
+msgstr "abc.history"
+
+#. module: smile_abc
+#: model:ir.model,name:smile_abc.model_abc_symbol
+msgid "abc.symbol"
+msgstr "abc.symbol"
+
+#. module: smile_abc
+#: view:abc.symbol:0
+msgid "Level/Symbol"
+msgstr "Niveau/Symbole"
+
+#. module: smile_abc
+#: view:abc.symbol:0
+#: field:abc.symbol,indicator_id:0
+msgid "ABC Indicator"
+msgstr "Indicateur ABC"
+
+#. module: smile_abc
+#: view:abc.indicator:0
+#: view:abc.symbol:0
+msgid "Levels/Symbols"
+msgstr "Niveaux/Symboles"
+
+#. module: smile_abc
+#: view:abc.indicator:0
+msgid "Symbol"
+msgstr "Symbole"
+
+#. module: smile_abc
+#: view:abc.indicator:0
+msgid "Compute Now"
+msgstr "Calculer"
+
+#. module: smile_abc
+#: field:abc.indicator,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_abc
+#: model:ir.actions.act_window,name:smile_abc.abc_indicator_action
+#: model:ir.ui.menu,name:smile_abc.menu_abc_indicator
+msgid "ABC Indicators"
+msgstr "Indicateurs ABC"
+
+#. module: smile_abc
+#: field:abc.indicator,abc_field_id:0
+msgid "ABC Field"
+msgstr "Champ ABC"
+
+#. module: smile_abc
+#: field:abc.indicator,display_tree:0
+msgid "Display Tree"
+msgstr "Affichage vue liste/arbre"
+
+#. module: smile_abc
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML non valide pour l'architecture de la vue"
+
+#. module: smile_abc
+#: field:abc.indicator,name:0
+#: field:abc.symbol,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_abc
+#: field:abc.symbol,level:0
+msgid "Level"
+msgstr "Niveau"
+
+#. module: smile_abc
+#: help:abc.indicator,display_tree:0
+msgid "Add the ABC indicator field on tree views"
+msgstr "Rajoute le champs Indicateur ABC sur les vues listes/arbres"
+
+#. module: smile_abc
+#: field:abc.indicator,model_id:0
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_abc
+#: help:abc.symbol,level:0
+msgid "Threshold percentage (between 0 and 100)."
+msgstr "Pourcentage de seuil (entre 0 et 100)."
+
+#. module: smile_abc
+#: field:abc.indicator,symbol_ids:0
+msgid "Letters"
+msgstr "Lettres"
+
+#. module: smile_abc
+#: field:abc.indicator,last_computation_date:0
+msgid "Last Computation Date"
+msgstr "Last Computation Date"
+
+#. module: smile_abc
+#: model:ir.module.module,description:smile_abc.module_meta_information
+#: model:ir.module.module,shortdesc:smile_abc.module_meta_information
+msgid "Smile ABC"
+msgstr "Smile ABC"
+
+#. module: smile_abc
+#: field:abc.indicator,id:0
+msgid "Id"
+msgstr "Id"
+
