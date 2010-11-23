@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<record id="ir_model_fields_access_view_tree" model="ir.ui.view">
+            <field name="name">ir.model.fields.access.tree</field>
+            <field name="model">ir.model.fields.access</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Field Access Controls" editable="bottom">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="group_id"/>
+                    <field name="states"/>
+                    <field name="field_id" domain="[('model_id','=',model_id)]"/>
+                    <field name="perm_write"/>
+                </tree>
+            </field>
+        </record>
+        <record id="ir_model_fields_access_view_form" model="ir.ui.view">
+            <field name="name">ir.model.fields.access.form</field>
+            <field name="model">ir.model.fields.access</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Field Access Control">
+                    <group col="4" colspan="4">
+                        <field name="name"/>
+                        <field name="group_id"/>
+                        <field name="model_id"/>
+                        <field name="states"/>
+	                    <field name="field_id" domain="[('model_id','=',model_id)]"/>
+                    </group>
+                    <separator string="Access" colspan="4"/>
+                    <group col="4" colspan="4">
+                        <field name="perm_write"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="ir_model_fields_access_view_search" model="ir.ui.view">
+            <field name="name">ir.model.fields.access.search</field>
+            <field name="model">ir.model.fields.access</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Field Access Controls">
+	                <group>
+	                    <filter string="Global" icon="terp-stage" domain="[('group_id','=',False)]"/>
+	                    <separator orientation="vertical"/>
+	                    <filter string="Write Access" icon="terp-tools" domain="[('perm_write','=',True)]"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="name"/>
+	               		<field name="model_id"/>
+	                	<field name="group_id"/>
+	                </group>
+	                <newline/>
+	                <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
+	                	<filter string="Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
+	                    <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
+	                </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="ir_model_fields_access_action" model="ir.actions.act_window">
+            <field name="name">Access Controls List Extension</field>
+            <field name="res_model">ir.model.fields.access</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="ir_model_fields_access_view_tree"/>
+            <field name="search_view_id" ref="ir_model_fields_access_view_search"/>
+        </record>
+      <menuitem action="ir_model_fields_access_action" id="menu_ir_model_fields_access_act" parent="base.menu_security" sequence="15" />
+
+	</data>
+</openerp>
