@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="0">
+
+        <menuitem name="Checklists" id="menu_checklists" sequence="90"  parent="base.menu_custom"/>
+
+        <record id="view_checklist_form" model="ir.ui.view">
+            <field name="name">Checklist</field>
+            <field name="model">checklist</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Checklist">
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="model_id"/>
+                    <notebook colspan="4">
+                    	<page string="Tasks">
+							<field name="task_ids" mode="tree,form" nolabel="1" colspan="4" context="{'active_test':False}">
+								<form string="Task" col="6">
+									<field name="name" />
+									<field name="sequence" />
+									<field name="active" />
+				                    <field name="condition" colspan="4"/>
+				                    <field name="model_id" invisible="1"/>
+									<field name="active_field" invisible="1"/>
+									<field name="mandatory" attrs="{'invisible':[('active_field','!=',True)]}"/>
+									<notebook colspan="6">
+										<page string="Fields to fill">
+											<field name="field_ids" mode="tree,form" nolabel="1" colspan="4">
+												<tree string="Fields">
+													<field name="name"/>
+												</tree>
+												<form string="Field">
+													<group colspan="2" col="2">				
+														<field name="name"/>
+														<field name="expression"/>
+													</group>
+													<group string="Expression builder" colspan="2" col="2">
+														<field name="field_id" on_change="onchange_get_field_expression(parent.model_id, field_name, field_id)" domain="[('model_id','=',parent.model_id)]" />
+														<field name="field_name" on_change="onchange_get_field_domain(parent.model_id, field_name, field_id)" colspan="4"/>
+													</group>
+												</form>
+											</field>
+										</page>
+										<page string="Action">
+											<field name="action_id" nolabel="1" colspan="4" domain="[('model_id.id','=',parent.model_id)]" />
+										</page>
+									</notebook>
+								</form>
+								<tree string="Tasks" colors="grey:not active">
+									<field name="name"/>
+									<field name="mandatory"/>
+									<field name="sequence" />
+								</tree>
+							</field>
+                    	</page>
+                    	<page string="Views">
+		                    <field name="model" invisible="1"/>
+							<field name="view_ids" nolabel="1" colspan="4" domain="[('type','in',['form','tree']),('model','=',model)]"/>
+							<label string="Leave blank in order to this checklist appears in all object views" colspan="4" align="0.0"/>
+                    	</page>
+                    	<page string="Action">
+							<field name="action_id" nolabel="1" colspan="4" domain="[('model_id.id','=',model_id)]"/>
+							<field name="active_field"/>
+                    	</page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_checklist_tree" model="ir.ui.view">
+            <field name="name">Checklists</field>
+            <field name="model">checklist</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Checklists">
+                    <field name="name" select="1"/>
+                    <field name="model_id" select="1"/>
+                    <field name="active" select="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_checklist" model="ir.actions.act_window">
+            <field name="name">Checklists</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">checklist</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_checklist_tree"/>
+        </record>
+        <menuitem action="action_checklist" id="menu_checklist" parent="menu_checklists"/>
+
+        <record id="view_checklist_task_field_tree" model="ir.ui.view">
+            <field name="name">Checklist Task Fields</field>
+            <field name="model">checklist.task.field</field>
+            <field name="priority">17</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+				<tree string="Fields">				
+					<field name="task_id" select="1"/>
+					<field name="name" select="1"/>
+				</tree>
+            </field>
+        </record>
+
+        <record id="view_checklist_task_field_form" model="ir.ui.view">
+            <field name="name">Checklist Task Field</field>
+            <field name="model">checklist.task.field</field>
+            <field name="priority">17</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<form string="Field">				
+					<group colspan="2" col="2">
+						<field name="name"/>
+						<field name="expression"/>
+					</group>
+					<group string="Expression builder" colspan="2" col="2">
+						<field name="field_id" on_change="onchange_get_field_expression(parent.model_id, field_name, field_id)" domain="[('model_id','=',parent.model_id)]" />
+						<field name="field_name" on_change="onchange_get_field_domain(parent.model_id, field_name, field_id)" colspan="4"/>
+					</group>
+					<field name="task_id"/>
+				</form>
+            </field>
+        </record>
+
+		<record id="view_checklist_exception_tree" model="ir.ui.view">
+			<field name="name">Checklists Exceptions</field>
+			<field name="model">checklist.exception</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Exceptions" editable="bottom">
+					<field name="checklist_id" />
+					<field name="checklist_task_id" />
+					<field name="res_id" />
+					<field name="field_id" />
+					<field name="action_id" />
+					<field name="exception_type" />
+					<field name="exception" />
+					<field name="stack" />
+					<field name="create_date" />					
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_checklist_exception" model="ir.actions.act_window">
+			<field name="name">Checklists Exceptions</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">checklist.exception</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree</field>
+			<field name="auto_refresh">3600</field>
+		</record>
+		<menuitem action="action_checklist_exception" id="menu_checklist_exception" parent="menu_checklist" sequence="90" />
+
+        <record id="view_checklist_task_instance_form" model="ir.ui.view">
+            <field name="name">Checklist Task Instance</field>
+            <field name="model">checklist.task.instance</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Task">
+                    <field name="name"/>
+                    <field name="active"/>
+					<field name="progress_rate" widget="progressbar"/>
+                    <field name="mandatory"/>
+                    <group colspan="4" col="5">
+	                    <separator string="Fields to fill" colspan="2"/>
+	                    <label/>
+	                    <separator string="Filled fields" colspan="2"/>
+						<field name="field_ids_to_fill" nolabel="1" mode="tree,form" colspan="2">
+							<tree string="Fields">
+								<field name="name"/>
+							</tree>
+							<form string="Field">
+								<field name="name"/>
+								<field name="expression"/>
+							</form>
+						</field>
+						<button icon="STOCK_GO_FORWARD" string=""/>
+						<field name="field_ids_filled" nolabel="1" mode="tree,form" colspan="2">
+							<tree string="Fields">
+								<field name="name"/>
+							</tree>
+							<form string="Field">
+								<field name="name"/>
+								<field name="expression"/>
+							</form>
+						</field>
+					</group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_checklist_task_instance_tree" model="ir.ui.view">
+            <field name="name">Checklist Task Instances</field>
+            <field name="model">checklist.task.instance</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Tasks" colors="red:progress_rate == 0;orange:progress_rate &gt; 0 and progress_rate &lt; 100;green:progress_rate == 100">
+                    <field name="name"/>
+                    <field name="mandatory"/>
+                    <field name="progress_rate" widget="progressbar"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>

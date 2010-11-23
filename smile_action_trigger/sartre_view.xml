@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="sartre_rule_form_view" model="ir.ui.view">
+			<field name="name">Trigger Rule</field>
+			<field name="model">sartre.rule</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Rule">
+					<group colspan="4">
+						<field name="name" select="1" />
+						<field name="active" select="1" />
+						<field name="model_id" select="1" on_change="onchange_model_id(model_id, trigger_function, trigger_other)"/>
+						<field name="executions_max_number" />
+						<label colspan="2" />
+						<button type="object" name="run_now" string="Run Now" colspan="2" />
+					</group>
+					<notebook colspan="4">
+						<page string="Triggers">
+							<field name="trigger_create" />
+							<field name="trigger_date" />
+							<field name="trigger_write" />
+							<field name="trigger_function" on_change="onchange_model_id(model_id, trigger_function, trigger_other)" />
+							<field name="trigger_unlink" />
+							<field name="trigger_other" on_change="onchange_model_id(model_id, trigger_function, trigger_other)" />
+							<label colspan="2" />
+							<field name="trigger_login" attrs="{'readonly':[('trigger_login_readonly','=',True)]}" />
+							<field name="trigger_login_readonly" invisible="1" />
+							<group string="Trigger Date" col="10" colspan="4" attrs="{'invisible':[('trigger_date','!=',True)]}">
+								<field name="trigger_date_type_display1" nolabel="1" attrs="{'required':[('trigger_date','=',True)]}" />
+								<group attrs="{'invisible':[('trigger_date_type_display1','!=','other_date')]}">
+									<field name="trigger_date_type_display2_id" nolabel="1" attrs="{'required':[('trigger_date_type_display1','=','other_date')]}" />
+								</group>
+								<field name="trigger_date_range" attrs="{'required':[('trigger_date','=',True)]}" />
+								<field name="trigger_date_range_type" nolabel="1" attrs="{'required':[('trigger_date','=',True)]}" />
+								<group attrs="{'invisible':[('trigger_date_type_display1','!=','other_date')]}">
+									<field name="trigger_date_range_operand" nolabel="1" attrs="{'required':[('trigger_date','=',True)]}" />
+								</group>
+							</group>
+							<group string="Cron Execution Periodicity" colspan="4" attrs="{'invisible':[('trigger_date','!=',True)]}">
+								<field name="interval_number" nolabel="1" attrs="{'required':[('trigger_date','=',True)]}" />
+								<field name="interval_type" nolabel="1" attrs="{'required':[('trigger_date','=',True)]}" />
+							</group>
+							<group string="Trigger Function" colspan="4" attrs="{'invisible':[('trigger_function','!=',True)]}">
+								<field name="trigger_function_field_id" attrs="{'required':[('trigger_function','=',True)]}" />
+								<field name="trigger_function_type" attrs="{'required':[('trigger_function','=',True)]}" />
+							</group>
+							<group string="Trigger Methods" colspan="4" attrs="{'invisible':[('trigger_other','!=',True)]}">
+								<field name="trigger_other_method_id" attrs="{'required':[('trigger_other','=',True)]}" />
+							</group>
+						</page>
+						<page string="Conditions">
+							<field name="condition_ids" colspan="4" nolabel="1" mode="tree,form" on_change="onchange_get_domain_force(condition_ids, domain_force)">
+								<form string="Condition">
+									<group colspan="2">
+										<separator string="Domain" colspan="4" />
+										<field name="field_name" colspan="3" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" />
+										<field name="value_age" nolabel="1" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" attrs="{'readonly': [('value_age_readonly', '=', True)]}" />
+										<field name="value_age_readonly" invisible="1" />
+										<field name="operator_id" on_change="onchange_get_value_age_domain(field_name, operator_id, opposite, value, value_age, value_type)" widget="selection" />
+										<field name="opposite" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" />
+										<field name="value" colspan="3" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" attrs="{'readonly': [(operator_id.other_value_necessary, '=', False)]}" />
+										<field name="value_type" nolabel="1" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" attrs="{'readonly': [(operator_id.other_value_necessary, '=', False)]}" />
+										<separator string="Force domain" colspan="4" />
+										<field name="domain" nolabel="1" colspan="4" />
+									</group>
+									<group colspan="2" col="2">
+										<separator string="Expression builder for field or dynamic value" colspan="2" />
+										<field name="field_id"  on_change="onchange_get_field_expression(parent.model_id, field_expression, field_id)" domain="[('model_id','=',parent.model_id)]" />
+										<field name="field_expression" on_change="onchange_get_field_domain(parent.model_id, field_expression)" />
+										<separator string="Legends for static value" colspan="2" />
+										<label align="0.0" string="Today - %%today" />
+										<label align="0.0" string="Date Format - YYYY-MM-DD" />
+										<label align="0.0" string="Time Format - HH:MM:SS" />
+										<label align="0.0" string="Datetime Format - YYYY-MM-DD HH:MM:SS" />
+									</group>
+								</form>
+								<tree string="Conditions">
+									<field name="domain" />
+								</tree>
+							</field>
+							<group colspan="4">
+								<label align="0.0" string="The rule is satisfied if all test are True (AND)"/>
+								<label align="0.0" string="Multiple rules on same objects are joined using operator OR or force the domain by using the polish notation"/>
+							</group>
+							<group colspan="4">
+								<field name="domain_force"/>
+							</group>
+						</page>
+						<page string="Actions">
+							<field name="action_ids" colspan="4" nolabel="1" context="{'model_id':model_id}" />
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+		<record id="sartre_rule_tree_view" model="ir.ui.view">
+			<field name="name">Trigger Rules</field>
+			<field name="model">sartre.rule</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Rules">
+					<field name="name" />
+					<field name="model_id" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="sartre_rule_action" model="ir.actions.act_window">
+			<field name="name">Trigger Rules</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sartre.rule</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem action="sartre_rule_action" id="sartre_rule_menu" parent="base.menu_custom_action" sequence="10" />
+
+		<record id="new_sartre_rule_action" model="ir.actions.act_window">
+			<field name="name">New Trigger Rule</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sartre.rule</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form,tree</field>
+		</record>
+		<menuitem action="new_sartre_rule_action" id="new_sartre_rule_menu" parent="sartre_rule_menu" sequence="10" />
+
+		<record id="sartre_operator_tree_view" model="ir.ui.view">
+			<field name="name">Trigger Rules Operators</field>
+			<field name="model">sartre.operator</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Operators">
+					<field name="name" select="1" />
+					<field name="symbol" select="1" />
+					<field name="opposite_symbol" select="1" />
+					<field name="native_operator" select="1" />
+					<field name="value_age_filter" select="2" />
+				</tree>
+			</field>
+		</record>
+		<record id="sartre_operator_form_view" model="ir.ui.view">
+			<field name="name">Trigger Rules Operator</field>
+			<field name="model">sartre.operator</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Operator">
+					<field name="name" colspan="4" />
+					<field name="symbol" />
+					<field name="opposite_symbol" />
+					<field name="native_operator" />
+					<field name="value_age_filter" />
+					<field name="other_value_necessary" />
+					<field name="other_value_transformation" attrs="{'readonly': [('native_operator', '=', 'none'),('other_value_mandatory', '=', False)]}" />
+					<field name="expression" colspan="4" />
+				</form>
+			</field>
+		</record>
+		<record id="sartre_operator_action" model="ir.actions.act_window">
+			<field name="name">Trigger Rule Operators</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sartre.operator</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem action="sartre_operator_action" id="sartre_operator_menu" parent="sartre_rule_menu" sequence="30" />
+
+		<record id="sartre_exception_tree_view" model="ir.ui.view">
+			<field name="name">Trigger Rules Exceptions</field>
+			<field name="model">sartre.exception</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Exceptions" editable="bottom">
+					<field name="rule_id" />
+					<field name="exception_type" />
+					<field name="res_id" />
+					<field name="action_id" />
+					<field name="exception" />
+					<field name="stack" />
+					<field name="create_date" />					
+				</tree>
+			</field>
+		</record>
+
+		<record id="sartre_exception_action" model="ir.actions.act_window">
+			<field name="name">Trigger Rules Exceptions</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sartre.exception</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree</field>
+		</record>
+		<menuitem action="sartre_exception_action" id="sartre_exception_menu" parent="sartre_rule_menu" sequence="90" />
+
+	</data>
+</openerp>

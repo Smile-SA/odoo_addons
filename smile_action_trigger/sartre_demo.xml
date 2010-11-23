@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="ir_actions_server_youremailchanged0" model="ir.actions.server">
+			<field name="type">ir.actions.server</field>
+			<field name="name">Your email changed</field>
+			<field name="model_id" ref="base.model_res_partner_address"/>
+			<field name="state">email</field>
+			<field eval="5" name="sequence"/>
+			<field name="condition">True</field>
+			<field eval="1" name="active"/>
+			<field name="email">[[ context['old_values'][ [[ object.id ]] ]['email'] ]]</field>
+			<field name="subject">[OpenERP] Your email changed</field>
+			<field eval="&quot;&quot;&quot;&lt;p&gt;Dear [[ object.partner_id.title ]]&amp;nbsp;[[ object.name ]],&lt;/p&gt;
+&lt;p&gt;In accordance with your wishes,&amp;nbsp;you will receive our newsletter via the following email:&amp;nbsp;[[ object.email ]]&lt;/p&gt;
+&lt;p&gt;Yours Sincerely,&lt;br /&gt;The OpenERP Team&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;&quot;&quot;&quot;" name="message"/>
+		</record>
+		<record id="sartre_rule_partneremailchanges0" model="sartre.rule">
+			<field name="name">Partner Email Changes</field>
+			<field eval="1" name="active"/>
+			<field name="model_id" ref="base.model_res_partner_address"/>
+			<field eval="1" name="trigger_write"/>
+			<field eval="[(6,0,[ref('ir_actions_server_youremailchanged0')])]" name="action_ids"/>
+		</record>
+		<record id="sartre_condition_0" model="sartre.condition">
+			<field name="sartre_rule_id" ref="sartre_rule_partneremailchanges0"/>
+			<field name="field_name">email</field>
+			<field name="field_id" ref="base.field_res_partner_address_email"/>
+			<field name="operator_id" ref="sartre_operator_ischanging0"/>
+			<field eval="0" name="opposite"/>
+			<field name="value_age">current</field>
+			<field name="domain">[('OLD_email', '~', '')]</field>
+		</record>
+
+	</data>
+</openerp>

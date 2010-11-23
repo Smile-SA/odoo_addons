@@ -1,0 +1,5 @@
+To update to version 3:
+* comment lines 120-122 in the file sartre.py
+* launch the server with --update=sartre
+* uncomment lines
+* launch server daemon
