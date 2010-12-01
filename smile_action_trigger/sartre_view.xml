@@ -60,8 +60,8 @@
 										<field name="value_age_readonly" invisible="1" />
 										<field name="operator_id" on_change="onchange_get_value_age_domain(field_name, operator_id, opposite, value, value_age, value_type)" widget="selection" />
 										<field name="opposite" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" />
-										<field name="value" colspan="3" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" attrs="{'readonly': [(operator_id.other_value_necessary, '=', False)]}" />
-										<field name="value_type" nolabel="1" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" attrs="{'readonly': [(operator_id.other_value_necessary, '=', False)]}" />
+										<field name="value" colspan="3" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" attrs="{'readonly': [(operator_id and operator_id.other_value_necessary, '=', False)]}" />
+										<field name="value_type" nolabel="1" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" attrs="{'readonly': [(operator_id and operator_id.other_value_necessary, '=', False)]}" />
 										<separator string="Force domain" colspan="4" />
 										<field name="domain" nolabel="1" colspan="4" />
 									</group>

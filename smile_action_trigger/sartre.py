@@ -547,11 +547,7 @@ sartre_execution()
 def _check_method_based_trigger_rules(self, cr, uid, method, field_name='', calculation_method=False):
     """Check method based trigger rules"""
     rule_ids = []
-	if hasattr(self, 'pool'):
-		rule_obj = self.pool.get('sartre.rule')
-	else:
-	    import pooler
-    	rule_obj = pooler.get_pool(cr.dbname).get('sartre.rule')
+    rule_obj = hasattr(self, 'pool') and self.pool.get('sartre.rule') or pooler.get_pool(cr.dbname).get('sartre.rule')
     if rule_obj:
         # Search rules to execute
         rule_ids += hasattr(rule_obj, 'sartre_rules_cache') and method in rule_obj.sartre_rules_cache and self._name in rule_obj.sartre_rules_cache[method] and rule_obj.sartre_rules_cache[method][self._name] or []
