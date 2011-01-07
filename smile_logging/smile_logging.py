@@ -24,6 +24,7 @@ import logging.handlers
 import threading
 import pooler
 import tools
+from re import escape
 
 class SmileDBHandler(logging.Handler):
     def emit(self, record):
@@ -38,7 +39,8 @@ class SmileDBHandler(logging.Handler):
                 if logging.TEST >= levelno and record.levelno == logging.WARNING and record.name.startswith('tests.'):
                     cr.execute("SELECT max(id) FROM %s" % (log_table,))
                     id = cr.fetchone()
-                    query = "UPDATE %s SET (failed, exception) = (TRUE, '%s') WHERE id = %d" % (log_table, record.msg, id[0])
+                    params = (log_table, record.msg, id[0])
+                    query = "UPDATE %s SET (failed, exception) = (TRUE, '%s') WHERE id = %d"
 
                 else:
                     cr.execute("SELECT relname FROM pg_class WHERE relname = '%s'" % (log_table,))
@@ -61,7 +63,7 @@ failed boolean,
 exception text
 )""" % (log_table,))
 
-                    record_tuple = (log_table, record.name, record.levelno, record.levelname, record.lineno, record.module, record.msecs, record.pathname, record.msg,)
+                    params = (log_table, record.name, record.levelno, record.levelname, record.lineno, record.module, record.msecs, record.pathname, escape(record.msg),)
                     query = """INSERT INTO %s (
 create_uid,
 create_date,
@@ -73,10 +75,10 @@ module,
 msecs,
 pathname,
 message)
-VALUES (1, now(), '%s', %d, '%s', %d, '%s', %.f, '%s', '%s')""" % record_tuple
+VALUES (1, now(), '%s', %d, '%s', %d, '%s', %.f, '%s', '%s')"""
 
                 try:
-                    cr.execute(query)
+                    cr.execute(query % params)
                     cr.commit()
                 except Exception, e:
                     record.msg = tools.ustr(e) + "\n" + record.msg

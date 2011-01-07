@@ -44,7 +44,9 @@ class ir_model_fields_access(osv.osv):
                 field_name = model_fields_access.field_id and model_fields_access.field_id.name or 'all_fields'
                 group_id = model_fields_access.group_id and model_fields_access.group_id.id or 0
                 self.model_fields_access_cache.setdefault(model, {}).setdefault(group_id, {}).setdefault(field_name, {})
-                states = model_fields_access.states and model_fields_access.states.replace(' ','').split(',') or dict(self.pool.get(model)._columns['state'].selection).keys()
+                states = model_fields_access.states and model_fields_access.states.replace(' ','').split(',') \
+                        or (self.pool.get(model)._columns.get('state', False) and dict(self.pool.get(model)._columns['state'].selection).keys()) \
+                        or 'none'
                 for state in states:
                     state_perms = self.model_fields_access_cache[model][group_id][field_name].setdefault(state, {})
                     state_perms['readonly'] = __and__(not model_fields_access.perm_write, state_perms.get('readonly', True))
@@ -91,19 +93,26 @@ def ir_model_fields_access_fields_get(self, cr, uid, allfields=None, context=Non
             if not user_group_ids_in_cache and 0 in cache[model]:
                 user_group_ids_in_cache = [0]
             if user_group_ids_in_cache:
-                states = {}
+                states = no_states = {}
                 for group_id in user_group_ids_in_cache:
                     field_names = cache[model][group_id].keys()
                     for field_name in field_names:
                         for state in cache[model][group_id][field_name]:
                             state_perms = states.setdefault(field_name, {}).setdefault(state, {})
                             state_perms['readonly'] = __and__(cache[model][group_id][field_name][state]['readonly'], state_perms.get('readonly', True))
-                            states[field_name][state] = state_perms
+                            if state != 'none':
+                                states[field_name][state] = state_perms
+                            else:
+                                no_states[field_name] = state_perms
                 for field in res:
                     if field in states:
                         res[field]['states'] = dict([(state, states[field][state].items()) for state in states[field]])
                     elif states.get('all_fields', False):
-                        res[field]['states'] = dict([(state, states['all_fields'][state].items()) for state in states['all_fields']])                        
+                        res[field]['states'] = dict([(state, states['all_fields'][state].items()) for state in states['all_fields']])
+                    if field in no_states:
+                        res[field]['readonly'] = no_states[field]
+                    elif no_states.get('all_fields', False):
+                        res[field]['readonly'] = no_states['all_fields']
     return res
 
 orm.orm_template.fields_get = ir_model_fields_access_fields_get

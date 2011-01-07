@@ -33,6 +33,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "init_xml" : [],
     "update_xml": [
         'export_view.xml',
+        'security/ir.model.access.csv',
     ],
     "demo_xml" : [],
     "installable": True,
