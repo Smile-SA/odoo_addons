@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+		<!-- Talend Log -->
+
+        <record id="view_talend_log_form" model="ir.ui.view">
+            <field name="name">talend.log.form</field>
+            <field name="model">talend.log</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Talend Log">
+                    <field name="moment" />
+                    <field name="pid" />
+                    <field name="root_pid" />
+                    <field name="father_pid" />
+                    <field name="project" />
+                    <field name="job" />
+                    <field name="context" />
+                    <field name="priority" />
+                    <field name="type" />
+                    <field name="origin" />
+                    <field name="message" />
+                    <field name="code" />
+               </form>
+            </field>
+        </record> 
+
+  		<record id="view_talend_log_tree" model="ir.ui.view">
+            <field name="name">talend.log.tree</field>
+            <field name="model">talend.log</field>
+            <field name="type">tree</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+				<tree string="Talend Logs">                				
+                    <field name="moment" />
+                    <field name="pid" />
+                    <field name="root_pid" />
+                    <field name="father_pid" />
+                    <field name="project" />
+                    <field name="job" />
+                    <field name="context" />
+                    <field name="priority" />
+                    <field name="type" />
+                    <field name="origin" />
+                    <field name="message" />
+                    <field name="code" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_talend_log_search" model="ir.ui.view">
+            <field name="name">talend.log.search</field>
+            <field name="model">talend.log</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                   <group col="6" colspan="4">
+                        <field name="moment" />
+						<field name="job" />
+                    	<field name="message" />
+                    </group>
+               </search>
+            </field>
+        </record>
+
+		<record id="action_talend_log" model="ir.actions.act_window">
+            <field name="name">Talend Logs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">talend.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+		<menuitem action="action_talend_log" id="menu_talend_log" parent="menu_talend_integration" sequence="30"/>
+
+		<!-- Talend State -->
+
+        <record id="view_talend_state_form" model="ir.ui.view">
+            <field name="name">talend.state.form</field>
+            <field name="model">talend.state</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Talend State">
+                    <field name="moment" />
+                    <field name="pid" />
+                    <field name="father_pid" />
+                    <field name="root_pid" />
+                    <field name="system_pid" />
+                    <field name="project" />
+                    <field name="job" />
+                    <field name="job_repository_id" />
+                    <field name="job_version" />
+                    <field name="context" />
+                    <field name="origin" />
+                    <field name="message" />
+                    <field name="duration" />
+               </form>
+            </field>
+        </record> 
+
+  		<record id="view_talend_state_tree" model="ir.ui.view">
+            <field name="name">talend.state.tree</field>
+            <field name="model">talend.state</field>
+            <field name="type">tree</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+				<tree string="Talend States">                				
+                    <field name="moment" />
+                    <field name="pid" />
+                    <field name="father_pid" />
+                    <field name="root_pid" />
+                    <field name="system_pid" />
+                    <field name="project" />
+                    <field name="job" />
+                    <field name="job_repository_id" />
+                    <field name="job_version" />
+                    <field name="context" />
+                    <field name="origin" />
+                    <field name="message" />
+                    <field name="duration" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_talend_state_search" model="ir.ui.view">
+            <field name="name">talend.state.search</field>
+            <field name="model">talend.state</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                   <group col="6" colspan="4">
+                        <field name="moment" />
+						<field name="job" />
+                    	<field name="message" />
+                    </group>
+               </search>
+            </field>
+        </record>
+
+		<record id="action_talend_state" model="ir.actions.act_window">
+            <field name="name">Talend States</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">talend.state</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+		<menuitem action="action_talend_state" id="menu_talend_state" parent="menu_talend_integration" sequence="40"/>
+
+		<!-- Talend Flow -->
+
+        <record id="view_talend_flow_form" model="ir.ui.view">
+            <field name="name">talend.flow.form</field>
+            <field name="model">talend.flow</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Talend Flow">
+                    <field name="moment" />
+                    <field name="pid" />
+                    <field name="father_pid" />
+                    <field name="root_pid" />
+                    <field name="system_pid" />
+                    <field name="project" />
+                    <field name="job" />
+                    <field name="job_repository_id" />
+                    <field name="job_version" />
+                    <field name="context" />
+                    <field name="origin" />
+                    <field name="label" />
+                    <field name="count" />
+                    <field name="reference" />
+                    <field name="thresholds" />
+               </form>
+            </field>
+        </record> 
+
+  		<record id="view_talend_flow_tree" model="ir.ui.view">
+            <field name="name">talend.flow.tree</field>
+            <field name="model">talend.flow</field>
+            <field name="type">tree</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+				<tree string="Talend Flows">                				
+                    <field name="moment" />
+                    <field name="pid" />
+                    <field name="father_pid" />
+                    <field name="root_pid" />
+                    <field name="system_pid" />
+                    <field name="project" />
+                    <field name="job" />
+                    <field name="job_repository_id" />
+                    <field name="job_version" />
+                    <field name="context" />
+                    <field name="origin" />
+                    <field name="label" />
+                    <field name="count" />
+                    <field name="reference" />
+                    <field name="thresholds" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_talend_flow_search" model="ir.ui.view">
+            <field name="name">talend.flow.search</field>
+            <field name="model">talend.flow</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                   <group col="6" colspan="4">
+                        <field name="moment" />
+						<field name="job" />
+                    	<field name="label" />
+                    </group>
+               </search>
+            </field>
+        </record>
+
+		<record id="action_talend_flow" model="ir.actions.act_window">
+            <field name="name">Talend Flows</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">talend.flow</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+		<menuitem action="action_talend_flow" id="menu_talend_flow" parent="menu_talend_integration" sequence="50"/>
+
+    </data>
+</openerp>

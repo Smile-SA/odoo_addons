@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+	    <record id="group_talend_integration" model="res.groups">
+	        <field name="name">Administration / Talend Integration</field>
+	    </record>
+
+	</data>
+</openerp>

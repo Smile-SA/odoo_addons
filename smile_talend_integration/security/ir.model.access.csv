@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_talend_log_user","talend.log","model_talend_log","group_talend_integration",1,0,0,0
+"access_talend_state_user","talend.state","model_talend_state","group_talend_integration",1,0,0,0
+"access_talend_flow_user","talend.flow","model_talend_flow","group_talend_integration",1,0,0,0
