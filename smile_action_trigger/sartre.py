@@ -40,7 +40,7 @@ def _get_browse_record_dict(self, cr, uid, ids):
 
 class ir_model_methods(osv.osv):
     _name = 'ir.model.methods'
-    
+
     _columns = {
         'name': fields.char('Method name', size=128, select=True, required=True),
         'model_id': fields.many2one('ir.model', 'Object', select=True, required=True),
@@ -168,7 +168,7 @@ class sartre_rule(osv.osv):
 
     _columns = {
         'name': fields.char("Name", size=64, required=True),
-        'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory','=', False)], required=True, ondelete='cascade'),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, ondelete='cascade'),
         'active': fields.boolean("Active"),
         'trigger_create': fields.boolean("Creation"),
         'trigger_write': fields.boolean("Update"),
@@ -192,7 +192,7 @@ class sartre_rule(osv.osv):
         'nextcall': fields.datetime("Next Call"),
         'condition_ids': fields.one2many('sartre.condition', 'sartre_rule_id', "Conditions", help="The rule is satisfied if all conditions are True"),
         'domain_force': fields.char('Force Domain', size=250),
-        'action_ids': fields.many2many('ir.actions.server', 'sartre_rule_server_action_rel', 'server_action_id', 'sartre_rule_id', "Actions"),
+        'action_ids': fields.many2many('ir.actions.server', 'sartre_rule_server_action_rel', 'sartre_rule_id', 'server_action_id', "Actions"),
         'executions_max_number': fields.integer('Max executions', help="Number of time actions are runned,\0 indicates that actions will always be executed"),
     }
 
@@ -458,7 +458,7 @@ class sartre_condition(osv.osv):
         """Update the field expression"""
         new_field_expression = field_expression
         if field_id:
-            new_field_expression = self._build_field_expression(cr, uid, field_id, field_expression, context)            
+            new_field_expression = self._build_field_expression(cr, uid, field_id, field_expression, context)
         res = self.onchange_get_field_domain(cr, uid, ids, model_id, new_field_expression, context)
         res.setdefault('value', {}).update({'field_expression': new_field_expression})
         return res
@@ -501,7 +501,7 @@ class sartre_exception(osv.osv):
     _name = 'sartre.exception'
     _description = 'Sartre Exception'
     _rec_name = 'rule_id'
-   
+
     _columns = {
         'rule_id': fields.many2one('sartre.rule', 'Rule', required=False, select=True),
         'exception_type': fields.selection([
@@ -523,7 +523,7 @@ class sartre_execution(osv.osv):
     _name = 'sartre.execution'
     _description = 'Sartre Execution'
     _rec_name = 'rule_id'
-   
+
     _columns = {
         'rule_id': fields.many2one('sartre.rule', 'Rule', required=False, select=True),
         'model_id': fields.many2one('ir.model', 'Object', required=False, select=True),
