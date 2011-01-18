@@ -41,7 +41,7 @@ def _get_browse_record_dict(self, cr, uid, ids):
 class ir_model_methods(osv.osv):
     _name = 'ir.model.methods'
     _description = 'Model Method'
-    
+
     _columns = {
         'name': fields.char('Method name', size=128, select=True, required=True),
         'model_id': fields.many2one('ir.model', 'Object', select=True, required=True),
@@ -167,7 +167,7 @@ class sartre_trigger(osv.osv):
 
     _columns = {
         'name': fields.char("Name", size=64, required=True),
-        'model_id': fields.many2one('ir.model', 'Object', required=True, ondelete='cascade'),
+        'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'active': fields.boolean("Active"),
         'on_create': fields.boolean("Creation"),
         'on_write': fields.boolean("Update"),
@@ -189,7 +189,7 @@ class sartre_trigger(osv.osv):
         'nextcall': fields.datetime("Next Call"),
         'filter_ids': fields.one2many('sartre.filter', 'trigger_id', "Filters", help="The trigger is satisfied if all filters are True"),
         'domain_force': fields.char('Force Domain', size=250),
-        'action_ids': fields.many2many('ir.actions.server', 'sartre_trigger_server_action_rel', 'action_id', 'trigger_id', "Actions"),
+        'action_ids': fields.many2many('ir.actions.server', 'sartre_trigger_server_action_rel', 'trigger_id', 'action_id', "Actions"),
         'executions_max_number': fields.integer('Max executions', help="Number of time actions are runned,\0 indicates that actions will always be executed"),
     }
 
@@ -311,7 +311,7 @@ class sartre_trigger(osv.osv):
                         other_value = eval(str(match.group()[2:-2]).strip(), {
                             'object': self.pool.get(trigger.model_id.model).browse(cr, uid, object_id),
                             'context': context,
-                            'time':time,})
+                            'time':time, })
                     current_field_value = current_values.get(object_id, {}).get(field, False)
                     old_field_value = current_field_value
                     if object_id in old_values and field in old_values[object_id]:
@@ -455,7 +455,7 @@ class sartre_filter(osv.osv):
         """Update the field expression"""
         new_field_expression = field_expression
         if field_id:
-            new_field_expression = self._build_field_expression(cr, uid, field_id, field_expression, context)            
+            new_field_expression = self._build_field_expression(cr, uid, field_id, field_expression, context)
         res = self.onchange_get_field_domain(cr, uid, ids, model_id, new_field_expression, context)
         res.setdefault('value', {}).update({'field_expression': new_field_expression})
         return res
@@ -498,7 +498,7 @@ class sartre_exception(osv.osv):
     _name = 'sartre.exception'
     _description = 'Sartre Exception'
     _rec_name = 'trigger_id'
-   
+
     _columns = {
         'trigger_id': fields.many2one('sartre.trigger', 'Trigger', required=False, select=True, ondelete='cascade'),
         'exception_type': fields.selection([
@@ -520,7 +520,7 @@ class sartre_execution(osv.osv):
     _name = 'sartre.execution'
     _description = 'Sartre Execution'
     _rec_name = 'trigger_id'
-   
+
     _columns = {
         'trigger_id': fields.many2one('sartre.trigger', 'Trigger', required=False, select=True, ondelete='cascade'),
         'model_id': fields.many2one('ir.model', 'Object', required=False, select=True),
