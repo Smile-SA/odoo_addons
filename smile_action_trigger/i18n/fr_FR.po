@@ -184,12 +184,6 @@ msgid "Multiple rules on same objects are joined using operator OR or force the 
 msgstr "De multiple règles sur le même objet sont reliées en utilisant l'opérateur OU. Il est possible d'utiliser modifier ce comportement en utilisant la notation polonaise."
 
 #. module: smile_action_trigger
-#: model:ir.actions.act_window,name:smile_action_trigger.new_sartre_rule_action
-#: model:ir.ui.menu,name:smile_action_trigger.new_sartre_rule_menu
-msgid "New Trigger Rule"
-msgstr "Nouvelle règle de déclenchement"
-
-#. module: smile_action_trigger
 #: selection:sartre.rule,trigger_date_type_display1:0
 msgid "Other Date"
 msgstr "Autre date"
@@ -329,8 +323,8 @@ msgstr "égal à"
 
 #. module: smile_action_trigger
 #: view:smile_action_trigger.exception:0
-msgid "Exceptions"
-msgstr ""
+msgid "Trigger Exceptions"
+msgstr "Exceptions"
 
 #. module: smile_action_trigger
 #: model:ir.actions.server,message:smile_action_trigger.ir_actions_server_youremailchanged0
@@ -351,7 +345,7 @@ msgstr "Filtre"
 #. module: smile_action_trigger
 #: field:sartre.filter,value_type:0
 msgid "Value Type"
-msgstr ""
+msgstr "Type de valeur"
 
 #. module: smile_action_trigger
 #: selection:sartre.rule,trigger_function_type:0
@@ -403,7 +397,7 @@ msgstr "Suppression"
 #: view:sartre.rule:0
 #: field:sartre.rule,filter_ids:0
 msgid "filters"
-msgstr ""
+msgstr "filtres"
 
 #. module: smile_action_trigger
 #: field:sartre.filter,opposite:0
@@ -451,7 +445,7 @@ msgstr "Utiliser le second champ pour compléter le premier"
 #: selection:sartre.exception,exception_type:0
 #: view:sartre.rule:0
 msgid "filter"
-msgstr ""
+msgstr "filtre"
 
 #. module: smile_action_trigger
 #: field:sartre.exception,exception:0
@@ -547,11 +541,6 @@ msgstr ""
 #. module: smile_action_trigger
 #: model:ir.actions.server,name:smile_action_trigger.ir_actions_server_youremailchanged0
 msgid "Your email changed"
-msgstr ""
-
-#. module: smile_action_trigger
-#: model:ir.model,name:smile_action_trigger.model_sartre_log
-msgid "Sartre Log"
 msgstr ""
 
 #. module: smile_action_trigger

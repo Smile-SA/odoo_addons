@@ -52,12 +52,7 @@ class actions_server(osv.osv):
     _description = 'Server Action'
 
     _columns = {
-        'active': fields.boolean('Active'),
         'log': fields.boolean('Log'),
-    }
-
-    _defaults = {
-        'active': lambda * a: True,
     }
 
     def merge_message(self, cr, uid, keystr, action, context=None):

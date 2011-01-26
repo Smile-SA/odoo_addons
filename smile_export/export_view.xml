@@ -83,8 +83,12 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
+
+		<menuitem name="Exports" id="menu_exports"
+			parent="base.menu_config" sequence="50" />
+
 		<menuitem action="action_export_template" id="menu_export_template"
-			parent="base.menu_custom" sequence="50" />
+			parent="menu_exports" />
 
 
 	</data>

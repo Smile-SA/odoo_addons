@@ -548,7 +548,7 @@ def _check_method_based_triggers(self, cr, uid, method, field_name='', calculati
     if trigger_obj:
         # Search triggers to execute
         trigger_ids = hasattr(trigger_obj, 'sartre_triggers_cache') and trigger_obj.sartre_triggers_cache.get(method, {}).get(self._name, [])
-        if method == 'function':
+        if trigger_ids and method == 'function':
             for trigger_id in trigger_ids:
                 trigger = trigger_obj.browse(cr, uid, trigger_id)
                 if not (trigger.on_function_field_id.name == field_name and trigger.on_function_type in [method, 'both']):

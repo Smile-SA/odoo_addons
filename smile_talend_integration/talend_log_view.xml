@@ -71,7 +71,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-		<menuitem action="action_talend_log" id="menu_talend_log" parent="menu_talend_integration" sequence="30"/>
+		<menuitem action="action_talend_log" id="menu_talend_log" parent="base.menu_audit" sequence="30"/>
 
 		<!-- Talend State -->
 
@@ -144,7 +144,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-		<menuitem action="action_talend_state" id="menu_talend_state" parent="menu_talend_integration" sequence="40"/>
+		<menuitem action="action_talend_state" id="menu_talend_state" parent="menu_talend_log" sequence="40"/>
 
 		<!-- Talend Flow -->
 
@@ -221,7 +221,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-		<menuitem action="action_talend_flow" id="menu_talend_flow" parent="menu_talend_integration" sequence="50"/>
+		<menuitem action="action_talend_flow" id="menu_talend_flow" parent="menu_talend_log" sequence="50"/>
 
     </data>
 </openerp>

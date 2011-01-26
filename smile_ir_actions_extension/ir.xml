@@ -50,7 +50,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree</field>
 		</record>
-		<menuitem action="action_server_action_log" id="menu_server_action_log" parent="base.menu_server_action" sequence="90" />
+		<menuitem action="action_server_action_log" id="menu_server_action_log" parent="base.menu_audit" sequence="20" />
 
     </data>
 </openerp>

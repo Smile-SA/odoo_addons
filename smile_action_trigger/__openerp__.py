@@ -51,7 +51,7 @@ A rule applies to a single object and is composed of:
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
-    "depends" : ['base'],
+    "depends" : ['smile_ir_actions_extension'],
     "init_xml" : [
         'ir_cron_data.xml',
         'security/sartre_security.xml',

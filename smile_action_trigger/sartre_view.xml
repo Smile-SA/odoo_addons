@@ -131,7 +131,7 @@
             </field>
         </record>
 		<record id="sartre_trigger_action" model="ir.actions.act_window">
-			<field name="name">Action Triggers</field>
+			<field name="name">Triggers</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">sartre.trigger</field>
 			<field name="view_type">form</field>
@@ -246,7 +246,7 @@
             </field>
         </record>
 		<record id="sartre_exception_action" model="ir.actions.act_window">
-			<field name="name">Exceptions</field>
+			<field name="name">Trigger Exceptions</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">sartre.exception</field>
 			<field name="view_type">form</field>

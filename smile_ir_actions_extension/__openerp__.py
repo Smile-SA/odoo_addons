@@ -33,7 +33,7 @@ Add to server actions:
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
 """,
-    "depends" : [],
+    "depends" : ['base'],
     "init_xml" : [],
     "update_xml": [
         'ir.xml',

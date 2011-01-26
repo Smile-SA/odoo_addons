@@ -9,9 +9,8 @@
 			<field name="inherit_id" ref="base.view_server_action_form" />
 			<field name="arch" type="xml">
 				<field name="condition" position="after">
-                    <field name="user_id"/>						
-                    <field name="active"/>
                     <field name="run_once"/>
+                    <field name="user_id"/>
 				</field>
 			</field>
 		</record>

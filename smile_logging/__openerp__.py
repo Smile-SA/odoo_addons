@@ -29,7 +29,7 @@
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
 """,
-    "depends" : [],
+    "depends" : ['base'],
     "init_xml" : [],
     "update_xml": [
         'sys_log_view.xml',
