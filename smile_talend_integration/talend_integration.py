@@ -24,6 +24,8 @@ import tools
 import time
 import subprocess
 import httplib
+import netsvc
+import traceback
 
 class server_object_lines(osv.osv):
     _inherit = 'ir.server.object.lines'
@@ -38,7 +40,7 @@ class talend_job(osv.osv):
     _inherit = 'ir.actions.server'
 
     def __init__(self, pool, cr):
-        super(osv.osv, self).__init__(pool, cr)
+        super(talend_job, self).__init__(pool, cr)
         item = ('talend_job', 'Talend Job')
         if not item in self._columns['state'].selection:
             self._columns['state'].selection.append(item)
@@ -77,8 +79,6 @@ class talend_job(osv.osv):
                 context['lang'] = user['context_lang']
             if 'context_tz' not in context:
                 context['context_tz'] = user['context_tz']
-
-        act_ids = []
 
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -120,8 +120,10 @@ class talend_job(osv.osv):
                                 value = eval(param.value, cxt)
                             params.append("--context_param %s=%s" % (param.key, value))
                         if action.talend_job_export_type == 'jar':
-                            command = 'cd %s && java -Xms%s -Xmx%s -cp classpath.jar: %s.%s_%s.%s --context=%s %s' % (
-                                action.talend_job_path,
+                            command = ''
+                            if action.talend_job_path:
+                                command += 'cd %s && ' % action.talend_job_path.replace(' ','\ ')
+                            command += 'java -Xms%s -Xmx%s -cp classpath.jar: %s.%s_%s.%s --context=%s %s' % (
                                 action.talend_job_java_xms,
                                 action.talend_job_java_xmx,
                                 action.talend_job_project,

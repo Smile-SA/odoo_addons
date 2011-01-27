@@ -12,7 +12,16 @@
 					<field name="condition" position="after">
                         <field name="active" />
                         <field name="log" />
+                        <newline/>
+                        <label string="" colspan="4"/>
+                        <button name="run" type="object" string="Run" colspan="2"/>
 					</field>
+                    <field name="srcmodel_id" position="attributes">
+						<attribute name="attrs">{'required':[('state', 'in', ['object_create', 'object_write'])]}</attribute>
+                    </field>
+                    <field name="copy_object" position="attributes">
+						<attribute name="attrs">{'required':[('state', 'in', ['object_create', 'object_write'])]}</attribute>
+                    </field>
 				</data>
 			</field>
 		</record>
