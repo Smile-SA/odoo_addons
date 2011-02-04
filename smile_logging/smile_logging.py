@@ -29,12 +29,12 @@ from re import escape
 class SmileDBHandler(logging.Handler):
     def emit(self, record):
         levelno = getattr(logging, tools.config['log2db'].upper())
-        if record.levelno <= levelno or (logging.TEST >= levelno and record.levelno == logging.WARNING and record.name.startswith('tests.')):
+        if record.levelno >= levelno or (logging.TEST >= levelno and record.levelno == logging.WARNING and record.name.startswith('tests.')):
             dbname = getattr(threading.currentThread(), 'dbname', '')
             if dbname:
                 db, pool = pooler.get_db_and_pool(dbname, update_module=tools.config['init'] or tools.config['update'], pooljobs=False)
                 cr = db.cursor()
-                log_table = 'syslog'
+                log_table = 'sys_log'
 
                 if logging.TEST >= levelno and record.levelno == logging.WARNING and record.name.startswith('tests.'):
                     cr.execute("SELECT max(id) FROM %s" % (log_table,))
@@ -62,7 +62,6 @@ message text,
 failed boolean,
 exception text
 )""" % (log_table,))
-
                     params = (log_table, record.name, record.levelno, record.levelname, record.lineno, record.module, record.msecs, record.pathname, escape(record.msg),)
                     query = """INSERT INTO %s (
 create_uid,
