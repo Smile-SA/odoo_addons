@@ -152,7 +152,6 @@ class talend_job(osv.osv):
                             connection.request('GET', url)
                             response = connection.getresponse()
                             return response.status < 400
-
                     else:
                         return super(talend_job, self).run(cr, uid, ids, context)
 
