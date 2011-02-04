@@ -29,6 +29,8 @@ import re
 import pytz
 import traceback
 import base64
+import threading
+import pooler
 
 class actions_server_log(osv.osv):
     _name = 'ir.actions.server.log'
@@ -127,19 +129,23 @@ class actions_server(osv.osv):
         message = com.sub(merge, keystr)
         return message
 
-    def run(self, cr, uid, ids, context={}):
+    def run_now(self, cr, uid, ids, context=None):
+        threaded_run = threading.Thread(target=self.run, args=(pooler.get_db(cr.dbname).cursor(), uid, ids, context))
+        threaded_run.start()
+        return True
+
+    def run(self, cr, uid, ids, context=None):
         logger = netsvc.Logger()
 
-        if not context:
+        if context is None:
             context = {}
+ 
         if 'lang' not in context and 'context_tz' not in context:
             user = self.pool.get('res.users').read(cr, uid, uid, ['context_lang', 'context_tz'])
             if 'lang' not in context:
                 context['lang'] = user['context_lang']
             if 'context_tz' not in context:
                 context['context_tz'] = user['context_tz']
-
-        act_ids = []
 
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -262,6 +268,5 @@ class actions_server(osv.osv):
                             'context': context,
                         })
                         self.pool.get('ir.actions.server.log').create(cr, uid, vals, context)
-
         return True
 actions_server()

@@ -9,12 +9,20 @@
 			<field name="inherit_id" ref="base.view_server_action_form" />
 			<field name="arch" type="xml">
 				<data>
+					<xpath expr="/form/group[1]" position="attributes">
+     					<attribute name="col">8</attribute>
+					</xpath>
+					<field name="state" position="after">
+                        <field name="active"/>
+					</field>
+					<field name="condition" position="attributes">
+     					<attribute name="colspan">4</attribute>
+					</field>
 					<field name="condition" position="after">
-                        <field name="active" />
-                        <field name="log" />
+                        <field name="log"/>
                         <newline/>
-                        <label string="" colspan="4"/>
-                        <button name="run" type="object" string="Run" colspan="2"/>
+                        <label string="" colspan="5"/>
+                        <button name="run_now" type="object" string="Run" colspan="3"/>
 					</field>
                     <field name="srcmodel_id" position="attributes">
 						<attribute name="attrs">{'required':[('state', 'in', ['object_create', 'object_write'])]}</attribute>
