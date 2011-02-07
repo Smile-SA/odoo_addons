@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+		<record model="ir.ui.view" id="view_change_commitment_form">
+			<field name="name">wizard.change.commitment.form</field>
+			<field name="model">wizard.change.commitment</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Change commitment date">
+					<field name="nb_periods" colspan="2"/>
+					<button name="change_commitment" string="Change committment" colspan="2" type="object"/>
+				</form>
+			</field>
+		</record>
+	</data>
+</openerp>

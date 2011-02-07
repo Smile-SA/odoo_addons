@@ -1,0 +1,343 @@
+- |
+  Créer un échéancier de facturation :
+  Engagement 12 mois avec reconduction tacite
+  Mode de facturation : Post-facturation
+  périodicité de facturation : 1 mois
+- 
+
+  !record {model: account.invoicing_plan, id: account_invoicing_plan_0}:
+    commitment: 12
+    mode: post
+    name: ENgagement 12 mois en post paiement
+    periodicity: 1
+    term: unlimited
+    trigger: manual
+    uop: months
+    
+-
+  Create modalities
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_00}:
+    invoicing_plan_id : 'account_invoicing_plan_0'
+    application_periods: '0'
+    name: 12 mois
+    sequence: 0.0
+-
+  Create Sub modalities
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_000}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_00'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 1.0
+ 
+ 
+ 
+ 
+ 
+     
+- |
+  Créer un échéancier de facturation :
+  Engagement 12 mois avec reconduction tacite
+  Mode de facturation : Pré-facturation
+  périodicité de facturation : 1 mois
+-  
+  !record {model: account.invoicing_plan, id: account_invoicing_plan_1}:
+    commitment: 12
+    mode: pre
+    name: ENgagement 12 mois en pré paiement
+    periodicity: 1
+    term: unlimited
+    trigger: manual
+    uop: months
+    
+-
+  Create modalities
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_10}:
+    invoicing_plan_id : 'account_invoicing_plan_1'
+    application_periods: '0'
+    name: 12 mois
+    sequence: 0.0
+-
+  Create Sub modalities
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_100}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_10'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 1.0
+    
+    
+    
+    
+    
+    
+- |
+  Créer un échéancier de facturation :
+  Engagement 12 mois avec reconduction tacite+ 2 mois gratuits
+  Mode de facturation : Pré-facturation
+  périodicité de facturation : 3 mois
+- 
+  !record {model: account.invoicing_plan, id: account_invoicing_plan_2}:
+    commitment: 12
+    mode: pre
+    name: Engagement 12 mois, Pré-paiement + 2 mois gratuit + Period = 3
+    periodicity: 3
+    term: unlimited
+    trigger: manual
+    uop: months
+    
+-
+  Create modality 2-0 
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_20}:
+    invoicing_plan_id : 'account_invoicing_plan_2'
+    application_periods: 1,2
+    name: 2 premiers mois gratuit
+    sequence: 0.0
+-
+  Create Sub modalities 2-0-0
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_200}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_20'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 0.0
+    
+-
+  Create modality 2-1 
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_21}:
+    invoicing_plan_id : 'account_invoicing_plan_2'
+    application_periods: '0'
+    name: Reste des mois entiers
+    sequence: 1
+-
+  Create Sub modalities 2-1-0
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_210}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_21'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 1.0
+    
+    
+    
+    
+    
+ 
+- |
+  Créer un échéancier de facturation :
+  Engagement 12 mois avec reconduction tacite
+  Mode de facturation : post-facturation
+  périodicité de facturation : 2 mois
+- 
+  !record {model: account.invoicing_plan, id: account_invoicing_plan_3}:
+    commitment: 12
+    mode: post
+    name: Engagement 12 mois, P = 2, post, mois 3 gratuit
+    periodicity: 2
+    term: unlimited
+    trigger: manual
+    uop: months
+
+
+-
+  Create modality 3-0 
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_30}:
+    invoicing_plan_id : 'account_invoicing_plan_3'
+    application_periods: 1,2,3
+    name: 3 premiers mois gratuit
+    sequence: 0.0
+-
+  Create Sub modalities 3-0-0
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_300}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_30'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 0.0
+    
+-
+  Create modality 3-1 
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_31}:
+    invoicing_plan_id : 'account_invoicing_plan_3'
+    application_periods: '0'
+    name: Reste des mois entiers
+    sequence: 1
+-
+  Create Sub modalities 3-1-0
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_310}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_31'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 1.0
+    
+    
+       
+- |
+ Créer un produit de test : 
+ Site WEB de type service
+ Echéancier de facturation par défaut associé : 12 mois en post facturation sans période de gratuité. 
+- 
+  !record {model: product.product, id: product_product_sitewebboutiquetest0}:
+    categ_id: product.cat0
+    cost_method: standard
+    invoicing_plan_id: 'account_invoicing_plan_0'
+    mes_type: fixed
+    name: Site web boutique (Test)
+    name_template: Site web boutique (Test)
+    procure_method: make_to_stock
+    seller_delay: '1'
+    subscription_ok: True
+    default_code : WEBSITE
+    seller_qty: 0.0
+    standard_price: 1.0
+    supply_method: produce
+    type: service
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+    valuation: manual_periodic
+    volume: 0.0
+    warranty: 0.0
+    weight: 0.0
+    weight_net: 0.0
+
+
+    
+- 
+  Creation d'un contrat
+- 
+  !record {model: sale.order, id: invoicing_paln_sale_order_so0}:
+    client_order_ref: Contrat N003
+    company_id: base.main_company
+    date_order: '2011-01-03'
+    invoice_quantity: order
+    invoicing_start_date: '2011-02-01'
+    order_policy: periodic
+    contract_ok : True
+    name: CONTRAT/0004
+    partner_id: base.res_partner_agrolait
+    partner_invoice_id: base.res_partner_address_8invoice
+    partner_order_id: base.res_partner_address_8
+    partner_shipping_id: base.res_partner_address_8delivery
+    periodicity: 1
+    picking_policy: direct
+    pricelist_id: product.list0
+    shop_id: sale.shop
+    uop: months    
+    
+    
+- |
+  Souscrire à un abonnement Site web boutique : 
+  Engagement 12 mois avec reconduction tacite
+  Mode de facturation : Post
+  périodicité de facturation : 1 mois 
+  prix : 10
+- 
+    
+ !record {model: sale.order.line, id: invoicing_paln_sale_order_line_sol0}:
+    order_id: 'invoicing_paln_sale_order_so0'
+    company_id: base.main_company
+    delay: 7.0
+    invoicing_plan_id: 'account_invoicing_plan_0'
+    invoicing_start_date: '2011-02-07'
+    name: 'Site web boutique'
+    order_partner_id: base.res_partner_agrolait
+    price_unit: 10.0
+    product_id: product_product_sitewebboutiquetest0
+    product_uom: product.product_uom_unit
+    product_uom_qty: 1.0
+    residual: 0.0
+    salesman_id: base.user_admin
+    state: draft
+    th_weight: 0.0
+    type: make_to_stock
+    
+    
+- |
+  Souscrire à un abonnement Site web boutique : 
+  Engagement 12 mois avec reconduction tacite
+  Mode de facturation : Pré-facturation
+  périodicité de facturation : 1 mois
+  prix : 20
+- 
+
+ !record {model: sale.order.line, id: invoicing_paln_sale_order_line_sol1}:
+    order_id: 'invoicing_paln_sale_order_so0'
+    company_id: base.main_company
+    delay: 7.0
+    invoicing_plan_id: 'account_invoicing_plan_1'
+    invoicing_start_date: '2011-02-07'
+    name: 'Site web boutique'
+    order_partner_id: base.res_partner_agrolait
+    price_unit: 10.0
+    product_id: product_product_sitewebboutiquetest0
+    product_uom: product.product_uom_unit
+    product_uom_qty: 1.0
+    residual: 0.0
+    salesman_id: base.user_admin
+    state: draft
+    th_weight: 0.0
+    type: make_to_stock
+    
+
+- |
+  Souscrire à un abonnement Site web boutique : 
+  Engagement 12 mois avec reconduction tacite
+  Mode de facturation : Pré-facturation
+  périodicité de facturation : 3 mois
+  prix : 30
+- 
+
+ !record {model: sale.order.line, id: invoicing_paln_sale_order_line_sol2}:
+    order_id: 'invoicing_paln_sale_order_so0'
+    company_id: base.main_company
+    delay: 7.0
+    invoicing_plan_id: 'account_invoicing_plan_2'
+    invoicing_start_date: '2011-02-07'
+    name: 'Site web boutique'
+    order_partner_id: base.res_partner_agrolait
+    price_unit: 10.0
+    product_id: product_product_sitewebboutiquetest0
+    product_uom: product.product_uom_unit
+    product_uom_qty: 1.0
+    residual: 0.0
+    salesman_id: base.user_admin
+    state: draft
+    th_weight: 0.0
+    type: make_to_stock
+    
+
+- |
+  Souscrire à un abonnement Site web boutique : 
+  Engagement 12 mois avec reconduction tacite
+  Mode de facturation : post-facturation
+  périodicité de facturation : 2 mois
+  prix : 40
+- 
+
+ !record {model: sale.order.line, id: invoicing_paln_sale_order_line_sol3}:
+    order_id: 'invoicing_paln_sale_order_so0'
+    company_id: base.main_company
+    delay: 7.0
+    invoicing_plan_id: 'account_invoicing_plan_3'
+    invoicing_start_date: '2011-02-07'
+    name: 'Site web boutique'
+    order_partner_id: base.res_partner_agrolait
+    price_unit: 10.0
+    product_id: product_product_sitewebboutiquetest0
+    product_uom: product.product_uom_unit
+    product_uom_qty: 1.0
+    residual: 0.0
+    salesman_id: base.user_admin
+    state: draft
+    th_weight: 0.0
+    type: make_to_stock
+
+
+

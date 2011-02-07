@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+		<!-- INVOICER WIZARD-->
+		
+		
+		
+		<record model="ir.ui.view" id="view_invoicer_form">
+			<field name="name">account.invoicer.form</field>
+			<field name="model">account.invoicer</field>
+			<field name="type">form</field>
+			<field eval="7" name="priority"/>
+			<field name="arch" type="xml">
+				<form string="Invoicer Plan">
+					<group colspan="2">
+						<field name="start_date" colspan="1"/>
+						<field name="end_date" colspan="1"/>
+						<newline></newline>
+						<field name="invoice_outof_period"/>
+						<field name="invoice_contracts" colspan="1"/>
+						<field name="invoice_non_contracts" colspan="1"/>
+						
+					</group>
+					<group colspan="2">
+						<button name="get_sale_orders2invoice" string="Compute" type="object" colspan="2"/>
+					</group>
+					<group>
+					<notebook colspan="4">
+						<page string="Periodic sale order">
+							<field name="periodic_sale_order_ids" nolabel="1" align="20.0"/>
+						</page>
+						<page string="Non Periodic sale order">
+							<field name="non_periodic_sale_order_ids" nolabel="1"/>
+						</page>
+						<page string="Generated invoices">
+							<field name="invoice_ids" nolabel="1" context="{'form_view_ref':'account.invoice_form'}"/>
+						</page>
+					</notebook>
+					</group>
+					<newline></newline>
+					<button name="pre_invoice" string="Invoice" type="object" align="20.0"/>
+				</form>
+			</field>
+		</record>
+		
+		<record id="invoicer_wizard" model="ir.actions.act_window">
+            <field name="name">Invoicer</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.invoicer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_invoicer_form"/>
+        </record>
+		
+		
+		<menuitem action="invoicer_wizard" id="menu_invoicing_plan_invoicer" parent="sale.menu_invoiced" sequence="50" />
+		
+		
+	
+		
+			
+	</data>
+</openerp>
+		

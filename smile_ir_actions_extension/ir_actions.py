@@ -28,7 +28,6 @@ import netsvc
 import re
 import pytz
 import traceback
-import base64
 import threading
 import pooler
 
