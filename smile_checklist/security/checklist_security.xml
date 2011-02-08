@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="ir_model_access_checklist_group_system" model="ir.model.access">
+			<field name="model_id" ref="model_checklist" />
+			<field eval="1" name="perm_read" />
+			<field eval="&quot;&quot;&quot;Checklist&quot;&quot;&quot;" name="name" />
+			<field eval="1" name="perm_unlink" />
+			<field eval="1" name="perm_write" />
+			<field eval="1" name="perm_create" />
+			<field name="group_id" ref="base.group_system" />
+		</record>
+		<record id="ir_model_access_checklist_task_group_system" model="ir.model.access">
+			<field name="model_id" ref="model_checklist_task" />
+			<field eval="1" name="perm_read" />
+			<field eval="&quot;&quot;&quot;Checklist Task&quot;&quot;&quot;" name="name" />
+			<field eval="1" name="perm_unlink" />
+			<field eval="1" name="perm_write" />
+			<field eval="1" name="perm_create" />
+			<field name="group_id" ref="base.group_system" />
+		</record>
+		<record id="ir_model_access_checklist_task_field_group_system" model="ir.model.access">
+			<field name="model_id" ref="model_checklist_task" />
+			<field eval="1" name="perm_read" />
+			<field eval="&quot;&quot;&quot;Checklist Task Field&quot;&quot;&quot;" name="name" />
+			<field eval="1" name="perm_unlink" />
+			<field eval="1" name="perm_write" />
+			<field eval="1" name="perm_create" />
+			<field name="group_id" ref="base.group_system" />
+		</record>
+		<record id="ir_model_access_checklist_task_instance_group_system" model="ir.model.access">
+			<field name="model_id" ref="model_checklist_task_instance" />
+			<field eval="1" name="perm_read" />
+			<field eval="&quot;&quot;&quot;Checklist Task Instance&quot;&quot;&quot;" name="name" />
+			<field eval="1" name="perm_unlink" />
+			<field eval="1" name="perm_write" />
+			<field eval="1" name="perm_create" />
+			<field name="group_id" ref="base.group_system" />
+		</record>
+		<record id="ir_model_access_checklist_exception_group_system" model="ir.model.access">
+			<field name="model_id" ref="model_checklist_exception" />
+			<field eval="1" name="perm_read" />
+			<field eval="&quot;&quot;&quot;Checklist Exception&quot;&quot;&quot;" name="name" />
+			<field eval="1" name="perm_unlink" />
+			<field eval="1" name="perm_write" />
+			<field eval="1" name="perm_create" />
+			<field name="group_id" ref="base.group_system" />
+		</record>
+
+		<record id="ir_model_access_checklist_all" model="ir.model.access">
+			<field name="model_id" ref="model_checklist" />
+			<field eval="1" name="perm_read" />
+			<field eval="&quot;&quot;&quot;Checklist&quot;&quot;&quot;" name="name" />
+			<field eval="0" name="perm_unlink" />
+			<field eval="0" name="perm_write" />
+			<field eval="0" name="perm_create" />
+		</record>
+		<record id="ir_model_access_checklist_task_all" model="ir.model.access">
+			<field name="model_id" ref="model_checklist_task" />
+			<field eval="1" name="perm_read" />
+			<field eval="&quot;&quot;&quot;Checklist Task&quot;&quot;&quot;" name="name" />
+			<field eval="0" name="perm_unlink" />
+			<field eval="0" name="perm_write" />
+			<field eval="0" name="perm_create" />
+		</record>
+		<record id="ir_model_access_checklist_task_field_all" model="ir.model.access">
+			<field name="model_id" ref="model_checklist_task" />
+			<field eval="1" name="perm_read" />
+			<field eval="&quot;&quot;&quot;Checklist Task Field&quot;&quot;&quot;" name="name" />
+			<field eval="0" name="perm_unlink" />
+			<field eval="0" name="perm_write" />
+			<field eval="0" name="perm_create" />
+		</record>
+		<record id="ir_model_access_checklist_task_instance_all" model="ir.model.access">
+			<field name="model_id" ref="model_checklist_task_instance" />
+			<field eval="1" name="perm_read" />
+			<field eval="&quot;&quot;&quot;Checklist Task Instance&quot;&quot;&quot;" name="name" />
+			<field eval="0" name="perm_unlink" />
+			<field eval="1" name="perm_write" />
+			<field eval="0" name="perm_create" />
+		</record>
+		<record id="ir_model_access_checklist_exception_all" model="ir.model.access">
+			<field name="model_id" ref="model_checklist_exception" />
+			<field eval="0" name="perm_read" />
+			<field eval="&quot;&quot;&quot;Checklist Exception&quot;&quot;&quot;" name="name" />
+			<field eval="0" name="perm_unlink" />
+			<field eval="0" name="perm_write" />
+			<field eval="1" name="perm_create" />
+		</record>
+
+	</data>
+</openerp>
