@@ -271,33 +271,26 @@ class checklist(osv.osv):
         self._update_models(cr, models)
         return result
 
-    def _compute_progress_rates(self, obj, cr, uid, ids=[], context={}):
+    def _compute_progress_rates(self, obj, cr, uid, ids=[], context=None):
         if not ids:
             ids = obj.search(cr, uid, [])
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = {}
+        inst_ids = []
+        instance_pool = self.pool.get('checklist.task.instance')
         for object in obj.browse(cr, uid, ids):
             context['active_id'] = object.id
-            instance_pool = self.pool.get('checklist.task.instance')
-            instance_ids = instance_pool.search(cr, uid, [('checklist_task_id.checklist_id.model_id.model', '=', obj._name), ('res_id', '=', object.id)], context={'active_test': True})
+            instance_ids = instance_pool.search(cr, uid, [('checklist_task_id.checklist_id.model_id.model', '=', obj._name), ('res_id', '=', object.id), ('manually_validated', '!=', True)], context={'active_test': True})
             for instance in instance_pool.browse(cr, uid, instance_ids):
                 progress_rate = 100
                 if instance.checklist_task_id.field_ids:
                     progress_rate -= (float(len(instance.field_ids_to_fill)) / float(len(instance.checklist_task_id.field_ids))) * 100
-                instance_pool.write(cr, uid, instance.id, {'progress_rate': progress_rate})
+                instance.write({'progress_rate': progress_rate})
                 # Execute action if progress_rate becomes equals to 100%
                 if instance.checklist_task_id.action_id and instance.progress_rate != progress_rate == 100:
-                    checklist_task = instance.checklist_task_id
-                    action = instance.checklist_task_id.action_id
-                    try:
-                        self.pool.get('ir.actions.server').run(cr, uid, [action.id], context)
-                        self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: checklist.task,%s' % (action.id, uid, object.id, checklist_task.id))
-                    except Exception, e:
-                        stack = traceback.format_exc()
-                        self.pool.get('checklist.exception').create(cr, uid, {'checklist_task_id': checklist_task.id, 'exception_type': 'action', 'res_id': object.id, 'action_id': action.id, 'exception': e, 'stack': stack})
-                        self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: checklist.task,%s, Exception: %s' % (action.id, uid, object.id, checklist_task.id, tools.ustr(e)))
-                        continue
+                    inst_ids.append(instance.id)
+        instance_pool.launch_actions(cr, uid, inst_ids, context)
         return self._compute_total_progress_rates(obj, cr, uid, ids, context)
 
     def _compute_total_progress_rates(self, obj, cr, uid, ids=[], context={}):
@@ -356,6 +349,7 @@ checklist()
 class checklist_task_instance(osv.osv):
     _name = 'checklist.task.instance'
     _description = 'Checklist Task Instance'
+    logger = netsvc.Logger()
 
     def _get_activity(self, cr, uid, ids, multi, arg, context=None):
         if isinstance(ids, (int, long)):
@@ -393,6 +387,7 @@ class checklist_task_instance(osv.osv):
         'name': fields.related('checklist_task_id', 'name', type='char', size=128, string='Name'),
         'mandatory': fields.related('checklist_task_id', 'mandatory', type='boolean', string='Mandatory', help='Required to make active object'),
         'manual_validation': fields.related('checklist_task_id', 'manual_validation', type='boolean', string='Manual validation'),
+        'manually_validated': fields.boolean('Manually validated'),
         'res_id': fields.integer('Resource ID', select=True, required=True),
         'active': fields.function(_get_activity, method=True, type='boolean', string='Active', store=False, multi='activity'),
         'sequence': fields.function(_get_activity, method=True, type='integer', string='Priority', store={
@@ -408,8 +403,25 @@ class checklist_task_instance(osv.osv):
         'sequence': lambda *a: 15,
     }
 
+    def launch_actions(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for instance in self.browse(cr, uid, ids):
+            checklist_task = instance.checklist_task_id
+            action = checklist_task.action_id
+            try:
+                self.pool.get('ir.actions.server').run(cr, uid, [action.id], context)
+                self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: checklist.task,%s' % (action.id, uid, instance.res_id, checklist_task.id))
+            except Exception, e:
+                stack = traceback.format_exc()
+                self.pool.get('checklist.exception').create(cr, uid, {'checklist_task_id': checklist_task.id, 'exception_type': 'action', 'res_id': instance.res_id, 'action_id': action.id, 'exception': e, 'stack': stack})
+                self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: checklist.task,%s, Exception: %s' % (action.id, uid, instance.res_id, checklist_task.id, tools.ustr(e)))
+                continue
+        return True
+
     def button_force_validation(self, cr, uid, ids, context=None):
-        res = self.write(cr, uid, ids, {'progress_rate': 100.0})
+        res = self.write(cr, uid, ids, {'progress_rate': 100.0, 'manually_validated': True})
+        self.launch_actions(cr, uid, ids, context)
         if res:
             models = {}
             for checklist_task_instance in self.read(cr, uid, ids, ['model', 'res_id']):
