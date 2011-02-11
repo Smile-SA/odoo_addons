@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+import tools
 
 class ir_model_export_template(osv.osv):
     _name = 'ir.model.export.template'
@@ -108,9 +109,19 @@ class ir_model_export(osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True),
         'create_uid': fields.many2one('res.users', 'Creation User', readonly=True),
         'line_ids': fields.one2many('ir.model.export.line', 'export_id', 'Lines'),
+        'state': fields.selection([
+            ('draft', 'Running'),
+            ('done', 'Done'),
+            ('exception', 'Exception'),
+        ], 'State'),
+        'exception': fields.text('Exception'),
     }
 
     _order = 'create_date desc'
+
+    _default = {
+        'state': lambda * a: 'draft',
+    }
 
     def create_export_lines(self, cr, uid, ids, context=None):
         if context is None:
@@ -169,8 +180,9 @@ class ir_model_export(osv.osv):
                                 context_copy = dict(context)
                                 context_copy['active_id'] = object_id
                                 self.pool.get('ir.actions.server').run(cr, uid, export.action_id.id, context=context_copy)
+                export.write({'state': 'done'})
             except Exception, e:
-                raise e
+                export.write({'state': 'exception', 'exception': tools.ustr(e)})
         return True
 ir_model_export()
 

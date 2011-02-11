@@ -22,13 +22,18 @@
 									<field name="create_date" />
 									<field name="create_uid" />
 									<field name="line_ids" />
+									<field name="state" readonly="1"/>
 									<button type="object" name="generate" icon="terp-gtk-jump-to-ltr" string="Re-generate" />
 								</tree>
 								<form string="Export">
-									<field name="create_date" />
-									<field name="create_uid" />
+									<group colspan="4" col="6">
+										<field name="create_date" />
+										<field name="create_uid" />
+										<field name="state" readonly="1"/>
+									</group>
 									<field name="line_ids" colspan="4" />
 									<button type="object" name="generate" string="Re-generate" colspan="4" />
+									<field name="exception" colspan="4" readonly="1" attrs="{'invisible': [('state', '!=', 'exception')]}"/>
 								</form>
 							</field>
 						</page>
