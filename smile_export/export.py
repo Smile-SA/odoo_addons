@@ -110,7 +110,8 @@ class ir_model_export(osv.osv):
         'create_uid': fields.many2one('res.users', 'Creation User', readonly=True),
         'line_ids': fields.one2many('ir.model.export.line', 'export_id', 'Lines'),
         'state': fields.selection([
-            ('draft', 'Running'),
+            ('draft', 'Draft'),
+            ('running', 'Running'),
             ('done', 'Done'),
             ('exception', 'Exception'),
         ], 'State'),
@@ -167,20 +168,28 @@ class ir_model_export(osv.osv):
             ids = [ids]
         for export in self.browse(cr, uid, ids):
             try:
+                is_running= False
                 if export.line_ids:
                     object_ids = [line.res_id for line in export.line_ids]
                     if object_ids:
                         if export.method:
+                            if not is_running:
+                                export.write({'state': 'running'})
+                                is_running = True
                             field_pool = self.pool.get('ir.model.fields')
                             field_ids = field_pool.search(cr, uid, [('model_id', '=', export.model_id.id)])
                             fields_to_export = [field['name'] for field in field_pool.read(cr, uid, field_ids, ['name'])]
                             getattr(self.pool.get(export.model_id.model), export.method)(cr, uid, object_ids, fields_to_export, context=context)
                         if export.action_id:
+                            if not is_running:
+                                export.write({'state': 'running'})
+                                is_running = True
                             for object_id in object_ids:
                                 context_copy = dict(context)
                                 context_copy['active_id'] = object_id
                                 self.pool.get('ir.actions.server').run(cr, uid, export.action_id.id, context=context_copy)
-                export.write({'state': 'done'})
+                if is_running:
+                    export.write({'state': 'done'})
             except Exception, e:
                 export.write({'state': 'exception', 'exception': tools.ustr(e)})
         return True

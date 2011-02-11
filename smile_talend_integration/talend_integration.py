@@ -133,7 +133,7 @@ class talend_job(osv.osv):
                                 action.talend_job_context,
                                 ' '.join(params),
                             )
-                            return not subprocess.call(command, shell=True)
+                            subprocess.check_call(command, shell=True)
                         elif action.talend_job_export_type == 'war':
                             host = action.talend_job_host
                             if host.startswith('https'):
@@ -151,7 +151,8 @@ class talend_job(osv.osv):
                                 url += '&arg%d=%s' % (i + 1, v)
                             connection.request('GET', url)
                             response = connection.getresponse()
-                            return response.status < 400
+                            if response.status >= 400:
+                                raise httplib.HTTPException(response.msg)
                     else:
                         return super(talend_job, self).run(cr, uid, ids, context)
 
