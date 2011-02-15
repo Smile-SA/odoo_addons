@@ -124,7 +124,7 @@ class ir_model_export(osv.osv):
         'state': lambda * a: 'draft',
     }
 
-    def create_export_lines(self, cr, uid, ids, context=None):
+    def populate(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         if isinstance(ids, (int, long)):
@@ -153,15 +153,20 @@ class ir_model_export(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         export_id = super(ir_model_export, self).create(cr, uid, vals, context)
-        self.create_export_lines(cr, uid, export_id, context)
+        self.populate(cr, uid, export_id, context)
         return export_id
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(ir_model_export, self).write(cr, uid, ids, vals, context)
-        self.create_export_lines(cr, uid, ids, context)
+        self.populate(cr, uid, ids, context)
         return res
 
     def generate(self, cr, uid, ids, context=None):
+        threaded_run = threading.Thread(target=self.__generate, args=(pooler.get_db(cr.dbname).cursor(), uid, ids, context))
+        threaded_run.start()
+        return True
+
+    def __generate(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         if isinstance(ids, (int, long)):
@@ -190,7 +195,9 @@ class ir_model_export(osv.osv):
                                 self.pool.get('ir.actions.server').run(cr, uid, export.action_id.id, context=context_copy)
                 if is_running:
                     export.write({'state': 'done'})
+                cr.commit()
             except Exception, e:
+                cr.rollback()
                 export.write({'state': 'exception', 'exception': tools.ustr(e)})
         return True
 ir_model_export()

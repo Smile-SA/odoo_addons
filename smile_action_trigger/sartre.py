@@ -335,6 +335,11 @@ class sartre_trigger(osv.osv):
         return domain
 
     def run_now(self, cr, uid, ids, context=None):
+        threaded_run = threading.Thread(target=self.__run_now, args=(pooler.get_db(cr.dbname).cursor(), uid, ids, context))
+        threaded_run.start()
+        return True
+
+    def __run_now(self, cr, uid, ids, context=None):
         """Execute now server actions"""
         if context is None:
             context_copy = {}
@@ -344,45 +349,45 @@ class sartre_trigger(osv.osv):
         for trigger in self.browse(cr, uid, ids):
             self.logger.notifyChannel('sartre.trigger', netsvc.LOG_DEBUG, 'trigger: %s, User: %s' % (trigger.id, uid))
             domain = []
-            domain_built = False
             try:
                 # Build domain expression
                 domain = self._build_domain_expression(cr, uid, trigger, context_copy)
-                domain_built = True
             except Exception, e:
                 stack = traceback.format_exc()
+                cr.rollback()
                 self.pool.get('sartre.exception').create(cr, uid, {'trigger_id': trigger.id, 'exception_type': 'filter', 'exception': tools.ustr(e), 'stack': tools.ustr(stack)})
                 self.logger.notifyChannel('sartre.trigger', netsvc.LOG_ERROR, 'Trigger: %s, User: %s, Exception:%s' % (trigger.id, uid, tools.ustr(e)))
-            # Search action to execute for filtered objects from domain
-            if domain_built:
-                # Search objects which validate trigger filters
-                trigger_object_ids = self.pool.get(trigger.model_id.model).search(cr, uid, domain, context=context_copy)
-                # Execute server actions
-                if trigger_object_ids:
-                    context_copy.setdefault('triggers', {}).setdefault(trigger.id, []).extend(trigger_object_ids)
-                    ir_actions_server_pool = self.pool.get('ir.actions.server')
-                    for action in trigger.action_ids:
-                        if action.active:
-                            try:
-                                if action.run_once:
-                                    # Sartre case where you run once for all instances
-                                    context_copy['active_id'] = trigger_object_ids
+                continue
+            # Search objects which validate trigger filters
+            trigger_object_ids = self.pool.get(trigger.model_id.model).search(cr, uid, domain, context=context_copy)
+            # Execute server actions
+            if trigger_object_ids:
+                context_copy.setdefault('triggers', {}).setdefault(trigger.id, []).extend(trigger_object_ids)
+                ir_actions_server_pool = self.pool.get('ir.actions.server')
+                for action in trigger.action_ids:
+                    if action.active:
+                        try:
+                            if action.run_once:
+                                # Sartre case where you run once for all instances
+                                context_copy['active_id'] = trigger_object_ids
+                                ir_actions_server_pool.run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context_copy)
+                                self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: sartre.trigger,%s' % (action.id, action.user_id and action.user_id.id or uid, context_copy['active_id'], trigger.id))
+                            else:
+                                # Sartre case where you run once per instance
+                                for object_id in trigger_object_ids:
+                                    context_copy['active_id'] = object_id
                                     ir_actions_server_pool.run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context_copy)
                                     self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: sartre.trigger,%s' % (action.id, action.user_id and action.user_id.id or uid, context_copy['active_id'], trigger.id))
-                                else:
-                                    # Sartre case where you run once per instance
-                                    for object_id in trigger_object_ids:
-                                        context_copy['active_id'] = object_id
-                                        ir_actions_server_pool.run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context_copy)
-                                        self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: sartre.trigger,%s' % (action.id, action.user_id and action.user_id.id or uid, context_copy['active_id'], trigger.id))
-                                if trigger.executions_max_number:
-                                    for object_id in trigger_object_ids:
-                                        self.pool.get('sartre.execution').update_executions_counter(cr, uid, trigger, object_id)
-                            except Exception, e:
-                                stack = traceback.format_exc()
-                                self.pool.get('sartre.exception').create(cr, uid, {'trigger_id': trigger.id, 'exception_type': 'action', 'res_id': False, 'action_id': action.id, 'exception': tools.ustr(e), 'stack': tools.ustr(stack)})
-                                self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: sartre.trigger,%s, Exception: %s' % (action.id, action.user_id and action.user_id.id or uid, False, trigger.id, tools.ustr(e)))
-                                continue
+                            if trigger.executions_max_number:
+                                for object_id in trigger_object_ids:
+                                    self.pool.get('sartre.execution').update_executions_counter(cr, uid, trigger, object_id)
+                        except Exception, e:
+                            stack = traceback.format_exc()
+                            cr.rollback()
+                            self.pool.get('sartre.exception').create(cr, uid, {'trigger_id': trigger.id, 'exception_type': 'action', 'res_id': False, 'action_id': action.id, 'exception': tools.ustr(e), 'stack': tools.ustr(stack)})
+                            self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: sartre.trigger,%s, Exception: %s' % (action.id, action.user_id and action.user_id.id or uid, False, trigger.id, tools.ustr(e)))
+                            break
+            cr.commit()
         return True
 
     def check_triggers(self, cr, uid, context=None):

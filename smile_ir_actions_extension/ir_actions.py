@@ -129,11 +129,11 @@ class actions_server(osv.osv):
         return message
 
     def run_now(self, cr, uid, ids, context=None):
-        threaded_run = threading.Thread(target=self.run, args=(pooler.get_db(cr.dbname).cursor(), uid, ids, context))
+        threaded_run = threading.Thread(target=self.__run_now, args=(pooler.get_db(cr.dbname).cursor(), uid, ids, context))
         threaded_run.start()
         return True
 
-    def run(self, cr, uid, ids, context=None):
+    def __run_now(self, cr, uid, ids, context=None):
         logger = netsvc.Logger()
 
         if context is None:
@@ -184,20 +184,22 @@ class actions_server(osv.osv):
                         for exp in action.fields_lines:
                             euq = exp.value
                             if exp.type == 'equation':
+                                obj_pool = self.pool.get(action.model_id.model)
+                                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
                                 expr = eval(euq, cxt)
                             else:
                                 expr = exp.value
                             res[exp.col1.name] = expr
-
+        
                         if not action.write_id:
                             if not action.srcmodel_id:
                                 obj_pool = self.pool.get(action.model_id.model)
-                                return obj_pool.write(cr, uid, [context.get('active_id')], res)
+                                obj_pool.write(cr, uid, [context.get('active_id')], res)
                             else:
                                 write_id = context.get('active_id')
                                 obj_pool = self.pool.get(action.srcmodel_id.model)
-                                return obj_pool.write(cr, uid, [write_id], res)
-
+                                obj_pool.write(cr, uid, [write_id], res)
+        
                         elif action.write_id:
                             obj_pool = self.pool.get(action.srcmodel_id.model)
                             rec = self.pool.get(action.model_id.model).browse(cr, uid, context.get('active_id'))
@@ -206,58 +208,62 @@ class actions_server(osv.osv):
                                 id = int(id)
                             except:
                                 raise osv.except_osv(_('Error'), _("Problem in configuration `Record Id` in Server Action!"))
-
+        
                             if type(id) != type(1):
                                 raise osv.except_osv(_('Error'), _("Problem in configuration `Record Id` in Server Action!"))
                             write_id = id
-                            return obj_pool.write(cr, uid, [write_id], res)
-
-                    elif action.state == 'object_create':
+                            obj_pool.write(cr, uid, [write_id], res)
+        
+                    if action.state == 'object_create':
                         res = {}
                         for exp in action.fields_lines:
                             euq = exp.value
                             if exp.type == 'equation':
+                                obj_pool = self.pool.get(action.model_id.model)
+                                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
                                 expr = eval(euq, cxt)
                             else:
                                 expr = exp.value
                             res[exp.col1.name] = expr
-
+        
                         obj_pool = None
                         res_id = False
                         obj_pool = self.pool.get(action.srcmodel_id.model)
                         res_id = obj_pool.create(cr, uid, res)
                         if action.record_id:
-                            return self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
-                        if res_id:
-                            return True
-
-                    elif action.state == 'object_copy':
+                            self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
+        
+                    if action.state == 'object_copy':
                         res = {}
                         for exp in action.fields_lines:
                             euq = exp.value
                             if exp.type == 'equation':
+                                obj_pool = self.pool.get(action.model_id.model)
+                                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
                                 expr = eval(euq, cxt)
                             else:
                                 expr = exp.value
                             res[exp.col1.name] = expr
-
+        
                         obj_pool = None
                         res_id = False
-
+        
                         model = action.copy_object.split(',')[0]
                         cid = action.copy_object.split(',')[1]
                         obj_pool = self.pool.get(model)
-                        return obj_pool.copy(cr, uid, int(cid), res)
+                        res_id = obj_pool.copy(cr, uid, int(cid), res)
 
                     else:
-                        return super(actions_server, self).run(cr, uid, [action.id], context)
+                        super(actions_server, self).run(cr, uid, [action.id], context)
 
+                    cr.commit()
                 except Exception, e:
                     stack = traceback.format_exc()
                     vals = {
                         'exception': tools.ustr(e),
                         'stack': tools.ustr(stack),
                     }
+                    cr.rollback()
                     if action.log:
                         self.pool.get('ir.actions.server.log').write(cr, uid, log_id, vals, context)
                     else:

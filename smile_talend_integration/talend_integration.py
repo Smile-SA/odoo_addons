@@ -154,7 +154,7 @@ class talend_job(osv.osv):
                             if response.status >= 400:
                                 raise httplib.HTTPException(response.msg)
                     else:
-                        return super(talend_job, self).run(cr, uid, ids, context)
+                        super(talend_job, self).run(cr, uid, ids, context)
 
                 except Exception, e:
                     stack = traceback.format_exc()
