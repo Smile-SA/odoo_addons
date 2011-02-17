@@ -30,6 +30,7 @@ from tools.translate import _
 import traceback
 import inspect
 import operator
+import threading
 
 def _get_browse_record_dict(self, cr, uid, ids, fields_list=None):
     """Get a dictionary of dictionary from browse records list"""

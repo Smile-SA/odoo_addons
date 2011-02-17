@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 import tools
+import threading
 
 class ir_model_export_template(osv.osv):
     _name = 'ir.model.export.template'
