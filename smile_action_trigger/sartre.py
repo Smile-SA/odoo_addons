@@ -19,18 +19,20 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
-import netsvc
-import pooler
 import re
 import time
-from mx.DateTime import RelativeDateTime, now
-import tools
-from tools.translate import _
 import traceback
 import inspect
 import operator
 import threading
+
+from mx.DateTime import RelativeDateTime, now
+
+from osv import fields, osv, orm
+import netsvc
+import pooler
+import tools
+from tools.translate import _
 
 def _get_browse_record_dict(self, cr, uid, ids, fields_list=None):
     """Get a dictionary of dictionary from browse records list"""
@@ -336,11 +338,11 @@ class sartre_trigger(osv.osv):
         return domain
 
     def run_now(self, cr, uid, ids, context=None):
-        threaded_run = threading.Thread(target=self.__run_now, args=(pooler.get_db(cr.dbname).cursor(), uid, ids, context))
+        threaded_run = threading.Thread(target=self._run_now, args=(pooler.get_db(cr.dbname).cursor(), uid, ids, context))
         threaded_run.start()
         return True
 
-    def __run_now(self, cr, uid, ids, context=None):
+    def _run_now(self, cr, uid, ids, context=None):
         """Execute now server actions"""
         if context is None:
             context_copy = {}
@@ -565,7 +567,7 @@ def _check_method_based_triggers(self, cr, uid, method, field_name='', calculati
         if trigger_ids and method == 'function':
             for trigger_id in list(trigger_ids):
                 trigger = trigger_obj.browse(cr, uid, trigger_id)
-                if not (trigger.on_function_field_id.name == field_name and trigger.on_function_type in [method, 'both']):
+                if not (trigger.on_function_field_id.name == field_name and trigger.on_function_type in [calculation_method, 'both']):
                     trigger_ids.remove(trigger_id)
     return trigger_ids
 
