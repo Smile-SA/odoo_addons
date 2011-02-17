@@ -563,7 +563,7 @@ def _check_method_based_triggers(self, cr, uid, method, field_name='', calculati
         # Search triggers to execute
         trigger_ids = trigger_obj.get_trigger_ids(cr, 1, self._name, method)
         if trigger_ids and method == 'function':
-            for trigger_id in trigger_ids:
+            for trigger_id in list(trigger_ids):
                 trigger = trigger_obj.browse(cr, uid, trigger_id)
                 if not (trigger.on_function_field_id.name == field_name and trigger.on_function_type in [method, 'both']):
                     trigger_ids.remove(trigger_id)
