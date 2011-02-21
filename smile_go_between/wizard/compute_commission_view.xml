@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    	<record id="wizard_compute_commission_view" model="ir.ui.view">
+            <field name="name">wizard.compute.commission.view</field>
+            <field name="model">wizard.compute.commission</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<form string="Compute commissions">
+            		<notebook>
+            			<page string="Opened invoices">
+            				<button name="button_compute" string="Get invoices" type="object"/>
+            				<group colspan="4">
+            					<field name="opened_invoice_ids" nolabel="1"/>
+            				</group>
+            				<button name="button_generate" string="Generate orders" type="object"/>
+            			</page>
+            			<page string="Subscriber purchases">
+            				<field name="subscriber_purchase_order_ids" nolabel="1"/>
+            			</page>
+            		</notebook>
+            		
+            	</form>
+            	
+            </field>
+        </record>
+        	
+		<record id="action_compute_commision_wizard" model="ir.actions.act_window">
+            <field name="name">Compute subscriber commissions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.compute.commission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="wizard_compute_commission_view"/>
+        </record>
+		
+		
+		<menuitem action="action_compute_commision_wizard" id="menu_compute_commission_wizard" parent="purchase.menu_purchase_config_purchase" sequence="50" />
+		
+    	
+    	
+	</data>
+</openerp>

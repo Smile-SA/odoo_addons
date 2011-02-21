@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="view_export_file_form" model="ir.ui.view">
+			<field name="name">ir.model.export_file.form</field>
+			<field name="model">ir.model.export_file</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="File Export">
+					<group colspan="4" col="6">
+						<field name="name"/>
+						<field name="model_id"/>
+						<field name="state"/>
+						<field name="filename" colspan="4"/>
+						<field name="encoding"/>
+					</group>
+					<notebook>
+						<page string="Template" attrs="{'invisible': [('state', 'not in', ['xml', 'csv'])]}">
+							<group attrs="{'invisible': [('state', '!=', 'xml')]}">
+								<label string="Use Mako language." align="0.0" colspan="4"/>
+							</group>
+							<separator string="Body" colspan="4"/>
+							<group attrs="{'invisible': [('state', '!=', 'csv')]}">
+								<field name="column_ids" colspan="4" nolabel="1" mode="tree,form">
+									<tree string="Columns">
+										<field name="name"/>
+										<field name="value" widget="char"/>
+										<field name="default_value"/>
+										<field name="not_none"/>
+										<field name="min_width"/>
+										<field name="max_width"/>
+									</tree>
+									<form string="Column">
+										<field name="name" colspan="4"/>
+										<field name="value" colspan="4"/>
+										<field name="default_value" colspan="4"/>
+										<field name="not_none"/>
+										<field name="exception_msg" attrs="{'invisible': [('not_none', '!=', True)], 'required': [('not_none', '=', True)]}"/>
+										<newline/>
+										<field name="min_width"/>
+										<field name="max_width"/>
+										<field name="fillchar" attrs="{'invisible': [('min_width', '=', 0)], 'required': [('min_width', '!=', 0)]}"/>
+										<field name="justify" attrs="{'invisible': [('min_width', '=', 0)], 'required': [('min_width', '!=', 0)]}"/>
+									</form>
+								</field>
+							</group>
+							<group attrs="{'invisible': [('state', '!=', 'xml')]}">
+								<field name="template" colspan="4" nolabel="1"/>
+							</group>		
+							<group col="2" colspan="2">
+								<separator string="Header" colspan="2"/>
+								<field name="header" colspan="2" nolabel="1"/>
+							</group>
+							<group col="2" colspan="2">
+								<separator string="Footer" colspan="2"/>
+								<field name="footer" colspan="2" nolabel="1"/>
+							</group>
+						</page>
+						<page string="Advanced configuration">
+							<group colspan="4" attrs="{'invisible': [('state', '!=', 'csv')]}">
+								<separator string="CSV Parameters" colspan="4"/>
+								<field name="delimiter"/>
+								<field name="lineterminator"/>
+								<field name="fieldnames_in_header"/>
+							</group>
+							<group col="2" colspan="2">
+								<separator string="Methods" colspan="2"/>
+								<field name="layout_method" attrs="{'invisible': [('state', 'in', ['xml', 'csv'])]}"/>
+								<field name="check_method"/>
+							</group>
+							<group col="2" colspan="2">
+								<separator string="Logs and Exceptions" colspan="2"/>
+								<field name="exception_handling"/>
+								<field name="log_level"/>
+							</group>
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_export_file_tree" model="ir.ui.view">
+			<field name="name">ir.model.export_file.tree</field>
+			<field name="model">ir.model.export_file</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="File Exports">
+					<field name="name"/>
+					<field name="model_id"/>
+					<field name="state"/>
+					<field name="filename"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_export_file_search" model="ir.ui.view">
+			<field name="name">ir.model.export_file.search</field>
+			<field name="model">ir.model.export_file</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<group col="8" colspan="4">
+						<field name="name"/>
+						<field name="model_id"/>
+						<field name="state"/>
+						<field name="filename"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_export_file" model="ir.actions.act_window">
+			<field name="name">File Exports</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ir.model.export_file</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem action="action_export_file" id="menu_export_file" parent="base.menu_config" />
+
+	</data>
+</openerp>

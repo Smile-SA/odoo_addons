@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+		
+		    
+		<record model="ir.ui.view" id="view_order_form">
+			<field name="name">go.btween.sale.order.form</field>
+			<field name="model">sale.order</field>
+			<field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+			<field eval="7" name="priority"/>
+			<field name="arch" type="xml">
+				<data>
+					<notebook position="inside">
+						<page string="Go between information">
+							<group colspan="2" col="2">
+								<field  name="subscriber_id"  domain="[('subscriber_ok','=',True)]" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field  name="subscriber_pricelist_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+							</group>
+							<group colspan="2">
+								<button name="button_set_lines_got_from_subscriber_ok" string="Charge all lines" states="draft" colspan="1" icon="STOCK_OK" type="object"/>
+			                	<button name="button_set_lines_got_from_subscriber_ko" string="Cancel all lines" states="draft" colspan="1" icon="STOCK_CANCEL" type="object"/>
+			                </group>
+						</page>
+						
+						
+					</notebook>
+					<xpath expr="/form/notebook/page[@string='Sales Order']/field[@name='order_line']/form/notebook" position="inside">
+			                <page string="Go between Subscribtion info">
+			                	<field name="got_from_subscriber_ok" colspan="2"/>
+			                	
+			                	
+			                </page>
+						</xpath>
+				</data>
+			</field>
+		</record>
+		
+	</data>
+</openerp>
