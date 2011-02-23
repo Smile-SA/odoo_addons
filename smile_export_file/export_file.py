@@ -124,7 +124,8 @@ class ir_model_export_file_template(osv.osv):
 
     def _lay_out_data(self, cr, uid, export_file, context):
         """Call specific layout methods and catch exceptions"""
-        content = report = []
+        content = []
+        report = []
         content_render_method = export_file.state in ['csv', 'xml'] and '_render_' + export_file.state or export_file.layout_method
         if content_render_method:
             localdict = {
@@ -172,7 +173,8 @@ class ir_model_export_file_template(osv.osv):
         export_file = self.browse(cr, uid, export_file_id, context)
         filename = ''
         report = []
-        content_ids = checked_content_ids = context.get('active_ids', 'active_id' in context and [context['active_id']] or [])
+        content_ids = context.get('active_ids', 'active_id' in context and [context['active_id']] or [])
+        checked_content_ids = content_ids.copy()
         if export_file.check_method:
             checked_content_ids = []
             content_model = self.pool.get(export_file.model)
@@ -192,7 +194,7 @@ class ir_model_export_file_template(osv.osv):
                 buffer_file = StringIO.StringIO()
                 buffer_file.write(file_content)
                 try:
-                    filename = eval(export_file.filename, {'object': export_file, 'time': time})
+                    filename = eval(export_file.filename, {'object': export_file, 'context': context, 'time': time})
                 except:
                     filename = export_file.filename
                 self._save_file(cr, uid, export_file, filename, buffer_file, context)
