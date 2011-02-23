@@ -169,10 +169,13 @@ class ir_model_export_file_template(osv.osv):
             checked_content_ids = []
             content_model = self.pool.get(export_file.model)
             for content_id in content_ids:
-                if getattr(content_model, export_file.check_method)(cr, uid, content_id, context):
-                    checked_content_ids.append(content_id)
-                else:
-                    report.append('%s,%s: %s' % (export_file.model, content_id, 'Check failed'))
+                try:
+                    if getattr(content_model, export_file.check_method)(cr, uid, content_id, context):
+                        checked_content_ids.append(content_id)
+                    else:
+                        report.append('%s,%s: %s' % (export_file.model, content_id, 'Check failed'))
+                except Exception, e:
+                    report.append('%s,%s: %s' % (export_file.model, content_id, _get_exception_message(e)))
         if checked_content_ids:
             context['active_ids'] = checked_content_ids
             file_content, report2 = self._lay_out_data(cr, uid, export_file, context)
