@@ -103,15 +103,14 @@ class ir_model_export_file_template(osv.osv):
         if template_part == 'body':
             line = []
             for column in export_file.column_ids:
-                column_value = tools.ustr(column.value)
+                column_value = eval(column.value, localdict)
                 if column.default_value and not column_value:
-                    column_value = tools.ustr(column.default_value)
+                    column_value = eval(column.default_value, localdict)
                 if column_value:
                     if column.min_width:
                         column_value = getattr(column_value, column.justify)(column.min_width, tools.ustr(column.fillchar))
                     if column.max_width:
                         column_value = column_value[:column.max_width]
-                    column_value = eval(column_value, localdict)
                 if column.not_none and not column_value:
                     try:
                         exception_msg = eval(column.exception_msg, localdict)
@@ -139,7 +138,7 @@ class ir_model_export_file_template(osv.osv):
             }
             objects = self.pool.get(export_file.model_id.model).browse(cr, uid, context['active_ids'], context)
             for template_part in ['header', 'body', 'footer']:
-                if getattr(export_file, template_part):
+                if export_file.state == 'csv' and export_file.column_ids or getattr(export_file, template_part):
                     template_parts = template_part == 'body' and objects or [objects]
                     for line in template_parts:
                         localdict['object'] = line
