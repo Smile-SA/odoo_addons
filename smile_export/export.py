@@ -26,6 +26,7 @@ import pooler
 
 class ir_model_export_template(osv.osv):
     _name = 'ir.model.export.template'
+    _description = 'Export Template'
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -98,6 +99,7 @@ ir_model_export_template()
 
 class ir_model_export(osv.osv):
     _name = 'ir.model.export'
+    _description = 'Export'
     _rec_name = 'export_tmpl_id'
 
     _columns = {
@@ -212,6 +214,7 @@ ir_model_export()
 
 class ir_model_export_line(osv.osv):
     _name = 'ir.model.export.line'
+    _description = 'Export Line'
     _rec_name = 'export_id'
 
     _columns = {
