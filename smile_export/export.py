@@ -19,8 +19,10 @@
 #
 ##############################################################################
 
-from osv import osv, fields
 import threading
+
+from osv import osv, fields
+import pooler
 
 class ir_model_export_template(osv.osv):
     _name = 'ir.model.export.template'
@@ -177,7 +179,7 @@ class ir_model_export(osv.osv):
 
     def generate(self, cr, uid, ids, context=None):
         """Create a new thread dedicated to export generation"""
-        threaded_run = threading.Thread(target=self._generate, args=(self.pool.get_db(cr.dbname).cursor(), uid, ids, context))
+        threaded_run = threading.Thread(target=self._generate, args=(pooler.get_db(cr.dbname).cursor(), uid, ids, context))
         threaded_run.start()
         return True
 
