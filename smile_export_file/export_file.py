@@ -20,6 +20,8 @@
 ##############################################################################
 
 import base64
+import calendar
+import datetime
 import logging
 import StringIO
 import time
@@ -111,7 +113,11 @@ class ir_model_export_file_template(osv.osv):
                         column_value = column_value[:column.max_width]
                     column_value = eval(column_value, localdict)
                 if column.not_none and not column_value:
-                    raise osv.except_osv(_('Error'), column.exception_msg)
+                    try:
+                        exception_msg = eval(column.exception_msg, localdict)
+                    except:
+                        exception_msg = column.exception_msg
+                    raise osv.except_osv(_('Error'), exception_msg)
                 line.append(column_value)
             template.append(export_file.delimiter.join(line))
         return export_file.lineterminator.join(template)
@@ -127,6 +133,8 @@ class ir_model_export_file_template(osv.osv):
                 'uid': uid,
                 'context': context,
                 'time': time,
+                'datetime': datetime,
+                'calendar': calendar,
             }
             objects = self.pool.get(export_file.model_id.model).browse(cr, uid, context['active_ids'], context)
             for template_part in ['header', 'body', 'footer']:

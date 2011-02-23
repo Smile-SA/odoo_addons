@@ -10,7 +10,7 @@
 			<field name="arch" type="xml">
 				<data>
 					<field name="action_id" position="after">
-						<field name="export_file_template_id" />
+						<field name="export_file_template_id" domain="[('model_id','=',model_id)]"/>
 					</field>
 					<xpath expr="/form/notebook/page[@string='Exports']/field[@name='export_ids']/form/field[@name='exception']" position="after">
 						<field name="report_summary" colspan="4" readonly="1" attrs="{'invisible': [('state', '!=', 'done')]}"/>
