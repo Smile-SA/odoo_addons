@@ -92,13 +92,17 @@ class ir_model_export_file_template(osv.osv):
     def _render_csv(self, cr, uid, export_file, template_part, localdict):
         """Render the output of this template as a string formated in CSV"""
         template = []
+        try:
+            delimiter = eval(export_file.delimiter)
+        except:
+            delimiter = export_file.delimiter
         # Header & Footer
         if getattr(export_file, template_part):
             template_src = tools.ustr(getattr(export_file, template_part))
             template.append(eval(template_src, localdict))
         # Header with fieldnames
         if template_part == 'header' and export_file.fieldnames_in_header:
-            template.append(export_file.delimiter.join([tools.ustr(column.name) for column in export_file.column_ids]))
+            template.append(delimiter.join([tools.ustr(column.name) for column in export_file.column_ids]))
         # Body
         if template_part == 'body':
             line = []
@@ -106,20 +110,25 @@ class ir_model_export_file_template(osv.osv):
                 column_value = eval(column.value, localdict)
                 if column.default_value and not column_value:
                     column_value = eval(column.default_value, localdict)
-                if column_value:
-                    if column.min_width:
-                        column_value = getattr(column_value, column.justify)(column.min_width, tools.ustr(column.fillchar))
-                    if column.max_width:
-                        column_value = column_value[:column.max_width]
-                if column.not_none and not column_value:
+                if column.not_none and column_value is None:
                     try:
                         exception_msg = eval(column.exception_msg, localdict)
                     except:
                         exception_msg = column.exception_msg
                     raise osv.except_osv(_('Error'), exception_msg)
+                column_value = tools.ustr(column_value)
+                if column_value:
+                    if column.min_width:
+                        column_value = getattr(column_value, column.justify)(column.min_width, tools.ustr(column.fillchar))
+                    if column.max_width:
+                        column_value = column_value[:column.max_width]
                 line.append(column_value)
-            template.append(export_file.delimiter.join(line))
-        return export_file.lineterminator.join(template)
+            template.append(delimiter.join(line))
+        try:
+            lineterminator = eval(export_file.lineterminator)
+        except:
+            lineterminator = export_file.lineterminator
+        return lineterminator.join(template)
 
     def _lay_out_data(self, cr, uid, export_file, context):
         """Call specific layout methods and catch exceptions"""
@@ -149,7 +158,11 @@ class ir_model_export_file_template(osv.osv):
                                 report.append('%s,%s: %s' % (export_file.model, line.id, _get_exception_message(e)))
                             else:
                                 raise
-        return (export_file.lineterminator.join(content), report)
+        try:
+            lineterminator = eval(export_file.lineterminator)
+        except:
+            lineterminator = export_file.lineterminator
+        return (lineterminator.join(content), report)
 
     def _save_file(self, cr, uid, export_file, filename, buffer_file, context):
         if export_file.create_attachment:
