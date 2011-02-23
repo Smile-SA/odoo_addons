@@ -33,6 +33,14 @@ ir_model_export_template()
 class ir_model_export(osv.osv):
     _inherit = 'ir.model.export'
 
+    def _get_last_attachment(self, cr, uid, ids, name, args, context=None):
+        res = {}.fromkeys(ids, False)
+        for export_id in ids:
+            attachment_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', export_id)], limit=1)
+            if attachment_ids:
+                res[export_id] = attachment_ids[0]
+        return res
+
     _columns = {
         'export_file_template_id': fields.related('export_tmpl_id', 'export_file_template_id',
             type='many2one', relation='ir.model.export.file_template', string='File Template', readonly=True),
@@ -42,6 +50,8 @@ class ir_model_export(osv.osv):
             type='many2one', relation='res.request', string='Report', readonly=True),
         'report_summary': fields.related('report_id', 'body',
             type='char', string='Report', readonly=True),
+        'attachment_id': fields.function(_get_last_attachment, method=True, type='many2one', relation='ir.attachment', string='Attachment', store=False),
+        'file': fields.related('attachment_id', 'datas', type='binary', string="File"),
     }
 
     def _run_actions(self, cr, uid, export, object_ids=[], context=None):
