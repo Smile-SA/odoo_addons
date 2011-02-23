@@ -26,7 +26,7 @@ class ir_model_export_template(osv.osv):
 
     _columns = {
         'export_file_template_id': fields.many2one('ir.model.export.file_template', 'File Template'),
-        'record_ids': fields.char('Record Ids', help=""),
+        'record_ids': fields.char('Record Ids'),
     }
 ir_model_export_template()
 
