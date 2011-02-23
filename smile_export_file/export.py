@@ -36,7 +36,7 @@ class ir_model_export(osv.osv):
     def _get_last_attachment(self, cr, uid, ids, name, args, context=None):
         res = {}.fromkeys(ids, False)
         for export_id in ids:
-            attachment_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', export_id)], limit=1)
+            attachment_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', export_id)], limit=1, order='id desc')
             if attachment_ids:
                 res[export_id] = attachment_ids[0]
         return res
