@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import osv, fields
-import tools
 import threading
 
 class ir_model_export_template(osv.osv):
@@ -126,6 +125,7 @@ class ir_model_export(osv.osv):
     }
 
     def populate(self, cr, uid, ids, context=None):
+        """Link export instance with resources to export"""
         if context is None:
             context = {}
         if isinstance(ids, (int, long)):
@@ -162,44 +162,49 @@ class ir_model_export(osv.osv):
         self.populate(cr, uid, ids, context)
         return res
 
+    def _run_actions(self, cr, uid, export, object_ids=[], context=None):
+        """Execute export method and action"""
+        context = context or {}
+        if export.method:
+            field_pool = self.pool.get('ir.model.fields')
+            field_ids = field_pool.search(cr, uid, [('model_id', '=', export.model_id.id)])
+            fields_to_export = [field['name'] for field in field_pool.read(cr, uid, field_ids, ['name'])]
+            getattr(self.pool.get(export.model_id.model), export.method)(cr, uid, object_ids, fields_to_export, context=context)
+        if export.action_id:
+            for object_id in object_ids:
+                context['active_id'] = object_id
+                self.pool.get('ir.actions.server').run(cr, uid, export.action_id.id, context=context)
+
     def generate(self, cr, uid, ids, context=None):
-        threaded_run = threading.Thread(target=self.__generate, args=(pooler.get_db(cr.dbname).cursor(), uid, ids, context))
+        """Create a new thread dedicated to export generation"""
+        threaded_run = threading.Thread(target=self._generate, args=(self.pool.get_db(cr.dbname).cursor(), uid, ids, context))
         threaded_run.start()
         return True
 
-    def __generate(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+    def _generate(self, cr, uid, ids, context=None):
+        """Call export method and action
+        Catch and log exceptions"""
         if isinstance(ids, (int, long)):
             ids = [ids]
         for export in self.browse(cr, uid, ids):
             try:
-                is_running= False
+                is_running = False
                 if export.line_ids:
                     object_ids = [line.res_id for line in export.line_ids]
                     if object_ids:
-                        if export.method:
-                            if not is_running:
-                                export.write({'state': 'running'})
-                                is_running = True
-                            field_pool = self.pool.get('ir.model.fields')
-                            field_ids = field_pool.search(cr, uid, [('model_id', '=', export.model_id.id)])
-                            fields_to_export = [field['name'] for field in field_pool.read(cr, uid, field_ids, ['name'])]
-                            getattr(self.pool.get(export.model_id.model), export.method)(cr, uid, object_ids, fields_to_export, context=context)
-                        if export.action_id:
-                            if not is_running:
-                                export.write({'state': 'running'})
-                                is_running = True
-                            for object_id in object_ids:
-                                context_copy = dict(context)
-                                context_copy['active_id'] = object_id
-                                self.pool.get('ir.actions.server').run(cr, uid, export.action_id.id, context=context_copy)
+                        if not is_running:
+                            export.write({'state': 'running'})
+                            is_running = True
+                        self._run_actions(cr, uid, export, object_ids, context)
                 if is_running:
                     export.write({'state': 'done'})
                 cr.commit()
             except Exception, e:
                 cr.rollback()
-                export.write({'state': 'exception', 'exception': tools.ustr(e)})
+                export.write({
+                    'state': 'exception',
+                    'exception': isinstance(e, osv.except_osv) and e.value or e,
+                })
         return True
 ir_model_export()
 
