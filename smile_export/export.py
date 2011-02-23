@@ -40,7 +40,6 @@ class ir_model_export_template(osv.osv):
 
     _defaults = {
         'domain': lambda * a: '[]',
-        'method': lambda * a: 'export_data',
     }
 
     def create_export(self, cr, uid, ids, context=None):
