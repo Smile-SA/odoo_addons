@@ -208,8 +208,9 @@ class ir_model_export_file_template(osv.osv):
         File name: %s
         Resources exported: %d
         Resources in exception: %d
-
-        Exceptions:\n%s""" % (export_file.id, start_date, end_date, filename, len(content_ids) - len(report), len(report), '\n'.join(report))
+        """ % (export_file.id, start_date, end_date, filename, len(content_ids) - len(report), len(report))
+        if report:
+            summary += "Exceptions:\n%s" % '\n'.join(report)
         vals = {
             'name': "File Export Processing Report",
             'act_from': uid,
