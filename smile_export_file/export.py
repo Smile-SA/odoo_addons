@@ -52,6 +52,7 @@ class ir_model_export(osv.osv):
             type='char', string='Report', readonly=True),
         'attachment_id': fields.function(_get_last_attachment, method=True, type='many2one', relation='ir.attachment', string='Attachment', store=False),
         'file': fields.related('attachment_id', 'datas', type='binary', string="File"),
+        'filename': fields.related('attachment_id', 'datas_fname', type='char', string="Filename"),
     }
 
     def _run_actions(self, cr, uid, export, object_ids=[], context=None):
