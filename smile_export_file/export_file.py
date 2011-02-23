@@ -22,6 +22,7 @@
 import base64
 import calendar
 import datetime
+from ftplib import FTP
 import logging
 import StringIO
 import time
@@ -74,6 +75,11 @@ class ir_model_export_file_template(osv.osv):
         'body': fields.text('Body', help="Template language: Mako"),
         'footer': fields.text('Footer'),
         'create_attachment': fields.boolean('Create an attachement'),
+        'upload_to_ftp_server': fields.boolean('Upload to FTP server'),
+        'ftp_host': fields.char('Host', size=128),
+        'ftp_anonymous': fields.boolean('Anonymous'),
+        'ftp_user': fields.char('User', size=64),
+        'ftp_password': fields.char('Password', size=64, invisible=True),
     }
 
     _defaults = {
@@ -165,15 +171,26 @@ class ir_model_export_file_template(osv.osv):
         return (lineterminator.join(content), report)
 
     def _save_file(self, cr, uid, export_file, filename, buffer_file, context):
+        binary = base64.encodestring(buffer_file.getvalue().encode(export_file.encoding))
         if export_file.create_attachment:
             vals = {
                 'name': filename,
-                'datas': base64.encodestring(buffer_file.getvalue().encode(export_file.encoding)),
+                'datas': binary,
                 'datas_fname': filename,
                 'res_model': context.get('attach_res_model', self._name),
                 'res_id': context.get('attach_res_id', export_file.id),
             }
             self.pool.get('ir.attachment').create(cr, uid, vals, context)
+        if export_file.upload_to_ftp_server:
+            ftp = FTP(export_file.ftp_host)
+            if export_file.ftp_anonymous:
+                ftp.login()
+            else:
+                ftp.login(export_file.ftp_user, export_file.ftp_password or '')
+            command = 'STOR %s' % filename
+            file = open(filename, 'w')
+            file.write(binary)
+            ftp.storbinary(command, file)
 
     def generate_file(self, cr, uid, export_file_id, context=None):
         """Check and lay out data, save file and produce an export processing report"""
