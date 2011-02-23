@@ -101,6 +101,7 @@ class ir_model_export(osv.osv):
     _columns = {
         'export_tmpl_id': fields.many2one('ir.model.export.template', 'Template', required=True, ondelete='cascade'),
         'model_id': fields.related('export_tmpl_id', 'model_id', type='many2one', relation='ir.model', string='Object', readonly=True),
+        'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
         'domain': fields.related('export_tmpl_id', 'domain', type='char', size=255, string='Domain', readonly=True),
         'unique': fields.related('export_tmpl_id', 'unique', type='boolean', string='Unique', readonly=True),
         'method': fields.related('export_tmpl_id', 'method', type='char', size=64, string='Method', readonly=True),
