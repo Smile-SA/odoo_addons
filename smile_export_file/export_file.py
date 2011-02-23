@@ -174,7 +174,7 @@ class ir_model_export_file_template(osv.osv):
         filename = ''
         report = []
         content_ids = context.get('active_ids', 'active_id' in context and [context['active_id']] or [])
-        checked_content_ids = content_ids.copy()
+        checked_content_ids = content_ids[:]
         if export_file.check_method:
             checked_content_ids = []
             content_model = self.pool.get(export_file.model)
