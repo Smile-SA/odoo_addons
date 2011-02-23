@@ -1,0 +1,3 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_ir_model_export_file_template_all","ir_model_export_file_template","model_ir_model_export_file_template",,1,1,1,1
+"access_ir_model_export_file_template_column_all","ir_model_export_file_template_column","model_ir_model_export_file_template_column",,1,1,1,1
