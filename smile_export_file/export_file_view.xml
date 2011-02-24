@@ -17,9 +17,7 @@
 					</group>
 					<notebook>
 						<page string="Template" attrs="{'invisible': [('state', 'not in', ['xml', 'csv'])]}">
-							<group attrs="{'invisible': [('state', '!=', 'xml')]}">
-								<label string="Use Mako language." align="0.0" colspan="4"/>
-							</group>
+							<label string="Use Mako language." align="0.0" colspan="4"/>
 							<separator string="Body" colspan="4"/>
 							<group attrs="{'invisible': [('state', '!=', 'csv')]}">
 								<field name="column_ids" colspan="4" nolabel="1" mode="tree,form">
@@ -74,6 +72,7 @@
 							<group col="2" colspan="2">
 								<separator string="Logs and Exceptions" colspan="2"/>
 								<field name="exception_handling"/>
+								<field name="exception_logging"/>
 							</group>
 						</page>
 						<page string="Storage">

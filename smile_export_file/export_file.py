@@ -39,6 +39,10 @@ from tools.translate import _
 def _get_exception_message(exception):
     return isinstance(exception, osv.except_osv) and exception.value or exception
 
+def _render_unicode(template_src, localdict, encoding='UTF-8'):
+    template = MakoTemplate(tools.ustr(template_src), output_encoding=encoding)
+    return template.render_unicode(**localdict)
+
 class ir_model_export_file_template(osv.osv):
     _name = 'ir.model.export.file_template'
     _description = 'Export File Template'
@@ -56,7 +60,7 @@ class ir_model_export_file_template(osv.osv):
             "'ir.model.export_file' with a signature equals to (self, cr, uid, export_file_instance, template_part, localdict)"),
         'check_method': fields.char('Data Check Method', size=64, help="Indicate a method of the "
             "remote model with a signature equals to (self, cr, uid, ids, context=None)"),
-        'filename': fields.char('Filename', size=256, required=True, help="You can use a python expession "
+        'filename': fields.char('Filename', size=256, required=True, help="You can use a mako language "
             "with the object and time variables"),
         'encoding': fields.selection([
             ('UTF-8', 'UTF-8'),
@@ -66,6 +70,10 @@ class ir_model_export_file_template(osv.osv):
             ('cancel', 'Cancel export'),
             ('continue', 'Ignore wrong line'),
         ], 'Exception Handling', required=True),
+        'exception_logging': fields.selection([
+            ('report', 'Included in report'),
+            ('file', 'Dedicated file'),
+        ], 'Exception Logging', required=True),
         'report_id': fields.many2one('res.request', 'Report', readonly=True),
         'delimiter': fields.char('Delimiter', size=64),
         'lineterminator': fields.char('Line Terminator', size=64),
@@ -74,6 +82,8 @@ class ir_model_export_file_template(osv.osv):
         'header': fields.text('Header'),
         'body': fields.text('Body', help="Template language: Mako"),
         'footer': fields.text('Footer'),
+        'report_summary_template': fields.text('Report', help="Use mako language with the pool, cr, uid, object, "
+            "context, time, datetime, start_date, end_date, filename, records_number, exceptions_number and exceptions variables"),
         'create_attachment': fields.boolean('Create an attachement'),
         'upload_to_ftp_server': fields.boolean('Upload to FTP server'),
         'ftp_host': fields.char('Host', size=128),
@@ -84,16 +94,26 @@ class ir_model_export_file_template(osv.osv):
 
     _defaults = {
         'exception_handling': lambda * a: 'cancel',
+        'exception_logging': lambda * a: 'report',
         'delimiter': lambda * a: "','",
         'lineterminator': lambda * a: "chr(10)",
         'create_attachment': lambda * a: True,
+        'report_summary_template': lambda * a: """Here is the file export processing report.
+
+        File export: ${object.id}
+        Start Time: ${start_time}
+        End Time: ${end_time}
+        File name: ${filename}
+        Resources exported: ${records_number - exceptions_number}
+        Resources in exception: ${exceptions_number}
+""",
     }
+
+    # ***** Data layout methods ****
 
     def _render_xml(self, cr, uid, export_file, template_part, localdict):
         """Render the output of this template as a string formated in XML"""
-        template_src = getattr(export_file, template_part)
-        template = MakoTemplate(tools.ustr(template_src), output_encoding=export_file.encoding)
-        return template.render_unicode(**localdict)
+        return _render_unicode(getattr(export_file, template_part), localdict, export_file.encoding)
 
     def _render_csv(self, cr, uid, export_file, template_part, localdict):
         """Render the output of this template as a string formated in CSV"""
@@ -104,8 +124,7 @@ class ir_model_export_file_template(osv.osv):
             delimiter = export_file.delimiter
         # Header & Footer
         if getattr(export_file, template_part):
-            template_src = tools.ustr(getattr(export_file, template_part))
-            template.append(eval(template_src, localdict))
+            template.append(self._render_xml(cr, uid, export_file, template_part, localdict))
         # Header with fieldnames
         if template_part == 'header' and export_file.fieldnames_in_header:
             template.append(delimiter.join([tools.ustr(column.name) for column in export_file.column_ids]))
@@ -113,12 +132,12 @@ class ir_model_export_file_template(osv.osv):
         if template_part == 'body':
             line = []
             for column in export_file.column_ids:
-                column_value = eval(column.value, localdict)
+                column_value = _render_unicode(column.value, localdict)
                 if column.default_value and not column_value:
-                    column_value = eval(column.default_value, localdict)
+                    column_value = _render_unicode(column.default_value, localdict)
                 if column.not_none and column_value is None:
                     try:
-                        exception_msg = eval(column.exception_msg, localdict)
+                        exception_msg = _render_unicode(column.exception_msg, localdict)
                     except:
                         exception_msg = column.exception_msg
                     raise osv.except_osv(_('Error'), exception_msg)
@@ -139,7 +158,7 @@ class ir_model_export_file_template(osv.osv):
     def _lay_out_data(self, cr, uid, export_file, context):
         """Call specific layout methods and catch exceptions"""
         content = []
-        report = []
+        exceptions = []
         content_render_method = export_file.state in ['csv', 'xml'] and '_render_' + export_file.state or export_file.layout_method
         if content_render_method:
             localdict = {
@@ -161,36 +180,45 @@ class ir_model_export_file_template(osv.osv):
                             content.append(getattr(self, content_render_method)(cr, uid, export_file, template_part, localdict))
                         except Exception, e:
                             if template_part == 'body' and export_file.exception_handling == 'continue':
-                                report.append('%s,%s: %s' % (export_file.model, line.id, _get_exception_message(e)))
+                                exceptions.append('%s,%s: %s' % (export_file.model, line.id, _get_exception_message(e)))
                             else:
                                 raise
         try:
             lineterminator = eval(export_file.lineterminator)
         except:
             lineterminator = export_file.lineterminator
-        return (lineterminator.join(content), report)
+        return (lineterminator.join(content), exceptions)
+
+    # ***** File saving methods *****
+
+    def _create_attachement(self, cr, uid, export_file, filename, binary, context):
+        vals = {
+            'name': filename,
+            'datas': binary,
+            'datas_fname': filename,
+            'res_model': context.get('attach_res_model', self._name),
+            'res_id': context.get('attach_res_id', export_file.id),
+        }
+        self.pool.get('ir.attachment').create(cr, uid, vals, context)
+
+    def _upload_to_ftp_server(self, cr, uid, export_file, filename, binary, context):
+        ftp = FTP(export_file.ftp_host)
+        if export_file.ftp_anonymous:
+            ftp.login()
+        else:
+            ftp.login(export_file.ftp_user, export_file.ftp_password or '')
+        command = 'STOR %s' % filename
+        file = open(filename, 'w')
+        file.write(binary)
+        ftp.storbinary(command, file)
 
     def _save_file(self, cr, uid, export_file, filename, buffer_file, context):
         binary = base64.encodestring(buffer_file.getvalue().encode(export_file.encoding))
-        if export_file.create_attachment:
-            vals = {
-                'name': filename,
-                'datas': binary,
-                'datas_fname': filename,
-                'res_model': context.get('attach_res_model', self._name),
-                'res_id': context.get('attach_res_id', export_file.id),
-            }
-            self.pool.get('ir.attachment').create(cr, uid, vals, context)
-        if export_file.upload_to_ftp_server:
-            ftp = FTP(export_file.ftp_host)
-            if export_file.ftp_anonymous:
-                ftp.login()
-            else:
-                ftp.login(export_file.ftp_user, export_file.ftp_password or '')
-            command = 'STOR %s' % filename
-            file = open(filename, 'w')
-            file.write(binary)
-            ftp.storbinary(command, file)
+        for save_file_method in ['create_attachment', 'upload_to_ftp_server']:
+            if getattr(export_file, save_file_method):
+                getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, binary, context)
+
+    # ***** File generation method *****
 
     def generate_file(self, cr, uid, export_file_id, context=None):
         """Check and lay out data, save file and produce an export processing report"""
@@ -201,7 +229,7 @@ class ir_model_export_file_template(osv.osv):
             export_file_id = export_file_id[0]
         export_file = self.browse(cr, uid, export_file_id, context)
         filename = ''
-        report = []
+        exceptions = []
         content_ids = context.get('active_ids', 'active_id' in context and [context['active_id']] or [])
         checked_content_ids = content_ids[:]
         if export_file.check_method:
@@ -212,34 +240,41 @@ class ir_model_export_file_template(osv.osv):
                     if getattr(content_model, export_file.check_method)(cr, uid, content_id, context):
                         checked_content_ids.append(content_id)
                     else:
-                        report.append('%s,%s: %s' % (export_file.model, content_id, 'Check failed'))
+                        exceptions.append('%s,%s: %s' % (export_file.model, content_id, 'Check failed'))
                 except Exception, e:
-                    report.append('%s,%s: %s' % (export_file.model, content_id, _get_exception_message(e)))
+                    exceptions.append('%s,%s: %s' % (export_file.model, content_id, _get_exception_message(e)))
         if checked_content_ids:
             context['active_ids'] = checked_content_ids
-            file_content, report2 = self._lay_out_data(cr, uid, export_file, context)
-            report += report2
+            file_content, content_exceptions = self._lay_out_data(cr, uid, export_file, context)
+            exceptions += content_exceptions
             if file_content:
                 buffer_file = StringIO.StringIO()
                 buffer_file.write(file_content)
-                try:
-                    filename = eval(export_file.filename, {'object': export_file, 'context': context, 'time': time})
-                except:
-                    filename = export_file.filename
+                filename = _render_unicode(export_file.filename, {'object': export_file, 'context': context, 'time': time}, export_file.encoding)
                 self._save_file(cr, uid, export_file, filename, buffer_file, context)
 
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
-        summary = """Here is the file export processing report.
-
-        File export: %d
-        Start Time: %s
-        End Time: %s
-        File name: %s
-        Resources exported: %d
-        Resources in exception: %d
-        """ % (export_file.id, start_date, end_date, filename, len(content_ids) - len(report), len(report))
-        if report:
-            summary += "Exceptions:\n%s" % '\n'.join(report)
+        report_localdict = {
+            'pool': self.pool,
+            'cr': cr,
+            'uid': uid,
+            'object': export_file,
+            'context': context,
+            'time': time,
+            'datetime': datetime,
+            'calendar': calendar,
+            'start_date': start_date,
+            'end_date': end_date,
+            'filename': filename,
+            'records_number': len(content_ids),
+            'exceptions_number': len(exceptions),
+            'exceptions': exceptions}
+        summary = _render_unicode(export_file.report_summary_template, report_localdict)
+        if exceptions:
+            if export_file.exception_logging == 'report':
+                summary += "Exceptions:\n%s" % '\n'.join(exceptions)
+            else: #elif export_file.exception_logging == 'report':
+                pass # TODO: generate exceptions file
         vals = {
             'name': "File Export Processing Report",
             'act_from': uid,
@@ -258,12 +293,13 @@ class ir_model_export_file_template_column(osv.osv):
         'name': fields.char('Label', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True),
         'export_file_template_id': fields.many2one('ir.model.export.file_template', 'Export', required=True, ondelete='cascade'),
-        'value': fields.text('Value', required=True, help="Use a python expression with the pool, cr, uid, object, "
-            "context and time variables"),
-        'default_value': fields.char('Default value', size=64, help="Use a python expression with the pool, cr, uid, "
-            "object, context and time variables"),
+        'value': fields.text('Value', required=True,
+            help="Use mako language with the pool, cr, uid, object, context and time variables"),
+        'default_value': fields.char('Default value', size=64,
+            help="Use mako language with the pool, cr, uid, object, context and time variables"),
         'not_none': fields.boolean('Not None?'),
-        'exception_msg': fields.char('Exception Message', size=256, translate=True),
+        'exception_msg': fields.char('Exception Message', size=256, translate=True,
+            help="Use mako language with the pool, cr, uid, object, context and time variables"),
         'min_width': fields.integer('Min width'),
         'fillchar': fields.char('Fillchar', size=1),
         'justify': fields.selection([

@@ -37,7 +37,7 @@
 						</page>
 					</notebook>
 					</group>
-					<newline></newline>
+					<newline/>
 					<button name="pre_invoice" string="Invoice" type="object" align="20.0"/>
 				</form>
 			</field>
