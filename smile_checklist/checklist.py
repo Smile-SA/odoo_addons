@@ -375,9 +375,9 @@ class checklist_task_instance(osv.osv):
         return res
 
     def _get_checklist_task_instance_ids(self, cr, uid, ids, context={}):
-        if isinstance(ids, (int,long)):
+        if isinstance(ids, (int, long)):
             ids = [ids]
-        return self.pool.get('checklist.task.instance').search(cr, uid, [('checklist_task_id','in',ids)])
+        return self.pool.get('checklist.task.instance').search(cr, uid, [('checklist_task_id', 'in', ids)])
 
     _columns = {
         'checklist_task_id': fields.many2one('checklist.task', 'Checklist Task', required=True, ondelete='cascade'),
@@ -399,8 +399,8 @@ class checklist_task_instance(osv.osv):
     }
 
     _defaults = {
-        'progress_rate': lambda *a: 0.0,
-        'sequence': lambda *a: 15,
+        'progress_rate': lambda * a: 0.0,
+        'sequence': lambda * a: 15,
     }
 
     def launch_actions(self, cr, uid, ids, context=None):
@@ -465,9 +465,7 @@ def __init__object_and_checklist(self, cr):
     result = native_orm_init(self, cr)
     checklist_pool = self.pool.get('checklist')
     if checklist_pool and hasattr(checklist_pool, '_update_models'):
-        if self._name == 'checklist':
-            checklist_pool._update_models(cr)
-        else:
+        if self._name != 'checklist':
             model_id = self.pool.get('ir.model').search(cr, 1, [('model', '=', self._name)], limit=1)
             if model_id:
                 model_id = model_id[0]
