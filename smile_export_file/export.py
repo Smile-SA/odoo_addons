@@ -34,11 +34,16 @@ class ir_model_export(osv.osv):
     _inherit = 'ir.model.export'
 
     def _get_last_attachment(self, cr, uid, ids, name, args, context=None):
-        res = {}.fromkeys(ids, False)
-        for export_id in ids:
-            attachment_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', export_id)], limit=1, order='create_date desc')
+        res = {}
+        for export in self.read(cr, uid, ids, ['report_id']):
+            res[export['id']] = {'attachment_id': False, 'exceptions_attachment_id': False}
+            attachment_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', export['id'])], limit=1, order='create_date desc')
             if attachment_ids:
-                res[export_id] = attachment_ids[0]
+                res[export['id']]['attachment_id'] = attachment_ids[0]
+            if export['report_id']:
+                exceptions_attachment_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'res.request'), ('res_id', '=', export['report_id'][0])], limit=1, order='create_date desc')
+                if exceptions_attachment_ids:
+                    res[export['id']]['exceptions_attachment_id'] = exceptions_attachment_ids[0]
         return res
 
     _columns = {
@@ -50,9 +55,12 @@ class ir_model_export(osv.osv):
             type='many2one', relation='res.request', string='Report', readonly=True),
         'report_summary': fields.related('report_id', 'body',
             type='char', string='Report', readonly=True),
-        'attachment_id': fields.function(_get_last_attachment, method=True, type='many2one', relation='ir.attachment', string='Attachment', store=False),
+        'attachment_id': fields.function(_get_last_attachment, method=True, type='many2one', relation='ir.attachment', string='Attachment', store=False, multi='report'),
         'file': fields.related('attachment_id', 'datas', type='binary', string="File"),
         'filename': fields.related('attachment_id', 'datas_fname', type='char', string="Filename"),
+        'exceptions_attachment_id': fields.function(_get_last_attachment, method=True, type='many2one', relation='ir.attachment', string='Exceptions', store=False, multi='report'),
+        'exceptions_file': fields.related('exceptions_attachment_id', 'datas', type='binary', string="Exceptions File"),
+        'exceptions_filename': fields.related('exceptions_attachment_id', 'datas_fname', type='char', string="Exceptions Filename"),
     }
 
     def _run_actions(self, cr, uid, export, object_ids=[], context=None):

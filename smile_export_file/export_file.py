@@ -212,11 +212,51 @@ class ir_model_export_file_template(osv.osv):
         file.write(binary)
         ftp.storbinary(command, file)
 
-    def _save_file(self, cr, uid, export_file, filename, buffer_file, context):
-        binary = base64.encodestring(buffer_file.getvalue().encode(export_file.encoding))
+    def _save_file(self, cr, uid, export_file, filename, file_content, context):
+        binary = base64.encodestring(file_content.encode(export_file.encoding))
         for save_file_method in ['create_attachment', 'upload_to_ftp_server']:
             if getattr(export_file, save_file_method):
                 getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, binary, context)
+
+    # ***** Execution report saving method *****
+
+    def _save_execution_report(self, cr, uid, export_file, filename, content_ids, exceptions, start_date, end_date, context):
+        localdict = {
+            'pool': self.pool,
+            'cr': cr,
+            'uid': uid,
+            'object': export_file,
+            'context': context,
+            'time': time,
+            'datetime': datetime,
+            'calendar': calendar,
+            'start_date': start_date,
+            'end_date': end_date,
+            'filename': filename,
+            'records_number': len(content_ids),
+            'exceptions_number': len(exceptions),
+            'exceptions': exceptions}
+        summary = _render_unicode(export_file.report_summary_template, localdict)
+        if exceptions and export_file.exception_logging == 'report':
+            summary += "Exceptions:\n%s" % '\n'.join(exceptions)
+        report_vals = {
+            'name': "File Export Processing Report",
+            'act_from': uid,
+            'act_to': uid,
+            'body': summary,
+        }
+        report_id = self.pool.get('res.request').create(cr, uid, report_vals, context)
+        if exceptions and export_file.exception_logging == 'report':
+            exceptions_filename = filename[:-filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
+            exceptions_vals = {
+                'name':  exceptions_filename,
+                'datas': base64.encodestring('\n'.join(exceptions).encode(export_file.encoding)),
+                'datas_fname': exceptions_filename,
+                'res_model': 'res.request',
+                'res_id': report_id,
+            }
+            self.pool.get('ir.attachment').create(cr, uid, exceptions_vals, context)
+        return export_file.write({'report_id': report_id})
 
     # ***** File generation method *****
 
@@ -248,41 +288,10 @@ class ir_model_export_file_template(osv.osv):
             file_content, content_exceptions = self._lay_out_data(cr, uid, export_file, context)
             exceptions += content_exceptions
             if file_content:
-                buffer_file = StringIO.StringIO()
-                buffer_file.write(file_content)
                 filename = _render_unicode(export_file.filename, {'object': export_file, 'context': context, 'time': time}, export_file.encoding)
-                self._save_file(cr, uid, export_file, filename, buffer_file, context)
-
+                self._save_file(cr, uid, export_file, filename, file_content, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
-        report_localdict = {
-            'pool': self.pool,
-            'cr': cr,
-            'uid': uid,
-            'object': export_file,
-            'context': context,
-            'time': time,
-            'datetime': datetime,
-            'calendar': calendar,
-            'start_date': start_date,
-            'end_date': end_date,
-            'filename': filename,
-            'records_number': len(content_ids),
-            'exceptions_number': len(exceptions),
-            'exceptions': exceptions}
-        summary = _render_unicode(export_file.report_summary_template, report_localdict)
-        if exceptions:
-            if export_file.exception_logging == 'report':
-                summary += "Exceptions:\n%s" % '\n'.join(exceptions)
-            else: #elif export_file.exception_logging == 'report':
-                pass # TODO: generate exceptions file
-        vals = {
-            'name': "File Export Processing Report",
-            'act_from': uid,
-            'act_to': uid,
-            'body': summary,
-        }
-        report_id = self.pool.get('res.request').create(cr, uid, vals, context)
-        return export_file.write({'report_id': report_id})
+        return self._save_execution_report(cr, uid, export_file, filename, content_ids, exceptions, start_date, end_date, context)
 ir_model_export_file_template()
 
 class ir_model_export_file_template_column(osv.osv):
