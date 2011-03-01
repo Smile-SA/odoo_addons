@@ -21,16 +21,11 @@
 
 from osv import fields, osv
 
-
-
 class res_partner(osv.osv):
-    
     _inherit = 'res.partner'
     
-    
     _columns = {
-            'subscriber_ok': fields.boolean('Is subscriber', required=False), 
-                    }
+        'subscriber_ok': fields.boolean('Is subscriber', required=False),
+    }
 
 res_partner()
-

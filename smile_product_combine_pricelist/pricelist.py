@@ -19,12 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-
-
+from osv import fields, osv
 
 class product_pricelist(osv.osv):
-    
     _inherit = 'product.pricelist'
    
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
@@ -44,18 +41,18 @@ class product_pricelist(osv.osv):
             context = {}
             
         res = {}
-        if not context.get('mix_price_list',False):
-            res = super(product_pricelist,self).price_get(cr, uid, ids, prod_id,qty,partner,context)
+        if not context.get('mix_price_list', False):
+            res = super(product_pricelist, self).price_get(cr, uid, ids, prod_id, qty, partner, context)
         
         else:
             if not isinstance(ids, list):
                 ids = [ids]
             
-            price = super(product_pricelist,self).price_get(cr,uid,[ids[0]],prod_id, qty or 1.0, partner, context)[ids[0]]
+            price = super(product_pricelist, self).price_get(cr, uid, [ids[0]], prod_id, qty or 1.0, partner, context)[ids[0]]
             
             for list_price_id in ids[1:] :
                 context.update({'based_on_price':{prod_id:price}})
-                price = super(product_pricelist,self).price_get(cr,uid,[list_price_id],prod_id, qty or 1.0, partner, context)[list_price_id]
+                price = super(product_pricelist, self).price_get(cr, uid, [list_price_id], prod_id, qty or 1.0, partner, context)[list_price_id]
                 context.pop('based_on_price')
                         
             for id in ids :
@@ -63,12 +60,4 @@ class product_pricelist(osv.osv):
             
             
         return res
-    
-    
 product_pricelist()
-
-
-
-
-
-

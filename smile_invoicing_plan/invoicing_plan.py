@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-import decimal_precision as dp
 from tools.translate import _
 
 class account_invoicing_plan(osv.osv):
@@ -92,7 +91,7 @@ class account_invoicing_plan_line(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=True),
         'invoicing_plan_id': fields.many2one('account.invoicing_plan', 'Invoicing Plan', required=True),
         'sequence': fields.integer('Sequence', required=True),
-        'invoicing_plan_sub_line_ids': fields.one2many('account.invoicing_plan.sub.line', 'invoicing_plan_line_id', 'Sub modalities', required=False), 
+        'invoicing_plan_sub_line_ids': fields.one2many('account.invoicing_plan.sub.line', 'invoicing_plan_line_id', 'Sub modalities', required=False),
 #        'value': fields.selection([
 #            ('fixed', 'Fixed Amount'),
 #            ('percent', 'Percent'),
@@ -130,7 +129,7 @@ class account_invoicing_plan_sub_line(osv.osv):
 
     _columns = {
 
-        'invoicing_plan_line_id': fields.many2one('account.invoicing_plan.line', 'Invoicing plan modality', required=False), 
+        'invoicing_plan_line_id': fields.many2one('account.invoicing_plan.line', 'Invoicing plan modality', required=False),
     }
 
     _defaults = {

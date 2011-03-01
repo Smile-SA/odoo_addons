@@ -20,13 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-import decimal_precision as dp
-from operator import __add__
-from tools.translate import _
-import time
-
-
-
     
 class sale_order(osv.osv):
     _inherit = "sale.order"
@@ -34,13 +27,13 @@ class sale_order(osv.osv):
     _columns = {
             'subscriber_id':fields.many2one('res.partner', 'Subscriber', required=False),
             'subscriber_pricelist_id':fields.many2one('product.pricelist', 'Subscriber Pricelist', required=False),
-            'subscriber_invoice_ids': fields.many2many('account.invoice', 'sale_order_subscriber_invoice_rel', 'order_id', 'invoice_id', 'Subscriber Invoices', readonly=True, help="Invoices generated for ."),  
+            'subscriber_invoice_ids': fields.many2many('account.invoice', 'sale_order_subscriber_invoice_rel', 'order_id', 'invoice_id', 'Subscriber Invoices', readonly=True, help="Invoices generated for ."),
                     }
     
-    def _get_sol2mark_as2charge(self,cr,uid,ids):
+    def _get_sol2mark_as2charge(self, cr, uid, ids):
         
-        sale_order_line_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','in',ids),('got_from_subscriber_ok','=',True)])
-        cr.execute("select invoice_id from sale_order_line_invoice_rel where order_line_id in ("+",".join([str(x) for x in sale_order_line_ids])+")")
+        sale_order_line_ids = self.pool.get('sale.order.line').search(cr, uid, [('order_id', 'in', ids), ('got_from_subscriber_ok', '=', True)])
+        cr.execute("select invoice_id from sale_order_line_invoice_rel where order_line_id in (" + ",".join([str(x) for x in sale_order_line_ids]) + ")")
         invoice_line_ids = []
         res = cr.fetchall()
         invoice_line_ids
@@ -49,30 +42,30 @@ class sale_order(osv.osv):
         
         return invoice_line_ids
     
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv=False, context=None):
         
         
-        ret = super(sale_order,self).action_invoice_create(cr, uid, ids, grouped, states, date_inv, context)
+        ret = super(sale_order, self).action_invoice_create(cr, uid, ids, grouped, states, date_inv, context)
         
         invoice_line_ids = self._get_sol2mark_as2charge(cr, uid, ids) 
         
         if invoice_line_ids:
-            self.pool.get('account.invoice.line').write(cr,uid,invoice_line_ids,{'invoice_line2charge_ok':True})
+            self.pool.get('account.invoice.line').write(cr, uid, invoice_line_ids, {'invoice_line2charge_ok':True})
         
         return ret
     
-    def button_set_lines_got_from_subscriber_ok(self,cr,uid,ids,context=None):
-        sol_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','in',ids)])
+    def button_set_lines_got_from_subscriber_ok(self, cr, uid, ids, context=None):
+        sol_ids = self.pool.get('sale.order.line').search(cr, uid, [('order_id', 'in', ids)])
         
         if sol_ids:
-            sol_ids = self.pool.get('sale.order.line').write(cr,uid,sol_ids,{'got_from_subscriber_ok':True})
+            sol_ids = self.pool.get('sale.order.line').write(cr, uid, sol_ids, {'got_from_subscriber_ok':True})
         return True
             
-    def button_set_lines_got_from_subscriber_ko(self,cr,uid,ids,context=None):
-        sol_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','in',ids)])
+    def button_set_lines_got_from_subscriber_ko(self, cr, uid, ids, context=None):
+        sol_ids = self.pool.get('sale.order.line').search(cr, uid, [('order_id', 'in', ids)])
         
         if sol_ids:
-            sol_ids = self.pool.get('sale.order.line').write(cr,uid,sol_ids,{'got_from_subscriber_ok':False})
+            sol_ids = self.pool.get('sale.order.line').write(cr, uid, sol_ids, {'got_from_subscriber_ok':False})
             
         return True
                 
@@ -84,10 +77,10 @@ class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
 
     _columns = {
-            'got_from_subscriber_ok':fields.boolean('Got from subscriber', required=False),  
+            'got_from_subscriber_ok':fields.boolean('Got from subscriber', required=False),
                     }
     
     _defaults = {  
-        'got_from_subscriber_ok': lambda *a: False,  
+        'got_from_subscriber_ok': lambda * a: False,
         }
 sale_order_line()

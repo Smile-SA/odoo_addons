@@ -20,25 +20,15 @@
 ##############################################################################
 
 from osv import fields, osv
-import decimal_precision as dp
-from operator import __add__
-from tools.translate import _
-import mx.DateTime as dt
-import time
-from datetime import datetime, timedelta
-import calendar
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
     
     _columns = {
-            'parent': fields.boolean('Parent', required=False),
-            'sale_order_line_period_info_id': fields.many2one('sale.order.line.period.info', 'Invoiced period', required=False),
-                    }
+        'parent': fields.boolean('Parent', required=False),
+        'sale_order_line_period_info_id': fields.many2one('sale.order.line.period.info', 'Invoiced period', required=False),
+    }
     _defaults = {  
-        'parent': lambda *a: False,
-           
-        }
-    
-    
+        'parent': lambda * a: False,
+    }    
 account_invoice_line()

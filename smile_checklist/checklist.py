@@ -19,14 +19,13 @@
 #
 ##############################################################################
 
-from osv import osv, fields, orm
-from tools.translate import _
-import operator
-import traceback
 import time
-import pooler
+import traceback
+
 import netsvc
+from osv import osv, fields, orm
 import tools
+from tools.translate import _
 
 class checklist(osv.osv):
     _name = 'checklist'
@@ -255,18 +254,18 @@ class checklist(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if 'model_id' in vals:
             if vals['model_id']:
-                checklist = self.read(cr, uid, isinstance(ids, list) and ids[0] or ids, ['model_id', 'active_field'])
-                models = {checklist['model_id'][0]: {'checklist_id': False, 'active_field': False}}
-                models.update({vals['model_id']: {'checklist_id': checklist['id'], 'active_field': checklist['active_field']}})
+                checklist_inst = self.read(cr, uid, isinstance(ids, list) and ids[0] or ids, ['model_id', 'active_field'])
+                models = {checklist_inst['model_id'][0]: {'checklist_id': False, 'active_field': False}}
+                models.update({vals['model_id']: {'checklist_id': checklist_inst['id'], 'active_field': checklist_inst['active_field']}})
             else:
-                models = dict([(checklist_obj['model_id'][0], {'checklist_id': False, 'active_field': False}) for checklist_obj in self.read(cr, uid, ids, ['model_id'])])
-        result = super(osv.osv, self).write(cr, uid, ids, vals, context)
+                models = dict([(checklist_inst['model_id'][0], {'checklist_id': False, 'active_field': False}) for checklist_inst in self.read(cr, uid, ids, ['model_id'])])
+        result = super(checklist, self).write(cr, uid, ids, vals, context)
         if 'model_id' in vals:
             self._update_models(cr, models)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
-        models = dict([(checklist_obj['model_id'][0], {'checklist_id': False, 'active_field': False}) for checklist_obj in self.read(cr, uid, ids, ['model_id'])])
+        models = dict([(checklist_inst['model_id'][0], {'checklist_id': False, 'active_field': False}) for checklist_inst in self.read(cr, uid, ids, ['model_id'])])
         result = super(checklist, self).unlink(cr, uid, ids, context)
         self._update_models(cr, models)
         return result

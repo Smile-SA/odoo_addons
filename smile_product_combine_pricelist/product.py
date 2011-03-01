@@ -20,12 +20,10 @@
 ##############################################################################
 
 from osv import osv, fields
-from tools.translate import _
 import netsvc
+from tools.translate import _
 
-
-class product_product2(osv.osv):
-    
+class product_product2(osv.osv):    
     _inherit = 'product.product'
     
     def price_get(self, cr, uid, ids, ptype='list_price', context=None):
@@ -37,18 +35,18 @@ class product_product2(osv.osv):
         
         new_base_prices = {}
         if not 'based_on_price' in context:
-            res =  super(product_product2,self).price_get(cr, uid, ids, ptype, context)
+            res = super(product_product2, self).price_get(cr, uid, ids, ptype, context)
             
         else:
             
-            new_base_prices = context.get('based_on_price',False)
-            if not isinstance(new_base_prices,dict):
+            new_base_prices = context.get('based_on_price', False)
+            if not isinstance(new_base_prices, dict):
                 return res
     
             if 'currency_id' in context:
                 pricetype_obj = self.pool.get('product.price.type')
-                price_type_id = pricetype_obj.search(cr, uid, [('field','=',ptype)])[0]
-                price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
+                price_type_id = pricetype_obj.search(cr, uid, [('field', '=', ptype)])[0]
+                price_type_currency_id = pricetype_obj.browse(cr, uid, price_type_id).currency_id.id
     
             res = {}
             product_uom_obj = self.pool.get('product.uom')
@@ -66,7 +64,7 @@ class product_product2(osv.osv):
                     # Take the price_type currency from the product field
                     # This is right cause a field cannot be in more than one currency
                     res[product.id] = self.pool.get('res.currency').compute(cr, uid, price_type_currency_id,
-                        context['currency_id'], res[product.id],context=context)
+                        context['currency_id'], res[product.id], context=context)
     
         return res 
 

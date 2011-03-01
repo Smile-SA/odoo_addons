@@ -19,17 +19,17 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 
 class product_product(osv.osv):
     _inherit = "product.product"
 
     _columns = {
         'invoicing_plan_id': fields.many2one('account.invoicing_plan', 'Invoicing Plan'),
-        'subscription_ok': fields.boolean('Is subscription', required=False), 
+        'subscription_ok': fields.boolean('Is subscription', required=False),
     }
     
     _defaults = {  
-        'subscription_ok': lambda *a: False,  
+        'subscription_ok': lambda * a: False,
         }
 product_product()
