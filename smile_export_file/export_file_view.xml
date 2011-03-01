@@ -79,15 +79,13 @@
 							<group col="2" colspan="2">
 								<separator string="Attachment" colspan="2"/>
 								<field name="create_attachment"/>
-							</group>
-							<group col="2" colspan="2">
 								<separator string="FTP" colspan="2"/>
 								<field name="upload_to_ftp_server"/>
 								<group col="2" colspan="2" attrs="{'invisible': [('upload_to_ftp_server', '!=', True)]}">
 									<field name="ftp_host" attrs="{'required': [('upload_to_ftp_server', '=', True)]}"/>
 									<field name="ftp_anonymous"/>
 									<field name="ftp_user" attrs="{'invisible': [('ftp_anonymous', '=', True)], 'required': [('ftp_anonymous', '!=', True)]}"/>
-									<field name="ftp_password" attrs="{'invisible': [('ftp_anonymous', '=', True)]}"/>
+									<field name="ftp_password" attrs="{'invisible': [('ftp_anonymous', '=', True)]}" password="True"/>
 								</group>
 							</group>
 						</page>

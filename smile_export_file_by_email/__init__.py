@@ -19,21 +19,4 @@
 #
 ##############################################################################
 
-{
-    "name" : "Export File",
-    "version" : "1.0",
-    "author" : "Smile",
-    "website": 'http://www.smile.fr',
-    "category" : "Tools",
-    "description": "Development in progress",
-    "depends" : ['smile_export'],
-    "init_xml" : [],
-    "update_xml": [
-        'export_file_view.xml',
-        'export_view.xml',
-        'security/ir.model.access.csv',
-    ],
-    "demo_xml" : [],
-    "installable": True,
-    "active": False,
-}
+import export_file

@@ -24,7 +24,6 @@ import calendar
 import datetime
 from ftplib import FTP
 import logging
-import StringIO
 import time
 
 try:
@@ -74,7 +73,6 @@ class ir_model_export_file_template(osv.osv):
             ('report', 'Included in report'),
             ('file', 'Dedicated file'),
         ], 'Exception Logging', required=True),
-        'report_id': fields.many2one('res.request', 'Report', readonly=True),
         'delimiter': fields.char('Delimiter', size=64),
         'lineterminator': fields.char('Line Terminator', size=64),
         'fieldnames_in_header': fields.boolean('Fieldnames in header'),
@@ -89,14 +87,14 @@ class ir_model_export_file_template(osv.osv):
         'ftp_host': fields.char('Host', size=128),
         'ftp_anonymous': fields.boolean('Anonymous'),
         'ftp_user': fields.char('User', size=64),
-        'ftp_password': fields.char('Password', size=64, invisible=True),
+        'ftp_password': fields.char('Password', size=64),
     }
 
     _defaults = {
         'exception_handling': lambda * a: 'cancel',
         'exception_logging': lambda * a: 'report',
         'delimiter': lambda * a: "','",
-        'lineterminator': lambda * a: "chr(10)",
+        'lineterminator': lambda * a: "'\n'",
         'create_attachment': lambda * a: True,
         'report_summary_template': lambda * a: """Here is the file export processing report.
 
@@ -194,10 +192,11 @@ class ir_model_export_file_template(osv.osv):
     def _create_attachement(self, cr, uid, export_file, filename, binary, context):
         vals = {
             'name': filename,
+            'type': 'binary',
             'datas': binary,
             'datas_fname': filename,
-            'res_model': context.get('attach_res_model', self._name),
-            'res_id': context.get('attach_res_id', export_file.id),
+            'res_model': 'ir.model.export',
+            'res_id': context.get('attach_export_id', 0),
         }
         self.pool.get('ir.attachment').create(cr, uid, vals, context)
 
@@ -212,30 +211,17 @@ class ir_model_export_file_template(osv.osv):
         file.write(binary)
         ftp.storbinary(command, file)
 
-    def _save_file(self, cr, uid, export_file, filename, file_content, context):
-        binary = base64.encodestring(file_content.encode(export_file.encoding))
+    def _save_file(self, cr, uid, export_file, filename, binary, context):
         for save_file_method in ['create_attachment', 'upload_to_ftp_server']:
             if getattr(export_file, save_file_method):
                 getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, binary, context)
 
     # ***** Execution report saving method *****
 
-    def _save_execution_report(self, cr, uid, export_file, filename, content_ids, exceptions, start_date, end_date, context):
-        localdict = {
-            'pool': self.pool,
-            'cr': cr,
-            'uid': uid,
-            'object': export_file,
-            'context': context,
-            'time': time,
-            'datetime': datetime,
-            'calendar': calendar,
-            'start_date': start_date,
-            'end_date': end_date,
-            'filename': filename,
-            'records_number': len(content_ids),
-            'exceptions_number': len(exceptions),
-            'exceptions': exceptions}
+    def _save_execution_report(self, cr, uid, export_file, localdict):
+        filename = localdict['filename']
+        exceptions = localdict['exceptions']
+        context = localdict['context']
         summary = _render_unicode(export_file.report_summary_template, localdict)
         if exceptions and export_file.exception_logging == 'report':
             summary += "Exceptions:\n%s" % '\n'.join(exceptions)
@@ -250,13 +236,15 @@ class ir_model_export_file_template(osv.osv):
             exceptions_filename = filename[:-filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
             exceptions_vals = {
                 'name':  exceptions_filename,
+                'type': 'binary',
                 'datas': base64.encodestring('\n'.join(exceptions).encode(export_file.encoding)),
                 'datas_fname': exceptions_filename,
                 'res_model': 'res.request',
                 'res_id': report_id,
             }
             self.pool.get('ir.attachment').create(cr, uid, exceptions_vals, context)
-        return export_file.write({'report_id': report_id})
+        export = self.pool.get('ir.model.export').browse(cr, uid, context.get('attach_export_id', 0), context)
+        return export.write({'report_id': report_id})
 
     # ***** File generation method *****
 
@@ -289,9 +277,26 @@ class ir_model_export_file_template(osv.osv):
             exceptions += content_exceptions
             if file_content:
                 filename = _render_unicode(export_file.filename, {'object': export_file, 'context': context, 'time': time}, export_file.encoding)
-                self._save_file(cr, uid, export_file, filename, file_content, context)
+                binary = base64.encodestring(file_content.encode(export_file.encoding))
+                self._save_file(cr, uid, export_file, filename, binary, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
-        return self._save_execution_report(cr, uid, export_file, filename, content_ids, exceptions, start_date, end_date, context)
+        localdict = {
+            'pool': self.pool,
+            'cr': cr,
+            'uid': uid,
+            'object': export_file,
+            'context': context,
+            'time': time,
+            'datetime': datetime,
+            'calendar': calendar,
+            'start_date': start_date,
+            'end_date': end_date,
+            'filename': filename,
+            'file': binary,
+            'records_number': len(content_ids),
+            'exceptions_number': len(exceptions),
+            'exceptions': exceptions}
+        return self._save_execution_report(cr, uid, export_file, localdict)
 ir_model_export_file_template()
 
 class ir_model_export_file_template_column(osv.osv):

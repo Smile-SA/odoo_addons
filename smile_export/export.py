@@ -222,6 +222,4 @@ class ir_model_export_line(osv.osv):
         'res_id': fields.integer('Resource ID', required=True),
         'res_type': fields.related('export_id', 'mode_id', type='many2one', relation='ir.model', string='Resource Object'),
     }
-
-    # TODO: manage object deletion => remove linked export lines
 ir_model_export_line()

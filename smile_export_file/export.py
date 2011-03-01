@@ -33,7 +33,7 @@ ir_model_export_template()
 class ir_model_export(osv.osv):
     _inherit = 'ir.model.export'
 
-    def _get_last_attachment(self, cr, uid, ids, name, args, context=None):
+    def _get_last_attachments(self, cr, uid, ids, name, args, context=None):
         res = {}
         for export in self.read(cr, uid, ids, ['report_id']):
             res[export['id']] = {'attachment_id': False, 'exceptions_attachment_id': False}
@@ -51,14 +51,13 @@ class ir_model_export(osv.osv):
             type='many2one', relation='ir.model.export.file_template', string='File Template', readonly=True),
         'record_ids': fields.related('export_tmpl_id', 'record_ids',
             type='char', string='Record Ids', readonly=True),
-        'report_id': fields.related('export_file_template_id', 'report_id',
-            type='many2one', relation='res.request', string='Report', readonly=True),
+        'report_id': fields.many2one('res.request', string='Report', readonly=True),
         'report_summary': fields.related('report_id', 'body',
             type='char', string='Report', readonly=True),
-        'attachment_id': fields.function(_get_last_attachment, method=True, type='many2one', relation='ir.attachment', string='Attachment', store=False, multi='report'),
+        'attachment_id': fields.function(_get_last_attachments, method=True, type='many2one', relation='ir.attachment', string='Attachment', store=False, multi='report'),
         'file': fields.related('attachment_id', 'datas', type='binary', string="File"),
         'filename': fields.related('attachment_id', 'datas_fname', type='char', string="Filename"),
-        'exceptions_attachment_id': fields.function(_get_last_attachment, method=True, type='many2one', relation='ir.attachment', string='Exceptions', store=False, multi='report'),
+        'exceptions_attachment_id': fields.function(_get_last_attachments, method=True, type='many2one', relation='ir.attachment', string='Exceptions', store=False, multi='report'),
         'exceptions_file': fields.related('exceptions_attachment_id', 'datas', type='binary', string="Exceptions File"),
         'exceptions_filename': fields.related('exceptions_attachment_id', 'datas_fname', type='char', string="Exceptions Filename"),
     }
@@ -76,7 +75,6 @@ class ir_model_export(osv.osv):
                     if isinstance(record_ids, (int, long)):
                         record_ids = [record_ids]
                     context['active_ids'] += record_ids
-            context['attach_res_model'] = self._name
-            context['attach_res_id'] = export.id
+            context['attach_export_id'] = export.id
             self.pool.get('ir.model.export.file_template').generate_file(cr, uid, export.export_file_template_id.id, context)
 ir_model_export()
