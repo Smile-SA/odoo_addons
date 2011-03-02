@@ -25,7 +25,18 @@
     "author" : "Smile",
     "website": 'http://www.smile.fr',
     "category" : "Tools",
-    "description": "Development in progress",
+    "description": """Export data in file
+
+Principle
+
+* Define a file template
+* Choose storage methods
+    * create an attachment
+    * upload in FTP server
+    * send by email
+
+Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+""",
     "depends" : ['smile_export'],
     "init_xml" : [],
     "update_xml": [

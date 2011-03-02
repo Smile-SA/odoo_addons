@@ -80,14 +80,24 @@ class ir_model_export_file_template(osv.osv):
         'header': fields.text('Header'),
         'body': fields.text('Body', help="Template language: Mako"),
         'footer': fields.text('Footer'),
+
         'report_summary_template': fields.text('Report', help="Use mako language with the pool, cr, uid, object, "
             "context, time, datetime, start_date, end_date, filename, records_number, exceptions_number and exceptions variables"),
+
         'create_attachment': fields.boolean('Create an attachement'),
         'upload_to_ftp_server': fields.boolean('Upload to FTP server'),
-        'ftp_host': fields.char('Host', size=128),
+        'ftp_host': fields.char('Host', size=128, help="You can use a mako language "
+            "with the object and time variables"),
         'ftp_anonymous': fields.boolean('Anonymous'),
         'ftp_user': fields.char('User', size=64),
         'ftp_password': fields.char('Password', size=64),
+        'send_by_email': fields.boolean('Send by email'),
+        'email_to': fields.char('To', size=128),
+        'email_cc': fields.char('CC', size=128),
+        'email_subject': fields.char('Subject', size=256),
+        'email_body': fields.text('Body'),
+        'email_attach_export_file': fields.boolean('Attach export file'),
+        'email_attach_exceptions_file': fields.boolean('Attach exceptions file'),
     }
 
     _defaults = {
@@ -105,6 +115,7 @@ class ir_model_export_file_template(osv.osv):
         Resources exported: ${records_number - exceptions_number}
         Resources in exception: ${exceptions_number}
 """,
+        'email_attach_export_file': lambda * a: True,
     }
 
     # ***** Data layout methods ****
@@ -187,7 +198,7 @@ class ir_model_export_file_template(osv.osv):
             lineterminator = export_file.lineterminator
         return (lineterminator.join(content), exceptions)
 
-    # ***** File saving methods *****
+    # ***** File storage methods *****
 
     def _create_attachement(self, cr, uid, export_file, filename, binary, context):
         vals = {
@@ -201,7 +212,13 @@ class ir_model_export_file_template(osv.osv):
         self.pool.get('ir.attachment').create(cr, uid, vals, context)
 
     def _upload_to_ftp_server(self, cr, uid, export_file, filename, binary, context):
-        ftp = FTP(export_file.ftp_host)
+        localdict = {
+            'object': export_file,
+            'context': context,
+            'time': time,
+        }
+        host = _render_unicode(export_file.ftp_host, localdict)
+        ftp = FTP(host)
         if export_file.ftp_anonymous:
             ftp.login()
         else:
@@ -216,7 +233,21 @@ class ir_model_export_file_template(osv.osv):
             if getattr(export_file, save_file_method):
                 getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, binary, context)
 
-    # ***** Execution report saving method *****
+    def _send_by_email(self, cr, uid, export_file, localdict):
+        email_to = _render_unicode(export_file.email_to, localdict)
+        email_subject = _render_unicode(export_file.email_subject, localdict)
+        email_body = _render_unicode(export_file.email_body, localdict)
+        email_cc = _render_unicode(export_file.email_cc, localdict)
+        attachments = []
+        context = localdict.get('context', {})
+        export = self.pool.get('ir.model.export').browse(cr, uid, context.get('attach_export_id', 0), context)
+        if export_file.email_attach_export_file:
+            attachments.append((localdict['filename'], localdict['file']))
+        if export_file.exception_logging == 'file' and export_file.email_attach_exceptions_file:
+            attachments.append((export.exceptions_filename, export.exceptions_file))
+        return tools.email_send(False, email_to, email_subject, email_body, email_cc, attach=attachments)
+
+    # ***** Execution report storage method *****
 
     def _save_execution_report(self, cr, uid, export_file, localdict):
         filename = localdict['filename']
@@ -244,7 +275,10 @@ class ir_model_export_file_template(osv.osv):
             }
             self.pool.get('ir.attachment').create(cr, uid, exceptions_vals, context)
         export = self.pool.get('ir.model.export').browse(cr, uid, context.get('attach_export_id', 0), context)
-        return export.write({'report_id': report_id})
+        export.write({'report_id': report_id})
+        if export_file.send_by_email:
+            self._send_by_email(cr, uid, export_file, localdict)
+        return True
 
     # ***** File generation method *****
 
@@ -276,7 +310,11 @@ class ir_model_export_file_template(osv.osv):
             file_content, content_exceptions = self._lay_out_data(cr, uid, export_file, context)
             exceptions += content_exceptions
             if file_content:
-                filename = _render_unicode(export_file.filename, {'object': export_file, 'context': context, 'time': time}, export_file.encoding)
+                filename = _render_unicode(export_file.filename, {
+                                'object': export_file,
+                                'context': context,
+                                'time': time
+                            }, export_file.encoding)
                 binary = base64.encodestring(file_content.encode(export_file.encoding))
                 self._save_file(cr, uid, export_file, filename, binary, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')

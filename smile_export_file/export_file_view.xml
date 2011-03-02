@@ -87,6 +87,16 @@
 									<field name="ftp_user" attrs="{'invisible': [('ftp_anonymous', '=', True)], 'required': [('ftp_anonymous', '!=', True)]}"/>
 									<field name="ftp_password" attrs="{'invisible': [('ftp_anonymous', '=', True)]}" password="True"/>
 								</group>
+								<separator string="Email" colspan="2"/>
+								<field name="send_by_email"/>
+								<group col="2" colspan="2" attrs="{'invisible': [('send_by_email', '!=', True)]}">
+									<field name="email_to" attrs="{'required': [('send_by_email', '=', True)]}"/>
+									<field name="email_cc"/>
+									<field name="email_subject" attrs="{'required': [('send_by_email', '=', True)]}"/>
+									<field name="email_body" attrs="{'required': [('send_by_email', '=', True)]}"/>
+									<field name="email_attach_export_file"/>
+									<field name="email_attach_exceptions_file"/>
+								</group>
 							</group>
 						</page>
 					</notebook>

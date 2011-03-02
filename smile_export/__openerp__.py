@@ -27,6 +27,17 @@
     "category" : "Tools",
     "description": """Export whatever objects
 
+Principle
+
+* Define an export template
+    * choose a object
+    * define a domain to filter lines to export
+    * indicate if a line can be export only once or several times
+* Create actions to generate a new export
+    * a client action to generate a export in fly
+    * a scheduled action to generate periodically a new export
+* Log execution exceptions
+
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
 """,
     "depends" : ['base'],
