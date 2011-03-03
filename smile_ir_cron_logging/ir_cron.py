@@ -51,10 +51,10 @@ class ir_cron(osv.osv, netsvc.Agent):
         # Added by Smile
         report = """Here is the action scheduling report.
 
-        Start Time: %s
-        End Time: %s
+Start Time: %s
+End Time: %s
 
-        """
+"""
         ##
         try:
             db, pool = pooler.get_db_and_pool(db_name)
@@ -87,7 +87,7 @@ class ir_cron(osv.osv, netsvc.Agent):
                             addsql = ', active=False'
                         cr.execute("update ir_cron set nextcall=%s, numbercall=%s" + addsql + " where id=%s", (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
                     # Added by Smile
-                        report += "No exceptions"
+                        report += "No errors"
                     except Exception, e:
                         report += "Exception:\n" + tools.ustr(e)
                     end_time = time.strftime('%Y-%m-%d %H:%M:%S')
