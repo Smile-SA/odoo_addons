@@ -25,10 +25,10 @@
     "author" : "Smile",
     "website": 'http://www.smile.fr',
     "category" : "Tools",
-    "description": """Log scheduled actions and catch exceptions
+    "description": """Log actions scheduling and catch exceptions
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
-""",
+    Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+    """,
     "depends" : ['base'],
     "init_xml" : [],
     "update_xml": [

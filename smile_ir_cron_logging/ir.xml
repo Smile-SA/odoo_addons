@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
 	            <field name="doall" position="after">
 	            	<separator string="Last Execution Report" colspan="4"/>
-	            	<field name="report" colspan="4" nolabel="1"/>
+	            	<field name="report" colspan="4" nolabel="1" readonly="1"/>
 	            </field>
             </field>
         </record>
