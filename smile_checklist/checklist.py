@@ -326,7 +326,7 @@ class checklist(osv.osv):
                 if object.total_progress_rate_mandatory != total_progress_rate_mandatory == 100:
                     fields.append('active')
                     values.append("TRUE")
-            cr.execute("UPDATE "+obj._table+" SET ("+','.join(fields)+") = %s WHERE id = %s", (tuple(values), object.id))
+            cr.execute("UPDATE " + obj._table + " SET (" + ','.join(fields) + ") = %s WHERE id = %s", (tuple(values), object.id))
             if instances and instances[0].checklist_task_id.checklist_id.action_id and object.total_progress_rate != total_progress_rate == 100:
                 checklist = instances[0].checklist_task_id.checklist_id
                 action = checklist.action_id
@@ -370,9 +370,9 @@ class checklist_task_instance(osv.osv):
         return res
 
     def _get_checklist_task_instance_ids(self, cr, uid, ids, context={}):
-        if isinstance(ids, (int,long)):
+        if isinstance(ids, (int, long)):
             ids = [ids]
-        return self.pool.get('checklist.task.instance').search(cr, uid, [('checklist_task_id','in',ids)])
+        return self.pool.get('checklist.task.instance').search(cr, uid, [('checklist_task_id', 'in', ids)])
 
     _columns = {
         'checklist_task_id': fields.many2one('checklist.task', 'Checklist Task', required=True, ondelete='cascade'),
@@ -391,8 +391,8 @@ class checklist_task_instance(osv.osv):
     }
 
     _defaults = {
-        'progress_rate': lambda *a: 0.0,
-        'sequence': lambda *a: 15,
+        'progress_rate': lambda * a: 0.0,
+        'sequence': lambda * a: 15,
     }        
 checklist_task_instance()
 
