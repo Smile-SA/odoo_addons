@@ -25,7 +25,7 @@
     "author" : "Smile",
     "website": 'http://www.smile.fr',
     "category" : "Tools",
-    "description": """Export data in file
+    "description": """Export data in flat file
 
 Principle
 

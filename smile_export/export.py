@@ -32,6 +32,7 @@ class ir_model_export_template(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'domain': fields.char('Domain', size=255),
+        'limit': fields.integer('Limit'),
         'unique': fields.boolean('Unique', help="If unique, each instance is exported only once"),
         'method': fields.char('Method', size=64, help="Indicate a method with a signature equals to (self, cr, uid, ids, fields_to_export, *args, context=None)"),
         'action_id': fields.many2one('ir.actions.server', 'Action'),

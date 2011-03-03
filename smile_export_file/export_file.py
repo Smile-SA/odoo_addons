@@ -24,6 +24,9 @@ import calendar
 import datetime
 from ftplib import FTP
 import logging
+import os
+from random import random
+import tempfile
 import time
 
 try:
@@ -35,12 +38,28 @@ from osv import osv, fields
 import tools
 from tools.translate import _
 
+from text2pdf import pyText2Pdf
+
 def _get_exception_message(exception):
     return isinstance(exception, osv.except_osv) and exception.value or exception
 
 def _render_unicode(template_src, localdict, encoding='UTF-8'):
     template = MakoTemplate(tools.ustr(template_src), output_encoding=encoding)
     return template.render_unicode(**localdict)
+
+def _text2pdf(string):
+    tmpfilename = os.path.join(tempfile.gettempdir(), str(int(random()*10 ** 9)))
+    tmpfile = open(tmpfilename, 'w')
+    tmpfile.write(string)
+    tmpfile.close()
+    pdf = pyText2Pdf()
+    pdf._ifile = tmpfilename
+    pdf.Convert()
+    tmpfile_pdf = open(tmpfilename + '.pdf', 'r')
+    string = tmpfile_pdf.read()
+    os.remove(tmpfilename)
+    os.remove(tmpfilename + '.pdf')
+    return string
 
 class ir_model_export_file_template(osv.osv):
     _name = 'ir.model.export.file_template'
@@ -51,16 +70,18 @@ class ir_model_export_file_template(osv.osv):
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'model': fields.related('model_id', 'model', type='char', string='Object', readonly=True),
         'state': fields.selection([
-            ('xml', 'XML'),
-            ('csv', 'CSV'),
-            ('custom', 'Custom'),
+            ('tab', 'Tabular'),
+            ('other', 'Other'),
         ], 'Type', required=True),
-        'layout_method': fields.char('Data Layout Method', size=64, help="Indicate a method of the object "
-            "'ir.model.export_file' with a signature equals to (self, cr, uid, export_file_instance, template_part, localdict)"),
         'check_method': fields.char('Data Check Method', size=64, help="Indicate a method of the "
             "remote model with a signature equals to (self, cr, uid, ids, context=None)"),
         'filename': fields.char('Filename', size=256, required=True, help="You can use a mako language "
             "with the object and time variables"),
+        'extension': fields.selection([
+            ('pdf', '.pdf'),
+            ('other', 'Other'),
+        ], 'Extension', required=True),
+        'extension_custom': fields.char('Custom Extension', size=12),
         'encoding': fields.selection([
             ('UTF-8', 'UTF-8'),
             ('ISO-8859-15', 'ISO-8859-15'),
@@ -75,7 +96,7 @@ class ir_model_export_file_template(osv.osv):
         ], 'Exception Logging', required=True),
         'delimiter': fields.char('Delimiter', size=64),
         'lineterminator': fields.char('Line Terminator', size=64),
-        'fieldnames_in_header': fields.boolean('Fieldnames in header'),
+        'fieldnames_in_header': fields.boolean('Add column labels in header'),
         'column_ids': fields.one2many('ir.model.export.file_template.column', 'export_file_template_id', 'Columns'),
         'header': fields.text('Header'),
         'body': fields.text('Body', help="Template language: Mako"),
@@ -101,6 +122,8 @@ class ir_model_export_file_template(osv.osv):
     }
 
     _defaults = {
+        'state': lambda * a: 'other',
+        'extension': lambda * a: 'other',
         'exception_handling': lambda * a: 'cancel',
         'exception_logging': lambda * a: 'report',
         'delimiter': lambda * a: "','",
@@ -120,12 +143,12 @@ class ir_model_export_file_template(osv.osv):
 
     # ***** Data layout methods ****
 
-    def _render_xml(self, cr, uid, export_file, template_part, localdict):
-        """Render the output of this template as a string formated in XML"""
+    def _render(self, cr, uid, export_file, template_part, localdict):
+        """Render the output of this template as a string"""
         return _render_unicode(getattr(export_file, template_part), localdict, export_file.encoding)
 
-    def _render_csv(self, cr, uid, export_file, template_part, localdict):
-        """Render the output of this template as a string formated in CSV"""
+    def _render_tab(self, cr, uid, export_file, template_part, localdict):
+        """Render the output of this template in a tabular format"""
         template = []
         try:
             delimiter = eval(export_file.delimiter)
@@ -133,7 +156,7 @@ class ir_model_export_file_template(osv.osv):
             delimiter = export_file.delimiter
         # Header & Footer
         if getattr(export_file, template_part):
-            template.append(self._render_xml(cr, uid, export_file, template_part, localdict))
+            template.append(self._render(cr, uid, export_file, template_part, localdict))
         # Header with fieldnames
         if template_part == 'header' and export_file.fieldnames_in_header:
             template.append(delimiter.join([tools.ustr(column.name) for column in export_file.column_ids]))
@@ -168,20 +191,20 @@ class ir_model_export_file_template(osv.osv):
         """Call specific layout methods and catch exceptions"""
         content = []
         exceptions = []
-        content_render_method = export_file.state in ['csv', 'xml'] and '_render_' + export_file.state or export_file.layout_method
+        content_render_method = export_file.state = 'tab' and '_render_tab' or '_render'
         if content_render_method:
             localdict = {
                 'pool': self.pool,
                 'cr': cr,
                 'uid': uid,
-                'local_context': context,
+                'localcontext': context,
                 'time': time,
                 'datetime': datetime,
                 'calendar': calendar,
             }
             objects = self.pool.get(export_file.model_id.model).browse(cr, uid, context['active_ids'], context)
             for template_part in ['header', 'body', 'footer']:
-                if export_file.state == 'csv' and export_file.column_ids or getattr(export_file, template_part):
+                if export_file.state == 'tab' and export_file.column_ids or getattr(export_file, template_part):
                     template_parts = template_part == 'body' and objects or [objects]
                     for line in template_parts:
                         localdict['object'] = line
@@ -214,7 +237,7 @@ class ir_model_export_file_template(osv.osv):
     def _upload_to_ftp_server(self, cr, uid, export_file, filename, binary, context):
         localdict = {
             'object': export_file,
-            'local_context': context,
+            'localcontext': context,
             'time': time,
         }
         host = _render_unicode(export_file.ftp_host, localdict)
@@ -239,7 +262,7 @@ class ir_model_export_file_template(osv.osv):
         email_body = _render_unicode(export_file.email_body, localdict)
         email_cc = _render_unicode(export_file.email_cc, localdict)
         attachments = []
-        context = localdict.get('local_context', {})
+        context = localdict.get('localcontext', {})
         export = self.pool.get('ir.model.export').browse(cr, uid, context.get('attach_export_id', 0), context)
         if export_file.email_attach_export_file:
             attachments.append((localdict['filename'], localdict['file']))
@@ -252,7 +275,7 @@ class ir_model_export_file_template(osv.osv):
     def _save_execution_report(self, cr, uid, export_file, localdict):
         filename = localdict['filename']
         exceptions = localdict['exceptions']
-        context = localdict['local_context']
+        context = localdict['localcontext']
         summary = _render_unicode(export_file.report_summary_template, localdict)
         if exceptions and export_file.exception_logging == 'report':
             summary += "Exceptions:\n%s" % '\n'.join(exceptions)
@@ -312,9 +335,18 @@ class ir_model_export_file_template(osv.osv):
             if file_content:
                 filename = _render_unicode(export_file.filename, {
                                 'object': export_file,
-                                'local_context': context,
+                                'localcontext': context,
                                 'time': time
                             }, export_file.encoding)
+                extension = ''
+                if export_file.extension == 'other':
+                    extension = export_file.extension_custom
+                    if extension.find('.'):
+                        extension = '.%s' % extension
+                else:
+                    extension = '.pdf'
+                    file_content = _text2pdf(file_content)
+                filename += extension
                 binary = base64.encodestring(file_content.encode(export_file.encoding))
                 self._save_file(cr, uid, export_file, filename, binary, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -323,7 +355,7 @@ class ir_model_export_file_template(osv.osv):
             'cr': cr,
             'uid': uid,
             'object': export_file,
-            'local_context': context,
+            'localcontext': context,
             'time': time,
             'datetime': datetime,
             'calendar': calendar,
@@ -348,12 +380,12 @@ class ir_model_export_file_template_column(osv.osv):
         'sequence': fields.integer('Sequence', required=True),
         'export_file_template_id': fields.many2one('ir.model.export.file_template', 'Export', required=True, ondelete='cascade'),
         'value': fields.text('Value', required=True,
-            help="Use mako language with the pool, cr, uid, object, local_context and time variables"),
+            help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'default_value': fields.char('Default value', size=64,
-            help="Use mako language with the pool, cr, uid, object, local_context and time variables"),
+            help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'not_none': fields.boolean('Not None?'),
         'exception_msg': fields.char('Exception Message', size=256, translate=True,
-            help="Use mako language with the pool, cr, uid, object, local_context and time variables"),
+            help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'min_width': fields.integer('Min width'),
         'fillchar': fields.char('Fillchar', size=1),
         'justify': fields.selection([
