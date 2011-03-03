@@ -30,8 +30,8 @@
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "depends" : ['base'],
-    "init_xml" : ['security/checklist_security.xml'],
-    "update_xml": ['checklist_view.xml'],
+    "init_xml" : [],
+    "update_xml": ['ir.xml'],
     "demo_xml" : [],
     "installable": True,
     "active": False,
