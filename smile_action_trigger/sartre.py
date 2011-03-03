@@ -196,7 +196,7 @@ class sartre_trigger(osv.osv):
     def get_trigger_ids(self, cr, uid, model, method):
         domain = [('model', '=', model)]
         if method in ['create', 'write', 'unlink', 'function']:
-            domain.append(('on_'+method, '=', True))
+            domain.append(('on_' + method, '=', True))
         else:
             domain.append(('on_other_method', '=', method))
         return self.search(cr, uid, domain, context={'active_test': True})
@@ -345,17 +345,18 @@ class sartre_trigger(osv.osv):
         for trigger in self.browse(cr, uid, ids):
             self.logger.notifyChannel('sartre.trigger', netsvc.LOG_DEBUG, 'trigger: %s, User: %s' % (trigger.id, uid))
             domain = []
+            trigger_object_ids = []
             try:
                 # Build domain expression
                 domain = self._build_domain_expression(cr, uid, trigger, context)
+                # Search objects which validate trigger filters
+                trigger_object_ids = self.pool.get(trigger.model_id.model).search(cr, uid, domain, context=context)
             except Exception, e:
                 stack = traceback.format_exc()
                 cr.rollback()
                 self.pool.get('sartre.exception').create(cr, uid, {'trigger_id': trigger.id, 'exception_type': 'filter', 'exception': tools.ustr(e), 'stack': tools.ustr(stack)})
                 self.logger.notifyChannel('sartre.trigger', netsvc.LOG_ERROR, 'Trigger: %s, User: %s, Exception:%s' % (trigger.id, uid, tools.ustr(e)))
                 continue
-            # Search objects which validate trigger filters
-            trigger_object_ids = self.pool.get(trigger.model_id.model).search(cr, uid, domain, context=context)
             # Execute server actions
             if trigger_object_ids:
                 context.setdefault('triggers', {}).setdefault(trigger.id, []).extend(trigger_object_ids)
