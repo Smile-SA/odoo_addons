@@ -174,7 +174,7 @@ class ir_model_export_file_template(osv.osv):
                 'pool': self.pool,
                 'cr': cr,
                 'uid': uid,
-                'context': context,
+                'local_context': context,
                 'time': time,
                 'datetime': datetime,
                 'calendar': calendar,
@@ -200,7 +200,7 @@ class ir_model_export_file_template(osv.osv):
 
     # ***** File storage methods *****
 
-    def _create_attachement(self, cr, uid, export_file, filename, binary, context):
+    def _create_attachment(self, cr, uid, export_file, filename, binary, context):
         vals = {
             'name': filename,
             'type': 'binary',
@@ -214,7 +214,7 @@ class ir_model_export_file_template(osv.osv):
     def _upload_to_ftp_server(self, cr, uid, export_file, filename, binary, context):
         localdict = {
             'object': export_file,
-            'context': context,
+            'local_context': context,
             'time': time,
         }
         host = _render_unicode(export_file.ftp_host, localdict)
@@ -239,7 +239,7 @@ class ir_model_export_file_template(osv.osv):
         email_body = _render_unicode(export_file.email_body, localdict)
         email_cc = _render_unicode(export_file.email_cc, localdict)
         attachments = []
-        context = localdict.get('context', {})
+        context = localdict.get('local_context', {})
         export = self.pool.get('ir.model.export').browse(cr, uid, context.get('attach_export_id', 0), context)
         if export_file.email_attach_export_file:
             attachments.append((localdict['filename'], localdict['file']))
@@ -252,7 +252,7 @@ class ir_model_export_file_template(osv.osv):
     def _save_execution_report(self, cr, uid, export_file, localdict):
         filename = localdict['filename']
         exceptions = localdict['exceptions']
-        context = localdict['context']
+        context = localdict['local_context']
         summary = _render_unicode(export_file.report_summary_template, localdict)
         if exceptions and export_file.exception_logging == 'report':
             summary += "Exceptions:\n%s" % '\n'.join(exceptions)
@@ -290,7 +290,7 @@ class ir_model_export_file_template(osv.osv):
         if isinstance(export_file_id, list):
             export_file_id = export_file_id[0]
         export_file = self.browse(cr, uid, export_file_id, context)
-        filename = ''
+        filename = binary = ''
         exceptions = []
         content_ids = context.get('active_ids', 'active_id' in context and [context['active_id']] or [])
         checked_content_ids = content_ids[:]
@@ -312,7 +312,7 @@ class ir_model_export_file_template(osv.osv):
             if file_content:
                 filename = _render_unicode(export_file.filename, {
                                 'object': export_file,
-                                'context': context,
+                                'local_context': context,
                                 'time': time
                             }, export_file.encoding)
                 binary = base64.encodestring(file_content.encode(export_file.encoding))
@@ -323,17 +323,19 @@ class ir_model_export_file_template(osv.osv):
             'cr': cr,
             'uid': uid,
             'object': export_file,
-            'context': context,
+            'local_context': context,
             'time': time,
             'datetime': datetime,
             'calendar': calendar,
-            'start_date': start_date,
-            'end_date': end_date,
+            'start_time': start_date,
+            'end_time': end_date,
             'filename': filename,
             'file': binary,
             'records_number': len(content_ids),
+            'export_lines_number': len(content_ids) - len(exceptions),
             'exceptions_number': len(exceptions),
-            'exceptions': exceptions}
+            'exceptions': exceptions,
+        }
         return self._save_execution_report(cr, uid, export_file, localdict)
 ir_model_export_file_template()
 
@@ -346,12 +348,12 @@ class ir_model_export_file_template_column(osv.osv):
         'sequence': fields.integer('Sequence', required=True),
         'export_file_template_id': fields.many2one('ir.model.export.file_template', 'Export', required=True, ondelete='cascade'),
         'value': fields.text('Value', required=True,
-            help="Use mako language with the pool, cr, uid, object, context and time variables"),
+            help="Use mako language with the pool, cr, uid, object, local_context and time variables"),
         'default_value': fields.char('Default value', size=64,
-            help="Use mako language with the pool, cr, uid, object, context and time variables"),
+            help="Use mako language with the pool, cr, uid, object, local_context and time variables"),
         'not_none': fields.boolean('Not None?'),
         'exception_msg': fields.char('Exception Message', size=256, translate=True,
-            help="Use mako language with the pool, cr, uid, object, context and time variables"),
+            help="Use mako language with the pool, cr, uid, object, local_context and time variables"),
         'min_width': fields.integer('Min width'),
         'fillchar': fields.char('Fillchar', size=1),
         'justify': fields.selection([

@@ -185,6 +185,9 @@ class ir_model_export(osv.osv):
         threaded_run.start()
         return True
 
+    def generate2(self, cr, uid, ids, context=None):
+        return self._generate(cr, uid, ids, context)
+
     def _generate(self, cr, uid, ids, context=None):
         """Call export method and action
         Catch and log exceptions"""
@@ -220,6 +223,5 @@ class ir_model_export_line(osv.osv):
     _columns = {
         'export_id': fields.many2one('ir.model.export', 'Export', required=True, ondelete='cascade'),
         'res_id': fields.integer('Resource ID', required=True),
-        'res_type': fields.related('export_id', 'mode_id', type='many2one', relation='ir.model', string='Resource Object'),
     }
 ir_model_export_line()

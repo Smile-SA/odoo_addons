@@ -73,6 +73,7 @@
 								<separator string="Logs and Exceptions" colspan="2"/>
 								<field name="exception_handling"/>
 								<field name="exception_logging"/>
+								<field name="report_summary_template"/>
 							</group>
 						</page>
 						<page string="Storage">
@@ -84,7 +85,7 @@
 								<group col="2" colspan="2" attrs="{'invisible': [('upload_to_ftp_server', '!=', True)]}">
 									<field name="ftp_host" attrs="{'required': [('upload_to_ftp_server', '=', True)]}"/>
 									<field name="ftp_anonymous"/>
-									<field name="ftp_user" attrs="{'invisible': [('ftp_anonymous', '=', True)], 'required': [('ftp_anonymous', '!=', True)]}"/>
+									<field name="ftp_user" attrs="{'invisible': [('ftp_anonymous', '=', True)], 'required': [('upload_to_ftp_server', '=', True), ('ftp_anonymous', '!=', True)]}"/>
 									<field name="ftp_password" attrs="{'invisible': [('ftp_anonymous', '=', True)]}" password="True"/>
 								</group>
 								<separator string="Email" colspan="2"/>
