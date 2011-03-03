@@ -340,45 +340,42 @@ class sartre_rule(osv.osv):
         for rule in self.browse(cr, uid, ids):
             self.logger.notifyChannel('sartre.rule', netsvc.LOG_DEBUG, 'Rule: %s, User: %s' % (rule.id, uid))
             domain = []
-            domain_built = False
+            rule_object_ids = []
             try:
                 # Build domain expression
                 domain = self._build_domain_expression(cr, uid, rule, context_copy)
-                domain_built = True
+                # Search objects which validate rule conditions
+                rule_object_ids = self.pool.get(rule.model_id.model).search(cr, uid, domain, context=context_copy)
             except Exception, e:
                 stack = traceback.format_exc()
                 self.pool.get('sartre.exception').create(cr, uid, {'rule_id': rule.id, 'exception_type': 'condition', 'exception': tools.ustr(e), 'stack': tools.ustr(stack)})
                 self.logger.notifyChannel('sartre.rule', netsvc.LOG_ERROR, 'Rule: %s, User: %s, Exception:%s' % (rule.id, uid, tools.ustr(e)))
-            # Search action to execute for filtered objects from domain
-            if domain_built:
-                # Search objects which validate rule conditions
-                rule_object_ids = self.pool.get(rule.model_id.model).search(cr, uid, domain, context=context_copy)
-                # Execute server actions
-                if rule_object_ids:
-                    context_copy.setdefault('rules', {}).setdefault(rule.id, []).extend(rule_object_ids)
-                    ir_actions_server_pool = self.pool.get('ir.actions.server')
-                    for action in rule.action_ids:
-                        if action.active:
-                            try:
-                                if action.run_once:
-                                    # Sartre case where you run once for all instances
-                                    context_copy['active_id'] = rule_object_ids
+            # Execute server actions
+            if rule_object_ids:
+                context_copy.setdefault('rules', {}).setdefault(rule.id, []).extend(rule_object_ids)
+                ir_actions_server_pool = self.pool.get('ir.actions.server')
+                for action in rule.action_ids:
+                    if action.active:
+                        try:
+                            if action.run_once:
+                                # Sartre case where you run once for all instances
+                                context_copy['active_id'] = rule_object_ids
+                                ir_actions_server_pool.run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context_copy)
+                                self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: sartre.rule,%s' % (action.id, action.user_id and action.user_id.id or uid, context_copy['active_id'], rule.id))
+                            else:
+                                # Sartre case where you run once per instance
+                                for object_id in rule_object_ids:
+                                    context_copy['active_id'] = object_id
                                     ir_actions_server_pool.run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context_copy)
                                     self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: sartre.rule,%s' % (action.id, action.user_id and action.user_id.id or uid, context_copy['active_id'], rule.id))
-                                else:
-                                    # Sartre case where you run once per instance
-                                    for object_id in rule_object_ids:
-                                        context_copy['active_id'] = object_id
-                                        ir_actions_server_pool.run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context_copy)
-                                        self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: sartre.rule,%s' % (action.id, action.user_id and action.user_id.id or uid, context_copy['active_id'], rule.id))
-                                if rule.executions_max_number:
-                                    for object_id in rule_object_ids:
-                                        self.pool.get('sartre.execution').update_executions_counter(cr, uid, rule, object_id)
-                            except Exception, e:
-                                stack = traceback.format_exc()
-                                self.pool.get('sartre.exception').create(cr, uid, {'rule_id': rule.id, 'exception_type': 'action', 'res_id': False, 'action_id': action.id, 'exception': tools.ustr(e), 'stack': tools.ustr(stack)})
-                                self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: sartre.rule,%s, Exception: %s' % (action.id, action.user_id and action.user_id.id or uid, False, rule.id, tools.ustr(e)))
-                                continue
+                            if rule.executions_max_number:
+                                for object_id in rule_object_ids:
+                                    self.pool.get('sartre.execution').update_executions_counter(cr, uid, rule, object_id)
+                        except Exception, e:
+                            stack = traceback.format_exc()
+                            self.pool.get('sartre.exception').create(cr, uid, {'rule_id': rule.id, 'exception_type': 'action', 'res_id': False, 'action_id': action.id, 'exception': tools.ustr(e), 'stack': tools.ustr(stack)})
+                            self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: sartre.rule,%s, Exception: %s' % (action.id, action.user_id and action.user_id.id or uid, False, rule.id, tools.ustr(e)))
+                            continue
         return True
 
     def check_rules(self, cr, uid, context={}):
