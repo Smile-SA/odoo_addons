@@ -347,7 +347,7 @@ class ir_model_export_file_template(osv.osv):
                     extension = '.pdf'
                     file_content = _text2pdf(file_content)
                 filename += extension
-                binary = base64.encodestring(file_content.encode(export_file.encoding))
+                binary = base64.encodestring(file_content)
                 self._save_file(cr, uid, export_file, filename, binary, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
         localdict = {
