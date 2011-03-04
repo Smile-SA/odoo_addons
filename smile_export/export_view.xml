@@ -11,6 +11,8 @@
 					<field name="name" />
 					<field name="model_id" />
 					<field name="domain" />
+					<field name="limit" />
+					<field name="order" />
 					<field name="unique" />
 					<notebook colspan="4">
 						<page string="Exports">

@@ -33,6 +33,7 @@ class ir_model_export_template(osv.osv):
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'domain': fields.char('Domain', size=255),
         'limit': fields.integer('Limit'),
+        'order': fields.char('Order by', size=64),
         'unique': fields.boolean('Unique', help="If unique, each instance is exported only once"),
         'method': fields.char('Method', size=64, help="Indicate a method with a signature equals to (self, cr, uid, ids, fields_to_export, *args, context=None)"),
         'action_id': fields.many2one('ir.actions.server', 'Action'),
@@ -107,9 +108,11 @@ class ir_model_export(osv.osv):
         'export_tmpl_id': fields.many2one('ir.model.export.template', 'Template', required=True, ondelete='cascade'),
         'model_id': fields.related('export_tmpl_id', 'model_id', type='many2one', relation='ir.model', string='Object', readonly=True),
         'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
-        'domain': fields.related('export_tmpl_id', 'domain', type='char', size=255, string='Domain', readonly=True),
+        'domain': fields.related('export_tmpl_id', 'domain', type='char', string='Domain', readonly=True),
+        'limit': fields.related('export_tmpl_id', 'limit', type='integer', string='Limit', readonly=True),
+        'order': fields.related('export_tmpl_id', 'order', type='char', string='Order by', readonly=True),
         'unique': fields.related('export_tmpl_id', 'unique', type='boolean', string='Unique', readonly=True),
-        'method': fields.related('export_tmpl_id', 'method', type='char', size=64, string='Method', readonly=True),
+        'method': fields.related('export_tmpl_id', 'method', type='char', string='Method', readonly=True),
         'action_id': fields.related('export_tmpl_id', 'action_id', type='many2one', relation='ir.actions.server', string='Action', readonly=True),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'create_uid': fields.many2one('res.users', 'Creation User', readonly=True),
@@ -151,7 +154,7 @@ class ir_model_export(osv.osv):
                 export_line_ids = export_line_pool.search(cr, uid, [('export_id.export_tmpl_id.model_id', '=', export.model_id.id)])
                 exported_object_ids = [line['res_id'] for line in export_line_pool.read(cr, uid, export_line_ids, ['res_id'])]
                 domain += [('id', 'not in', exported_object_ids)]
-            object_ids = self.pool.get(export.model_id.model).search(cr, uid, domain)
+            object_ids = self.pool.get(export.model_id.model).search(cr, uid, domain, limit=export.limit, order=export.order)
             if object_ids:
                 for object_id in object_ids:
                     export_line_pool.create(cr, uid, {'export_id': export.id, 'res_id': object_id})
