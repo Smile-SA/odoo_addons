@@ -69,6 +69,8 @@ class ir_model_export_file_template(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'model': fields.related('model_id', 'model', type='char', string='Object', readonly=True),
+        'refer_to_underlying_object': fields.boolean('Columns correspond to an underlying object'),
+        'records': fields.char('Records', size=256, help="Provide the field name that refers to the records to export. If it is empty it will refer to the current object."),
         'state': fields.selection([
             ('tab', 'Tabular'),
             ('other', 'Other'),
@@ -162,25 +164,32 @@ class ir_model_export_file_template(osv.osv):
             template.append(delimiter.join([tools.ustr(column.name) for column in export_file.column_ids]))
         # Body
         if template_part == 'body':
-            line = []
-            for column in export_file.column_ids:
-                column_value = _render_unicode(column.value, localdict)
-                if column.default_value and not column_value:
-                    column_value = _render_unicode(column.default_value, localdict)
-                if column.not_none and column_value is None:
-                    try:
-                        exception_msg = _render_unicode(column.exception_msg, localdict)
-                    except:
-                        exception_msg = column.exception_msg
-                    raise osv.except_osv(_('Error'), exception_msg)
-                column_value = tools.ustr(column_value)
-                if column_value:
-                    if column.min_width:
-                        column_value = getattr(column_value, column.justify)(column.min_width, tools.ustr(column.fillchar))
-                    if column.max_width:
-                        column_value = column_value[:column.max_width]
-                line.append(column_value)
-            template.append(delimiter.join(line))
+            sub_objects = localdict['object']
+            if export_file.refer_to_underlying_object:
+                sub_objects = _render_unicode(export_file.records, localdict)
+            if not isinstance(sub_objects, list):
+                sub_objects = [sub_objects]
+            for sub_object in sub_objects:
+                localdict['object'] = sub_object
+                line = []
+                for column in export_file.column_ids:
+                    column_value = _render_unicode(column.value, localdict)
+                    if column.default_value and not column_value:
+                        column_value = _render_unicode(column.default_value, localdict)
+                    if column.not_none and column_value is None:
+                        try:
+                            exception_msg = _render_unicode(column.exception_msg, localdict)
+                        except:
+                            exception_msg = column.exception_msg
+                        raise osv.except_osv(_('Error'), exception_msg)
+                    column_value = tools.ustr(column_value)
+                    if column_value:
+                        if column.min_width:
+                            column_value = getattr(column_value, column.justify)(column.min_width, tools.ustr(column.fillchar))
+                        if column.max_width:
+                            column_value = column_value[:column.max_width]
+                    line.append(column_value)
+                template.append(delimiter.join(line))
         try:
             lineterminator = eval(export_file.lineterminator)
         except:

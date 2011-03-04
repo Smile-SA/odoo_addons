@@ -26,7 +26,7 @@ class ir_model_export_template(osv.osv):
 
     _columns = {
         'export_file_template_id': fields.many2one('ir.model.export.file_template', 'File Template'),
-        'record_ids': fields.char('Record Ids', size=256, help="Provide the field name that the record ids refer to for the records to export. If it is empty it will refer to the active ids of the object."),
+        'records': fields.char('Records', size=256, help="Provide the field name that refers to the records to export. If it is empty it will refer to the current object."),
     }
 ir_model_export_template()
 
@@ -49,8 +49,8 @@ class ir_model_export(osv.osv):
     _columns = {
         'export_file_template_id': fields.related('export_tmpl_id', 'export_file_template_id',
             type='many2one', relation='ir.model.export.file_template', string='File Template', readonly=True),
-        'record_ids': fields.related('export_tmpl_id', 'record_ids',
-            type='char', string='Record Ids', readonly=True),
+        'records': fields.related('export_tmpl_id', 'records',
+            type='char', string='Records', readonly=True),
         'report_id': fields.many2one('res.request', string='Report', readonly=True),
         'report_summary': fields.related('report_id', 'body',
             type='char', string='Report', readonly=True),

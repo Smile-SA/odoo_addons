@@ -22,6 +22,8 @@
 							<label string="Use Mako language." align="0.0" colspan="4"/>
 							<separator string="Body" colspan="4"/>
 							<group attrs="{'invisible': [('state', '!=', 'tab')]}">
+								<field name="refer_to_underlying_object"/>
+								<field name="records" attrs="{'invisible': [('refer_to_underlying_object', '!=', True)], 'required': [('refer_to_underlying_object', '=', True)]}"/>
 								<field name="column_ids" colspan="4" nolabel="1" mode="tree,form">
 									<tree string="Columns">
 										<field name="sequence"/>
