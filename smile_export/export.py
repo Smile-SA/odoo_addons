@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from math import ceil
 import threading
 
 from osv import osv, fields
@@ -31,8 +32,10 @@ class ir_model_export_template(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
+        'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
         'domain': fields.char('Domain', size=255),
         'limit': fields.integer('Limit'),
+        'max_offset': fields.integer('Max Offset'),
         'order': fields.char('Order by', size=64),
         'unique': fields.boolean('Unique', help="If unique, each instance is exported only once"),
         'method': fields.char('Method', size=64, help="Indicate a method with a signature equals to (self, cr, uid, ids, fields_to_export, *args, context=None)"),
@@ -47,13 +50,34 @@ class ir_model_export_template(osv.osv):
         'domain': lambda * a: '[]',
     }
 
+    def _build_domain(self, cr, uid, export_template, context):
+        domain = []
+        export_line_pool = self.pool.get('ir.model.export.line')
+        if not context.get('bypass_domain', False):
+            domain += eval(export_template.domain)
+        else:
+            domain += [('id', 'in', context.get('active_ids', []))]
+        if export_template.unique:
+            export_line_ids = export_line_pool.search(cr, uid, [('export_id.export_tmpl_id.model_id', '=', export_template.model_id.id)])
+            exported_object_ids = [line['res_id'] for line in export_line_pool.read(cr, uid, export_line_ids, ['res_id'])]
+            domain += [('id', 'not in', exported_object_ids)]
+        return domain
+
     def create_export(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         export_pool = self.pool.get('ir.model.export')
-        for id in ids:
-            export_id = export_pool.create(cr, uid, {'export_tmpl_id': id}, context)
-            export_pool.generate(cr, uid, export_id, context)
+        export_ids = []
+        for export_template in self.browse(cr, uid, ids, context):
+            total_offset = 1
+            if export_template.limit:
+                domain = self._build_domain(cr, uid, export_template, context)
+                total_offset = int(ceil(self.pool.get(export_template.model).search(cr, uid, domain, count=True) / float(export_template.limit)))
+                if export_template.max_offset:
+                    total_offset = min(total_offset, export_template.max_offset)
+            for offset in range(total_offset):
+                export_ids.append(export_pool.create(cr, uid, {'export_tmpl_id': export_template.id, 'offset': offset}, context))
+        export_pool.generate(cr, uid, export_ids, context)
         return True
 
     def create_cron(self, cr, uid, ids, context=None):
@@ -110,6 +134,7 @@ class ir_model_export(osv.osv):
         'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
         'domain': fields.related('export_tmpl_id', 'domain', type='char', string='Domain', readonly=True),
         'limit': fields.related('export_tmpl_id', 'limit', type='integer', string='Limit', readonly=True),
+        'offset': fields.integer('Offset'),
         'order': fields.related('export_tmpl_id', 'order', type='char', string='Order by', readonly=True),
         'unique': fields.related('export_tmpl_id', 'unique', type='boolean', string='Unique', readonly=True),
         'method': fields.related('export_tmpl_id', 'method', type='char', string='Method', readonly=True),
@@ -145,16 +170,8 @@ class ir_model_export(osv.osv):
             export_line_pool.unlink(cr, uid, export_line_ids)
         # Create new export lines linked for current exports (ids)
         for export in self.browse(cr, uid, ids):
-            domain = []
-            if not context.get('bypass_domain', False):
-                domain += eval(export.domain)
-            else:
-                domain += [('id', 'in', context.get('active_ids', []))]
-            if export.unique:
-                export_line_ids = export_line_pool.search(cr, uid, [('export_id.export_tmpl_id.model_id', '=', export.model_id.id)])
-                exported_object_ids = [line['res_id'] for line in export_line_pool.read(cr, uid, export_line_ids, ['res_id'])]
-                domain += [('id', 'not in', exported_object_ids)]
-            object_ids = self.pool.get(export.model_id.model).search(cr, uid, domain, limit=export.limit, order=export.order)
+            domain = self.pool.get('ir.model.export.template')._build_domain(cr, uid, export.export_tmpl_id, context)
+            object_ids = self.pool.get(export.model_id.model).search(cr, uid, domain, export.offset, export.limit, export.order, context)
             if object_ids:
                 for object_id in object_ids:
                     export_line_pool.create(cr, uid, {'export_id': export.id, 'res_id': object_id})

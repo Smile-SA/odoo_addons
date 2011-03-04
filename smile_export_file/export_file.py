@@ -79,7 +79,7 @@ class ir_model_export_file_template(osv.osv):
             "with the object and time variables"),
         'extension': fields.selection([
             ('pdf', '.pdf'),
-            ('other', 'Other'),
+            ('other', 'other'),
         ], 'Extension', required=True),
         'extension_custom': fields.char('Custom Extension', size=12),
         'encoding': fields.selection([
@@ -305,6 +305,20 @@ class ir_model_export_file_template(osv.osv):
 
     # ***** File generation method *****
 
+    def _get_filename(self, cr, uid, export_file, context):
+        filename = _render_unicode(export_file.filename, {
+                        'object': export_file,
+                        'localcontext': context,
+                        'time': time
+                    }, export_file.encoding)
+        extension = '.pdf'
+        if export_file.extension == 'other':
+            extension = export_file.extension_custom
+            if extension.find('.'):
+                extension = '.%s' % extension
+        filename += extension
+        return filename
+
     def generate_file(self, cr, uid, export_file_id, context=None):
         """Check and lay out data, save file and produce an export processing report"""
         start_date = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -333,20 +347,9 @@ class ir_model_export_file_template(osv.osv):
             file_content, content_exceptions = self._lay_out_data(cr, uid, export_file, context)
             exceptions += content_exceptions
             if file_content:
-                filename = _render_unicode(export_file.filename, {
-                                'object': export_file,
-                                'localcontext': context,
-                                'time': time
-                            }, export_file.encoding)
-                extension = ''
-                if export_file.extension == 'other':
-                    extension = export_file.extension_custom
-                    if extension.find('.'):
-                        extension = '.%s' % extension
-                else:
-                    extension = '.pdf'
+                filename = self._get_filename(cr, uid, export_file, context)
+                if export_file.extension == 'pdf':
                     file_content = _text2pdf(file_content)
-                filename += extension
                 binary = base64.encodestring(file_content)
                 self._save_file(cr, uid, export_file, filename, binary, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
