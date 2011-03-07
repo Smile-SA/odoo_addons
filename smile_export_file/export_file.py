@@ -175,7 +175,7 @@ class ir_model_export_file_template(osv.osv):
                 localdict['object'] = sub_object
                 line = []
                 for column in export_file.column_ids:
-                    column_value = _render_unicode(column.value, localdict)
+                    column_value = _render_unicode(column.value or '', localdict)
                     if column.default_value and not column_value:
                         column_value = _render_unicode(column.default_value, localdict)
                     if column.not_none and column_value is None:
@@ -190,9 +190,12 @@ class ir_model_export_file_template(osv.osv):
                             column_value = getattr(column_value, column.justify)(column.min_width, tools.ustr(column.fillchar))
                         if column.max_width:
                             column_value = column_value[:column.max_width]
-                    if not column.not_string:
-                        quotechar = export_file.quotechar
-                        colum_value = '%(quotechar)s%(column_value)s%(quotechar)s' % {
+                    if not column.not_string and export_file.quotechar:
+                        try:
+                            quotechar = eval(export_file.quotechar)
+                        except:
+                            quotechar = export_file.quotechar
+                        column_value = '%(quotechar)s%(column_value)s%(quotechar)s' % {
                             'column_value': column_value.replace(quotechar, "\\" + quotechar),
                             'quotechar': quotechar,
                         }
@@ -403,8 +406,8 @@ class ir_model_export_file_template_column(osv.osv):
             help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'default_value': fields.char('Default value', size=64,
             help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
-        'not_string': fields.boolean('Not a string?'),
-        'not_none': fields.boolean('Not None?'),
+        'not_string': fields.boolean('Not a string'),
+        'not_none': fields.boolean('Not None'),
         'exception_msg': fields.char('Exception Message', size=256, translate=True,
             help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'min_width': fields.integer('Min width'),

@@ -41,18 +41,19 @@
 										<field name="value" colspan="4"/>
 										<field name="default_value" colspan="4"/>
 										<field name="not_string"/>
-										<newline/>
 										<field name="not_none"/>
-										<field name="exception_msg" attrs="{'invisible': [('not_none', '!=', True)], 'required': [('not_none', '=', True)]}"/>
-										<newline/>
+										<field name="exception_msg" attrs="{'invisible': [('not_none', '!=', True)], 'required': [('not_none', '=', True)]}" colspan="4"/>
 										<field name="min_width"/>
 										<field name="max_width"/>
 										<field name="fillchar" attrs="{'invisible': [('min_width', '=', 0)], 'required': [('min_width', '!=', 0)]}"/>
 										<field name="justify" attrs="{'invisible': [('min_width', '=', 0)], 'required': [('min_width', '!=', 0)]}"/>
 									</form>
 								</field>
-								<field name="delimiter"/>
-								<field name="lineterminator"/>
+								<group colspan="4" col="6">
+									<field name="delimiter"/>
+									<field name="lineterminator"/>
+									<field name="quotechar"/>
+								</group>
 							</group>
 							<group attrs="{'invisible': [('state', '=', 'tab')]}">
 								<field name="body" colspan="4" nolabel="1"/>
