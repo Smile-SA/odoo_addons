@@ -30,6 +30,7 @@
 										<field name="name"/>
 										<field name="value" widget="char"/>
 										<field name="default_value"/>
+										<field name="not_string"/>
 										<field name="not_none"/>
 										<field name="min_width"/>
 										<field name="max_width"/>
@@ -39,6 +40,8 @@
 										<field name="sequence"/>
 										<field name="value" colspan="4"/>
 										<field name="default_value" colspan="4"/>
+										<field name="not_string"/>
+										<newline/>
 										<field name="not_none"/>
 										<field name="exception_msg" attrs="{'invisible': [('not_none', '!=', True)], 'required': [('not_none', '=', True)]}"/>
 										<newline/>

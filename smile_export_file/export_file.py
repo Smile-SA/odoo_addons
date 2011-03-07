@@ -96,8 +96,9 @@ class ir_model_export_file_template(osv.osv):
             ('report', 'Included in report'),
             ('file', 'Dedicated file'),
         ], 'Exception Logging', required=True),
-        'delimiter': fields.char('Delimiter', size=64),
-        'lineterminator': fields.char('Line Terminator', size=64),
+        'delimiter': fields.char('Delimiter', size=24),
+        'lineterminator': fields.char('Line Terminator', size=24),
+        'quotechar': fields.char('Quote Character', size=24),
         'fieldnames_in_header': fields.boolean('Add column labels in header'),
         'column_ids': fields.one2many('ir.model.export.file_template.column', 'export_file_template_id', 'Columns'),
         'header': fields.text('Header'),
@@ -128,8 +129,9 @@ class ir_model_export_file_template(osv.osv):
         'extension': lambda * a: 'other',
         'exception_handling': lambda * a: 'cancel',
         'exception_logging': lambda * a: 'report',
-        'delimiter': lambda * a: "','",
-        'lineterminator': lambda * a: "'\n'",
+        'delimiter': lambda * a: "chr(44)",
+        'lineterminator': lambda * a: "chr(10)",
+        'quotechar': lambda * a: "chr(39)",
         'create_attachment': lambda * a: True,
         'report_summary_template': lambda * a: """Here is the file export processing report.
 
@@ -166,7 +168,7 @@ class ir_model_export_file_template(osv.osv):
         if template_part == 'body':
             sub_objects = localdict['object']
             if export_file.refer_to_underlying_object:
-                sub_objects = _render_unicode(export_file.records, localdict)
+                sub_objects = eval(export_file.records, localdict)
             if not isinstance(sub_objects, list):
                 sub_objects = [sub_objects]
             for sub_object in sub_objects:
@@ -188,6 +190,11 @@ class ir_model_export_file_template(osv.osv):
                             column_value = getattr(column_value, column.justify)(column.min_width, tools.ustr(column.fillchar))
                         if column.max_width:
                             column_value = column_value[:column.max_width]
+                    if not column.not_string:
+                        colum_value = '%(quotechar)s%(column_value)s%(quotechar)s' % {
+                            'column_value': column_value.replace("\\" + export_file.quotechar),
+                            'quotechar': export_file.quotechar,
+                        }
                     line.append(column_value)
                 template.append(delimiter.join(line))
         try:
@@ -200,7 +207,7 @@ class ir_model_export_file_template(osv.osv):
         """Call specific layout methods and catch exceptions"""
         content = []
         exceptions = []
-        content_render_method = export_file.state = 'tab' and '_render_tab' or '_render'
+        content_render_method = export_file.state == 'tab' and '_render_tab' or '_render'
         if content_render_method:
             localdict = {
                 'pool': self.pool,
@@ -295,7 +302,7 @@ class ir_model_export_file_template(osv.osv):
             'body': summary,
         }
         report_id = self.pool.get('res.request').create(cr, uid, report_vals, context)
-        if exceptions and export_file.exception_logging == 'report':
+        if exceptions and export_file.exception_logging == 'file':
             exceptions_filename = filename[:-filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
             exceptions_vals = {
                 'name':  exceptions_filename,
@@ -391,10 +398,11 @@ class ir_model_export_file_template_column(osv.osv):
         'name': fields.char('Label', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True),
         'export_file_template_id': fields.many2one('ir.model.export.file_template', 'Export', required=True, ondelete='cascade'),
-        'value': fields.text('Value', required=True,
+        'value': fields.text('Value',
             help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'default_value': fields.char('Default value', size=64,
             help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
+        'not_string': fields.boolean('Not a string?'),
         'not_none': fields.boolean('Not None?'),
         'exception_msg': fields.char('Exception Message', size=256, translate=True,
             help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),

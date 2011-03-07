@@ -171,7 +171,11 @@ class ir_model_export(osv.osv):
         # Create new export lines linked for current exports (ids)
         for export in self.browse(cr, uid, ids):
             domain = self.pool.get('ir.model.export.template')._build_domain(cr, uid, export.export_tmpl_id, context)
-            object_ids = self.pool.get(export.model_id.model).search(cr, uid, domain, export.offset, export.limit, export.order, context)
+            # The next lines exist just to bypass a orm bug
+            limit = export.limit
+            if isinstance(export.limit, str):
+                limit = int(eval(export.limit))
+            object_ids = self.pool.get(export.model_id.model).search(cr, uid, domain, export.offset, limit, export.order, context)
             if object_ids:
                 for object_id in object_ids:
                     export_line_pool.create(cr, uid, {'export_id': export.id, 'res_id': object_id})
