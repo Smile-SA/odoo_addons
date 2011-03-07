@@ -191,9 +191,10 @@ class ir_model_export_file_template(osv.osv):
                         if column.max_width:
                             column_value = column_value[:column.max_width]
                     if not column.not_string:
+                        quotechar = export_file.quotechar
                         colum_value = '%(quotechar)s%(column_value)s%(quotechar)s' % {
-                            'column_value': column_value.replace("\\" + export_file.quotechar),
-                            'quotechar': export_file.quotechar,
+                            'column_value': column_value.replace(quotechar, "\\" + quotechar),
+                            'quotechar': quotechar,
                         }
                     line.append(column_value)
                 template.append(delimiter.join(line))
