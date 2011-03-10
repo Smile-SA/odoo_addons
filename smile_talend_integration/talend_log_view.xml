@@ -75,12 +75,12 @@
 
 		<!-- Talend State -->
 
-        <record id="view_talend_state_form" model="ir.ui.view">
-            <field name="name">talend.state.form</field>
-            <field name="model">talend.state</field>
+        <record id="view_talend_stats_form" model="ir.ui.view">
+            <field name="name">talend.stats.form</field>
+            <field name="model">talend.stats</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Talend State">
+                <form string="Talend Stats">
                     <field name="moment" />
                     <field name="pid" />
                     <field name="father_pid" />
@@ -98,13 +98,13 @@
             </field>
         </record> 
 
-  		<record id="view_talend_state_tree" model="ir.ui.view">
-            <field name="name">talend.state.tree</field>
-            <field name="model">talend.state</field>
+  		<record id="view_talend_stats_tree" model="ir.ui.view">
+            <field name="name">talend.stats.tree</field>
+            <field name="model">talend.stats</field>
             <field name="type">tree</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-				<tree string="Talend States">                				
+				<tree string="Talend Stats">                				
                     <field name="moment" />
                     <field name="pid" />
                     <field name="father_pid" />
@@ -122,9 +122,9 @@
             </field>
         </record>
 
-        <record id="view_talend_state_search" model="ir.ui.view">
-            <field name="name">talend.state.search</field>
-            <field name="model">talend.state</field>
+        <record id="view_talend_stats_search" model="ir.ui.view">
+            <field name="name">talend.stats.search</field>
+            <field name="model">talend.stats</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
@@ -137,20 +137,20 @@
             </field>
         </record>
 
-		<record id="action_talend_state" model="ir.actions.act_window">
-            <field name="name">Talend States</field>
+		<record id="action_talend_stats" model="ir.actions.act_window">
+            <field name="name">Talend Stats</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">talend.state</field>
+            <field name="res_model">talend.stats</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-		<menuitem action="action_talend_state" id="menu_talend_state" parent="menu_talend_log" sequence="40"/>
+		<menuitem action="action_talend_stats" id="menu_talend_stats" parent="menu_talend_log" sequence="40"/>
 
-		<!-- Talend Flow -->
+		<!-- Talend Meter -->
 
-        <record id="view_talend_flow_form" model="ir.ui.view">
-            <field name="name">talend.flow.form</field>
-            <field name="model">talend.flow</field>
+        <record id="view_talend_meter_form" model="ir.ui.view">
+            <field name="name">talend.meter.form</field>
+            <field name="model">talend.meter</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Talend Flow">
@@ -173,9 +173,9 @@
             </field>
         </record> 
 
-  		<record id="view_talend_flow_tree" model="ir.ui.view">
-            <field name="name">talend.flow.tree</field>
-            <field name="model">talend.flow</field>
+  		<record id="view_talend_meter_tree" model="ir.ui.view">
+            <field name="name">talend.meter.tree</field>
+            <field name="model">talend.meter</field>
             <field name="type">tree</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
@@ -199,9 +199,9 @@
             </field>
         </record>
 
-        <record id="view_talend_flow_search" model="ir.ui.view">
-            <field name="name">talend.flow.search</field>
-            <field name="model">talend.flow</field>
+        <record id="view_talend_meter_search" model="ir.ui.view">
+            <field name="name">talend.meter.search</field>
+            <field name="model">talend.meter</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
@@ -214,14 +214,28 @@
             </field>
         </record>
 
-		<record id="action_talend_flow" model="ir.actions.act_window">
-            <field name="name">Talend Flows</field>
+		<record id="action_talend_meter" model="ir.actions.act_window">
+            <field name="name">Talend Meter</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">talend.flow</field>
+            <field name="res_model">talend.meter</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-		<menuitem action="action_talend_flow" id="menu_talend_flow" parent="menu_talend_log" sequence="50"/>
+		<menuitem action="action_talend_meter" id="menu_talend_meter" parent="menu_talend_log" sequence="50"/>
+
+		<record id="view_server_action_log_tree" model="ir.ui.view">
+			<field name="name">Server Action Logs</field>
+			<field name="model">ir.actions.server.log</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="smile_ir_actions_extension.view_server_action_log_tree"/>
+			<field name="arch" type="xml">
+				<field name="end_date" position="after">
+					<field name="talend_log_ids"/>
+					<field name="talend_stats_ids"/>
+					<field name="talend_meter_ids"/>
+				</field>
+			</field>
+		</record>
 
     </data>
 </openerp>

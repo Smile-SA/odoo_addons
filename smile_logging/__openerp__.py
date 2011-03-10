@@ -25,7 +25,7 @@
     "author" : "Smile",
     "website": 'http://www.smile.fr',
     "category" : "Tools",
-    "description": """System Logs
+    "description": """System Logs To Database
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
 """,

@@ -19,17 +19,18 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import time
 import datetime
+import pytz
+import re
+import threading
+import time
+import traceback
+
+import netsvc
+from osv import fields, osv
+import pooler
 import tools
 from tools.translate import _
-import netsvc
-import re
-import pytz
-import traceback
-import threading
-import pooler
 
 class actions_server_log(osv.osv):
     _name = 'ir.actions.server.log'
@@ -43,6 +44,7 @@ class actions_server_log(osv.osv):
         'exception': fields.text('Exception'),
         'stack': fields.text('Stack Trace'),
         'create_date': fields.datetime('Creation Date', readonly=True),
+        'end_date': fields.datetime('End Date'),
     }
 
     _order = "create_date desc"
@@ -55,6 +57,7 @@ class actions_server(osv.osv):
     _columns = {
         'active': fields.boolean('Active'),
         'log': fields.boolean('Log'),
+        'log_ids': fields.one2many('ir.actions.server.log', 'action_id', 'Logs'),
     }
 
     _defaults = {
@@ -256,10 +259,14 @@ class actions_server(osv.osv):
                     else:
                         super(actions_server, self).run(cr, uid, [action.id], context)
 
+                    if action.log:
+                        self.pool.get('ir.actions.server.log').write(cr, uid, log_id, {'end_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
+                    
                     cr.commit()
                 except Exception, e:
                     stack = traceback.format_exc()
                     vals = {
+                        'end_date': time.strftime('%Y-%m-%d %H:%M:%S'),
                         'exception': tools.ustr(e),
                         'stack': tools.ustr(stack),
                     }

@@ -25,7 +25,7 @@
 							<field name="on_unlink" />
 							<newline/>
 							<field name="on_other" on_change="onchange_model_id(model_id, on_function, on_other)" />
-							<group string="Trigger on date" col="10" colspan="4" attrs="{'invisible':[('on_date','!=',True)]}">
+							<group string="Trigger on date" col="12" colspan="4" attrs="{'invisible':[('on_date','!=',True)]}">
 								<field name="on_date_type_display1" nolabel="1" attrs="{'required':[('on_date','=',True)]}" />
 								<group attrs="{'invisible':[('on_date_type_display1','!=','other_date')]}">
 									<field name="on_date_type_display2_id" nolabel="1" attrs="{'required':[('on_date_type_display1','=','other_date')]}" />

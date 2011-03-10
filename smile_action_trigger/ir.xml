@@ -6,11 +6,12 @@
 			<field name="name">Server Action Inherit</field>
 			<field name="model">ir.actions.server</field>
 			<field name="type">form</field>
+			<field name="priority">25</field>
 			<field name="inherit_id" ref="base.view_server_action_form" />
 			<field name="arch" type="xml">
 				<field name="condition" position="after">
-                    <field name="run_once"/>
                     <field name="user_id"/>
+                    <field name="run_once"/>
 				</field>
 			</field>
 		</record>

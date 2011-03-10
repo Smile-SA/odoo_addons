@@ -19,13 +19,14 @@
 #
 ##############################################################################
 
+import httplib
+import subprocess
+import time
+import traceback
+
+import netsvc
 from osv import osv, fields
 import tools
-import time
-import subprocess
-import httplib
-import netsvc
-import traceback
 
 class server_object_lines(osv.osv):
     _inherit = 'ir.server.object.lines'
@@ -122,7 +123,7 @@ class talend_job(osv.osv):
                         if action.talend_job_export_type == 'jar':
                             command = ''
                             if action.talend_job_path:
-                                command += 'cd %s && ' % action.talend_job_path.replace(' ','\ ')
+                                command += 'cd %s && ' % action.talend_job_path.replace(' ', '\ ')
                             command += 'java -Xms%s -Xmx%s -cp classpath.jar: %s.%s_%s.%s --context=%s %s' % (
                                 action.talend_job_java_xms,
                                 action.talend_job_java_xmx,
@@ -156,9 +157,13 @@ class talend_job(osv.osv):
                     else:
                         super(talend_job, self).run(cr, uid, ids, context)
 
+                    if action.log:
+                        self.pool.get('ir.actions.server.log').write(cr, uid, log_id, {'end_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
+
                 except Exception, e:
                     stack = traceback.format_exc()
                     vals = {
+                        'end_date': time.strftime('%Y-%m-%d %H:%M:%S'),
                         'exception': tools.ustr(e),
                         'stack': tools.ustr(stack),
                     }

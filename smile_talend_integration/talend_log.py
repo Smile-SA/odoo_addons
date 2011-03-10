@@ -42,9 +42,9 @@ class talend_log(osv.osv):
     }
 talend_log()
 
-class talend_state(osv.osv):
-    _name = 'talend.state'
-    _description = 'Talend State'
+class talend_stats(osv.osv):
+    _name = 'talend.stats'
+    _description = 'Talend Stats'
     _rec_name = "pid"
 
     _columns = {
@@ -62,11 +62,11 @@ class talend_state(osv.osv):
         'message': fields.char('Message', size=255),
         'duration': fields.integer('Code'),
     }
-talend_state()
+talend_stats()
 
-class talend_flow(osv.osv):
-    _name = 'talend.flow'
-    _description = 'Talend Flow'
+class talend_meter(osv.osv):
+    _name = 'talend.meter'
+    _description = 'Talend Flow Meter'
     _rec_name = "pid"
 
     _columns = {
@@ -86,4 +86,35 @@ class talend_flow(osv.osv):
         'reference': fields.integer('Reference'),
         'thresholds': fields.char('Thresholds', size=255),
     }
-talend_flow()
+talend_meter()
+
+class actions_server_log(osv.osv):
+    _inherit = 'ir.actions.server.log'
+
+    def _get_talend_logs(self, cr, uid, ids, multi, arg, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = {}
+        for act_server_log in self.browse(cr, uid, ids, context):
+            res[act_server_log.id] = {
+                'talend_log_ids': False,
+                'talend_stats_ids': False,
+                'talend_meter_ids': False,
+            }
+            if act_server_log.action_id.state == 'talend_job':
+                domain = [('project', '=', act_server_log.action_id.talend_job_project),
+                          ('moment', '>=', act_server_log.create_date),
+                          ('moment', '<=', act_server_log.end_date)]
+                res[act_server_log.id].update({
+                    'talend_log_ids': self.pool.get('talend.log').search(cr, uid, domain, context=context),
+                    'talend_stats_ids': self.pool.get('talend.stats').search(cr, uid, domain, context=context),
+                    'talend_meter_ids': self.pool.get('talend.meter').search(cr, uid, domain, context=context),
+                })
+        return res
+    
+    _columns = {
+        'talend_log_ids': fields.function(_get_talend_logs, method=True, type='one2many', relation='talend.log', string='Talend Logs', store=False, multi='talend_log'),
+        'talend_stats_ids': fields.function(_get_talend_logs, method=True, type='one2many', relation='talend.stats', string='Talend Stats', store=False, multi='talend_log'),
+        'talend_meter_ids': fields.function(_get_talend_logs, method=True, type='one2many', relation='talend.meter', string='Talend Flow Meters', store=False, multi='talend_log'),
+    }
+actions_server_log()
