@@ -331,15 +331,16 @@ class checklist(osv.osv):
                 if object.total_progress_rate_mandatory != total_progress_rate_mandatory == 100:
                     fields.append('active')
                     values.append("TRUE")
-                mandatory_action = checklist.mandatory_action_id
-                try:
-                    self.pool.get('ir.actions.server').run(cr, uid, [mandatory_action.id], context)
-                    self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: checklist,%s' % (mandatory_action.id, uid, object.id, checklist.id))
-                except Exception, e:
-                    stack = traceback.format_exc()
-                    self.pool.get('checklist.exception').create(cr, uid, {'checklist_id': checklist.id, 'exception_type': 'action', 'res_id': object.id, 'action_id': mandatory_action.id, 'exception': e, 'stack': stack})
-                    self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: checklist,%s, Exception: %s' % (mandatory_action.id, uid, object.id, checklist.id, tools.ustr(e)))
-                    continue                
+                    mandatory_action = checklist.mandatory_action_id
+                    if mandatory_action:
+                        try:
+                            self.pool.get('ir.actions.server').run(cr, uid, [mandatory_action.id], context)
+                            self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: checklist,%s' % (mandatory_action.id, uid, object.id, checklist.id))
+                        except Exception, e:
+                            stack = traceback.format_exc()
+                            self.pool.get('checklist.exception').create(cr, uid, {'checklist_id': checklist.id, 'exception_type': 'action', 'res_id': object.id, 'action_id': mandatory_action.id, 'exception': e, 'stack': stack})
+                            self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: checklist,%s, Exception: %s' % (mandatory_action.id, uid, object.id, checklist.id, tools.ustr(e)))
+                            continue
             cr.execute("UPDATE %s SET (%s) = (%s) WHERE id = %s" % (obj._table, ','.join(fields), ','.join(values), object.id))
             # Execute action if total_progress_rate becomes equals to 100%
             if instances and instances[0].checklist_task_id.checklist_id.action_id and object.total_progress_rate != total_progress_rate == 100:
