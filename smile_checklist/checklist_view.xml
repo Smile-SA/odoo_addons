@@ -147,14 +147,14 @@
 		</record>
 
 		<record id="action_checklist_exception" model="ir.actions.act_window">
-			<field name="name">Checklists Exceptions</field>
+			<field name="name">Exceptions</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">checklist.exception</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree</field>
 			<field name="auto_refresh">3600</field>
 		</record>
-		<menuitem action="action_checklist_exception" id="menu_checklist_exception" parent="menu_checklist" sequence="90" />
+		<menuitem action="action_checklist_exception" id="menu_checklist_exception" parent="menu_checklists" sequence="90" />
 
         <record id="view_checklist_task_instance_form" model="ir.ui.view">
             <field name="name">Checklist Task Instance</field>
