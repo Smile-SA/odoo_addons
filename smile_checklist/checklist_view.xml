@@ -24,7 +24,7 @@
 				                    <field name="manual_validation" />
 				                    <field name="model_id" invisible="1"/>
 									<field name="active_field" invisible="1"/>
-									<field name="mandatory" attrs="{'invisible':[('active_field','!=',True)]}"/>
+									<field name="mandatory"/>
 									<notebook colspan="6">
 										<page string="Fields to fill">
 											<field name="field_ids" mode="tree,form" nolabel="1" colspan="4">
