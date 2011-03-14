@@ -61,10 +61,11 @@
 							<label string="Leave blank in order to this checklist appears in all object views" colspan="4" align="0.0"/>
                     	</page>
                     	<page string="Action">
-							<field name="action_id" nolabel="1" colspan="4" domain="[('model_id.id','=',model_id)]"/>
+							<separator string="Once all tasks are completed" colspan="4"/>
+							<field name="action_id" colspan="4" domain="[('model_id.id','=',model_id)]"/>
 							<separator string="Once mandatory tasks are completed" colspan="4"/>
 							<field name="active_field"/>
-							<field name="mandatory_action_id" nolabel="1" colspan="4" domain="[('model_id.id','=',model_id)]"/>
+							<field name="mandatory_action_id" colspan="4" domain="[('model_id.id','=',model_id)]"/>
                     	</page>
                     </notebook>
                 </form>

@@ -37,7 +37,7 @@ class checklist(osv.osv):
         'model': fields.related('model_id', 'model', type='char', size=64, string='Model Name'),
         'active': fields.boolean('Active'),
         'active_field': fields.boolean("Add or update a boolean field 'Active' in model"),
-        'mandatory_action_id': fields.many2one('ir.actions.server', 'Mandatory action'),
+        'mandatory_action_id': fields.many2one('ir.actions.server', 'Action'),
         'action_id': fields.many2one('ir.actions.server', 'Action'),
         'view_ids': fields.many2many('ir.ui.view', 'checklist_view_rel', 'view_id', 'checklist_id', 'Views'),
     }
