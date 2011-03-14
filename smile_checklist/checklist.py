@@ -234,11 +234,14 @@ class checklist(osv.osv):
                         if not cr.rowcount:
                             cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (model['model'].replace('.', '_'), column, columns_to_add[column]))
                             cr.commit()
+                    self.pool.get(model['model'])._field_create(cr)
                 else:
                     if 'checklist_task_instance_ids' in model_columns:
                         del model_columns['checklist_task_instance_ids']
                     if 'total_progress_rate' in model_columns:
                         del model_columns['total_progress_rate']
+                    cr.execute("""DELETE FROM ir_model_fields WHERE model = %s AND name IN %s""",
+                               (model['model'], ('checklist_task_instance_ids', 'total_progress_rate')))
         return True
 
     def __init__(self, pool, cr):
