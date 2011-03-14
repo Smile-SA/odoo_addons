@@ -62,7 +62,9 @@
                     	</page>
                     	<page string="Action">
 							<field name="action_id" nolabel="1" colspan="4" domain="[('model_id.id','=',model_id)]"/>
+							<separator string="Once mandatory tasks are completed" colspan="4"/>
 							<field name="active_field"/>
+							<field name="mandatory_action_id" nolabel="1" colspan="4" domain="[('model_id.id','=',model_id)]"/>
                     	</page>
                     </notebook>
                 </form>
