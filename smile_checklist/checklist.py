@@ -366,7 +366,8 @@ class checklist_task_instance(osv.osv):
                 except Exception, e:
                     stack = traceback.format_exc()
                     self.pool.get('checklist.exception').create(cr, uid, {'checklist_task_id': instance.checklist_task_id.id, 'exception_type': 'field', 'res_id': instance.res_id, 'field_id': field.id, 'exception': e, 'stack': stack})
-                    continue
+                    continue    
+                
         return res
 
     def _get_checklist_task_instance_ids(self, cr, uid, ids, context={}):
@@ -495,7 +496,7 @@ def object_and_checklist_fields_view_get(self, cr, uid, view_id=None, view_type=
                 arch_list.append('</group>')
                 arch_list.append(arch[arch.rfind('<'):])
                 fields_view['fields']['checklist_task_instance_ids'] = {'string': 'Tasks', 'type': 'one2many', 'relation': 'checklist.task.instance', 'context': {}}
-            fields_view['arch'] = ''.join(arch_list)
+            fields_view['arch'] = ''.join(arch_list or arch)
     return fields_view
 
 orm.orm.__init__ = __init__object_and_checklist
