@@ -141,7 +141,7 @@ class checklist_task_field(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, translate=True),
-        'expression': fields.text('Expression', required=True),
+        'expression': fields.text('Expression', required=True, help="You can use the fields from the object, e.g. object.name"),
         'field_name': fields.char('Copy to expression field', size=128),
         'field_id': fields.many2one('ir.model.fields', "Choose a field"),
         'task_id': fields.many2one('checklist.task', 'Task'),

@@ -44,7 +44,8 @@
 											</field>
 										</page>
 										<page string="Action">
-											<field name="action_id" nolabel="1" colspan="4" domain="[('model_id.id','=',parent.model_id)]" />
+											<separator string="Once this task is completed" colspan="4"/>
+											<field name="action_id" colspan="4" domain="[('model_id.id','=',parent.model_id)]" />
 										</page>
 									</notebook>
 								</form>
