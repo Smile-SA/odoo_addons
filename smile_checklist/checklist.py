@@ -48,8 +48,8 @@ class checklist(osv.osv):
     def _check_unique_checklist_per_object(self, cr, uid, ids): 
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for checklist in self.browse(cr, uid, ids):
-            checklist_ids = self.search(cr, uid, [('model_id', '=', checklist.model_id.id)])
+        for checklist_inst in self.browse(cr, uid, ids):
+            checklist_ids = self.search(cr, uid, [('model_id', '=', checklist_inst.model_id.id)])
             if len(checklist_ids) > 1:
                 return False
         return True
@@ -275,7 +275,7 @@ class checklist(osv.osv):
             ids = obj.search(cr, uid, [])
         if isinstance(ids, (int, long)):
             ids = [ids]
-        res = {}
+        context = context or {}
         inst_ids = []
         instance_pool = self.pool.get('checklist.task.instance')
         for object in obj.browse(cr, uid, ids):
@@ -535,7 +535,7 @@ def object_and_checklist_fields_view_get(self, cr, uid, view_id=None, view_type=
                     arch_list.append('</group>')
                     arch_list.append(arch[arch.rfind('<'):])
                     fields_view['fields']['checklist_task_instance_ids'] = {'string': 'Tasks', 'type': 'one2many', 'relation': 'checklist.task.instance', 'context': {}}
-                fields_view['arch'] = ''.join(arch_list)
+                fields_view['arch'] = ''.join(arch_list or arch)
     return fields_view
 
 orm.orm.__init__ = __init__object_and_checklist
