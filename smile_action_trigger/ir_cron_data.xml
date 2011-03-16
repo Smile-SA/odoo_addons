@@ -3,7 +3,7 @@
 	<data noupdate="1">
 
 		<record forcecreate="True" id="ir_cron_sartre_action" model="ir.cron">
-			<field name="name">Run sartre scheduler</field>
+			<field name="name">Run action trigger scheduler</field>
 			<field eval="True" name="active" />
 			<field name="user_id" ref="base.user_root" />
 			<field name="interval_number">1</field>

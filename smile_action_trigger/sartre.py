@@ -19,24 +19,32 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
-import service
-import netsvc
-import pooler
-import re
-import time
-from mx.DateTime import RelativeDateTime, now
-import tools
-from tools.translate import _
-import traceback
 import inspect
 import operator
+import re
+import time
+import traceback
 
-def _get_browse_record_dict(self, cr, uid, ids):
+from mx.DateTime import RelativeDateTime, now
+
+import netsvc
+from osv import fields, osv, orm
+import pooler
+import service
+import tools
+from tools.translate import _
+
+def _get_browse_record_dict(obj, cr, uid, ids, fields_list=None):
     """Get a dictionary of dictionary from browse records list"""
     if isinstance(ids, (int, long)):
         ids = [ids]
-    return dict([(object.id, dict([(field, eval('obj.' + field, {'obj':object})) for field in self._columns])) for object in self.browse(cr, uid, ids)])
+    if fields_list is None:
+        fields_list = obj._columns.keys()
+    browse_record_dict = {}
+    for object_inst in obj.browse(cr, uid, ids):
+        for field in fields_list:
+            browse_record_dict.setdefault(object_inst.id, {})[field] = getattr(object_inst, field)
+    return browse_record_dict
 
 class ir_model_methods(osv.osv):
     _name = 'ir.model.methods'
@@ -252,7 +260,7 @@ class sartre_rule(osv.osv):
             interval_type = str(rule.trigger_date_range_type)
             interval_operand = rule.trigger_date_range_operand
             # Update rule next call
-            self.write(cr, uid, rule.id, {'nextcall': now() + RelativeDateTime(**{str(rule.interval_type): rule.interval_number})}, context)
+            self.write(cr, 1, rule.id, {'nextcall': now() + RelativeDateTime(**{str(rule.interval_type): rule.interval_number})}, context)
             # Add datetime filter
             field = rule.trigger_date_type
             limit_date = now()
@@ -348,7 +356,7 @@ class sartre_rule(osv.osv):
                 rule_object_ids = self.pool.get(rule.model_id.model).search(cr, uid, domain, context=context_copy)
             except Exception, e:
                 stack = traceback.format_exc()
-                self.pool.get('sartre.exception').create(cr, uid, {'rule_id': rule.id, 'exception_type': 'condition', 'exception': tools.ustr(e), 'stack': tools.ustr(stack)})
+                self.pool.get('sartre.exception').create(cr, uid, {'rule_id': rule.id, 'exception_type': 'condition', 'exception': tools.ustr(e), 'stack': tools.ustr(stack), 'context': tools.ustr(context_copy)})
                 self.logger.notifyChannel('sartre.rule', netsvc.LOG_ERROR, 'Rule: %s, User: %s, Exception:%s' % (rule.id, uid, tools.ustr(e)))
             # Execute server actions
             if rule_object_ids:
@@ -373,7 +381,7 @@ class sartre_rule(osv.osv):
                                     self.pool.get('sartre.execution').update_executions_counter(cr, uid, rule, object_id)
                         except Exception, e:
                             stack = traceback.format_exc()
-                            self.pool.get('sartre.exception').create(cr, uid, {'rule_id': rule.id, 'exception_type': 'action', 'res_id': False, 'action_id': action.id, 'exception': tools.ustr(e), 'stack': tools.ustr(stack)})
+                            self.pool.get('sartre.exception').create(cr, uid, {'rule_id': rule.id, 'exception_type': 'action', 'res_id': False, 'action_id': action.id, 'exception': tools.ustr(e), 'stack': tools.ustr(stack), 'context': tools.ustr(context_copy)})
                             self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: sartre.rule,%s, Exception: %s' % (action.id, action.user_id and action.user_id.id or uid, False, rule.id, tools.ustr(e)))
                             continue
         return True
@@ -500,15 +508,16 @@ class sartre_exception(osv.osv):
     _rec_name = 'rule_id'
 
     _columns = {
-        'rule_id': fields.many2one('sartre.rule', 'Rule', required=False, select=True),
+        'rule_id': fields.many2one('sartre.rule', 'Rule', select=True),
         'exception_type': fields.selection([
             ('condition', 'Condition'),
             ('action', 'Action'),
-             ], 'Type', required=False, select=True),
-        'res_id': fields.integer('Resource', required=False),
-        'action_id': fields.many2one('ir.actions.server', 'Action', required=False, select=True),
-        'exception': fields.text('Exception', required=False),
-        'stack': fields.text('Stack Trace', required=False),
+             ], 'Type', select=True),
+        'res_id': fields.integer('Resource'),
+        'action_id': fields.many2one('ir.actions.server', 'Action', select=True),
+        'exception': fields.text('Exception'),
+        'stack': fields.text('Stack Trace'),
+        'context': fields.text('Context'),
         'create_date': fields.datetime('Creation Date'),
     }
 
