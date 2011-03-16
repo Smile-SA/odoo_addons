@@ -207,6 +207,7 @@
 					<field name="exception" />
 					<field name="create_date" />					
 					<field name="stack" colspan="4" />
+					<field name="context" colspan="4" />
 				</form>
 			</field>
 		</record>
@@ -222,6 +223,7 @@
 					<field name="action_id" />
 					<field name="exception" />
 					<field name="stack" />
+					<field name="context" />
 					<field name="create_date" />					
 				</tree>
 			</field>

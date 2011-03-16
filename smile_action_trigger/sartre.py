@@ -252,7 +252,7 @@ class sartre_trigger(osv.osv):
             interval_type = trigger.on_date_range_type
             interval_operand = trigger.on_date_range_operand
             # Update trigger next call
-            self.write(cr, uid, trigger.id, {'nextcall': now() + RelativeDateTime(**{str(trigger.interval_type): trigger.interval_number})}, context)
+            self.write(cr, 1, trigger.id, {'nextcall': now() + RelativeDateTime(**{str(trigger.interval_type): trigger.interval_number})}, context)
             # Add datetime filter
             field = trigger.on_date_type
             limit_date = now()
@@ -354,7 +354,7 @@ class sartre_trigger(osv.osv):
             except Exception, e:
                 stack = traceback.format_exc()
                 cr.rollback()
-                self.pool.get('sartre.exception').create(cr, uid, {'trigger_id': trigger.id, 'exception_type': 'filter', 'exception': tools.ustr(e), 'stack': tools.ustr(stack)})
+                self.pool.get('sartre.exception').create(cr, uid, {'trigger_id': trigger.id, 'exception_type': 'filter', 'exception': tools.ustr(e), 'stack': tools.ustr(stack), 'context': tools.ustr(context)})
                 self.logger.notifyChannel('sartre.trigger', netsvc.LOG_ERROR, 'Trigger: %s, User: %s, Exception:%s' % (trigger.id, uid, tools.ustr(e)))
                 continue
             # Execute server actions
@@ -381,7 +381,7 @@ class sartre_trigger(osv.osv):
                         except Exception, e:
                             stack = traceback.format_exc()
                             cr.rollback()
-                            self.pool.get('sartre.exception').create(cr, uid, {'trigger_id': trigger.id, 'exception_type': 'action', 'res_id': False, 'action_id': action.id, 'exception': tools.ustr(e), 'stack': tools.ustr(stack)})
+                            self.pool.get('sartre.exception').create(cr, uid, {'trigger_id': trigger.id, 'exception_type': 'action', 'res_id': False, 'action_id': action.id, 'exception': tools.ustr(e), 'stack': tools.ustr(stack), 'context': tools.ustr(context)})
                             self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: sartre.trigger,%s, Exception: %s' % (action.id, action.user_id and action.user_id.id or uid, False, trigger.id, tools.ustr(e)))
                             break
             cr.commit()
@@ -519,15 +519,16 @@ class sartre_exception(osv.osv):
     _rec_name = 'trigger_id'
 
     _columns = {
-        'trigger_id': fields.many2one('sartre.trigger', 'Trigger', required=False, select=True, ondelete='cascade'),
+        'trigger_id': fields.many2one('sartre.trigger', 'Trigger', select=True, ondelete='cascade'),
         'exception_type': fields.selection([
             ('filter', 'Filter'),
             ('action', 'Action'),
-             ], 'Type', required=False, select=True),
-        'res_id': fields.integer('Resource', required=False),
-        'action_id': fields.many2one('ir.actions.server', 'Action', required=False, select=True),
-        'exception': fields.text('Exception', required=False),
-        'stack': fields.text('Stack Trace', required=False),
+             ], 'Type', select=True),
+        'res_id': fields.integer('Resource'),
+        'action_id': fields.many2one('ir.actions.server', 'Action', select=True),
+        'exception': fields.text('Exception'),
+        'stack': fields.text('Stack Trace'),
+        'context': fields.text('Context'),
         'create_date': fields.datetime('Creation Date'),
     }
 
