@@ -171,7 +171,8 @@ class ir_model_export_file_template(osv.osv):
                 sub_objects = eval(export_file.records, localdict)
             if not isinstance(sub_objects, list):
                 sub_objects = [sub_objects]
-            for sub_object in sub_objects:
+            for index, sub_object in enumerate(sub_objects):
+                localdict['line_number'] = index + 1
                 localdict['object'] = sub_object
                 line = []
                 for column in export_file.column_ids:
@@ -403,7 +404,7 @@ class ir_model_export_file_template_column(osv.osv):
         'sequence': fields.integer('Sequence', required=True),
         'export_file_template_id': fields.many2one('ir.model.export.file_template', 'Export', required=True, ondelete='cascade'),
         'value': fields.text('Value',
-            help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
+            help="Use mako language with the pool, cr, uid, object, line_number, localcontext and time variables"),
         'default_value': fields.char('Default value', size=64,
             help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'not_string': fields.boolean('Not a string'),
