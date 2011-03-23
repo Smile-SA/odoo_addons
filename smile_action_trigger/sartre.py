@@ -578,7 +578,7 @@ def sartre_decorator(original_method):
             ids = [ids]
         context = args_dict.get('context', {}) or {}
         trigger_obj = obj.pool.get('sartre.trigger')
-        if obj and cr and uid:
+        if trigger_obj and obj and cr and uid:
             # Case: trigger on function
             field_name = ''
             calculation_method = False
@@ -598,7 +598,7 @@ def sartre_decorator(original_method):
         # Execute original method
         result = original_method(*args, **kwargs)
         # Run triggers if exists
-        if obj and cr and uid and trigger_ids and method_name != 'unlink':
+        if trigger_obj and obj and cr and uid and trigger_ids and method_name != 'unlink':
             # Case: trigger on create
             if method_name == 'create':
                 context['active_object_ids'] = [result]
