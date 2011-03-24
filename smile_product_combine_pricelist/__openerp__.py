@@ -20,16 +20,15 @@
 ##############################################################################
 
 {
-    'name': 'Webformance Sale & Product',
+    'name': 'Combine multiple pricelists',
     'version': '1.0',
-    'category': 'Webformance',
+    'category': 'Generic Modules/Sales & Purchases',
     'description': """  
-                        Combine multiple price lists. Applying the first one and choose to deduct a price then reapply the follows.
+                        Combine multiple pricelists. Applying the first one and choose to deduct a price then reapply the follows.
                         Combine products to set a price:
                             The price of a product is based on the amount taken for other products.
                             This module must be inherited from other specific modules to be used
-                            """,
-                            
+    """,                        
     'author': 'Smile.fr',
     'website': 'http://www.smile.fr',
     'depends': [
