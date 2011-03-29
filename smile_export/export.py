@@ -161,6 +161,8 @@ class ir_model_export(osv.osv):
         """Link export instance with resources to export"""
         if context is None:
             context = {}
+        if context.get('not_populate', False):
+            return True
         if isinstance(ids, (int, long)):
             ids = [ids]
         export_line_pool = self.pool.get('ir.model.export.line')
@@ -210,14 +212,13 @@ class ir_model_export(osv.osv):
         threaded_run.start()
         return True
 
-    def generate2(self, cr, uid, ids, context=None):
-        return self._generate(cr, uid, ids, context)
-
     def _generate(self, cr, uid, ids, context=None):
         """Call export method and action
         Catch and log exceptions"""
         if isinstance(ids, (int, long)):
             ids = [ids]
+        context = context or {}
+        context['not_populate'] = True
         for export in self.browse(cr, uid, ids):
             try:
                 is_running = False
@@ -225,18 +226,18 @@ class ir_model_export(osv.osv):
                     object_ids = [line.res_id for line in export.line_ids]
                     if object_ids:
                         if not is_running:
-                            export.write({'state': 'running'})
+                            export.write({'state': 'running'}, context)
                             is_running = True
                         self._run_actions(cr, uid, export, object_ids, context)
                 if is_running:
-                    export.write({'state': 'done'})
+                    export.write({'state': 'done'}, context)
                 cr.commit()
             except Exception, e:
                 cr.rollback()
                 export.write({
                     'state': 'exception',
                     'exception': isinstance(e, osv.except_osv) and e.value or e,
-                })
+                }, context)
         return True
 ir_model_export()
 
