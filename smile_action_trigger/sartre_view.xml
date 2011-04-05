@@ -118,10 +118,11 @@
 	                    <filter string="other method" icon="terp-tools" domain="[('on_other','=',True)]"/>
 	                    <filter string="function field" icon="terp-tools" domain="[('on_function','=',True)]"/>
 	                    <filter string="on date" icon="terp-tools" domain="[('on_date','=',True)]"/>
+                            <filter string="Show all" icon="terp-tools" domain="[('active','in',('True','False'))]"/>
+	                    <filter string="Inactive only" icon="terp-tools" domain="[('active','=',False)]"/>
 	                    <separator orientation="vertical"/>
 	                    <field name="name"/>
-	               		<field name="model_id"/>
-	                	<field name="active"/>
+                            <field name="model_id"/>
 	                </group>
 	                <newline/>
 	                <group expand="0" string="Group By..." groups="base.group_extended">
