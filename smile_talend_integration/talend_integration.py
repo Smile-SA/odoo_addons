@@ -129,7 +129,7 @@ class talend_job(osv.osv):
                                 action.talend_job_java_xmx,
                                 action.talend_job_project,
                                 action.talend_job_name.lower(),
-                                action.talend_job_version,
+                                action.talend_job_version.replace('.','_'),
                                 action.talend_job_name,
                                 action.talend_job_context,
                                 ' '.join(params),
