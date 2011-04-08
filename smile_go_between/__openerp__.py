@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Invoicing Plan for Sales",
+    "name" : "Go Between",
     "version" : "1.0",
     "category" : "Generic Modules/Sales & Purchases",
     "author" : "Smile",
@@ -35,7 +35,7 @@
                     
     Suggestions & Feedback to: samir.rachedi@smile.fr & corentin.pouhet-brunerie@smile.fr
     """,
-    "depends" : ['sale','purchase','smile_product_combine_pricelist'],
+    "depends" : ['sale', 'purchase', 'smile_product_combine_pricelist'],
     "init_xml" : [],
     "update_xml": [
         'sale_view.xml',
