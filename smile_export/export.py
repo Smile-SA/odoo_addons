@@ -208,18 +208,25 @@ class ir_model_export(osv.osv):
 
     def generate(self, cr, uid, ids, context=None):
         """Create a new thread dedicated to export generation"""
-        threaded_run = threading.Thread(target=self._generate, args=(cr.db_name, uid, ids, context))
+        threaded_run = threading.Thread(target=self._generate_with_new_cursor, args=(cr.db_name, uid, ids, context))
         threaded_run.start()
         return True
 
-    def _generate(self, db_name, uid, ids, context=None):
-        """Call export method and action
-        Catch and log exceptions"""
+    def _generate_with_new_cursor(self, db_name, uid, ids, context):
         try:
             db = pooler.get_db(db_name)
         except:
             return False
         cr = db.cursor()
+        try:
+            self._generate(self, cr, uid, ids, context)
+        finally:
+            cr.close()
+        return
+
+    def _generate(self, cr, uid, ids, context=None):
+        """Call export method and action
+        Catch and log exceptions"""
         if isinstance(ids, (int, long)):
             ids = [ids]
         context = context or {}

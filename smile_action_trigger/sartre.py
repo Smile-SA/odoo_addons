@@ -334,17 +334,24 @@ class sartre_trigger(osv.osv):
         return domain
 
     def run_now(self, cr, uid, ids, context=None):
-        threaded_run = threading.Thread(target=self._run_now, args=(cr.db_name, uid, ids, context))
+        threaded_run = threading.Thread(target=self._run_now_with_new_cursor, args=(cr.db_name, uid, ids, context))
         threaded_run.start()
         return True
 
-    def _run_now(self, db_name, uid, ids, context=None):
-        """Execute now server actions"""
+    def _run_now_with_new_cursor(self, db_name, uid, ids, context):
         try:
             db = pooler.get_db(db_name)
         except:
             return False
         cr = db.cursor()
+        try:
+            self._run_now(self, cr, uid, ids, context)
+        finally:
+            cr.close()
+        return
+
+    def _run_now(self, cr, uid, ids, context=None):
+        """Execute now server actions"""
         context = copy.deepcopy(context) or {}
         context.setdefault('active_test', False)
         for trigger in self.browse(cr, uid, ids):
@@ -390,7 +397,6 @@ class sartre_trigger(osv.osv):
                             self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: sartre.trigger,%s, Exception: %s' % (action.id, action.user_id and action.user_id.id or uid, False, trigger.id, tools.ustr(e)))
                             break
             cr.commit()
-        cr.close()
         return True
 
     def check_triggers(self, cr, uid, context=None):
