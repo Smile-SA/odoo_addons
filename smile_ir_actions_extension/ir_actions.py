@@ -132,12 +132,18 @@ class actions_server(osv.osv):
         return message
 
     def run_now(self, cr, uid, ids, context=None):
-        threaded_run = threading.Thread(target=self.__run_now, args=(pooler.get_db(cr.dbname).cursor(), uid, ids, context))
+        threaded_run = threading.Thread(target=self._run_now, args=(cr.db_name, uid, ids, context))
         threaded_run.start()
         return True
 
-    def __run_now(self, cr, uid, ids, context=None):
+    def _run_now(self, db_name, uid, ids, context=None):
         logger = netsvc.Logger()
+
+        try:
+            db = pooler.get_db(db_name)
+        except:
+            return False
+        cr = db.cursor()
 
         if context is None:
             context = {}
@@ -280,5 +286,6 @@ class actions_server(osv.osv):
                             'context': context,
                         })
                         self.pool.get('ir.actions.server.log').create(cr, uid, vals, context)
+        cr.close()
         return True
 actions_server()
