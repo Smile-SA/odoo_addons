@@ -319,7 +319,7 @@ class ir_model_export_file_template(osv.osv):
             }
             self.pool.get('ir.attachment').create(cr, uid, exceptions_vals, context)
         export = self.pool.get('ir.model.export').browse(cr, uid, context.get('attach_export_id', 0), context)
-        export.write({'report_id': report_id})
+        export.write({'report_id': report_id}, context)
         if export_file.send_by_email:
             self._send_by_email(cr, uid, export_file, localdict)
         return True
