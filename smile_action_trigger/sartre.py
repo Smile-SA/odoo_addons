@@ -345,7 +345,7 @@ class sartre_trigger(osv.osv):
             return False
         cr = db.cursor()
         try:
-            self._run_now(self, cr, uid, ids, context)
+            self._run_now(cr, uid, ids, context)
         finally:
             cr.close()
         return

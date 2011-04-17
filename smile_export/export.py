@@ -219,7 +219,7 @@ class ir_model_export(osv.osv):
             return False
         cr = db.cursor()
         try:
-            self._generate(self, cr, uid, ids, context)
+            self._generate(cr, uid, ids, context)
         finally:
             cr.close()
         return
@@ -231,7 +231,7 @@ class ir_model_export(osv.osv):
             ids = [ids]
         context = context or {}
         context['not_populate'] = True
-        for export in self.browse(cr, uid, ids):
+        for export in self.browse(cr, uid, ids, context):
             try:
                 is_running = False
                 if export.line_ids:
