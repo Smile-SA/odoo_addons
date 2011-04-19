@@ -208,7 +208,7 @@ class ir_model_export(osv.osv):
 
     def generate(self, cr, uid, ids, context=None):
         """Create a new thread dedicated to export generation"""
-        threaded_run = threading.Thread(target=self._generate_with_new_cursor, args=(cr.db_name, uid, ids, context))
+        threaded_run = threading.Thread(target=self._generate_with_new_cursor, args=(cr.dbname, uid, ids, context))
         threaded_run.start()
         return True
 

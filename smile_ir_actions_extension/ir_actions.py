@@ -132,7 +132,7 @@ class actions_server(osv.osv):
         return message
 
     def run_now(self, cr, uid, ids, context=None):
-        threaded_run = threading.Thread(target=self._run_now_new_cursor, args=(cr.db_name, uid, ids, context))
+        threaded_run = threading.Thread(target=self._run_now_new_cursor, args=(cr.dbname, uid, ids, context))
         threaded_run.start()
         return True
 

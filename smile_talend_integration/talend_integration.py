@@ -129,7 +129,7 @@ class talend_job(osv.osv):
                                 action.talend_job_java_xmx,
                                 action.talend_job_project,
                                 action.talend_job_name.lower(),
-                                action.talend_job_version.replace('.','_'),
+                                action.talend_job_version.replace('.', '_'),
                                 action.talend_job_name,
                                 action.talend_job_context,
                                 ' '.join(params),
@@ -155,7 +155,7 @@ class talend_job(osv.osv):
                             if response.status >= 400:
                                 raise httplib.HTTPException(response.msg)
                     else:
-                        super(talend_job, self).run(cr, uid, ids, context)
+                        return super(talend_job, self).run(cr, uid, ids, context)
 
                     if action.log:
                         self.pool.get('ir.actions.server.log').write(cr, uid, log_id, {'end_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
