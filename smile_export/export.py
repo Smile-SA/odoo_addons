@@ -250,7 +250,6 @@ class ir_model_export(osv.osv):
                     'state': 'exception',
                     'exception': isinstance(e, osv.except_osv) and e.value or e,
                 }, context)
-        cr.close()
         return True
 ir_model_export()
 
