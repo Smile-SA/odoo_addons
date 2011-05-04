@@ -247,26 +247,26 @@ class ir_model_export_file_template(osv.osv):
 
     # ***** File storage methods *****
 
-    def _create_attachment(self, cr, uid, export_file, filename, binary, context):
+    def _create_attachment(self, cr, uid, export_file, filename, file_content, context):
         vals = {
             'name': filename,
             'type': 'binary',
-            'datas': binary,
+            'datas': base64.encodestring(file_content),
             'datas_fname': filename,
             'res_model': 'ir.model.export',
             'res_id': context.get('attach_export_id', 0),
         }
         self.pool.get('ir.attachment').create(cr, uid, vals, context)
         
-    def _save_in_local_dir(self, cr, uid, export_file, filename, binary, context):
+    def _save_in_local_dir(self, cr, uid, export_file, filename, file_content, context):
         directory = os.path.abspath(export_file.local_directory)
         if not os.path.exists(directory):
             raise Exception('Directory %s does not exist or permission on it is not granted' % (directory,))
         file = open(directory + '/' + filename, 'w')
-        file.write(binary)
+        file.write(file_content)
         file.close()
 
-    def _upload_to_ftp_server(self, cr, uid, export_file, filename, binary, context):
+    def _upload_to_ftp_server(self, cr, uid, export_file, filename, file_content, context):
         localdict = {
             'object': export_file,
             'localcontext': context,
@@ -280,14 +280,14 @@ class ir_model_export_file_template(osv.osv):
             ftp.login(export_file.ftp_user, export_file.ftp_password or '')
         command = 'STOR %s' % filename
         file = open(filename, 'w')
-        file.write(binary)
+        file.write(file_content)
         ftp.storbinary(command, file)
 
-    def _save_file(self, cr, uid, export_file, filename, binary, context):
+    def _save_file(self, cr, uid, export_file, filename, file_content, context):
         for save_file_method in ['create_attachment', 'upload_to_ftp_server', 'save_in_local_dir']:
             if getattr(export_file, save_file_method):
                 try:
-                    getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, binary, context)
+                    getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, file_content, context)
                 except osv.except_osv, e:
                     exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e) + str(e.value))
                     raise Exception(exception_infos) 
@@ -389,8 +389,7 @@ class ir_model_export_file_template(osv.osv):
                 filename = self._get_filename(cr, uid, export_file, context)
                 if export_file.extension == 'pdf':
                     file_content = _text2pdf(file_content)
-                binary = base64.encodestring(file_content)
-                self._save_file(cr, uid, export_file, filename, binary, context)
+                self._save_file(cr, uid, export_file, filename, file_content, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
         localdict = {
             'pool': self.pool,
