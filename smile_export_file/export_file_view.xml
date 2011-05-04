@@ -90,6 +90,11 @@
 									<field name="ftp_user" attrs="{'invisible': [('ftp_anonymous', '=', True)], 'required': [('upload_to_ftp_server', '=', True), ('ftp_anonymous', '!=', True)]}"/>
 									<field name="ftp_password" attrs="{'invisible': [('ftp_anonymous', '=', True)]}" password="True"/>
 								</group>
+								<separator string="Local storage" colspan="2"/>
+								<field name="save_in_local_dir"/>
+								<group col="2" colspan="2" attrs="{'invisible': [('save_in_local_dir', '!=', True)]}">
+									<field name="local_directory" attrs="{'required': [('save_in_local_dir', '=', True)]}"/>
+								</group>
 								<separator string="Email" colspan="2"/>
 								<field name="send_by_email"/>
 								<group col="2" colspan="2" attrs="{'invisible': [('send_by_email', '!=', True)]}">

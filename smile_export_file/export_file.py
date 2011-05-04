@@ -23,6 +23,7 @@ import base64
 import calendar
 import datetime
 from ftplib import FTP
+import os.path
 import logging
 import os
 from random import random
@@ -115,6 +116,8 @@ class ir_model_export_file_template(osv.osv):
         'ftp_anonymous': fields.boolean('Anonymous'),
         'ftp_user': fields.char('User', size=64),
         'ftp_password': fields.char('Password', size=64),
+        'save_in_local_dir': fields.boolean('Save in a local directory'),
+        'local_directory': fields.char('Local directory', size=128),
         'send_by_email': fields.boolean('Send by email'),
         'email_to': fields.char('To', size=128),
         'email_cc': fields.char('CC', size=128),
@@ -254,6 +257,14 @@ class ir_model_export_file_template(osv.osv):
             'res_id': context.get('attach_export_id', 0),
         }
         self.pool.get('ir.attachment').create(cr, uid, vals, context)
+        
+    def _save_in_local_dir(self, cr, uid, export_file, filename, binary, context):
+        directory = os.path.abspath(export_file.local_directory)
+        if not os.path.exists(directory):
+            raise Exception('Directory %s does not exist or permission on it is not granted' % (directory,))
+        file = open(directory + '/' + filename, 'w')
+        file.write(binary)
+        file.close()
 
     def _upload_to_ftp_server(self, cr, uid, export_file, filename, binary, context):
         localdict = {
@@ -273,9 +284,16 @@ class ir_model_export_file_template(osv.osv):
         ftp.storbinary(command, file)
 
     def _save_file(self, cr, uid, export_file, filename, binary, context):
-        for save_file_method in ['create_attachment', 'upload_to_ftp_server']:
+        for save_file_method in ['create_attachment', 'upload_to_ftp_server', 'save_in_local_dir']:
             if getattr(export_file, save_file_method):
-                getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, binary, context)
+                try:
+                    getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, binary, context)
+                except osv.except_osv, e:
+                    exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e) + str(e.value))
+                    raise Exception(exception_infos) 
+                except Exception, e:
+                    exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e))
+                    raise Exception(exception_infos)
 
     def _send_by_email(self, cr, uid, export_file, localdict):
         email_to = _render_unicode(export_file.email_to, localdict)
