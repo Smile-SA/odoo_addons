@@ -153,7 +153,7 @@ class ir_model_export(osv.osv):
 
     _order = 'create_date desc'
 
-    _default = {
+    _defaults = {
         'state': lambda * a: 'draft',
     }
 
