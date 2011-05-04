@@ -88,7 +88,7 @@ class ir_model_export_template(osv.osv):
                 vals = {
                     'name': template.name,
                     'user_id': 1,
-                    'model': template.model_id.model,
+                    'model': self._name,
                     'function': 'create_export',
                     'args': '(%d,)' % template.id,
                     'numbercall':-1,
