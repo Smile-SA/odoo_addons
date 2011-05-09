@@ -31,21 +31,17 @@
 										<field name="value" widget="char"/>
 										<field name="default_value"/>
 										<field name="not_string"/>
-										<field name="not_none"/>
-										<field name="not_false"/>
 										<field name="min_width"/>
 										<field name="max_width"/>
+										<field name="has_validator"/>
 									</tree>
 									<form string="Column">
 										<field name="name"/>
 										<field name="sequence"/>
 										<field name="value" colspan="4"/>
 										<field name="default_value" colspan="4"/>
-										<group colspan="4" col="6">
-											<field name="not_string"/>
-											<field name="not_none"/>
-											<field name="not_false"/>
-										</group>
+										<field name="not_string"/>
+										<field name="column_validator"/>
 										<field name="exception_msg" attrs="{'invisible': [('not_none', '!=', True)], 'required': [('not_none', '=', True)]}" colspan="4"/>
 										<field name="min_width"/>
 										<field name="max_width"/>

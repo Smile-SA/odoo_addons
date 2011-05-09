@@ -37,6 +37,7 @@ except ImportError:
 
 from osv import osv, fields
 import tools
+from tools.safe_eval import safe_eval as eval
 from tools.translate import _
 
 from text2pdf import pyText2Pdf
@@ -182,12 +183,14 @@ class ir_model_export_file_template(osv.osv):
                     column_value = _render_unicode(column.value or '', localdict)
                     if column.default_value and not column_value:
                         column_value = _render_unicode(column.default_value, localdict)
-                    if (column.not_none and column_value is None) or (column.not_false and column_value is False):
-                        try:
-                            exception_msg = _render_unicode(column.exception_msg, localdict)
-                        except:
-                            exception_msg = column.exception_msg
-                        raise osv.except_osv(_('Error'), exception_msg)
+                    if column.column_validator:
+                        validation = eval(column.column_validator, localdict)
+                        if not validation:
+                            try:
+                                exception_msg = _render_unicode(column.exception_msg, localdict)
+                            except:
+                                exception_msg = column.exception_msg
+                            raise osv.except_osv(_('Error'), exception_msg)
                     column_value = tools.ustr(column_value)
                     if column_value:
                         if column.min_width:
@@ -415,6 +418,13 @@ ir_model_export_file_template()
 class ir_model_export_file_template_column(osv.osv):
     _name = 'ir.model.export.file_template.column'
     _description = 'Export File Template Column'
+    
+    def _has_validator(self, cr, uid, ids, name, arg, context=None):
+        res = {}.fromkeys(ids, False)
+        for column in self.read(cr, uid, ids, ['column_validator']):
+            if column['column_validator']:
+                res[column['id']] = True
+        return res
 
     _columns = {
         'name': fields.char('Label', size=64, required=True),
@@ -425,8 +435,8 @@ class ir_model_export_file_template_column(osv.osv):
         'default_value': fields.char('Default value', size=64,
             help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'not_string': fields.boolean('Not a string'),
-        'not_none': fields.boolean('Not None'),
-        'not_false': fields.boolean('Not False'),
+        'column_validator': fields.text('Column validator', help="Raise an exception if validator evaluates to False: use python language with the pool, cr, uid, object, localcontext and time variables"),
+        'has_validator': fields.function(_has_validator, method=True, type='boolean', string="Validator",),
         'exception_msg': fields.char('Exception Message', size=256, translate=True,
             help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'min_width': fields.integer('Min width'),
@@ -437,4 +447,5 @@ class ir_model_export_file_template_column(osv.osv):
         ], 'Justify'),
         'max_width': fields.integer('Max width'),
     }
+    
 ir_model_export_file_template_column()
