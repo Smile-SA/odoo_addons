@@ -1,4 +1,7 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_ir_model_export_template_all","ir_model_export_template","model_ir_model_export_template",,1,1,1,1
-"access_ir_model_export_all","ir_model_export","model_ir_model_export",,1,1,1,1
-"access_ir_model_export_line_all","ir_model_export_line","model_ir_model_export_line",,1,1,1,1
+"access_ir_model_export_template_manager","ir_model_export_template.manager","model_ir_model_export_template","smile_export.group_smile_export_manager",1,1,1,1
+"access_ir_model_export_manager","ir_model_export.manager","model_ir_model_export","smile_export.group_smile_export_manager",1,1,1,1
+"access_ir_model_export_line_manager","ir_model_export_line.manager","model_ir_model_export_line","smile_export.group_smile_export_manager",1,1,1,1
+"access_ir_model_export_template_reader","ir_model_export_template.manager","model_ir_model_export_template","smile_export.group_smile_export_log_reader",1,0,0,0
+"access_ir_model_export_reader","ir_model_export.manager","model_ir_model_export","smile_export.group_smile_export_log_reader",1,0,0,0
+"access_ir_model_export_line_reader","ir_model_export_line.manager","model_ir_model_export_line","smile_export.group_smile_export_log_reader",1,0,0,0
