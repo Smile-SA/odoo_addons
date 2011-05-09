@@ -182,7 +182,7 @@ class ir_model_export_file_template(osv.osv):
                     column_value = _render_unicode(column.value or '', localdict)
                     if column.default_value and not column_value:
                         column_value = _render_unicode(column.default_value, localdict)
-                    if column.not_none and column_value is None:
+                    if (column.not_none and column_value is None) or (column.not_false and column_value is False):
                         try:
                             exception_msg = _render_unicode(column.exception_msg, localdict)
                         except:
@@ -426,6 +426,7 @@ class ir_model_export_file_template_column(osv.osv):
             help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'not_string': fields.boolean('Not a string'),
         'not_none': fields.boolean('Not None'),
+        'not_false': fields.boolean('Not False'),
         'exception_msg': fields.char('Exception Message', size=256, translate=True,
             help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'min_width': fields.integer('Min width'),
