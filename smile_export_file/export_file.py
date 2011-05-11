@@ -37,7 +37,6 @@ except ImportError:
 
 from osv import osv, fields
 import tools
-from tools.safe_eval import safe_eval as eval
 from tools.translate import _
 
 from text2pdf import pyText2Pdf
