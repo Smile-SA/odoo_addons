@@ -143,12 +143,15 @@ class actions_server(osv.osv):
             return False
         cr = db.cursor()
         try:
-            self._run_now(cr, uid, ids, context)
+            self.run(cr, uid, ids, context)
         finally:
             cr.close()
         return
 
-    def _run_now(self, cr, uid, ids, context=None):
+    def _run(self, cr, uid, ids, context=None):
+        return super(actions_server, self).run(cr, uid, ids, context)
+
+    def run(self, cr, uid, ids, context=None):
         logger = netsvc.Logger()
 
         if context is None:
@@ -165,7 +168,6 @@ class actions_server(osv.osv):
             ids = [ids]
 
         for action in self.browse(cr, uid, ids, context):
-
             if action.active:
 
                 if action.log:
@@ -174,6 +176,7 @@ class actions_server(osv.osv):
                         'res_id': context.get('active_id', False),
                         'context': context,
                     })
+                    cr.commit()
 
                 try:
 
@@ -269,13 +272,14 @@ class actions_server(osv.osv):
                         res_id = obj_pool.copy(cr, uid, int(cid), res)
 
                     else:
-                        super(actions_server, self).run(cr, uid, [action.id], context)
+                        return self._run(cr, uid, ids, context)
 
                     if action.log:
                         self.pool.get('ir.actions.server.log').write(cr, uid, log_id, {'end_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
                     
                     cr.commit()
                 except Exception, e:
+                    logger.notifyChannel("web-services", netsvc.LOG_INFO, 'Zop: %s' % (str(e),))
                     stack = traceback.format_exc()
                     vals = {
                         'end_date': time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -284,6 +288,7 @@ class actions_server(osv.osv):
                     }
                     cr.rollback()
                     if action.log:
+                        logger.notifyChannel("web-services", netsvc.LOG_INFO, 'Zop1 %s' % (vals,))
                         self.pool.get('ir.actions.server.log').write(cr, uid, log_id, vals, context)
                     else:
                         vals.update({
@@ -291,6 +296,8 @@ class actions_server(osv.osv):
                             'res_id': context.get('active_id', False),
                             'context': context,
                         })
+                        logger.notifyChannel("web-services", netsvc.LOG_INFO, 'Zop2')
                         self.pool.get('ir.actions.server.log').create(cr, uid, vals, context)
+                    cr.commit()
         return True
 actions_server()
