@@ -272,12 +272,20 @@ class actions_server(osv.osv):
                         res_id = obj_pool.copy(cr, uid, int(cid), res)
 
                     else:
-                        return self._run(cr, uid, ids, context)
+                        result = self._run(cr, uid, [action.id], context)
 
                     if action.log:
                         self.pool.get('ir.actions.server.log').write(cr, uid, log_id, {'end_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
                     
                     cr.commit()
+                    
+                    # DIRTY IR.ACTIONS.SERVER:
+                    # if result = False, no need to return the result,
+                    # we can try to handle the next ir.actions.server
+                    # but in case of a 'code' ir.actions.server returning an ir.actions dictionnary
+                    # the result must be returned
+                    if result:
+                        return result
                 except Exception, e:
                     logger.notifyChannel("web-services", netsvc.LOG_INFO, 'Zop: %s' % (str(e),))
                     stack = traceback.format_exc()
@@ -299,5 +307,5 @@ class actions_server(osv.osv):
                         logger.notifyChannel("web-services", netsvc.LOG_INFO, 'Zop2')
                         self.pool.get('ir.actions.server.log').create(cr, uid, vals, context)
                     cr.commit()
-        return True
+        return False
 actions_server()
