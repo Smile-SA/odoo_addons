@@ -69,113 +69,64 @@ class talend_job(osv.osv):
         'talend_job_java_xmx': lambda * a: '1024M',
     }
 
-    def run(self, cr, uid, ids, context=None):
-        logger = netsvc.Logger()
-
-        if not context:
-            context = {}
-        if 'lang' not in context and 'context_tz' not in context:
-            user = self.pool.get('res.users').read(cr, uid, uid, ['context_lang', 'context_tz'])
-            if 'lang' not in context:
-                context['lang'] = user['context_lang']
-            if 'context_tz' not in context:
-                context['context_tz'] = user['context_tz']
-
+    def _run(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
         for action in self.browse(cr, uid, ids, context):
-
-            if action.active:
-
-                if action.log:
-                    log_id = self.pool.get('ir.actions.server.log').create(cr, uid, {
-                        'action_id': action.id,
-                        'res_id': context.get('active_id', False),
-                        'context': context,
-                    })
-
-                try:
-
-                    # Extracted to [OpenERPServerHome]/bin/addons/base/ir/ir_actions.py lines 581-593
-                    obj_pool = self.pool.get(action.model_id.model)
-                    obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                    cxt = {
-                        'context':context,
-                        'object': obj,
-                        'time':time,
-                        'cr': cr,
-                        'pool' : self.pool,
-                        'uid' : uid,
-                    }
-                    expr = eval(str(action.condition), cxt)
-                    if not expr:
-                        continue
-                    # End of the extract
-
-                    if action.state == 'talend_job':
-                        params = []
-                        for param in action.fields_lines:
-                            value = param.value
-                            if param.type == 'equation':
-                                value = eval(param.value, cxt)
-                            params.append("--context_param %s=%s" % (param.key, value))
-                        if action.talend_job_export_type == 'jar':
-                            command = ''
-                            if action.talend_job_path:
-                                command += 'cd %s && ' % action.talend_job_path.replace(' ', '\ ')
-                            command += 'java -Xms%s -Xmx%s -cp classpath.jar: %s.%s_%s.%s --context=%s %s' % (
-                                action.talend_job_java_xms,
-                                action.talend_job_java_xmx,
-                                action.talend_job_project,
-                                action.talend_job_name.lower(),
-                                action.talend_job_version.replace('.', '_'),
-                                action.talend_job_name,
-                                action.talend_job_context,
-                                ' '.join(params),
-                            )
-                            subprocess.check_call(command, shell=True)
-                        elif action.talend_job_export_type == 'war':
-                            host = action.talend_job_host
-                            if host.startswith('https'):
-                                connection = httplib.HTTPSConnection(host.split('/')[2])
-                            elif host.startswith('http'):
-                                connection = httplib.HTTPConnection(host.split('/')[2])
-                            else:
-                                connection = httplib.HTTPConnection(host.split('/')[0])
-                            url = '/%s_%s/services/%s?method=runJob' % (
-                                action.talend_job_name.lower(),
-                                action.talend_job_version,
-                                action.talend_job_name,
-                            )
-                            for i, v in enumerate(params):
-                                url += '&arg%d=%s' % (i + 1, v)
-                            connection.request('GET', url)
-                            response = connection.getresponse()
-                            if response.status >= 400:
-                                raise httplib.HTTPException(response.msg)
+            if action.state == 'talend_job':
+                params = []
+                for param in action.fields_lines:
+                    value = param.value
+                    if param.type == 'equation':
+                        obj_pool = self.pool.get(action.model_id.model)
+                        obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+                        cxt = {
+                            'context':context,
+                            'object': obj,
+                            'time':time,
+                            'cr': cr,
+                            'pool' : self.pool,
+                            'uid' : uid,
+                        }
+                        value = eval(param.value, cxt)
+                    params.append("--context_param %s=%s" % (param.key, value))
+                if action.talend_job_export_type == 'jar':
+                    command = ''
+                    if action.talend_job_path:
+                        command += 'cd %s && ' % action.talend_job_path.replace(' ', '\ ')
+                    command += 'java -Xms%s -Xmx%s -cp classpath.jar: %s.%s_%s.%s --context=%s %s' % (
+                        action.talend_job_java_xms,
+                        action.talend_job_java_xmx,
+                        action.talend_job_project,
+                        action.talend_job_name.lower(),
+                        action.talend_job_version.replace('.', '_'),
+                        action.talend_job_name,
+                        action.talend_job_context,
+                        ' '.join(params),
+                    )
+                    subprocess.check_call(command, shell=True)
+                elif action.talend_job_export_type == 'war':
+                    host = action.talend_job_host
+                    if host.startswith('https'):
+                        connection = httplib.HTTPSConnection(host.split('/')[2])
+                    elif host.startswith('http'):
+                        connection = httplib.HTTPConnection(host.split('/')[2])
                     else:
-                        return super(talend_job, self).run(cr, uid, ids, context)
-
-                    if action.log:
-                        self.pool.get('ir.actions.server.log').write(cr, uid, log_id, {'end_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
-
-                except Exception, e:
-                    stack = traceback.format_exc()
-                    vals = {
-                        'end_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                        'exception': tools.ustr(e),
-                        'stack': tools.ustr(stack),
-                    }
-                    if action.log:
-                        self.pool.get('ir.actions.server.log').write(cr, uid, log_id, vals, context)
-                    else:
-                        vals.update({
-                            'action_id': action.id,
-                            'res_id': context.get('active_id', False),
-                            'context': context,
-                        })
-                        self.pool.get('ir.actions.server.log').create(cr, uid, vals, context)
+                        connection = httplib.HTTPConnection(host.split('/')[0])
+                    url = '/%s_%s/services/%s?method=runJob' % (
+                        action.talend_job_name.lower(),
+                        action.talend_job_version,
+                        action.talend_job_name,
+                    )
+                    for i, v in enumerate(params):
+                        url += '&arg%d=%s' % (i + 1, v)
+                    connection.request('GET', url)
+                    response = connection.getresponse()
+                    if response.status >= 400:
+                        raise httplib.HTTPException(response.msg)
+            else:
+                return super(talend_job, self)._run(cr, uid, ids, context)
 
         return True
 talend_job()
