@@ -348,7 +348,7 @@ class ir_model_export_file_template(osv.osv):
 
     def _get_filename(self, cr, uid, export_file, context):
         filename = _render_unicode(export_file.filename, {
-                        'object': export_file,
+                        'object': context.get('attach_export_id', False) and self.pool.get('ir.model.export').browse(cr, uid, context['attach_export_id'], context),
                         'localcontext': context,
                         'time': time
                     }, export_file.encoding)
