@@ -188,11 +188,6 @@ class ir_model_export(osv.osv):
         self.populate(cr, uid, export_id, context)
         return export_id
 
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(ir_model_export, self).write(cr, uid, ids, vals, context)
-        self.populate(cr, uid, ids, context)
-        return res
-
     def _run_actions(self, cr, uid, export, object_ids=[], context=None):
         """Execute export method and action"""
         context = context or {}
@@ -232,24 +227,21 @@ class ir_model_export(osv.osv):
         context = context or {}
         context['not_populate'] = True
         for export in self.browse(cr, uid, ids, context):
+            is_running = (export.state == 'running')
             try:
-                is_running = False
-                if export.line_ids:
+                if not is_running and export.line_ids:
                     object_ids = [line.res_id for line in export.line_ids]
-                    if object_ids:
-                        if not is_running:
-                            export.write({'state': 'running'}, context)
-                            is_running = True
-                        self._run_actions(cr, uid, export, object_ids, context)
-                if is_running:
+                    export.write({'state': 'running'}, context)
+                    cr.commit()
+                    self._run_actions(cr, uid, export, object_ids, context)
                     export.write({'state': 'done'}, context)
-                cr.commit()
             except Exception, e:
                 cr.rollback()
                 export.write({
                     'state': 'exception',
                     'exception': isinstance(e, osv.except_osv) and e.value or e,
                 }, context)
+            finally:
                 cr.commit()
         return True
 ir_model_export()
