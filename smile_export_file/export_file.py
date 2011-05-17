@@ -317,6 +317,7 @@ class ir_model_export_file_template(osv.osv):
         filename = localdict['filename']
         exceptions = localdict['exceptions']
         context = localdict['localcontext']
+        attach_export_id = context.get('attach_export_id', False)
         summary = _render_unicode(export_file.report_summary_template, localdict)
         if exceptions and export_file.exception_logging == 'report':
             summary += "Exceptions:\n%s" % '\n'.join(exceptions)
@@ -328,18 +329,19 @@ class ir_model_export_file_template(osv.osv):
         }
         report_id = self.pool.get('res.request').create(cr, uid, report_vals, context)
         if exceptions and export_file.exception_logging == 'file':
-            exceptions_filename = filename[:-filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
-            exceptions_vals = {
-                'name':  exceptions_filename,
-                'type': 'binary',
-                'datas': base64.encodestring('\n'.join(exceptions).encode(export_file.encoding)),
-                'datas_fname': exceptions_filename,
-                'res_model': 'res.request',
-                'res_id': report_id,
-            }
-            self.pool.get('ir.attachment').create(cr, uid, exceptions_vals, context)
-        export = self.pool.get('ir.model.export').browse(cr, uid, context.get('attach_export_id', 0), context)
-        export.write({'report_id': report_id}, context)
+                exceptions_filename = filename[:-filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
+                exceptions_vals = {
+                    'name':  exceptions_filename,
+                    'type': 'binary',
+                    'datas': base64.encodestring('\n'.join(exceptions).encode(export_file.encoding)),
+                    'datas_fname': exceptions_filename,
+                    'res_model': 'res.request',
+                    'res_id': report_id,
+                }
+                self.pool.get('ir.attachment').create(cr, uid, exceptions_vals, context)
+        if attach_export_id:
+            self.pool.get('ir.model.export').write(cr, uid, attach_export_id, {'report_id': report_id,
+                                                                               'exception_during_last_run': bool(exceptions)}, context)
         if export_file.send_by_email:
             self._send_by_email(cr, uid, export_file, localdict)
         return True

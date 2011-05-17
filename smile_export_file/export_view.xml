@@ -23,6 +23,9 @@
 							<field name="exceptions_file" filename="exceptions_filename" attrs="{'invisible': [('exceptions_filename', '=', False)]}"/>
 						</group>
 					</xpath>
+					<xpath expr="/form/notebook/page[@string='Exports']/field[@name='export_ids']/tree/field[@name='state']" position="after">
+						<field name="exception_during_last_run"/>
+					</xpath>
 				</data>
 			</field>
 		</record>
