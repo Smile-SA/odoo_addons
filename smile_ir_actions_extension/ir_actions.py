@@ -287,7 +287,6 @@ class actions_server(osv.osv):
                     if result:
                         return result
                 except Exception, e:
-                    logger.notifyChannel("web-services", netsvc.LOG_INFO, 'Zop: %s' % (str(e),))
                     stack = traceback.format_exc()
                     vals = {
                         'end_date': time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -296,7 +295,6 @@ class actions_server(osv.osv):
                     }
                     cr.rollback()
                     if action.log:
-                        logger.notifyChannel("web-services", netsvc.LOG_INFO, 'Zop1 %s' % (vals,))
                         self.pool.get('ir.actions.server.log').write(cr, uid, log_id, vals, context)
                     else:
                         vals.update({
@@ -304,7 +302,6 @@ class actions_server(osv.osv):
                             'res_id': context.get('active_id', False),
                             'context': context,
                         })
-                        logger.notifyChannel("web-services", netsvc.LOG_INFO, 'Zop2')
                         self.pool.get('ir.actions.server.log').create(cr, uid, vals, context)
                     cr.commit()
         return False
