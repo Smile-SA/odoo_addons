@@ -97,9 +97,9 @@ class actions_server_log(osv.osv):
         res = {}
         for act_server_log in self.browse(cr, uid, ids, context):
             res[act_server_log.id] = {
-                'talend_log_ids': False,
-                'talend_stats_ids': False,
-                'talend_meter_ids': False,
+                'talend_log_ids': [],
+                'talend_stats_ids': [],
+                'talend_meter_ids': [],
             }
             if act_server_log.action_id.state == 'talend_job':
                 domain = [('project', '=', act_server_log.action_id.talend_job_project),
