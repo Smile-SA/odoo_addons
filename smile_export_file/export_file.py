@@ -134,7 +134,7 @@ class ir_model_export_file_template(osv.osv):
         'exception_logging': lambda * a: 'report',
         'delimiter': lambda * a: "chr(44)",
         'lineterminator': lambda * a: "chr(10)",
-        'quotechar': lambda * a: "chr(39)",
+        'quotechar': lambda * a: "chr(34)",
         'create_attachment': lambda * a: True,
         'report_summary_template': lambda * a: """Here is the file export processing report.
 

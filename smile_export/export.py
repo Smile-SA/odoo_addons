@@ -77,6 +77,8 @@ class ir_model_export_template(osv.osv):
                     total_offset = min(total_offset, export_template.max_offset)
             for offset in range(total_offset):
                 export_ids.append(export_pool.create(cr, uid, {'export_tmpl_id': export_template.id, 'offset': offset}, context))
+        context = context or {}
+        context['same_thread'] = True
         export_pool.generate(cr, uid, export_ids, context)
         return True
 
@@ -203,6 +205,9 @@ class ir_model_export(osv.osv):
 
     def generate(self, cr, uid, ids, context=None):
         """Create a new thread dedicated to export generation"""
+        context = context or {}
+        if context.get('same_thread', False):
+            self._generate(cr, uid, ids, context)
         threaded_run = threading.Thread(target=self._generate_with_new_cursor, args=(cr.dbname, uid, ids, context))
         threaded_run.start()
         return True

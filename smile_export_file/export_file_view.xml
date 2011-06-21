@@ -17,7 +17,7 @@
 						<field name="extension_custom" nolabel="1" attrs="{'readonly': [('extension', '=', 'pdf')]}"/>
 						<field name="encoding"/>
 					</group>
-					<notebook>
+					<notebook colspan="4">
 						<page string="Template">
 							<label string="Use Mako language." align="0.0" colspan="4"/>
 							<separator string="Body" colspan="4"/>
@@ -41,7 +41,7 @@
 										<field name="value" colspan="4"/>
 										<field name="default_value" colspan="4"/>
 										<field name="not_string"/>
-										<field name="column_validator"/>
+										<field name="column_validator" colspan="4"/>
 										<field name="exception_msg" attrs="{'invisible': [('not_none', '!=', True)], 'required': [('not_none', '=', True)]}" colspan="4"/>
 										<field name="min_width"/>
 										<field name="max_width"/>

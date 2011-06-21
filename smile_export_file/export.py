@@ -60,7 +60,7 @@ class ir_model_export(osv.osv):
         'exceptions_attachment_id': fields.function(_get_last_attachments, method=True, type='many2one', relation='ir.attachment', string='Exceptions', store=False, multi='report'),
         'exceptions_file': fields.related('exceptions_attachment_id', 'datas', type='binary', string="Exceptions File"),
         'exceptions_filename': fields.related('exceptions_attachment_id', 'datas_fname', type='char', string="Exceptions Filename"),
-        'exception_during_last_run': fields.boolean('Exception', readonly=True,),
+        'exception_during_last_run': fields.boolean('Lines in exception', readonly=True,),
     }
 
     def _run_actions(self, cr, uid, export, object_ids=[], context=None):
