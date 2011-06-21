@@ -136,9 +136,9 @@ class actions_server(osv.osv):
         threaded_run.start()
         return True
 
-    def _run_now_new_cursor(self, db_name, uid, ids, context):
+    def _run_now_new_cursor(self, dbname, uid, ids, context):
         try:
-            db = pooler.get_db(db_name)
+            db = pooler.get_db(dbname)
         except:
             return False
         cr = db.cursor()

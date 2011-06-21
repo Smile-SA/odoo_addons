@@ -334,13 +334,13 @@ class sartre_trigger(osv.osv):
         return domain
 
     def run_now(self, cr, uid, ids, context=None):
-        threaded_run = threading.Thread(target=self._run_now_with_new_cursor, args=(cr.db_name, uid, ids, context))
+        threaded_run = threading.Thread(target=self._run_now_with_new_cursor, args=(cr.dbname, uid, ids, context))
         threaded_run.start()
         return True
 
-    def _run_now_with_new_cursor(self, db_name, uid, ids, context):
+    def _run_now_with_new_cursor(self, dbname, uid, ids, context):
         try:
-            db = pooler.get_db(db_name)
+            db = pooler.get_db(dbname)
         except:
             return False
         cr = db.cursor()

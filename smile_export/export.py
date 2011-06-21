@@ -212,9 +212,9 @@ class ir_model_export(osv.osv):
         threaded_run.start()
         return True
 
-    def _generate_with_new_cursor(self, db_name, uid, ids, context):
+    def _generate_with_new_cursor(self, dbname, uid, ids, context):
         try:
-            db = pooler.get_db(db_name)
+            db = pooler.get_db(dbname)
         except:
             return False
         cr = db.cursor()
