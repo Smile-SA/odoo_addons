@@ -207,7 +207,7 @@ class ir_model_export(osv.osv):
         """Create a new thread dedicated to export generation"""
         context = context or {}
         if context.get('same_thread', False):
-            self._generate(cr, uid, ids, context)
+            return self._generate(cr, uid, ids, context)
         threaded_run = threading.Thread(target=self._generate_with_new_cursor, args=(cr.dbname, uid, ids, context))
         threaded_run.start()
         return True
