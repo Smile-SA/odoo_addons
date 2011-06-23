@@ -31,18 +31,40 @@ class IrModelImportTemplate(osv.osv):
         'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
         'method': fields.char('Method', size=64, help="Arguments passed through **kwargs", required=True),
         'import_ids': fields.one2many('ir.model.import', 'import_tmpl_id', 'Imports', readonly=True),
+        'server_action_id': fields.many2one('ir.actions.server', 'Server Action'),
+        'test_mode': fields.boolean('Test Mode'),
     }
     
     def create_import(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         import_obj = self.pool.get('ir.model.import')
-        for template in self.read(cr, uid, ids, ['name'], context):
+        for template in self.read(cr, uid, ids, ['name', 'test_mode'], context):
             import_id = import_obj.create(cr, uid, {
                 'name': template['name'],
                 'import_tmpl_id': template['id'],
             }, context)
+            cr.commit()
             import_obj.process(cr, uid, import_id, context)
+            if template['test_mode']:
+                cr.rollback()
+        return True
+
+    def create_server_action(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        model_id = self.pool.get('ir.model').search(cr, uid, [('name', '=', self._name)], limit=1, context=context)[0]
+        for template in self.browse(cr, uid, ids, context):
+            if not template.server_action_id:
+                vals = {
+                    'name': template.name,
+                    'user_id': 1,
+                    'model_id': model_id,
+                    'state': 'code',
+                    'code': 'obj.create_import(context)' % template.id,
+                }
+                server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals)
+                template.write({'server_action_id': server_action_id})
         return True
 IrModelImportTemplate()
 

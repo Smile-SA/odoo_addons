@@ -22,9 +22,9 @@
 import logging
 from re import escape
 import threading
-import tools
 
 import pooler
+import tools
 
 class SmileImportDBHandler(logging.Handler):
 

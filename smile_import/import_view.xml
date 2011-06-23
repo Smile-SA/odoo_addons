@@ -13,6 +13,9 @@
 					<field name="name" colspan="4"/>
 					<field name="model_id" />
 					<field name="method" />
+					<separator string="Trigger" colspan="4"/>
+					<field name="server_action_id" />
+					<button type="object" name="create_server_action" string="Create Server Action" colspan="2" attrs="{'readonly': [('cron_id', '!=', False)]}"/>
 					<separator string="Imports" colspan="4"/>
 					<field name="import_ids" colspan="4" nolabel="1"/>
 				</form>
