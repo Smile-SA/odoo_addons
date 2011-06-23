@@ -29,18 +29,19 @@ import tools
 class SmileImportDBHandler(logging.Handler):
 
     def __init__(self, level=logging.NOTSET):
-        super(SmileImportDBHandler, self).__init__(level)
+        logging.Handler.__init__(self, level)
         self._dbname_to_cr = {}
         
     def emit(self, record):
         dbname = getattr(threading.currentThread(), 'dbname', '')
+        db, pool = pooler.get_db_and_pool(dbname, update_module=tools.config['init'] or tools.config['update'], pooljobs=False)
         cr = self._dbname_to_cr.get(dbname, False)
         if not cr:
-            db, pool = pooler.get_db_and_pool(dbname, update_module=tools.config['init'] or tools.config['update'], pooljobs=False)
             cr = self._dbname_to_cr[dbname] = db.cursor()
+        import_id = record.args and record.args[0].get('import_id', False) 
         import_log_obj = pool.get('ir.model.import.log')
         import_log_obj.create(cr, 1, {
-            'import_id': record.args.get('import_id', False),
+            'import_id': import_id,
             'level': record.levelname,
             'message': escape(record.msg),
         })
@@ -48,7 +49,7 @@ class SmileImportDBHandler(logging.Handler):
         return True
 
     def close(self):
-        super(SmileImportDBHandler, self).close()
+        logging.Handler.close(self)
         for cr in self._dbname_to_cr.values():
             cr.close()
         self._dbname_to_cr = {}
