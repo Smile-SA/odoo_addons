@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="group_smile_ds_manager" model="res.groups">
+	        <field name="name">Smile Directory Scanner / Manager</field>
+	    </record>
+	    
+	    <record id="group_smile_ds_file_reader" model="res.groups">
+	        <field name="name">Smile Directory Scanner / File Reader</field>
+	    </record>
+	</data>
+</openerp>
