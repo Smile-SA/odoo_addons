@@ -32,16 +32,26 @@ class IrModelImportTemplate(osv.osv):
         'method': fields.char('Method', size=64, help="Arguments passed through **kwargs", required=True),
         'import_ids': fields.one2many('ir.model.import', 'import_tmpl_id', 'Imports', readonly=True),
     }
+    
+    def create_import(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        import_obj = self.pool.get('ir.model.import')
+        for template in self.read(cr, uid, ids, ['name'], context):
+            import_id = import_obj.create(cr, uid, {
+                'name': template['name'],
+                'import_tmpl_id': template['id'],
+            }, context)
+            import_obj.process(cr, uid, import_id, context)
+        return True
 IrModelImportTemplate()
 
-class IrModelImportState(osv.osv):
-    _name = 'ir.model.import.state'
-    _description = 'Import State'
-
-    _columns = {
-        'name': fields.char('Name', size=32, readonly=True),
-    }
-IrModelImportState()
+STATES = [
+    ('draft', 'Draft'),
+    ('running', 'Running'),
+    ('done', 'Done'),
+    ('exception', 'Exception'),
+]
 
 class IrModelImport(osv.osv):
     _name = 'ir.model.import'
@@ -52,9 +62,24 @@ class IrModelImport(osv.osv):
         'import_tmpl_id': fields.many2one('ir.model.import.template', 'Template', readonly=True, ondelete='cascade'),
         'from_date': fields.datetime('From date', readonly=True),
         'to_date': fields.datetime('To date', readonly=True),
-        'state': fields.many2one('ir.model.import.state', 'State', readonly=True),
+        'state': fields.selection(STATES, 'State', size=16, readonly=True),
         'log_ids': fields.one2many('ir.model.import.log', 'import_id', 'Logs', readonly=True),
     }
+
+    defaults = {
+        'state': 'draft',
+    }
+
+    def process(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        context = context or {}
+        for import_ in self.browse(cr, uid, ids, context):
+            model_obj = self.pool.get(import_.import_tmpl_id.model)
+            model_method = import_.import_tmpl_id.method
+            context['import_id'] = import_.id
+            getattr(model_obj, model_method)(cr, uid, context)
+        return True
 IrModelImport()
 
 class IrModelImportLog(osv.osv):

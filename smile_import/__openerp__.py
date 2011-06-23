@@ -32,10 +32,11 @@ Development in progress
 Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
 """,
     "depends" : ['base'],
-    "init_xml" : [],
-    "update_xml": [
+    "init_xml" : [
         'security/smile_import_security.xml',
         'security/ir.model.access.csv',
+    ],
+    "update_xml": [
         'import_view.xml',
     ],
     "demo_xml" : [],

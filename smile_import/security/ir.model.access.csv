@@ -1,9 +1,7 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 "access_ir_model_import_template_manager","ir_model_import_template.manager","model_ir_model_import_template","smile_import.group_smile_import_manager",1,1,1,1
-"access_ir_model_import_state_manager","ir_model_import_state.manager","model_ir_model_import_state","smile_import.group_smile_import_manager",1,1,1,1
 "access_ir_model_import_manager","ir_model_import.manager","model_ir_model_import","smile_import.group_smile_import_manager",1,1,1,1
 "access_ir_model_import_log_manager","ir_model_import_log.manager","model_ir_model_import_log","smile_import.group_smile_import_manager",1,1,1,1
 "access_ir_model_import_template_reader","ir_model_import_template.reader","model_ir_model_import_template","smile_import.group_smile_import_log_reader",1,0,0,0
-"access_ir_model_import_state_reader","ir_model_import_state.reader","model_ir_model_import_state","smile_import.group_smile_import_log_reader",1,0,0,0
 "access_ir_model_import_reader","ir_model_import.manager","model_ir_model_import","smile_import.group_smile_import_log_reader",1,0,0,0
 "access_ir_model_import_log_reader","ir_model_import_log.manager","model_ir_model_import_log","smile_import.group_smile_import_log_reader",1,0,0,0
