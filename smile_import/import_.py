@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import time
+
 from osv import osv, fields
 
 class IrModelImportTemplate(osv.osv):
@@ -44,7 +46,8 @@ class IrModelImportTemplate(osv.osv):
             import_id = import_obj.create(cr, uid, {
                 'name': import_name or template['name'],
                 'import_tmpl_id': template['id'],
-                'state':'running',
+                'state': 'running',
+                'from_date': time.strftime('%Y-%m-%d %H:%M:%:S'),
             }, context)
             cr.commit()
             try:
@@ -56,7 +59,7 @@ class IrModelImportTemplate(osv.osv):
                 cr.rollback()
                 import_obj.write(cr, uid, import_id, {'state': 'draft'}, context)
             else:
-                import_obj.write(cr, uid, import_id, {'state': 'done'}, context)
+                import_obj.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
             cr.commit()
         return True
 
@@ -73,7 +76,7 @@ class IrModelImportTemplate(osv.osv):
                         'user_id': 1,
                         'model_id': model_id,
                         'state': 'code',
-                        'code': 'obj.create_import(context)',
+                        'code': "self.pool.get('ir.model.import.template').create_import(cr, uid, %d, context)" % (template.id,),
                     }
                     server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals)
                     template.write({'server_action_id': server_action_id})
