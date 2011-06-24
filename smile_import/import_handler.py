@@ -19,9 +19,7 @@
 #
 ##############################################################################
 
-import logging
-from re import escape
-import threading
+import logging, threading
 
 import pooler
 import tools
@@ -43,7 +41,7 @@ class SmileImportDBHandler(logging.Handler):
         import_log_obj.create(cr, 1, {
             'import_id': import_id,
             'level': record.levelname,
-            'message': escape(record.msg),
+            'message': record.msg,
         })
         cr.commit()
         return True
