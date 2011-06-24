@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import time
+import time, logging
 
 from osv import osv, fields
 
@@ -52,14 +52,16 @@ class IrModelImportTemplate(osv.osv):
             cr.commit()
             try:
                 import_obj.process(cr, uid, import_id, context)
-            except:
+                import_obj.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
+            except Exception, e:
+                logger = logging.getLogger("smile_import")
+                logger.critical("Import failed: %s" % (str(e),), {'import_id': import_id})
                 import_obj.write(cr, uid, import_id, {'state': 'exception'}, context)
             
             if template['test_mode']:
                 cr.rollback()
-                import_obj.write(cr, uid, import_id, {'state': 'draft'}, context)
-            else:
-                import_obj.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
+                import_obj.write(cr, uid, import_id, {'state': 'draft', 'to_date': False}, context)
+                
             cr.commit()
         return True
 
