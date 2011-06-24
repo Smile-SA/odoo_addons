@@ -38,7 +38,7 @@ class SmileImportDBHandler(logging.Handler):
         cr = self._dbname_to_cr.get(dbname, False)
         if not cr:
             cr = self._dbname_to_cr[dbname] = db.cursor()
-        import_id = record.args and record.args[0].get('import_id', False) 
+        import_id = record.args and isinstance(record.args, dict) and record.args.get('import_id', False) or False 
         import_log_obj = pool.get('ir.model.import.log')
         import_log_obj.create(cr, 1, {
             'import_id': import_id,
