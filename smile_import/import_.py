@@ -53,18 +53,20 @@ class IrModelImportTemplate(osv.osv):
     def create_server_action(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        model_id = self.pool.get('ir.model').search(cr, uid, [('name', '=', self._name)], limit=1, context=context)[0]
-        for template in self.browse(cr, uid, ids, context):
-            if not template.server_action_id:
-                vals = {
-                    'name': template.name,
-                    'user_id': 1,
-                    'model_id': model_id,
-                    'state': 'code',
-                    'code': 'obj.create_import(context)' % template.id,
-                }
-                server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals)
-                template.write({'server_action_id': server_action_id})
+        model_id = self.pool.get('ir.model').search(cr, uid, [('name', '=', self._name)], limit=1, context=context)
+        if model_id:
+            model_id = model_id[0]
+            for template in self.browse(cr, uid, ids, context):
+                if not template.server_action_id:
+                    vals = {
+                        'name': template.name,
+                        'user_id': 1,
+                        'model_id': model_id,
+                        'state': 'code',
+                        'code': 'obj.create_import(context)',
+                    }
+                    server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals)
+                    template.write({'server_action_id': server_action_id})
         return True
 IrModelImportTemplate()
 
