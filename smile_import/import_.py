@@ -39,21 +39,31 @@ class IrModelImportTemplate(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         import_obj = self.pool.get('ir.model.import')
+        import_name = context and context.get('import_name', False)
         for template in self.read(cr, uid, ids, ['name', 'test_mode'], context):
             import_id = import_obj.create(cr, uid, {
-                'name': template['name'],
+                'name': import_name or template['name'],
                 'import_tmpl_id': template['id'],
+                'state':'running',
             }, context)
             cr.commit()
-            import_obj.process(cr, uid, import_id, context)
+            try:
+                import_obj.process(cr, uid, import_id, context)
+            except:
+                import_obj.write(cr, uid, import_id, {'state': 'exception'}, context)
+            
             if template['test_mode']:
                 cr.rollback()
+                import_obj.write(cr, uid, import_id, {'state': 'draft'}, context)
+            else:
+                import_obj.write(cr, uid, import_id, {'state': 'done'}, context)
+            cr.commit()
         return True
 
     def create_server_action(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        model_id = self.pool.get('ir.model').search(cr, uid, [('name', '=', self._name)], limit=1, context=context)
+        model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', self._name)], limit=1, context=context)
         if model_id:
             model_id = model_id[0]
             for template in self.browse(cr, uid, ids, context):
