@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import logging, threading
+import logging, threading, datetime
 
 import pooler
 import tools
@@ -55,3 +55,40 @@ class SmileImportDBHandler(logging.Handler):
 logger = logging.getLogger("smile_import")
 handler = SmileImportDBHandler()
 logger.addHandler(handler)
+
+
+class SmileImportLogger():
+    
+    def __init__(self, import_id, import_start=False):
+        self.logger = logging.getLogger("smile_import")
+        self.import_id = import_id
+        self.import_start = import_start
+        
+    def info(self, msg):
+        self.logger.info(msg, {'import_id': self.import_id})
+
+    def warning(self, msg):
+        self.logger.warning(msg, {'import_id': self.import_id})
+        
+    def error(self, msg):
+        self.logger.error(msg, {'import_id': self.import_id})
+        
+    def critical(self, msg):
+        self.logger.critical(msg, {'import_id': self.import_id})
+        
+    def log(self, msg):
+        self.logger.log(msg, {'import_id': self.import_id})
+
+    def exception(self, msg):
+        self.logger.exception(msg, {'import_id': self.import_id})
+        
+    def time_info(self, msg):
+        delay = datetime.datetime.now() - self.import_start
+        msg = "%s h, %s min %s sec: " % tuple(str(delay).split(':')) + msg
+        self.logger.info(msg, {'import_id': self.import_id})
+
+
+
+        
+        
+        
