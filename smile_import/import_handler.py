@@ -83,8 +83,9 @@ class SmileImportLogger():
         self.logger.exception(msg, {'import_id': self.import_id})
         
     def time_info(self, msg):
-        delay = datetime.datetime.now() - self.import_start
-        msg = "%s h, %s min %s sec: " % tuple(str(delay).split(':')) + msg
+        if self.import_start:
+            delay = datetime.datetime.now() - self.import_start
+            msg = "%s h, %s min %s sec: " % tuple(str(delay).split(':')) + msg
         self.logger.info(msg, {'import_id': self.import_id})
 
 
