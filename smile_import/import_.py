@@ -95,6 +95,8 @@ STATES = [
 class IrModelImport(osv.osv):
     _name = 'ir.model.import'
     _description = 'Import'
+    
+    _order = 'from_date desc'
 
     _columns = {
         'name': fields.char('Name', size=64, readonly=True),
