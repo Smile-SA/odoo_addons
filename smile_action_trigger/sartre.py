@@ -177,7 +177,7 @@ class sartre_trigger(osv.osv):
         'filter_ids': fields.one2many('sartre.filter', 'trigger_id', "Filters", help="The trigger is satisfied if all filters are True"),
         'domain_force': fields.char('Force Domain', size=250),
         'action_ids': fields.many2many('ir.actions.server', 'sartre_trigger_server_action_rel', 'trigger_id', 'action_id', "Actions"),
-        'executions_max_number': fields.integer('Max executions', help="Number of time actions are runned,\0 indicates that actions will always be executed"),
+        'executions_max_number': fields.integer('Max executions', help="Number of time actions are runned, indicates that actions will always be executed"),
     }
 
     _defaults = {
