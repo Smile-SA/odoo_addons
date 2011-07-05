@@ -116,6 +116,7 @@ class ir_model_export_file_template(osv.osv):
         'ftp_anonymous': fields.boolean('Anonymous'),
         'ftp_user': fields.char('User', size=64),
         'ftp_password': fields.char('Password', size=64),
+        'ftp_directory': fields.char('Directory', size=128),
         'save_in_local_dir': fields.boolean('Save in a local directory'),
         'local_directory': fields.char('Local directory', size=128),
         'send_by_email': fields.boolean('Send by email'),
@@ -280,6 +281,8 @@ class ir_model_export_file_template(osv.osv):
             ftp.login()
         else:
             ftp.login(export_file.ftp_user, export_file.ftp_password or '')
+        if export_file.ftp_directory:
+            ftp.cwd(export_file.ftp_directory)
         command = 'STOR %s' % filename
         file = open(filename, 'w')
         file.write(file_content)
