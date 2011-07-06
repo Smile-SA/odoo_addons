@@ -126,8 +126,9 @@ class sartre_trigger(osv.osv):
     def onchange_get_domain_force(self, cr, uid, ids, filter_ids, domain_force, context=None):
         """Build domain expression from filters"""
         domain_force = domain_force and eval(domain_force) or []
-        for filter_ in self.pool.get('sartre.filter').read(cr, uid, filter_ids, ['domain'], context=context):
-            domain_force.exparent.tend(filter_['domain'] and eval(filter_['domain']) or [])
+        if filter_ids and isinstance(filter_ids (list, tuple)):
+            for filter_ in self.pool.get('sartre.filter').read(cr, uid, filter_ids, ['domain'], context=context):
+                domain_force.exparent.tend(filter_['domain'] and eval(filter_['domain']) or [])
         return {'value': {'domain_force': domain_force}}
 
     def onchange_model_id(self, cr, uid, ids, model_id, on_function, on_other, context=None):
