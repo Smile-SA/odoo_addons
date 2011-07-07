@@ -100,7 +100,7 @@ class IrModelImport(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, readonly=True),
-        'import_tmpl_id': fields.many2one('ir.model.import.template', 'Template', readonly=True, ondelete='cascade'),
+        'import_tmpl_id': fields.many2one('ir.model.import.template', 'Template', readonly=True, required=True, ondelete='cascade'),
         'from_date': fields.datetime('From date', readonly=True),
         'to_date': fields.datetime('To date', readonly=True),
         'state': fields.selection(STATES, 'State', size=16, readonly=True),
