@@ -77,7 +77,7 @@ message)
 VALUES (1, now(), '%s', %d, '%s', %d, '%s', %.f, '%s', '%s')"""
 
                 try:
-                    cr.execute(query % params)
+                    cr.execute(query, params)
                     cr.commit()
                 except Exception, e:
                     record.msg = tools.ustr(e) + "\n" + record.msg
