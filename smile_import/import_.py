@@ -127,6 +127,8 @@ class IrModelImportLog(osv.osv):
     _name = 'ir.model.import.log'
     _description = 'Import Log'
     _rec_name = 'message'
+    
+    _order = 'create_date desc'
 
     _columns = {
         'create_date': fields.datetime('Date', readonly=True),
