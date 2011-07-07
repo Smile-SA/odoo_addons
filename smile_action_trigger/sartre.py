@@ -409,13 +409,13 @@ class sartre_trigger(osv.osv):
             self.run_now(cr, uid, trigger_ids, context)
         return True
 
-    def _check_method_based_triggers(self, cr, uid, method, field_name='', calculation_method=False):
+    def _check_method_based_triggers(self, obj, cr, uid, method, field_name='', calculation_method=False):
         """Check method based trigger triggers"""
         trigger_ids = []
         trigger_obj = hasattr(self, 'pool') and self.pool.get('sartre.trigger') or pooler.get_pool(cr.dbname).get('sartre.trigger')
         if trigger_obj:
             # Search triggers to execute
-            trigger_ids = trigger_obj.get_trigger_ids(cr, 1, self._name, method)
+            trigger_ids = trigger_obj.get_trigger_ids(cr, 1, obj._name, method)
             if trigger_ids and method == 'function':
                 for trigger_id in list(trigger_ids):
                     trigger = trigger_obj.browse(cr, uid, trigger_id)
@@ -600,7 +600,7 @@ def sartre_decorator(original_method):
                 calculation_method = method_name
                 method_name = 'function'
             # Search triggers
-            trigger_ids = trigger_obj._check_method_based_triggers(cr, uid, method_name, field_name, calculation_method)
+            trigger_ids = trigger_obj._check_method_based_triggers(obj, cr, uid, method_name, field_name, calculation_method)
             # Save old values if triggers exist
             if trigger_ids and ids:
                 fields_list = trigger_obj.get_fields_to_save_old_values(cr, 1, trigger_ids)
