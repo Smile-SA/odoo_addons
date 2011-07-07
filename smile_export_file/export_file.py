@@ -398,6 +398,7 @@ class ir_model_export_file_template(osv.osv):
                 filename = self._get_filename(cr, uid, export_file, context)
                 if export_file.extension == 'pdf':
                     file_content = _text2pdf(file_content)
+                file_content = file_content.encode('utf-8')
                 self._save_file(cr, uid, export_file, filename, file_content, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
         localdict = {
@@ -454,4 +455,5 @@ class ir_model_export_file_template_column(osv.osv):
         'max_width': fields.integer('Max width'),
     }
     
+    _order = 'sequence asc'
 ir_model_export_file_template_column()

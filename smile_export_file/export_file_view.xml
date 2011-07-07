@@ -103,7 +103,7 @@
 									<field name="email_cc"/>
 									<field name="email_subject" attrs="{'required': [('send_by_email', '=', True)]}"/>
 									<field name="email_body" attrs="{'required': [('send_by_email', '=', True)]}"/>
-									<group colspan="2" col="4">
+									<group colspan="2" col="4" attrs="{'invisible': [('create_attachment', '!=', True)]}">
 										<field name="email_attach_export_file"/>
 										<field name="email_attach_exceptions_file"/>
 									</group>
