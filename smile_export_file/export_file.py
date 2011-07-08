@@ -209,7 +209,7 @@ class ir_model_export_file_template(osv.osv):
                             }
                         line.append(column_value)
                     except Exception, e:
-                        raise osv.except_osv(_('Error'), 'Column %s: %s' % (column.name, e))
+                        raise osv.except_osv(_('Error'), 'column %s: %s' % (column.name, e))
                 template.append(delimiter.join(line))
         try:
             lineterminator = eval(export_file.lineterminator)
