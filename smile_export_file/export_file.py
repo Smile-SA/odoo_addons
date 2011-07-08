@@ -180,33 +180,36 @@ class ir_model_export_file_template(osv.osv):
                 localdict['object'] = sub_object
                 line = []
                 for column in export_file.column_ids:
-                    column_value = _render_unicode(column.value or '', localdict)
-                    if column.default_value and not column_value:
-                        column_value = _render_unicode(column.default_value, localdict)
-                    if column.column_validator:
-                        validation = eval(column.column_validator, localdict)
-                        if not validation:
+                    try:
+                        column_value = _render_unicode(column.value or '', localdict)
+                        if column.default_value and not column_value:
+                            column_value = _render_unicode(column.default_value, localdict)
+                        if column.column_validator:
+                            validation = eval(column.column_validator, localdict)
+                            if not validation:
+                                try:
+                                    exception_msg = _render_unicode(column.exception_msg, localdict)
+                                except:
+                                    exception_msg = column.exception_msg
+                                raise osv.except_osv(_('Error'), exception_msg)
+                        column_value = tools.ustr(column_value)
+                        if column_value:
+                            if column.min_width:
+                                column_value = getattr(column_value, column.justify)(column.min_width, tools.ustr(column.fillchar))
+                            if column.max_width:
+                                column_value = column_value[:column.max_width]
+                        if not column.not_string and export_file.quotechar:
                             try:
-                                exception_msg = _render_unicode(column.exception_msg, localdict)
+                                quotechar = export_file.quotechar and eval(export_file.quotechar) or ''
                             except:
-                                exception_msg = column.exception_msg
-                            raise osv.except_osv(_('Error'), exception_msg)
-                    column_value = tools.ustr(column_value)
-                    if column_value:
-                        if column.min_width:
-                            column_value = getattr(column_value, column.justify)(column.min_width, tools.ustr(column.fillchar))
-                        if column.max_width:
-                            column_value = column_value[:column.max_width]
-                    if not column.not_string and export_file.quotechar:
-                        try:
-                            quotechar = export_file.quotechar and eval(export_file.quotechar) or ''
-                        except:
-                            quotechar = export_file.quotechar
-                        column_value = '%(quotechar)s%(column_value)s%(quotechar)s' % {
-                            'column_value': quotechar and column_value.replace(quotechar, "\\" + quotechar) or column_value,
-                            'quotechar': quotechar,
-                        }
-                    line.append(column_value)
+                                quotechar = export_file.quotechar
+                            column_value = '%(quotechar)s%(column_value)s%(quotechar)s' % {
+                                'column_value': quotechar and column_value.replace(quotechar, "\\" + quotechar) or column_value,
+                                'quotechar': quotechar,
+                            }
+                        line.append(column_value)
+                    except Exception, e:
+                        raise osv.except_osv(_('Error'), 'Column %s: ' + e % (column.name,))
                 template.append(delimiter.join(line))
         try:
             lineterminator = eval(export_file.lineterminator)
