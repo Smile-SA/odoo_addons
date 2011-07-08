@@ -398,7 +398,7 @@ class ir_model_export_file_template(osv.osv):
                 filename = self._get_filename(cr, uid, export_file, context)
                 if export_file.extension == 'pdf':
                     file_content = _text2pdf(file_content)
-                file_content = file_content.encode('utf-8')
+                file_content = file_content.encode(export_file.encoding)
                 self._save_file(cr, uid, export_file, filename, file_content, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
         localdict = {
