@@ -242,9 +242,9 @@ class ir_model_export_file_template(osv.osv):
                             content.append(getattr(self, content_render_method)(cr, uid, export_file, template_part, localdict))
                         except Exception, e:
                             if template_part == 'body' and export_file.exception_handling == 'continue':
-                                exceptions.append('%s,%s: %s' % (export_file.model, line.id, _get_exception_message(e)))
+                                exceptions.append('%s - %s,%s: %s' % (template_part, export_file.model, line.id, _get_exception_message(e)))
                             else:
-                                raise
+                                raise '%s - %s' % (template_part, e)
         try:
             lineterminator = eval(export_file.lineterminator)
         except:
