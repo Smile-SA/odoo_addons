@@ -22,6 +22,7 @@
 import time, logging
 
 from osv import osv, fields
+import tools
 
 class IrModelImportTemplate(osv.osv):
     _name = 'ir.model.import.template'
@@ -55,7 +56,7 @@ class IrModelImportTemplate(osv.osv):
                 import_obj.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
             except Exception, e:
                 logger = logging.getLogger("smile_import")
-                logger.critical("Import failed: %s" % (str(e),), {'import_id': import_id})
+                logger.critical("Import failed: %s" % (tools.ustr(e),), {'import_id': import_id})
                 import_obj.write(cr, uid, import_id, {'state': 'exception'}, context)
             
             if template['test_mode']:
