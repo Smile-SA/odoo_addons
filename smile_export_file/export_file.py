@@ -28,6 +28,7 @@ import logging
 import os
 from random import random
 import tempfile
+from tempfile import mkstemp
 import time
 
 try:
@@ -286,12 +287,15 @@ class ir_model_export_file_template(osv.osv):
             ftp.login(export_file.ftp_user, export_file.ftp_password or '')
         if export_file.ftp_directory:
             ftp.cwd(export_file.ftp_directory)
-        file = open(filename, 'wb')
+        fd, temp_path = mkstemp()
+        file = open(temp_path, 'wb')
         file.write(file_content)
         file.close()
-        file = open(filename, 'rb')
+        os.close(fd)
+        file = open(temp_path, 'rb')
         ftp.storbinary('STOR %s' % filename, file)
         file.close()
+        os.remove(temp_path)
 
     def _save_file(self, cr, uid, export_file, filename, file_content, context):
         for save_file_method in ['create_attachment', 'upload_to_ftp_server', 'save_in_local_dir']:
