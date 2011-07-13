@@ -72,8 +72,10 @@
 			<field name="arch" type="xml">
 				<form string="Import">
 					<field name="name" />
-					<field name="state" />
 					<field name="import_tmpl_id" />
+					<field name="state" />
+					<field name="test_mode"/>
+					
 					<newline/>
 					<field name="from_date" />
 					<field name="to_date" />
@@ -106,6 +108,7 @@
 					<field name="import_tmpl_id" />
 					<field name="from_date" />
 					<field name="to_date" />
+					<field name="test_mode"/>
 					<field name="log_ids" />
 				</tree>
 			</field>

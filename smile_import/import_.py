@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-import time, logging
+import time, logging, threading
 
 from osv import osv, fields
-import tools
+import tools, pooler
 
 class IrModelImportTemplate(osv.osv):
     _name = 'ir.model.import.template'
@@ -47,22 +47,10 @@ class IrModelImportTemplate(osv.osv):
             import_id = import_obj.create(cr, uid, {
                 'name': import_name or template['name'],
                 'import_tmpl_id': template['id'],
-                'state': 'running',
-                'from_date': time.strftime('%Y-%m-%d %H:%M:%:S'),
+                'test_mode': template['test_mode'],
             }, context)
             cr.commit()
-            try:
-                import_obj.process(cr, uid, import_id, context)
-                import_obj.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
-            except Exception, e:
-                logger = logging.getLogger("smile_import")
-                logger.critical("Import failed: %s" % (tools.ustr(e),), {'import_id': import_id})
-                import_obj.write(cr, uid, import_id, {'state': 'exception'}, context)
-            
-            if template['test_mode']:
-                cr.rollback()
-                import_obj.write(cr, uid, import_id, {'state': 'draft', 'to_date': False}, context)
-                
+            import_obj.launch_thread(cr, uid, import_id, context)
             cr.commit()
         return True
 
@@ -98,30 +86,81 @@ class IrModelImport(osv.osv):
     _description = 'Import'
     
     _order = 'from_date desc'
+    
+    def _get_state(self, cr, uid, ids, prop, unknow_none, context=None):
+        result = {}
+        for import_ in self.browse(cr, uid, ids, context):
+            if import_.done:
+                result[import_.id] = "done"
+            else:
+                if import_.thread_name:
+                    for thread in threading.enumerate():
+                        if thread.name == import_.thread_name and thread.isAlive():
+                            result[import_.id] = "running"
+                            break
+                    else:
+                        result[import_.id] = "exception"
+                else:
+                    result[import_.id] = "draft"
+        return result
+                    
 
     _columns = {
         'name': fields.char('Name', size=64, readonly=True),
         'import_tmpl_id': fields.many2one('ir.model.import.template', 'Template', readonly=True, required=True, ondelete='cascade'),
         'from_date': fields.datetime('From date', readonly=True),
         'to_date': fields.datetime('To date', readonly=True),
-        'state': fields.selection(STATES, 'State', size=16, readonly=True),
+        'test_mode': fields.boolean('Test Mode'),
         'log_ids': fields.one2many('ir.model.import.log', 'import_id', 'Logs', readonly=True),
+        
+        'thread_name': fields.char('Thread name', size=128, readonly=True,),
+        'done': fields.boolean('Done', readonly=True),
+        'state': fields.function(_get_state, method=True, string="State", type='selection', selection=STATES),
     }
-
-    defaults = {
-        'state': 'draft',
-    }
-
-    def process(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        context = context or {}
-        for import_ in self.browse(cr, uid, ids, context):
+    
+    
+    def _process_with_new_cursor(self, dbname, uid, import_id, context=None):
+        if not isinstance(import_id, (int, long)):
+            raise osv.except_osv('Error !', '_process_with_new_cursor: import_id is supposed to be an integer')
+        logger = logging.getLogger("smile_import")
+        try:
+            db = pooler.get_db(dbname)
+            cr = db.cursor()
+        except:
+            logger.critical("Import failed: impossible to get a cursor for dbname: %s" % (dbname,))
+            return
+        try:
+            context = context and context.copy() or {}
+            import_ = self.browse(cr, uid, import_id, context)
+            context['test_mode'] = import_.test_mode
+            context['import_id'] = import_.id
             model_obj = self.pool.get(import_.import_tmpl_id.model)
             model_method = import_.import_tmpl_id.method
-            context['import_id'] = import_.id
             getattr(model_obj, model_method)(cr, uid, context)
+            
+            if import_.test_mode:
+                cr.rollback()
+                logger.info("Import rollbacking: %s" % (import_id,), {'import_id': import_id})
+                import_obj.write(cr, uid, import_id, {'done': True, 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
+            else:
+                self.write(cr, uid, import_id, {'done': True, 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
+                cr.commit()
+        except Exception, e:
+            logger.critical("Import failed: %s" % (tools.ustr(e),), {'import_id': import_id})
+        finally:
+            cr.close()
+        return
+    
+    def launch_thread(self, cr, uid, import_id, context=None):
+        import_name = self.read(cr, uid, import_id, ['name'])['name']
+        time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
+        thread_name = 'IMPORT_%s: %s %s' % (import_id, import_name, time_stamp)
+        t = threading.Thread(target=self._process_with_new_cursor, args=(cr.dbname, uid, import_id, context), name=thread_name)
+        t.start()
+        self.write(cr, uid, import_id, {'thread_name': thread_name, 'from_date': time_stamp}, context)
         return True
+    
+    
 IrModelImport()
 
 class IrModelImportLog(osv.osv):
