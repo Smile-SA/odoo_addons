@@ -409,8 +409,10 @@ class sartre_trigger(osv.osv):
             self.run_now(cr, uid, trigger_ids, context)
         return True
 
-    def _check_method_based_triggers(self, obj, cr, uid, method, field_name='', calculation_method=False):
+    def _check_method_based_triggers(self, obj, cr, uid, method, field_name=[], calculation_method=False):
         """Check method based trigger triggers"""
+        if not isinstance(field_name, (list, tuple)):
+            field_name = [field_name]
         trigger_ids = []
         trigger_obj = hasattr(self, 'pool') and self.pool.get('sartre.trigger') or pooler.get_pool(cr.dbname).get('sartre.trigger')
         if trigger_obj:
@@ -419,7 +421,9 @@ class sartre_trigger(osv.osv):
             if trigger_ids and method == 'function':
                 for trigger_id in list(trigger_ids):
                     trigger = trigger_obj.browse(cr, uid, trigger_id)
-                    if not (trigger.on_function_field_id.name == field_name and trigger.on_function_type in [calculation_method, 'both']):
+                    if not isinstance(field_name, (list, tuple)):
+                        field_name = [field_name]
+                    if trigger.on_function_field_id.name not in field_name or trigger.on_function_type not in [calculation_method, 'both']:
                         trigger_ids.remove(trigger_id)
         return trigger_ids
 
