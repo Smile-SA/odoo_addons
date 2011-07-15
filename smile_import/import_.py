@@ -146,7 +146,7 @@ class IrModelImport(osv.osv):
                 self.write(cr, uid, import_id, {'done': True, 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
                 cr.commit()
         except Exception, e:
-            logger.critical("Import failed: %s" % (tools.ustr(e),), {'import_id': import_id})
+            logger.critical("Import failed: %s" % (tools.ustr(repr(e)),), {'import_id': import_id})
         finally:
             cr.close()
         return
