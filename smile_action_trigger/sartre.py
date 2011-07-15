@@ -550,8 +550,10 @@ class sartre_execution(osv.osv):
 
 sartre_execution()
 
-def _check_method_based_trigger_rules(self, cr, uid, method, field_name='', calculation_method=False):
+def _check_method_based_trigger_rules(self, cr, uid, method, field_name=[], calculation_method=False):
     """Check method based trigger rules"""
+    if not isinstance(field_name, (list, tuple)):
+        field_name = [field_name]
     rule_ids = []
     rule_obj = hasattr(self, 'pool') and self.pool.get('sartre.rule') or pooler.get_pool(cr.dbname).get('sartre.rule')
     if rule_obj:
@@ -560,7 +562,7 @@ def _check_method_based_trigger_rules(self, cr, uid, method, field_name='', calc
         if method == 'function':
             for rule_id in rule_ids:
                 rule = rule_obj.browse(cr, uid, rule_id)
-                if not (rule.trigger_function_field_id.name == field_name and rule.trigger_function_type in [calculation_method, 'both']):
+                if rule.trigger_function_field_id.name not in field_name or rule.trigger_function_type not in [calculation_method, 'both']:
                     rule_ids.remove(rule_id)
     return rule_ids
 
@@ -590,7 +592,7 @@ def sartre_decorator(original_method):
                 calculation_method = method_name
                 method_name = 'function'
             # Search trigger rules
-            rule_ids = _check_method_based_trigger_rules(self, cr, uid, original_method.__name__)
+            rule_ids = _check_method_based_trigger_rules(self, cr, uid, method_name, field_name, calculation_method)
             # Save old values if trigger rules exist
             if rule_ids and ids:
                 context.update({'active_object_ids': ids, 'old_values': _get_browse_record_dict(self, cr, uid, ids)})
