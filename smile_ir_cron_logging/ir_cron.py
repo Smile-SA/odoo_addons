@@ -48,14 +48,6 @@ class ir_cron(osv.osv, netsvc.Agent):
             raise
 
     def _poolJobs(self, db_name, check=False):
-        # Added by Smile
-        report = """Here is the action scheduling report.
-
-Start Time: %s
-End Time: %s
-
-"""
-        ##
         try:
             db, pool = pooler.get_db_and_pool(db_name)
         except:
@@ -67,6 +59,12 @@ End Time: %s
                 cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
                 for job in cr.dictfetchall():
                     # Added by Smile
+                    report = """Here is the action scheduling report.
+
+Start Time: %s
+End Time: %s
+
+"""
                     start_time = time.strftime('%Y-%m-%d %H:%M:%S')
                     try:
                     ##
