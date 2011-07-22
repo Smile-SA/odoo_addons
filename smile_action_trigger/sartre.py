@@ -340,6 +340,7 @@ class sartre_rule(osv.osv):
 
     def run_now(self, cr, uid, ids, context=None):
         """Execute now server actions"""
+        import pdb; pdb.set_trace()
         if context is None:
             context_copy = {}
         else:
@@ -349,12 +350,12 @@ class sartre_rule(osv.osv):
             self.logger.notifyChannel('sartre.rule', netsvc.LOG_DEBUG, 'Rule: %s, User: %s' % (rule.id, uid))
             domain = []
             rule_object_ids = []
-            try:
+            if True: #try:
                 # Build domain expression
                 domain = self._build_domain_expression(cr, uid, rule, context_copy)
                 # Search objects which validate rule conditions
                 rule_object_ids = self.pool.get(rule.model_id.model).search(cr, uid, domain, context=context_copy)
-            except Exception, e:
+            else: #except Exception, e:
                 stack = traceback.format_exc()
                 self.pool.get('sartre.exception').create(cr, uid, {'rule_id': rule.id, 'exception_type': 'condition', 'exception': tools.ustr(e), 'stack': tools.ustr(stack), 'context': tools.ustr(context_copy)})
                 self.logger.notifyChannel('sartre.rule', netsvc.LOG_ERROR, 'Rule: %s, User: %s, Exception:%s' % (rule.id, uid, tools.ustr(e)))
