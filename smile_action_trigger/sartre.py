@@ -340,7 +340,6 @@ class sartre_rule(osv.osv):
 
     def run_now(self, cr, uid, ids, context=None):
         """Execute now server actions"""
-        import pdb; pdb.set_trace()
         if context is None:
             context_copy = {}
         else:
