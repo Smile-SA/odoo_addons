@@ -23,13 +23,19 @@ import base64
 import calendar
 import datetime
 from ftplib import FTP
-import os.path
-import logging
 import os
+import logging
 from random import random
 import tempfile
 from tempfile import mkstemp
 import time
+import shutil
+import re
+
+try:
+    import xlwt
+except ImportError:
+    logging.getLogger("import").exception("xlwt package is not installed")
 
 try:
     from mako.template import Template as MakoTemplate
@@ -42,12 +48,18 @@ from tools.translate import _
 
 from text2pdf import pyText2Pdf
 
+MAKO_EXPR = re.compile('\$\{(.+?)\}')
+
 def _get_exception_message(exception):
     return isinstance(exception, osv.except_osv) and exception.value or exception
 
 def _render_unicode(template_src, localdict, encoding='UTF-8'):
     template = MakoTemplate(tools.ustr(template_src), output_encoding=encoding)
     return template.render_unicode(**localdict)
+
+def _render_data(template_src, localdict):
+    src = MAKO_EXPR.match(template_src).group(1)
+    return eval(src, localdict)
 
 def _text2pdf(string):
     tmpfilename = os.path.join(tempfile.gettempdir(), str(int(random()*10 ** 9)))
@@ -62,6 +74,14 @@ def _text2pdf(string):
     os.remove(tmpfilename)
     os.remove(tmpfilename + '.pdf')
     return string
+
+def _save_excel_file(content, filename):
+    workbook = xlwt.Workbook()
+    sheet = workbook.add_sheet('sheet 1')
+    for row, cols in enumerate(content):
+        for col, data in enumerate(cols):
+            sheet.write(row, col, data)
+    workbook.save(filename)
 
 class ir_model_export_file_template(osv.osv):
     _name = 'ir.model.export.file_template'
@@ -83,6 +103,7 @@ class ir_model_export_file_template(osv.osv):
             "with the object and time variables"),
         'extension': fields.selection([
             ('pdf', '.pdf'),
+            ('xls', '.xls'),
             ('other', 'other'),
         ], 'Extension', required=True),
         'extension_custom': fields.char('Custom Extension', size=12),
@@ -152,23 +173,31 @@ class ir_model_export_file_template(osv.osv):
 
     # ***** Data layout methods ****
 
-    def _render(self, cr, uid, export_file, template_part, localdict):
+    def _render(self, export_file, template_part, localdict):
         """Render the output of this template as a string"""
         return _render_unicode(getattr(export_file, template_part), localdict, export_file.encoding)
 
-    def _render_tab(self, cr, uid, export_file, template_part, localdict):
-        """Render the output of this template in a tabular format"""
-        template = []
+    def _render_csv(self, export_file, file_content):
+        """Render the output of this template in a csv format"""
         try:
             delimiter = eval(export_file.delimiter)
         except:
             delimiter = export_file.delimiter
+        return [delimiter.join(line) for line in file_content]
+
+    def _render_tab(self, export_file, template_part, localdict):
+        """Render the output of this template in a tabular format"""
+        template = []
         # Header & Footer
         if getattr(export_file, template_part):
-            template.append(self._render(cr, uid, export_file, template_part, localdict))
+            template.append([self._render(export_file, template_part, localdict)])
         # Header with fieldnames
         if template_part == 'header' and export_file.fieldnames_in_header:
-            template.append(delimiter.join([tools.ustr(column.name) for column in export_file.column_ids]))
+            template.append([tools.ustr(column.name) for column in export_file.column_ids])
+        if export_file.extension == 'xls':
+            _render_func = _render_data
+        else:
+            _render_func = _render_unicode
         # Body
         if template_part == 'body':
             sub_objects = localdict['object']
@@ -182,9 +211,9 @@ class ir_model_export_file_template(osv.osv):
                 line = []
                 for column in export_file.column_ids:
                     try:
-                        column_value = _render_unicode(column.value or '', localdict)
+                        column_value = _render_func(column.value or '', localdict)
                         if column.default_value and not column_value:
-                            column_value = _render_unicode(column.default_value, localdict)
+                            column_value = _render_func(column.default_value, localdict)
                         if column.column_validator:
                             validation = eval(column.column_validator, localdict)
                             if not validation:
@@ -193,13 +222,12 @@ class ir_model_export_file_template(osv.osv):
                                 except:
                                     exception_msg = column.exception_msg
                                 raise osv.except_osv(_('Error'), exception_msg)
-                        column_value = tools.ustr(column_value)
-                        if column_value:
+                        if column_value and isinstance(column_value, basestring):
                             if column.min_width:
                                 column_value = getattr(column_value, column.justify)(column.min_width, tools.ustr(column.fillchar))
                             if column.max_width:
                                 column_value = column_value[:column.max_width]
-                        if not column.not_string and export_file.quotechar:
+                        if not column.not_string and export_file.extension != 'xls' and export_file.quotechar:
                             try:
                                 quotechar = export_file.quotechar and eval(export_file.quotechar) or ''
                             except:
@@ -211,12 +239,8 @@ class ir_model_export_file_template(osv.osv):
                         line.append(column_value)
                     except Exception, e:
                         raise osv.except_osv(_('Error'), 'column %s: %s' % (column.name, e))
-                template.append(delimiter.join(line))
-        try:
-            lineterminator = eval(export_file.lineterminator)
-        except:
-            lineterminator = export_file.lineterminator
-        return lineterminator.join(template)
+                template.append(line)
+        return template
 
     def _lay_out_data(self, cr, uid, export_file, context):
         """Call specific layout methods and catch exceptions"""
@@ -240,21 +264,28 @@ class ir_model_export_file_template(osv.osv):
                     for line in template_parts:
                         localdict['object'] = line
                         try:
-                            content.append(getattr(self, content_render_method)(cr, uid, export_file, template_part, localdict))
+                            content.extend(getattr(self, content_render_method)(export_file, template_part, localdict))
                         except Exception, e:
                             if template_part == 'body' and export_file.exception_handling == 'continue':
                                 exceptions.append('%s - %s,%s: %s' % (template_part, export_file.model, line.id, _get_exception_message(e)))
                             else:
                                 raise Exception('%s - %s' % (template_part, _get_exception_message(e)))
+            if export_file.extension == 'xls':
+                return content, exceptions
+            if export_file.state == 'tab':
+                content = self._render_csv(export_file, content)
         try:
             lineterminator = eval(export_file.lineterminator)
         except:
             lineterminator = export_file.lineterminator
-        return (lineterminator.join(content), exceptions)
+        return lineterminator.join(content), exceptions
 
     # ***** File storage methods *****
 
-    def _create_attachment(self, cr, uid, export_file, filename, file_content, context):
+    def _create_attachment(self, cr, uid, export_file, filename, temp_path, context):
+        file_obj = open(temp_path)
+        file_content = file_obj.read()
+        file_obj.close()
         vals = {
             'name': filename,
             'type': 'binary',
@@ -263,17 +294,16 @@ class ir_model_export_file_template(osv.osv):
             'res_model': 'ir.model.export',
             'res_id': context.get('attach_export_id', 0),
         }
-        self.pool.get('ir.attachment').create(cr, uid, vals, context)
-        
-    def _save_in_local_dir(self, cr, uid, export_file, filename, file_content, context):
+        attachment_id = self.pool.get('ir.attachment').create(cr, uid, vals, context)
+        context['attachment_id'] = attachment_id
+
+    def _save_in_local_dir(self, cr, uid, export_file, filename, temp_path, context):
         directory = os.path.abspath(export_file.local_directory)
         if not os.path.exists(directory):
             raise Exception('Directory %s does not exist or permission on it is not granted' % (directory,))
-        file = open(directory + '/' + filename, 'w')
-        file.write(file_content)
-        file.close()
+        shutil.copy(temp_path, os.path.join(directory, filename))
 
-    def _upload_to_ftp_server(self, cr, uid, export_file, filename, file_content, context):
+    def _upload_to_ftp_server(self, cr, uid, export_file, filename, filetemp, context):
         localdict = {
             'object': export_file,
             'localcontext': context,
@@ -287,21 +317,15 @@ class ir_model_export_file_template(osv.osv):
             ftp.login(export_file.ftp_user, export_file.ftp_password or '')
         if export_file.ftp_directory:
             ftp.cwd(export_file.ftp_directory)
-        fd, temp_path = mkstemp()
-        file = open(temp_path, 'wb')
-        file.write(file_content)
-        file.close()
-        os.close(fd)
-        file = open(temp_path, 'rb')
+        file = open(filetemp, 'rb')
         ftp.storbinary('STOR %s' % filename, file)
         file.close()
-        os.remove(temp_path)
 
-    def _save_file(self, cr, uid, export_file, filename, file_content, context):
+    def _save_file(self, cr, uid, export_file, filename, temp_path, context):
         for save_file_method in ['create_attachment', 'upload_to_ftp_server', 'save_in_local_dir']:
             if getattr(export_file, save_file_method):
                 try:
-                    getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, file_content, context)
+                    getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, temp_path, context)
                 except osv.except_osv, e:
                     exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e) + str(e.value))
                     raise Exception(exception_infos) 
@@ -341,16 +365,16 @@ class ir_model_export_file_template(osv.osv):
         }
         report_id = self.pool.get('res.request').create(cr, uid, report_vals, context)
         if exceptions and export_file.exception_logging == 'file':
-                exceptions_filename = filename[:-filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
-                exceptions_vals = {
-                    'name':  exceptions_filename,
-                    'type': 'binary',
-                    'datas': base64.encodestring('\n'.join(exceptions).encode(export_file.encoding)),
-                    'datas_fname': exceptions_filename,
-                    'res_model': 'res.request',
-                    'res_id': report_id,
+            exceptions_filename = filename[:-filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
+            exceptions_vals = {
+                'name':  exceptions_filename,
+                'type': 'binary',
+                'datas': base64.encodestring('\n'.join(exceptions).encode(export_file.encoding)),
+                'datas_fname': exceptions_filename,
+                'res_model': 'res.request',
+                'res_id': report_id,
                 }
-                self.pool.get('ir.attachment').create(cr, uid, exceptions_vals, context)
+            self.pool.get('ir.attachment').create(cr, uid, exceptions_vals, context)
         if attach_export_id:
             self.pool.get('ir.model.export').write(cr, uid, attach_export_id, {'report_id': report_id,
                                                                                'exception_during_last_run': bool(exceptions)}, context)
@@ -366,23 +390,19 @@ class ir_model_export_file_template(osv.osv):
                         'localcontext': context,
                         'time': time
                     }, export_file.encoding)
-        extension = '.pdf'
+        extension = export_file.extension
         if export_file.extension == 'other':
-            extension = export_file.extension_custom
-            if extension.find('.'):
-                extension = '.%s' % extension
-        filename += extension
-        return filename
+            extension = export_file.extension_custom.replace('.', '')
+        return '%s.%s' % (filename, extension)
 
     def generate_file(self, cr, uid, export_file_id, context=None):
         """Check and lay out data, save file and produce an export processing report"""
         start_date = time.strftime('%Y-%m-%d %H:%M:%S')
-
         context = context or {}
         if isinstance(export_file_id, list):
             export_file_id = export_file_id[0]
         export_file = self.browse(cr, uid, export_file_id, context)
-        filename = binary = ''
+        filename = ''
         exceptions = []
         content_ids = context.get('active_ids', 'active_id' in context and [context['active_id']] or [])
         checked_content_ids = content_ids[:]
@@ -403,10 +423,19 @@ class ir_model_export_file_template(osv.osv):
             exceptions += content_exceptions
             if file_content:
                 filename = self._get_filename(cr, uid, export_file, context)
-                if export_file.extension == 'pdf':
-                    file_content = _text2pdf(file_content)
-                file_content = file_content.encode(export_file.encoding)
-                self._save_file(cr, uid, export_file, filename, file_content, context)
+                fd, temp_path = mkstemp()
+                if export_file.extension == 'xls':
+                    _save_excel_file(file_content, temp_path)
+                else:
+                    if export_file.extension == 'pdf':
+                        file_content = _text2pdf(file_content)
+                    file_content = file_content.encode(export_file.encoding)
+                    file_temp = open(temp_path, 'wb')
+                    file_temp.write(file_content)
+                    file_temp.close()
+                os.close(fd)
+                self._save_file(cr, uid, export_file, filename, temp_path, context)
+                os.remove(temp_path)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
         localdict = {
             'pool': self.pool,
@@ -420,13 +449,15 @@ class ir_model_export_file_template(osv.osv):
             'start_time': start_date,
             'end_time': end_date,
             'filename': filename,
-            'file': binary,
+            'file': '',
+            'attachment_id': context.get('attachment_id', None),
             'records_number': len(content_ids),
             'export_lines_number': len(content_ids) - len(exceptions),
             'exceptions_number': len(exceptions),
             'exceptions': exceptions,
         }
         return self._save_execution_report(cr, uid, export_file, localdict)
+
 ir_model_export_file_template()
 
 class ir_model_export_file_template_column(osv.osv):
