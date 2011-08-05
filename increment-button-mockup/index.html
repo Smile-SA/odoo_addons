@@ -1,0 +1,71 @@
+<html>
+
+    <script type="text/javascript" src="jquery-1.6.2.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var cycling_values = ['0', '0.5', '1'];
+            var buttons = $('.increment.button:not(.disabled)');
+            buttons.click(function(){
+                var button_value_tag = $(this).find('input');
+                var button_label_tag = $(this).find('span');
+                var current_index = $.inArray(button_value_tag.val(), cycling_values);
+                var new_index = 0;
+                if(!isNaN(current_index)) {
+                    new_index = (current_index + 1) % cycling_values.length;
+                };
+                var new_value = cycling_values[new_index];
+                button_value_tag.val(new_value);
+                button_label_tag.text(new_value);
+            });
+            buttons.trigger('click');
+        });
+    </script>
+
+<body>
+
+    <style type="text/css">
+        .button {
+            display: block;
+            padding: .5em;
+            margin: .5em;
+            background: #fff;
+            border: 1px #999 solid;
+            float: left;
+            cursor: pointer;
+            text-align: center;
+            color: #000;
+            width: 2em;
+            /*  Do not highlight text on click. See:
+             *  http://stackoverflow.com/questions/6235503/jquery-double-click-but-dont-select-the-content/6235517#6235517
+             *  http://stackoverflow.com/questions/2132172/disable-text-highlighting-on-double-click-in-jquery/2132230#2132230
+             */
+            -moz-user-select   : none;
+            -khtml-user-select : none;
+            -webkit-user-select: none;
+            -o-user-select     : none;
+            user-select        : none;
+            /* height: 1em; */
+        }
+        .button.disabled {
+            background: #eee;
+            color: #ccc;
+            border-color: #ccc;
+            cursor: default;
+        }
+        .highlight { background: #ff0; }
+    </style>
+
+
+    <div class="button increment">
+        <span>Not initialized</span>
+        <input type="hidden" value=""/>
+    </div>
+
+    <div class="button increment disabled">
+        <span>Not initialized</span>
+        <input type="hidden" value=""/>
+    </div>
+
+</body>
+</html>
