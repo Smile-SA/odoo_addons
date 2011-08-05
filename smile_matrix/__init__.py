@@ -20,4 +20,4 @@
 ##############################################################################
 
 import smile_project
-#import smile_matrix
+import smile_matrix

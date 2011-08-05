@@ -2,6 +2,8 @@
 <openerp>
     <data noupdate="0">
 
+        <act_window name="Project matrix" res_model="smile.matrix" src_model="smile.project" id="action_project_matrix" view_mode='form' target='new'/>
+
         <record model="ir.ui.view" id="view_project_form">
             <field name="name">smile_project.view_project</field>
             <field name="model">smile.project</field>
@@ -9,7 +11,10 @@
             <field name="priority">17</field>
             <field name="arch" type="xml">
                 <form string="Project">
-                    <field name="name" colspan="4"/>
+                    <field name="name" colspan="2"/>
+                    <button type="action" name="%(action_project_matrix)d" string="Matrix" colspan="2"/>
+                    <field name="start_date" colspan="2"/>
+                    <field name="end_date" colspan="2"/>
                     <separator string="Project lines" colspan="4"/>
                     <field name="line_ids" colspan="4" nolabel="1">
                         <tree string="Lines">

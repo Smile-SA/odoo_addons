@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import datetime
+
 from osv import osv, fields
 
 
@@ -27,7 +29,14 @@ class smile_project(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=32),
+        'start_date': fields.date('Start', required=True),
+        'end_date': fields.date('End', required=True),
         'line_ids': fields.one2many('smile.project.line', 'project_id', "Project lines"),
+        }
+
+    _defaults = {
+        'start_date': datetime.datetime.today().strftime('%Y-%m-%d'),
+        'end_date': (datetime.datetime.today() + datetime.timedelta(days=7)).strftime('%Y-%m-%d'),
         }
 
 smile_project()
