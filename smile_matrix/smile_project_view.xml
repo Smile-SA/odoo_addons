@@ -11,8 +11,30 @@
                 <form string="Project">
                     <field name="name" colspan="4"/>
                     <separator string="Project lines" colspan="4"/>
-                    <field name="line_ids" colspan="4" nolabel="1"/>
+                    <field name="line_ids" colspan="4" nolabel="1">
+                        <tree string="Lines">
+                            <field name="name"/>
+                            <field name="price"/>
+                        </tree>
+                        <form string="Lines">
+                            <field name="name"/>
+                            <field name="price"/>
+                        </form>
+                    </field>
                 </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_project_tree">
+            <field name="name">smile_project.view_project</field>
+            <field name="model">smile.project</field>
+            <field name="type">tree</field>
+            <field name="priority">17</field>
+            <field name="arch" type="xml">
+                <tree string="Project">
+                    <field name="name"/>
+                    <field name="line_ids"/>
+                </tree>
             </field>
         </record>
 

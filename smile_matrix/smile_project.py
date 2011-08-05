@@ -37,7 +37,8 @@ class smile_project_line(osv.osv):
     _name = 'smile.project.line'
 
     _columns = {
-        'name': fields.char('Name', size=32),
+        'name': fields.char('Name', size=32, required=True),
+        'price': fields.float('Price'),
         'project_id': fields.many2one('smile.project', "Project", required=True, ondelete='cascade'),
         }
 
