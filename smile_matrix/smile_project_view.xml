@@ -9,14 +9,16 @@
             <field name="priority">17</field>
             <field name="arch" type="xml">
                 <form string="Project">
-
                     <field name="name" colspan="4"/>
                     <separator string="Project lines" colspan="4"/>
                     <field name="line_ids" colspan="4" nolabel="1"/>
-
                 </form>
             </field>
         </record>
+
+        <act_window name="Projects" res_model="smile.project" id="action_project_list"/>
+
+        <menuitem action="action_project_list" id="menu_smile_project" name="Projects"/>
 
     </data>
 </openerp>
