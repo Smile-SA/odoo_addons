@@ -64,6 +64,15 @@ class smile_project(osv.osv):
                 'target': 'new',
                 }
 
+    def _check_months(self, cr, uid, ids):
+        for project in self.browse(cr, uid, ids):
+            start = datetime.datetime.strptime(project.start_date, '%Y-%m-%d')
+            end = datetime.datetime.strptime(project.end_date, '%Y-%m-%d')
+            if end < start:
+                return False
+        return True
+
+    _constraints = [(_check_months, "End < start", ['start_date', 'end_date'])]
 
 
 smile_project()

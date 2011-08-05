@@ -74,7 +74,9 @@ class smile_matrix(osv.osv_memory):
         return result
 
     def _month_to_str(self, month):
-        return "%s_%s" % month
+        year = month[0]
+        month = str(month[1]).zfill(2)
+        return "%s_%s" % (year,month)
 
     mako_template = """
         <form string="Test">
@@ -82,16 +84,33 @@ class smile_matrix(osv.osv_memory):
                 <style type="text/css">
                     table#smile_matrix input {
                         width: 2em;
-                        text-align: right;
                         border: 0;
+                    }
+                    table#smile_matrix tfoot span,
+                    table#smile_matrix input {
                         float: right;
+                        text-align: right;
+                    }
+                    table#smile_matrix tbody td,
+                    table#smile_matrix th {
+                        border-bottom: 1px dotted #999;
+                        padding: .2em;
                     }
                 </style>
                 <script type="application/javascript">
                     $(document).ready(function(){
-                        $("input[name^='line_']").click(function(){
-                            $(this).val(10);
+                        $("input[name^='line_']").change(function(){
+                            name_fragments = $(this).attr("id").split("_");
+                            column_index = name_fragments[2] + '_' + name_fragments[3];
+                            row_index = name_fragments[1];
+                            // Select all fields of the columns we clicked in
+                            var column_sum = 0;
+                            $("input[name^='line_'][name$='_" + column_index + "']").each(function(){
+                                column_sum += parseInt($(this).val());
+                            });
+                            $("tfoot span.column_sum_" + column_index).text(column_sum);
                         });
+                        $("tbody tr:first input[name^='line_']").trigger('change');
                     });
                 </script>
                 <table id="smile_matrix">
@@ -99,10 +118,18 @@ class smile_matrix(osv.osv_memory):
                         <tr>
                             <th>Line</th>
                             %for month in months:
-                                <th>${month}</th>
+                                <th>${"%s/%s" % (month[5:],month[2:4])}</th>
                             %endfor
                         </tr>
                     </thead>
+                    <tfoot>
+                        <tr>
+                            <td>Sums:</td>
+                            %for month in months:
+                                <td><span class="column_sum_${month}">NaN</span></td>
+                            %endfor
+                        </tr>
+                    </tfoot>
                     <tbody>
                         %for line in lines:
                             <tr>
@@ -139,7 +166,6 @@ class smile_matrix(osv.osv_memory):
 
     def create(self, cr, uid, vals, context=None):
         proj_fields = self.fields_get(cr, uid, context=context)
-
         today = datetime.datetime.today()
         for f in proj_fields:
             if f not in self._columns:
@@ -147,7 +173,6 @@ class smile_matrix(osv.osv_memory):
                     self._columns[f] = fields.integer(create_date=today, **proj_fields[f])
             elif hasattr(self._columns[f], 'create_date'):
                 self._columns[f].create_date = today
-
         return super(smile_matrix, self).create(cr, uid, vals, context)
 
     def vaccum(self, cr, uid, force=False):
@@ -166,6 +191,5 @@ class smile_matrix(osv.osv_memory):
         for f in fields_to_clean:
             del self._columns[f]
         return True
-
 
 smile_matrix()
