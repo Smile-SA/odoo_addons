@@ -39,6 +39,33 @@ class smile_project(osv.osv):
         'end_date': (datetime.datetime.today() + datetime.timedelta(days=7)).strftime('%Y-%m-%d'),
         }
 
+    def matrix(self, cr, uid, ids, context=None):
+        if len(ids) >1:
+            raise osv.except_osv('Error', 'len(ids) !=1')
+        project = self.browse(cr, uid, ids[0], context)
+
+        vals = {}
+        for month in self.pool.get('smile.matrix')._get_project_months(project):
+            month_str = self.pool.get('smile.matrix')._month_to_str(month)
+            for line in project.line_ids:
+                vals['line_%s_%s' % (line.id, month_str)] = line.price
+
+        new_context = context.copy()
+        new_context['project_id'] = ids[0]
+        matrix_id = self.pool.get('smile.matrix').create(cr, uid, vals, new_context)
+        return {
+                'name': "%s matrix" % (project.name,),
+                'type': 'ir.actions.act_window',
+                'res_model': 'smile.matrix',
+                'res_id': matrix_id,
+                'view_mode': 'form',
+                'view_type': 'form',
+                'context': new_context,
+                'target': 'new',
+                }
+
+
+
 smile_project()
 
 

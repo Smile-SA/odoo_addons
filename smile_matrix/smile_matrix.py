@@ -53,7 +53,7 @@ class smile_matrix(osv.osv_memory):
         }
 
     def _get_project(self, cr, uid, context):
-        project_id = context.get('active_model',False) == 'smile.project' and context.get('active_id',False)
+        project_id = context and context.get('project_id',False)
         if project_id:
             return self.pool.get('smile.project').browse(cr, uid, project_id, context)
         return False
@@ -64,14 +64,13 @@ class smile_matrix(osv.osv_memory):
         return list(year_month_tuples(start.year, start.month, end.year, end.month))
 
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
+        result = super(smile_matrix, self).fields_get(cr, uid, allfields, context, write_access)
         project = self._get_project(cr, uid, context)
-        if not project:
-            return super(smile_matrix, self).fields_get(cr, uid, allfields, context, write_access)
-        result = {}
-        for line in project.line_ids:
-            for month in self._get_project_months(project):
-                month_str = self._month_to_str(month)
-                result['line_%s_%s' % (line.id, month_str)] = {'string': month_str, 'type':'integer', 'required':True}
+        if project:
+            for line in project.line_ids:
+                for month in self._get_project_months(project):
+                    month_str = self._month_to_str(month)
+                    result['line_%s_%s' % (line.id, month_str)] = {'string': month_str, 'type':'integer', 'required':True, 'readonly': False}
         return result
 
     def _month_to_str(self, month):
@@ -83,25 +82,39 @@ class smile_matrix(osv.osv_memory):
                 <style type="text/css">
                     table#smile_matrix input {
                         width: 2em;
+                        text-align: right;
+                        border: 0;
+                        float: right;
                     }
                 </style>
+                <script type="application/javascript">
+                    $(document).ready(function(){
+                        $("input[name^='line_']").click(function(){
+                            $(this).val(10);
+                        });
+                    });
+                </script>
                 <table id="smile_matrix">
-                    <tr>
-                        <th>Line</th>
-                        %for month in months:
-                            <th>${month}</th>
-                        %endfor
-                    </tr>
-                    %for line in lines:
+                    <thead>
                         <tr>
-                            <td>${line.name}</td>
+                            <th>Line</th>
                             %for month in months:
-                                <td>
-                                    <field name="${'line_%s_%s' % (line.id, month)}"/>
-                                </td>
+                                <th>${month}</th>
                             %endfor
                         </tr>
-                    %endfor
+                    </thead>
+                    <tbody>
+                        %for line in lines:
+                            <tr>
+                                <td>${line.name}</td>
+                                %for month in months:
+                                    <td>
+                                        <field name="${'line_%s_%s' % (line.id, month)}"/>
+                                    </td>
+                                %endfor
+                            </tr>
+                        %endfor
+                    </tbody>
                 </table>
                 <button string="Ok" name="validate" type="object"/>
             </html>
@@ -114,17 +127,45 @@ class smile_matrix(osv.osv_memory):
             return super(smile_matrix, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         fields = self.fields_get(cr, uid, context=context)
         months = [self._month_to_str(month) for month in self._get_project_months(project)]
-        print months
         arch = MakoTemplate(self.mako_template).render_unicode(months=months, lines=project.line_ids,
                                                          format_exceptions=True)
         return {'fields': fields, 'arch': arch}
 
     def validate(self, cr, uid, ids, context=None):
-        print 'validate'
-        return True
+        if len(ids) != 1:
+            raise osv.except_osv('Error', 'len(ids) !=1')
+        print self.read(cr, uid, ids[0])
+        return {'type': 'ir.actions.act_window_close'}
 
     def create(self, cr, uid, vals, context=None):
-        print 'create', vals
+        proj_fields = self.fields_get(cr, uid, context=context)
+
+        today = datetime.datetime.today()
+        for f in proj_fields:
+            if f not in self._columns:
+                if proj_fields[f]['type'] == 'integer':
+                    self._columns[f] = fields.integer(create_date=today, **proj_fields[f])
+            elif hasattr(self._columns[f], 'create_date'):
+                self._columns[f].create_date = today
+
+        return super(smile_matrix, self).create(cr, uid, vals, context)
+
+    def vaccum(self, cr, uid, force=False):
+        super(smile_matrix, self).vaccum(cr, uid, force)
+        today = datetime.datetime.today()
+        fields_to_clean = []
+        for f in self._columns:
+            if hasattr(self._columns[f], 'create_date') and (self._columns[f].create_date < today  - datetime.timedelta(days=1)):
+                unused = True
+                for val in self.datas.values():
+                    if f in val:
+                        unused=False
+                        break
+                if unused:
+                    fields_to_clean.append(f)
+        for f in fields_to_clean:
+            del self._columns[f]
         return True
+
 
 smile_matrix()
