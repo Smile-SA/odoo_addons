@@ -66,8 +66,6 @@ def is_a_datetime(str0, type='datetime'):
     return
 
 def format_lang(pool, cr, value, lang='en_US', digits=2, tz='America/New_York'):
-    if not isinstance(value, (str, unicode)):
-        value = str(value)
     lang_obj = pool.get('res.lang')
     lang_id = lang_obj.search(cr, 1, [('code', '=', lang)], limit=1)
     if lang_id:
