@@ -30,6 +30,7 @@ from random import random
 import tempfile
 from tempfile import mkstemp
 import time
+import unicodedata
 
 try:
     from mako.template import Template as MakoTemplate
@@ -41,6 +42,11 @@ import tools
 from tools.translate import _
 
 from text2pdf import pyText2Pdf
+
+def strip_accents(s):
+    u = isinstance(s, unicode) and s or unicode(s, 'utf8')
+    a = ''.join((c for c in unicodedata.normalize('NFD', u) if unicodedata.category(c) != 'Mn'))
+    return str(a)
 
 def _get_exception_message(exception):
     return isinstance(exception, osv.except_osv) and exception.value or exception
@@ -232,6 +238,7 @@ class ir_model_export_file_template(osv.osv):
                 'time': time,
                 'datetime': datetime,
                 'calendar': calendar,
+                'strip_accents': strip_accents,
             }
             objects = self.pool.get(export_file.model_id.model).browse(cr, uid, context['active_ids'], context)
             for template_part in ['header', 'body', 'footer']:
