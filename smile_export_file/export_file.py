@@ -26,6 +26,7 @@ from ftplib import FTP
 import os.path
 import logging
 import os
+import pytz
 from random import random
 import tempfile
 from tempfile import mkstemp
@@ -47,6 +48,43 @@ def strip_accents(s):
     u = isinstance(s, unicode) and s or unicode(s, 'utf8')
     a = ''.join((c for c in unicodedata.normalize('NFD', u) if unicodedata.category(c) != 'Mn'))
     return str(a)
+
+def is_a_datetime(str0, type='datetime'):
+    if isinstance(str0, str):
+        formats = {
+            'datetime': '%Y-%m-%d %H:%M:%S',
+            'date': '%Y-%m-%d',
+            'time': '%Y-%m-%d %H:%M:%S',
+        }
+        try:
+            if type == 'time':
+                str0 = datetime.datetime.today().strftime(formats['date']) + ' ' + str0
+            result = datetime.datetime.strptime(str0, formats[type])
+            return result
+        except Exception, e:
+            pass
+    return
+
+def format_lang(pool, cr, value, lang='en_US', digits=2, tz='America/New_York'):
+    if not isinstance(value, (str, unicode)) or not value:
+        return ''
+    lang_obj = pool.get('res.lang')
+    lang_id = lang_obj.search(cr, 1, [('code', '=', lang)], limit=1)
+    if lang_id:
+        lang = lang_obj.read(cr, 1, lang_id[0], ['date_format', 'time_format'])
+        output_formats = {
+            'datetime': '%s %s' % (lang['date_format'], lang['time_format']),
+            'date': str(lang['date_format']),
+            'time': str(lang['time_format']),
+        }
+        for type in output_formats:
+            if is_a_datetime(value, type):
+                if tz:
+                    return pytz.timezone(tz).fromutc(is_a_datetime(value)).strftime(output_formats[type])
+                else:
+                    return is_a_datetime(value).strftime(output_formats[type])
+        return lang_obj.format(cr, 1, lang_id, '%.' + str(digits) + 'f', value)
+    return value
 
 def _get_exception_message(exception):
     return isinstance(exception, osv.except_osv) and exception.value or exception
@@ -238,6 +276,7 @@ class ir_model_export_file_template(osv.osv):
                 'time': time,
                 'datetime': datetime,
                 'calendar': calendar,
+                'format_lang': format_lang,
                 'strip_accents': strip_accents,
             }
             objects = self.pool.get(export_file.model_id.model).browse(cr, uid, context['active_ids'], context)
