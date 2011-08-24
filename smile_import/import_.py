@@ -24,6 +24,8 @@ import time, logging, threading
 from osv import osv, fields
 import tools, pooler
 
+from import_handler import SmileImportLogger
+
 class IrModelImportTemplate(osv.osv):
     _name = 'ir.model.import.template'
     _description = 'Import Template'
@@ -122,7 +124,7 @@ class IrModelImport(osv.osv):
     def _process_with_new_cursor(self, dbname, uid, import_id, context=None):
         if not isinstance(import_id, (int, long)):
             raise osv.except_osv('Error !', '_process_with_new_cursor: import_id is supposed to be an integer')
-        logger = logging.getLogger("smile_import")
+        logger = SmileImportLogger(uid, import_id)
         try:
             db = pooler.get_db(dbname)
             cr = db.cursor()
@@ -140,13 +142,13 @@ class IrModelImport(osv.osv):
             
             if import_.test_mode:
                 cr.rollback()
-                logger.info("Import rollbacking: %s" % (import_id,), {'import_id': import_id})
+                logger.info("Import rollbacking: %s" % (import_id,))
                 import_obj.write(cr, uid, import_id, {'done': True, 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
             else:
                 self.write(cr, uid, import_id, {'done': True, 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
                 cr.commit()
         except Exception, e:
-            logger.critical("Import failed: %s" % (tools.ustr(repr(e)),), {'import_id': import_id})
+            logger.critical("Import failed: %s" % (tools.ustr(repr(e))))
         finally:
             cr.close()
         return
