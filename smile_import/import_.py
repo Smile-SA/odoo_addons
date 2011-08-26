@@ -143,9 +143,9 @@ class IrModelImport(osv.osv):
             if import_.test_mode:
                 cr.rollback()
                 logger.info("Import rollbacking: %s" % (import_id,))
-                import_obj.write(cr, uid, import_id, {'done': True, 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
+                self.write(cr, uid, import_id, {'done': True, 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
             else:
-                self.write(cr, uid, import_id, {'done': True, 'to_date': time.strftime('%Y-%m-%d %H:%M:%:S')}, context)
+                self.write(cr, uid, import_id, {'done': True, 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
                 cr.commit()
         except Exception, e:
             logger.critical("Import failed: %s" % (tools.ustr(repr(e))))
