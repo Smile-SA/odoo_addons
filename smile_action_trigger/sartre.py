@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import copy
 import inspect
 import re
 import threading
@@ -353,7 +352,7 @@ class sartre_trigger(osv.osv):
 
     def _run_now(self, cr, uid, ids, context=None):
         """Execute now server actions"""
-        context = copy.deepcopy(context) or {}
+        context = dict(context) or {}
         context.setdefault('active_test', False)
         for trigger in self.browse(cr, uid, ids):
             self.logger.notifyChannel('sartre.trigger', netsvc.LOG_DEBUG, 'trigger: %s, User: %s' % (trigger.id, uid))
@@ -472,7 +471,9 @@ class sartre_filter(osv.osv):
             field_pool = self.pool.get('ir.model.fields')
             model = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])['model']
             for f_name in field_list:
-                f_id = field_pool.search(cr, uid, [('model', '=', model), ('name', '=', '[' in f_name and f_name[:f_name.index('[')] or f_name)], limit=1, context=context)
+                if '[' in f_name:
+                    f_name = f_name[:f_name.index('[')]
+                f_id = field_pool.search(cr, uid, [('model', '=', model), ('name', '=', f_name)], limit=1, context=context)
                 if not f_id:
                     raise osv.except_osv(_('Error'), _("The field %s is not in the model %s !" % (f_name, model)))
                 f_obj = field_pool.read(cr, uid, f_id[0], ['name', 'ttype', 'relation'])
