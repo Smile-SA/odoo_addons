@@ -340,10 +340,10 @@ class sartre_trigger(osv.osv):
 
     def _run_now_with_new_cursor(self, dbname, uid, ids, context):
         try:
-            db = pooler.get_db(dbname)
-        except:
-            return False
-        cr = db.cursor()
+            cr = pooler.get_db(dbname).cursor()
+        except Exception, e:
+            self.logger.notifyChannel('sartre.trigger', netsvc.LOG_ERROR, isinstance(e, osv.except_osv) and e.value or e)
+            return
         try:
             self._run_now(cr, uid, ids, context)
         finally:
@@ -352,7 +352,7 @@ class sartre_trigger(osv.osv):
 
     def _run_now(self, cr, uid, ids, context=None):
         """Execute now server actions"""
-        context = dict(context) or {}
+        context = dict(context) or {} # Can't use deepcopy because of browse_record_list
         context.setdefault('active_test', False)
         for trigger in self.browse(cr, uid, ids):
             self.logger.notifyChannel('sartre.trigger', netsvc.LOG_DEBUG, 'trigger: %s, User: %s' % (trigger.id, uid))
@@ -487,7 +487,7 @@ class sartre_filter(osv.osv):
     def onchange_get_field_domain(self, cr, uid, ids, model_id, field_expression='', context=None):
         """Get field domain"""
         model_id = self._check_field_expression(cr, uid, model_id, field_expression, context)
-        return {'values': {'field_id': False}, 'domain': {'field_id': "[('model_id', '=', %d)]" % model_id}}
+        return {'value': {'field_id': False}, 'domain': {'field_id': "[('model_id', '=', %d)]" % model_id}}
 
     def onchange_get_field_expression(self, cr, uid, ids, model_id, field_expression='', field_id=False, context=None):
         """Update the field expression"""
@@ -528,7 +528,6 @@ class sartre_filter(osv.osv):
         'value_age': lambda * a: 'current',
         'value_type': lambda * a: 'static',
     }
-
 sartre_filter()
 
 class sartre_exception(osv.osv):
@@ -551,7 +550,6 @@ class sartre_exception(osv.osv):
     }
 
     _order = "create_date desc"
-
 sartre_exception()
 
 class sartre_execution(osv.osv):
@@ -576,7 +574,6 @@ class sartre_execution(osv.osv):
             return self.write(cr, uid, log_id[0], {'executions_number': executions_number})
         else:
             return self.create(cr, uid, {'trigger_id': trigger.id, 'model_id': trigger.model_id.id, 'res_id': res_id, 'executions_number': 1}) and True
-
 sartre_execution()
 
 def sartre_decorator(original_method):
