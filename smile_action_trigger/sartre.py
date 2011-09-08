@@ -352,7 +352,8 @@ class sartre_trigger(osv.osv):
 
     def _run_now(self, cr, uid, ids, context=None):
         """Execute now server actions"""
-        context = dict(context) or {} # Can't use deepcopy because of browse_record_list
+        context = context or {} # Can't use deepcopy because of browse_record_list
+        context = dict(context)
         context.setdefault('active_test', False)
         for trigger in self.browse(cr, uid, ids):
             self.logger.notifyChannel('sartre.trigger', netsvc.LOG_DEBUG, 'trigger: %s, User: %s' % (trigger.id, uid))
