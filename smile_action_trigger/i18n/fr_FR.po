@@ -233,25 +233,19 @@ msgid "\n"
 msgstr ""
 
 #. module: smile_action_trigger
-#: code:addons/smile_action_trigger/sartre.py:0
-#, python-format
-msgid "The field %s is not in the model %s !\" % (f_name, model)))\n"
-"                f_obj = field_pool.read(cr, uid, f_id[0], ['name', 'ttype', 'relation'])\n"
-"                if f_obj['ttype'] in ['many2one', 'one2many', 'many2many']:\n"
-"                    model = f_obj['relation']\n"
-"                    model_id = self.pool.get('ir.model"
-msgstr ""
-
-#. module: smile_action_trigger
 #: view:sartre.rule:0
 msgid "The rule is satisfied if all test are True (AND)"
 msgstr "La règle est satisfaite si tous les tests sont vérifiés (opérateur ET)"
 
 #. module: smile_action_trigger
-#: field:sartre.exception,create_date:0
 #: selection:sartre.rule,trigger_date_type_display1:0
 msgid "Creation Date"
 msgstr "Date de création"
+
+#. module: smile_action_trigger
+#: field:sartre.log,create_uid:0
+msgid "User"
+msgstr "Utilisateur"
 
 #. module: smile_action_trigger
 #: selection:sartre.rule,interval_type:0
@@ -268,23 +262,6 @@ msgstr "Utile uniquement pour les opérateurs natifs"
 #: field:sartre.rule,interval_type:0
 msgid "Interval Unit"
 msgstr "Unité de l'interval"
-
-#. module: smile_action_trigger
-#: code:addons/smile_action_trigger/sartre.py:0
-#, python-format
-msgid "The field %s is not a relation field !\" % f_obj['name']))\n"
-"                i += 1\n"
-"        return model_id\n"
-"\n"
-"    def onchange_get_field_domain(self, cr, uid, ids, model_id, field='', field_id=False, operator_id=False, opposite=False, value='', value_age='current', value_type='fixed', context={}):\n"
-"        \"\"\"\n"
-"        Get field domain\n"
-"        \"\"\"\n"
-"        model_id = self.__check_field_expression(cr, uid, model_id, field, context)\n"
-"        res = self.onchange_get_domain(cr, uid, ids, field, operator_id, opposite, value, value_age, value_type, context)\n"
-"        res.setdefault('domain', {})\n"
-"        res['domain'].update({'field_id': \"[('model_id','=',\" + str(model_id) + "
-msgstr ""
 
 #. module: smile_action_trigger
 #: field:sartre.operator,other_value_transformation:0
@@ -312,19 +289,9 @@ msgid "Run Now"
 msgstr "Exécuter maintenant"
 
 #. module: smile_action_trigger
-#: model:ir.model,name:smile_action_trigger.model_sartre_exception
-msgid "Sartre Exception"
-msgstr ""
-
-#. module: smile_action_trigger
 #: selection:sartre.operator,native_operator:0
 msgid "is equal to"
 msgstr "égal à"
-
-#. module: smile_action_trigger
-#: view:smile_action_trigger.exception:0
-msgid "Trigger Exceptions"
-msgstr "Exceptions"
 
 #. module: smile_action_trigger
 #: model:ir.actions.server,message:smile_action_trigger.ir_actions_server_youremailchanged0
@@ -415,11 +382,6 @@ msgid "contains"
 msgstr "contient"
 
 #. module: smile_action_trigger
-#: field:sartre.exception,stack:0
-msgid "Stack Trace"
-msgstr "Trace"
-
-#. module: smile_action_trigger
 #: field:ir.model,trigger_rules_allowed:0
 msgid "Allow trigger rules"
 msgstr "Permettre de définir des règles de déclenchement dessus"
@@ -440,17 +402,6 @@ msgstr ""
 #: help:sartre.filter,field_name:0
 msgid "Use the second field to complete the first one"
 msgstr "Utiliser le second champ pour compléter le premier"
-
-#. module: smile_action_trigger
-#: selection:sartre.exception,exception_type:0
-#: view:sartre.rule:0
-msgid "filter"
-msgstr "filtre"
-
-#. module: smile_action_trigger
-#: field:sartre.exception,exception:0
-msgid "Exception"
-msgstr ""
 
 #. module: smile_action_trigger
 #: view:sartre.rule:0
@@ -475,7 +426,6 @@ msgstr "Expression à copier"
 
 #. module: smile_action_trigger
 #: field:sartre.filter,sartre_rule_id:0
-#: field:sartre.exception,rule_id:0
 #: field:sartre.log,rule_id:0
 #: view:sartre.rule:0
 msgid "Rule"
@@ -491,12 +441,6 @@ msgstr "Actif"
 #, python-format
 msgid "Error"
 msgstr "Erreur"
-
-#. module: smile_action_trigger
-#: field:sartre.exception,action_id:0
-#: selection:sartre.exception,exception_type:0
-msgid "Action"
-msgstr ""
 
 #. module: smile_action_trigger
 #: field:sartre.rule,domain_force:0
@@ -589,11 +533,6 @@ msgid "Opposite symbol for SQL filter"
 msgstr "Symbole de l'opposé pour les filtrages SQL"
 
 #. module: smile_action_trigger
-#: field:sartre.exception,exception_type:0
-msgid "Type"
-msgstr ""
-
-#. module: smile_action_trigger
 #: field:sartre.operator,opposite_symbol:0
 msgid "Opposite symbol"
 msgstr "Symbole de l'opposé"
@@ -617,18 +556,6 @@ msgstr "Opérateur"
 #: view:ir.model:0
 msgid "Set this flag to True to allow users to define trigger rules on resources of this type."
 msgstr "Cocher cette case pour permettre la définition des règles de déclenchement sur cet objet."
-
-#. module: smile_action_trigger
-#: model:ir.actions.act_window,name:smile_action_trigger.sartre_exception_action
-#: model:ir.ui.menu,name:smile_action_trigger.sartre_exception_menu
-msgid "Trigger Rules Exceptions"
-msgstr "Exceptions à l'exécution des règles de déclenchement"
-
-#. module: smile_action_trigger
-#: field:sartre.exception,res_id:0
-#: field:sartre.log,res_id:0
-msgid "Resource"
-msgstr "Ressource"
 
 #. module: smile_action_trigger
 #: field:sartre.operator,name:0
