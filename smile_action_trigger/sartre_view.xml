@@ -12,12 +12,11 @@
 						<field name="name" select="1" />
 						<field name="active" select="1" />
 						<field name="model_id" select="1" on_change="onchange_model_id(model_id, on_function, on_other)"/>
-						<field name="executions_max_number" />
-						<label colspan="2" />
-						<button type="object" name="run_now" string="Run Now" colspan="2" />
+						<field name="test_mode" />
 					</group>
 					<notebook colspan="4">
 						<page string="Triggers">
+							<button type="object" name="run_now" string="Run Now" colspan="4" />
 							<field name="on_create" />
 							<field name="on_date" />
 							<field name="on_write" />
@@ -49,6 +48,7 @@
 							</group>
 						</page>
 						<page string="Filters">
+							<field name="executions_max_number"/>
 							<field name="filter_ids" colspan="4" nolabel="1" mode="tree,form" on_change="onchange_get_domain_force(filter_ids, domain_force)">
 								<form string="Filter">
 									<group colspan="2">
@@ -78,13 +78,8 @@
 									<field name="domain" />
 								</tree>
 							</field>
-							<group colspan="4">
-								<label align="0.0" string="The rule is satisfied if all test are True (AND)"/>
-								<label align="0.0" string="Multiple triggers on same objects are joined using operator OR or force the domain by using the polish notation"/>
-							</group>
-							<group colspan="4">
-								<field name="domain_force"/>
-							</group>
+							<label align="1.0" string="The rule is satisfied if all test are True (AND). Multiple triggers on same objects are joined using operator OR or force the domain by using the polish notation" colspan="4"/>
+							<field name="domain_force" colspan="4"/>
 						</page>
 						<page string="Actions">
 							<field name="action_ids" colspan="4" nolabel="1" domain="[('model_id','=',model_id)]" />

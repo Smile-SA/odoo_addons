@@ -68,16 +68,14 @@ logger.addHandler(handler)
 
 class SartreLogger():
     
-    def __init__(self, uid, trigger_id, trigger_start=False):
+    def __init__(self, uid, trigger_id):
         assert isinstance(uid, (int, long)), 'uid should be an integer'
         self.logger = logging.getLogger("smile_action_trigger")
-        
         self.uid = uid
         self.trigger_id = trigger_id
-        self.trigger_start = trigger_start
-        
-        self.logger_args = {'trigger_id': self.trigger_id, 'uid': self.uid}
-        
+        self.trigger_start = datetime.datetime.now()
+        self.logger_args = {'trigger_id': trigger_id, 'uid': uid}
+
     def info(self, msg):
         self.logger.info(msg, self.logger_args)
 
@@ -97,7 +95,6 @@ class SartreLogger():
         self.logger.exception(msg, self.logger_args)
         
     def time_info(self, msg):
-        if self.trigger_start:
-            delay = datetime.datetime.now() - self.trigger_start
-            msg = "%s h, %s min %s sec: " % tuple(str(delay).split(':')) + msg
+        delay = datetime.datetime.now() - self.trigger_start
+        msg += " after %sh %smin %ss" % tuple(str(delay).split(':'))
         self.logger.info(msg, self.logger_args)

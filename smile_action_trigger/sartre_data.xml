@@ -125,7 +125,8 @@
 \n#    - old_field_value (useful if value age filter != 'Both')
 \n#    - other_value (fixed or dynamic)
 \n# You must assign a boolean value to the variable &quot;result&quot;
-\nresult = current_field_value != old_field_value&quot;&quot;&quot;" name="expression"/>
+\nresult = current_field_value != old_field_value and (not other_value or current_field_value == other_value)
+\n&quot;&quot;&quot;" name="expression"/>
 		</record>
 		<record id="sartre_operator_exists0" model="sartre.operator">
 			<field name="name">exists</field>
