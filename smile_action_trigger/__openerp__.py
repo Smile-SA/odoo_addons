@@ -55,6 +55,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "init_xml" : [
         'ir_cron_data.xml',
         'security/sartre_security.xml',
+        'sartre_sequence.xml',
     ],
     "update_xml": [
         'ir.xml',

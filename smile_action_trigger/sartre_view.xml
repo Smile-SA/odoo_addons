@@ -49,7 +49,7 @@
 							</group>
 						</page>
 						<page string="Filters">
-							<field name="filter_ids" colspan="4" nolabel="1" mode="tree,form" on_change="onchange_get_domain_force(condition_ids, domain_force)">
+							<field name="filter_ids" colspan="4" nolabel="1" mode="tree,form" on_change="onchange_get_domain_force(filter_ids, domain_force)">
 								<form string="Filter">
 									<group colspan="2">
 										<separator string="Domain" colspan="4" />
@@ -88,6 +88,16 @@
 						</page>
 						<page string="Actions">
 							<field name="action_ids" colspan="4" nolabel="1" domain="[('model_id','=',model_id)]" />
+						</page>
+						<page string="Logs">
+							<field name="log_ids" colspan="4" nolabel="1" mode="tree">
+								<tree string="Logs">
+									<field name="create_date"/>
+									<field name="level"/>
+									<field name="message"/>
+									<field name="create_uid"/>
+								</tree>
+							</field>
 						</page>
 					</notebook>
 				</form>
@@ -195,68 +205,6 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 		<menuitem action="sartre_operator_action" id="sartre_operator_menu" parent="sartre_trigger_menu" sequence="30" />
-
-		<record id="sartre_exception_form_view" model="ir.ui.view">
-			<field name="name">Action Trigger Exceptions - Form</field>
-			<field name="model">sartre.exception</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Exception" editable="bottom">
-					<field name="trigger_id" />
-					<field name="exception_type" />
-					<field name="res_id" />
-					<field name="action_id" />
-					<field name="exception" />
-					<field name="create_date" />					
-					<field name="stack" colspan="4" />
-					<field name="context" colspan="4" />
-				</form>
-			</field>
-		</record>
-		<record id="sartre_exception_tree_view" model="ir.ui.view">
-			<field name="name">Action Trigger Exceptions - Tree</field>
-			<field name="model">sartre.exception</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Exceptions" editable="bottom">
-					<field name="trigger_id" />
-					<field name="exception_type" />
-					<field name="res_id" />
-					<field name="action_id" />
-					<field name="exception" />
-					<field name="stack" />
-					<field name="context" />
-					<field name="create_date" />					
-				</tree>
-			</field>
-		</record>
-        <record id="sartre_exception_search_view" model="ir.ui.view">
-            <field name="name">Action Trigger Exceptions - Search</field>
-            <field name="model">sartre.exception</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Exceptions">
-	                <group>
-	                    <field name="trigger_id"/>
-						<field name="exception_type" />
-	                	<field name="res_id"/>
-	               		<field name="action_id"/>
-	                </group>
-	                <newline/>
-	                <group expand="0" string="Group By..." groups="base.group_extended">
-	                    <filter string="Trigger" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'trigger_id'}"/>
-	                </group>
-                </search>
-            </field>
-        </record>
-		<record id="sartre_exception_action" model="ir.actions.act_window">
-			<field name="name">Trigger Exceptions</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">sartre.exception</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<menuitem action="sartre_exception_action" id="sartre_exception_menu" parent="sartre_trigger_menu" sequence="90" />
 
 	</data>
 </openerp>

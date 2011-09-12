@@ -21,3 +21,4 @@
 
 import ir_actions
 import sartre
+import sartre_handler

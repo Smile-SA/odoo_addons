@@ -21,7 +21,7 @@
 
 from osv import fields, osv
 
-class actions_server(osv.osv):
+class IrActionsServer(osv.osv):
     _inherit = 'ir.actions.server'
 
     _columns = {
@@ -34,4 +34,4 @@ class actions_server(osv.osv):
         'active': lambda * a: True,
         'run_once': lambda * a: False,
     }
-actions_server()
+IrActionsServer()
