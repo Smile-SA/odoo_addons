@@ -368,6 +368,7 @@ class SartreTrigger(osv.osv):
         cr.commit()
         logger = context['logger']
         logger.info('[%s] Action Trigger Start on %s' % (pid, context['trigger']))
+        logger.info('[%s] Context: %s' % (pid, context))
         trigger = self.browse(cr, uid, trigger_id, context)
         
         domain = []
@@ -377,7 +378,7 @@ class SartreTrigger(osv.osv):
             domain = self._build_domain_expression(cr, uid, trigger, context)
             # Search objects which validate trigger filters
             trigger_object_ids = self.pool.get(trigger.model_id.model).search(cr, uid, domain, context=context)
-            logger.info('[%s] Successful Objects Filtering - Before: %s, After: %s' % (pid, context['active_object_ids'], trigger_object_ids))
+            logger.info('[%s] Successful Objects Filtering - Before: %s, After: %s' % (pid, context.get('active_object_ids', []), trigger_object_ids))
         except Exception, e:
             stack = traceback.format_exc()
             cr.rollback()
