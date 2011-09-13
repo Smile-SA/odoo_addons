@@ -583,22 +583,26 @@ class SartreExecution(osv.osv):
             return self.create(cr, uid, {'trigger_id': trigger.id, 'model_id': trigger.model_id.id, 'res_id': res_id, 'executions_number': 1}) and True
 SartreExecution()
 
+def _get_args(method):
+    args_names = inspect.getargspec(original_method)[0]
+    args_dict = {}.fromkeys(args_names, False)
+    for index, arg in enumerate(args_names):
+        if index < len(args):
+            args_dict[arg] = args[index]
+    obj = args_dict.get('obj', False) or args_dict.get('self', False)
+    cr = args_dict.get('cursor', False) or args_dict.get('cr', False)
+    uid = args_dict.get('uid', False) or args_dict.get('user', False)
+    ids = args_dict.get('ids', []) or args_dict.get('id', [])
+    if isinstance(ids, (int, long)):
+        ids = [ids]
+    context = isinstance(args_dict.get('context'), dict) and dict(args_dict['context']) or {}
+    return obj, cr, uid, ids, context
+
 def sartre_decorator(original_method):
     def sartre_trigger(*args, **kwargs):
         # Get arguments
+        obj, cr, uid, ids, context = _get_args(original_method)
         method_name = original_method.__name__
-        args_names = inspect.getargspec(original_method)[0]
-        args_dict = {}.fromkeys(args_names, False)
-        for index, arg in enumerate(args_names):
-            if index < len(args):
-                args_dict[arg] = args[index]
-        obj = args_dict.get('obj', False) or args_dict.get('self', False)
-        cr = args_dict.get('cursor', False) or args_dict.get('cr', False)
-        uid = args_dict.get('uid', False) or args_dict.get('user', False)
-        ids = args_dict.get('ids', []) or args_dict.get('id', [])
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        context = args_dict.get('context', {}) or {}
         context['trigger'] = method_name
         trigger_obj = obj.pool.get('sartre.trigger')
         if trigger_obj and obj and cr and uid:
