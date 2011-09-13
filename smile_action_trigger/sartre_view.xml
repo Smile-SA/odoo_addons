@@ -49,7 +49,7 @@
 						</page>
 						<page string="Filters">
 							<field name="executions_max_number"/>
-							<field name="filter_ids" colspan="4" nolabel="1" mode="tree,form" on_change="onchange_get_domain_force(filter_ids, domain_force)">
+							<field name="filter_ids" colspan="4" nolabel="1" mode="tree,form">
 								<form string="Filter">
 									<group colspan="2">
 										<separator string="Domain" colspan="4" />
@@ -78,7 +78,7 @@
 									<field name="domain" />
 								</tree>
 							</field>
-							<label align="1.0" string="The rule is satisfied if all test are True (AND). Multiple triggers on same objects are joined using operator OR or force the domain by using the polish notation" colspan="4"/>
+							<label align="0.5" string="The rule is satisfied if all test are True (AND). Multiple triggers on same objects are joined using operator OR or force the domain by using the polish notation" colspan="4"/>
 							<field name="domain_force" colspan="4"/>
 						</page>
 						<page string="Actions">

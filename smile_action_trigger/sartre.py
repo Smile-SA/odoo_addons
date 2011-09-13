@@ -125,14 +125,6 @@ class SartreTrigger(osv.osv):
                 res[trigger.id] = trigger.on_date_type_display1
         return res
 
-    def onchange_get_domain_force(self, cr, uid, ids, filter_ids, domain_force, context=None):
-        """Build domain expression from filters"""
-        domain_force = domain_force and eval(domain_force) or []
-        if filter_ids and isinstance(filter_ids, (list, tuple)):
-            for filter_ in self.pool.get('sartre.filter').read(cr, uid, filter_ids, ['domain'], context=context):
-                domain_force.extend(filter_['domain'] and eval(filter_['domain']) or [])
-        return {'value': {'domain_force': domain_force}}
-
     def onchange_model_id(self, cr, uid, ids, model_id, on_function, on_other, context=None):
         """Dynamic domain for the field on_function_field_id"""
         res = {'value': {}}
@@ -178,7 +170,7 @@ class SartreTrigger(osv.osv):
         'interval_type': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), ('work_days', 'Work Days'), ('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
         'nextcall': fields.datetime("Next Call"),
         'filter_ids': fields.one2many('sartre.filter', 'trigger_id', "Filters", help="The trigger is satisfied if all filters are True"),
-        'domain_force': fields.char('Force Domain', size=250),
+        'domain_force': fields.char('Force Domain', size=256, help="Warning: using a Force domain makes all other filters useless"),
         'action_ids': fields.many2many('ir.actions.server', 'sartre_trigger_server_action_rel', 'trigger_id', 'action_id', "Actions"),
         'executions_max_number': fields.integer('Max executions', help="Number of time actions are runned, indicates that actions will always be executed"),
         'log_ids': fields.one2many('sartre.log', 'trigger_id', string="Logs", readonly=True),
@@ -373,7 +365,7 @@ class SartreTrigger(osv.osv):
         logger.info('[%s] Trigger on %s' % (pid, context['trigger']))
         logger.info('[%s] Context: %s' % (pid, context))
         trigger = self.browse(cr, uid, trigger_id, context)
-        
+
         domain = []
         trigger_object_ids = []
         try:
@@ -559,7 +551,7 @@ class SartreLog(osv.osv):
     _name = 'sartre.log'
     _description = 'Smile Action Trigger Log'
     _rec_name = 'message'
-    
+
     _order = 'create_date desc'
 
     _columns = {
