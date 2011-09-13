@@ -583,8 +583,8 @@ class SartreExecution(osv.osv):
             return self.create(cr, uid, {'trigger_id': trigger.id, 'model_id': trigger.model_id.id, 'res_id': res_id, 'executions_number': 1}) and True
 SartreExecution()
 
-def _get_args(method):
-    args_names = inspect.getargspec(original_method)[0]
+def _get_args(method, args, kwargs):
+    args_names = inspect.getargspec(method)[0]
     args_dict = {}.fromkeys(args_names, False)
     for index, arg in enumerate(args_names):
         if index < len(args):
@@ -595,22 +595,22 @@ def _get_args(method):
     ids = args_dict.get('ids', []) or args_dict.get('id', [])
     if isinstance(ids, (int, long)):
         ids = [ids]
+    field_name = args_dict.get('name', '')
     context = isinstance(args_dict.get('context'), dict) and dict(args_dict['context']) or {}
-    return obj, cr, uid, ids, context
+    return obj, cr, uid, ids, field_name, context
 
 def sartre_decorator(original_method):
     def sartre_trigger(*args, **kwargs):
         # Get arguments
-        obj, cr, uid, ids, context = _get_args(original_method)
+        obj, cr, uid, ids, field_name, context = _get_args(original_method, args, kwargs)
         method_name = original_method.__name__
         context['trigger'] = method_name
         trigger_obj = obj.pool.get('sartre.trigger')
-        if trigger_obj and obj and cr and uid:
+        trigger_ids = []
+        if trigger_obj:
             # Case: trigger on function
-            field_name = ''
             calculation_method = False
             if method_name in ('get', 'set') and original_method.im_class == fields.function:
-                field_name = args_dict.get('name', '')
                 calculation_method = method_name
                 method_name = 'function'
             # Search triggers
@@ -625,7 +625,7 @@ def sartre_decorator(original_method):
         # Execute original method
         result = original_method(*args, **kwargs)
         # Run triggers if exists
-        if trigger_obj and obj and cr and uid and trigger_ids and method_name != 'unlink':
+        if trigger_obj and trigger_ids and method_name != 'unlink':
             # Case: trigger on create
             if method_name == 'create':
                 context['active_object_ids'] = [result]
