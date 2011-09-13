@@ -42,7 +42,7 @@ def _get_browse_record_dict(obj, cr, uid, ids, fields_list=None):
     if isinstance(ids, (int, long)):
         ids = [ids]
     if fields_list is None:
-        fields_list = obj._columns.keys()
+        fields_list = [f for f in obj._columns if obj._columns[f]._type != 'binary']
     browse_record_dict = {}
     for object_inst in obj.browse(cr, uid, ids):
         for field in fields_list:
@@ -269,7 +269,7 @@ class SartreTrigger(osv.osv):
 
     def _build_domain_expression(self, cr, uid, trigger, context):
         """Build domain expression"""
-        # To manage planned execution        
+        # To manage planned execution
         if not context.get('active_object_ids', []):
             context['active_object_ids'] = self.pool.get(trigger.model_id.model).search(cr, uid, [], context=context)
         operator_obj = self.pool.get('sartre.operator')
@@ -368,7 +368,6 @@ class SartreTrigger(osv.osv):
 
     def _run_now(self, cr, uid, trigger_id, context):
         logger = SartreLogger(uid, trigger_id)
-
         # Get sequence in order to differentiate logs per run
         pid = self._get_pid(cr, uid, trigger_id, context)
         if not pid:
@@ -376,7 +375,7 @@ class SartreTrigger(osv.osv):
             return
 
         # Get sequence in order to differentiate logs per run
-        logger.debug('[%s] Trigger on %s' % (pid, context['trigger']))
+        logger.debug('[%s] Trigger on %s' % (pid, context.get('trigger', 'manual')))
         logger.debug('[%s] Context: %s' % (pid, context))
         trigger = self.browse(cr, uid, trigger_id, context)
 
@@ -388,7 +387,6 @@ class SartreTrigger(osv.osv):
         except Exception, e:
             logger.exception('[%s] Objects Filtering failed: %s' % (pid, _get_exception_message(e)))
             raise e
-
         # Execute server actions for filtered objects
         if filtered_object_ids:
             logger.info('[%s] Trigger on %s for objects %s,%s' % (pid, context['trigger'], trigger.model_id.model, filtered_object_ids))
