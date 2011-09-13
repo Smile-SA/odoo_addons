@@ -386,7 +386,7 @@ class SartreTrigger(osv.osv):
             filtered_object_ids = self._get_filtered_object_ids(cr, uid, trigger, context)
             logger.debug('[%s] Successful Objects Filtering: %s' % (pid, filtered_object_ids))
         except Exception, e:
-            logger.exception_with_stack('[%s] Objects Filtering failed: %s' % (pid, _get_exception_message(e)))
+            logger.exception('[%s] Objects Filtering failed: %s' % (pid, _get_exception_message(e)))
             raise e
 
         # Execute server actions for filtered objects
@@ -402,7 +402,7 @@ class SartreTrigger(osv.osv):
                             self.pool.get('ir.actions.server').run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context)
                         logger.time_info('[%s] Successful Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
                     except Exception, e:
-                        logger.exception_with_stack('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
+                        logger.exception('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
                         #TODO: add savepoint to rollback until the begin of Sartre
             if trigger.executions_max_number:
                 for object_id in filtered_object_ids:

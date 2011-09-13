@@ -67,6 +67,20 @@ logger = logging.getLogger("smile_action_trigger")
 handler = SartreDBHandler()
 logger.addHandler(handler)
 
+def add_timing(original_method):
+    def new_method(self, msg):
+        delay = datetime.datetime.now() - self.trigger_start
+        msg += " after %sh %smin %ss" % tuple(str(delay).split(':'))
+        return original_method(self, msg)
+    return new_method
+
+def add_trace(original_method):
+    def new_method(self, msg):
+        stack = traceback.format_exc()
+        msg += '\n%s' % stack
+        return original_method(self, msg)
+    return new_method
+
 class SartreLogger():
 
     def __init__(self, uid, trigger_id):
@@ -86,31 +100,25 @@ class SartreLogger():
     def warning(self, msg):
         self.logger.warning(msg, self.logger_args)
 
-    def error(self, msg):
-        self.logger.error(msg, self.logger_args)
-
-    def critical(self, msg):
-        self.logger.critical(msg, self.logger_args)
-
     def log(self, msg):
         self.logger.log(msg, self.logger_args)
 
+    @add_trace
+    def error(self, msg):
+        self.logger.error(msg, self.logger_args)
+
+    @add_trace
+    def critical(self, msg):
+        self.logger.critical(msg, self.logger_args)
+
+    @add_trace
     def exception(self, msg):
         self.logger.exception(msg, self.logger_args)
 
-    def exception_with_stack(self, msg):
-        stack = traceback.format_exc()
-        self.logger.exception('%s\n%s' % (msg, stack), self.logger_args)
-
-    def _add_timing(self, msg):
-        delay = datetime.datetime.now() - self.trigger_start
-        msg += " after %sh %smin %ss" % tuple(str(delay).split(':'))
-        return msg
-
+    @add_timing
     def time_info(self, msg):
-        msg = self._add_timing_to_msg(msg)
         self.logger.info(msg, self.logger_args)
 
+    @add_timing
     def time_debug(self, msg):
-        msg = self._add_timing_to_msg(msg)
         self.logger.debug(msg, self.logger_args)
