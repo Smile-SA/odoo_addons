@@ -22,6 +22,7 @@
 import datetime
 import logging
 import threading
+import traceback
 
 import pooler
 import tools
@@ -40,7 +41,7 @@ class SartreDBHandler(logging.Handler):
             cr = self._dbname_to_cr[dbname] = db.cursor()
         trigger_id = record.args and isinstance(record.args, dict) and record.args.get('trigger_id', False) or False
         uid = record.args and isinstance(record.args, dict) and record.args.get('uid', False) or False
-        
+
         if uid and pool.get('res.users').exists(cr, 1, uid):
             sartre_log_obj = pool.get('sartre.log')
             sartre_log_obj.create(cr, uid, {
@@ -67,7 +68,7 @@ handler = SartreDBHandler()
 logger.addHandler(handler)
 
 class SartreLogger():
-    
+
     def __init__(self, uid, trigger_id):
         assert isinstance(uid, (int, long)), 'uid should be an integer'
         self.logger = logging.getLogger("smile_action_trigger")
@@ -76,25 +77,40 @@ class SartreLogger():
         self.trigger_start = datetime.datetime.now()
         self.logger_args = {'trigger_id': trigger_id, 'uid': uid}
 
+    def debug(self, msg):
+        self.logger.debug(msg, self.logger_args)
+
     def info(self, msg):
         self.logger.info(msg, self.logger_args)
 
     def warning(self, msg):
         self.logger.warning(msg, self.logger_args)
-        
+
     def error(self, msg):
         self.logger.error(msg, self.logger_args)
-        
+
     def critical(self, msg):
         self.logger.critical(msg, self.logger_args)
-        
+
     def log(self, msg):
         self.logger.log(msg, self.logger_args)
 
     def exception(self, msg):
         self.logger.exception(msg, self.logger_args)
-        
-    def time_info(self, msg):
+
+    def exception_with_stack(self, msg):
+        stack = traceback.format_exc()
+        self.logger.exception('%s\n%s' % (msg, stack), self.logger_args)
+
+    def _add_timing(self, msg):
         delay = datetime.datetime.now() - self.trigger_start
         msg += " after %sh %smin %ss" % tuple(str(delay).split(':'))
+        return msg
+
+    def time_info(self, msg):
+        msg = self._add_timing_to_msg(msg)
         self.logger.info(msg, self.logger_args)
+
+    def time_debug(self, msg):
+        msg = self._add_timing_to_msg(msg)
+        self.logger.debug(msg, self.logger_args)

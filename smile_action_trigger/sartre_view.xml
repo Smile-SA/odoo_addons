@@ -38,6 +38,7 @@
 							<group string="Cron Execution Periodicity" colspan="4" attrs="{'invisible':[('on_date','!=',True)]}">
 								<field name="interval_number" nolabel="1" attrs="{'required':[('on_date','=',True)]}" />
 								<field name="interval_type" nolabel="1" attrs="{'required':[('on_date','=',True)]}" />
+                                <field name="nextcall" attrs="{'required':[('on_date','=',True)]}" />
 							</group>
 							<group string="Trigger on function field" colspan="4" attrs="{'invisible':[('on_function','!=',True)]}">
 								<field name="on_function_field_id" attrs="{'required':[('on_function','=',True)]}" />

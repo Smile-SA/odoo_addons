@@ -331,86 +331,83 @@ class SartreTrigger(osv.osv):
         return domain
 
     def run_now(self, cr, uid, ids, context=None):
-        threaded_run = threading.Thread(target=self._run_now_with_new_cursor, args=(cr.dbname, uid, ids, context))
-        threaded_run.start()
-        return True
-
-    def _run_now_with_new_cursor(self, dbname, uid, ids, context):
+        """Execute now server actions"""
         context = context or {}
         context = dict(context) # Can't use deepcopy because of browse_record_list
         context.setdefault('active_test', False)
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for trigger_id in ids:
-            try:
-                cr = pooler.get_db(dbname).cursor()
-            except:
-                logger = SartreLogger(uid, trigger_id)
-                logger.critical('Action Trigger failed: impossible to get a cursor for dbname %s' % (dbname))
-                return
-            try:
-                self._run_now(cr, uid, trigger_id, context)
-            finally:
-                cr.close()
-        return
+        triggers = self.read(cr, uid, ids, ['test_mode'], context)
+        triggers_in_test_mode = [trigger for trigger in triggers if trigger['test_mode']]
+        if triggers_in_test_mode:
+            test_cursor = pooler.get_db(cr.dbname).cursor()
+        try:
+            for trigger in triggers:
+                cursor = trigger['test_mode'] and test_cursor or cr
+                self._run_now(cursor, uid, trigger['id'], context)
+        finally:
+            if triggers_in_test_mode:
+                test_cursor.close()
+        return True
+
+    def _get_pid(self, cr, uid, trigger_id, context):
+        pid = None
+        try:
+            cursor = pooler.get_db(cr.dbname).cursor()
+            pid = self.pool.get('ir.sequence').get(cursor, uid, 'sartre.trigger')
+            cursor.commit()
+        finally:
+            cursor.close()
+        return pid
+
+    def _get_filtered_object_ids(self, cr, uid, trigger, context):
+        # Build domain expression
+        domain = self._build_domain_expression(cr, uid, trigger, context)
+        # Search objects which validate trigger filters
+        return self.pool.get(trigger.model_id.model).search(cr, uid, domain, context=context)
 
     def _run_now(self, cr, uid, trigger_id, context):
-        """Execute now server actions"""
-        # Get sequence in order to differentiate logs per run
-        pid = self.pool.get('ir.sequence').get(cr, uid, 'sartre.trigger')
-        cr.commit()
+        logger = SartreLogger(uid, trigger_id)
 
         # Get sequence in order to differentiate logs per run
-        logger = SartreLogger(uid, trigger_id)
-        logger.info('[%s] Trigger on %s' % (pid, context['trigger']))
-        logger.info('[%s] Context: %s' % (pid, context))
+        pid = self._get_pid(cr, uid, trigger_id, context)
+        if not pid:
+            logger.critical('Action Trigger failed: impossible to get a pid for dbname %s' % (cr.dbname))
+            return
+
+        # Get sequence in order to differentiate logs per run
+        logger.debug('[%s] Trigger on %s' % (pid, context['trigger']))
+        logger.debug('[%s] Context: %s' % (pid, context))
         trigger = self.browse(cr, uid, trigger_id, context)
 
-        domain = []
-        trigger_object_ids = []
+        # Filter objects
+        filtered_object_ids = []
         try:
-            # Build domain expression
-            domain = self._build_domain_expression(cr, uid, trigger, context)
-            # Search objects which validate trigger filters
-            trigger_object_ids = self.pool.get(trigger.model_id.model).search(cr, uid, domain, context=context)
-            logger.info('[%s] Successful Objects Filtering: %s' % (pid, trigger_object_ids))
+            filtered_object_ids = self._get_filtered_object_ids(cr, uid, trigger, context)
+            logger.debug('[%s] Successful Objects Filtering: %s' % (pid, filtered_object_ids))
         except Exception, e:
-            stack = traceback.format_exc()
-            cr.rollback()
-            logger.exception('[%s] Objects Filtering failed: %s\n%s' % (pid, _get_exception_message(e), tools.ustr(stack)))
-            return True
-        # Execute server actions
-        if trigger_object_ids:
-            context.setdefault('triggers', {}).setdefault(trigger.id, []).extend(trigger_object_ids)
-            ir_actions_server_pool = self.pool.get('ir.actions.server')
+            logger.exception_with_stack('[%s] Objects Filtering failed: %s' % (pid, _get_exception_message(e)))
+            raise e
+
+        # Execute server actions for filtered objects
+        if filtered_object_ids:
+            logger.info('[%s] Trigger on %s for objects %s,%s' % (pid, context['trigger'], trigger.model_id.model, filtered_object_ids))
+            context.setdefault('triggers', {}).setdefault(trigger.id, []).extend(filtered_object_ids)
             for action in trigger.action_ids:
+                active_ids = action.run_once and [filtered_object_ids] or filtered_object_ids
                 if action.active:
                     try:
-                        if action.run_once:
-                            # Sartre case where you run once for all instances
-                            context['active_id'] = trigger_object_ids
-                            ir_actions_server_pool.run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context)
-                            logger.info('[%s] Successful Action: %s - Objects list: %s,%s' % (pid, action.name, action.model_id.model, trigger_object_ids))
-                        else:
-                            # Sartre case where you run once per instance
-                            for object_id in trigger_object_ids:
-                                context['active_id'] = object_id
-                                ir_actions_server_pool.run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context)
-                                logger.info('[%s] Successful Action: %s - Object: %s,%s' % (pid, action.name, action.model_id.model, object_id))
-                        if trigger.executions_max_number:
-                            for object_id in trigger_object_ids:
-                                self.pool.get('sartre.execution').update_executions_counter(cr, uid, trigger, object_id)
+                        for active_id in active_ids:
+                            context['active_id'] = active_id
+                            self.pool.get('ir.actions.server').run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context)
+                        logger.time_info('[%s] Successful Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
                     except Exception, e:
-                        stack = traceback.format_exc()
-                        cr.rollback()
-                        logger.exception('[%s] Action failed: %s - %s\n%s' % (pid, action.name, _get_exception_message(e), tools.ustr(stack)))
-                        break
-        if trigger.test_mode:
-            cr.rollback()
-            logger.time_info('[%s] Test rollback' % (pid,))
-        else:
-            cr.commit()
-            logger.time_info('[%s] End' % (pid,))
+                        logger.exception_with_stack('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
+                        #TODO: add savepoint to rollback until the begin of Sartre
+            if trigger.executions_max_number:
+                for object_id in filtered_object_ids:
+                    self.pool.get('sartre.execution').update_executions_counter(cr, uid, trigger, object_id)
+        logger.time_debug('[%s] End' % (pid,))
         return True
 
     def check_triggers(self, cr, uid, context=None):
@@ -442,7 +439,6 @@ class SartreTrigger(osv.osv):
                     if trigger.on_function_field_id.name not in field_name or trigger.on_function_type not in [calculation_method, 'both']:
                         trigger_ids.remove(trigger_id)
         return trigger_ids
-
 SartreTrigger()
 
 class SartreFilter(osv.osv):
