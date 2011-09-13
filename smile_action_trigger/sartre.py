@@ -145,6 +145,12 @@ class SartreTrigger(osv.osv):
                         model_methods_obj.create(cr, uid, {'name': method, 'model_id': model_id})
         return res
 
+    def _get_logs(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for trigger_id in ids:
+            res[trigger_id] = self.pool.get('sartre.log').search(cr, uid, [('trigger_id', '=', trigger_id)], context=context)
+        return res
+
     _columns = {
         'name': fields.char("Name", size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
@@ -173,7 +179,7 @@ class SartreTrigger(osv.osv):
         'domain_force': fields.char('Force Domain', size=256, help="Warning: using a Force domain makes all other filters useless"),
         'action_ids': fields.many2many('ir.actions.server', 'sartre_trigger_server_action_rel', 'trigger_id', 'action_id', "Actions"),
         'executions_max_number': fields.integer('Max executions', help="Number of time actions are runned, indicates that actions will always be executed"),
-        'log_ids': fields.one2many('sartre.log', 'trigger_id', string="Logs", readonly=True),
+        'log_ids': fields.function(_get_logs, method=True, type='one2many', relation='sartre.log', string="Logs"),
         'test_mode': fields.boolean('Test Mode'),
     }
 
@@ -551,7 +557,7 @@ class SartreLog(osv.osv):
     _columns = {
         'create_date': fields.datetime('Date', readonly=True),
         'create_uid': fields.many2one('res.users', 'User', readonly=True),
-        'trigger_id': fields.many2one('sartre.trigger', 'Action Trigger', readonly=True, ondelete='cascade'),
+        'trigger_id': fields.integer('sartre.trigger', 'Action Trigger', readonly=True,),
         'level': fields.char('Level', size=16, readonly=True),
         'message': fields.text('Message', readonly=True),
     }
