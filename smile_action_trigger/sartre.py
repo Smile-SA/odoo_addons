@@ -395,7 +395,7 @@ class SartreTrigger(osv.osv):
             raise e
         # Execute server actions for filtered objects
         if filtered_object_ids:
-            logger.info('[%s] Trigger on %s for objects %s,%s' % (pid, context['trigger'], trigger.model_id.model, filtered_object_ids))
+            logger.info('[%s] Trigger on %s for objects %s,%s' % (pid, context.get('trigger', 'manual'), trigger.model_id.model, filtered_object_ids))
             context.setdefault('triggers', {}).setdefault(trigger.id, []).extend(filtered_object_ids)
             for action in trigger.action_ids:
                 active_ids = action.run_once and [filtered_object_ids] or filtered_object_ids
