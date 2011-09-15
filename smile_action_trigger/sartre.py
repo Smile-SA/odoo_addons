@@ -44,7 +44,7 @@ def _get_browse_record_dict(obj, cr, uid, ids, fields_list=None):
     if fields_list is None:
         fields_list = [f for f in obj._columns if obj._columns[f]._type != 'binary']
     browse_record_dict = {}
-    for object_inst in obj.browse(cr, uid, ids):
+    for object_inst in obj.browse(cr, 1, ids):
         for field in fields_list:
             browse_record_dict.setdefault(object_inst.id, {})[field] = getattr(object_inst, field)
     return browse_record_dict
