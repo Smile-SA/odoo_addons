@@ -110,6 +110,12 @@ class SartreOperator(osv.osv):
         return res
 SartreOperator()
 
+def cache_restarter(method):
+    def restart(self, cr, mode):
+        self.get('sartre.trigger').cache_restart(cr)
+        return method(self, cr, mode)
+    return restart
+
 class SartreTrigger(osv.osv):
     _name = 'sartre.trigger'
     _description = 'Action Trigger'
@@ -230,8 +236,12 @@ class SartreTrigger(osv.osv):
             m_class = self.pool.get(trigger.model_id.model)
             m_name = trigger.on_other_method
             if hasattr(m_class, m_name):
-                setattr(m_class, m_name, sartre_decorator(getattr(m_class, m_name)))
+                setattr(m_class.__class__, m_name, sartre_decorator(getattr(m_class.__class__, m_name)))
         return True
+
+    def __init__(self, pool, cr):
+        super(SartreTrigger, self).__init__(pool, cr)
+        setattr(osv.osv_pool, 'init_set', cache_restarter(getattr(osv.osv_pool, 'init_set')))
 
     def create(self, cr, uid, vals, context=None):
         trigger_id = super(SartreTrigger, self).create(cr, uid, vals, context)
@@ -356,7 +366,7 @@ class SartreTrigger(osv.osv):
                 test_cursor.close()
         return True
 
-    def _get_pid(self, cr, uid, trigger_id, context):
+    def _get_pid(self, cr, uid):
         pid = None
         try:
             cursor = pooler.get_db(cr.dbname).cursor()
@@ -375,7 +385,7 @@ class SartreTrigger(osv.osv):
     def _run_now(self, cr, uid, trigger_id, context):
         logger = SartreLogger(uid, trigger_id)
         # Get sequence in order to differentiate logs per run
-        pid = self._get_pid(cr, uid, trigger_id, context)
+        pid = self._get_pid(cr, uid)
         if not pid:
             logger.critical('Action Trigger failed: impossible to get a pid for dbname %s' % (cr.dbname))
             return
