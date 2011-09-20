@@ -425,7 +425,6 @@ class SartreTrigger(osv.osv):
 
     def _run_action_for_object_ids(self, cr, uid, action, object_ids, context):
         active_ids = self._build_id_groups(cr, uid, action, object_ids, context)
-        print active_ids
         for active_id in active_ids:
             context['active_id'] = active_id
             self.pool.get('ir.actions.server').run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context)
