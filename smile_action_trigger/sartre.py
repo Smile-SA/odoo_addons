@@ -410,12 +410,9 @@ class SartreTrigger(osv.osv):
             logger.info('[%s] Trigger on %s for objects %s,%s' % (pid, context.get('trigger', 'manual'), trigger.model_id.model, filtered_object_ids))
             context.setdefault('triggers', {}).setdefault(trigger.id, []).extend(filtered_object_ids)
             for action in trigger.action_ids:
-                active_ids = action.run_once and [filtered_object_ids] or filtered_object_ids
                 if action.active:
                     try:
-                        for active_id in active_ids:
-                            context['active_id'] = active_id
-                            self.pool.get('ir.actions.server').run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context)
+                        self._run_action_for_object_ids(cr, uid, action, filtered_object_ids, context)
                         logger.time_info('[%s] Successful Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
                     except Exception, e:
                         logger.exception('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
@@ -425,6 +422,33 @@ class SartreTrigger(osv.osv):
                     self.pool.get('sartre.execution').update_executions_counter(cr, uid, trigger, object_id)
         logger.time_debug('[%s] End' % (pid,))
         return True
+
+    def _run_action_for_object_ids(self, cr, uid, action, object_ids, context):
+        active_ids = self._build_id_groups(cr, uid, action, object_ids, context)
+        print active_ids
+        for active_id in active_ids:
+            context['active_id'] = active_id
+            self.pool.get('ir.actions.server').run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context)
+
+    def _build_id_groups(self, cr, uid, action, object_ids, context):
+        if not action.run_once:
+            # object_ids passed one by one
+            return object_ids
+        elif not action.group_by:
+            # object_ids passed all together
+            return [object_ids]
+        else:
+            #object_ids grouped by identical 'group_by eval value'
+            action_objects = self.pool.get(action.model_id.model).browse(cr, uid, object_ids, context)
+            eval_to_ids = {}
+            for action_object in action_objects:
+                value = eval(action.group_by, {
+                                               'object': action_object,
+                                               'context': context,
+                                               'time':time, })
+                eval_to_ids.setdefault(value, []).append(action_object.id)
+            return eval_to_ids.values()
+
 
     def check_triggers(self, cr, uid, context=None):
         """Call the scheduler to check date based trigger triggers"""
