@@ -106,6 +106,27 @@
 
 		<menuitem action="action_export_template" id="menu_export_template"
 			parent="menu_exports" />
+            
+            
+        <record id="action_exports_from_template" model="ir.actions.act_window">
+            <field name="name">Exports</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.model.export</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('export_tmpl_id','=',active_id)]</field>
+            <field name="target">current</field>
+        </record>
+            
+            
+        <record model="ir.values" id="export_template_to_exports">
+            <field name="name">Exports</field>
+            <field name="key">action</field>
+            <field name="key2">client_action_relate</field>
+            <field name="model">ir.model.export.template</field>
+            <field name="object" eval="1" />
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('smile_export.action_exports_from_template'))"/>
+        </record>
 
 
 	</data>
