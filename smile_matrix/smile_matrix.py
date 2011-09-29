@@ -141,13 +141,13 @@ class smile_matrix(osv.osv_memory):
                             row_index = name_fragments[1];
                             // Select all fields of the columns we clicked in and sum them up
                             var column_total = 0;
-                            $("input[name^='cell_'][name$='_" + column_index + "']").each(function(){
+                            $("input[name^='cell_'][name$='_" + column_index + "']:not(:disabled)").each(function(){
                                 column_total += parseFloat($(this).val());
                             });
                             $("tfoot span.column_total_" + column_index).text(column_total);
                             // Select all fields of the row we clicked in and sum them up
                             var row_total = 0;
-                            $("input[name^='cell_" + row_index + "_']").each(function(){
+                            $("input[name^='cell_" + row_index + "_']:not(:disabled)").each(function(){
                                 row_total += parseFloat($(this).val());
                             });
                             $("tbody span.row_total_" + row_index).text(row_total);
