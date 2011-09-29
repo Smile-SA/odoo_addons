@@ -70,7 +70,7 @@ class smile_matrix(osv.osv_memory):
             for line in project.line_ids:
                 for month in self._get_project_months(project):
                     month_str = self._month_to_str(month)
-                    result['line_%s_%s' % (line.id, month_str)] = {'string': month_str, 'type':'integer', 'required':True, 'readonly': False}
+                    result['cell_%s_%s' % (line.id, month_str)] = {'string': month_str, 'type':'integer', 'required':True, 'readonly': False}
         return result
 
     def _month_to_str(self, month):
@@ -113,34 +113,34 @@ class smile_matrix(osv.osv_memory):
                 </style>
                 <script type="application/javascript">
                     $(document).ready(function(){
-                        $("input[name^='line_']").change(function(){
+                        $("input[name^='cell_']").change(function(){
                             name_fragments = $(this).attr("id").split("_");
                             column_index = name_fragments[2] + '_' + name_fragments[3];
                             row_index = name_fragments[1];
                             // Select all fields of the columns we clicked in and sum them up
-                            var column_sum = 0;
-                            $("input[name^='line_'][name$='_" + column_index + "']").each(function(){
-                                column_sum += parseFloat($(this).val());
+                            var column_total = 0;
+                            $("input[name^='cell_'][name$='_" + column_index + "']").each(function(){
+                                column_total += parseFloat($(this).val());
                             });
-                            $("tfoot span.column_sum_" + column_index).text(column_sum);
+                            $("tfoot span.column_total_" + column_index).text(column_total);
                             // Select all fields of the row we clicked in and sum them up
-                            var row_sum = 0;
-                            $("input[name^='line_" + row_index + "_']").each(function(){
-                                row_sum += parseFloat($(this).val());
+                            var row_total = 0;
+                            $("input[name^='cell_" + row_index + "_']").each(function(){
+                                row_total += parseFloat($(this).val());
                             });
-                            $("tbody span.row_sum_" + row_index).text(row_sum);
+                            $("tbody span.row_total_" + row_index).text(row_total);
                             // Compute the grand-total
                             var grand_total = 0;
-                            $("span[class^='column_sum_']").each(function(){
+                            $("span[class^='column_total_']").each(function(){
                                 grand_total += parseFloat($(this).text());
                             });
                             $("#grand_total").text(grand_total);
                         });
-                        $("tbody tr:first input[name^='line_']").trigger('change');
+                        $("tbody tr:first input[name^='cell_']").trigger('change');
 
                         // Replace all integer fields by a button template, then hide the original field
                         var button_template = $("#button_template");
-                        var cells = $("input[name^='line_']");
+                        var cells = $("input[name^='cell_']");
                         cells.each(function(i, cell){
                             var $cell = $(cell);
                             $cell.after($(button_template).clone().attr('id', 'button_' + $cell.attr("id")));
@@ -186,7 +186,7 @@ class smile_matrix(osv.osv_memory):
                         <tr>
                             <td>Total</td>
                             %for month in months:
-                                <td><span class="column_sum_${month}">NaN</span></td>
+                                <td><span class="column_total_${month}">NaN</span></td>
                             %endfor
                             <td><span id="grand_total">NaN</span></td>
                         </tr>
@@ -197,10 +197,10 @@ class smile_matrix(osv.osv_memory):
                                 <td>${line.name}</td>
                                 %for month in months:
                                     <td>
-                                        <field name="${'line_%s_%s' % (line.id, month)}"/>
+                                        <field name="${'cell_%s_%s' % (line.id, month)}"/>
                                     </td>
                                 %endfor
-                                <td><span class="row_sum_${line.id}">NaN</span></td>
+                                <td><span class="row_total_${line.id}">NaN</span></td>
                             </tr>
                         %endfor
                     </tbody>

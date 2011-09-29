@@ -48,7 +48,7 @@ class smile_project(osv.osv):
         for month in self.pool.get('smile.matrix')._get_project_months(project):
             month_str = self.pool.get('smile.matrix')._month_to_str(month)
             for line in project.line_ids:
-                vals['line_%s_%s' % (line.id, month_str)] = line.price
+                vals['cell_%s_%s' % (line.id, month_str)] = line.price
 
         new_context = context.copy()
         new_context['project_id'] = ids[0]
