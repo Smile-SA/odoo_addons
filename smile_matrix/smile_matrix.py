@@ -129,6 +129,12 @@ class smile_matrix(osv.osv_memory):
                                 row_sum += parseFloat($(this).val());
                             });
                             $("tbody span.row_sum_" + row_index).text(row_sum);
+                            // Compute the grand-total
+                            var grand_total = 0;
+                            $("span[class^='column_sum_']").each(function(){
+                                grand_total += parseFloat($(this).text());
+                            });
+                            $("#grand_total").text(grand_total);
                         });
                         $("tbody tr:first input[name^='line_']").trigger('change');
 
@@ -182,7 +188,7 @@ class smile_matrix(osv.osv_memory):
                             %for month in months:
                                 <td><span class="column_sum_${month}">NaN</span></td>
                             %endfor
-                            <td><span>XX</span></td>
+                            <td><span id="grand_total">NaN</span></td>
                         </tr>
                     </tfoot>
                     <tbody>
