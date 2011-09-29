@@ -96,6 +96,16 @@ class smile_matrix(osv.osv_memory):
                         border-bottom: 1px dotted #999;
                         padding: .2em;
                     }
+
+                    table#smile_matrix .button.increment {
+                        /* TODO Why this is not working ??? */
+                        width: 2em;
+                    }
+
+                    .wrapper.action-buttons {
+                        diplay:none;
+                    }
+
                 </style>
                 <script type="application/javascript">
                     $(document).ready(function(){
@@ -106,13 +116,46 @@ class smile_matrix(osv.osv_memory):
                             // Select all fields of the columns we clicked in
                             var column_sum = 0;
                             $("input[name^='line_'][name$='_" + column_index + "']").each(function(){
-                                column_sum += parseInt($(this).val());
+                                column_sum += parseFloat($(this).val());
                             });
                             $("tfoot span.column_sum_" + column_index).text(column_sum);
                         });
                         $("tbody tr:first input[name^='line_']").trigger('change');
+
+                        // Replace all integer fields by a button template, then hide the original field
+                        var button_template = $("#button_template");
+                        var cells = $("input[name^='line_']");
+                        cells.each(function(i, cell){
+                            var $cell = $(cell);
+                            $cell.after($(button_template).clone().addClass($cell.attr("id")));
+                            $cell.hide();
+                        });
+                        // Hide the button template
+                        $(button_template).hide();
+
+                        // Cycles buttons
+                        var cycling_values = ['0', '0.5', '1'];
+                        var buttons = $('.button.increment:not(.disabled)');
+                        buttons.click(function(){
+                            var button_value_tag = $(this).parent().find('input');
+                            var button_label_tag = $(this);
+                            var current_index = $.inArray(button_value_tag.val(), cycling_values);
+                            var new_index = 0;
+                            if(!isNaN(current_index)) {
+                                new_index = (current_index + 1) % cycling_values.length;
+                            };
+                            var new_value = cycling_values[new_index];
+                            button_label_tag.text(new_value);
+                            button_value_tag.val(new_value);
+                            button_value_tag.trigger('change');
+                        });
+                        buttons.trigger('click');
+
                     });
                 </script>
+                <span id="button_template" class="button increment">
+                    Button template
+                </span>
                 <table id="smile_matrix">
                     <thead>
                         <tr>
@@ -145,6 +188,7 @@ class smile_matrix(osv.osv_memory):
                 </table>
                 <button string="Ok" name="validate" type="object"/>
             </html>
+            <button string="Truc" name="machin" type="object"/>
         </form>
         """
 
@@ -163,6 +207,9 @@ class smile_matrix(osv.osv_memory):
             raise osv.except_osv('Error', 'len(ids) !=1')
         print self.read(cr, uid, ids[0])
         return {'type': 'ir.actions.act_window_close'}
+
+    def machin(self, cr, uid, ids, context=None):
+        return True
 
     def create(self, cr, uid, vals, context=None):
         proj_fields = self.fields_get(cr, uid, context=context)
