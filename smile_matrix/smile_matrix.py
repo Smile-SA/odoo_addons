@@ -93,11 +93,6 @@ class smile_matrix(osv.osv_memory):
                     result['cell_%s_%s' % (line.id, date_str)] = field_props
         return result
 
-    def _month_to_str(self, month):
-        year = month[0]
-        month = str(month[1]).zfill(2)
-        return "%s_%s" % (year,month)
-
     mako_template = """
         <%
             import datetime
