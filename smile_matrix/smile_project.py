@@ -70,10 +70,12 @@ class smile_project(osv.osv):
 
     ## Custom methods
 
-    def get_date_range(self, start_date, end_date, day_delta=1):
+    def get_date_range(self, project, day_delta=1):
         """ Get a list of date objects covering the given date range
         """
         date_range = []
+        start_date = project.start_date
+        end_date = project.end_date
         if not isinstance(start_date, (datetime.date, datetime.datetime)):
             start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
         if not isinstance(end_date, (datetime.date, datetime.datetime)):
@@ -109,10 +111,9 @@ class smile_project(osv.osv):
             raise osv.except_osv('Error', 'len(ids) !=1')
         project = self.browse(cr, uid, ids[0], context)
         vals = {}
-        for month in self.pool.get('smile.matrix')._get_project_months(project):
-            month_str = self.pool.get('smile.matrix')._month_to_str(month)
+        for date_str in self.pool.get('smile.matrix').get_date_range_as_str(project):
             for line in project.line_ids:
-                vals['cell_%s_%s' % (line.id, month_str)] = line.price
+                vals['cell_%s_%s' % (line.id, date_str)] = line.price
         new_context = context.copy()
         new_context['project_id'] = ids[0]
         matrix_id = self.pool.get('smile.matrix').create(cr, uid, vals, new_context)
@@ -157,8 +158,7 @@ class smile_project_line(osv.osv):
     def generate_cells(self, cr, uid, line, context=None):
         """ This method generate all cells between the date range.
         """
-        project = line.project_id
-        date_range = self.pool.get('smile.project').get_date_range(project.start_date, project.end_date)
+        date_range = self.pool.get('smile.project').get_date_range(line.project_id)
         vals = {
             'line_id': line.id
             }

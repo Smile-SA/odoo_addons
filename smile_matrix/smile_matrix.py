@@ -58,19 +58,25 @@ class smile_matrix(osv.osv_memory):
             return self.pool.get('smile.project').browse(cr, uid, project_id, context)
         return False
 
-    def _get_project_months(self, project):
-        start = datetime.datetime.strptime(project.start_date, '%Y-%m-%d')
-        end = datetime.datetime.strptime(project.end_date, '%Y-%m-%d')
-        return list(year_month_tuples(start.year, start.month, end.year, end.month))
+    def date_to_str(self, date):
+        return date.strftime('%Y%m%d')
+
+    def get_date_range_as_str(self, project):
+        return [self.date_to_str(d) for d in self.pool.get('smile.project').get_date_range(project)]
 
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
         result = super(smile_matrix, self).fields_get(cr, uid, allfields, context, write_access)
         project = self._get_project(cr, uid, context)
         if project:
+            date_range = self.get_date_range_as_str(project)
             for line in project.line_ids:
-                for month in self._get_project_months(project):
-                    month_str = self._month_to_str(month)
-                    result['cell_%s_%s' % (line.id, month_str)] = {'string': month_str, 'type':'integer', 'required':True, 'readonly': False}
+                line_cells = dict([(self.date_to_str(datetime.datetime.strptime(cell.date, '%Y-%m-%d')), cell) for cell in line.cell_ids])
+                for date_str in date_range:
+                    if date_str in line_cells:
+                        result['cell_%s_%s' % (line.id, date_str)] = {'string': date_str, 'type':'integer', 'required':True, 'readonly': False}
+                    # We must make this cell disabled
+                    #else:
+
         return result
 
     def _month_to_str(self, month):
@@ -79,6 +85,9 @@ class smile_matrix(osv.osv_memory):
         return "%s_%s" % (year,month)
 
     mako_template = """
+        <%
+            import datetime
+        %>
         <form string="Test">
             <html>
                 <style type="text/css">
@@ -115,7 +124,7 @@ class smile_matrix(osv.osv_memory):
                     $(document).ready(function(){
                         $("input[name^='cell_']").change(function(){
                             name_fragments = $(this).attr("id").split("_");
-                            column_index = name_fragments[2] + '_' + name_fragments[3];
+                            column_index = name_fragments[2];
                             row_index = name_fragments[1];
                             // Select all fields of the columns we clicked in and sum them up
                             var column_total = 0;
@@ -176,8 +185,8 @@ class smile_matrix(osv.osv_memory):
                     <thead>
                         <tr>
                             <th>Line</th>
-                            %for month in months:
-                                <th>${"%s/%s" % (month[5:],month[2:4])}</th>
+                            %for date in date_range:
+                                <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime('%d/%m')}</th>
                             %endfor
                             <th>Total</th>
                         </tr>
@@ -185,8 +194,8 @@ class smile_matrix(osv.osv_memory):
                     <tfoot>
                         <tr>
                             <td>Total</td>
-                            %for month in months:
-                                <td><span class="column_total_${month}">NaN</span></td>
+                            %for date in date_range:
+                                <td><span class="column_total_${date}">NaN</span></td>
                             %endfor
                             <td><span id="grand_total">NaN</span></td>
                         </tr>
@@ -195,9 +204,9 @@ class smile_matrix(osv.osv_memory):
                         %for line in lines:
                             <tr>
                                 <td>${line.name}</td>
-                                %for month in months:
+                                %for date in date_range:
                                     <td>
-                                        <field name="${'cell_%s_%s' % (line.id, month)}"/>
+                                        <field name="${'cell_%s_%s' % (line.id, date)}"/>
                                     </td>
                                 %endfor
                                 <td><span class="row_total_${line.id}">NaN</span></td>
@@ -216,8 +225,8 @@ class smile_matrix(osv.osv_memory):
         if not project:
             return super(smile_matrix, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         fields = self.fields_get(cr, uid, context=context)
-        months = [self._month_to_str(month) for month in self._get_project_months(project)]
-        arch = MakoTemplate(self.mako_template).render_unicode(months=months, lines=project.line_ids,
+        date_range = self.get_date_range_as_str(project)
+        arch = MakoTemplate(self.mako_template).render_unicode(date_range=date_range, lines=project.line_ids,
                                                          format_exceptions=True)
         return {'fields': fields, 'arch': arch}
 
