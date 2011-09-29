@@ -20,10 +20,17 @@
                         <tree string="Lines">
                             <field name="name"/>
                             <field name="price"/>
+                            <field name="cell_ids"/>
                         </tree>
                         <form string="Lines">
                             <field name="name"/>
                             <field name="price"/>
+                            <field name="cell_ids" colspan="4" nolabel="1" readonly="1">
+                                <tree string="Cells">
+                                    <field name="date"/>
+                                    <field name="quantity"/>
+                                </tree>
+                            </field>
                         </form>
                     </field>
                 </form>
@@ -38,6 +45,8 @@
             <field name="arch" type="xml">
                 <tree string="Project">
                     <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
                     <field name="line_ids"/>
                 </tree>
             </field>
