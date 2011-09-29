@@ -98,8 +98,9 @@ class smile_matrix(osv.osv_memory):
                     }
 
                     table#smile_matrix .button.increment {
-                        /* TODO Why this is not working ??? */
-                        width: 2em;
+                        display: block;
+                        width: 1.5em;
+                        text-align: center;
                     }
 
                     .wrapper.action-buttons {
@@ -127,7 +128,7 @@ class smile_matrix(osv.osv_memory):
                         var cells = $("input[name^='line_']");
                         cells.each(function(i, cell){
                             var $cell = $(cell);
-                            $cell.after($(button_template).clone().addClass($cell.attr("id")));
+                            $cell.after($(button_template).clone().attr('id', 'button_' + $cell.attr("id")));
                             $cell.hide();
                         });
                         // Hide the button template
