@@ -30,6 +30,7 @@ except ImportError:
 from osv import osv, fields
 
 
+
 def year_month_tuples(year, month, max_year, max_month):
     # inspired by http://stackoverflow.com/questions/6576187/get-year-month-for-the-last-x-months
     _year, _month, _max_year, _max_month = year, month, max_year, max_month
@@ -43,6 +44,7 @@ def year_month_tuples(year, month, max_year, max_month):
         if _month == 13:
             _month = 1
             _year += 1
+
 
 
 class smile_matrix(osv.osv_memory):
@@ -72,11 +74,23 @@ class smile_matrix(osv.osv_memory):
             for line in project.line_ids:
                 line_cells = dict([(self.date_to_str(datetime.datetime.strptime(cell.date, '%Y-%m-%d')), cell) for cell in line.cell_ids])
                 for date_str in date_range:
+                    field_props = {
+                        'string': date_str,
+                        'type':'integer',
+                        }
+                    # Make the cell active
                     if date_str in line_cells:
-                        result['cell_%s_%s' % (line.id, date_str)] = {'string': date_str, 'type':'integer', 'required':True, 'readonly': False}
-                    # We must make this cell disabled
-                    #else:
-
+                        field_props.update({
+                            'required': True,
+                            'readonly': False,
+                            })
+                    # Disable the cell
+                    else:
+                        field_props.update({
+                            'required': False,
+                            'readonly': True,
+                            })
+                    result['cell_%s_%s' % (line.id, date_str)] = field_props
         return result
 
     def _month_to_str(self, month):
@@ -108,7 +122,6 @@ class smile_matrix(osv.osv_memory):
                         border-bottom: 1px dotted #999;
                         padding: .2em;
                     }
-
                     table#smile_matrix .button.increment {
                         display: block;
                         width: 1.5em;
@@ -149,7 +162,7 @@ class smile_matrix(osv.osv_memory):
 
                         // Replace all integer fields by a button template, then hide the original field
                         var button_template = $("#button_template");
-                        var cells = $("input[name^='cell_']");
+                        var cells = $("input[name^='cell_']:not(:disabled)");
                         cells.each(function(i, cell){
                             var $cell = $(cell);
                             $cell.after($(button_template).clone().attr('id', 'button_' + $cell.attr("id")));
@@ -160,7 +173,7 @@ class smile_matrix(osv.osv_memory):
 
                         // Cycles buttons
                         var cycling_values = ['0', '0.5', '1'];
-                        var buttons = $('.button.increment:not(.disabled)');
+                        var buttons = $('.button.increment:not(:disabled)');
                         buttons.click(function(){
                             var button_value_tag = $(this).parent().find('input');
                             var button_label_tag = $(this);
