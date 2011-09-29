@@ -82,12 +82,15 @@ class smile_matrix(osv.osv_memory):
         <form string="Test">
             <html>
                 <style type="text/css">
+                    table#smile_matrix {
+                        border-spacing: .1em;
+                    }
                     table#smile_matrix input {
                         width: 2em;
                         border: 0;
                     }
                     table#smile_matrix tfoot span,
-                    table#smile_matrix input {
+                    table#smile_matrix tbody span {
                         float: right;
                         text-align: right;
                     }
@@ -114,12 +117,18 @@ class smile_matrix(osv.osv_memory):
                             name_fragments = $(this).attr("id").split("_");
                             column_index = name_fragments[2] + '_' + name_fragments[3];
                             row_index = name_fragments[1];
-                            // Select all fields of the columns we clicked in
+                            // Select all fields of the columns we clicked in and sum them up
                             var column_sum = 0;
                             $("input[name^='line_'][name$='_" + column_index + "']").each(function(){
                                 column_sum += parseFloat($(this).val());
                             });
                             $("tfoot span.column_sum_" + column_index).text(column_sum);
+                            // Select all fields of the row we clicked in and sum them up
+                            var row_sum = 0;
+                            $("input[name^='line_" + row_index + "_']").each(function(){
+                                row_sum += parseFloat($(this).val());
+                            });
+                            $("tbody span.row_sum_" + row_index).text(row_sum);
                         });
                         $("tbody tr:first input[name^='line_']").trigger('change');
 
@@ -164,14 +173,16 @@ class smile_matrix(osv.osv_memory):
                             %for month in months:
                                 <th>${"%s/%s" % (month[5:],month[2:4])}</th>
                             %endfor
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <td>Sums:</td>
+                            <td>Total</td>
                             %for month in months:
                                 <td><span class="column_sum_${month}">NaN</span></td>
                             %endfor
+                            <td><span>XX</span></td>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -183,6 +194,7 @@ class smile_matrix(osv.osv_memory):
                                         <field name="${'line_%s_%s' % (line.id, month)}"/>
                                     </td>
                                 %endfor
+                                <td><span class="row_sum_${line.id}">NaN</span></td>
                             </tr>
                         %endfor
                     </tbody>
