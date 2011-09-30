@@ -130,7 +130,7 @@ class smile_matrix(osv.osv_memory):
                 </style>
                 <script type="application/javascript">
                     $(document).ready(function(){
-                        $("input[name^='cell_']").change(function(){
+                        $("input[name^='cell_']:not(:disabled)").change(function(){
                             name_fragments = $(this).attr("id").split("_");
                             column_index = name_fragments[2];
                             row_index = name_fragments[1];
@@ -153,14 +153,14 @@ class smile_matrix(osv.osv_memory):
                             });
                             $("#grand_total").text(grand_total);
                         });
-                        $("tbody tr:first input[name^='cell_']").trigger('change');
+                        $("tbody tr:first input[name^='cell_']:not(:disabled)").trigger('change');
 
                         // Replace all integer fields by a button template, then hide the original field
                         var button_template = $("#button_template");
                         var cells = $("input[name^='cell_']:not(:disabled)");
                         cells.each(function(i, cell){
                             var $cell = $(cell);
-                            $cell.after($(button_template).clone().attr('id', 'button_' + $cell.attr("id")));
+                            $cell.after($(button_template).clone().attr('id', 'button_' + $cell.attr("id")).text($cell.val()));
                             $cell.hide();
                         });
                         // Hide the button template
@@ -182,7 +182,6 @@ class smile_matrix(osv.osv_memory):
                             button_value_tag.val(new_value);
                             button_value_tag.trigger('change');
                         });
-                        buttons.trigger('click');
 
                     });
                 </script>
@@ -203,9 +202,9 @@ class smile_matrix(osv.osv_memory):
                         <tr>
                             <td>Total</td>
                             %for date in date_range:
-                                <td><span class="column_total_${date}">NaN</span></td>
+                                <td><span class="column_total_${date}">??</span></td>
                             %endfor
-                            <td><span id="grand_total">NaN</span></td>
+                            <td><span id="grand_total">??</span></td>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -217,7 +216,7 @@ class smile_matrix(osv.osv_memory):
                                         <field name="${'cell_%s_%s' % (line.id, date)}"/>
                                     </td>
                                 %endfor
-                                <td><span class="row_total_${line.id}">NaN</span></td>
+                                <td><span class="row_total_${line.id}">??</span></td>
                             </tr>
                         %endfor
                     </tbody>
