@@ -117,6 +117,15 @@ class smile_matrix(osv.osv_memory):
                         border-bottom: 1px dotted #999;
                         padding: .2em;
                     }
+                    table#smile_matrix tfoot tr.boolean_line td {
+                        border-top: 1px dotted #999;
+                        padding: .2em;
+                    }
+
+                    table#smile_matrix tfoot tr.boolean_line td {
+                        font-weight: normal;
+                    }
+
                     table#smile_matrix .button.increment {
                         display: block;
                         width: 1.5em;
@@ -130,25 +139,25 @@ class smile_matrix(osv.osv_memory):
                 </style>
                 <script type="application/javascript">
                     $(document).ready(function(){
-                        $("input[name^='cell_']:not(:disabled)").change(function(){
+                        $("input[kind!='boolean'][name^='cell_']:not(:disabled)").change(function(){
                             name_fragments = $(this).attr("id").split("_");
                             column_index = name_fragments[2];
                             row_index = name_fragments[1];
                             // Select all fields of the columns we clicked in and sum them up
                             var column_total = 0;
-                            $("input[name^='cell_'][name$='_" + column_index + "']:not(:disabled)").each(function(){
+                            $("input[kind!='boolean'][name^='cell_'][name$='_" + column_index + "']:not(:disabled)").each(function(){
                                 column_total += parseFloat($(this).val());
                             });
                             $("tfoot span.column_total_" + column_index).text(column_total);
                             // Select all fields of the row we clicked in and sum them up
                             var row_total = 0;
-                            $("input[name^='cell_" + row_index + "_']:not(:disabled)").each(function(){
+                            $("input[kind!='boolean'][name^='cell_" + row_index + "_']:not(:disabled)").each(function(){
                                 row_total += parseFloat($(this).val());
                             });
                             $("tbody span.row_total_" + row_index).text(row_total);
                             // Compute the grand-total
                             var grand_total = 0;
-                            $("span[class^='column_total_']").each(function(){
+                            $("tbody span[class^='row_total_']").each(function(){
                                 grand_total += parseFloat($(this).text());
                             });
                             $("#grand_total").text(grand_total);
@@ -157,7 +166,7 @@ class smile_matrix(osv.osv_memory):
 
                         // Replace all integer fields by a button template, then hide the original field
                         var button_template = $("#button_template");
-                        var cells = $("input[name^='cell_']:not(:disabled)");
+                        var cells = $("input[kind!='boolean'][name^='cell_']:not(:disabled)");
                         cells.each(function(i, cell){
                             var $cell = $(cell);
                             $cell.after($(button_template).clone().attr('id', 'button_' + $cell.attr("id")).text($cell.val()));
@@ -199,16 +208,27 @@ class smile_matrix(osv.osv_memory):
                         </tr>
                     </thead>
                     <tfoot>
-                        <tr>
+                        <tr class="total_line">
                             <td>Total</td>
                             %for date in date_range:
-                                <td><span class="column_total_${date}">??</span></td>
+                                <td><span class="column_total_${date}"></span></td>
                             %endfor
-                            <td><span id="grand_total">??</span></td>
+                            <td><span id="grand_total"></span></td>
                         </tr>
+                        %for line in [l for l in lines if not l.hold_quantities]:
+                            <tr class="boolean_line">
+                                <td>${line.name}</td>
+                                %for date in date_range:
+                                    <td>
+                                        <field name="${'cell_%s_%s' % (line.id, date)}" widget="boolean"/>
+                                    </td>
+                                %endfor
+                                <td></td>
+                            </tr>
+                        %endfor
                     </tfoot>
                     <tbody>
-                        %for line in lines:
+                        %for line in [l for l in lines if l.hold_quantities]:
                             <tr>
                                 <td>${line.name}</td>
                                 %for date in date_range:
@@ -216,12 +236,12 @@ class smile_matrix(osv.osv_memory):
                                         <field name="${'cell_%s_%s' % (line.id, date)}"/>
                                     </td>
                                 %endfor
-                                <td><span class="row_total_${line.id}">??</span></td>
+                                <td><span class="row_total_${line.id}"></span></td>
                             </tr>
                         %endfor
                     </tbody>
                 </table>
-                <button string="Ok" name="validate" type="object"/>
+                <button string="Validate" name="validate" type="object"/>
             </html>
             <button string="Truc" name="machin" type="object"/>
         </form>
@@ -233,8 +253,7 @@ class smile_matrix(osv.osv_memory):
             return super(smile_matrix, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         fields = self.fields_get(cr, uid, context=context)
         date_range = self.get_date_range_as_str(project)
-        arch = MakoTemplate(self.mako_template).render_unicode(date_range=date_range, lines=project.line_ids,
-                                                         format_exceptions=True)
+        arch = MakoTemplate(self.mako_template).render_unicode(date_range=date_range, lines=project.line_ids, format_exceptions=True)
         return {'fields': fields, 'arch': arch}
 
     def validate(self, cr, uid, ids, context=None):
