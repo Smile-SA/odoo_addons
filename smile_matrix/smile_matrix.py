@@ -254,12 +254,10 @@ class smile_matrix(osv.osv_memory):
                     cell_value = None
             else:
                 # Boolean conversion
-                if cell_value is '1':
+                if cell_value == '1':
                     cell_value = True
-                elif cell_value is '0':
-                    cell_value = False
                 else:
-                    cell_value = None
+                    cell_value = False
             # Ignore non-modified cells
             if cell_value is None:
                 continue
