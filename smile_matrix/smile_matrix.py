@@ -107,23 +107,25 @@ class smile_matrix(osv.osv_memory):
                         width: 2em;
                         border: 0;
                     }
+                    table#smile_matrix tbody td,
+                    table#smile_matrix th,
+                    table#smile_matrix tfoot tr.boolean_line td {
+                        border-style: dotted;
+                        border-color: #999
+                        padding: .2em;
+                    }
+                    table#smile_matrix tbody td,
+                    table#smile_matrix th {
+                        border-width: 0 0 1px;
+                    }
+                    table#smile_matrix tfoot tr.boolean_line td {
+                        border-width: 1px 0 0;
+                        font-weight: normal;
+                    }
                     table#smile_matrix tfoot span,
                     table#smile_matrix tbody span {
                         float: right;
                         text-align: right;
-                    }
-                    table#smile_matrix tbody td,
-                    table#smile_matrix th {
-                        border-bottom: 1px dotted #999;
-                        padding: .2em;
-                    }
-                    table#smile_matrix tfoot tr.boolean_line td {
-                        border-top: 1px dotted #999;
-                        padding: .2em;
-                    }
-
-                    table#smile_matrix tfoot tr.boolean_line td {
-                        font-weight: normal;
                     }
 
                     table#smile_matrix .button.increment {
