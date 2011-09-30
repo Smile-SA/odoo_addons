@@ -140,6 +140,13 @@ class smile_project_line(osv.osv):
         'price': fields.float('Price'),
         'project_id': fields.many2one('smile.project', "Project", required=True, ondelete='cascade'),
         'cell_ids': fields.one2many('smile.project.line.cell', 'line_id', "Cells"),
+        # This property define if the line hold float quantities or booleans
+        # This can be changed later to a line_type
+        'hold_quantities': fields.boolean('Hold quantities'),
+        }
+
+    _defaults = {
+        'hold_quantities': True,
         }
 
 
@@ -177,14 +184,35 @@ class smile_project_line_cell(osv.osv):
 
     _order = "date"
 
+
+    ## Function fields
+
+    def _get_cell_value_string(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for cell in self.browse(cr, uid, ids, context):
+            val = ''
+            if cell.hold_quantities:
+                val = cell.quantity
+            else:
+                val = cell.boolean_value
+            result[cell.id] = str(val)
+        return result
+
+
+    ## Fields definition
+
     _columns = {
         'date': fields.date('Date', required=True),
         'quantity': fields.float('Quantity', required=True),
+        'boolean_value': fields.boolean('Boolean Value', required=True),
         'line_id': fields.many2one('smile.project.line', "Project line", required=True, ondelete='cascade'),
+        'hold_quantities': fields.related('line_id', 'hold_quantities', type='boolean', string="Hold quantities", readonly=True),
+        'cell_value_string': fields.function(_get_cell_value_string, string="Cell value", type='string', readonly=True, method=True),
         }
 
     _defaults = {
         'quantity': 0.0,
+        'boolean_value': False,
         }
 
 
