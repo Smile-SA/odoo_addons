@@ -101,7 +101,6 @@ class smile_project(osv.osv):
                     if date < start_date or date > end_date:
                         # Cell is out of range. Delete it.
                         outdated_cells.append(cell.id)
-
         if outdated_cells:
             self.pool.get('smile.project.line.cell').unlink(cr, uid, outdated_cells, context)
         return
@@ -111,9 +110,22 @@ class smile_project(osv.osv):
             raise osv.except_osv('Error', 'len(ids) !=1')
         project = self.browse(cr, uid, ids[0], context)
         vals = {}
-        for date_str in self.pool.get('smile.matrix').get_date_range_as_str(project):
-            for line in project.line_ids:
-                vals['cell_%s_%s' % (line.id, date_str)] = line.price
+        # Set default values for all cells of the matrix
+        for line in project.line_ids:
+            # Populate our matrix with cell values found in the lines
+            cell_value_holder = 'boolean_value'
+            cell_type = 'boolean'
+            if line.hold_quantities is True:
+                cell_value_holder = 'quantity'
+                cell_type = 'float'
+            for cell in line.cell_ids:
+                cell_date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
+                vals['cell_%s_%s' % (line.id, cell_date.strftime('%Y%m%d'))] = (getattr(cell, cell_value_holder), cell_type)
+            # Create empty cells for missing dates
+            for date_str in self.pool.get('smile.matrix').get_date_range_as_str(project):
+                cell_id = 'cell_%s_%s' % (line.id, date_str)
+                if cell_id not in vals:
+                    vals[cell_id] = (None, cell_type)
         new_context = context.copy()
         new_context['project_id'] = ids[0]
         matrix_id = self.pool.get('smile.matrix').create(cr, uid, vals, new_context)
@@ -137,7 +149,6 @@ class smile_project_line(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=32, required=True),
-        'price': fields.float('Price'),
         'project_id': fields.many2one('smile.project', "Project", required=True, ondelete='cascade'),
         'cell_ids': fields.one2many('smile.project.line.cell', 'line_id', "Cells"),
         # This property define if the line hold float quantities or booleans

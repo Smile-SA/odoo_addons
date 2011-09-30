@@ -66,33 +66,6 @@ class smile_matrix(osv.osv_memory):
     def get_date_range_as_str(self, project):
         return [self.date_to_str(d) for d in self.pool.get('smile.project').get_date_range(project)]
 
-    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
-        result = super(smile_matrix, self).fields_get(cr, uid, allfields, context, write_access)
-        project = self._get_project(cr, uid, context)
-        if project:
-            date_range = self.get_date_range_as_str(project)
-            for line in project.line_ids:
-                line_cells = dict([(self.date_to_str(datetime.datetime.strptime(cell.date, '%Y-%m-%d')), cell) for cell in line.cell_ids])
-                for date_str in date_range:
-                    field_props = {
-                        'string': date_str,
-                        'type':'integer',
-                        }
-                    # Make the cell active
-                    if date_str in line_cells:
-                        field_props.update({
-                            'required': True,
-                            'readonly': False,
-                            })
-                    # Disable the cell
-                    else:
-                        field_props.update({
-                            'required': False,
-                            'readonly': True,
-                            })
-                    result['cell_%s_%s' % (line.id, date_str)] = field_props
-        return result
-
     mako_template = """
         <%
             import datetime
@@ -261,22 +234,86 @@ class smile_matrix(osv.osv_memory):
     def validate(self, cr, uid, ids, context=None):
         if len(ids) != 1:
             raise osv.except_osv('Error', 'len(ids) !=1')
-        print self.read(cr, uid, ids[0])
+        # Parse and clean-up data comming from the matrix
+        matrix_values = self.read(cr, uid, ids[0])
+        for (cell_name, cell_value) in matrix_values.items():
+            # Filters out non cell values
+            if not cell_name.startswith('cell_'):
+                continue
+            cell_name_fragments = cell_name.split('_')
+            line_id = int(cell_name_fragments[1])
+            cell_date = datetime.datetime.strptime(cell_name_fragments[2], '%Y%m%d')
+            # Get the line
+            line = self.pool.get('smile.project.line').browse(cr, uid, line_id, context)
+            # Convert the raw value to the right one depending on the type of the line
+            if line.hold_quantities:
+                # Quantity conversion
+                if type(cell_value) is type(''):
+                    cell_value = float(cell_value)
+                else:
+                    cell_value = None
+            else:
+                # Boolean conversion
+                if cell_value is '1':
+                    cell_value = True
+                elif cell_value is '0':
+                    cell_value = False
+                else:
+                    cell_value = None
+            # Ignore non-modified cells
+            if cell_value is None:
+                continue
+            # Prepare the cell value
+            vals = {}
+            if line.hold_quantities:
+                vals.update({'quantity': cell_value})
+            else:
+                vals.update({'boolean_value': cell_value})
+            # Search for an existing cell at the given date
+            cell = self.pool.get('smile.project.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
+            # Cell doesn't exists, create it
+            if not cell:
+                vals.update({
+                    'date': cell_date,
+                    'line_id': line_id,
+                    })
+                self.pool.get('smile.project.line.cell').create(cr, uid, vals, context)
+            # Update cell with our data
+            else:
+                cell_id = cell[0]
+                self.pool.get('smile.project.line.cell').write(cr, uid, cell_id, vals, context)
         return {'type': 'ir.actions.act_window_close'}
 
     def machin(self, cr, uid, ids, context=None):
         return True
 
     def create(self, cr, uid, vals, context=None):
-        proj_fields = self.fields_get(cr, uid, context=context)
         today = datetime.datetime.today()
-        for f in proj_fields:
-            if f not in self._columns:
-                if proj_fields[f]['type'] == 'integer':
-                    self._columns[f] = fields.integer(create_date=today, **proj_fields[f])
-            elif hasattr(self._columns[f], 'create_date'):
-                self._columns[f].create_date = today
-        return super(smile_matrix, self).create(cr, uid, vals, context)
+        for (cell_id, (cell_value, cell_type)) in vals.items():
+            field_id = cell_id
+            if cell_id not in self._columns:
+                cell_date = cell_id.split('_')[2]
+                field_props = {
+                    'string': cell_date,
+                    'type': cell_type,
+                    }
+                # Make the cell active
+                if cell_value is not None:
+                    field_props.update({
+                        'required': True,
+                        'readonly': False,
+                        })
+                # Disable the cell
+                else:
+                    field_props.update({
+                        'required': False,
+                        'readonly': True,
+                        })
+                field_class = getattr(fields, cell_type)
+                self._columns[field_id] = field_class(create_date=today, **field_props)
+            elif hasattr(self._columns[field_id], 'create_date'):
+                self._columns[field_id].create_date = today
+        return super(smile_matrix, self).create(cr, uid, dict([(k, v) for (k, (v, t)) in vals.items()]), context)
 
     def vaccum(self, cr, uid, force=False):
         super(smile_matrix, self).vaccum(cr, uid, force)
