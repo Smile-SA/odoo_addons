@@ -92,7 +92,7 @@ def _render_unicode(template_src, localdict, encoding='UTF-8'):
     return template.render_unicode(**localdict)
 
 def _text2pdf(string):
-    tmpfilename = os.path.join(tempfile.gettempdir(), str(int(random()*10 ** 9)))
+    tmpfilename = os.path.join(tempfile.gettempdir(), str(int(random() * 10 ** 9)))
     tmpfile = open(tmpfilename, 'w')
     tmpfile.write(string)
     tmpfile.close()
@@ -385,16 +385,16 @@ class ir_model_export_file_template(osv.osv):
         }
         report_id = self.pool.get('res.request').create(cr, uid, report_vals, context)
         if exceptions and export_file.exception_logging == 'file':
-                exceptions_filename = filename[:-filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
-                exceptions_vals = {
-                    'name':  exceptions_filename,
-                    'type': 'binary',
-                    'datas': base64.encodestring('\n'.join(exceptions).encode(export_file.encoding)),
-                    'datas_fname': exceptions_filename,
-                    'res_model': 'res.request',
-                    'res_id': report_id,
-                }
-                self.pool.get('ir.attachment').create(cr, uid, exceptions_vals, context)
+            exceptions_filename = filename[:-filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
+            exceptions_vals = {
+                'name':  exceptions_filename,
+                'type': 'binary',
+                'datas': base64.encodestring('\n'.join(exceptions).encode(export_file.encoding)),
+                'datas_fname': exceptions_filename,
+                'res_model': 'res.request',
+                'res_id': report_id,
+            }
+            self.pool.get('ir.attachment').create(cr, uid, exceptions_vals, context)
         if attach_export_id:
             self.pool.get('ir.model.export').write(cr, uid, attach_export_id, {'report_id': report_id,
                                                                                'exception_during_last_run': bool(exceptions)}, context)
@@ -421,7 +421,6 @@ class ir_model_export_file_template(osv.osv):
     def generate_file(self, cr, uid, export_file_id, context=None):
         """Check and lay out data, save file and produce an export processing report"""
         start_date = time.strftime('%Y-%m-%d %H:%M:%S')
-
         context = context or {}
         if isinstance(export_file_id, list):
             export_file_id = export_file_id[0]

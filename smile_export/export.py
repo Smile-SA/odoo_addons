@@ -234,11 +234,12 @@ class ir_model_export(osv.osv):
         for export in self.browse(cr, uid, ids, context):
             is_running = (export.state == 'running')
             try:
-                if not is_running and export.line_ids:
-                    object_ids = [line.res_id for line in export.line_ids]
-                    export.write({'state': 'running'}, context)
-                    cr.commit()
-                    self._run_actions(cr, uid, export, object_ids, context)
+                if not is_running:
+                    if export.line_ids:
+                        object_ids = [line.res_id for line in export.line_ids]
+                        export.write({'state': 'running'}, context)
+                        cr.commit()
+                        self._run_actions(cr, uid, export, object_ids, context)
                     export.write({'state': 'done'}, context)
             except Exception, e:
                 cr.rollback()
