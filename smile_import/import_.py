@@ -160,9 +160,7 @@ class IrModelImport(osv.osv):
         t = threading.Thread(target=self._process_with_new_cursor, args=(cr.dbname, uid, import_id, context), name=thread_name)
         t.start()
         self.write(cr, uid, import_id, {'thread_name': thread_name, 'from_date': time_stamp}, context)
-        return True
-    
-    
+        return True    
 IrModelImport()
 
 class IrModelImportLog(osv.osv):

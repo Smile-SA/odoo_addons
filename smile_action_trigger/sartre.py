@@ -74,16 +74,16 @@ class SartreOperator(osv.osv):
     }
 
     _defaults = {
-        'native_operator': lambda * a: 'none',
-        'value_age_filter': lambda * a: 'both',
-        'expression': lambda * a: """# You can use the following variables
+        'native_operator': 'none',
+        'value_age_filter': 'both',
+        'expression': """# You can use the following variables
 \n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
 \n#    - current_field_value (useful if value age filter != 'Both')
 \n#    - old_field_value (useful if value age filter != 'Both')
 \n#    - other_value (static or dynamic)
 \n# You must assign a boolean value to the variable "result"
 """,
-        'other_value_necessary': lambda * a: False,
+        'other_value_necessary': False,
     }
 
     @tools.cache()
@@ -91,6 +91,7 @@ class SartreOperator(osv.osv):
         operator_id = self.search(cr, uid, ['|', ('symbol', '=', name), ('opposite_symbol', '=', name)], limit=1, context=context)
         if operator_id:
             return self.browse(cr, uid, operator_id[0], context)
+        return
 
     def create(self, cr, uid, vals, context=None):
         operator_id = super(SartreOperator, self).create(cr, uid, vals, context)
@@ -192,15 +193,15 @@ class SartreTrigger(osv.osv):
     }
 
     _defaults = {
-        'active': lambda * a: True,
-        'on_function_type': lambda * a: 'both',
-        'on_date_type_display1': lambda * a: 'create_date',
-        'on_date_range': lambda * a: 2,
-        'on_date_range_type': lambda * a: 'days',
-        'on_date_range_operand': lambda * a: 'after',
-        'interval_number': lambda * a: 1,
-        'interval_type': lambda * a: 'hours',
-        'nextcall': lambda * a: now().strftime("%Y-%m-%d %H:%M:%S"),
+        'active': True,
+        'on_function_type': 'both',
+        'on_date_type_display1': 'create_date',
+        'on_date_range': 2,
+        'on_date_range_type': 'days',
+        'on_date_range_operand': 'after',
+        'interval_number': 1,
+        'interval_type': 'hours',
+        'nextcall': time.strftime("%Y-%m-%d %H:%M:%S"),
     }
 
     @tools.cache()
@@ -276,14 +277,16 @@ class SartreTrigger(osv.osv):
             if interval_operand == 'before':
                 limit_date += RelativeDateTime(**{interval_type: interval_number})
             return (field, '<=', limit_date.strftime("%Y-%m-%d %H:%M:%S"))
+        return
 
     def _add_max_executions_filter(self, cr, uid, trigger, context):
         """Build max executions filter"""
         if trigger.executions_max_number:
-            execution_pool = self.pool.get('sartre.execution')
-            execution_ids = execution_pool.search(cr, uid, [('trigger_id', '=', trigger.id), ('executions_number', '>=', trigger.executions_max_number)])
-            res_ids = list(set(context.get('active_object_ids', [])) - set([execution['res_id'] for execution in execution_pool.read(cr, uid, execution_ids, ['res_id'])]))
+            cr.execute("SELECT res_id FROM sartre_execution WHERE trigger_id=%s AND executions_number>=%s", (trigger.id, trigger.executions_max_number))
+            res_ids_off = cr.fetchall()
+            res_ids = list(set(context.get('active_object_ids', [])) - set(res_ids_off))
             return ('id', 'in', res_ids)
+        return
 
     def _build_domain_expression(self, cr, uid, trigger, context):
         """Build domain expression"""
@@ -300,7 +303,7 @@ class SartreTrigger(osv.osv):
         # Add general filters
         domain.extend(filter(bool, [getattr(self, filter_name)(cr, uid, trigger, context) for filter_name in ('_add_trigger_date_filter', '_add_max_executions_filter')]))
         # To avoid infinite recursion
-        if 'triggers' in context and trigger.id in context['triggers']:
+        if trigger.id in context.get('triggers', []):
             context['active_object_ids'] = list(set(context['active_object_ids']) - set(context['triggers'][trigger.id]))
         # Check if active objects respect all filters based on old or dynamic values, or Python operators
         indexes = [index for index, item in enumerate(domain) if isinstance(item, tuple) and (item[0].startswith('OLD_') \
@@ -577,8 +580,8 @@ class SartreFilter(osv.osv):
     }
 
     _defaults = {
-        'value_age': lambda * a: 'current',
-        'value_type': lambda * a: 'static',
+        'value_age': 'current',
+        'value_type': 'static',
     }
 SartreFilter()
 

@@ -101,5 +101,5 @@ class SmileImportLogger():
     def time_info(self, msg):
         if self.import_start:
             delay = datetime.datetime.now() - self.import_start
-            msg = "%s h, %s min %s sec: " % tuple(str(delay).split(':')) + msg
+            msg = "%s h %s min %s sec: " % tuple(str(delay).split(':')) + msg
         self.logger.info(msg, self.logger_args)
