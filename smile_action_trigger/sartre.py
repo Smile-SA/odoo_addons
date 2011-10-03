@@ -86,7 +86,7 @@ class SartreOperator(osv.osv):
         'other_value_necessary': False,
     }
 
-    @tools.cache()
+    @tools.cache(skiparg=3)
     def _get_operator(self, cr, uid, name, context=None):
         operator_id = self.search(cr, uid, ['|', ('symbol', '=', name), ('opposite_symbol', '=', name)], limit=1, context=context)
         if operator_id:
@@ -284,7 +284,7 @@ class SartreTrigger(osv.osv):
         if trigger.executions_max_number:
             cr.execute("SELECT res_id FROM sartre_execution WHERE trigger_id=%s AND executions_number>=%s", (trigger.id, trigger.executions_max_number))
             res_ids_off = cr.fetchall()
-            res_ids = list(set(context.get('active_object_ids', [])) - set(res_ids_off))
+            res_ids = list(set(context.get('active_object_ids', [])) - set([item[0] for item in res_ids_off]))
             return ('id', 'in', res_ids)
         return
 
