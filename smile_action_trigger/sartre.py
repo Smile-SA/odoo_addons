@@ -238,7 +238,7 @@ class SartreTrigger(osv.osv):
         for trigger in triggers:
             m_class = self.pool.get(trigger.model_id.model)
             m_name = trigger.on_other_method
-            if hasattr(m_class, m_name):
+            if m_name and hasattr(m_class, m_name):
                 setattr(m_class.__class__, m_name, sartre_decorator(getattr(m_class.__class__, m_name)))
         return True
 
@@ -288,8 +288,9 @@ class SartreTrigger(osv.osv):
             return ('id', 'in', res_ids)
         return
 
-    def _update_domain(self, cr, uid, domain, context):
+    def _update_domain(self, cr, uid, trigger, domain, context):
         """Updated filters based on old or dynamic values, or Python operators"""
+        operator_obj = self.pool.get('sartre.operator')
         domain = domain or []
         indexes = [index for index, item in enumerate(domain) if isinstance(item, tuple) and (item[0].startswith('OLD_') \
                                                             or (operator_obj._get_operator(cr, uid, item[1], context) and operator_obj._get_operator(cr, uid, item[1], context).native_operator == 'none') \
@@ -341,7 +342,6 @@ class SartreTrigger(osv.osv):
         # To manage planned execution
         if not context.get('active_object_ids', []):
             context['active_object_ids'] = self.pool.get(trigger.model_id.model).search(cr, uid, [], context=context)
-        operator_obj = self.pool.get('sartre.operator')
         # Define domain from domain_force
         domain = trigger.domain_force and eval(trigger.domain_force.replace('%today', now().strftime('%Y-%m-%d %H:%M:%S'))) or []
         # Add filters one by one if domain_force is empty
@@ -354,7 +354,7 @@ class SartreTrigger(osv.osv):
         if trigger.id in context.get('triggers', []):
             context['active_object_ids'] = list(set(context['active_object_ids']) - set(context['triggers'][trigger.id]))
         # Update filters based on old or dynamic values or Python operators
-        return self._update_domain(cr, uid, domain, context)
+        return self._update_domain(cr, uid, trigger, domain, context)
 
     def run_now(self, cr, uid, ids, context=None):
         """Execute now server actions"""
