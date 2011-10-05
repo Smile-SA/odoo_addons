@@ -24,6 +24,8 @@ import threading
 from osv import osv, fields
 import pooler
 
+from export_handler import SmileExportLogger
+
 class ir_model_export_template(osv.osv):
     _name = 'ir.model.export.template'
     _description = 'Export Template'
@@ -90,6 +92,7 @@ class ir_model_export_template(osv.osv):
 
         context = context or {}
         context['same_thread'] = True
+        cr.commit()
         export_pool.generate(cr, uid, export_ids, context)
         return True
 
@@ -155,6 +158,7 @@ class ir_model_export(osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True),
         'create_uid': fields.many2one('res.users', 'Creation User', readonly=True),
         'line_ids': fields.one2many('ir.model.export.line', 'export_id', 'Lines'),
+        'log_ids': fields.one2many('ir.model.export.log', 'export_id', 'Logs', readonly=True),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('running', 'Running'),
@@ -208,16 +212,21 @@ class ir_model_export(osv.osv):
             ids = [ids]
         for export in self.browse(cr, uid, ids, context):
             is_running = (export.state == 'running')
+            logger = SmileExportLogger(uid, export.id)
+            context['export_id'] = export.id
             try:
                 if not is_running:
                     if export.line_ids:
                         res_ids = [line.res_id for line in export.line_ids]
+                        logger.info('Export start')
                         export.write({'state': 'running'}, context)
                         cr.commit()
                         self._run_actions(cr, uid, export, res_ids, context)
+                        logger.time_info('Export done')
                     export.write({'state': 'done'}, context)
             except Exception, e:
                 cr.rollback()
+                logger.critical(isinstance(e, osv.except_osv) and e.value or e)
                 export.write({
                     'state': 'exception',
                     'exception': isinstance(e, osv.except_osv) and e.value or e,
@@ -264,3 +273,18 @@ class ir_model_export_line(osv.osv):
         'res_label': fields.function(_get_resource_label, method=True, type='char', size=256, string="Resource label"),
     }
 ir_model_export_line()
+
+class ir_model_export_log(osv.osv):
+    _name = 'ir.model.export.log'
+    _description = 'Export Log'
+    _rec_name = 'message'
+
+    _order = 'create_date desc'
+
+    _columns = {
+        'create_date': fields.datetime('Date', readonly=True),
+        'export_id': fields.many2one('ir.model.export', 'Export', readonly=True, ondelete='cascade'),
+        'level': fields.char('Level', size=16, readonly=True),
+        'message': fields.text('Message', readonly=True),
+    }
+ir_model_export_log()
