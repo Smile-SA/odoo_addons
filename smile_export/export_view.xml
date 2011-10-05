@@ -33,6 +33,7 @@
 									</group>
 									<field name="line_ids" colspan="4" nolabel="1" mode="tree">
 										<tree string="Lines">
+											<field name="res_label"/>
 											<field name="res_id"/>
 										</tree>
 									</field>

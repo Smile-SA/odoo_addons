@@ -257,8 +257,35 @@ class ir_model_export_line(osv.osv):
     _description = 'Export Line'
     _rec_name = 'export_id'
 
+
+    def _get_resource_label(self, cr, uid, ids, name, args, context=None):
+        """ get the resource label using the name_get function of the exported model
+        group the line res_id by model before performing the name_get call
+        """
+        model_to_res_ids = {}
+        line_id_to_res_id_model = {}
+        for line in self.browse(cr, uid, ids, context):
+            model_to_res_ids.setdefault(line.export_id.model, []).append(line.res_id)
+            line_id_to_res_id_model[line.id] = (line.res_id, line.export_id.model)
+
+        buf_result = {}
+        for model, res_ids in model_to_res_ids.iteritems():
+            name_get_result = []
+            try:
+                name_get_result = self.pool.get(model).name_get(cr, uid, res_ids, context)
+            except:
+                name_get_result = [(res_id, "name_get error") for res_id in res_ids]
+            for res_id, name in name_get_result:
+                buf_result[(res_id, model)] = name
+
+        result = {}
+        for line_id in line_id_to_res_id_model:
+            result[line_id] = buf_result[line_id_to_res_id_model[line_id]]
+        return result
+
     _columns = {
         'export_id': fields.many2one('ir.model.export', 'Export', required=True, ondelete='cascade'),
         'res_id': fields.integer('Resource ID', required=True),
+        'res_label': fields.function(_get_resource_label, method=True, type='char', size=256, string="Resource label"),
     }
 ir_model_export_line()
