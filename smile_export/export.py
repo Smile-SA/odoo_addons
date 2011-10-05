@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from math import ceil
 import threading
 
 from osv import osv, fields
@@ -38,7 +37,7 @@ class ir_model_export_template(osv.osv):
         'max_offset': fields.integer('Max Offset'),
         'order': fields.char('Order by', size=64),
         'unique': fields.boolean('Unique', help="If unique, each instance is exported only once"),
-        'method': fields.char('Method', size=64, help="Indicate a method with a signature equals to (self, cr, uid, ids, fields_to_export, *args, context=None)"),
+        'method': fields.char('Method', size=64, help="Indicate a method with a signature equals to (self, cr, uid, ids, *args, context=None)"),
         'action_id': fields.many2one('ir.actions.server', 'Action'),
         'export_ids': fields.one2many('ir.model.export', 'export_tmpl_id', 'Exports'),
         'cron_id': fields.many2one('ir.cron', 'Scheduled Action'),
@@ -47,7 +46,7 @@ class ir_model_export_template(osv.osv):
     }
 
     _defaults = {
-        'domain': lambda * a: '[]',
+        'domain': '[]',
     }
 
     def _build_domain(self, cr, uid, export_template, context):
@@ -70,13 +69,25 @@ class ir_model_export_template(osv.osv):
         export_ids = []
         for export_template in self.browse(cr, uid, ids, context):
             total_offset = 1
+            domain = self._build_domain(cr, uid, export_template, context)
+            res_ids = self.pool.get(export_template.model).search(cr, uid, domain, context=context)
+            res_ids_list = [res_ids]
+
             if export_template.limit:
-                domain = self._build_domain(cr, uid, export_template, context)
-                total_offset = int(ceil(self.pool.get(export_template.model).search(cr, uid, domain, count=True) / float(export_template.limit)))
-                if export_template.max_offset:
-                    total_offset = min(total_offset, export_template.max_offset)
-            for offset in range(total_offset):
-                export_ids.append(export_pool.create(cr, uid, {'export_tmpl_id': export_template.id, 'offset': offset}, context))
+                i = 0
+                while(res_ids[i:i + export_template.limit]):
+                    if export_template.max_offset and i == export_template.max_offset * export_template.limit:
+                        break
+                    res_ids_list.append(res_ids[i:i + export_template.limit])
+                    i += export_template.limit
+
+            for index, export_res_ids in enumerate(res_ids_list):
+                export_ids.append(export_pool.create(cr, uid, {
+                    'export_tmpl_id': export_template.id,
+                    'line_ids': [(0, 0, {'res_id': res_id}) for res_id in export_res_ids],
+                    'offset': index + 1,
+                }, context))
+
         context = context or {}
         context['same_thread'] = True
         export_pool.generate(cr, uid, export_ids, context)
@@ -118,7 +129,7 @@ self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)"""
                     'model_id': template.model_id.id,
                     'model': template.model_id.model,
                     'key2': 'client_action_multi',
-                    'value_unpickle': 'ir.actions.server,%d' % server_action_id,
+                    'value': 'ir.actions.server,%d' % server_action_id,
                 }
                 client_action_id = self.pool.get('ir.values').create(cr, uid, vals2, context)
                 template.write({'client_action_id': client_action_id, 'client_action_server_id': server_action_id, })
@@ -156,51 +167,17 @@ class ir_model_export(osv.osv):
     _order = 'create_date desc'
 
     _defaults = {
-        'state': lambda * a: 'draft',
+        'state': 'draft',
     }
 
-    def populate(self, cr, uid, ids, context=None):
-        """Link export instance with resources to export"""
-        if context is None:
-            context = {}
-        if context.get('not_populate', False):
-            return True
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        export_line_pool = self.pool.get('ir.model.export.line')
-        # Remove export lines linked to current exports (ids)
-        export_line_ids = export_line_pool.search(cr, uid, [('export_id', 'in', ids)])
-        if export_line_ids:
-            export_line_pool.unlink(cr, uid, export_line_ids)
-        # Create new export lines linked for current exports (ids)
-        for export in self.browse(cr, uid, ids):
-            domain = self.pool.get('ir.model.export.template')._build_domain(cr, uid, export.export_tmpl_id, context)
-            # The next lines exist just to bypass a orm bug
-            limit = export.limit
-            if isinstance(export.limit, str):
-                limit = int(eval(export.limit))
-            object_ids = self.pool.get(export.model_id.model).search(cr, uid, domain, export.offset, limit, export.order, context)
-            if object_ids:
-                for object_id in object_ids:
-                    export_line_pool.create(cr, uid, {'export_id': export.id, 'res_id': object_id})
-        return True
-
-    def create(self, cr, uid, vals, context=None):
-        export_id = super(ir_model_export, self).create(cr, uid, vals, context)
-        self.populate(cr, uid, export_id, context)
-        return export_id
-
-    def _run_actions(self, cr, uid, export, object_ids=[], context=None):
+    def _run_actions(self, cr, uid, export, res_ids=[], context=None):
         """Execute export method and action"""
         context = context or {}
         if export.method:
-            field_pool = self.pool.get('ir.model.fields')
-            field_ids = field_pool.search(cr, uid, [('model_id', '=', export.model_id.id)])
-            fields_to_export = [field['name'] for field in field_pool.read(cr, uid, field_ids, ['name'])]
-            getattr(self.pool.get(export.model_id.model), export.method)(cr, uid, object_ids, fields_to_export, context=context)
+            getattr(self.pool.get(export.model_id.model), export.method)(cr, uid, res_ids, context=context)
         if export.action_id:
-            for object_id in object_ids:
-                context['active_id'] = object_id
+            for res_id in res_ids:
+                context['active_id'] = res_id
                 self.pool.get('ir.actions.server').run(cr, uid, export.action_id.id, context=context)
 
     def generate(self, cr, uid, ids, context=None):
@@ -229,17 +206,15 @@ class ir_model_export(osv.osv):
         Catch and log exceptions"""
         if isinstance(ids, (int, long)):
             ids = [ids]
-        context = context or {}
-        context['not_populate'] = True
         for export in self.browse(cr, uid, ids, context):
             is_running = (export.state == 'running')
             try:
                 if not is_running:
                     if export.line_ids:
-                        object_ids = [line.res_id for line in export.line_ids]
+                        res_ids = [line.res_id for line in export.line_ids]
                         export.write({'state': 'running'}, context)
                         cr.commit()
-                        self._run_actions(cr, uid, export, object_ids, context)
+                        self._run_actions(cr, uid, export, res_ids, context)
                     export.write({'state': 'done'}, context)
             except Exception, e:
                 cr.rollback()
