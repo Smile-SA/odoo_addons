@@ -44,13 +44,16 @@ class matrix(fields.dummy):
         #return False
 
 
+    def date_to_str(self, date):
+        return date.strftime('%Y%m%d')
+
+
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
         """
 
         line_ids_property_name = args[0]
         cell_ids_property_name = args[1]
-        cell_value_property_name = args[2]
 
         matrix_list = {}
 
@@ -59,20 +62,47 @@ class matrix(fields.dummy):
 
             matrix_data = []
 
+            date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.project').get_date_range(parent_obj)]
+
             lines = getattr(parent_obj, line_ids_property_name, [])
 
             for line in lines:
-                line_data = []
+                line_data = {}
+
+
+                # Populate our matrix with cell values found in the lines
+                cell_value_holder = 'boolean_value'
+                cell_type = 'boolean'
+                if line.hold_quantities is True:
+                    cell_value_holder = 'quantity'
+                    cell_type = 'float'
+
+                line_data.update({
+                    'id': line.id,
+                    'name': line.name,
+                    'type': cell_type,
+                    })
 
                 cells = getattr(line, cell_ids_property_name, [])
+
+                cells_data = {}
                 for cell in cells:
-                    line_data.append(getattr(cell, cell_value_property_name, None))
+                    cell_date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
+                    cells_data[cell_date.strftime('%Y%m%d')] = getattr(cell, cell_value_holder)
+
+                line_data.update({'cells_data': cells_data})
 
                 matrix_data.append(line_data)
 
             print repr(matrix_data)
 
-            matrix_list.update({parent_obj.id: matrix_data})
+            matrix_list.update({
+                parent_obj.id: {
+                    'matrix_data': matrix_data,
+                    'date_range': date_range,
+                    }
+                })
+
 
         return matrix_list
 
@@ -88,8 +118,7 @@ class smile_project(osv.osv):
         'start_date': fields.date('Start', required=True),
         'end_date': fields.date('End', required=True),
         'line_ids': fields.one2many('smile.project.line', 'project_id', "Project lines"),
-        'line_ids_copy': fields.related('line_ids', type='one2many', relation='smile.project.line', string="Project lines", readonly=True),
-        'matrix_line_ids': matrix('line_ids', 'cell_ids', 'cell_value_string', string="Project lines", readonly=True),
+        'matrix_line_ids': matrix('line_ids', 'cell_ids', string="Project lines", readonly=True),
         }
 
     _defaults = {

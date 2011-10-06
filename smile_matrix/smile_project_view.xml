@@ -16,8 +16,7 @@
                     <field name="start_date" colspan="2"/>
                     <field name="end_date" colspan="2"/>
                     <separator string="Project lines" colspan="4"/>
-                    <field name="line_ids_copy" colspan="4" widget="matrix"/>
-                    <field name="matrix_line_ids" colspan="4" widget="matrix"/>
+                    <field name="matrix_line_ids" colspan="4" widget="matrix" nolabel="1"/>
                     <field name="line_ids" colspan="4" nolabel="1">
                         <tree string="Lines">
                             <field name="name"/>
