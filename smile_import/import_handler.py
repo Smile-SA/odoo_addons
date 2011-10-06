@@ -19,7 +19,10 @@
 #
 ##############################################################################
 
-import logging, threading, datetime
+import datetime
+import logging
+import threading
+import traceback
 
 import pooler
 import tools
@@ -64,42 +67,59 @@ logger = logging.getLogger("smile_import")
 handler = SmileImportDBHandler()
 logger.addHandler(handler)
 
+def add_timing(original_method):
+    def new_method(self, msg):
+        delay = datetime.datetime.now() - self.trigger_start
+        msg += " after %sh %smin %ss" % tuple(str(delay).split(':'))
+        return original_method(self, msg)
+    return new_method
+
+def add_trace(original_method):
+    def new_method(self, msg):
+        stack = traceback.format_exc()
+        msg += '\n%s' % stack
+        return original_method(self, msg)
+    return new_method
 
 class SmileImportLogger():
     
     def __init__(self, uid, import_id, import_start=False):
+        """Keep import_start arg to be retro-compatible"""
         assert isinstance(uid, (int, long)), 'uid should be an integer'
         self.logger = logging.getLogger("smile_import")
-        
         self.uid = uid
         self.import_id = import_id
-        self.import_start = import_start
-        
-        self.logger_args = {
-                            'import_id': self.import_id,
-                            'uid': self.uid,
-                            }
-        
+        self.import_start = import_start or datetime.datetime.now()
+        self.logger_args = {'import_id': self.import_id, 'uid': self.uid}
+
+    def debug(self, msg):
+        self.logger.debug(msg, self.logger_args)
+
     def info(self, msg):
         self.logger.info(msg, self.logger_args)
 
     def warning(self, msg):
         self.logger.warning(msg, self.logger_args)
         
-    def error(self, msg):
-        self.logger.error(msg, self.logger_args)
-        
-    def critical(self, msg):
-        self.logger.critical(msg, self.logger_args)
-        
     def log(self, msg):
         self.logger.log(msg, self.logger_args)
 
+    @add_trace
+    def error(self, msg):
+        self.logger.error(msg, self.logger_args)
+
+    @add_trace
+    def critical(self, msg):
+        self.logger.critical(msg, self.logger_args)
+
+    @add_trace
     def exception(self, msg):
         self.logger.exception(msg, self.logger_args)
-        
+
+    @add_timing
     def time_info(self, msg):
-        if self.import_start:
-            delay = datetime.datetime.now() - self.import_start
-            msg = "%s h %s min %s sec: " % tuple(str(delay).split(':')) + msg
         self.logger.info(msg, self.logger_args)
+
+    @add_timing
+    def time_debug(self, msg):
+        self.logger.debug(msg, self.logger_args)
