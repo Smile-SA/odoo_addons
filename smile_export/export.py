@@ -67,8 +67,10 @@ class ir_model_export_template(osv.osv):
     def create_export(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        context = context or {}
         export_pool = self.pool.get('ir.model.export')
         export_ids = []
+
         for export_template in self.browse(cr, uid, ids, context):
             total_offset = 1
             domain = self._build_domain(cr, uid, export_template, context)
@@ -90,7 +92,6 @@ class ir_model_export_template(osv.osv):
                     'offset': index + 1,
                 }, context))
 
-        context = context or {}
         context['same_thread'] = True
         cr.commit()
         export_pool.generate(cr, uid, export_ids, context)
