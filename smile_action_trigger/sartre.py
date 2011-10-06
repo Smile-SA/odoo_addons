@@ -66,8 +66,8 @@ class SartreOperator(osv.osv):
         'symbol': fields.char('Symbol', size=8, required=True),
         'opposite_symbol': fields.char('Opposite symbol', size=12, help="Opposite symbol for SQL filter"),
         'value_age_filter': fields.selection([('current', 'Current'), ('old', 'Old'), ('both', 'Both')], 'Value Age Filter', required=True),
-        'native_operator': fields.selection([('=', 'is equal to'), ('<=', 'less than'), ('>=', 'greater than'), ('like', 'contains'),
-                                             ('ilike', 'contains exactly'), ('in', 'in'), ('child_of', 'child of'), ('none', 'none')], 'Native Operator'),
+        'native_operator': fields.selection([('=', 'is equal to'), ('<=', 'less than'), ('>=', 'greater than'), ('like', 'contains (case-sensitive matching)'),
+            ('ilike', 'contains (case-insensitive matching)'), ('in', 'in'), ('child_of', 'child of'), ('none', 'none')], 'Native Operator', required=True),
         'other_value_necessary': fields.boolean('Other Value Necessary'),
         'other_value_transformation': fields.char('Value Transformation', size=64, help="Useful only for native operator"),
         'expression': fields.text('Expression'),
@@ -190,6 +190,9 @@ class SartreTrigger(osv.osv):
         'executions_max_number': fields.integer('Max executions', help="Number of time actions are runned, indicates that actions will always be executed"),
         'log_ids': fields.function(_get_logs, method=True, type='one2many', relation='sartre.log', string="Logs"),
         'test_mode': fields.boolean('Test Mode'),
+        'exception_handling': fields.selection([('continue', 'Ignore actions in exception'), ('rollback', 'Rollback transaction')], 'Exception Handling', required=True),
+        'exception_warning': fields.selection([('custom', 'Custom'), ('none', 'None')], 'Exception Warning', required=True),
+        'exception_message': fields.char('Exception Message', size=256, translate=True, required=True),
     }
 
     _defaults = {
@@ -202,6 +205,9 @@ class SartreTrigger(osv.osv):
         'interval_number': 1,
         'interval_type': 'hours',
         'nextcall': time.strftime("%Y-%m-%d %H:%M:%S"),
+        'exception_handling': 'continue',
+        'exception_warning': 'custom',
+        'exception_message': 'Action failed. Please, contact your administrator.',
     }
 
     @tools.cache()
@@ -373,6 +379,7 @@ class SartreTrigger(osv.osv):
                 self._run_now(cursor, uid, trigger['id'], context)
         finally:
             if triggers_in_test_mode:
+                test_cursor.rollback()
                 test_cursor.close()
         return True
 
@@ -419,12 +426,22 @@ class SartreTrigger(osv.osv):
             context.setdefault('triggers', {}).setdefault(trigger.id, []).extend(filtered_object_ids)
             for action in trigger.action_ids:
                 if action.active:
+                    if trigger.exception_handling == 'continue':
+                        cr.execute("SAVEPOINT smile_action_trigger")
                     try:
                         self._run_action_for_object_ids(cr, uid, action, filtered_object_ids, context)
                         logger.time_info('[%s] Successful Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
                     except Exception, e:
                         logger.exception('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
-                        #TODO: add savepoint to rollback until the begin of Sartre
+                        if trigger.exception_handling == 'continue' and not action.force_rollback:
+                            cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger")
+                        else:
+                            cr.rollback()
+                            logger.time_info("[%s] Transaction rolled back" % (pid,))
+                            if trigger.exception_warning == 'custom':
+                                raise osv.except_osv(_('Error'), _('%s\n[Action Trigger "%s" - Pid %s]') % (trigger.exception_message, trigger.name, pid))
+                            else:# elif trigger.exception_warning == 'none':
+                                return True
             if trigger.executions_max_number:
                 for object_id in filtered_object_ids:
                     self.pool.get('sartre.execution').update_executions_counter(cr, uid, trigger, object_id)
@@ -680,6 +697,6 @@ def sartre_decorator(original_method):
         return result
     return sartre_trigger
 
-for method in [orm.orm.create, orm.orm.write, orm.orm.unlink, fields.function.get, fields.function.set]:
-    if hasattr(method.im_class, method.__name__):
-        setattr(method.im_class, method.__name__, sartre_decorator(getattr(method.im_class, method.__name__)))
+for orm_method in [orm.orm.create, orm.orm.write, orm.orm.unlink, fields.function.get, fields.function.set]:
+    if hasattr(orm_method.im_class, orm_method.__name__):
+        setattr(orm_method.im_class, orm_method.__name__, sartre_decorator(getattr(orm_method.im_class, orm_method.__name__)))

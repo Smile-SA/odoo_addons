@@ -84,6 +84,11 @@
 						</page>
 						<page string="Actions">
 							<field name="action_ids" colspan="4" nolabel="1" domain="[('model_id','=',model_id)]" />
+							<group name="exception_management" attrs="{'invisible': [('test_mode', '=', True)]}">
+								<field name="exception_handling"/>
+								<field name="exception_warning" attrs="{'invisible': [('exception_handling', '!=', 'rollback')]}"/>
+								<field name="exception_message" colspan="4" attrs="{'invisible': ['|', ('exception_handling', '!=', 'rollback'), ('exception_warning', '!=', 'custom')]}"/>
+							</group>
 						</page>
 						<page string="Logs">
 							<field name="log_ids" colspan="4" nolabel="1" mode="tree">
