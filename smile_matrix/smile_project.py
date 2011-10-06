@@ -138,6 +138,7 @@ class smile_project(osv.osv):
             'view_type': 'form',
             'context': new_context,
             'target': 'new',
+            #'target': 'current',
             }
 
 smile_project()
