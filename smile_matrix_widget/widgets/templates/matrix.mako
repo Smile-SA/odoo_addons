@@ -1,3 +1,8 @@
 <span class="matrix">
-    <h1>Matrix wisget here</h1>
+    <h1>Matrix widget here</h1>
+
+    %for v in value:
+        <div>${repr(v)}</div>
+    %endfor
+
 </span>

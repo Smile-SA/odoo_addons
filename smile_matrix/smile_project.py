@@ -25,6 +25,59 @@ from osv import osv, fields
 
 
 
+class matrix(fields.dummy):
+    """ A custom field to prepare data for, and mangle data from, the matrix widget
+    """
+
+    # Copy of the native dummy field
+    #def __init__(self, *arg, **args):
+        #self.arg = arg
+        #self._relations = []
+        #super(dummy, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, method=True, fnct_search=None, **args)
+
+
+    #def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
+        #return []
+
+
+    #def _fnct_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
+        #return False
+
+
+    def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
+        """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
+        """
+
+        line_ids_property_name = args[0]
+        cell_ids_property_name = args[1]
+        cell_value_property_name = args[2]
+
+        matrix_list = {}
+
+        obj_list = obj.browse(cr, uid, ids, context)
+        for parent_obj in obj_list:
+
+            matrix_data = []
+
+            lines = getattr(parent_obj, line_ids_property_name, [])
+
+            for line in lines:
+                line_data = []
+
+                cells = getattr(line, cell_ids_property_name, [])
+                for cell in cells:
+                    line_data.append(getattr(cell, cell_value_property_name, None))
+
+                matrix_data.append(line_data)
+
+            print repr(matrix_data)
+
+            matrix_list.update({parent_obj.id: matrix_data})
+
+        return matrix_list
+
+
+
 class smile_project(osv.osv):
     _name = 'smile.project'
 
@@ -35,7 +88,8 @@ class smile_project(osv.osv):
         'start_date': fields.date('Start', required=True),
         'end_date': fields.date('End', required=True),
         'line_ids': fields.one2many('smile.project.line', 'project_id', "Project lines"),
-        'matrix_line_ids': fields.related('line_ids', type='one2many', relation='smile.project.line', string="Project lines", readonly=True),
+        'line_ids_copy': fields.related('line_ids', type='one2many', relation='smile.project.line', string="Project lines", readonly=True),
+        'matrix_line_ids': matrix('line_ids', 'cell_ids', 'cell_value_string', string="Project lines", readonly=True),
         }
 
     _defaults = {

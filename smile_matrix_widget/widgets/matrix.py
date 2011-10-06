@@ -19,21 +19,35 @@
 #
 ##############################################################################
 
+import random
+
 from openerp.widgets import TinyInputWidget, register_widget
 from openerp import validators
+
+from openobject.widgets import JSSource, JSLink
 
 
 
 class Matrix(TinyInputWidget):
 
     template = "/smile_matrix_widget/widgets/templates/matrix.mako"
+
+    javascript = [
+        JSLink("smile_matrix_widget", "javascript/matrix.js"),
+        ]
+
     params = ['widget']
 
+
     def __init__(self, **attrs):
+        name = 'matrix_%s' % (random.randint(0,10000))
         super(Matrix, self).__init__(**attrs)
-        self.validator = validators.String()
+        #self.validator = validators.String()
+
 
     def set_value(self, value):
+
         self.default = value
+
 
 register_widget(Matrix, ["matrix"])
