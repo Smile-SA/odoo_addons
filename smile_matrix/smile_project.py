@@ -35,6 +35,7 @@ class smile_project(osv.osv):
         'start_date': fields.date('Start', required=True),
         'end_date': fields.date('End', required=True),
         'line_ids': fields.one2many('smile.project.line', 'project_id', "Project lines"),
+        'matrix_line_ids': fields.related('line_ids', type='one2many', relation='smile.project.line', string="Project lines", readonly=True),
         }
 
     _defaults = {

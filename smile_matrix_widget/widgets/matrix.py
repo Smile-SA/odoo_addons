@@ -27,7 +27,7 @@ from openerp import validators
 class Matrix(TinyInputWidget):
 
     template = "/smile_matrix_widget/widgets/templates/matrix.mako"
-    params = ['height', 'width', 'widget']
+    params = ['widget']
 
     def __init__(self, **attrs):
         super(Matrix, self).__init__(**attrs)
