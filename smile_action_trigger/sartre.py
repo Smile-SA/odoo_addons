@@ -88,9 +88,16 @@ class SartreOperator(osv.osv):
 
     @tools.cache(skiparg=3)
     def _get_operator(self, cr, uid, name, context=None):
+        opposite_operator = False
+        if name.startswith('not '):
+            opposite_operator = True
+            name = name.replace('not ', '')
         operator_id = self.search(cr, uid, ['|', ('symbol', '=', name), ('opposite_symbol', '=', name)], limit=1, context=context)
         if operator_id:
-            return self.browse(cr, uid, operator_id[0], context)
+            operator = self.browse(cr, uid, operator_id[0], context)
+            if name == operator.opposite_symbol:
+                opposite_operator = not opposite_operator
+            return operator, opposite_operator
         return
 
     def create(self, cr, uid, vals, context=None):
@@ -160,6 +167,55 @@ class SartreTrigger(osv.osv):
             res[trigger_id] = self.pool.get('sartre.log').search(cr, uid, [('trigger_id', '=', trigger_id)], context=context)
         return res
 
+    def _is_dynamic_filter(self, cr, uid, item, context=None):
+        if isinstance(item, tuple):
+            # Old values
+            if item[0].startswith('OLD_'):
+                return True
+            # Dynamic comparison value
+            if re.match('(\[\[.+?\]\])', str(item[2]) or ''):
+                return True
+            # Python operator
+            operator = self.pool.get('sartre.operator')._get_operator(cr, uid, item[1], context)
+            if operator and operator[0] and operator[0].native_operator == 'none':
+                return True
+        return False
+
+    def _is_python_domain(self, cr, uid, ids, name, args, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = {}.fromkeys(ids, False)
+        for trigger in self.browse(cr, uid, ids, context):
+            domain = eval(trigger.domain_force or '[]') 
+            if not domain:
+                for filter_ in trigger.filter_ids:
+                    domain.extend(eval(filter_.domain or '[]'))
+            for item in domain:
+                is_dynamic_item = self._is_dynamic_filter(cr, uid, item, context)
+                if is_dynamic_item:
+                    res[trigger.id] = True
+                    break
+        return res
+
+    def _get_trigger_ids_from_filters(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        return [filter_['trigger_id'][0] for filter_ in self.read(cr, uid, ids, ['trigger_id'], context)]
+    
+    def _get_trigger_ids_from_operators(self, cr, uid, ids, context=None):
+        return self.pool.get('sartre.trigger').search(cr, uid, [], context={'active_test': False})
+
+    def _dummy(self, cr, uid, ids, name, arg, context=None):
+        return {}.fromkeys(isinstance(ids, (int, long)) and [ids] or ids, '')
+
+    def _search_pid(self, cr, uid, obj, name, domain, context=None):
+        trigger_ids = []
+        if domain and isinstance(domain[0], tuple):
+            log_obj = self.pool.get('sartre.log')
+            log_ids = log_obj.search(cr, uid, [('message', domain[0][1], domain[0][2])], context=context)
+            trigger_ids = [log['trigger_id'] for log in log_obj.read(cr, uid, log_ids, ['trigger_id'], context)]
+        return [('id', 'in', trigger_ids)]
+
     _columns = {
         'name': fields.char("Name", size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
@@ -193,6 +249,12 @@ class SartreTrigger(osv.osv):
         'exception_handling': fields.selection([('continue', 'Ignore actions in exception'), ('rollback', 'Rollback transaction')], 'Exception Handling', required=True),
         'exception_warning': fields.selection([('custom', 'Custom'), ('none', 'None')], 'Exception Warning', required=True),
         'exception_message': fields.char('Exception Message', size=256, translate=True, required=True),
+        'python_domain': fields.function(_is_python_domain, method=True, type='boolean', string='Python domain', store={
+            'sartre.trigger': (lambda self, cr, uid, ids, context=None: ids, ['domain_force', 'filter_ids'], 10),
+            'sartre.filter': (_get_trigger_ids_from_filters, None, 10),
+            'sartre.operator': (_get_trigger_ids_from_operators, None, 10),
+        }),
+        'pid_search': fields.function(_dummy, fnct_search=_search_pid, method=True, type='char', string='Pid'),
     }
 
     _defaults = {
@@ -294,52 +356,38 @@ class SartreTrigger(osv.osv):
             return ('id', 'in', res_ids)
         return
 
-    def _update_domain(self, cr, uid, trigger, domain, context):
+    def _build_python_domain(self, cr, uid, trigger, domain, context):
         """Updated filters based on old or dynamic values, or Python operators"""
         operator_obj = self.pool.get('sartre.operator')
+        old_values = context.get('old_values', {})
+        current_values = _get_browse_record_dict(self.pool.get(trigger.model_id.model), cr, uid, context['active_object_ids'])
         domain = domain or []
-        indexes = [index for index, item in enumerate(domain) if isinstance(item, tuple) and (item[0].startswith('OLD_') \
-                                                            or (operator_obj._get_operator(cr, uid, item[1], context) and operator_obj._get_operator(cr, uid, item[1], context).native_operator == 'none') \
-                                                            or re.match('(\[\[.+?\]\])', str(item[2]) or ''))]
-        if not indexes:
-            domain.append(('id', 'in', context['active_object_ids']))
-        else:
-            old_values = context.get('old_values', {})
-            current_values = _get_browse_record_dict(self.pool.get(trigger.model_id.model), cr, uid, context['active_object_ids'])
-            # Replace filters on old values or Python operators by filters on active objects
-            for index in indexes:
-                active_object_ids = list(set(context['active_object_ids']))
-                condition = domain[index]
-                field = condition[0].replace('OLD_', '')
-                prefix = ''
-                operator_symbol = condition[1]
-                if operator_symbol.startswith('not '): # Can accept 'not ==' instead of '<>' but can't accept '!='
-                    prefix = 'not '
-                    operator_symbol = operator_symbol.replace('not ', '')
-                operator_inst = operator_obj._get_operator(cr, uid, condition[1], context=context)
-                if operator_inst:
-                    prefix += operator_symbol == operator_inst.opposite_symbol and 'not ' or '' # += rather than = in order to manage double negation
-                other_value = condition[2]
-                match = other_value and re.match('(\[\[.+?\]\])', other_value)
-                for object_id in list(active_object_ids):
-                    if match:
-                        other_value = eval(str(match.group()[2:-2]).strip(), {
-                            'object': self.pool.get(trigger.model_id.model).browse(cr, uid, object_id),
+        for index, condition in enumerate(domain):
+            if self._is_dynamic_filter(cr, uid, condition, context):
+                active_object_ids = context['active_object_ids'][:]
+
+                field, operator_symbol, other_value = condition
+                field = field.replace('OLD_', '')
+                operator_inst, opposite_operator = operator_obj._get_operator(cr, uid, operator_symbol, context=context)
+                
+                dynamic_other_value = other_value and re.match('(\[\[.+?\]\])', other_value)
+                for object in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
+                    if dynamic_other_value:
+                        other_value = eval(str(dynamic_other_value.group()[2:-2]).strip(), {
+                            'object': object,
                             'context': context,
-                            'time':time, })
-                    current_field_value = current_values.get(object_id, {}).get(field, False)
-                    old_field_value = current_field_value
-                    if object_id in old_values and field in old_values[object_id]:
-                        old_field_value = old_values[object_id][field]
+                            'time':time,
+                        })
+                    current_field_value = current_values.get(object.id, {}).get(field)
+                    old_field_value = old_values.get(object.id, {}).get(field)
                     localdict = {'selected_field_value': 'OLD_' in condition[0] and old_field_value or current_field_value,
                                  'current_field_value': current_field_value,
                                  'old_field_value': old_field_value,
                                  'other_value': other_value}
-                    operator_inst = operator_obj._get_operator(cr, uid, operator_symbol, context=context)
                     if operator_inst:
                         exec operator_inst.expression in localdict
-                    if 'result' not in localdict or ('result' in localdict and (prefix and localdict['result'] or not localdict['result'])):
-                        active_object_ids.remove(object_id)
+                    if opposite_operator == localdict.get('result', opposite_operator):
+                        active_object_ids.remove(object.id)
                 domain[index] = ('id', 'in', active_object_ids)
         return domain
 
@@ -360,7 +408,11 @@ class SartreTrigger(osv.osv):
         if trigger.id in context.get('triggers', []):
             context['active_object_ids'] = list(set(context['active_object_ids']) - set(context['triggers'][trigger.id]))
         # Update filters based on old or dynamic values or Python operators
-        return self._update_domain(cr, uid, trigger, domain, context)
+        if trigger.python_domain:
+            domain = self._build_python_domain(cr, uid, trigger, domain, context)
+        else:
+            domain.append(('id', 'in', context['active_object_ids']))
+        return domain
 
     def run_now(self, cr, uid, ids, context=None):
         """Execute now server actions"""
@@ -369,18 +421,9 @@ class SartreTrigger(osv.osv):
         context.setdefault('active_test', False)
         if isinstance(ids, (int, long)):
             ids = [ids]
-        triggers = self.read(cr, uid, ids, ['test_mode'], context)
-        triggers_in_test_mode = [trigger for trigger in triggers if trigger['test_mode']]
-        if triggers_in_test_mode:
-            test_cursor = pooler.get_db(cr.dbname).cursor()
-        try:
-            for trigger in triggers:
-                cursor = trigger['test_mode'] and test_cursor or cr
-                self._run_now(cursor, uid, trigger['id'], context)
-        finally:
-            if triggers_in_test_mode:
-                test_cursor.rollback()
-                test_cursor.close()
+        for trigger in self.read(cr, uid, ids, ['test_mode'], context):
+            context['test_mode'] = trigger['test_mode']
+            self._run_now(cr, uid, trigger['id'], context)
         return True
 
     def _get_pid(self, cr, uid):
@@ -402,12 +445,15 @@ class SartreTrigger(osv.osv):
     def _run_now(self, cr, uid, trigger_id, context):
         logger = SartreLogger(uid, trigger_id)
         # Get sequence in order to differentiate logs per run
-        pid = self._get_pid(cr, uid)
+        context.setdefault('pid_list', []).append(self._get_pid(cr, uid))
+        pid = '-'.join(map(str, context['pid_list']))
         if not pid:
             logger.critical('Action Trigger failed: impossible to get a pid for dbname %s' % (cr.dbname))
             return
 
         # Get sequence in order to differentiate logs per run
+        if context.get('test_mode', False):
+            logger.info('[%s] Trigger in test mode' % (pid,))
         logger.debug('[%s] Trigger on %s' % (pid, context.get('trigger', 'manual')))
         logger.debug('[%s] Context: %s' % (pid, context))
         trigger = self.browse(cr, uid, trigger_id, context)
@@ -424,24 +470,30 @@ class SartreTrigger(osv.osv):
         if filtered_object_ids:
             logger.info('[%s] Trigger on %s for objects %s,%s' % (pid, context.get('trigger', 'manual'), trigger.model_id.model, filtered_object_ids))
             context.setdefault('triggers', {}).setdefault(trigger.id, []).extend(filtered_object_ids)
+            if context.get('test_mode', False):
+                cr.execute("SAVEPOINT smile_action_trigger_test_mode_%s" % trigger.id)
             for action in trigger.action_ids:
                 if action.active:
                     if trigger.exception_handling == 'continue':
-                        cr.execute("SAVEPOINT smile_action_trigger")
+                        cr.execute("SAVEPOINT smile_action_trigger_%s" % trigger.id)
                     try:
+                        logger.debug('[%s] Launch Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
                         self._run_action_for_object_ids(cr, uid, action, filtered_object_ids, context)
                         logger.time_info('[%s] Successful Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
                     except Exception, e:
                         logger.exception('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
                         if trigger.exception_handling == 'continue' and not action.force_rollback:
-                            cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger")
+                            cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_%s" % trigger.id)
                         else:
                             cr.rollback()
                             logger.time_info("[%s] Transaction rolled back" % (pid,))
                             if trigger.exception_warning == 'custom':
-                                raise osv.except_osv(_('Error'), _('%s\n[Action Trigger "%s" - Pid %s]') % (trigger.exception_message, trigger.name, pid))
+                                raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (trigger.exception_message, pid))
                             else:# elif trigger.exception_warning == 'none':
                                 return True
+            if context.get('test_mode', False):
+                cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_test_mode_%s" % trigger.id)
+                logger.time_info("[%s] Actions execution rolled back" % (pid,))
             if trigger.executions_max_number:
                 for object_id in filtered_object_ids:
                     self.pool.get('sartre.execution').update_executions_counter(cr, uid, trigger, object_id)
@@ -453,6 +505,7 @@ class SartreTrigger(osv.osv):
         for active_id in active_ids:
             context['active_id'] = active_id
             self.pool.get('ir.actions.server').run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context)
+        return True
 
     def _build_id_groups(self, cr, uid, action, object_ids, context):
         if not action.run_once:
@@ -462,17 +515,13 @@ class SartreTrigger(osv.osv):
             # object_ids passed all together
             return [object_ids]
         else:
-            #object_ids grouped by identical 'group_by eval value'
+            # object_ids grouped by identical 'group_by eval value'
             action_objects = self.pool.get(action.model_id.model).browse(cr, uid, object_ids, context)
             eval_to_ids = {}
             for action_object in action_objects:
-                value = eval(action.group_by, {
-                                               'object': action_object,
-                                               'context': context,
-                                               'time':time, })
+                value = eval(action.group_by, {'object': action_object, 'context': context, 'time':time})
                 eval_to_ids.setdefault(value, []).append(action_object.id)
             return eval_to_ids.values()
-
 
     def check_triggers(self, cr, uid, context=None):
         """Call the scheduler to check date based trigger triggers"""

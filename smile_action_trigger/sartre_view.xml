@@ -129,11 +129,14 @@
 	                    <filter string="other method" icon="terp-tools" domain="[('on_other','=',True)]"/>
 	                    <filter string="function field" icon="terp-tools" domain="[('on_function','=',True)]"/>
 	                    <filter string="on date" icon="terp-tools" domain="[('on_date','=',True)]"/>
-                            <filter string="Show all" icon="terp-tools" domain="[('active','in',('True','False'))]"/>
-	                    <filter string="Inactive only" icon="terp-tools" domain="[('active','=',False)]"/>
 	                    <separator orientation="vertical"/>
 	                    <field name="name"/>
-                            <field name="model_id"/>
+                        <field name="model_id"/>
+	                </group>
+	                <newline/>
+	                <group expand="0" string="Extended..." groups="base.group_extended">
+	                    <field name="active"/>
+	                    <field name="pid_search"/>
 	                </group>
 	                <newline/>
 	                <group expand="0" string="Group By..." groups="base.group_extended">
@@ -148,7 +151,7 @@
 			<field name="res_model">sartre.trigger</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-                        <field name="context">{'active_test': False}</field>
+			<field name="context">{'active_test': False}</field>
 		</record>
 		<menuitem action="sartre_trigger_action" id="sartre_trigger_menu" parent="base.next_id_6" sequence="10" />
 
