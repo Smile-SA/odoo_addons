@@ -29,21 +29,6 @@ class matrix(fields.dummy):
     """ A custom field to prepare data for, and mangle data from, the matrix widget
     """
 
-    # Copy of the native dummy field
-    #def __init__(self, *arg, **args):
-        #self.arg = arg
-        #self._relations = []
-        #super(dummy, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, method=True, fnct_search=None, **args)
-
-
-    #def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
-        #return []
-
-
-    #def _fnct_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
-        #return False
-
-
     def date_to_str(self, date):
         return date.strftime('%Y%m%d')
 
@@ -51,59 +36,40 @@ class matrix(fields.dummy):
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
         """
-
         line_ids_property_name = args[0]
         cell_ids_property_name = args[1]
-
         matrix_list = {}
-
         obj_list = obj.browse(cr, uid, ids, context)
         for parent_obj in obj_list:
-
             matrix_data = []
-
             date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.project').get_date_range(parent_obj)]
-
             lines = getattr(parent_obj, line_ids_property_name, [])
-
             for line in lines:
                 line_data = {}
-
-
                 # Populate our matrix with cell values found in the lines
                 cell_value_holder = 'boolean_value'
                 cell_type = 'boolean'
                 if line.hold_quantities is True:
                     cell_value_holder = 'quantity'
                     cell_type = 'float'
-
                 line_data.update({
                     'id': line.id,
                     'name': line.name,
                     'type': cell_type,
                     })
-
                 cells = getattr(line, cell_ids_property_name, [])
-
                 cells_data = {}
                 for cell in cells:
                     cell_date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
                     cells_data[cell_date.strftime('%Y%m%d')] = getattr(cell, cell_value_holder)
-
                 line_data.update({'cells_data': cells_data})
-
                 matrix_data.append(line_data)
-
-            print repr(matrix_data)
-
             matrix_list.update({
                 parent_obj.id: {
                     'matrix_data': matrix_data,
                     'date_range': date_range,
                     }
                 })
-
-
         return matrix_list
 
 
@@ -118,7 +84,7 @@ class smile_project(osv.osv):
         'start_date': fields.date('Start', required=True),
         'end_date': fields.date('End', required=True),
         'line_ids': fields.one2many('smile.project.line', 'project_id', "Project lines"),
-        'matrix_line_ids': matrix('line_ids', 'cell_ids', string="Project lines", readonly=True),
+        'matrix_line_ids': matrix('line_ids', 'cell_ids', string="Project lines", readonly=False),
         }
 
     _defaults = {
@@ -144,11 +110,83 @@ class smile_project(osv.osv):
 
     ## Native methods
 
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        result = super(smile_project, self).read(cr, uid, ids, fields, context, load)
+        # Let anyone read a cell value durectly using the cell_LineID_YYYYMMMDD scheme
+        if isinstance(ids, (int, long)):
+            result = [result]
+        updated_result = []
+        for props in result:
+            unread_fields = set(fields).difference(set(props.keys()))
+            for f_id in unread_fields:
+                f_id_elements = f_id.split('_')
+                if len(f_id_elements) == 3 and f_id_elements[0] == 'cell':
+                    line_id = int(f_id_elements[1])
+                    cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
+                    #project = self.browse(cr, uid, props['id'], context)
+                    cell_id = self.pool.get('smile.project.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
+                    if cell_id:
+                        cell = self.pool.get('smile.project.line.cell').browse(cr, uid, cell_id, context)[0]
+                        if cell.hold_quantities:
+                            cell_value = cell.quantity
+                        else:
+                            cell_value = cell.boolean_value
+                        props.update({f_id: cell_value})
+            updated_result.append(props)
+        if isinstance(ids, (int, long)):
+            updated_result = updated_result[0]
+        return updated_result
+
     def write(self, cr, uid, ids, vals, context=None):
         ret = super(smile_project, self).write(cr, uid, ids, vals, context)
         # Automaticcaly remove out of range cells if dates changes
         if 'start_date' in vals or 'end_date' in vals:
             self.remove_outdated_cells(cr, uid, ids, vals, context)
+        # Parse and clean-up data comming from the matrix
+        for (cell_name, cell_value) in vals.items():
+            # Filters out non cell values
+            if not cell_name.startswith('cell_'):
+                continue
+            cell_name_fragments = cell_name.split('_')
+            line_id = int(cell_name_fragments[1])
+            cell_date = datetime.datetime.strptime(cell_name_fragments[2], '%Y%m%d')
+            # Get the line
+            line = self.pool.get('smile.project.line').browse(cr, uid, line_id, context)
+            # Convert the raw value to the right one depending on the type of the line
+            if line.hold_quantities:
+                # Quantity conversion
+                if type(cell_value) is type(''):
+                    cell_value = float(cell_value)
+                else:
+                    cell_value = None
+            else:
+                # Boolean conversion
+                if cell_value == '1':
+                    cell_value = True
+                else:
+                    cell_value = False
+            # Ignore non-modified cells
+            if cell_value is None:
+                continue
+            # Prepare the cell value
+            cell_vals = {}
+            if line.hold_quantities:
+                cell_vals.update({'quantity': cell_value})
+            else:
+                cell_vals.update({'boolean_value': cell_value})
+            # Search for an existing cell at the given date
+            cell = self.pool.get('smile.project.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
+            # Cell doesn't exists, create it
+            if not cell:
+                cell_vals.update({
+                    'date': cell_date,
+                    'line_id': line_id,
+                    })
+                self.pool.get('smile.project.line.cell').create(cr, uid, cell_vals, context)
+            # Update cell with our data
+            else:
+                cell_id = cell[0]
+                self.pool.get('smile.project.line.cell').write(cr, uid, cell_id, cell_vals, context)
         return ret
 
 
@@ -188,42 +226,6 @@ class smile_project(osv.osv):
         if outdated_cells:
             self.pool.get('smile.project.line.cell').unlink(cr, uid, outdated_cells, context)
         return
-
-    def matrix(self, cr, uid, ids, context=None):
-        if len(ids) > 1:
-            raise osv.except_osv('Error', 'len(ids) !=1')
-        project = self.browse(cr, uid, ids[0], context)
-        vals = {}
-        # Set default values for all cells of the matrix
-        for line in project.line_ids:
-            # Populate our matrix with cell values found in the lines
-            cell_value_holder = 'boolean_value'
-            cell_type = 'boolean'
-            if line.hold_quantities is True:
-                cell_value_holder = 'quantity'
-                cell_type = 'float'
-            for cell in line.cell_ids:
-                cell_date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
-                vals['cell_%s_%s' % (line.id, cell_date.strftime('%Y%m%d'))] = (getattr(cell, cell_value_holder), cell_type)
-            # Create empty cells for missing dates
-            for date_str in self.pool.get('smile.matrix').get_date_range_as_str(project):
-                cell_id = 'cell_%s_%s' % (line.id, date_str)
-                if cell_id not in vals:
-                    vals[cell_id] = (None, cell_type)
-        new_context = context.copy()
-        new_context['project_id'] = ids[0]
-        matrix_id = self.pool.get('smile.matrix').create(cr, uid, vals, new_context)
-        return {
-            'name': "%s matrix" % (project.name,),
-            'type': 'ir.actions.act_window',
-            'res_model': 'smile.matrix',
-            'res_id': matrix_id,
-            'view_mode': 'form',
-            'view_type': 'form',
-            'context': new_context,
-            'target': 'new',
-            #'target': 'current',
-            }
 
 smile_project()
 

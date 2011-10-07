@@ -28,6 +28,7 @@ $(document).ready(function(){
         }
     });
 
+    // Compute totals
     $(".matrix input[kind!='boolean'][name^='cell_']:not(:disabled)").change(function(){
         name_fragments = $(this).attr("id").split("_");
         column_index = name_fragments[2];

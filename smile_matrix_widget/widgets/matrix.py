@@ -25,6 +25,16 @@ from openerp.widgets import TinyInputWidget, register_widget
 from openerp import validators
 
 from openobject.widgets import JSSource, JSLink
+from openobject.validators import BaseValidator
+
+
+class MatrixValidator(BaseValidator):
+    def _to_python(self, value, state):
+        import pdb; set_trace()
+
+    def _from_python(self, value, state):
+        import pdb; set_trace()
+
 
 
 
@@ -40,14 +50,18 @@ class Matrix(TinyInputWidget):
 
 
     def __init__(self, **attrs):
-        name = 'matrix_%s' % (random.randint(0,10000))
+        name = 'matrix_%s' % (random.randint(0, 10000))
         super(Matrix, self).__init__(**attrs)
-        #self.validator = validators.String()
+        self.validator = MatrixValidator()
 
 
     def set_value(self, value):
-
         self.default = value
+
+    def save(self, **kw):
+        import pdb; pdb.set_trace()
+        return
+
 
 
 register_widget(Matrix, ["matrix"])

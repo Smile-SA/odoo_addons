@@ -12,7 +12,6 @@
             <field name="arch" type="xml">
                 <form string="Project">
                     <field name="name" colspan="2"/>
-                    <button type="object" name="matrix" string="Matrix" colspan="2"/>
                     <field name="start_date" colspan="2"/>
                     <field name="end_date" colspan="2"/>
                     <separator string="Project lines" colspan="4"/>
