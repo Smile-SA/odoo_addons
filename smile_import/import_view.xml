@@ -82,12 +82,12 @@
 					<separator string="Logs" colspan="4"/>
 					<field name="log_ids" colspan="4" nolabel="1" mode="tree,form">
 						<tree string="Logs">
-							<field name="create_date" />
+							<field name="log_date" />
 							<field name="level" />
 							<field name="message" />
 						</tree>
 						<form string="Log">
-							<field name="create_date" />
+							<field name="log_date" />
 							<field name="level" />
 							<field name="message" colspan="4"/>
 						</form>
@@ -111,37 +111,6 @@
 					<field name="test_mode"/>
 					<field name="log_ids" />
 				</tree>
-			</field>
-		</record>
-		
-		<record id="view_import_log_tree" model="ir.ui.view">
-			<field name="name">ir.model.import.log.tree</field>
-			<field name="model">ir.model.import.log</field>
-			<field name="type">tree</field>
-			<field name="priority">32</field>
-			<field name="arch" type="xml">
-				<tree string="Import Logs">
-					<field name="create_date"/>
-					<field name="import_id"/>
-					<field name="level"/>
-					<field name="message"/>
-			    </tree>
-			</field>
-		</record>
-		
-		<record id="view_import_log_form" model="ir.ui.view">
-			<field name="name">ir.model.import.log.form</field>
-			<field name="model">ir.model.import.log</field>
-			<field name="type">form</field>
-			<field name="priority">32</field>
-			<field name="arch" type="xml">
-				<form string="Import Log">
-					<field name="import_id"/>
-					<field name="create_date"/>
-					<field name="level"/>
-					<separator string="Message" colspan="4"/>
-					<field name="message" nolabel="1" colspan="4"/>
-			    </form>
 			</field>
 		</record>
 

@@ -31,7 +31,7 @@ Development in progress
 
 Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
 """,
-    "depends" : ['smile_db_handler'],
+    "depends" : ['smile_log'],
     "init_xml" : [
         'security/smile_import_security.xml',
         'security/ir.model.access.csv',
