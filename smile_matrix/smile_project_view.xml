@@ -2,8 +2,6 @@
 <openerp>
     <data noupdate="0">
 
-        <act_window name="Project matrix" res_model="smile.matrix" id="action_project_matrix" view_mode='form' target='new'/>
-
         <record model="ir.ui.view" id="view_project_form">
             <field name="name">smile_project.view_project</field>
             <field name="model">smile.project</field>
