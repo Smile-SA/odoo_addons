@@ -68,7 +68,7 @@ logger.addHandler(handler)
 
 def add_timing(original_method):
     def new_method(self, msg):
-        delay = datetime.datetime.now() - self.trigger_start
+        delay = datetime.datetime.now() - self.export_start
         msg += " after %sh %smin %ss" % tuple(str(delay).split(':'))
         return original_method(self, msg)
     return new_method
