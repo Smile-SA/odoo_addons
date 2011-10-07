@@ -20,25 +20,30 @@
 ##############################################################################
 
 {
-    "name" : "Import",
+    "name" : "Smile DB Handler",
     "version" : "1.0",
     "author" : "Smile",
     "website": 'http://www.smile.fr',
     "category" : "Tools",
-    "description": """Import whatever objects
+    "description": """Logs handler writing to database
 
-Development in progress
+Notice
+
+* In your module __init__.py
+import logging
+logger = logging.getLogger(your_logger_name)
+handler = SmileDBHandler(your_log_model)
+logger.addHandler(handler)
+
+* In your code
+logger = SmileLogger(your_logger_name, your_model_res_id, uid, pid)
+logger.info(your_message) will create line in your log model linked to your model res id
 
 Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
 """,
-    "depends" : ['smile_db_handler'],
-    "init_xml" : [
-        'security/smile_import_security.xml',
-        'security/ir.model.access.csv',
-    ],
-    "update_xml": [
-        'import_view.xml',
-    ],
+    "depends" : ['base'],
+    "init_xml" : [],
+    "update_xml": [],
     "demo_xml" : [],
     "installable": True,
     "active": False,

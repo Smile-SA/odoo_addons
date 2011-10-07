@@ -19,27 +19,4 @@
 #
 ##############################################################################
 
-{
-    "name" : "Import",
-    "version" : "1.0",
-    "author" : "Smile",
-    "website": 'http://www.smile.fr',
-    "category" : "Tools",
-    "description": """Import whatever objects
-
-Development in progress
-
-Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
-""",
-    "depends" : ['smile_db_handler'],
-    "init_xml" : [
-        'security/smile_import_security.xml',
-        'security/ir.model.access.csv',
-    ],
-    "update_xml": [
-        'import_view.xml',
-    ],
-    "demo_xml" : [],
-    "installable": True,
-    "active": False,
-}
+import db_handler

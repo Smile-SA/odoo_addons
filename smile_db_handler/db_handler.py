@@ -27,31 +27,38 @@ import traceback
 import pooler
 import tools
 
-class SmileImportDBHandler(logging.Handler):
+class SmileDBHandler(logging.Handler):
 
-    def __init__(self, level=logging.NOTSET):
+    def __init__(self, log_model, level=logging.NOTSET):
         logging.Handler.__init__(self, level)
         self._dbname_to_cr = {}
+        self._log_model = log_model
 
     def emit(self, record):
         dbname = getattr(threading.currentThread(), 'dbname', '')
-        db, pool = pooler.get_db_and_pool(dbname, update_module=tools.config['init'] or tools.config['update'], pooljobs=False)
+        db, pool = pooler.get_db_and_pool(dbname, pooljobs=False)
         cr = self._dbname_to_cr.get(dbname, False)
         if not cr:
             cr = self._dbname_to_cr[dbname] = db.cursor()
-        import_id = record.args and isinstance(record.args, dict) and record.args.get('import_id', False) or False
-        uid = record.args and isinstance(record.args, dict) and record.args.get('uid', False) or False
-        
+
+        parent_id, pid, uid = False, '', False
+        if record.args and isinstance(record.args, dict):
+            parent_id = record.args.get('parent_id', False)
+            pid = record.args.get('pid', '')
+            uid = record.args.get('uid', False)
+
         if uid and pool.get('res.users').exists(cr, 1, uid):
-            import_log_obj = pool.get('ir.model.import.log')
-            import_log_obj.create(cr, uid, {
-                'import_id': import_id,
+            pool.get(self._log_model).create(cr, uid, {
+                'parent_id': parent_id,
+                'pid': pid,
                 'level': record.levelname,
                 'message': record.msg,
             })
         else:
-            cr.execute("INSERT INTO ir_model_import_log (create_date, import_id, level, message) VALUES (now(), %s, %s, %s)",
-                       (import_id,
+            cr.execute("INSERT INTO %s (create_date, parent_id, pid, level, message) VALUES (now(), %s, %s, %s)",
+                       (pool.get(self._log_model)._table,
+                        parent_id,
+                        pid,
                         record.levelname,
                         record.msg,))
         cr.commit()
@@ -63,13 +70,9 @@ class SmileImportDBHandler(logging.Handler):
             cr.close()
         self._dbname_to_cr = {}
 
-logger = logging.getLogger("smile_import")
-handler = SmileImportDBHandler()
-logger.addHandler(handler)
-
 def add_timing(original_method):
     def new_method(self, msg):
-        delay = datetime.datetime.now() - self.import_start
+        delay = datetime.datetime.now() - self._logger_start
         msg += " after %sh %smin %ss" % tuple(str(delay).split(':'))
         return original_method(self, msg)
     return new_method
@@ -81,45 +84,45 @@ def add_trace(original_method):
         return original_method(self, msg)
     return new_method
 
-class SmileImportLogger():
-    
-    def __init__(self, uid, import_id, import_start=False):
-        """Keep import_start arg to be retro-compatible"""
+class SmileDBLogger():
+
+    def __init__(self, logger_name, parent_id, uid=0, pid=''):
         assert isinstance(uid, (int, long)), 'uid should be an integer'
-        self.logger = logging.getLogger("smile_import")
-        self.uid = uid
-        self.import_id = import_id
-        self.import_start = import_start or datetime.datetime.now()
-        self.logger_args = {'import_id': self.import_id, 'uid': self.uid}
+        self._logger = logging.getLogger(logger_name)
+        self._parent_id = parent_id
+        self._uid = uid
+        self._pid = pid
+        self._logger_start = datetime.datetime.now()
+        self._logger_args = {'parent_id': self._parent_id, 'uid': self._uid, 'pid': pid}
 
     def debug(self, msg):
-        self.logger.debug(msg, self.logger_args)
+        self._logger.debug(msg, self._logger_args)
 
     def info(self, msg):
-        self.logger.info(msg, self.logger_args)
+        self._logger.info(msg, self._logger_args)
 
     def warning(self, msg):
-        self.logger.warning(msg, self.logger_args)
-        
+        self._logger.warning(msg, self._logger_args)
+
     def log(self, msg):
-        self.logger.log(msg, self.logger_args)
+        self._logger.log(msg, self._logger_args)
 
     @add_trace
     def error(self, msg):
-        self.logger.error(msg, self.logger_args)
+        self._logger.error(msg, self._logger_args)
 
     @add_trace
     def critical(self, msg):
-        self.logger.critical(msg, self.logger_args)
+        self._logger.critical(msg, self._logger_args)
 
     @add_trace
     def exception(self, msg):
-        self.logger.exception(msg, self.logger_args)
+        self._logger.exception(msg, self._logger_args)
 
     @add_timing
     def time_info(self, msg):
-        self.logger.info(msg, self.logger_args)
+        self._logger.info(msg, self._logger_args)
 
     @add_timing
     def time_debug(self, msg):
-        self.logger.debug(msg, self.logger_args)
+        self._logger.debug(msg, self._logger_args)

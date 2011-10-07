@@ -19,12 +19,18 @@
 #
 ##############################################################################
 
-import time, logging, threading
+import logging
+import threading
+import time
 
 from osv import osv, fields
 import tools, pooler
 
-from import_handler import SmileImportLogger
+from smile_db_handler.db_handler import SmileDBHandler, SmileDBLogger
+
+logger = logging.getLogger('smile_import')
+handler = SmileDBHandler('ir.model.import.log')
+logger.addHandler(handler)
 
 class IrModelImportTemplate(osv.osv):
     _name = 'ir.model.import.template'
@@ -124,7 +130,7 @@ class IrModelImport(osv.osv):
     def _process_with_new_cursor(self, dbname, uid, import_id, context=None):
         if not isinstance(import_id, (int, long)):
             raise osv.except_osv('Error !', '_process_with_new_cursor: import_id is supposed to be an integer')
-        logger = SmileImportLogger(uid, import_id)
+        logger = SmileDBLogger('ir.model.import.log', import_id, uid)
         try:
             db = pooler.get_db(dbname)
             cr = db.cursor()
