@@ -16,6 +16,7 @@ $(document).ready(function(){
     var buttons = $(".matrix .button.increment:not(:disabled)");
 
     // Align the button and cell value to an available label
+    // TODO: make this an original method and call it everytime we render a float. Apply this to totals too.
     buttons.each(function(i, button){
         var $button = $(button);
         for(i = 0; i < cycling_values.length; i++){
