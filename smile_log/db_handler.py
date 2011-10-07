@@ -29,38 +29,33 @@ import tools
 
 class SmileDBHandler(logging.Handler):
 
-    def __init__(self, log_model, level=logging.NOTSET):
+    def __init__(self, level=logging.NOTSET):
         logging.Handler.__init__(self, level)
         self._dbname_to_cr = {}
-        self._log_model = log_model
 
     def emit(self, record):
-        dbname = getattr(threading.currentThread(), 'dbname', '')
-        db, pool = pooler.get_db_and_pool(dbname, pooljobs=False)
-        cr = self._dbname_to_cr.get(dbname, False)
+        if not (record.args and isinstance(record.args, dict)):
+            return False
+
+        dbname = record.args.get(dbname, '')
+        cr = self._dbname_to_cr.get(dbname)
         if not cr:
+            db, pool = pooler.get_db_and_pool(dbname, pooljobs=False)
             cr = self._dbname_to_cr[dbname] = db.cursor()
 
-        parent_id, pid, uid = False, '', False
-        if record.args and isinstance(record.args, dict):
-            parent_id = record.args.get('parent_id', False)
-            pid = record.args.get('pid', '')
-            uid = record.args.get('uid', False)
+        res_id = record.args.get('res_id', 0)
+        pid = record.args.get('pid', 0)
+        uid = record.args.get('uid', 0)
+        model_name = record.args.get('model_name', '')
 
-        if uid and pool.get('res.users').exists(cr, 1, uid):
-            pool.get(self._log_model).create(cr, uid, {
-                'parent_id': parent_id,
-                'pid': pid,
-                'level': record.levelname,
-                'message': record.msg,
-            })
-        else:
-            cr.execute("INSERT INTO %s (create_date, parent_id, pid, level, message) VALUES (now(), %s, %s, %s)",
-                       (pool.get(self._log_model)._table,
-                        parent_id,
-                        pid,
-                        record.levelname,
-                        record.msg,))
+        cr.execute("INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message) VALUES (now(), %s, %s, %s, %s, %s, %s)",
+                   (uid,
+                    model_name,
+                    res_id,
+                    pid,
+                    record.levelname,
+                    record.msg,))
+
         cr.commit()
         return True
 
@@ -86,14 +81,19 @@ def add_trace(original_method):
 
 class SmileDBLogger():
 
-    def __init__(self, logger_name, parent_id, uid=0, pid=''):
+    def __init__(self, dbname, model_name, res_id, uid=0):
         assert isinstance(uid, (int, long)), 'uid should be an integer'
-        self._logger = logging.getLogger(logger_name)
-        self._parent_id = parent_id
-        self._uid = uid
-        self._pid = pid
+        self._logger = logging.getLogger('smile_log')
+
+        db, pool = pooler.get_db_and_pool(dbname, pooljobs=False)
+        cr = db.cursor()
+
+        cr.execute("select nextval('smile_log_seq')")
+        res = cr.fetchone()
+        pid = res and res[0] or 0
+
         self._logger_start = datetime.datetime.now()
-        self._logger_args = {'parent_id': self._parent_id, 'uid': self._uid, 'pid': pid}
+        self._logger_args = {'dbname': dbname, 'model_name': model_name, 'res_id': res_id, 'uid': uid, 'pid': pid}
 
     def debug(self, msg):
         self._logger.debug(msg, self._logger_args)
@@ -126,3 +126,7 @@ class SmileDBLogger():
     @add_timing
     def time_debug(self, msg):
         self._logger.debug(msg, self._logger_args)
+
+
+logging.getLogger('smile_log').addHandler(SmileDBHandler())
+

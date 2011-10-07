@@ -19,4 +19,27 @@
 #
 ##############################################################################
 
-import db_handler
+{
+    "name" : "Smile Log",
+    "version" : "1.0",
+    "author" : "Smile",
+    "website": 'http://www.smile.fr',
+    "category" : "Tools",
+    "description": """Logs handler writing to database
+
+Notice
+
+* In your code
+import logging
+logger = SmileLogger(dbname, model_name, res_id, uid)
+logger.info(your_message) will create a log in db with a unique pid per logger
+
+Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
+""",
+    "depends" : ['base'],
+    "init_xml" : [],
+    "update_xml": ["smile_log_view.xml", ],
+    "demo_xml" : [],
+    "installable": True,
+    "active": False,
+}

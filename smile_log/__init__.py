@@ -19,32 +19,5 @@
 #
 ##############################################################################
 
-{
-    "name" : "Smile DB Handler",
-    "version" : "1.0",
-    "author" : "Smile",
-    "website": 'http://www.smile.fr',
-    "category" : "Tools",
-    "description": """Logs handler writing to database
-
-Notice
-
-* In your module __init__.py
-import logging
-logger = logging.getLogger(your_logger_name)
-handler = SmileDBHandler(your_log_model)
-logger.addHandler(handler)
-
-* In your code
-logger = SmileLogger(your_logger_name, your_model_res_id, uid, pid)
-logger.info(your_message) will create line in your log model linked to your model res id
-
-Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
-""",
-    "depends" : ['base'],
-    "init_xml" : [],
-    "update_xml": [],
-    "demo_xml" : [],
-    "installable": True,
-    "active": False,
-}
+import smile_log
+import db_handler

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="smile_log_form_view" model="ir.ui.view">
+            <field name="name">Smile Log - Form</field>
+            <field name="model">smile.log</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Smile Log">
+                    <field name="log_date"/>
+                    <field name="log_user_name"/>
+                    <field name="model_name"/>
+                    <field name="res_id"/>
+                    <field name="pid"/>
+                    <field name="level"/>
+                    <field name="message"/>
+                </form>
+            </field>
+        </record>
+        
+        
+        <record id="smile_log_tree_view" model="ir.ui.view">
+            <field name="name">Smile Log - Tree</field>
+            <field name="model">smile.log</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Smile Logs">
+                    <field name="log_date"/>
+                    <field name="pid"/>
+                    <field name="model_name"/>
+                    <field name="res_id"/>
+                    <field name="level"/>
+                    <field name="message"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="act_smile_log" model="ir.actions.act_window">
+            <field name="name">Smile Logs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">smile.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_smile_log" parent="base.menu_audit" name="Smile logs" action="act_smile_log"/>
+        
+    </data>
+</openerp>

@@ -26,11 +26,7 @@ import time
 from osv import osv, fields
 import tools, pooler
 
-from smile_db_handler.db_handler import SmileDBHandler, SmileDBLogger
-
-logger = logging.getLogger('smile_import')
-handler = SmileDBHandler('ir.model.import.log')
-logger.addHandler(handler)
+from smile_db_handler.db_handler import SmileDBLogger
 
 class IrModelImportTemplate(osv.osv):
     _name = 'ir.model.import.template'
@@ -45,7 +41,7 @@ class IrModelImportTemplate(osv.osv):
         'server_action_id': fields.many2one('ir.actions.server', 'Server Action'),
         'test_mode': fields.boolean('Test Mode'),
     }
-    
+
     def create_import(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -92,9 +88,9 @@ STATES = [
 class IrModelImport(osv.osv):
     _name = 'ir.model.import'
     _description = 'Import'
-    
+
     _order = 'from_date desc'
-    
+
     def _get_state(self, cr, uid, ids, prop, unknow_none, context=None):
         result = {}
         for import_ in self.browse(cr, uid, ids, context):
@@ -111,7 +107,7 @@ class IrModelImport(osv.osv):
                 else:
                     result[import_.id] = "draft"
         return result
-                    
+
 
     _columns = {
         'name': fields.char('Name', size=64, readonly=True),
@@ -120,13 +116,13 @@ class IrModelImport(osv.osv):
         'to_date': fields.datetime('To date', readonly=True),
         'test_mode': fields.boolean('Test Mode'),
         'log_ids': fields.one2many('ir.model.import.log', 'import_id', 'Logs', readonly=True),
-        
+
         'thread_name': fields.char('Thread name', size=128, readonly=True,),
         'done': fields.boolean('Done', readonly=True),
         'state': fields.function(_get_state, method=True, string="State", type='selection', selection=STATES),
     }
-    
-    
+
+
     def _process_with_new_cursor(self, dbname, uid, import_id, context=None):
         if not isinstance(import_id, (int, long)):
             raise osv.except_osv('Error !', '_process_with_new_cursor: import_id is supposed to be an integer')
@@ -145,7 +141,7 @@ class IrModelImport(osv.osv):
             model_obj = self.pool.get(import_.import_tmpl_id.model)
             model_method = import_.import_tmpl_id.method
             getattr(model_obj, model_method)(cr, uid, context)
-            
+
             if import_.test_mode:
                 cr.rollback()
                 logger.info("Import rollbacking: %s" % (import_id,))
@@ -158,7 +154,7 @@ class IrModelImport(osv.osv):
         finally:
             cr.close()
         return
-    
+
     def launch_thread(self, cr, uid, import_id, context=None):
         import_name = self.read(cr, uid, import_id, ['name'])['name']
         time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -166,14 +162,14 @@ class IrModelImport(osv.osv):
         t = threading.Thread(target=self._process_with_new_cursor, args=(cr.dbname, uid, import_id, context), name=thread_name)
         t.start()
         self.write(cr, uid, import_id, {'thread_name': thread_name, 'from_date': time_stamp}, context)
-        return True    
+        return True
 IrModelImport()
 
 class IrModelImportLog(osv.osv):
     _name = 'ir.model.import.log'
     _description = 'Import Log'
     _rec_name = 'message'
-    
+
     _order = 'create_date desc'
 
     _columns = {
