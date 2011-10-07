@@ -80,7 +80,7 @@
 <div class="matrix">
 
     %if editable:
-        <span id="button_template" class="button increment">
+        <span id="matrix_button_template" class="button increment">
             Button template
         </span>
     %endif
