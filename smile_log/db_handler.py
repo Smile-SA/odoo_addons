@@ -37,7 +37,7 @@ class SmileDBHandler(logging.Handler):
         if not (record.args and isinstance(record.args, dict)):
             return False
 
-        dbname = record.args.get(dbname, '')
+        dbname = record.args.get('dbname', '')
         cr = self._dbname_to_cr.get(dbname)
         if not cr:
             db, pool = pooler.get_db_and_pool(dbname, pooljobs=False)
@@ -86,11 +86,15 @@ class SmileDBLogger():
         self._logger = logging.getLogger('smile_log')
 
         db, pool = pooler.get_db_and_pool(dbname, pooljobs=False)
-        cr = db.cursor()
-
-        cr.execute("select nextval('smile_log_seq')")
-        res = cr.fetchone()
-        pid = res and res[0] or 0
+        pid = 0
+        try:
+            cr = db.cursor()
+            cr.execute("select nextval('smile_log_seq')")
+            cr.commit()
+            res = cr.fetchone()
+            pid = res and res[0] or 0
+        finally:
+            cr.close()
 
         self._logger_start = datetime.datetime.now()
         self._logger_args = {'dbname': dbname, 'model_name': model_name, 'res_id': res_id, 'uid': uid, 'pid': pid}

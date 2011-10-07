@@ -31,10 +31,10 @@ class SmileLog(osv.osv):
 
     def __init__(self, pool, cr):
         super(SmileLog, self).__init__(pool, cr)
-        cr.execute("select count(1) from pg_class where relname='smile_log_seq'")
-        if not cr.fetchone():
+        cr.execute("select relname from pg_class where relname='smile_log_seq'")
+        res = cr.fetchone()
+        if not res:
             cr.execute("create sequence smile_log_seq")
-
 
     def _get_user_name(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
