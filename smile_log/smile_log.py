@@ -42,14 +42,13 @@ class SmileLog(osv.osv):
         user_id_to_name = {}
         for log in self.browse(cr, uid, ids, context):
             if log.log_uid not in user_id_to_name:
-                if user_obj.exist(cr, uid, log.log_uid, context):
+                if user_obj.exists(cr, uid, log.log_uid, context):
                     name = user_obj.read(cr, uid, log.log_uid, ['name'], context)['name']
-                    user_id_to_name[log.log_uid] = "[%s] %s" (log.log_uid, name)
+                    user_id_to_name[log.log_uid] = "%s [%s]" % (name, log.log_uid)
                 else:
-                    user_id_to_name[log.log_uid] = "[%s]" (log.log_uid,)
+                    user_id_to_name[log.log_uid] = "[%s]" % (log.log_uid,)
             result[log.id] = user_id_to_name[log.log_uid]
         return result
-
 
     _columns = {
         'log_date': fields.datetime('Date', readonly=True),
@@ -63,5 +62,4 @@ class SmileLog(osv.osv):
         'level': fields.char('Level', size=16, readonly=True),
         'message': fields.text('Message', readonly=True),
     }
-
 SmileLog()

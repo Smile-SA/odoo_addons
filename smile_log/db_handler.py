@@ -90,7 +90,6 @@ class SmileDBLogger():
         try:
             cr = db.cursor()
             cr.execute("select nextval('smile_log_seq')")
-            cr.commit()
             res = cr.fetchone()
             pid = res and res[0] or 0
         finally:
@@ -98,6 +97,10 @@ class SmileDBLogger():
 
         self._logger_start = datetime.datetime.now()
         self._logger_args = {'dbname': dbname, 'model_name': model_name, 'res_id': res_id, 'uid': uid, 'pid': pid}
+
+    @property
+    def pid(self):
+        return self._logger_args['pid']
 
     def debug(self, msg):
         self._logger.debug(msg, self._logger_args)
@@ -131,6 +134,4 @@ class SmileDBLogger():
     def time_debug(self, msg):
         self._logger.debug(msg, self._logger_args)
 
-
 logging.getLogger('smile_log').addHandler(SmileDBHandler())
-
