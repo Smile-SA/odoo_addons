@@ -30,7 +30,7 @@ import pooler
 import tools
 from tools.translate import _
 
-from sartre_handler import SartreLogger
+from smile_log.db_handler import SmileDBLogger
 
 def _get_exception_message(exception):
     return isinstance(exception, osv.except_osv) and exception.value or exception
@@ -164,7 +164,7 @@ class SartreTrigger(osv.osv):
     def _get_logs(self, cr, uid, ids, name, args, context=None):
         res = {}
         for trigger_id in ids:
-            res[trigger_id] = self.pool.get('sartre.log').search(cr, uid, [('trigger_id', '=', trigger_id)], context=context)
+            res[trigger_id] = self.pool.get('smile.log').search(cr, uid, [('model_name', '=', 'sartre.trigger'), ('res_id', '=', trigger_id)], context=context)
         return res
 
     def _is_dynamic_filter(self, cr, uid, item, context=None):
@@ -211,9 +211,9 @@ class SartreTrigger(osv.osv):
     def _search_pid(self, cr, uid, obj, name, domain, context=None):
         trigger_ids = []
         if domain and isinstance(domain[0], tuple):
-            log_obj = self.pool.get('sartre.log')
-            log_ids = log_obj.search(cr, uid, [('message', domain[0][1], domain[0][2])], context=context)
-            trigger_ids = [log['trigger_id'] for log in log_obj.read(cr, uid, log_ids, ['trigger_id'], context)]
+            log_obj = self.pool.get('smile.log')
+            log_ids = log_obj.search(cr, uid, [('pid', domain[0][1], domain[0][2]), ('model_name', '=', 'sartre.trigger')], context=context)
+            trigger_ids = [log['res_id'] for log in log_obj.read(cr, uid, log_ids, ['res_id'], context)]
         return [('id', 'in', trigger_ids)]
 
     _columns = {
@@ -244,7 +244,7 @@ class SartreTrigger(osv.osv):
         'domain_force': fields.char('Force Domain', size=256, help="Warning: using a Force domain makes all other filters useless"),
         'action_ids': fields.many2many('ir.actions.server', 'sartre_trigger_server_action_rel', 'trigger_id', 'action_id', "Actions"),
         'executions_max_number': fields.integer('Max executions', help="Number of time actions are runned, indicates that actions will always be executed"),
-        'log_ids': fields.function(_get_logs, method=True, type='one2many', relation='sartre.log', string="Logs"),
+        'log_ids': fields.function(_get_logs, method=True, type='one2many', relation='smile.log', string="Logs"),
         'test_mode': fields.boolean('Test Mode'),
         'exception_handling': fields.selection([('continue', 'Ignore actions in exception'), ('rollback', 'Rollback transaction')], 'Exception Handling', required=True),
         'exception_warning': fields.selection([('custom', 'Custom'), ('none', 'None')], 'Exception Warning', required=True),
@@ -426,16 +426,6 @@ class SartreTrigger(osv.osv):
             self._run_now(cr, uid, trigger['id'], context)
         return True
 
-    def _get_pid(self, cr, uid):
-        pid = None
-        try:
-            cursor = pooler.get_db(cr.dbname).cursor()
-            pid = self.pool.get('ir.sequence').get(cursor, uid, 'sartre.trigger')
-            cursor.commit()
-        finally:
-            cursor.close()
-        return pid
-
     def _get_filtered_object_ids(self, cr, uid, trigger, context):
         # Build domain expression
         domain = self._build_domain_expression(cr, uid, trigger, context)
@@ -443,9 +433,10 @@ class SartreTrigger(osv.osv):
         return self.pool.get(trigger.model_id.model).search(cr, uid, domain, context=context)
 
     def _run_now(self, cr, uid, trigger_id, context):
-        logger = SartreLogger(uid, trigger_id)
+        logger = SmileDBLogger(cr.dbname, self._name, trigger_id, uid)
+
         # Get sequence in order to differentiate logs per run
-        context.setdefault('pid_list', []).append(self._get_pid(cr, uid))
+        context.setdefault('pid_list', []).append(str(logger.pid).rjust(8, '0'))
         pid = '-'.join(map(str, context['pid_list']))
         if not pid:
             logger.critical('Action Trigger failed: impossible to get a pid for dbname %s' % (cr.dbname))
@@ -655,22 +646,6 @@ class SartreFilter(osv.osv):
         'value_type': 'static',
     }
 SartreFilter()
-
-class SartreLog(osv.osv):
-    _name = 'sartre.log'
-    _description = 'Smile Action Trigger Log'
-    _rec_name = 'message'
-
-    _order = 'create_date desc'
-
-    _columns = {
-        'create_date': fields.datetime('Date', readonly=True),
-        'create_uid': fields.many2one('res.users', 'User', readonly=True),
-        'trigger_id': fields.integer('sartre.trigger', 'Action Trigger', readonly=True,),
-        'level': fields.char('Level', size=16, readonly=True),
-        'message': fields.text('Message', readonly=True),
-    }
-SartreLog()
 
 class SartreExecution(osv.osv):
     _name = 'sartre.execution'

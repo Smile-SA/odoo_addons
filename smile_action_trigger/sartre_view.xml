@@ -93,10 +93,10 @@
 						<page string="Logs">
 							<field name="log_ids" colspan="4" nolabel="1" mode="tree">
 								<tree string="Logs">
-									<field name="create_date"/>
+									<field name="log_date"/>
 									<field name="level"/>
 									<field name="message"/>
-									<field name="create_uid"/>
+									<field name="log_user_name"/>
 								</tree>
 							</field>
 						</page>
