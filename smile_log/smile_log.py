@@ -21,6 +21,26 @@
 
 from osv import osv, fields
 
+def cache_restarter(method):
+    def restart(self, cr, mode):
+        res = method(self, cr, mode)
+        if isinstance(self, osv.osv_pool) and \
+        self.get('sartre.trigger') and \
+        hasattr(self.get('sartre.trigger'), 'cache_restart'):
+            self.get('sartre.trigger').cache_restart(cr)
+        return res
+    return restart
+
+
+def log_start(method):
+    def log_start(self, cr, mode):
+        res = method(self, cr, mode)
+        from db_handler import SmileDBLogger
+        logger = SmileDBLogger(cr.dbname, '', 0, 0)
+        logger.info('OpenERP server start')
+        return res
+    return log_start
+
 class SmileLog(osv.osv):
     _name = 'smile.log'
     _description = 'Smile Logs'
@@ -35,6 +55,7 @@ class SmileLog(osv.osv):
         res = cr.fetchone()
         if not res:
             cr.execute("create sequence smile_log_seq")
+        setattr(osv.osv_pool, 'init_set', log_start(getattr(osv.osv_pool, 'init_set')))
 
     def _get_user_name(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
@@ -56,9 +77,9 @@ class SmileLog(osv.osv):
         'log_user_name': fields.function(_get_user_name, method=True, string='User', type='char', size=256),
 
         'model_name': fields.char('Model name', size=64, readonly=True),
-        'res_id': fields.integer('Ressource id', readonly=True),
+        'res_id': fields.integer('Ressource id', readonly=True, group_operator="count"),
 
-        'pid': fields.integer('Pid', readonly=True),
+        'pid': fields.integer('Pid', readonly=True, group_operator="count"),
         'level': fields.char('Level', size=16, readonly=True),
         'message': fields.text('Message', readonly=True),
     }

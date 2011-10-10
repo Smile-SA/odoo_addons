@@ -36,6 +36,31 @@
             </field>
         </record>
         
+        <record id="smile_log_search_view" model="ir.ui.view">
+            <field name="name">Smile Log - Search</field>
+            <field name="model">smile.log</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Smile Logs">
+                    <field name="log_date"/>
+                    <field name="pid"/>
+                    <field name="model_name"/>
+                    <field name="level"/>
+                    <field name="message"/>
+                    <newline/>
+                    <group expand="0" string="Extended..." colspan="11" col="11" groups="base.group_extended">
+                        <field name="res_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="4" groups="base.group_extended">
+                        <filter string="Model" icon="terp-stage" domain="[]" context="{'group_by':'model_name'}"/>
+                        <filter string="PID" icon="terp-account" domain="[]" context="{'group_by':'pid'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        
         <record id="act_smile_log" model="ir.actions.act_window">
             <field name="name">Smile Logs</field>
             <field name="type">ir.actions.act_window</field>
