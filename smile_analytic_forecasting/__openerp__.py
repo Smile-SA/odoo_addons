@@ -27,9 +27,10 @@
     "category" : "Generic Modules/Accounting",
     "depends" : ["account"],
     "description": """Module for defining analytic accounting object""",
-    "init_xml" : [],
-    "update_xml": [
+    "init_xml" : [
         'security/ir.model.access.csv',
+    ],
+    "update_xml": [
         'analytic_view.xml',
         'account_view.xml',
         'report/analytic_report_view.xml',

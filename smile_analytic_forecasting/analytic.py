@@ -30,10 +30,11 @@ class AnalyticPeriod(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly', True)]}),
-        'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly', True)]}),
+        'date_end': fields.date('End of Period', required=True, states={'done':[('readonly', True)]}),
         'state': fields.selection([('draft', 'Opened'), ('done', 'Closed')], 'State', required=True),
         'general_period_id': fields.many2one('account.period', 'General Period', required=True),
         'fiscalyear_id': fields.related('general_period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear', readonly=True),
+        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
     }
 
     _defaults = {
@@ -46,9 +47,9 @@ class AnalyticPeriod(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         period = self.browse(cr, uid, ids[0], context)
-        if period.date_stop < period.date_start \
+        if period.date_end < period.date_start \
         or period.date_start < period.general_period_id.date_start \
-        or period.date_stop > period.general_period_id.date_stop:
+        or period.date_end > period.general_period_id.date_end:
             return False            
         return True
 
@@ -58,25 +59,25 @@ class AnalyticPeriod(osv.osv):
         for period in self.browse(cr, uid, ids, context):
             domain = [
                 ('id', '<>', period.id),
-                '|',
-                '&', ('date_start', '>=', period.date_start), ('date_stop', '<=', period.date_start),
-                '&', ('date_start', '>=', period.date_stop), ('date_stop', '<=', period.date_stop),
+                '|', '|',
+                '&', ('date_start', '>=', period.date_start), ('date_start', '<=', period.date_end),
+                '&', ('date_end', '>=', period.date_start), ('date_end', '<=', period.date_end),
+                '&', ('date_start', '<=', period.date_start), ('date_end', '>=', period.date_end),
             ]
             if self.search(cr, uid, domain, context=context):
                 return False
         return True
 
     _constraints = [
-        (_check_duration, 'The duration of the period is invalid or the period dates are not in the scope of the account period!', ['date_start', 'date_stop']),
-        (_check_periods_overlap, 'Some periods overlap!', ['date_start', 'date_stop']),
+        (_check_duration, 'The duration of the period is invalid or the period dates are not in the scope of the account period!', ['date_start', 'date_end']),
+        (_check_periods_overlap, 'Some periods overlap!', ['date_start', 'date_end']),
     ]
 
     def get_period_id_from_date(self, cr, uid, date=False, context=None):
         date = date or time.strftime('%Y-%m-%d')
-        period_id = self.search(cr, uid, [('date_start', '<=', date), ('date_stop', '>=', date)], limit=1, context=context)
+        period_id = self.search(cr, uid, [('date_start', '<=', date), ('date_end', '>=', date)], limit=1, context=context)
         if not period_id:
             return False
-            raise osv.except_osv(_('Error'), _('No analytic period found for this date %s') % date)
         if self.read(cr, uid, period_id[0], ['state'], context)['state'] == 'done':
             raise osv.except_osv(_('Error'), _('You cannot pass a journal entry in a period closed!'))
         return period_id[0]
@@ -95,6 +96,7 @@ class AnalyticLine(osv.osv):
         return res
 
     _columns = {
+        'active': fields.boolean('Active'),
         'type': fields.selection([('actual', 'Actual'), ('forecast', 'Forecast')], 'Type', required=True),
         'period_id': fields.many2one('account.analytic.period', 'Period', domain=[('state', '!=', 'done')]),
         'analysis_period_id': fields.function(_get_period_id, method=True, type='many2one', relation='account.analytic.period', string='Analysis Period', store={
@@ -106,6 +108,7 @@ class AnalyticLine(osv.osv):
         return self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, context=context)
 
     _defaults = {
+        'active': True,
         'type': 'actual',
         'period_id': _get_default_period_id,
     }
