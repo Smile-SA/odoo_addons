@@ -53,14 +53,15 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "depends" : ['smile_log'],
     "init_xml" : [
-        'ir_cron_data.xml',
         'security/sartre_security.xml',
+        'security/ir.model.access.csv',
         'sartre_sequence.xml',
+        'ir_cron_data.xml',
+        'sartre_data.xml',
     ],
     "update_xml": [
         'ir.xml',
         'sartre_view.xml',
-        'sartre_data.xml',
     ],
     "demo_xml" : [
         'sartre_demo.xml'
