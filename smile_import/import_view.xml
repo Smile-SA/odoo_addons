@@ -16,10 +16,14 @@
 					<separator string="Trigger" colspan="4"/>
 					<field name="server_action_id" />
 					<button type="object" name="create_server_action" string="Create Server Action" colspan="2" attrs="{'readonly': [('cron_id', '!=', False)]}"/>
-					<separator string="Imports" colspan="4"/>
-					<field name="import_ids" colspan="4" nolabel="1"/>
-                    <separator string="Logs" colspan="4"/>
-                    <field name="log_ids" colspan="4" nolabel="1" context="{'group_by':'log_date'}"/>
+                    <notebook colspan="4">
+                        <page string="Imports">
+                            <field name="import_ids" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Logs">
+                            <field name="log_ids" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>          
 				</form>
 			</field>
 		</record>
@@ -83,7 +87,7 @@
 					<field name="from_date" />
 					<field name="to_date" />
 					<separator string="Logs" colspan="4"/>
-					<field name="log_ids" colspan="4" nolabel="1" mode="tree,form" domain="[('pid','=',pid)]">
+					<field name="log_ids" colspan="4" nolabel="1" mode="tree,form">
 						<tree string="Logs">
 							<field name="log_date" />
 							<field name="level" />

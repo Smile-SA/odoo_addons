@@ -46,8 +46,8 @@ class IrModelImportTemplate(osv.osv):
         """
         context used to specify test_mode and import_mode
         import_mode can be:
-        - same_thread_full_rollback (default)
-        - same_thread_import_rollback
+        - same_thread_raise_error (default)
+        - same_thread_rollback_and_continue
         - new_thread
         """
         if isinstance(ids, (int, long)):
@@ -63,15 +63,14 @@ class IrModelImportTemplate(osv.osv):
             import_name = import_name or template['name']
 
             logger = SmileDBLogger(cr.dbname, 'ir.model.import.template', template['id'], uid)
-            import_vals = {
-                'name': import_name,
-                'import_tmpl_id': template['id'],
-                'test_mode': test_mode,
-                'pid': logger.pid,
-                'state': 'running',
-                'from_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-            }
-            import_id = import_obj.create_new_cr(cr.dbname, uid, import_vals, context)
+            import_id = import_obj.create_new_cr(cr.dbname, uid, {
+                                                                    'name': import_name,
+                                                                    'import_tmpl_id': template['id'],
+                                                                    'test_mode': test_mode,
+                                                                    'pid': logger.pid,
+                                                                    'state': 'running',
+                                                                    'from_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                                                                    }, context)
 
             if import_mode == 'new_thread':
                 t = threading.Thread(target=import_obj._process_with_new_cursor, args=(cr.dbname, uid, import_id, logger, context))
@@ -81,13 +80,10 @@ class IrModelImportTemplate(osv.osv):
                 try:
                     import_obj._process_import(cr, uid, import_id, logger, context)
                 except Exception, e:
-                    if import_mode == 'same_thread_import_rollback':
-                        logger.error("Import failed: %s" % (tools.ustr(repr(e))))
+                    if import_mode == 'same_thread_rollback_and_continue':
                         cr.execute("ROLLBACK TO SAVEPOINT smile_import")
                         logger.info("Import rollbacking")
-                    else: #same_thread_full_rollback
-                        print e, repr(e)
-                        logger.critical("Import failed: %s" % (tools.ustr(repr(e))))
+                    else: #same_thread_raise_error
                         raise e
         return True
 
@@ -137,6 +133,12 @@ class IrModelImport(osv.osv):
         super(IrModelImport, self).__init__(pool, cr)
         setattr(osv.osv_pool, 'init_set', state_cleaner(getattr(osv.osv_pool, 'init_set')))
 
+    def _get_logs(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for import_ in self.browse(cr, uid, ids, context):
+            result[import_.id] = self.pool.get('smile.log').search(cr, uid, [('model_name', '=', 'ir.model.import.template'), ('pid', '=', import_.pid)], context=context)
+        return result
+
     _columns = {
         'name': fields.char('Name', size=64, readonly=True),
         'import_tmpl_id': fields.many2one('ir.model.import.template', 'Template', readonly=True, required=True, ondelete='cascade'),
@@ -144,7 +146,7 @@ class IrModelImport(osv.osv):
         'to_date': fields.datetime('To date', readonly=True),
         'test_mode': fields.boolean('Test Mode', readonly=True),
         'pid': fields.integer('PID', readonly=True),
-        'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import.template')], readonly=True),
+        'log_ids': fields.function(_get_logs, method=True, type='one2many', relation='smile.log', string="Logs"),
         'state': fields.selection(STATES, "State", readonly=True),
     }
 
@@ -161,7 +163,6 @@ class IrModelImport(osv.osv):
         return import_id
 
     def write_new_cr(self, dbname, uid, ids, vals, context):
-        #TODO: create 2 functions 'import_done', 'import_exception', doing the write and that sartre could catch
         db = pooler.get_db(dbname)
         cr = db.cursor()
 
@@ -180,11 +181,14 @@ class IrModelImport(osv.osv):
         import_ = self.browse(cr, uid, import_id, context)
         context['test_mode'] = import_.test_mode
         context['logger'] = logger
-        model_obj = self.pool.get(import_.import_tmpl_id.model)
-        model_method = import_.import_tmpl_id.method
 
         cr.execute("SAVEPOINT smile_import_test_mode")
         try:
+            model_obj = self.pool.get(import_.import_tmpl_id.model)
+            if not model_obj:
+                raise Exception('Unknown model: %s' % (import_.import_tmpl_id.model,))
+            model_method = import_.import_tmpl_id.method
+
             getattr(model_obj, model_method)(cr, uid, context)
         except Exception, e:
             logger.critical("Import failed: %s" % (tools.ustr(repr(e))))
@@ -201,12 +205,8 @@ class IrModelImport(osv.osv):
             raise e
 
     def _process_with_new_cursor(self, dbname, uid, import_id, logger, context=None):
-        try:
-            db = pooler.get_db(dbname)
-            cr = db.cursor()
-        except Exception, e:
-            logger.critical("Import failed: impossible to get a cursor for dbname: %s - %s" % (dbname, repr(e)))
-            return
+        db = pooler.get_db(dbname)
+        cr = db.cursor()
 
         try:
             self._process_import(cr, uid, import_id, logger, context)
