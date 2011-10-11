@@ -23,7 +23,8 @@ import inspect
 import re
 import time
 
-from mx.DateTime import RelativeDateTime, now
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv, orm
 import pooler
@@ -332,18 +333,19 @@ class SartreTrigger(osv.osv):
     def _add_trigger_date_filter(self, cr, uid, trigger, context):
         """Build trigger date filter"""
         if trigger.on_date:
+            now = datetime.now()
             interval_number = trigger.on_date_range
-            interval_type = trigger.on_date_range_type
+            interval_type = str(trigger.on_date_range_type)
             interval_operand = trigger.on_date_range_operand
             # Update trigger next call
-            self.write(cr, 1, trigger.id, {'nextcall': now() + RelativeDateTime(**{str(trigger.interval_type): trigger.interval_number})}, context)
+            self.write(cr, 1, trigger.id, {'nextcall': now + relativedelta(**{str(trigger.interval_type): trigger.interval_number})}, context)
             # Add datetime filter
             field = trigger.on_date_type
-            limit_date = now()
+            limit_date = now
             if interval_operand == 'after':
-                limit_date -= RelativeDateTime(**{interval_type: interval_number})
+                limit_date -= relativedelta(**{interval_type: interval_number})
             if interval_operand == 'before':
-                limit_date += RelativeDateTime(**{interval_type: interval_number})
+                limit_date += relativedelta(**{interval_type: interval_number})
             return (field, '<=', limit_date.strftime("%Y-%m-%d %H:%M:%S"))
         return
 
@@ -397,11 +399,11 @@ class SartreTrigger(osv.osv):
         if not context.get('active_object_ids', []):
             context['active_object_ids'] = self.pool.get(trigger.model_id.model).search(cr, uid, [], context=context)
         # Define domain from domain_force
-        domain = trigger.domain_force and eval(trigger.domain_force.replace('%today', now().strftime('%Y-%m-%d %H:%M:%S'))) or []
+        domain = trigger.domain_force and eval(trigger.domain_force.replace('%today', time.strftime('%Y-%m-%d %H:%M:%S'))) or []
         # Add filters one by one if domain_force is empty
         if not domain:
             for filter_ in trigger.filter_ids:
-                domain.extend(eval(filter_.domain.replace('%today', now().strftime('%Y-%m-%d %H:%M:%S'))))
+                domain.extend(eval(filter_.domain.replace('%today', time.strftime('%Y-%m-%d %H:%M:%S'))))
         # Add general filters
         domain.extend(filter(bool, [getattr(self, filter_name)(cr, uid, trigger, context) for filter_name in ('_add_trigger_date_filter', '_add_max_executions_filter')]))
         # To avoid infinite recursion
@@ -517,7 +519,7 @@ class SartreTrigger(osv.osv):
     def check_triggers(self, cr, uid, context=None):
         """Call the scheduler to check date based trigger triggers"""
         # Search triggers to execute
-        trigger_ids = self.search(cr, uid, [('active', '=', True), ('on_date', '=', True), ('nextcall', '<=', now().strftime("%Y-%m-%d %H:%M:%S"))])
+        trigger_ids = self.search(cr, uid, [('active', '=', True), ('on_date', '=', True), ('nextcall', '<=', time.strftime("%Y-%m-%d %H:%M:%S"))])
         if trigger_ids:
             # Launch triggers execution
             context = context or {}
