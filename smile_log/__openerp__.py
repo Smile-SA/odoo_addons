@@ -37,7 +37,10 @@ logger.info(your_message) will create a log in db with a unique pid per logger
 Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
 """,
     "depends" : ['base'],
-    "init_xml" : [],
+    "init_xml" : [
+        "security/smile_log_security.xml",
+        "security/ir.model.access.csv",
+    ],
     "update_xml": ["smile_log_view.xml", ],
     "demo_xml" : [],
     "installable": True,
