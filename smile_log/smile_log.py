@@ -21,17 +21,6 @@
 
 from osv import osv, fields
 
-def cache_restarter(method):
-    def restart(self, cr, mode):
-        res = method(self, cr, mode)
-        if isinstance(self, osv.osv_pool) and \
-        self.get('sartre.trigger') and \
-        hasattr(self.get('sartre.trigger'), 'cache_restart'):
-            self.get('sartre.trigger').cache_restart(cr)
-        return res
-    return restart
-
-
 def log_start(method):
     def log_start(self, cr, mode):
         res = method(self, cr, mode)
