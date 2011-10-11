@@ -365,13 +365,15 @@ class SartreTrigger(osv.osv):
 
     def _build_python_domain(self, cr, uid, trigger, domain, context):
         """Updated filters based on old or dynamic values, or Python operators"""
+        domain = domain or []
         operator_obj = self.pool.get('sartre.operator')
         old_values = context.get('old_values', {})
-        current_values = _get_browse_record_dict(self.pool.get(trigger.model_id.model), cr, uid, context['active_object_ids'])
-        domain = domain or []
+        model_obj = self.pool.get(trigger.model_id.model)
+        all_active_object_ids = context.get('active_object_ids', model_obj.search(cr, uid, [], context=context))
+        current_values = _get_browse_record_dict(model_obj, cr, uid, all_active_object_ids)
         for index, condition in enumerate(domain):
             if self._is_dynamic_filter(cr, uid, condition, context):
-                active_object_ids = context['active_object_ids'][:]
+                active_object_ids = all_active_object_ids[:]
 
                 field, operator_symbol, other_value = condition
                 field = field.replace('OLD_', '')
@@ -400,9 +402,6 @@ class SartreTrigger(osv.osv):
 
     def _build_domain_expression(self, cr, uid, trigger, context):
         """Build domain expression"""
-        # To manage planned execution
-        if not context.get('active_object_ids', []):
-            context['active_object_ids'] = self.pool.get(trigger.model_id.model).search(cr, uid, [], context=context)
         # Define domain from domain_force
         domain = trigger.domain_force and eval(trigger.domain_force.replace('%today', time.strftime('%Y-%m-%d %H:%M:%S'))) or []
         # Add filters one by one if domain_force is empty
@@ -411,13 +410,10 @@ class SartreTrigger(osv.osv):
                 domain.extend(eval(filter_.domain.replace('%today', time.strftime('%Y-%m-%d %H:%M:%S'))))
         # Add general filters
         domain.extend(filter(bool, [getattr(self, filter_name)(cr, uid, trigger, context) for filter_name in ('_add_trigger_date_filter', '_add_max_executions_filter')]))
-        # To avoid infinite recursion
-        if trigger.id in context.get('triggers', []):
-            context['active_object_ids'] = list(set(context['active_object_ids']) - set(context['triggers'][trigger.id]))
         # Update filters based on old or dynamic values or Python operators
         if trigger.python_domain:
             domain = self._build_python_domain(cr, uid, trigger, domain, context)
-        else:
+        elif not context.get('active_object_ids'):
             domain.append(('id', 'in', context['active_object_ids']))
         return domain
 
@@ -437,7 +433,11 @@ class SartreTrigger(osv.osv):
         # Build domain expression
         domain = self._build_domain_expression(cr, uid, trigger, context)
         # Search objects which validate trigger filters
-        return self.pool.get(trigger.model_id.model).search(cr, uid, domain, context=context)
+        res_ids = self.pool.get(trigger.model_id.model).search(cr, uid, domain, context=context)
+        # To avoid infinite recursion
+        if trigger.id in context.get('triggers', []) and context['triggers'][trigger.id]:
+            res_ids = list(set(res_ids) - set(context['triggers'][trigger.id]))
+        return res_ids
 
     def _run_now(self, cr, uid, trigger_id, context):
         logger = SmileDBLogger(cr.dbname, self._name, trigger_id, uid)
