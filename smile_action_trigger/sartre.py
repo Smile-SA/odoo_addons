@@ -187,7 +187,7 @@ class SartreTrigger(osv.osv):
             ids = [ids]
         res = {}.fromkeys(ids, False)
         for trigger in self.browse(cr, uid, ids, context):
-            domain = eval(trigger.domain_force or '[]') 
+            domain = eval(trigger.domain_force or '[]')
             if not domain:
                 for filter_ in trigger.filter_ids:
                     domain.extend(eval(filter_.domain or '[]'))
@@ -202,7 +202,7 @@ class SartreTrigger(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         return [filter_['trigger_id'][0] for filter_ in self.read(cr, uid, ids, ['trigger_id'], context)]
-    
+
     def _get_trigger_ids_from_operators(self, cr, uid, ids, context=None):
         return self.pool.get('sartre.trigger').search(cr, uid, [], context={'active_test': False})
 
@@ -212,8 +212,13 @@ class SartreTrigger(osv.osv):
     def _search_pid(self, cr, uid, obj, name, domain, context=None):
         trigger_ids = []
         if domain and isinstance(domain[0], tuple):
+            value = domain[0][2]
+            try:
+                value = int(value)
+            except ValueError:
+                raise osv.except_osv(_('Error !'), _('Pid search field: please enter an integer'))
             log_obj = self.pool.get('smile.log')
-            log_ids = log_obj.search(cr, uid, [('pid', domain[0][1], domain[0][2]), ('model_name', '=', 'sartre.trigger')], context=context)
+            log_ids = log_obj.search(cr, uid, [('pid', '=', value), ('model_name', '=', 'sartre.trigger')], context=context)
             trigger_ids = [log['res_id'] for log in log_obj.read(cr, uid, log_ids, ['res_id'], context)]
         return [('id', 'in', trigger_ids)]
 
@@ -371,7 +376,7 @@ class SartreTrigger(osv.osv):
                 field, operator_symbol, other_value = condition
                 field = field.replace('OLD_', '')
                 operator_inst, opposite_operator = operator_obj._get_operator(cr, uid, operator_symbol, context=context)
-                
+
                 dynamic_other_value = other_value and re.match('(\[\[.+?\]\])', other_value)
                 for object in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
                     if dynamic_other_value:

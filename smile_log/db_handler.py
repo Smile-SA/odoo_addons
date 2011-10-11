@@ -62,7 +62,11 @@ class SmileDBHandler(logging.Handler):
     def close(self):
         logging.Handler.close(self)
         for cr in self._dbname_to_cr.values():
-            cr.close()
+            try:
+                cr.execute("INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message) VALUES (now(), 0, '', 0, 0, 'INFO', 'OpenERP server stopped')")
+                cr.commit()
+            finally:
+                cr.close()
         self._dbname_to_cr = {}
 
 def add_timing(original_method):
