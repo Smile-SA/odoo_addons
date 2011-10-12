@@ -21,15 +21,6 @@
 
 from osv import osv, fields
 
-def log_start(method):
-    def log_start(self, cr, mode):
-        res = method(self, cr, mode)
-        from db_handler import SmileDBLogger
-        logger = SmileDBLogger(cr.dbname, '', 0, 0)
-        logger.info('OpenERP server start')
-        return res
-    return log_start
-
 class SmileLog(osv.osv):
     _name = 'smile.log'
     _description = 'Smile Logs'
@@ -44,7 +35,10 @@ class SmileLog(osv.osv):
         res = cr.fetchone()
         if not res:
             cr.execute("create sequence smile_log_seq")
-        setattr(osv.osv_pool, 'init_set', log_start(getattr(osv.osv_pool, 'init_set')))
+        else:
+            from db_handler import SmileDBLogger
+            logger = SmileDBLogger(cr.dbname, '', 0, 0)
+            logger.info('OpenERP server start')
 
     def _get_user_name(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
