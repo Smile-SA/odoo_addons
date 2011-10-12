@@ -168,8 +168,8 @@ class SartreTrigger(osv.osv):
             res[trigger_id] = self.pool.get('smile.log').search(cr, uid, [('model_name', '=', 'sartre.trigger'), ('res_id', '=', trigger_id)], context=context)
         return res
 
-    def _is_dynamic_filter(self, cr, uid, item, context=None):
-        if isinstance(item, tuple):
+    def _is_dynamic_filter(self, cr, uid, item, model_obj, context=None):
+        if isinstance(item, tuple) and model_obj:
             # Old values
             if item[0].startswith('OLD_'):
                 return True
@@ -180,6 +180,13 @@ class SartreTrigger(osv.osv):
             operator = self.pool.get('sartre.operator')._get_operator(cr, uid, item[1], context)
             if operator and operator[0] and operator[0].native_operator == 'none':
                 return True
+
+            # Function field without fnct_search and not stored
+            if item[0] in model_obj._columns:
+                item_field = model_obj._columns[item[0]]
+                if isinstance(item_field, fields.function):
+                    if not item_field._fnct_search and not item_field.store:
+                        return True
         return False
 
     def _is_python_domain(self, cr, uid, ids, name, args, context=None):
@@ -191,8 +198,9 @@ class SartreTrigger(osv.osv):
             if not domain:
                 for filter_ in trigger.filter_ids:
                     domain.extend(eval(filter_.domain or '[]'))
+            model_obj = self.pool.get(trigger.model_id.model)
             for item in domain:
-                is_dynamic_item = self._is_dynamic_filter(cr, uid, item, context)
+                is_dynamic_item = self._is_dynamic_filter(cr, uid, item, model_obj, context)
                 if is_dynamic_item:
                     res[trigger.id] = True
                     break
@@ -372,7 +380,7 @@ class SartreTrigger(osv.osv):
         all_active_object_ids = context.get('active_object_ids', model_obj.search(cr, uid, [], context=context))
         current_values = _get_browse_record_dict(model_obj, cr, uid, all_active_object_ids)
         for index, condition in enumerate(domain):
-            if self._is_dynamic_filter(cr, uid, condition, context):
+            if self._is_dynamic_filter(cr, uid, condition, model_obj, context):
                 active_object_ids = all_active_object_ids[:]
 
                 field, operator_symbol, other_value = condition
