@@ -6,10 +6,6 @@
 	        <field name="name">Smile import / Manager</field>
 	    </record>
 	    
-	    <record id="group_smile_import_log_reader" model="res.groups">
-	        <field name="name">Smile import / Log reader</field>
-	    </record>
-	    
 	    <record id="group_smile_import_user" model="res.groups">
 	        <field name="name">Smile import / User</field>
 	    </record>
