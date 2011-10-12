@@ -117,9 +117,10 @@ STATES = [
 def state_cleaner(method):
     def state_cleaner(self, cr, mode):
         res = method(self, cr, mode)
-        import_ids = self.get('ir.model.import').search(cr, 1, [('state', '=', 'running')])
-        if import_ids:
-            self.get('ir.model.import').write(cr, 1, import_ids, {'state': 'exception'})
+        if self.get('ir.model.import'):
+            import_ids = self.get('ir.model.import').search(cr, 1, [('state', '=', 'running')])
+            if import_ids:
+                self.get('ir.model.import').write(cr, 1, import_ids, {'state': 'exception'})
         return res
     return state_cleaner
 
