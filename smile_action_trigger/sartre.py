@@ -356,9 +356,9 @@ class SartreTrigger(osv.osv):
             field = trigger.on_date_type
             limit_date = now
             if interval_operand == 'after':
-                limit_date -= relativedelta(**{str(interval_type): interval_number})
+                limit_date -= relativedelta(**{interval_type: interval_number})
             if interval_operand == 'before':
-                limit_date += relativedelta(**{str(interval_type): interval_number})
+                limit_date += relativedelta(**{interval_type: interval_number})
             return (field, '<=', limit_date.strftime("%Y-%m-%d %H:%M:%S"))
         return
 
