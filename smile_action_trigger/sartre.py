@@ -36,17 +36,24 @@ from smile_log.db_handler import SmileDBLogger
 def _get_exception_message(exception):
     return isinstance(exception, osv.except_osv) and exception.value or exception
 
-def _get_browse_record_dict(obj, cr, uid, ids, fields_list=None):
+def _get_browse_record_dict(obj, cr, uid, ids, fields_list=None, context=None):
     """Get a dictionary of dictionary from browse records list"""
     if isinstance(ids, (int, long)):
         ids = [ids]
     if fields_list is None:
         fields_list = [f for f in obj._columns if obj._columns[f]._type != 'binary']
     browse_record_dict = {}
-    for object_inst in obj.browse(cr, 1, ids):
+    for object_inst in obj.browse(cr, 1, ids, context):
         for field in fields_list:
             browse_record_dict.setdefault(object_inst.id, {})[field] = getattr(object_inst, field)
     return browse_record_dict
+
+def _get_id_from_browse_record(value):
+    if isinstance(value, orm.browse_record):
+        value = value.id
+    if isinstance(value, orm.browse_record_list):
+        value = [v.id for v in value]
+    return value
 
 class IrModelMethods(osv.osv):
     _name = 'ir.model.methods'
@@ -180,13 +187,15 @@ class SartreTrigger(osv.osv):
             operator = self.pool.get('sartre.operator')._get_operator(cr, uid, item[1], context)
             if operator and operator[0] and operator[0].native_operator == 'none':
                 return True
-
             # Function field without fnct_search and not stored
-            if item[0] in model_obj._columns:
-                item_field = model_obj._columns[item[0]]
-                if isinstance(item_field, fields.function):
-                    if not item_field._fnct_search and not item_field.store:
-                        return True
+            obj = model_obj
+            for field in item[0].split('.'):
+                if field in obj._columns:
+                    item_field = obj._columns[field]
+                    if isinstance(item_field, fields.function):
+                        if not item_field._fnct_search and not item_field.store:
+                            return True
+                    obj = self.pool.get(item_field._obj)
         return False
 
     def _is_python_domain(self, cr, uid, ids, name, args, context=None):
@@ -378,25 +387,29 @@ class SartreTrigger(osv.osv):
         old_values = context.get('old_values', {})
         model_obj = self.pool.get(trigger.model_id.model)
         all_active_object_ids = context.get('active_object_ids', model_obj.search(cr, uid, [], context=context))
-        current_values = _get_browse_record_dict(model_obj, cr, uid, all_active_object_ids)
+        current_values = _get_browse_record_dict(model_obj, cr, uid, all_active_object_ids, context=context)
         for index, condition in enumerate(domain):
             if self._is_dynamic_filter(cr, uid, condition, model_obj, context):
                 active_object_ids = all_active_object_ids[:]
 
                 field, operator_symbol, other_value = condition
-                field = field.replace('OLD_', '')
+                fields_list = field.replace('OLD_', '').split('.')
+                field, remote_field = fields_list[0], len(fields_list) > 1 and '.'.join(fields_list[1:]) or ''
                 operator_inst, opposite_operator = operator_obj._get_operator(cr, uid, operator_symbol, context=context)
 
-                dynamic_other_value = other_value and re.match('(\[\[.+?\]\])', other_value)
+                dynamic_other_value = other_value and re.match('(\[\[.+?\]\])', str(other_value))
                 for object in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
                     if dynamic_other_value:
-                        other_value = eval(str(dynamic_other_value.group()[2:-2]).strip(), {
+                        other_value = _get_id_from_browse_record(eval(str(dynamic_other_value.group()[2:-2]).strip(), {
                             'object': object,
                             'context': context,
                             'time':time,
-                        })
+                        }))
                     current_field_value = current_values.get(object.id, {}).get(field)
                     old_field_value = old_values.get(object.id, {}).get(field)
+                    if remote_field:
+                        current_field_value = _get_id_from_browse_record(getattr(current_field_value, remote_field))
+                        old_field_value = _get_id_from_browse_record(old_field_value and getattr(old_field_value, remote_field))
                     localdict = {'selected_field_value': 'OLD_' in condition[0] and old_field_value or current_field_value,
                                  'current_field_value': current_field_value,
                                  'old_field_value': old_field_value,
@@ -721,7 +734,7 @@ def sartre_decorator(original_method):
             # Save old values if triggers exist
             if trigger_ids and ids:
                 fields_list = trigger_obj.get_fields_to_save_old_values(cr, 1, trigger_ids)
-                context.update({'active_object_ids': ids, 'old_values': _get_browse_record_dict(obj, cr, uid, ids, fields_list)})
+                context.update({'active_object_ids': ids, 'old_values': _get_browse_record_dict(obj, cr, uid, ids, fields_list, context)})
                 # Case: trigger on unlink
                 if method_name == 'unlink':
                     trigger_obj.run_now(cr, uid, trigger_ids, context=context)

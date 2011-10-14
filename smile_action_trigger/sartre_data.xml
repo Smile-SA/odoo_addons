@@ -93,7 +93,7 @@
 \n#    - old_field_value (useful if value age filter != 'Both')
 \n#    - other_value (fixed or dynamic)
 \n# You must assign a boolean value to the variable &quot;result&quot;
-\nresult = selected_field_value in other_value.split(',')&quot;&quot;&quot;" name="expression"/>
+\nresult = selected_field_value in str(other_value).split(',')&quot;&quot;&quot;" name="expression"/>
 		</record>
 		<record id="sartre_operator_childof0" model="sartre.operator">
 			<field name="name">child of</field>
