@@ -148,7 +148,7 @@ class IrModelImport(osv.osv):
         'test_mode': fields.boolean('Test Mode', readonly=True),
         'pid': fields.integer('PID', readonly=True),
         'log_ids': fields.function(_get_logs, method=True, type='one2many', relation='smile.log', string="Logs"),
-        'state': fields.selection(STATES, "State", readonly=True),
+        'state': fields.selection(STATES, "State", readonly=True, required=True,),
     }
 
     def create_new_cr(self, dbname, uid, vals, context):
