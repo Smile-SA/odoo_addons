@@ -3,7 +3,6 @@
 %>
 
 <style type="text/css">
-
     .matrix .toolbar {
         margin-bottom: 1em;
     }
@@ -11,10 +10,6 @@
     .matrix table {
         text-align: center;
     }
-
-/*    div.non-editable table.fields td {
-        border: inherit;
-    }*/
 
     .matrix table thead th {
         text-transform: none;
@@ -55,31 +50,15 @@
         display: block;
     }
 
-
-
     .matrix table tfoot input {
         width: none;
         }
-
-/*    .matrix table tfoot input,
-    {
-        float: right;
-        width: none;
-    }
-
-    .matrix table tbody input {
-        text-align: center;
-    }*/
 
     .matrix table .button.increment {
         display: block;
         width: 1.5em;
         text-align: center;
     }
-
-    /*.wrapper.action-buttons {
-        display:none;
-    }*/
 </style>
 
 <div class="matrix">
