@@ -91,7 +91,7 @@
     %if editable:
         <div class="toolbar">
             <span id="matrix_add_row" class="button">
-                Add a line
+                Add line
             </span>
             <span id="matrix_button_template" class="button increment">
                 Button template
@@ -103,6 +103,7 @@
         <thead>
             <tr>
                 <th class="first_column">Line</th>
+                <th></th>
                 %for date in value['date_range']:
                     <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime('%d/%m')}</th>
                 %endfor
@@ -112,6 +113,7 @@
         <tfoot>
             <tr class="total_line">
                 <td class="first_column">Total</td>
+                <td></td>
                 %for date in value['date_range']:
                     <td>
                         <span class="column_total_${date}">
@@ -133,6 +135,7 @@
             %for line in [l for l in lines if l['type'] == 'boolean']:
                 <tr class="boolean_line">
                     <td class="first_column">${line['name']}</td>
+                    <td></td>
                     %for date in value['date_range']:
                         <td class="boolean">
                             <%
@@ -165,6 +168,11 @@
             %for line in [l for l in lines if l['type'] != 'boolean']:
                 <tr>
                     <td class="first_column">${line['name']}</td>
+                    <td>
+                        %if editable:
+                            <span class="button delete_row">X</span>
+                        %endif
+                    </td>
                     %for date in value['date_range']:
                         <td class="float">
                             <%

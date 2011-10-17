@@ -97,4 +97,9 @@ $(document).ready(function(){
         last_row.after(new_row);
     });
 
+    // Activate delete row button
+    $(".matrix .delete_row").click(function(){
+        $(this).parent().parent().remove();
+    });
+
 });
