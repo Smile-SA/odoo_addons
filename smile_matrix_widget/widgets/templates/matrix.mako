@@ -3,6 +3,11 @@
 %>
 
 <style type="text/css">
+
+    .matrix .toolbar {
+        margin-bottom: 1em;
+    }
+
     .matrix table {
         text-align: center;
     }
@@ -79,15 +84,20 @@
 
 <div class="matrix">
 
-    %if editable:
-        <span id="matrix_button_template" class="button increment">
-            Button template
-        </span>
-    %endif
-
     <%
         lines = value.get('matrix_data', [])
     %>
+
+    %if editable:
+        <div class="toolbar">
+            <span id="matrix_add_row" class="button">
+                Add a line
+            </span>
+            <span id="matrix_button_template" class="button increment">
+                Button template
+            </span>
+        </div>
+    %endif
 
     <table id="${name}">
         <thead>
@@ -170,7 +180,7 @@
                             %endif
                         </td>
                     %endfor
-                    <td class="total"><span class="row_total_${line['id']}">${sum([v for (k, v) in line['cells_data'].items()])}</span></td>
+                    <td class="total"><span id="row_total_${line['id']}">${sum([v for (k, v) in line['cells_data'].items()])}</span></td>
                 </tr>
             %endfor
         </tbody>

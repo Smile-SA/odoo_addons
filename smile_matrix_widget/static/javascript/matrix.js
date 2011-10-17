@@ -1,8 +1,14 @@
 $(document).ready(function(){
 
+    // Selector expressions
+    var float_cells_selector = "input[kind!='boolean'][name^='cell_']:not(:disabled)";
+    var increment_button_selector = ".button.increment:not(:disabled)";
+    var global_float_cells_selector = ".matrix " + float_cells_selector;
+    var global_increment_button_selector = ".matrix " + increment_button_selector;
+
     // Replace all integer fields by a button template, then hide the original field
     var button_template = $("#matrix_button_template");
-    var cells = $(".matrix input[kind!='boolean'][name^='cell_']:not(:disabled)");
+    var cells = $(global_float_cells_selector);
     cells.each(function(i, cell){
         var $cell = $(cell);
         $cell.after($(button_template).clone().attr('id', 'button_' + $cell.attr("id")).text($cell.val()));
@@ -13,7 +19,7 @@ $(document).ready(function(){
 
     // Label of buttons
     var cycling_values = ['0', '0.5', '1'];
-    var buttons = $(".matrix .button.increment:not(:disabled)");
+    var buttons = $(global_increment_button_selector);
 
     // Align the button and cell value to an available label
     // TODO: make this an original method and call it everytime we render a float. Apply this to totals too.
@@ -29,7 +35,7 @@ $(document).ready(function(){
     });
 
     // Compute totals
-    $(".matrix input[kind!='boolean'][name^='cell_']:not(:disabled)").change(function(){
+    $(global_float_cells_selector).change(function(){
         name_fragments = $(this).attr("id").split("_");
         column_index = name_fragments[2];
         row_index = name_fragments[1];
@@ -44,10 +50,10 @@ $(document).ready(function(){
         $(".matrix input[kind!='boolean'][name^='cell_" + row_index + "_']:not(:disabled)").each(function(){
             row_total += parseFloat($(this).val());
         });
-        $(".matrix tbody span.row_total_" + row_index).text(row_total);
+        $(".matrix tbody span#row_total_" + row_index).text(row_total);
         // Compute the grand-total
         var grand_total = 0;
-        $(".matrix tbody span[class^='row_total_']").each(function(){
+        $(".matrix tbody span[id^='row_total_']").each(function(){
             grand_total += parseFloat($(this).text());
         });
         $(".matrix #grand_total").text(grand_total);
@@ -67,6 +73,28 @@ $(document).ready(function(){
         button_label_tag.text(new_value);
         button_value_tag.val(new_value);
         button_value_tag.trigger('change');
+    });
+
+    // Make the add line button working
+    $(".matrix #matrix_add_row").click(function(){
+        var last_row = $(".matrix tbody tr:last");
+        var new_row = last_row.clone(true);
+        // Generate a new row index
+        new_row_index = "new" + Math.floor(Math.random() * 999999);
+        // Construct our new row
+        new_row.find(float_cells_selector).each(function(){
+            // Compute new cell and button ID
+            name_fragments = $(this).attr("id").split("_");
+            column_index = name_fragments[2];
+            var new_cell_id   =        "cell_" + new_row_index + "_" + column_index;
+            var new_button_id = "button_cell_" + new_row_index + "_" + column_index;
+            // Apply new IDs and reset values
+            $(this).attr('id', new_cell_id).attr('name', new_cell_id).val(cycling_values[0]);
+            $(this).parent().find(increment_button_selector).first().attr('id', new_button_id).text(cycling_values[0]);
+        });
+        new_row.find("span[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
+        // Insert our new row at the end of the matrix
+        last_row.after(new_row);
     });
 
 });
