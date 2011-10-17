@@ -23,6 +23,7 @@ import threading, time
 
 from osv import osv, fields
 import tools, pooler
+from tools.translate import _
 
 from smile_log.db_handler import SmileDBLogger
 
@@ -34,7 +35,9 @@ class ir_model_export_template(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
-        'domain': fields.char('Domain', size=255),
+        'filter_type': fields.selection([('domain', 'Domain'), ('method', 'Method')], string="Filter method", required=True,),
+        'domain': fields.char('Filter domain', size=256),
+        'filter_method': fields.char('Filter method', size=64, help="signature: method(cr, uid, context)"),
         'limit': fields.integer('Limit'),
         'max_offset': fields.integer('Max Offset'),
         'order': fields.char('Order by', size=64),
@@ -49,20 +52,26 @@ class ir_model_export_template(osv.osv):
 
     _defaults = {
         'domain': '[]',
+        'filter_type': 'domain',
     }
 
-    def _build_domain(self, cr, uid, export_template, context):
-        domain = []
-        export_line_pool = self.pool.get('ir.model.export.line')
-        if not context.get('bypass_domain', False):
-            domain += eval(export_template.domain)
-        else:
-            domain += [('id', 'in', context.get('active_ids', []))]
-        if export_template.unique:
-            export_line_ids = export_line_pool.search(cr, uid, [('export_id.export_tmpl_id.model_id', '=', export_template.model_id.id)])
-            exported_object_ids = [line['res_id'] for line in export_line_pool.read(cr, uid, export_line_ids, ['res_id'])]
-            domain += [('id', 'not in', exported_object_ids)]
-        return domain
+    def _get_res_ids(self, cr, uid, template, context):
+        model_obj = self.pool.get(template.model)
+        if not model_obj:
+            raise osv.except_osv(_('Error'), _("Unknown object: %s") % (template.model,))
+        if template.filter_type == 'domain':
+            domain = eval(template.domain)
+            return model_obj.search(cr, uid, domain, context=context)
+        elif template.filter_type == 'method':
+            if not (template.filter_method and hasattr(model_obj, template.filter_method)):
+                raise osv.except_osv(_('Error'), _("Can't find method: %s on object: %s") % (template.filter_method, template.model))
+            return getattr(model_obj, template.filter_method)(cr, uid, context)
+        return []
+
+    def get_exported_res_ids(self, cr, uid, export_template_id, context):
+        export_line_ids = self.pool.get('ir.model.export.line').search(cr, uid, [('export_id.export_tmpl_id', '=', export_template_id)], context=context)
+        return [line['res_id'] for line in self.pool.get('ir.model.export.line').read(cr, uid, export_line_ids, ['res_id'], context)]
+
 
     def create_export(self, cr, uid, ids, context=None):
         """
@@ -81,10 +90,12 @@ class ir_model_export_template(osv.osv):
 
         for export_template in self.browse(cr, uid, ids, context):
             total_offset = 1
-            domain = self._build_domain(cr, uid, export_template, context)
-            res_ids = self.pool.get(export_template.model).search(cr, uid, domain, context=context)
-            res_ids_list = [res_ids]
+            res_ids = self._get_res_ids(cr, uid, export_template, context)
+            if export_template.unique:
+                old_res_ids = self.get_exported_res_ids(cr, uid, export_template.id, context)
+                res_ids = list(set(res_ids) - set(old_res_ids))
 
+            res_ids_list = []
             if export_template.limit:
                 i = 0
                 while(res_ids[i:i + export_template.limit]):
@@ -92,6 +103,8 @@ class ir_model_export_template(osv.osv):
                         break
                     res_ids_list.append(res_ids[i:i + export_template.limit])
                     i += export_template.limit
+            else:
+                res_ids_list = [res_ids]
 
             for index, export_res_ids in enumerate(res_ids_list):
                 export_ids.append(export_pool.create_new_cr(cr.dbname, uid, {
