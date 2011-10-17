@@ -112,7 +112,7 @@ class smile_project(osv.osv):
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         result = super(smile_project, self).read(cr, uid, ids, fields, context, load)
-        # Let anyone read a cell value durectly using the cell_LineID_YYYYMMMDD scheme
+        # Let anyone read a cell value directly using the cell_LineID_YYYYMMMDD scheme
         if isinstance(ids, (int, long)):
             result = [result]
         updated_result = []
@@ -121,17 +121,19 @@ class smile_project(osv.osv):
             for f_id in unread_fields:
                 f_id_elements = f_id.split('_')
                 if len(f_id_elements) == 3 and f_id_elements[0] == 'cell':
-                    line_id = int(f_id_elements[1])
-                    cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
-                    #project = self.browse(cr, uid, props['id'], context)
-                    cell_id = self.pool.get('smile.project.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
-                    if cell_id:
-                        cell = self.pool.get('smile.project.line.cell').browse(cr, uid, cell_id, context)[0]
-                        if cell.hold_quantities:
-                            cell_value = cell.quantity
-                        else:
-                            cell_value = cell.boolean_value
-                        props.update({f_id: cell_value})
+                    cell_value = None
+                    if not f_id_elements[1].startswith('new'):
+                        line_id = int(f_id_elements[1])
+                        cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
+                        #project = self.browse(cr, uid, props['id'], context)
+                        cell_id = self.pool.get('smile.project.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
+                        if cell_id:
+                            cell = self.pool.get('smile.project.line.cell').browse(cr, uid, cell_id, context)[0]
+                            if cell.hold_quantities:
+                                cell_value = cell.quantity
+                            else:
+                                cell_value = cell.boolean_value
+                    props.update({f_id: cell_value})
             updated_result.append(props)
         if isinstance(ids, (int, long)):
             updated_result = updated_result[0]
@@ -142,51 +144,68 @@ class smile_project(osv.osv):
         # Automaticcaly remove out of range cells if dates changes
         if 'start_date' in vals or 'end_date' in vals:
             self.remove_outdated_cells(cr, uid, ids, vals, context)
-        # Parse and clean-up data comming from the matrix
-        for (cell_name, cell_value) in vals.items():
-            # Filters out non cell values
-            if not cell_name.startswith('cell_'):
-                continue
-            cell_name_fragments = cell_name.split('_')
-            line_id = int(cell_name_fragments[1])
-            cell_date = datetime.datetime.strptime(cell_name_fragments[2], '%Y%m%d')
-            # Get the line
-            line = self.pool.get('smile.project.line').browse(cr, uid, line_id, context)
-            # Convert the raw value to the right one depending on the type of the line
-            if line.hold_quantities:
-                # Quantity conversion
-                if type(cell_value) is type(''):
-                    cell_value = float(cell_value)
+        for project in self.browse(cr, uid, ids, context):
+            new_lines = {}
+            # Parse and clean-up data coming from the matrix
+            for (cell_name, cell_value) in vals.items():
+                # Filters out non cell values
+                if not cell_name.startswith('cell_'):
+                    continue
+                cell_name_fragments = cell_name.split('_')
+                cell_date = datetime.datetime.strptime(cell_name_fragments[2], '%Y%m%d')
+                # Are we updating an existing line or creating a new one ?
+                line_id = cell_name_fragments[1]
+                if line_id.startswith('new'):
+                    line_name = line_id
+                    line_id = None
+                    if line_name in new_lines:
+                        line_id = new_lines[line_name]
+                    else:
+                        vals = {
+                            'project_id': project.id,
+                            'name': line_name,
+                            }
+                        line_id = self.pool.get('smile.project.line').create(cr, uid, vals, context)
+                        new_lines[line_name] = line_id
                 else:
-                    cell_value = None
-            else:
-                # Boolean conversion
-                if cell_value == '1':
-                    cell_value = True
+                    line_id = int(line_id)
+                # Get the line
+                line = self.pool.get('smile.project.line').browse(cr, uid, line_id, context)
+                # Convert the raw value to the right one depending on the type of the line
+                if line.hold_quantities:
+                    # Quantity conversion
+                    if type(cell_value) is type(''):
+                        cell_value = float(cell_value)
+                    else:
+                        cell_value = None
                 else:
-                    cell_value = False
-            # Ignore non-modified cells
-            if cell_value is None:
-                continue
-            # Prepare the cell value
-            cell_vals = {}
-            if line.hold_quantities:
-                cell_vals.update({'quantity': cell_value})
-            else:
-                cell_vals.update({'boolean_value': cell_value})
-            # Search for an existing cell at the given date
-            cell = self.pool.get('smile.project.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
-            # Cell doesn't exists, create it
-            if not cell:
-                cell_vals.update({
-                    'date': cell_date,
-                    'line_id': line_id,
-                    })
-                self.pool.get('smile.project.line.cell').create(cr, uid, cell_vals, context)
-            # Update cell with our data
-            else:
-                cell_id = cell[0]
-                self.pool.get('smile.project.line.cell').write(cr, uid, cell_id, cell_vals, context)
+                    # Boolean conversion
+                    if cell_value == '1':
+                        cell_value = True
+                    else:
+                        cell_value = False
+                # Ignore non-modified cells
+                if cell_value is None:
+                    continue
+                # Prepare the cell value
+                cell_vals = {}
+                if line.hold_quantities:
+                    cell_vals.update({'quantity': cell_value})
+                else:
+                    cell_vals.update({'boolean_value': cell_value})
+                # Search for an existing cell at the given date
+                cell = self.pool.get('smile.project.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
+                # Cell doesn't exists, create it
+                if not cell:
+                    cell_vals.update({
+                        'date': cell_date,
+                        'line_id': line_id,
+                        })
+                    self.pool.get('smile.project.line.cell').create(cr, uid, cell_vals, context)
+                # Update cell with our data
+                else:
+                    cell_id = cell[0]
+                    self.pool.get('smile.project.line.cell').write(cr, uid, cell_id, cell_vals, context)
         return ret
 
 
