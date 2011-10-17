@@ -24,7 +24,7 @@ import threading
 from osv import osv, fields
 import pooler
 
-from export_handler import SmileExportLogger
+from smile_log.db_handler import SmileDBLogger
 
 class ir_model_export_template(osv.osv):
     _name = 'ir.model.export.template'
@@ -65,9 +65,17 @@ class ir_model_export_template(osv.osv):
         return domain
 
     def create_export(self, cr, uid, ids, context=None):
+        """
+        context used to specify export_mode
+        export_mode can be:
+        - same_thread_raise_error (default)
+        - same_thread_rollback_and_continue
+        - new_thread
+        """
         if isinstance(ids, (int, long)):
             ids = [ids]
         context = context or {}
+        context.setdefault('export_mode', 'same_thread_full_rollback')
         export_pool = self.pool.get('ir.model.export')
         export_ids = []
 
@@ -86,14 +94,13 @@ class ir_model_export_template(osv.osv):
                     i += export_template.limit
 
             for index, export_res_ids in enumerate(res_ids_list):
-                export_ids.append(export_pool.create(cr, uid, {
+                export_ids.append(export_pool.create_new_cr(cr.dbname, uid, {
                     'export_tmpl_id': export_template.id,
+                    'state': 'running',
                     'line_ids': [(0, 0, {'res_id': res_id}) for res_id in export_res_ids],
                     'offset': index + 1,
                 }, context))
 
-        context['same_thread'] = True
-        cr.commit()
         export_pool.generate(cr, uid, export_ids, context)
         return True
 
@@ -140,10 +147,30 @@ self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)"""
         return True
 ir_model_export_template()
 
+STATES = [
+    ('running', 'Running'),
+    ('done', 'Done'),
+    ('exception', 'Exception'),
+]
+
+def state_cleaner(method):
+    def state_cleaner(self, cr, mode):
+        res = method(self, cr, mode)
+        if self.get('ir.model.export'):
+            export_ids = self.get('ir.model.export').search(cr, 1, [('state', '=', 'running')])
+            if export_ids:
+                self.get('ir.model.export').write(cr, 1, export_ids, {'state': 'exception'})
+        return res
+    return state_cleaner
+
 class ir_model_export(osv.osv):
     _name = 'ir.model.export'
     _description = 'Export'
     _rec_name = 'export_tmpl_id'
+
+    def __init__(self, pool, cr):
+        super(ir_model_export, self).__init__(pool, cr)
+        setattr(osv.osv_pool, 'init_set', state_cleaner(getattr(osv.osv_pool, 'init_set')))
 
     _columns = {
         'export_tmpl_id': fields.many2one('ir.model.export.template', 'Template', required=True, ondelete='cascade'),
@@ -159,21 +186,24 @@ class ir_model_export(osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True),
         'create_uid': fields.many2one('res.users', 'Creation User', readonly=True),
         'line_ids': fields.one2many('ir.model.export.line', 'export_id', 'Lines'),
-        'log_ids': fields.one2many('ir.model.export.log', 'export_id', 'Logs', readonly=True),
-        'state': fields.selection([
-            ('draft', 'Draft'),
-            ('running', 'Running'),
-            ('done', 'Done'),
-            ('exception', 'Exception'),
-        ], 'State'),
+        'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export')], readonly=True),
+        'state': fields.selection(STATES, "State", readonly=True, required=True,),
         'exception': fields.text('Exception'),
     }
 
     _order = 'create_date desc'
 
-    _defaults = {
-        'state': 'draft',
-    }
+    def create_new_cr(self, dbname, uid, vals, context):
+        db = pooler.get_db(dbname)
+        cr = db.cursor()
+
+        try:
+            export_id = self.pool.get('ir.model.export').create(cr, uid, vals, context)
+            cr.commit()
+        finally:
+            cr.close()
+
+        return export_id
 
     def _run_actions(self, cr, uid, export, res_ids=[], context=None):
         """Execute export method and action"""
@@ -186,54 +216,75 @@ class ir_model_export(osv.osv):
                 self.pool.get('ir.actions.server').run(cr, uid, export.action_id.id, context=context)
 
     def generate(self, cr, uid, ids, context=None):
-        """Create a new thread dedicated to export generation"""
+        """
+        context used to specify export_mode
+        export_mode can be:
+        - same_thread_raise_error (default)
+        - same_thread_rollback_and_continue
+        - new_thread
+        """
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         context = context or {}
-        if context.get('same_thread', False):
-            return self._generate(cr, uid, ids, context)
-        threaded_run = threading.Thread(target=self._generate_with_new_cursor, args=(cr.dbname, uid, ids, context))
-        threaded_run.start()
+        export_mode = context.get('export_mode', 'same_thread_full_rollback')
+
+        for export_id in ids:
+            logger = SmileDBLogger(cr.dbname, 'ir.model.export', export_id, uid)
+            if export_mode == 'new_thread':
+                t = threading.Thread(target=self._generate_with_new_cursor, args=(cr.dbname, uid, export_id, logger, context))
+                t.start()
+            else:
+                cr.execute('SAVEPOINT smile_export')
+                try:
+                    self._generate(cr, uid, export_id, logger, context)
+                except Exception, e:
+                    if import_mode == 'same_thread_rollback_and_continue':
+                        cr.execute("ROLLBACK TO SAVEPOINT smile_export")
+                        logger.info("Export rollbacking")
+                    else: #same_thread_raise_error
+                        raise e
         return True
 
-    def _generate_with_new_cursor(self, dbname, uid, ids, context):
+    def _generate_with_new_cursor(self, dbname, uid, export_id, logger, context):
         try:
             db = pooler.get_db(dbname)
         except:
             return False
         cr = db.cursor()
         try:
-            self._generate(cr, uid, ids, context)
+            self._generate(cr, uid, export_id, logger, context)
         finally:
             cr.close()
         return
 
-    def _generate(self, cr, uid, ids, context=None):
+    def _generate(self, cr, uid, export_id, logger, context=None):
         """Call export method and action
         Catch and log exceptions"""
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for export in self.browse(cr, uid, ids, context):
-            is_running = (export.state == 'running')
-            logger = SmileExportLogger(uid, export.id)
-            context['export_id'] = export.id
-            try:
-                if not is_running:
-                    if export.line_ids:
-                        res_ids = [line.res_id for line in export.line_ids]
-                        logger.info('Export start')
-                        export.write({'state': 'running'}, context)
-                        cr.commit()
-                        self._run_actions(cr, uid, export, res_ids, context)
-                        logger.time_info('Export done')
-                    export.write({'state': 'done'}, context)
-            except Exception, e:
-                cr.rollback()
-                logger.critical(isinstance(e, osv.except_osv) and e.value or e)
-                export.write({
-                    'state': 'exception',
-                    'exception': isinstance(e, osv.except_osv) and e.value or e,
-                }, context)
-            finally:
-                cr.commit()
+        assert isinstance(export_id, (int, long)), 'ir.model.export, _generate: export_id is supposed to be an integer'
+
+        context = context and context.copy() or {}
+        export = self.browse(cr, uid, export_id, context)
+        context['logger'] = logger
+        context['export_id'] = export.id
+
+        try:
+            if export.line_ids:
+                res_ids = [line.res_id for line in export.line_ids]
+                logger.info('Export start')
+                self._run_actions(cr, uid, export, res_ids, context)
+                logger.time_info('Export done')
+        except Exception, e:
+            logger.critical("Export failed: %s" % (tools.ustr(repr(e))))
+            self.write_new_cr(cr.dbname, uid, export_id, {'state': 'exception',
+                                                          'to_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                                                          'exception': isinstance(e, osv.except_osv) and e.value or e, }, context)
+            raise e
+
+        try:
+            self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
+        except Exception, e:
+            logger.error("Could not mark export %s as done" % (export_id, tools.ustr(repr(e))))
+            raise e
         return True
 ir_model_export()
 
@@ -274,18 +325,3 @@ class ir_model_export_line(osv.osv):
         'res_label': fields.function(_get_resource_label, method=True, type='char', size=256, string="Resource label"),
     }
 ir_model_export_line()
-
-class ir_model_export_log(osv.osv):
-    _name = 'ir.model.export.log'
-    _description = 'Export Log'
-    _rec_name = 'message'
-
-    _order = 'create_date desc'
-
-    _columns = {
-        'create_date': fields.datetime('Date', readonly=True),
-        'export_id': fields.many2one('ir.model.export', 'Export', readonly=True, ondelete='cascade'),
-        'level': fields.char('Level', size=16, readonly=True),
-        'message': fields.text('Message', readonly=True),
-    }
-ir_model_export_log()

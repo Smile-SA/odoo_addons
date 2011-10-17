@@ -40,7 +40,7 @@ Principle
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
 """,
-    "depends" : ['base'],
+    "depends" : ['smile_log'],
     "init_xml" : [],
     "update_xml": [
         'security/smile_export_security.xml',

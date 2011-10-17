@@ -6,8 +6,8 @@
 	        <field name="name">Smile export / Manager</field>
 	    </record>
 	    
-	    <record id="group_smile_export_log_reader" model="res.groups">
-	        <field name="name">Smile export / Log reader</field>
+	    <record id="group_smile_export_user" model="res.groups">
+	        <field name="name">Smile export / User</field>
 	    </record>
 
 	</data>
