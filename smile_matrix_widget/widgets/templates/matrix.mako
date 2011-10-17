@@ -84,7 +84,7 @@
                 <th class="first_column">Line</th>
                 <th></th>
                 %for date in value['date_range']:
-                    <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime('%d/%m')}</th>
+                    <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime('%d')}</th>
                 %endfor
                 <th class="total">Total</th>
             </tr>
