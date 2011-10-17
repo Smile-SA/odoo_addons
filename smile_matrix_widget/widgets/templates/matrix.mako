@@ -52,7 +52,7 @@
 
     .matrix table tfoot input {
         width: none;
-        }
+    }
 
     .matrix table .button.increment {
         display: block;

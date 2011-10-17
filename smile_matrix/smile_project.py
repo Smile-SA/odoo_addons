@@ -144,6 +144,7 @@ class smile_project(osv.osv):
         # Automaticcaly remove out of range cells if dates changes
         if 'start_date' in vals or 'end_date' in vals:
             self.remove_outdated_cells(cr, uid, ids, vals, context)
+        written_lines = []
         for project in self.browse(cr, uid, ids, context):
             new_lines = {}
             # Parse and clean-up data coming from the matrix
@@ -169,6 +170,7 @@ class smile_project(osv.osv):
                         new_lines[line_name] = line_id
                 else:
                     line_id = int(line_id)
+                written_lines.append(line_id)
                 # Get the line
                 line = self.pool.get('smile.project.line').browse(cr, uid, line_id, context)
                 # Convert the raw value to the right one depending on the type of the line
@@ -206,6 +208,10 @@ class smile_project(osv.osv):
                 else:
                     cell_id = cell[0]
                     self.pool.get('smile.project.line.cell').write(cr, uid, cell_id, cell_vals, context)
+        # If there was no references to one of our line it means it was deleted
+        for project in self.browse(cr, uid, ids, context):
+            removed_lines = list(set([l.id for l in project.line_ids]).difference(set(written_lines)))
+            self.pool.get('smile.project.line').unlink(cr, uid, removed_lines, context)
         return ret
 
 
