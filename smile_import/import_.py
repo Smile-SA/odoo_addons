@@ -19,9 +19,7 @@
 #
 ##############################################################################
 
-import logging
-import threading
-import time
+import threading, time
 
 from osv import osv, fields
 import tools, pooler
@@ -168,12 +166,12 @@ class IrModelImport(osv.osv):
         cr = db.cursor()
 
         try:
-            import_id = self.pool.get('ir.model.import').write(cr, uid, ids, vals, context)
+            result = self.pool.get('ir.model.import').write(cr, uid, ids, vals, context)
             cr.commit()
         finally:
             cr.close()
 
-        return import_id
+        return result
 
     def _process_import(self, cr, uid, import_id, logger, context):
         assert isinstance(import_id, (int, long)), 'ir.model.import, run_import: import_id is supposed to be an integer'
@@ -202,7 +200,7 @@ class IrModelImport(osv.osv):
         try:
             self.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
-            logger.error("Could not mark import %s as done" % (import_id, tools.ustr(repr(e))))
+            logger.error("Could not mark import %s as done: %s" % (import_id, tools.ustr(repr(e))))
             raise e
 
     def _process_with_new_cursor(self, dbname, uid, import_id, logger, context=None):

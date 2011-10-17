@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-import threading
+import threading, time
 
 from osv import osv, fields
-import pooler
+import tools, pooler
 
 from smile_log.db_handler import SmileDBLogger
 
@@ -205,6 +205,18 @@ class ir_model_export(osv.osv):
 
         return export_id
 
+    def write_new_cr(self, dbname, uid, ids, vals, context):
+        db = pooler.get_db(dbname)
+        cr = db.cursor()
+
+        try:
+            result = self.pool.get('ir.model.export').write(cr, uid, ids, vals, context)
+            cr.commit()
+        finally:
+            cr.close()
+
+        return result
+
     def _run_actions(self, cr, uid, export, res_ids=[], context=None):
         """Execute export method and action"""
         context = context or {}
@@ -238,7 +250,7 @@ class ir_model_export(osv.osv):
                 try:
                     self._generate(cr, uid, export_id, logger, context)
                 except Exception, e:
-                    if import_mode == 'same_thread_rollback_and_continue':
+                    if export_mode == 'same_thread_rollback_and_continue':
                         cr.execute("ROLLBACK TO SAVEPOINT smile_export")
                         logger.info("Export rollbacking")
                     else: #same_thread_raise_error
@@ -283,7 +295,7 @@ class ir_model_export(osv.osv):
         try:
             self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
-            logger.error("Could not mark export %s as done" % (export_id, tools.ustr(repr(e))))
+            logger.error("Could not mark export %s as done: %s" % (export_id, tools.ustr(repr(e))))
             raise e
         return True
 ir_model_export()
