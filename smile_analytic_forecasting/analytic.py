@@ -163,7 +163,7 @@ class AnalyticLine(osv.osv):
             for field in unicity_fields:
                 value = isinstance(line[field], tuple) and line[field][0] or line[field]
                 domain.append((field, '=', value))
-            key_line_ids = self.search(cr, uid, domain, order='period_id desc, type asc', context={'active_test': True})
+            key_line_ids = self.search(cr, uid, domain, order='period_id desc, type asc', context=context)
             no_actual_lines = 1
             for index, key_line in enumerate(self.read(cr, uid, key_line_ids, ['period_id', 'type'], context)):
                 if key_line['type'] == 'actual':
@@ -175,11 +175,15 @@ class AnalyticLine(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(AnalyticLine, self).create(cr, uid, vals, context)
+        context = context or {}
+        context['active_test'] = True
         self._deactivate_old_forecast_lines(cr, uid, res_id, context)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(AnalyticLine, self).write(cr, uid, ids, vals, context)
+        context = context or {}
+        context['active_test'] = True
         unicity_fields = self._unicity_fields + ['period_id', 'type']
         for field in vals:
             if field in unicity_fields:
@@ -189,6 +193,7 @@ class AnalyticLine(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         context = context or {}
+        context['active_test'] = False
         context['ids_to_exclude'] = isinstance(ids, (int, long)) and [ids] or ids
         res = super(AnalyticLine, self).unlink(cr, uid, ids, context)
         self._deactivate_old_forecast_lines(cr, uid, ids, context)
