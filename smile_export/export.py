@@ -74,6 +74,7 @@ class ir_model_export_template(osv.osv):
         return [line['res_id'] for line in self.pool.get('ir.model.export.line').read(cr, uid, export_line_ids, ['res_id'], context)]
 
     def unlink_res_ids(self, cr, uid, ids, model, res_ids, context):
+        unlink_line_ids = []
         for template in self.browse(cr, uid, ids, context):
             if template.model != model:
                 raise osv.except_osv(_('Error'), _("unlink_res_ids: model(%s) does not match template model (%s, %s)") % (model, template.id, template.model))
@@ -85,8 +86,8 @@ class ir_model_export_template(osv.osv):
                 logger = SmileDBLogger(cr.dbname, 'ir.model.export.template', template.id, uid)
                 logger.info('Unlinking model:%s, res_ids: %s - real_res_ids found: %s' % (model, res_ids, real_res_ids))
                 self.pool.get('ir.model.export.line').unlink(cr, uid, export_line_ids, context)
-        return True
-
+                unlink_line_ids.extend(export_line_ids)
+        return unlink_line_ids
 
     def create_export(self, cr, uid, ids, context=None):
         """
