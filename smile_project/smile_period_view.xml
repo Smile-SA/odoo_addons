@@ -20,10 +20,6 @@
                                 <field name="date"/>
                                 <field name="working_day"/>
                             </tree>
-                            <form string="Lines">
-                                <field name="date"/>
-                                <field name="working_day"/>
-                            </form>
                         </field>
                         <field name="project_ids" colspan="4" nolabel="1">
                             <tree string="Projects">

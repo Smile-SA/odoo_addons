@@ -186,7 +186,7 @@
 
     %else:
 
-        Can't render the matrix widget until a period is selected.
+        Can't render the matrix widget, unless a period is selected.
 
     %endif
 

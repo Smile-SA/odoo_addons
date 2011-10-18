@@ -255,7 +255,7 @@ class smile_period_line(osv.osv):
 
     _columns = {
         'date': fields.date('Date', required=True, readonly=True),
-        'period_id': fields.many2one('smile.period', "Period", required=True, ondelete='cascade'),
+        'period_id': fields.many2one('smile.period', "Period", required=True, readonly=True, ondelete='cascade'),
         'working_day': fields.boolean('Working day'),
         }
 
