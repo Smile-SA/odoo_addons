@@ -71,5 +71,20 @@
 
         <menuitem id="menu_smile_log" parent="base.menu_audit" name="Smile logs" action="act_smile_log"/>
         
+        <record id="smile_log_simple_tree_view" model="ir.ui.view">
+            <field name="name">Smile Log - Tree</field>
+            <field name="model">smile.log</field>
+            <field name="type">tree</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <tree string="Smile Logs">
+                    <field name="log_date"/>
+                    <field name="pid"/>
+                    <field name="level"/>
+                    <field name="message"/>
+                </tree>
+            </field>
+        </record>
+        
     </data>
 </openerp>
