@@ -198,23 +198,6 @@ class smile_period(osv.osv):
             date = date + datetime.timedelta(days=day_delta)
         return date_range
 
-
-    #def get_active_date_range(self, project, day_delta=1):
-        #""" Get a list of date objects covering the given date range
-        #"""
-        #date_range = []
-        #start_date = project.start_date
-        #end_date = project.end_date
-        #if not isinstance(start_date, (datetime.date, datetime.datetime)):
-            #start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
-        #if not isinstance(end_date, (datetime.date, datetime.datetime)):
-            #end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
-        #date = start_date
-        #while date <= end_date:
-            #date_range.append(date)
-            #date = date + datetime.timedelta(days=day_delta)
-        #return date_range
-
     def update_lines(self, cr, uid, ids, context):
         """ This method create and remove lines to fill the period
         """
@@ -263,6 +246,18 @@ class smile_period_line(osv.osv):
     _defaults = {
         'working_day': True
         }
+
+
+    ## Native methods
+
+    def write(self, cr, uid, ids, vals, context=None):
+        ret = super(smile_period_line, self).write(cr, uid, ids, vals, context)
+        # Each time we update the working_day boolean of one line we clean-up the projects
+        project_ids = []
+        for period_line in self.browse(cr, uid, ids, context):
+            project_ids += [p.id for p in period_line.period_id.project_ids]
+        self.pool.get('smile.project').remove_inactive_cells(cr, uid, project_ids, context)
+        return ret
 
 
     ## Constraints methods

@@ -138,7 +138,7 @@ class smile_project(osv.osv):
         ret = super(smile_project, self).write(cr, uid, ids, vals, context)
         # Automaticcaly remove out of range cells if dates changes
         if 'start_date' in vals or 'end_date' in vals:
-            self.remove_outdated_cells(cr, uid, ids, vals, context)
+            self.remove_inactive_cells(cr, uid, ids, context)
         written_lines = []
         for project in self.browse(cr, uid, ids, context):
             new_lines = {}
@@ -212,19 +212,18 @@ class smile_project(osv.osv):
 
     ## Custom methods
 
-    def remove_outdated_cells(self, cr, uid, ids, vals, context):
-        """ This method remove out of range cells on each sub lines
+    def remove_inactive_cells(self, cr, uid, ids, context):
+        """ This method remove out of range and inactive cells on each sub lines
         """
         if isinstance(ids, (int, long)):
             ids = [ids]
         outdated_cells = []
         for project in self.browse(cr, uid, ids, context):
-            start_date = datetime.datetime.strptime(project.start_date, '%Y-%m-%d')
-            end_date = datetime.datetime.strptime(project.end_date, '%Y-%m-%d')
+            active_dates = [datetime.datetime.strptime(l.date, '%Y-%m-%d') for l in project.period_id.active_line_ids]
             for line in project.line_ids:
                 for cell in line.cell_ids:
                     date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
-                    if date < start_date or date > end_date:
+                    if date not in active_dates:
                         # Cell is out of range. Delete it.
                         outdated_cells.append(cell.id)
         if outdated_cells:
