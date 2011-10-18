@@ -77,35 +77,16 @@ class matrix(fields.dummy):
 class smile_project(osv.osv):
     _name = 'smile.project'
 
-    _order = "start_date"
+    #_order = "start_date"
 
     _columns = {
         'name': fields.char('Name', size=32),
-        'start_date': fields.date('Start', required=True),
-        'end_date': fields.date('End', required=True),
+        'period_id': fields.many2one('smile.period', "Period", required=True),
+        'start_date': fields.related('period_id', 'start_date', type='date', string="Start date", readonly=True),
+        'end_date': fields.related('period_id', 'end_date', type='date', string="End date", readonly=True),
         'line_ids': fields.one2many('smile.project.line', 'project_id', "Project lines"),
         'matrix_line_ids': matrix('line_ids', 'cell_ids', string="Project lines", readonly=False),
         }
-
-    _defaults = {
-        'start_date': datetime.datetime.today().strftime('%Y-%m-%d'),
-        'end_date': (datetime.datetime.today() + datetime.timedelta(days=7)).strftime('%Y-%m-%d'),
-        }
-
-
-    ## Constraints
-
-    def _check_date_range(self, cr, uid, ids, context=None):
-        for project in self.browse(cr, uid, ids, context):
-            start_date = datetime.datetime.strptime(project.start_date, '%Y-%m-%d')
-            end_date = datetime.datetime.strptime(project.end_date, '%Y-%m-%d')
-            if end_date < start_date:
-                return False
-        return True
-
-    _constraints = [
-        (_check_date_range, "Start date can't be greater than end date.", ['start_date', 'end_date'])
-        ]
 
 
     ## Native methods

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record model="ir.ui.view" id="view_period_form">
+            <field name="name">smile_period.view_period</field>
+            <field name="model">smile.period</field>
+            <field name="type">form</field>
+            <field name="priority">17</field>
+            <field name="arch" type="xml">
+                <form string="Period">
+                    <group colspan="4" col="4">
+                        <field name="name"/>
+                        <field name="month_name"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <separator string="Period lines" colspan="4"/>
+                        <field name="line_ids" colspan="4" nolabel="1">
+                            <tree string="Lines">
+                                <field name="date"/>
+                            </tree>
+                            <form string="Lines">
+                                <field name="date"/>
+                            </form>
+                        </field>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_period_tree">
+            <field name="name">smile_period.view_period</field>
+            <field name="model">smile.period</field>
+            <field name="type">tree</field>
+            <field name="priority">17</field>
+            <field name="arch" type="xml">
+                <tree string="Period">
+                    <field name="name"/>
+                    <field name="month_name"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="line_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <act_window name="Periods" res_model="smile.period" id="action_period_list"/>
+
+        <menuitem id="act_period_menu" parent="project_menu" action="action_period_list" sequence="11"/>
+
+    </data>
+</openerp>

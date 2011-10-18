@@ -63,123 +63,131 @@
 
 <div class="matrix">
 
-    <%
-        lines = value.get('matrix_data', [])
-    %>
+    %if type(value) == type({}) and 'date_range' in value:
 
-    %if editable:
-        <div class="toolbar">
-            <span id="matrix_add_row" class="button">
-                Add line
-            </span>
-            <span id="matrix_button_template" class="button increment">
-                Button template
-            </span>
-        </div>
-    %endif
+        <%
+            lines = value.get('matrix_data', [])
+        %>
 
-    <table id="${name}">
-        <thead>
-            <tr>
-                <th class="first_column">Line</th>
-                <th></th>
-                %for date in value['date_range']:
-                    <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime('%d')}</th>
-                %endfor
-                <th class="total">Total</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr class="total_line">
-                <td class="first_column">Total</td>
-                <td></td>
-                %for date in value['date_range']:
-                    <td>
-                        <span class="column_total_${date}">
-                            <%
-                                column_values = [line['cells_data'][date] for line in lines if line['type'] == 'float' and date in line['cells_data']]
-                            %>
-                            %if len(column_values):
-                                ${sum(column_values)}
-                            %endif
-                        </span>
-                    </td>
-                %endfor
-                <td class="total">
-                    <span id="grand_total">
-                        ${sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['type'] == 'float'])}
-                    </span>
-                </td>
-            </tr>
-            %for line in [l for l in lines if l['type'] == 'boolean']:
-                <tr class="boolean_line">
-                    <td class="first_column">${line['name']}</td>
+        %if editable:
+            <div class="toolbar">
+                <span id="matrix_add_row" class="button">
+                    Add line
+                </span>
+                <span id="matrix_button_template" class="button increment">
+                    Button template
+                </span>
+            </div>
+        %endif
+
+        <table id="${name}">
+            <thead>
+                <tr>
+                    <th class="first_column">Line</th>
+                    <th></th>
+                    %for date in value['date_range']:
+                        <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime('%d')}</th>
+                    %endfor
+                    <th class="total">Total</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr class="total_line">
+                    <td class="first_column">Total</td>
                     <td></td>
                     %for date in value['date_range']:
-                        <td class="boolean">
-                            <%
-                                cell_id = 'cell_%s_%s' % (line['id'], date)
-                                cell_value = line['cells_data'].get(date, None)
-                            %>
-                            %if cell_value is not None:
-                                %if editable:
-                                    <input type="hidden" kind="boolean" name="${cell_id}" id="${cell_id}" value="${cell_value and '1' or '0'}"/>
-                                    <input type="checkbox" enabled="enabled" kind="boolean" class="checkbox" id="${cell_id}"
-                                        %if cell_value:
-                                            checked="checked"
-                                        %endif
-                                    />
-                                %else:
-                                    <input type="checkbox" name="${cell_id}" id="${cell_id}" kind="boolean" class="checkbox" readonly="readonly" disabled="disabled" value="${cell_value and '1' or '0'}"
-                                        %if cell_value:
-                                            checked="checked"
-                                        %endif
-                                    />
+                        <td>
+                            <span class="column_total_${date}">
+                                <%
+                                    column_values = [line['cells_data'][date] for line in lines if line['type'] == 'float' and date in line['cells_data']]
+                                %>
+                                %if len(column_values):
+                                    ${sum(column_values)}
                                 %endif
-                            %endif
+                            </span>
                         </td>
                     %endfor
-                    <td class="total"></td>
-                </tr>
-            %endfor
-        </tfoot>
-        <tbody>
-            <%
-                # Add a dummy row in editable mode that will serve as a template
-                if editable:
-                    lines.append({
-                        'id'  : "template",
-                        'name': "Row template",
-                        'type': "float",
-                        })
-            %>
-            %for line in [l for l in lines if l['type'] != 'boolean'] :
-                <tr>
-                    <td class="first_column">${line['name']}</td>
-                    <td>
-                        %if editable:
-                            <span class="button delete_row">X</span>
-                        %endif
+                    <td class="total">
+                        <span id="grand_total">
+                            ${sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['type'] == 'float'])}
+                        </span>
                     </td>
-                    %for date in value['date_range']:
-                        <td class="float">
-                            <%
-                                cell_id = 'cell_%s_%s' % (line['id'], date)
-                                cell_value = line.get('cells_data', {}).get(date, None)
-                            %>
-                            %if cell_value is not None:
-                                %if editable:
-                                    <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${cell_value}" size="1" class="float"/>
-                                %else:
-                                    <span kind="float" id="${cell_id}" value="${cell_value}">${cell_value}</span>
+                </tr>
+                %for line in [l for l in lines if l['type'] == 'boolean']:
+                    <tr class="boolean_line">
+                        <td class="first_column">${line['name']}</td>
+                        <td></td>
+                        %for date in value['date_range']:
+                            <td class="boolean">
+                                <%
+                                    cell_id = 'cell_%s_%s' % (line['id'], date)
+                                    cell_value = line['cells_data'].get(date, None)
+                                %>
+                                %if cell_value is not None:
+                                    %if editable:
+                                        <input type="hidden" kind="boolean" name="${cell_id}" id="${cell_id}" value="${cell_value and '1' or '0'}"/>
+                                        <input type="checkbox" enabled="enabled" kind="boolean" class="checkbox" id="${cell_id}"
+                                            %if cell_value:
+                                                checked="checked"
+                                            %endif
+                                        />
+                                    %else:
+                                        <input type="checkbox" name="${cell_id}" id="${cell_id}" kind="boolean" class="checkbox" readonly="readonly" disabled="disabled" value="${cell_value and '1' or '0'}"
+                                            %if cell_value:
+                                                checked="checked"
+                                            %endif
+                                        />
+                                    %endif
                                 %endif
+                            </td>
+                        %endfor
+                        <td class="total"></td>
+                    </tr>
+                %endfor
+            </tfoot>
+            <tbody>
+                <%
+                    # Add a dummy row in editable mode that will serve as a template
+                    if editable:
+                        lines.append({
+                            'id'  : "template",
+                            'name': "Row template",
+                            'type': "float",
+                            })
+                %>
+                %for line in [l for l in lines if l['type'] != 'boolean'] :
+                    <tr>
+                        <td class="first_column">${line['name']}</td>
+                        <td>
+                            %if editable:
+                                <span class="button delete_row">X</span>
                             %endif
                         </td>
-                    %endfor
-                    <td class="total"><span id="row_total_${line['id']}">${sum([v for (k, v) in line.get('cells_data', dict()).items()])}</span></td>
-                </tr>
-            %endfor
-        </tbody>
-    </table>
+                        %for date in value['date_range']:
+                            <td class="float">
+                                <%
+                                    cell_id = 'cell_%s_%s' % (line['id'], date)
+                                    cell_value = line.get('cells_data', {}).get(date, None)
+                                %>
+                                %if cell_value is not None:
+                                    %if editable:
+                                        <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${cell_value}" size="1" class="float"/>
+                                    %else:
+                                        <span kind="float" id="${cell_id}" value="${cell_value}">${cell_value}</span>
+                                    %endif
+                                %endif
+                            </td>
+                        %endfor
+                        <td class="total"><span id="row_total_${line['id']}">${sum([v for (k, v) in line.get('cells_data', dict()).items()])}</span></td>
+                    </tr>
+                %endfor
+            </tbody>
+        </table>
+
+    %else:
+
+        No period selected.
+
+    %endif
 
 </div>
