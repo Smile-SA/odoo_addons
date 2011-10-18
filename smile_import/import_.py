@@ -57,13 +57,13 @@ class IrModelImportTemplate(osv.osv):
         test_mode = context.get('test_mode', False)
         import_mode = context.get('import_mode', 'same_thread_full_rollback')
 
-        for template in self.read(cr, uid, ids, ['name'], context):
-            import_name = import_name or template['name']
+        for template in self.browse(cr, uid, ids, context):
+            import_name = import_name or template.name
 
-            logger = SmileDBLogger(cr.dbname, 'ir.model.import.template', template['id'], uid)
+            logger = SmileDBLogger(cr.dbname, 'ir.model.import.template', template.id, uid)
             import_id = import_obj.create_new_cr(cr.dbname, uid, {
                                                                     'name': import_name,
-                                                                    'import_tmpl_id': template['id'],
+                                                                    'import_tmpl_id': template.id,
                                                                     'test_mode': test_mode,
                                                                     'pid': logger.pid,
                                                                     'state': 'running',
