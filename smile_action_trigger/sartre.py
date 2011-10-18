@@ -175,27 +175,34 @@ class SartreTrigger(osv.osv):
             res[trigger_id] = self.pool.get('smile.log').search(cr, uid, [('model_name', '=', 'sartre.trigger'), ('res_id', '=', trigger_id)], context=context)
         return res
 
+    def _is_dynamic_field(self, filter_field, model_obj):
+         # Old values
+        if filter_field.startswith('OLD_'):
+            return True
+        # Function field without fnct_search and not stored
+        obj = model_obj
+        for field in filter_field.split('.'):
+            if field in obj._columns:
+                item_field = obj._columns[field]
+                if isinstance(item_field, fields.function):
+                    if not item_field._fnct_search and not item_field.store:
+                        return True
+                obj = self.pool.get(item_field._obj)
+        return False
+
+
     def _is_dynamic_filter(self, cr, uid, item, model_obj, context=None):
         if isinstance(item, tuple) and model_obj:
-            # Old values
-            if item[0].startswith('OLD_'):
-                return True
-            # Dynamic comparison value
-            if re.match('(\[\[.+?\]\])', str(item[2]) or ''):
+            # first element
+            if self._is_dynamic_field(item[0], model_obj):
                 return True
             # Python operator
             operator = self.pool.get('sartre.operator')._get_operator(cr, uid, item[1], context)
             if operator and operator[0] and operator[0].native_operator == 'none':
                 return True
-            # Function field without fnct_search and not stored
-            obj = model_obj
-            for field in item[0].split('.'):
-                if field in obj._columns:
-                    item_field = obj._columns[field]
-                    if isinstance(item_field, fields.function):
-                        if not item_field._fnct_search and not item_field.store:
-                            return True
-                    obj = self.pool.get(item_field._obj)
+            # Dynamic comparison value
+            if re.match('(\[\[.+?\]\])', str(item[2]) or ''):
+                return True
         return False
 
     def _is_python_domain(self, cr, uid, ids, name, args, context=None):
@@ -203,11 +210,16 @@ class SartreTrigger(osv.osv):
             ids = [ids]
         res = {}.fromkeys(ids, False)
         for trigger in self.browse(cr, uid, ids, context):
+            model_obj = self.pool.get(trigger.model_id.model)
+            if trigger.on_date and trigger.on_date_type_display1 == 'other_date':
+                #other date is function field without fnct_search and not stored
+                if self._is_dynamic_field(trigger.on_date_type, model_obj):
+                    res[trigger.id] = True
+                    break
             domain = eval(trigger.domain_force or '[]')
             if not domain:
                 for filter_ in trigger.filter_ids:
                     domain.extend(eval(filter_.domain or '[]'))
-            model_obj = self.pool.get(trigger.model_id.model)
             for item in domain:
                 is_dynamic_item = self._is_dynamic_filter(cr, uid, item, model_obj, context)
                 if is_dynamic_item:
