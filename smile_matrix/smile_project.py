@@ -149,8 +149,8 @@ class smile_project(osv.osv):
             new_lines = {}
             # Parse and clean-up data coming from the matrix
             for (cell_name, cell_value) in vals.items():
-                # Filters out non cell values
-                if not cell_name.startswith('cell_'):
+                # Filters out non cell values and template row
+                if not cell_name.startswith('cell_') or cell_name.startswith('cell_template'):
                     continue
                 cell_name_fragments = cell_name.split('_')
                 cell_date = datetime.datetime.strptime(cell_name_fragments[2], '%Y%m%d')
@@ -168,8 +168,6 @@ class smile_project(osv.osv):
                             }
                         line_id = self.pool.get('smile.project.line').create(cr, uid, vals, context)
                         new_lines[line_name] = line_id
-                elif line_id == 'template':
-                    pass
                 else:
                     line_id = int(line_id)
                 written_lines.append(line_id)
