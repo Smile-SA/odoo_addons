@@ -153,6 +153,7 @@ class AnalyticLine(osv.osv):
     def _deactivate_old_forecast_lines(self, cr, uid, ids, context=None):
         line_ids_to_deactivate = []
         context = context or {}
+        context['active_test'] = not context.has_key('ids_to_exclude')
         unicity_fields = self._unicity_fields
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -175,15 +176,11 @@ class AnalyticLine(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(AnalyticLine, self).create(cr, uid, vals, context)
-        context = context or {}
-        context['active_test'] = True
         self._deactivate_old_forecast_lines(cr, uid, res_id, context)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(AnalyticLine, self).write(cr, uid, ids, vals, context)
-        context = context or {}
-        context['active_test'] = True
         unicity_fields = self._unicity_fields + ['period_id', 'type']
         for field in vals:
             if field in unicity_fields:
@@ -193,7 +190,6 @@ class AnalyticLine(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         context = context or {}
-        context['active_test'] = False
         context['ids_to_exclude'] = isinstance(ids, (int, long)) and [ids] or ids
         res = super(AnalyticLine, self).unlink(cr, uid, ids, context)
         self._deactivate_old_forecast_lines(cr, uid, ids, context)
