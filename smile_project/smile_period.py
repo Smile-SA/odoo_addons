@@ -82,6 +82,12 @@ class smile_period(osv.osv):
                 res[period.id] = self._str_to_date(period.start_date).strftime("%B")
         return res
 
+    def _get_active_line_ids(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for period in self.browse(cr, uid, ids, context):
+            res[period.id] = self.pool.get('smile.period.line').search(cr, uid, [('period_id', '=', period.id), ('working_day', '=', True)], context=context)
+        return res
+
 
     ## Object fields definition
 
@@ -91,7 +97,8 @@ class smile_period(osv.osv):
         'end_date': fields.date('End', required=True),
         'month_name': fields.function(_get_month, method=True, type='char', size=16, string='Month', readonly=True),
         'line_ids': fields.one2many('smile.period.line', 'period_id', "Period lines"),
-        'project_ids': fields.one2many('smile.project', 'period_id', "Projects"),
+        'active_line_ids': fields.function(_get_active_line_ids, string="Active lines", type='one2many', relation='smile.period.line', method=True),
+        'project_ids': fields.one2many('smile.project', 'period_id', "Projects", readonly=True),
         }
 
     _defaults = {
@@ -102,15 +109,21 @@ class smile_period(osv.osv):
 
     ## Native methods
 
+    def create(self, cr, uid, vals, context=None):
+        period_id = super(smile_period, self).create(cr, uid, vals, context)
+        # Create default lines
+        self.update_lines(cr, uid, period_id, context)
+        return period_id
+
     def write(self, cr, uid, ids, vals, context=None):
         today = datetime.date.today()
         for period in self.browse(cr, uid, ids, context):
             if self._str_to_date(period.end_date) < today:
                 raise osv.except_osv(_('Error !'), _("Past periods are archived and can't be updated."))
         ret = super(smile_period, self).write(cr, uid, ids, vals, context)
-        # Automaticcaly remove out of range lines if dates changes
+        # Update lines if dates changes
         if 'start_date' in vals or 'end_date' in vals:
-            self.remove_outdated_lines(cr, uid, ids, vals, context)
+            self.update_lines(cr, uid, ids, vals, context)
         return ret
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -174,21 +187,17 @@ class smile_period(osv.osv):
 
     ## Custom methods
 
-    #def get_date_range(self, day_delta=1):
-        #""" Get a list of date objects covering the given date range
-        #"""
-        #date_range = []
-        #start_date = self.start_date
-        #end_date = self.end_date
-        #if not isinstance(start_date, (datetime.date, datetime.datetime)):
-            #start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
-        #if not isinstance(end_date, (datetime.date, datetime.datetime)):
-            #end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
-        #date = start_date
-        #while date <= end_date:
-            #date_range.append(date)
-            #date = date + datetime.timedelta(days=day_delta)
-        #return date_range
+    def get_date_range(self, period, day_delta=1):
+        """ Get a list of date objects covering the given date range
+        """
+        date_range = []
+        start_date = self._str_to_date(period.start_date)
+        end_date = self._str_to_date(period.end_date)
+        date = start_date
+        while date <= end_date:
+            date_range.append(date)
+            date = date + datetime.timedelta(days=day_delta)
+        return date_range
 
     #def get_active_date_range(self, project, day_delta=1):
         #""" Get a list of date objects covering the given date range
@@ -206,22 +215,31 @@ class smile_period(osv.osv):
             #date = date + datetime.timedelta(days=day_delta)
         #return date_range
 
-    def remove_outdated_lines(self, cr, uid, ids, vals, context):
-        """ This method remove out of range lines existing in this period
+    def update_lines(self, cr, uid, ids, context):
+        """ This method create and remove lines to fill the period
         """
         if isinstance(ids, (int, long)):
             ids = [ids]
-        outdated_lines = []
         for period in self.browse(cr, uid, ids, context):
-            start_date = datetime.datetime.strptime(period.start_date, '%Y-%m-%d')
-            end_date = datetime.datetime.strptime(period.end_date, '%Y-%m-%d')
+            start_date = self._str_to_date(period.start_date)
+            end_date = self._str_to_date(period.end_date)
+            # Remove out of range lines
+            outdated_lines = []
             for line in period.line_ids:
-                date = datetime.datetime.strptime(line.date, '%Y-%m-%d')
+                date = self._str_to_date(period.end_date)
                 if date < start_date or date > end_date:
-                    # Line is out of range. Delete it.
                     outdated_lines.append(line.id)
-        if outdated_lines:
-            self.pool.get('smile.period.line').unlink(cr, uid, outdated_lines, context)
+            if outdated_lines:
+                self.pool.get('smile.period.line').unlink(cr, uid, outdated_lines, context)
+            # Create missing lines to cover the whole period
+            exiting_line_dates = [self._str_to_date(l.date) for l in period.line_ids]
+            for date in self.get_date_range(period):
+                if date not in exiting_line_dates:
+                    vals = {
+                        'date': date,
+                        'period_id': period.id,
+                        }
+                    self.pool.get('smile.period.line').create(cr, uid, vals, context)
         return
 
 smile_period()
@@ -231,9 +249,33 @@ smile_period()
 class smile_period_line(osv.osv):
     _name = 'smile.period.line'
 
+
+    ## Object fields definition
+
     _columns = {
-        'date': fields.date('Date', required=True),
+        'date': fields.date('Date', required=True, readonly=True),
         'period_id': fields.many2one('smile.period', "Period", required=True, ondelete='cascade'),
+        'working_day': fields.boolean('Working day'),
         }
+
+    _defaults = {
+        'working_day': True
+        }
+
+
+    ## Constraints methods
+
+    #def _check_overlapping(self, cr, uid, ids, context=None):
+        #""" Check if any other date overlap the current one within the current period
+        #"""
+        #context.update({'active_test': False})
+        #for line in self.browse(cr, uid, ids, context):
+            #if len(self.search(cr, uid, [('date', '=', line.date), ('period_id', '=', line.period_id.id), ('id', '!=', line.id)], context=context, limit=1)):
+                #return False
+        #return True
+
+    #_constraints = [
+        ##(_check_overlapping, "Dates can't overlap within a period.", ['date', 'period_id']),
+        #]
 
 smile_period_line()
