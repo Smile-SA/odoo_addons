@@ -121,9 +121,8 @@ class smile_period(osv.osv):
             if self._str_to_date(period.end_date) < today:
                 raise osv.except_osv(_('Error !'), _("Past periods are archived and can't be updated."))
         ret = super(smile_period, self).write(cr, uid, ids, vals, context)
-        # Update lines if dates changes
-        if 'start_date' in vals or 'end_date' in vals:
-            self.update_lines(cr, uid, ids, vals, context)
+        # Always update lines
+        self.update_lines(cr, uid, ids, context)
         return ret
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -248,6 +247,8 @@ smile_period()
 
 class smile_period_line(osv.osv):
     _name = 'smile.period.line'
+
+    _order = "date"
 
 
     ## Object fields definition
