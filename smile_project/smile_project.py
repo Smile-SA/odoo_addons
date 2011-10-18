@@ -198,22 +198,6 @@ class smile_project(osv.osv):
 
     ## Custom methods
 
-    def get_date_range(self, project, day_delta=1):
-        """ Get a list of date objects covering the given date range
-        """
-        date_range = []
-        start_date = project.start_date
-        end_date = project.end_date
-        if not isinstance(start_date, (datetime.date, datetime.datetime)):
-            start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
-        if not isinstance(end_date, (datetime.date, datetime.datetime)):
-            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
-        date = start_date
-        while date <= end_date:
-            date_range.append(date)
-            date = date + datetime.timedelta(days=day_delta)
-        return date_range
-
     def remove_outdated_cells(self, cr, uid, ids, vals, context):
         """ This method remove out of range cells on each sub lines
         """

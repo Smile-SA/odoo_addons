@@ -155,7 +155,7 @@
                             'type': "float",
                             })
                 %>
-                %for line in [l for l in lines if l['type'] != 'boolean'] :
+                %for line in [l for l in lines if l['type'] != 'boolean']:
                     <tr>
                         <td class="first_column">${line['name']}</td>
                         <td>
@@ -186,7 +186,7 @@
 
     %else:
 
-        No period selected.
+        Can't render the matrix widget until a period is selected.
 
     %endif
 
