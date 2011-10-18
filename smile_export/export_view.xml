@@ -78,6 +78,9 @@
 							<field name="method" />
 							<field name="action_id" />
 						</page>
+                        <page string="Logs">
+                            <field name="log_ids" colspan="4" nolabel="1" mode="tree,form" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}"/>
+                        </page>
 					</notebook>
 				</form>
 			</field>
