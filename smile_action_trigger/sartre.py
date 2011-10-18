@@ -176,7 +176,7 @@ class SartreTrigger(osv.osv):
         return res
 
     def _is_dynamic_field(self, filter_field, model_obj):
-         # Old values
+        # Old values
         if filter_field.startswith('OLD_'):
             return True
         # Function field without fnct_search and not stored
@@ -193,7 +193,7 @@ class SartreTrigger(osv.osv):
 
     def _is_dynamic_filter(self, cr, uid, item, model_obj, context=None):
         if isinstance(item, tuple) and model_obj:
-            # first element
+            # First element
             if self._is_dynamic_field(item[0], model_obj):
                 return True
             # Python operator
@@ -259,12 +259,14 @@ class SartreTrigger(osv.osv):
         'on_create': fields.boolean("Creation"),
         'on_write': fields.boolean("Update"),
         'on_unlink': fields.boolean("Deletion"),
-        'on_function': fields.boolean("Function"),
+        'on_function': fields.boolean("Function Field"),
         'on_function_type': fields.selection([('set', 'Manually'), ('get', 'Automatically'), ('both', 'Both')], "updated", size=16),
         'on_function_field_id': fields.many2one('ir.model.fields', "Function field", domain="[('model_id', '=', model_id)]", help="Function, related or property field"),
         'on_other': fields.boolean("Other method", help="Only methods with an argument 'id' or 'ids' in their signatures"),
         'on_other_method_id': fields.many2one('ir.model.methods', "Object method", domain="[('model_id', '=', model_id)]"),
         'on_other_method': fields.related('on_other_method_id', 'name', type='char', string='Method'),
+        'on_client_action': fields.boolean("Client Action"),
+        'on_client_action_id': fields.many2one('ir.values', "Client Action"),
         'on_date': fields.boolean("Date"),
         'on_date_type': fields.function(_get_trigger_date_type, method=True, type='char', size=64, string='Trigger Date Type', store=True),
         'on_date_type_display1': fields.selection([('create_date', 'Creation Date'), ('write_date', 'Update Date'), ('other_date', 'Other Date')], 'Trigger Date Type 1', size=16),
@@ -306,6 +308,30 @@ class SartreTrigger(osv.osv):
         'exception_warning': 'custom',
         'exception_message': 'Action failed. Please, contact your administrator.',
     }
+
+    def create_client_action(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for trigger in self.browse(cr, uid, ids, context):
+            if not trigger.on_client_action_id:
+                vals = {
+                    'name': trigger.name,
+                    'model_id': trigger.model_id.id,
+                    'state': 'code',
+                    'code': "self.pool.get('sartre.trigger').run_now(cr, uid, %d, context)" % (trigger.id,),
+                }
+                server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals, context)
+                vals2 = {
+                    'name': trigger.name,
+                    'object': True,
+                    'model_id': trigger.model_id.id,
+                    'model': trigger.model,
+                    'key2': 'client_action_multi',
+                    'value': 'ir.actions.server,%d' % server_action_id,
+                }
+                client_action_id = self.pool.get('ir.values').create(cr, uid, vals2, context)
+                trigger.write({'on_client_action_id': client_action_id})
+        return True
 
     @tools.cache()
     def get_trigger_ids(self, cr, uid, model, method):
@@ -410,15 +436,15 @@ class SartreTrigger(osv.osv):
                 operator_inst, opposite_operator = operator_obj._get_operator(cr, uid, operator_symbol, context=context)
 
                 dynamic_other_value = other_value and re.match('(\[\[.+?\]\])', str(other_value))
-                for object in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
+                for object_ in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
                     if dynamic_other_value:
                         other_value = _get_id_from_browse_record(eval(str(dynamic_other_value.group()[2:-2]).strip(), {
-                            'object': object,
+                            'object': object_,
                             'context': context,
                             'time':time,
                         }))
-                    current_field_value = current_values.get(object.id, {}).get(field)
-                    old_field_value = old_values.get(object.id, {}).get(field)
+                    current_field_value = current_values.get(object_.id, {}).get(field)
+                    old_field_value = old_values.get(object_.id, {}).get(field)
                     if remote_field:
                         current_field_value = _get_id_from_browse_record(getattr(current_field_value, remote_field))
                         old_field_value = _get_id_from_browse_record(old_field_value and getattr(old_field_value, remote_field))
@@ -429,7 +455,7 @@ class SartreTrigger(osv.osv):
                     if operator_inst:
                         exec operator_inst.expression in localdict
                     if opposite_operator == localdict.get('result', opposite_operator):
-                        active_object_ids.remove(object.id)
+                        active_object_ids.remove(object_.id)
                 domain[index] = ('id', 'in', active_object_ids)
         return domain
 

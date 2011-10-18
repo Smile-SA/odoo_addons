@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-10-11 11:32+0000\n"
-"PO-Revision-Date: 2011-10-11 11:32+0000\n"
+"POT-Creation-Date: 2011-10-18 13:55+0000\n"
+"PO-Revision-Date: 2011-10-18 13:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -148,7 +148,7 @@ msgid "Datetime Format - YYYY-MM-DD HH:MM:SS"
 msgstr "Format date et heure - AAAA-MM-JJ HH:MM:SS"
 
 #. module: smile_action_trigger
-#: code:addons/smile_action_trigger/sartre.py:597
+#: code:addons/smile_action_trigger/sartre.py:661
 #, python-format
 msgid "The field %s is not in the model %s !\" % (f_name, model)))\n"
 "                f_obj = field_pool.read(cr, uid, f_id[0], ['name', 'ttype', 'relation'])\n"
@@ -334,7 +334,7 @@ msgid "Dynamic value corresponds to an object field"
 msgstr "Une valeur dynamique correspond à un champ de l'objet"
 
 #. module: smile_action_trigger
-#: code:addons/smile_action_trigger/sartre.py:667
+#: code:addons/smile_action_trigger/sartre.py:731
 #, python-format
 msgid "Action Trigger Execution: all arguments are mandatory !"
 msgstr "Execution du déclencheur: tous les arguments sont obligatoires !"
@@ -361,6 +361,12 @@ msgid "Active"
 msgstr "Active"
 
 #. module: smile_action_trigger
+#: field:sartre.trigger,on_client_action:0
+#: field:sartre.trigger,on_client_action_id:0
+msgid "Client Action"
+msgstr "Action client"
+
+#. module: smile_action_trigger
 #: field:sartre.trigger,exception_handling:0
 msgid "Exception Handling"
 msgstr "Gestion des exceptions"
@@ -374,6 +380,11 @@ msgstr "contient (sensible à la casse)"
 #: selection:sartre.trigger,on_date_type_display1:0
 msgid "Other Date"
 msgstr "Autre date"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Create Client Action"
+msgstr "Créer l'action client"
 
 #. module: smile_action_trigger
 #: selection:sartre.trigger,exception_handling:0
@@ -396,6 +407,12 @@ msgid "Force transaction rollback"
 msgstr "Force transaction rollback"
 
 #. module: smile_action_trigger
+#: code:addons/smile_action_trigger/sartre.py:248
+#, python-format
+msgid "Error !"
+msgstr "Error !"
+
+#. module: smile_action_trigger
 #: field:sartre.trigger,on_other:0
 msgid "Other method"
 msgstr "Autre méthode"
@@ -409,6 +426,11 @@ msgstr "Date de création"
 #: model:sartre.trigger,exception_message:smile_action_trigger.sartre_trigger_partneremailchanges0
 msgid "Action failed. Please, contact your administrator."
 msgstr "Echec de l'action. Merci de contacter votre administrateur."
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Trigger on client action"
+msgstr "Trigger on client action"
 
 #. module: smile_action_trigger
 #: selection:sartre.trigger,interval_type:0
@@ -457,6 +479,11 @@ msgid "Action Trigger Filter"
 msgstr "Action Trigger Filter"
 
 #. module: smile_action_trigger
+#: field:sartre.trigger,on_function:0
+msgid "Function Field"
+msgstr "Champ fonction"
+
+#. module: smile_action_trigger
 #: selection:sartre.operator,native_operator:0
 msgid "contains (case-insensitive matching)"
 msgstr "contient (insensible à la casse)"
@@ -494,7 +521,7 @@ msgid "Manually"
 msgstr "Manuellement"
 
 #. module: smile_action_trigger
-#: code:addons/smile_action_trigger/sartre.py:484
+#: code:addons/smile_action_trigger/sartre.py:548
 #, python-format
 msgid "%s\n"
 "[Pid: %s]"
@@ -621,9 +648,9 @@ msgid "Months"
 msgstr "Mois"
 
 #. module: smile_action_trigger
-#: selection:sartre.trigger,exception_handling:0
-msgid "Ignore actions in exception"
-msgstr "Ignorer les actions en erreur"
+#: field:sartre.filter,field_id:0
+msgid "Field Builder"
+msgstr "Constructeur de champ"
 
 #. module: smile_action_trigger
 #: field:sartre.trigger,exception_message:0
@@ -641,10 +668,10 @@ msgid "Action Trigger Execution"
 msgstr "Action Trigger Execution"
 
 #. module: smile_action_trigger
-#: code:addons/smile_action_trigger/sartre.py:484
-#: code:addons/smile_action_trigger/sartre.py:597
-#: code:addons/smile_action_trigger/sartre.py:603
+#: code:addons/smile_action_trigger/sartre.py:548
+#: code:addons/smile_action_trigger/sartre.py:661
 #: code:addons/smile_action_trigger/sartre.py:667
+#: code:addons/smile_action_trigger/sartre.py:731
 #, python-format
 msgid "Error"
 msgstr "Erreur"
@@ -712,6 +739,12 @@ msgid "Filter Operators"
 msgstr "Filter Operators"
 
 #. module: smile_action_trigger
+#: code:addons/smile_action_trigger/sartre.py:248
+#, python-format
+msgid "Pid search field: please enter an integer"
+msgstr "Pid search field: please enter an integer"
+
+#. module: smile_action_trigger
 #: field:sartre.operator,value_age_filter:0
 msgid "Value Age Filter"
 msgstr "Filtre sur l'ancienneté de la valeur"
@@ -760,11 +793,6 @@ msgstr "Nbre max d'éxecutions"
 #: selection:sartre.operator,native_operator:0
 msgid "in"
 msgstr "dans"
-
-#. module: smile_action_trigger
-#: field:sartre.trigger,on_function:0
-msgid "Function"
-msgstr "Champ fonction"
 
 #. module: smile_action_trigger
 #: field:ir.model.methods,name:0
@@ -833,9 +861,9 @@ msgid "Next Call"
 msgstr "Prochain appel"
 
 #. module: smile_action_trigger
-#: field:sartre.filter,field_id:0
-msgid "Field Builder"
-msgstr "Constructeur de champ"
+#: selection:sartre.trigger,exception_handling:0
+msgid "Ignore actions in exception"
+msgstr "Ignorer les actions en erreur"
 
 #. module: smile_action_trigger
 #: view:sartre.trigger:0

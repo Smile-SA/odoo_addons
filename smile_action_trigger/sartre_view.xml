@@ -22,6 +22,7 @@
 							<field name="on_write" />
 							<field name="on_function" on_change="onchange_model_id(model_id, on_function, on_other)" />
 							<field name="on_unlink" />
+							<field name="on_client_action" />
 							<newline/>
 							<field name="on_other" on_change="onchange_model_id(model_id, on_function, on_other)" />
 							<group string="Trigger on date" col="12" colspan="4" attrs="{'invisible':[('on_date','!=',True)]}">
@@ -46,6 +47,10 @@
 							</group>
 							<group string="Trigger on other method" colspan="4" attrs="{'invisible':[('on_other','!=',True)]}">
 								<field name="on_other_method_id" attrs="{'required':[('on_other','=',True)]}" />
+							</group>
+							<group string="Trigger on client action" colspan="4" attrs="{'invisible':[('on_client_action','!=',True)]}">
+								<field name="on_client_action_id"/><!-- attrs="{'required':[('on_client_action','=',True)]}" /-->
+								<button type="object" name="create_client_action" string="Create Client Action" colspan="2" attrs="{'readonly': [('on_client_action_id', '!=', False)]}" />
 							</group>
 						</page>
 						<page string="Filters">
