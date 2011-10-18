@@ -168,6 +168,8 @@ class smile_project(osv.osv):
                             }
                         line_id = self.pool.get('smile.project.line').create(cr, uid, vals, context)
                         new_lines[line_name] = line_id
+                elif line_id == 'template':
+                    pass
                 else:
                     line_id = int(line_id)
                 written_lines.append(line_id)

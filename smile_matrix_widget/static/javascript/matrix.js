@@ -5,6 +5,7 @@ $(document).ready(function(){
     var increment_button_selector = ".button.increment:not(:disabled)";
     var global_float_cells_selector = ".matrix " + float_cells_selector;
     var global_increment_button_selector = ".matrix " + increment_button_selector;
+    var last_row_selector = ".matrix tbody tr:last";
 
     // Replace all integer fields by a button template, then hide the original field
     var button_template = $("#matrix_button_template");
@@ -14,8 +15,10 @@ $(document).ready(function(){
         $cell.after($(button_template).clone().attr('id', 'button_' + $cell.attr("id")).text($cell.val()));
         $cell.hide();
     });
-    // Hide the button template
+
+    // Hide the button and row template
     $(button_template).hide();
+    $(last_row_selector).hide();
 
     // Label of buttons
     var cycling_values = ['0', '0.5', '1'];
@@ -77,7 +80,7 @@ $(document).ready(function(){
 
     // Make the add line button working
     $(".matrix #matrix_add_row").click(function(){
-        var last_row = $(".matrix tbody tr:last");
+        var last_row = $(last_row_selector);
         var new_row = last_row.clone(true);
         // Generate a new row index
         new_row_index = "new" + Math.floor(Math.random() * 999999);
@@ -94,7 +97,8 @@ $(document).ready(function(){
         });
         new_row.find("span[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
         // Insert our new row at the end of the matrix
-        last_row.after(new_row);
+        last_row.before(new_row.show());
+        last_row.hide();
     });
 
     // Activate delete row button

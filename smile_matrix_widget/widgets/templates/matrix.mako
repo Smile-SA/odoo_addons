@@ -144,7 +144,16 @@
             %endfor
         </tfoot>
         <tbody>
-            %for line in [l for l in lines if l['type'] != 'boolean']:
+            <%
+                # Add a dummy row in editable mode that will serve as a template
+                if editable:
+                    lines.append({
+                        'id'  : "template",
+                        'name': "Row template",
+                        'type': "float",
+                        })
+            %>
+            %for line in [l for l in lines if l['type'] != 'boolean'] :
                 <tr>
                     <td class="first_column">${line['name']}</td>
                     <td>
@@ -156,7 +165,7 @@
                         <td class="float">
                             <%
                                 cell_id = 'cell_%s_%s' % (line['id'], date)
-                                cell_value = line['cells_data'].get(date, None)
+                                cell_value = line.get('cells_data', {}).get(date, None)
                             %>
                             %if cell_value is not None:
                                 %if editable:
@@ -167,7 +176,7 @@
                             %endif
                         </td>
                     %endfor
-                    <td class="total"><span id="row_total_${line['id']}">${sum([v for (k, v) in line['cells_data'].items()])}</span></td>
+                    <td class="total"><span id="row_total_${line['id']}">${sum([v for (k, v) in line.get('cells_data', dict()).items()])}</span></td>
                 </tr>
             %endfor
         </tbody>
