@@ -830,11 +830,6 @@ msgid "write"
 msgstr "Mise à jour"
 
 #. module: smile_action_trigger
-#: model:ir.model,name:smile_action_trigger.model_sartre_log
-msgid "Smile Action Trigger Log"
-msgstr "Smile Action Trigger Log"
-
-#. module: smile_action_trigger
 #: view:sartre.trigger:0
 msgid "The rule is satisfied if all test are True (AND). Multiple triggers on same objects are joined using operator OR or force the domain by using the polish notation"
 msgstr "La règle est satisfaite unqiuement si tous les tests sont positifs (ET). L'utilisation de plusieurs déclencheurs permet de simuler l'opérateur OU. L'utilsation de la notation polonaise dans le domaine forcé permet de mariager directement ET et OU."
