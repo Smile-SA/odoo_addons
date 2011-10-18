@@ -146,15 +146,6 @@
                 %endfor
             </tfoot>
             <tbody>
-                <%
-                    # Add a dummy row in editable mode that will serve as a template
-                    if editable:
-                        lines.append({
-                            'id'  : "template",
-                            'name': "Row template",
-                            'type': "float",
-                            })
-                %>
                 %for line in [l for l in lines if l['type'] != 'boolean']:
                     <tr>
                         <td class="first_column">${line['name']}</td>

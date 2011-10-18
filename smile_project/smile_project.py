@@ -42,7 +42,7 @@ class matrix(fields.dummy):
         obj_list = obj.browse(cr, uid, ids, context)
         for parent_obj in obj_list:
             matrix_data = []
-            date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.project').get_date_range(parent_obj)]
+            date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.period').get_date_range(parent_obj.period_id)]
             lines = getattr(parent_obj, line_ids_property_name, [])
             for line in lines:
                 line_data = {}
@@ -64,6 +64,20 @@ class matrix(fields.dummy):
                     cells_data[cell_date.strftime('%Y%m%d')] = getattr(cell, cell_value_holder)
                 line_data.update({'cells_data': cells_data})
                 matrix_data.append(line_data)
+
+            # Add a row template at the end
+            line_data = ({
+                'id'  : "template",
+                'name': "Row template",
+                'type': "float",
+                })
+            cells_data = {}
+            for period_line in parent_obj.period_id.active_line_ids:
+                cell_date = datetime.datetime.strptime(period_line.date, '%Y-%m-%d')
+                cells_data[cell_date.strftime('%Y%m%d')] = 0.0
+            line_data.update({'cells_data': cells_data})
+            matrix_data.append(line_data)
+
             matrix_list.update({
                 parent_obj.id: {
                     'matrix_data': matrix_data,
@@ -103,7 +117,7 @@ class smile_project(osv.osv):
                 f_id_elements = f_id.split('_')
                 if len(f_id_elements) == 3 and f_id_elements[0] == 'cell':
                     cell_value = None
-                    if not f_id_elements[1].startswith('new'):
+                    if not (f_id_elements[1].startswith('new') or f_id_elements[1].startswith('template')):
                         line_id = int(f_id_elements[1])
                         cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
                         #project = self.browse(cr, uid, props['id'], context)
@@ -253,12 +267,12 @@ class smile_project_line(osv.osv):
     def generate_cells(self, cr, uid, line, context=None):
         """ This method generate all cells between the date range.
         """
-        date_range = self.pool.get('smile.project').get_date_range(line.project_id)
+        period_lines = line.project_id.period_id.active_line_ids
         vals = {
             'line_id': line.id
             }
-        for date in date_range:
-            vals.update({'date': date})
+        for period_line in period_lines:
+            vals.update({'date': period_line.date})
             self.pool.get('smile.project.line.cell').create(cr, uid, vals, context)
         return
 

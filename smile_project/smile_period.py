@@ -198,6 +198,7 @@ class smile_period(osv.osv):
             date = date + datetime.timedelta(days=day_delta)
         return date_range
 
+
     #def get_active_date_range(self, project, day_delta=1):
         #""" Get a list of date objects covering the given date range
         #"""
