@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+		<!-- Account Analytic Axis -->
+
+        <record id="view_account_analytic_axis_form" model="ir.ui.view">
+            <field name="name">account.analytic.axis.form</field>
+            <field name="model">account.analytic.axis</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Axis">
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="model_id"/>
+                    <field name="active"/>
+                    <field name="domain"/>
+                    <field name="required"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_axis_tree" model="ir.ui.view">
+            <field name="name">account.analytic.axis.tree</field>
+            <field name="model">account.analytic.axis</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Axis">
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="model_id"/>
+                    <field name="active"/>
+                    <field name="domain"/>
+                    <field name="required"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_axis_search" model="ir.ui.view">
+            <field name="name">account.analytic.axis.search</field>
+            <field name="model">account.analytic.axis</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Analytic Axis">
+                    <group>
+                        <field name="name"/>
+                        <field name="model_id"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_account_analytic_axis_form" model="ir.actions.act_window">
+            <field name="name">Analytic Axis</field>
+            <field name="res_model">account.analytic.axis</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'active_test': False}</field>
+        </record>
+        <menuitem action="action_account_analytic_axis_form" id="menu_action_account_analytic_axis_form" parent="account.menu_analytic_accounting" sequence="50"/>
+
+		<!-- Account Analytic Distribution -->
+
+        <record id="view_account_analytic_distribution_form" model="ir.ui.view">
+            <field name="name">account.analytic.distribution.form</field>
+            <field name="model">account.analytic.distribution</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Distribution">
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="axis1_id"/>
+                    <field name="axis2_id"/>
+                    <field name="version_ids" mode="tree,form" context="{'distribution_id': active_id}">
+                    </field>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_distribution_tree" model="ir.ui.view">
+            <field name="name">account.analytic.distribution.tree</field>
+            <field name="model">account.analytic.distribution</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Distributions">
+                    <field name="name"/>
+                    <field name="axis1_id"/>
+                    <field name="axis2_id"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_distribution_search" model="ir.ui.view">
+            <field name="name">account.analytic.distribution.search</field>
+            <field name="model">account.analytic.distribution</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Analytic Distributions">
+                    <group>
+                        <field name="name"/>
+                        <field name="axis1_id"/>
+                        <field name="axis2_id"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_account_analytic_distribution_form" model="ir.actions.act_window">
+            <field name="name">Analytic Distribution</field>
+            <field name="res_model">account.analytic.distribution</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'active_test': False}</field>
+        </record>
+        <menuitem action="action_account_analytic_distribution_form" id="menu_action_account_analytic_distribution_form" parent="account.menu_analytic_accounting" sequence="60"/>
+
+    </data>
+</openerp>

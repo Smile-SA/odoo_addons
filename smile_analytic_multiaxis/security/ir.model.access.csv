@@ -1,0 +1,9 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_account_analytic_axis_user","account.analytic.axis user","model_account_analytic_axis","account.group_account_user",1,0,0,0
+"access_account_analytic_axis_manager","account.analytic.axis manager","model_account_analytic_axis","account.group_account_manager",1,1,1,1
+"access_account_analytic_distribution_user","account.analytic.distribution user","model_account_analytic_distribution","account.group_account_user",1,0,0,0
+"access_account_analytic_distribution_manager","account.analytic.distribution manager","model_account_analytic_distribution","account.group_account_manager",1,1,1,1
+"access_account_analytic_distribution_version_user","account.analytic.distribution.version user","model_account_analytic_distribution_version","account.group_account_user",1,0,0,0
+"access_account_analytic_distribution_version_manager","account.analytic.distribution.version manager","model_account_analytic_distribution_version","account.group_account_manager",1,1,1,1
+"access_account_analytic_distribution_item_user","account.analytic.distribution.item user","model_account_analytic_distribution_item","account.group_account_user",1,0,0,0
+"access_account_analytic_distribution_item_manager","account.analytic.distribution.item manager","model_account_analytic_distribution_item","account.group_account_manager",1,1,1,1
