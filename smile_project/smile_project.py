@@ -32,7 +32,6 @@ class matrix(fields.dummy):
     def date_to_str(self, date):
         return date.strftime('%Y%m%d')
 
-
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
         """

@@ -61,6 +61,16 @@
     }
 </style>
 
+
+<%def name="render_float(f)">
+    %if int(f) == f:
+        ${int(f)}
+    %else:
+        ${f}
+    %endif
+</%def>
+
+
 <div class="matrix">
 
     %if type(value) == type({}) and 'date_range' in value:
@@ -102,14 +112,14 @@
                                     column_values = [line['cells_data'][date] for line in lines if line['type'] == 'float' and date in line['cells_data']]
                                 %>
                                 %if len(column_values):
-                                    ${sum(column_values)}
+                                    ${render_float(sum(column_values))}
                                 %endif
                             </span>
                         </td>
                     %endfor
                     <td class="total">
                         <span id="grand_total">
-                            ${sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['type'] == 'float'])}
+                            ${render_float(sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['type'] == 'float']))}
                         </span>
                     </td>
                 </tr>
@@ -162,14 +172,14 @@
                                 %>
                                 %if cell_value is not None:
                                     %if editable:
-                                        <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${cell_value}" size="1" class="float"/>
+                                        <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${render_float(cell_value)}" size="1" class="float"/>
                                     %else:
-                                        <span kind="float" id="${cell_id}" value="${cell_value}">${cell_value}</span>
+                                        <span kind="float" id="${cell_id}" value="${render_float(cell_value)}">${render_float(cell_value)}</span>
                                     %endif
                                 %endif
                             </td>
                         %endfor
-                        <td class="total"><span id="row_total_${line['id']}">${sum([v for (k, v) in line.get('cells_data', dict()).items()])}</span></td>
+                        <td class="total"><span id="row_total_${line['id']}">${render_float(sum([v for (k, v) in line.get('cells_data', dict()).items()]))}</span></td>
                     </tr>
                 %endfor
             </tbody>
