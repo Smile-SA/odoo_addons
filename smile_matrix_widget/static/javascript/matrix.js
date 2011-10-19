@@ -47,7 +47,7 @@ $(document).ready(function(){
         $(".matrix input[kind!='boolean'][name^='cell_'][name$='_" + column_index + "']:not(:disabled)").each(function(){
             column_total += parseFloat($(this).val());
         });
-        $(".matrix tfoot span.column_total_" + column_index).text(column_total);
+        $(".matrix tfoot span#column_total_" + column_index).text(column_total);
         // Select all fields of the row we clicked in and sum them up
         var row_total = 0;
         $(".matrix input[kind!='boolean'][name^='cell_" + row_index + "_']:not(:disabled)").each(function(){

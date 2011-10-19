@@ -11,6 +11,26 @@
         text-align: center;
     }
 
+    .matrix td,
+    .matrix th {
+        min-width: 1.5em;
+    }
+
+    .non-editable .matrix td,
+    .non-editable .matrix th {
+        padding: 0 .3em;
+    }
+
+    .matrix table .button {
+        width: 1.5em;
+        padding-left: .3em;
+        padding-right: .3em;
+    }
+
+    .matrix .zero {
+        color: #ccc;
+    }
+
     .matrix table thead th {
         text-transform: none;
     }
@@ -23,20 +43,17 @@
         font-weight: bold;
     }
 
-    .matrix table input {
-        width: 2.2em;
-        min-width: 2.2em;
-    }
-
     .matrix table tbody td,
+    div.non-editable .matrix table tbody td,
     .matrix table th,
     .matrix table tfoot tr.boolean_line td {
         border-style: solid;
-        border-color: #bbb;
+        border-color: #ccc;
         margin: 0;
         padding: 0 .2em;
     }
     .matrix table tbody td,
+    div.non-editable .matrix table tbody td,
     .matrix table th {
         border-width: 0 0 1px;
     }
@@ -52,12 +69,6 @@
 
     .matrix table tfoot input {
         width: none;
-    }
-
-    .matrix table .button.increment {
-        display: block;
-        width: 1.5em;
-        text-align: center;
     }
 </style>
 
@@ -107,19 +118,33 @@
                     <td></td>
                     %for date in value['date_range']:
                         <td>
-                            <span class="column_total_${date}">
+                            <%
+                                column_values = [line['cells_data'][date] for line in lines if line['type'] == 'float' and date in line['cells_data']]
+                            %>
+                            %if len(column_values):
                                 <%
-                                    column_values = [line['cells_data'][date] for line in lines if line['type'] == 'float' and date in line['cells_data']]
+                                    column_total = sum(column_values)
                                 %>
-                                %if len(column_values):
-                                    ${render_float(sum(column_values))}
-                                %endif
-                            </span>
+                                <span id="column_total_${date}"
+                                    %if not editable and column_total <= 0.0:
+                                        class="zero"
+                                    %endif
+                                    >
+                                        ${render_float(column_total)}
+                                </span>
+                            %endif
                         </td>
                     %endfor
                     <td class="total">
-                        <span id="grand_total">
-                            ${render_float(sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['type'] == 'float']))}
+                        <%
+                            grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['type'] == 'float'])
+                        %>
+                        <span id="grand_total"
+                            %if not editable and grand_total <= 0.0:
+                                class="zero"
+                            %endif
+                            >
+                            ${render_float(grand_total)}
                         </span>
                     </td>
                 </tr>
@@ -174,12 +199,29 @@
                                     %if editable:
                                         <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${render_float(cell_value)}" size="1" class="float"/>
                                     %else:
-                                        <span kind="float" id="${cell_id}" value="${render_float(cell_value)}">${render_float(cell_value)}</span>
+                                        <span kind="float" id="${cell_id}" value="${render_float(cell_value)}"
+                                            %if not editable and cell_value <= 0.0:
+                                                class="zero"
+                                            %endif
+                                            >
+                                                ${render_float(cell_value)}
+                                        </span>
                                     %endif
                                 %endif
                             </td>
                         %endfor
-                        <td class="total"><span id="row_total_${line['id']}">${render_float(sum([v for (k, v) in line.get('cells_data', dict()).items()]))}</span></td>
+                        <td class="total">
+                            <%
+                                row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
+                            %>
+                            <span id="row_total_${line['id']}"
+                                %if not editable and row_total <= 0.0:
+                                    class="zero"
+                                %endif
+                                >
+                                ${render_float(row_total)}
+                            </span>
+                        </td>
                     </tr>
                 %endfor
             </tbody>
