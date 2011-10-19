@@ -54,10 +54,28 @@ class SmileLog(osv.osv):
             result[log.id] = user_id_to_name[log.log_uid]
         return result
 
+    def _get_res_name(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        res_to_name = {}
+        for log in self.browse(cr, uid, ids, context):
+            res_key = (log.model_name, log.res_id)
+            result[log.id] = "%s,%s" % res_key
+            if log.model_name and log.res_id:
+                if res_key in res_to_name:
+                    result[log.id] = res_to_name[res_key]
+                else:
+                    if self.pool.get(log.model_name) and self.pool.get(log.model_name).exists(cr, uid, log.res_id, context):
+                        name = self.pool.get(log.model_name).name_get(cr, uid, log.res_id, context)
+                        if name and name[0]:
+                            res_to_name[(log.model_name, log.res_id)] = name[0][1]
+                            result[log.id] = name[0][1]
+        return result
+
     _columns = {
         'log_date': fields.datetime('Date', readonly=True),
         'log_uid': fields.integer('User', readonly=True),
         'log_user_name': fields.function(_get_user_name, method=True, string='User', type='char', size=256),
+        'log_res_name': fields.function(_get_res_name, method=True, string='Ressource name', type='char', size=256),
 
         'model_name': fields.char('Model name', size=64, readonly=True),
         'res_id': fields.integer('Ressource id', readonly=True, group_operator="count"),
