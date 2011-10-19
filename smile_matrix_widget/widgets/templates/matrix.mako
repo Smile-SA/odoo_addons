@@ -9,20 +9,24 @@
 
     .matrix table {
         text-align: center;
+        margin-bottom: 1em;
     }
 
     .matrix td,
     .matrix th {
         min-width: 1.5em;
+        height: 1.5em;
     }
 
     .non-editable .matrix td,
     .non-editable .matrix th {
-        padding: 0 .3em;
+        padding: 0 .4em;
     }
 
     .matrix table .button {
         width: 1.5em;
+        height: 1.5em;
+        line-height: inherit;
         padding-left: .3em;
         padding-right: .3em;
     }
@@ -50,7 +54,7 @@
         border-style: solid;
         border-color: #ccc;
         margin: 0;
-        padding: 0 .2em;
+        padding: 0 .1em;
     }
     .matrix table tbody td,
     div.non-editable .matrix table tbody td,
