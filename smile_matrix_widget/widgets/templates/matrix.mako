@@ -23,12 +23,17 @@
         padding: 0 .4em;
     }
 
+
     .matrix table .button {
+        padding-left: .3em;
+        padding-right: .3em;
+    }
+
+
+    .matrix table .button.increment {
         width: 1.5em;
         height: 1.5em;
         line-height: inherit;
-        padding-left: .3em;
-        padding-right: .3em;
     }
 
     .matrix .zero {
