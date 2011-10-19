@@ -136,7 +136,7 @@ class smile_activity_report(osv.osv):
         ret = super(smile_activity_report, self).write(cr, uid, ids, vals, context)
         # Automaticcaly remove out of range cells if dates changes
         if 'start_date' in vals or 'end_date' in vals:
-            self.remove_inactive_cells(cr, uid, ids, context)
+            self.update_cells(cr, uid, ids, context)
         written_lines = []
         for report in self.browse(cr, uid, ids, context):
             new_lines = {}
@@ -210,8 +210,10 @@ class smile_activity_report(osv.osv):
 
     ## Custom methods
 
-    def remove_inactive_cells(self, cr, uid, ids, context):
-        """ This method remove out of range and inactive cells on each sub lines
+    def update_cells(self, cr, uid, ids, context):
+        """ This method maintain cells in sync with the period definition by
+            removing out of range and inactive cells, and creating missing ones
+            on each report lines.
         """
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -219,11 +221,17 @@ class smile_activity_report(osv.osv):
         for report in self.browse(cr, uid, ids, context):
             active_dates = [datetime.datetime.strptime(l.date, '%Y-%m-%d') for l in report.period_id.active_line_ids]
             for line in report.line_ids:
-                for cell in line.cell_ids:
-                    date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
-                    if date not in active_dates:
-                        # Cell is out of range. Delete it.
-                        outdated_cells.append(cell.id)
+                # Get out of range cells
+                outdated_cells += [cell.id for cell in line.cell_ids if datetime.datetime.strptime(cell.date, '%Y-%m-%d') not in active_dates]
+                # Get missing cells
+                existing_days = set([datetime.datetime.strptime(cell.date, '%Y-%m-%d') for cell in line.cell_ids])
+                # Generate cells at missing dates
+                for d in set(active_dates).difference(existing_days):
+                    vals = {
+                        'line_id': line.id,
+                        'date': d,
+                        }
+                    self.pool.get('smile.activity.report.line.cell').create(cr, uid, vals, context)
         if outdated_cells:
             self.pool.get('smile.activity.report.line.cell').unlink(cr, uid, outdated_cells, context)
         return

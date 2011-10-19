@@ -256,7 +256,7 @@ class smile_activity_period_line(osv.osv):
         report_ids = []
         for period_line in self.browse(cr, uid, ids, context):
             report_ids += [p.id for p in period_line.period_id.report_ids]
-        self.pool.get('smile.activity.report').remove_inactive_cells(cr, uid, report_ids, context)
+        self.pool.get('smile.activity.report').update_cells(cr, uid, report_ids, context)
         return ret
 
 
