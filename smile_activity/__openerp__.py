@@ -30,6 +30,7 @@
     "init_xml" : [],
     "update_xml": [
         'smile_activity_view.xml',
+        'smile_project_view.xml',
         'smile_period_view.xml',
     ],
     "installable": True,

@@ -19,7 +19,15 @@
 #
 ##############################################################################
 
-import smile_project
-import smile_period
-import smile_activity
+from osv import osv, fields
 
+
+
+class smile_activity_project(osv.osv):
+    _name = 'smile.activity.project'
+
+    _columns = {
+        'name': fields.char('Name', size=32),
+        }
+
+smile_activity_project()
