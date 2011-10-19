@@ -96,7 +96,7 @@
 					<field name="name" />
 					<field name="model_id" />
 					<field name="unique" />
-					<field name="domain" />
+					<field name="filter_type" />
 					<field name="method" />
 					<field name="action_id" />
 					<field name="export_ids" />
