@@ -20,5 +20,5 @@
 ##############################################################################
 
 import smile_period
-import smile_project
+import smile_activity
 

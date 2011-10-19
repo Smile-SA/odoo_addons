@@ -21,8 +21,8 @@
                                 <field name="working_day"/>
                             </tree>
                         </field>
-                        <field name="project_ids" colspan="4" nolabel="1">
-                            <tree string="Projects">
+                        <field name="report_ids" colspan="4" nolabel="1">
+                            <tree string="Reports">
                                 <field name="name"/>
                                 <field name="period_id"/>
                                 <field name="start_date" on_change="onchange_start_date(start_date, end_date)"/>
@@ -48,14 +48,14 @@
                     <field name="end_date"/>
                     <field name="line_ids" string="Days"/>
                     <field name="active_line_ids" string="Active days"/>
-                    <field name="project_ids"/>
+                    <field name="report_ids"/>
                 </tree>
             </field>
         </record>
 
-        <act_window name="Periods" res_model="smile.period" id="action_period_list"/>
+        <act_window name="Periods" res_model="smile.activity.period" id="action_activity_period_list"/>
 
-        <menuitem id="act_period_menu" parent="project_menu" action="action_period_list" sequence="11"/>
+        <menuitem id="act_activity_period_menu" parent="activity_report_menu" action="action_activity_period_list" sequence="11"/>
 
     </data>
 </openerp>

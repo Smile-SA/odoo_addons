@@ -87,8 +87,8 @@ class matrix(fields.dummy):
 
 
 
-class smile_project(osv.osv):
-    _name = 'smile.project'
+class smile_activity_report(osv.osv):
+    _name = 'smile.activity.report'
 
     #_order = "start_date"
 
@@ -97,15 +97,15 @@ class smile_project(osv.osv):
         'period_id': fields.many2one('smile.period', "Period", required=True),
         'start_date': fields.related('period_id', 'start_date', type='date', string="Start date", readonly=True),
         'end_date': fields.related('period_id', 'end_date', type='date', string="End date", readonly=True),
-        'line_ids': fields.one2many('smile.project.line', 'project_id', "Project lines"),
-        'matrix_line_ids': matrix('line_ids', 'cell_ids', string="Project lines", readonly=False),
+        'line_ids': fields.one2many('smile.activity.report.line', 'report_id', "Activity lines"),
+        'matrix_line_ids': matrix('line_ids', 'cell_ids', string="Activity report lines", readonly=False),
         }
 
 
     ## Native methods
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = super(smile_project, self).read(cr, uid, ids, fields, context, load)
+        result = super(smile_activity_report, self).read(cr, uid, ids, fields, context, load)
         # Let anyone read a cell value directly using the cell_LineID_YYYYMMMDD scheme
         if isinstance(ids, (int, long)):
             result = [result]
@@ -119,10 +119,9 @@ class smile_project(osv.osv):
                     if not (f_id_elements[1].startswith('new') or f_id_elements[1].startswith('template')):
                         line_id = int(f_id_elements[1])
                         cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
-                        #project = self.browse(cr, uid, props['id'], context)
-                        cell_id = self.pool.get('smile.project.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
+                        cell_id = self.pool.get('smile.activity.report.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
                         if cell_id:
-                            cell = self.pool.get('smile.project.line.cell').browse(cr, uid, cell_id, context)[0]
+                            cell = self.pool.get('smile.activity.report.line.cell').browse(cr, uid, cell_id, context)[0]
                             if cell.hold_quantities:
                                 cell_value = cell.quantity
                             else:
@@ -134,12 +133,12 @@ class smile_project(osv.osv):
         return updated_result
 
     def write(self, cr, uid, ids, vals, context=None):
-        ret = super(smile_project, self).write(cr, uid, ids, vals, context)
+        ret = super(smile_activity_report, self).write(cr, uid, ids, vals, context)
         # Automaticcaly remove out of range cells if dates changes
         if 'start_date' in vals or 'end_date' in vals:
             self.remove_inactive_cells(cr, uid, ids, context)
         written_lines = []
-        for project in self.browse(cr, uid, ids, context):
+        for report in self.browse(cr, uid, ids, context):
             new_lines = {}
             # Parse and clean-up data coming from the matrix
             for (cell_name, cell_value) in vals.items():
@@ -157,16 +156,16 @@ class smile_project(osv.osv):
                         line_id = new_lines[line_name]
                     else:
                         vals = {
-                            'project_id': project.id,
+                            'report_id': report.id,
                             'name': line_name,
                             }
-                        line_id = self.pool.get('smile.project.line').create(cr, uid, vals, context)
+                        line_id = self.pool.get('smile.activity.report.line').create(cr, uid, vals, context)
                         new_lines[line_name] = line_id
                 else:
                     line_id = int(line_id)
                 written_lines.append(line_id)
                 # Get the line
-                line = self.pool.get('smile.project.line').browse(cr, uid, line_id, context)
+                line = self.pool.get('smile.activity.report.line').browse(cr, uid, line_id, context)
                 # Convert the raw value to the right one depending on the type of the line
                 if line.hold_quantities:
                     # Quantity conversion
@@ -190,22 +189,22 @@ class smile_project(osv.osv):
                 else:
                     cell_vals.update({'boolean_value': cell_value})
                 # Search for an existing cell at the given date
-                cell = self.pool.get('smile.project.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
+                cell = self.pool.get('smile.activity.report.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
                 # Cell doesn't exists, create it
                 if not cell:
                     cell_vals.update({
                         'date': cell_date,
                         'line_id': line_id,
                         })
-                    self.pool.get('smile.project.line.cell').create(cr, uid, cell_vals, context)
+                    self.pool.get('smile.activity.report.line.cell').create(cr, uid, cell_vals, context)
                 # Update cell with our data
                 else:
                     cell_id = cell[0]
-                    self.pool.get('smile.project.line.cell').write(cr, uid, cell_id, cell_vals, context)
+                    self.pool.get('smile.activity.report.line.cell').write(cr, uid, cell_id, cell_vals, context)
         # If there was no references to one of our line it means it was deleted
-        for project in self.browse(cr, uid, ids, context):
-            removed_lines = list(set([l.id for l in project.line_ids]).difference(set(written_lines)))
-            self.pool.get('smile.project.line').unlink(cr, uid, removed_lines, context)
+        for report in self.browse(cr, uid, ids, context):
+            removed_lines = list(set([l.id for l in report.line_ids]).difference(set(written_lines)))
+            self.pool.get('smile.activity.report.line').unlink(cr, uid, removed_lines, context)
         return ret
 
 
@@ -217,29 +216,29 @@ class smile_project(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         outdated_cells = []
-        for project in self.browse(cr, uid, ids, context):
-            active_dates = [datetime.datetime.strptime(l.date, '%Y-%m-%d') for l in project.period_id.active_line_ids]
-            for line in project.line_ids:
+        for report in self.browse(cr, uid, ids, context):
+            active_dates = [datetime.datetime.strptime(l.date, '%Y-%m-%d') for l in report.period_id.active_line_ids]
+            for line in report.line_ids:
                 for cell in line.cell_ids:
                     date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
                     if date not in active_dates:
                         # Cell is out of range. Delete it.
                         outdated_cells.append(cell.id)
         if outdated_cells:
-            self.pool.get('smile.project.line.cell').unlink(cr, uid, outdated_cells, context)
+            self.pool.get('smile.activity.report.line.cell').unlink(cr, uid, outdated_cells, context)
         return
 
-smile_project()
+smile_activity_report()
 
 
 
-class smile_project_line(osv.osv):
-    _name = 'smile.project.line'
+class smile_activity_report_line(osv.osv):
+    _name = 'smile.activity.report.line'
 
     _columns = {
         'name': fields.char('Name', size=32, required=True),
-        'project_id': fields.many2one('smile.project', "Project", required=True, ondelete='cascade'),
-        'cell_ids': fields.one2many('smile.project.line.cell', 'line_id', "Cells"),
+        'report_id': fields.many2one('smile.activity.report', "Activity report", required=True, ondelete='cascade'),
+        'cell_ids': fields.one2many('smile.activity.report.line.cell', 'line_id', "Cells"),
         # This property define if the line hold float quantities or booleans
         # This can be changed later to a line_type
         'hold_quantities': fields.boolean('Hold quantities'),
@@ -253,7 +252,7 @@ class smile_project_line(osv.osv):
     ## Native methods
 
     def create(self, cr, uid, vals, context=None):
-        line_id = super(smile_project_line, self).create(cr, uid, vals, context)
+        line_id = super(smile_activity_report_line, self).create(cr, uid, vals, context)
         # Create default cells
         line = self.browse(cr, uid, line_id, context)
         self.generate_cells(cr, uid, line, context)
@@ -265,22 +264,22 @@ class smile_project_line(osv.osv):
     def generate_cells(self, cr, uid, line, context=None):
         """ This method generate all cells between the date range.
         """
-        period_lines = line.project_id.period_id.active_line_ids
+        period_lines = line.report_id.period_id.active_line_ids
         vals = {
             'line_id': line.id
             }
         for period_line in period_lines:
             vals.update({'date': period_line.date})
-            self.pool.get('smile.project.line.cell').create(cr, uid, vals, context)
+            self.pool.get('smile.activity.report.line.cell').create(cr, uid, vals, context)
         return
 
 
-smile_project_line()
+smile_activity_report_line()
 
 
 
-class smile_project_line_cell(osv.osv):
-    _name = 'smile.project.line.cell'
+class smile_activity_report_line_cell(osv.osv):
+    _name = 'smile.activity.report.line.cell'
 
     _order = "date"
 
@@ -305,7 +304,7 @@ class smile_project_line_cell(osv.osv):
         'date': fields.date('Date', required=True),
         'quantity': fields.float('Quantity', required=True),
         'boolean_value': fields.boolean('Boolean Value', required=True),
-        'line_id': fields.many2one('smile.project.line', "Project line", required=True, ondelete='cascade'),
+        'line_id': fields.many2one('smile.activity.report.line', "Activity report line", required=True, ondelete='cascade'),
         'hold_quantities': fields.related('line_id', 'hold_quantities', type='boolean', string="Hold quantities", readonly=True),
         'cell_value_string': fields.function(_get_cell_value_string, string="Cell value", type='string', readonly=True, method=True),
         }
@@ -327,9 +326,9 @@ class smile_project_line_cell(osv.osv):
     def _check_date(self, cr, uid, ids, context=None):
         for cell in self.browse(cr, uid, ids,context):
             date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
-            project = cell.line_id.project_id
-            start_date = datetime.datetime.strptime(project.start_date, '%Y-%m-%d')
-            end_date = datetime.datetime.strptime(project.end_date, '%Y-%m-%d')
+            report = cell.line_id.report_id
+            start_date = datetime.datetime.strptime(report.start_date, '%Y-%m-%d')
+            end_date = datetime.datetime.strptime(report.end_date, '%Y-%m-%d')
             if date < start_date or date > end_date:
                 return False
         return True
@@ -342,8 +341,8 @@ class smile_project_line_cell(osv.osv):
 
     _constraints = [
         (_check_quantity, "Quantity can't be negative.", ['quantity']),
-        (_check_date, "Cell date is out of the project date range.", ['date']),
+        (_check_date, "Cell date is out of the activity report date range.", ['date']),
         (_check_duplicate, "Two cells can't share the same date.", ['date']),
         ]
 
-smile_project_line_cell()
+smile_activity_report_line_cell()

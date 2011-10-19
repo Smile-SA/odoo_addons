@@ -98,7 +98,7 @@ class smile_period(osv.osv):
         'month_name': fields.function(_get_month, method=True, type='char', size=16, string='Month', readonly=True),
         'line_ids': fields.one2many('smile.period.line', 'period_id', "Period lines"),
         'active_line_ids': fields.function(_get_active_line_ids, string="Active lines", type='one2many', relation='smile.period.line', method=True),
-        'project_ids': fields.one2many('smile.project', 'period_id', "Projects", readonly=True),
+        'report_ids': fields.one2many('smile.activity.report', 'period_id', "Activity reports", readonly=True),
         }
 
     _defaults = {
@@ -130,8 +130,8 @@ class smile_period(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for period in self.browse(cr, uid, ids, context):
-            if len(period.project_ids):
-                raise osv.except_osv(_('Error !'), _("Can't remove periods which have projects attached to it."))
+            if len(period.report_ids):
+                raise osv.except_osv(_('Error !'), _("Can't remove periods which have activity reports attached to it."))
         return super(smile_period, self).unlink(cr, uid, ids, context)
 
 
@@ -252,11 +252,11 @@ class smile_period_line(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         ret = super(smile_period_line, self).write(cr, uid, ids, vals, context)
-        # Each time we update the working_day boolean of one line we clean-up the projects
-        project_ids = []
+        # Each time we update the working_day boolean of one line we clean-up the activity reports
+        report_ids = []
         for period_line in self.browse(cr, uid, ids, context):
-            project_ids += [p.id for p in period_line.period_id.project_ids]
-        self.pool.get('smile.project').remove_inactive_cells(cr, uid, project_ids, context)
+            report_ids += [p.id for p in period_line.period_id.report_ids]
+        self.pool.get('smile.activity.report').remove_inactive_cells(cr, uid, report_ids, context)
         return ret
 
 

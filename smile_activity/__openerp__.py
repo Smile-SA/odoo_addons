@@ -20,16 +20,16 @@
 ##############################################################################
 
 {
-    "name" : "Smile - Project",
+    "name" : "Smile - Activity",
     "version" : "0.1",
     "author" : "Smile",
     "website": 'http://www.smile.fr',
     "category" : "Custom",
-    "description": "Smile - Project",
+    "description": "Smile - Activity",
     "depends" : ['base'],
     "init_xml" : [],
     "update_xml": [
-        'smile_project_view.xml',
+        'smile_activity_view.xml',
         'smile_period_view.xml',
     ],
     "installable": True,
