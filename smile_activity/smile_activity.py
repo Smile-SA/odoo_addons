@@ -41,7 +41,7 @@ class matrix(fields.dummy):
         obj_list = obj.browse(cr, uid, ids, context)
         for parent_obj in obj_list:
             matrix_data = []
-            date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.period').get_date_range(parent_obj.period_id)]
+            date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.activity.period').get_date_range(parent_obj.period_id)]
             lines = getattr(parent_obj, line_ids_property_name, [])
             for line in lines:
                 line_data = {}
@@ -94,7 +94,7 @@ class smile_activity_report(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=32),
-        'period_id': fields.many2one('smile.period', "Period", required=True),
+        'period_id': fields.many2one('smile.activity.period', "Period", required=True),
         'start_date': fields.related('period_id', 'start_date', type='date', string="Start date", readonly=True),
         'end_date': fields.related('period_id', 'end_date', type='date', string="End date", readonly=True),
         'line_ids': fields.one2many('smile.activity.report.line', 'report_id', "Activity lines"),

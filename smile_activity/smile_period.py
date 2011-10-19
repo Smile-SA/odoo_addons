@@ -27,12 +27,12 @@ from tools.translate import _
 
 
 
-class smile_period(osv.osv):
-    """ Smile periods are always 1 month long.
+class smile_activity_period(osv.osv):
+    """ Activity periods are always 1 month long.
 
     """
 
-    _name = 'smile.period'
+    _name = 'smile.activity.period'
 
     _order = "start_date"
 
@@ -85,7 +85,7 @@ class smile_period(osv.osv):
     def _get_active_line_ids(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for period in self.browse(cr, uid, ids, context):
-            res[period.id] = self.pool.get('smile.period.line').search(cr, uid, [('period_id', '=', period.id), ('working_day', '=', True)], context=context)
+            res[period.id] = self.pool.get('smile.activity.period.line').search(cr, uid, [('period_id', '=', period.id), ('active_day', '=', True)], context=context)
         return res
 
 
@@ -96,8 +96,8 @@ class smile_period(osv.osv):
         'start_date': fields.date('Start', required=True),
         'end_date': fields.date('End', required=True),
         'month_name': fields.function(_get_month, method=True, type='char', size=16, string='Month', readonly=True),
-        'line_ids': fields.one2many('smile.period.line', 'period_id', "Period lines"),
-        'active_line_ids': fields.function(_get_active_line_ids, string="Active lines", type='one2many', relation='smile.period.line', method=True),
+        'line_ids': fields.one2many('smile.activity.period.line', 'period_id', "Period lines"),
+        'active_line_ids': fields.function(_get_active_line_ids, string="Active lines", type='one2many', relation='smile.activity.period.line', method=True),
         'report_ids': fields.one2many('smile.activity.report', 'period_id', "Activity reports", readonly=True),
         }
 
@@ -110,7 +110,7 @@ class smile_period(osv.osv):
     ## Native methods
 
     def create(self, cr, uid, vals, context=None):
-        period_id = super(smile_period, self).create(cr, uid, vals, context)
+        period_id = super(smile_activity_period, self).create(cr, uid, vals, context)
         # Create default lines
         self.update_lines(cr, uid, period_id, context)
         return period_id
@@ -120,7 +120,7 @@ class smile_period(osv.osv):
         for period in self.browse(cr, uid, ids, context):
             if self._str_to_date(period.end_date) < today:
                 raise osv.except_osv(_('Error !'), _("Past periods are archived and can't be updated."))
-        ret = super(smile_period, self).write(cr, uid, ids, vals, context)
+        ret = super(smile_activity_period, self).write(cr, uid, ids, vals, context)
         # Always update lines
         self.update_lines(cr, uid, ids, context)
         return ret
@@ -132,7 +132,7 @@ class smile_period(osv.osv):
         for period in self.browse(cr, uid, ids, context):
             if len(period.report_ids):
                 raise osv.except_osv(_('Error !'), _("Can't remove periods which have activity reports attached to it."))
-        return super(smile_period, self).unlink(cr, uid, ids, context)
+        return super(smile_activity_period, self).unlink(cr, uid, ids, context)
 
 
     ## Constraints methods
@@ -163,7 +163,7 @@ class smile_period(osv.osv):
         """ Check if any other period overlap the current one
         """
         for period in self.browse(cr, uid, ids, context):
-            if len(self.pool.get('smile.period').search(cr, uid, [('start_date', '<=', period.end_date), ('end_date', '>=', period.start_date), ('id', '!=', period.id)], context=context, limit=1)):
+            if len(self.pool.get('smile.activity.period').search(cr, uid, [('start_date', '<=', period.end_date), ('end_date', '>=', period.start_date), ('id', '!=', period.id)], context=context, limit=1)):
                 return False
         return True
 
@@ -213,7 +213,7 @@ class smile_period(osv.osv):
                 if date < start_date or date > end_date:
                     outdated_lines.append(line.id)
             if outdated_lines:
-                self.pool.get('smile.period.line').unlink(cr, uid, outdated_lines, context)
+                self.pool.get('smile.activity.period.line').unlink(cr, uid, outdated_lines, context)
             # Create missing lines to cover the whole period
             exiting_line_dates = [self._str_to_date(l.date) for l in period.line_ids]
             for date in self.get_date_range(period):
@@ -222,15 +222,15 @@ class smile_period(osv.osv):
                         'date': date,
                         'period_id': period.id,
                         }
-                    self.pool.get('smile.period.line').create(cr, uid, vals, context)
+                    self.pool.get('smile.activity.period.line').create(cr, uid, vals, context)
         return
 
-smile_period()
+smile_activity_period()
 
 
 
-class smile_period_line(osv.osv):
-    _name = 'smile.period.line'
+class smile_activity_period_line(osv.osv):
+    _name = 'smile.activity.period.line'
 
     _order = "date"
 
@@ -239,20 +239,20 @@ class smile_period_line(osv.osv):
 
     _columns = {
         'date': fields.date('Date', required=True, readonly=True),
-        'period_id': fields.many2one('smile.period', "Period", required=True, readonly=True, ondelete='cascade'),
-        'working_day': fields.boolean('Working day'),
+        'period_id': fields.many2one('smile.activity.period', "Period", required=True, readonly=True, ondelete='cascade'),
+        'active_day': fields.boolean('Active day'),
         }
 
     _defaults = {
-        'working_day': True
+        'active_day': True,
         }
 
 
     ## Native methods
 
     def write(self, cr, uid, ids, vals, context=None):
-        ret = super(smile_period_line, self).write(cr, uid, ids, vals, context)
-        # Each time we update the working_day boolean of one line we clean-up the activity reports
+        ret = super(smile_activity_period_line, self).write(cr, uid, ids, vals, context)
+        # Each time we update the active_day boolean of one line we clean-up the activity reports
         report_ids = []
         for period_line in self.browse(cr, uid, ids, context):
             report_ids += [p.id for p in period_line.period_id.report_ids]
@@ -275,4 +275,4 @@ class smile_period_line(osv.osv):
         ##(_check_overlapping, "Dates can't overlap within a period.", ['date', 'period_id']),
         #]
 
-smile_period_line()
+smile_activity_period_line()

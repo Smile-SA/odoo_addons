@@ -53,11 +53,11 @@
             </field>
         </record>
 
-        <act_window name="Activity" res_model="smile.activity" id="action_activity_report_list"/>
+        <act_window name="Reports" res_model="smile.activity.report" id="action_activity_report_list"/>
 
-        <menuitem action="action_activity_list" id="menu_smile_activity" name="Activity"/>
+        <menuitem action="action_activity_report_list" id="menu_smile_activity" name="Activity"/>
 
-        <menuitem id="activity_report_menu" parent="menu_smile_activity" name="Activity reports" sequence="1"/>
+        <menuitem id="activity_report_menu" parent="menu_smile_activity" name="Activity" sequence="1"/>
 
         <menuitem id="act_activity_report_menu" parent="activity_report_menu" action="action_activity_report_list" sequence="10"/>
 

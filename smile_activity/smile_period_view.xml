@@ -2,9 +2,9 @@
 <openerp>
     <data noupdate="0">
 
-        <record model="ir.ui.view" id="view_period_form">
-            <field name="name">smile_period.view_period</field>
-            <field name="model">smile.period</field>
+        <record model="ir.ui.view" id="view_activity_period_form">
+            <field name="name">smile_period.view_activity_period</field>
+            <field name="model">smile.activity.period</field>
             <field name="type">form</field>
             <field name="priority">17</field>
             <field name="arch" type="xml">
@@ -18,7 +18,7 @@
                         <field name="line_ids" colspan="4" nolabel="1">
                             <tree string="Period lines" editable="top">
                                 <field name="date"/>
-                                <field name="working_day"/>
+                                <field name="active_day"/>
                             </tree>
                         </field>
                         <field name="report_ids" colspan="4" nolabel="1">
@@ -35,9 +35,9 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_period_tree">
-            <field name="name">smile_period.view_period</field>
-            <field name="model">smile.period</field>
+        <record model="ir.ui.view" id="view_activity_period_tree">
+            <field name="name">smile_period.view_activity_period</field>
+            <field name="model">smile.activity.period</field>
             <field name="type">tree</field>
             <field name="priority">17</field>
             <field name="arch" type="xml">
