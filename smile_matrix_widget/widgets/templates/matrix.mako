@@ -7,6 +7,10 @@
         margin-bottom: 1em;
     }
 
+    .matrix .toolbar select {
+        width: 30em;
+    }
+
     .matrix table {
         text-align: center;
         margin-bottom: 1em;
@@ -99,6 +103,15 @@
 
         %if editable:
             <div class="toolbar">
+                <select id="new_row_data" kind="char" name="new_row_data" type2="" operator="=" class="selection_search selection">
+<!--                search_context="{'lang': u'en_US', 'tz': False, 'search_view': 128, 'active_model': 'ir.ui.menu', '_terp_view_name': u'Addresses', 'bin_size': True, 'client': 'web', 'active_ids': [75], 'search_default_customer': 1, 'active_id': 75}"-->
+                    <option selected="selected">Select a project in the list</option>
+                    <option value="1">Project 1</option>
+                    <option value="2">Project 2</option>
+                    <option value="3">Project 3</option>
+                    <option value="4">Project 4</option>
+                    <option value="5">Project 5</option>
+                </select>
                 <span id="matrix_add_row" class="button">
                     Add line
                 </span>

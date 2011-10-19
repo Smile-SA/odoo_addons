@@ -80,11 +80,22 @@ $(document).ready(function(){
 
     // Make the add line button working
     $(".matrix #matrix_add_row").click(function(){
+        // Check that we selected a row in the select widget
+        var new_row_data = $(".matrix #new_row_data option:selected").first();
+        var row_id = new_row_data.val();
+        if(isNaN(row_id)) {
+            return;
+        };
+        row_id = parseInt(row_id);
+        // We can't add a line twice in the matrix
+        new_row_index = "new" + row_id;
+        if($(".matrix input[id^='cell_" + new_row_index + "_']").length > 0) {
+            return;
+        };
+        // Construct our new row based on the row template
+        var row_name = new_row_data.text();
         var last_row = $(last_row_selector);
         var new_row = last_row.clone(true);
-        // Generate a new row index
-        new_row_index = "new" + Math.floor(Math.random() * 999999);
-        // Construct our new row
         new_row.find(float_cells_selector).each(function(){
             // Compute new cell and button ID
             name_fragments = $(this).attr("id").split("_");
@@ -96,6 +107,7 @@ $(document).ready(function(){
             $(this).parent().find(increment_button_selector).first().attr('id', new_button_id).text(cycling_values[0]);
         });
         new_row.find("span[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
+        new_row.find(".first_column").text(row_name);
         // Insert our new row at the end of the matrix
         last_row.before(new_row.show());
         last_row.hide();

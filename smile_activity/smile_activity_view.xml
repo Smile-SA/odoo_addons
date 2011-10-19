@@ -9,10 +9,10 @@
             <field name="priority">17</field>
             <field name="arch" type="xml">
                 <form string="Reports">
-                    <field name="name" colspan="2"/>
-                    <field name="period_id" colspan="2"/>
-                    <field name="start_date" colspan="2"/>
-                    <field name="end_date" colspan="2"/>
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="period_id"/>
+                    <field name="end_date"/>
                     <separator string="Activity report lines" colspan="4"/>
                     <field name="matrix_line_ids" colspan="4" widget="matrix" nolabel="1"/>
                     <field name="line_ids" colspan="4" nolabel="1">
@@ -22,7 +22,7 @@
                             <field name="cell_ids"/>
                         </tree>
                         <form string="Lines">
-                            <field name="name"/>
+                            <field name="project_id"/>
                             <field name="hold_quantities"/>
                             <field name="cell_ids" colspan="4" nolabel="1" readonly="1">
                                 <tree string="Cells">

@@ -150,17 +150,17 @@ class smile_activity_report(osv.osv):
                 # Are we updating an existing line or creating a new one ?
                 line_id = cell_name_fragments[1]
                 if line_id.startswith('new'):
-                    line_name = line_id
+                    line_project_id = int(line_id[3:])
                     line_id = None
-                    if line_name in new_lines:
-                        line_id = new_lines[line_name]
+                    if line_project_id in new_lines:
+                        line_id = new_lines[line_project_id]
                     else:
                         vals = {
                             'report_id': report.id,
-                            'name': line_name,
+                            'project_id': line_project_id,
                             }
                         line_id = self.pool.get('smile.activity.report.line').create(cr, uid, vals, context)
-                        new_lines[line_name] = line_id
+                        new_lines[line_project_id] = line_id
                 else:
                     line_id = int(line_id)
                 written_lines.append(line_id)
@@ -244,8 +244,9 @@ class smile_activity_report_line(osv.osv):
     _name = 'smile.activity.report.line'
 
     _columns = {
-        'name': fields.char('Name', size=32, required=True),
+        'name': fields.related('project_id', 'name', type='char', string='Project name', size=32, readonly=True),
         'report_id': fields.many2one('smile.activity.report', "Activity report", required=True, ondelete='cascade'),
+        'project_id': fields.many2one('smile.activity.project', "Project", required=True),
         'cell_ids': fields.one2many('smile.activity.report.line.cell', 'line_id', "Cells"),
         # This property define if the line hold float quantities or booleans
         # This can be changed later to a line_type
