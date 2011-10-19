@@ -104,6 +104,7 @@ $(document).ready(function(){
     // Activate delete row button
     $(".matrix .delete_row").click(function(){
         $(this).parent().parent().remove();
+        // TODO: update column totals
     });
 
 });
