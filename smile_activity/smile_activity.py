@@ -41,11 +41,16 @@ class matrix(fields.dummy):
         obj_list = obj.browse(cr, uid, ids, context)
         for parent_obj in obj_list:
             matrix_data = []
+            # Get the list of all objects new rows of the matrix can be linked to
+            p = parent_obj.pool.get('smile.activity.project')
+            new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)]
+            # Get the list of all dates (active and inactive) composing the period
             date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.activity.period').get_date_range(parent_obj.period_id)]
+            # Browse all lines that will compose our matrix
             lines = getattr(parent_obj, line_ids_property_name, [])
             for line in lines:
                 line_data = {}
-                # Populate our matrix with cell values found in the lines
+                # Get all cells of the line
                 cell_value_holder = 'boolean_value'
                 cell_type = 'boolean'
                 if line.hold_quantities is True:
@@ -63,7 +68,6 @@ class matrix(fields.dummy):
                     cells_data[cell_date.strftime('%Y%m%d')] = getattr(cell, cell_value_holder)
                 line_data.update({'cells_data': cells_data})
                 matrix_data.append(line_data)
-
             # Add a row template at the end
             line_data = ({
                 'id'  : "template",
@@ -76,11 +80,12 @@ class matrix(fields.dummy):
                 cells_data[cell_date.strftime('%Y%m%d')] = 0.0
             line_data.update({'cells_data': cells_data})
             matrix_data.append(line_data)
-
+            # Pack all data required to render the matrix
             matrix_list.update({
                 parent_obj.id: {
                     'matrix_data': matrix_data,
                     'date_range': date_range,
+                    'new_row_list': new_row_list,
                     }
                 })
         return matrix_list
