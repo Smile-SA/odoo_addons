@@ -10,6 +10,7 @@
             <field name="arch" type="xml">
                 <form string="Projects">
                     <field name="name"/>
+                    <field name="value_type"/>
                 </form>
             </field>
         </record>
@@ -22,11 +23,12 @@
             <field name="arch" type="xml">
                 <tree string="Project">
                     <field name="name"/>
+                    <field name="value_type"/>
                 </tree>
             </field>
         </record>
 
-        <act_window name="Project" res_model="smile.activity.project" id="action_activity_project_list"/>
+        <act_window name="Projects" res_model="smile.activity.project" id="action_activity_project_list"/>
 
         <menuitem id="act_activity_project_menu" parent="activity_report_menu" action="action_activity_project_list" sequence="12"/>
 

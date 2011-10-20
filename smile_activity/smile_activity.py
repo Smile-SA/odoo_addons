@@ -43,7 +43,7 @@ class matrix(fields.dummy):
             matrix_data = []
             # Get the list of all objects new rows of the matrix can be linked to
             p = parent_obj.pool.get('smile.activity.project')
-            new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)]
+            new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context) if o.value_type == 'float']
             # Get the list of all dates (active and inactive) composing the period
             date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.activity.period').get_date_range(parent_obj.period_id)]
             # Browse all lines that will compose our matrix
@@ -51,35 +51,25 @@ class matrix(fields.dummy):
             for line in lines:
                 line_data = {}
                 # Get all cells of the line
-                cell_value_holder = 'boolean_value'
-                cell_type = 'boolean'
-                if line.hold_quantities is True:
-                    cell_value_holder = 'quantity'
-                    cell_type = 'float'
                 line_data.update({
                     'id': line.id,
                     'name': line.name,
-                    'type': cell_type,
+                    'type': line.line_type,
                     })
                 cells = getattr(line, cell_ids_property_name, [])
                 cells_data = {}
                 for cell in cells:
                     cell_date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
-                    cells_data[cell_date.strftime('%Y%m%d')] = getattr(cell, cell_value_holder)
+                    cells_data[cell_date.strftime('%Y%m%d')] = cell.cell_value
                 line_data.update({'cells_data': cells_data})
                 matrix_data.append(line_data)
             # Add a row template at the end
-            line_data = ({
-                'id'  : "template",
+            matrix_data.append({
+                'id': "template",
                 'name': "Row template",
                 'type': "float",
+                'cells_data': dict([(datetime.datetime.strptime(l.date, '%Y-%m-%d').strftime('%Y%m%d'), 0.0) for l in parent_obj.period_id.active_line_ids]),
                 })
-            cells_data = {}
-            for period_line in parent_obj.period_id.active_line_ids:
-                cell_date = datetime.datetime.strptime(period_line.date, '%Y-%m-%d')
-                cells_data[cell_date.strftime('%Y%m%d')] = 0.0
-            line_data.update({'cells_data': cells_data})
-            matrix_data.append(line_data)
             # Pack all data required to render the matrix
             matrix_list.update({
                 parent_obj.id: {
@@ -124,13 +114,10 @@ class smile_activity_report(osv.osv):
                     if not (f_id_elements[1].startswith('new') or f_id_elements[1].startswith('template')):
                         line_id = int(f_id_elements[1])
                         cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
-                        cell_id = self.pool.get('smile.activity.report.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
+                        cell_id = self.pool.get('smile.activity.report.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
                         if cell_id:
-                            cell = self.pool.get('smile.activity.report.line.cell').browse(cr, uid, cell_id, context)[0]
-                            if cell.hold_quantities:
-                                cell_value = cell.quantity
-                            else:
-                                cell_value = cell.boolean_value
+                            cell = self.pool.get('smile.activity.report.cell').browse(cr, uid, cell_id, context)[0]
+                            cell_value = cell.cell_value
                     props.update({f_id: cell_value})
             updated_result.append(props)
         if isinstance(ids, (int, long)):
@@ -172,7 +159,7 @@ class smile_activity_report(osv.osv):
                 # Get the line
                 line = self.pool.get('smile.activity.report.line').browse(cr, uid, line_id, context)
                 # Convert the raw value to the right one depending on the type of the line
-                if line.hold_quantities:
+                if line.line_type != 'boolean':
                     # Quantity conversion
                     if type(cell_value) is type(''):
                         cell_value = float(cell_value)
@@ -188,24 +175,22 @@ class smile_activity_report(osv.osv):
                 if cell_value is None:
                     continue
                 # Prepare the cell value
-                cell_vals = {}
-                if line.hold_quantities:
-                    cell_vals.update({'quantity': cell_value})
-                else:
-                    cell_vals.update({'boolean_value': cell_value})
+                cell_vals = {
+                    'quantity': cell_value,
+                    }
                 # Search for an existing cell at the given date
-                cell = self.pool.get('smile.activity.report.line.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
+                cell = self.pool.get('smile.activity.report.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
                 # Cell doesn't exists, create it
                 if not cell:
                     cell_vals.update({
                         'date': cell_date,
                         'line_id': line_id,
                         })
-                    self.pool.get('smile.activity.report.line.cell').create(cr, uid, cell_vals, context)
+                    self.pool.get('smile.activity.report.cell').create(cr, uid, cell_vals, context)
                 # Update cell with our data
                 else:
                     cell_id = cell[0]
-                    self.pool.get('smile.activity.report.line.cell').write(cr, uid, cell_id, cell_vals, context)
+                    self.pool.get('smile.activity.report.cell').write(cr, uid, cell_id, cell_vals, context)
         # If there was no references to one of our line it means it was deleted
         for report in self.browse(cr, uid, ids, context):
             removed_lines = list(set([l.id for l in report.line_ids]).difference(set(written_lines)))
@@ -236,9 +221,9 @@ class smile_activity_report(osv.osv):
                         'line_id': line.id,
                         'date': d,
                         }
-                    self.pool.get('smile.activity.report.line.cell').create(cr, uid, vals, context)
+                    self.pool.get('smile.activity.report.cell').create(cr, uid, vals, context)
         if outdated_cells:
-            self.pool.get('smile.activity.report.line.cell').unlink(cr, uid, outdated_cells, context)
+            self.pool.get('smile.activity.report.cell').unlink(cr, uid, outdated_cells, context)
         return
 
 smile_activity_report()
@@ -248,18 +233,26 @@ smile_activity_report()
 class smile_activity_report_line(osv.osv):
     _name = 'smile.activity.report.line'
 
+
+    ## Function fields
+
+    def _get_line_type(self, cr, uid, ids, name, arg, context=None):
+        """ The line type is derived from the project it's attached to
+        """
+        result = {}
+        for line in self.browse(cr, uid, ids, context):
+            result[line.id] = line.project_id.value_type
+        return result
+
+
+    ## Fields definition
+
     _columns = {
         'name': fields.related('project_id', 'name', type='char', string='Project name', size=32, readonly=True),
         'report_id': fields.many2one('smile.activity.report', "Activity report", required=True, ondelete='cascade'),
         'project_id': fields.many2one('smile.activity.project', "Project", required=True),
-        'cell_ids': fields.one2many('smile.activity.report.line.cell', 'line_id', "Cells"),
-        # This property define if the line hold float quantities or booleans
-        # This can be changed later to a line_type
-        'hold_quantities': fields.boolean('Hold quantities'),
-        }
-
-    _defaults = {
-        'hold_quantities': True,
+        'cell_ids': fields.one2many('smile.activity.report.cell', 'line_id', "Cells"),
+        'line_type': fields.function(_get_line_type, string="Line type", type='string', readonly=True, method=True),
         }
 
 
@@ -284,31 +277,30 @@ class smile_activity_report_line(osv.osv):
             }
         for period_line in period_lines:
             vals.update({'date': period_line.date})
-            self.pool.get('smile.activity.report.line.cell').create(cr, uid, vals, context)
+            self.pool.get('smile.activity.report.cell').create(cr, uid, vals, context)
         return
-
 
 smile_activity_report_line()
 
 
 
-class smile_activity_report_line_cell(osv.osv):
-    _name = 'smile.activity.report.line.cell'
+class smile_activity_report_cell(osv.osv):
+    _name = 'smile.activity.report.cell'
 
     _order = "date"
 
 
     ## Function fields
 
-    def _get_cell_value_string(self, cr, uid, ids, name, arg, context=None):
+    def _get_cell_value(self, cr, uid, ids, name, arg, context=None):
+        """ Transform the quantity according the line type
+        """
         result = {}
         for cell in self.browse(cr, uid, ids, context):
-            val = ''
-            if cell.hold_quantities:
-                val = cell.quantity
-            else:
-                val = cell.boolean_value
-            result[cell.id] = str(val)
+            val = cell.quantity
+            if cell.line_id.line_type == 'boolean':
+                val = (cell.quantity != 0) and True or False
+            result[cell.id] = val
         return result
 
 
@@ -317,15 +309,12 @@ class smile_activity_report_line_cell(osv.osv):
     _columns = {
         'date': fields.date('Date', required=True),
         'quantity': fields.float('Quantity', required=True),
-        'boolean_value': fields.boolean('Boolean Value', required=True),
         'line_id': fields.many2one('smile.activity.report.line', "Activity report line", required=True, ondelete='cascade'),
-        'hold_quantities': fields.related('line_id', 'hold_quantities', type='boolean', string="Hold quantities", readonly=True),
-        'cell_value_string': fields.function(_get_cell_value_string, string="Cell value", type='string', readonly=True, method=True),
+        'cell_value': fields.function(_get_cell_value, string="Cell value", type='string', readonly=True, method=True),
         }
 
     _defaults = {
         'quantity': 0.0,
-        'boolean_value': False,
         }
 
 
@@ -349,7 +338,7 @@ class smile_activity_report_line_cell(osv.osv):
 
     def _check_duplicate(self, cr, uid, ids, context=None):
         for cell in self.browse(cr, uid, ids, context):
-            if len(self.search(cr, uid, [('date', '=', cell.date), ('line_id', '=', cell.line_id.id)], context=context)) > 1 :
+            if len(self.search(cr, uid, [('date', '=', cell.date), ('line_id', '=', cell.line_id.id)], context=context)) > 1:
                 return False
         return True
 
@@ -359,4 +348,4 @@ class smile_activity_report_line_cell(osv.osv):
         (_check_duplicate, "Two cells can't share the same date.", ['date']),
         ]
 
-smile_activity_report_line_cell()
+smile_activity_report_cell()

@@ -28,6 +28,14 @@ class smile_activity_project(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=32),
+        'value_type': fields.selection([
+            ('float', 'Float'),
+            ('boolean', 'Boolean'),
+            ], 'Value type', select=True, required=True),
+        }
+
+    _defaults = {
+        'value_type': 'float',
         }
 
 smile_activity_project()

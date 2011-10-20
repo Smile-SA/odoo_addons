@@ -90,6 +90,10 @@
 
 
 <%def name="render_float(f)">
+    <%
+        if type(f) != type(0.0):
+            f = float(f)
+    %>
     %if int(f) == f:
         ${int(f)}
     %else:
@@ -112,7 +116,6 @@
                     new_row_list = value.get('new_row_list', [])
                 %>
                 <select id="new_row_data" kind="char" name="new_row_data" type2="" operator="=" class="selection_search selection">
-<!--                search_context="{'lang': u'en_US', 'tz': False, 'search_view': 128, 'active_model': 'ir.ui.menu', '_terp_view_name': u'Addresses', 'bin_size': True, 'client': 'web', 'active_ids': [75], 'search_default_customer': 1, 'active_id': 75}"-->
                     <option selected="selected">Select a project in the list</option>
                     %for new_row in new_row_list:
                         <option value="${new_row[0]}">${new_row[1]}</option>
