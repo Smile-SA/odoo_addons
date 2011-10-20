@@ -47,21 +47,20 @@ $(document).ready(function(){
         $(".matrix input[kind!='boolean'][name^='cell_'][name$='_" + column_index + "']:not(:disabled)").each(function(){
             column_total += parseFloat($(this).val());
         });
-        $(".matrix tfoot span#column_total_" + column_index).text(column_total);
+        $(".matrix tfoot span#column_total_" + column_index).text(column_total).effect("highlight");
         // Select all fields of the row we clicked in and sum them up
         var row_total = 0;
         $(".matrix input[kind!='boolean'][name^='cell_" + row_index + "_']:not(:disabled)").each(function(){
             row_total += parseFloat($(this).val());
         });
-        $(".matrix tbody span#row_total_" + row_index).text(row_total);
+        $(".matrix tbody span#row_total_" + row_index).text(row_total).effect("highlight");
         // Compute the grand-total
         var grand_total = 0;
         $(".matrix tbody span[id^='row_total_']").each(function(){
             grand_total += parseFloat($(this).text());
         });
-        $(".matrix #grand_total").text(grand_total);
+        $(".matrix #grand_total").text(grand_total).effect("highlight");
     });
-    $(".matrix tbody tr:first input[name^='cell_']:not(:disabled)").trigger('change');
 
     // Cycles buttons
     buttons.click(function(){
@@ -95,7 +94,7 @@ $(document).ready(function(){
         // Construct our new row based on the row template
         var row_name = new_row_data.text();
         var last_row = $(last_row_selector);
-        var new_row = last_row.clone(true);
+        var new_row = last_row.clone(true).hide();
         new_row.find(float_cells_selector).each(function(){
             // Compute new cell and button ID
             name_fragments = $(this).attr("id").split("_");
@@ -109,13 +108,15 @@ $(document).ready(function(){
         new_row.find("span[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
         new_row.find(".first_column").text(row_name);
         // Insert our new row at the end of the matrix
-        last_row.before(new_row.show());
-        last_row.hide();
+        last_row.before(new_row.hide());
+        new_row.fadeIn('fast');
     });
 
     // Activate delete row button
     $(".matrix .delete_row").click(function(){
-        $(this).parent().parent().remove();
+        $(this).parent().parent().fadeOut('fast', function(){
+            $(this).remove();
+        });
         // TODO: update column totals
     });
 
