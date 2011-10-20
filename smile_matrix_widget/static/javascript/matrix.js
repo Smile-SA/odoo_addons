@@ -47,7 +47,13 @@ $(document).ready(function(){
         $(".matrix input[kind!='boolean'][name^='cell_'][name$='_" + column_index + "']:not(:disabled)").each(function(){
             column_total += parseFloat($(this).val());
         });
-        $(".matrix tfoot span#column_total_" + column_index).text(column_total).effect("highlight");
+        $(".matrix tfoot span#column_total_" + column_index).text(column_total).effect("highlight", function(){
+            if(column_total > 1){
+                $(this).addClass("warning");
+            } else {
+                $(this).removeClass("warning");
+            }
+        });
         // Select all fields of the row we clicked in and sum them up
         var row_total = 0;
         $(".matrix input[kind!='boolean'][name^='cell_" + row_index + "_']:not(:disabled)").each(function(){

@@ -16,6 +16,11 @@
         margin-bottom: 1em;
     }
 
+    .matrix .warning {
+        background: #f00;
+        color: #fff;
+    }
+
     .matrix td,
     .matrix th {
         min-width: 1.5em;
@@ -146,11 +151,14 @@
                                 <%
                                     column_total = sum(column_values)
                                 %>
-                                <span id="column_total_${date}"
+                                <span id="column_total_${date}" class="
                                     %if not editable and column_total <= 0.0:
-                                        class="zero"
+                                        zero
                                     %endif
-                                    >
+                                    %if column_total > 1:
+                                        warning
+                                    %endif
+                                    ">
                                         ${render_float(column_total)}
                                 </span>
                             %endif
