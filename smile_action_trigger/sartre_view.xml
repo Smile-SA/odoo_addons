@@ -49,8 +49,9 @@
 								<field name="on_other_method_id" attrs="{'required':[('on_other','=',True)]}" />
 							</group>
 							<group string="Trigger on client action" colspan="4" attrs="{'invisible':[('on_client_action','!=',True)]}">
-								<field name="on_client_action_id"/><!-- attrs="{'required':[('on_client_action','=',True)]}" /-->
-								<button type="object" name="create_client_action" string="Create Client Action" colspan="2" attrs="{'readonly': [('on_client_action_id', '!=', False)]}" />
+								<field name="on_client_action_id"/>
+								<field name="on_client_action_type" nolabel="1" attrs="{'required':[('on_client_action','=',True)], 'readonly': [('on_client_action_id', '!=', False)]}" />
+								<button type="object" name="create_client_action" string="Create Client Action" attrs="{'readonly': [('on_client_action_id', '!=', False)]}" />
 							</group>
 						</page>
 						<page string="Filters">

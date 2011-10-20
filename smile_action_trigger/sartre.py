@@ -267,6 +267,7 @@ class SartreTrigger(osv.osv):
         'on_other_method': fields.related('on_other_method_id', 'name', type='char', string='Method'),
         'on_client_action': fields.boolean("Client Action"),
         'on_client_action_id': fields.many2one('ir.values', "Client Action"),
+        'on_client_action_type': fields.selection([('client_print_multi', 'Report'), ('client_action_multi', 'Action'), ('client_action_relate', 'Link')], "Type"),
         'on_date': fields.boolean("Date"),
         'on_date_type': fields.function(_get_trigger_date_type, method=True, type='char', size=64, string='Trigger Date Type', store=True),
         'on_date_type_display1': fields.selection([('create_date', 'Creation Date'), ('write_date', 'Update Date'), ('other_date', 'Other Date')], 'Trigger Date Type 1', size=16),
@@ -297,6 +298,7 @@ class SartreTrigger(osv.osv):
     _defaults = {
         'active': True,
         'on_function_type': 'both',
+        'on_client_action_type': 'client_action_multi',
         'on_date_type_display1': 'create_date',
         'on_date_range': 2,
         'on_date_range_type': 'days',
@@ -326,7 +328,7 @@ class SartreTrigger(osv.osv):
                     'object': True,
                     'model_id': trigger.model_id.id,
                     'model': trigger.model,
-                    'key2': 'client_action_multi',
+                    'key2': trigger.on_client_action_type,
                     'value': 'ir.actions.server,%d' % server_action_id,
                 }
                 client_action_id = self.pool.get('ir.values').create(cr, uid, vals2, context)
