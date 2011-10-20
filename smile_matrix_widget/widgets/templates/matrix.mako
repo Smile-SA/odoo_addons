@@ -193,7 +193,7 @@
                                 %if cell_value is not None:
                                     %if editable:
                                         <input type="hidden" kind="boolean" name="${cell_id}" id="${cell_id}" value="${cell_value and '1' or '0'}"/>
-                                        <input type="checkbox" enabled="enabled" kind="boolean" class="checkbox" id="${cell_id}"
+                                        <input type="checkbox" enabled="enabled" kind="boolean" class="checkbox" id="${cell_id}_checkbox_"
                                             %if cell_value:
                                                 checked="checked"
                                             %endif
