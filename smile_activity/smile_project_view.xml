@@ -11,6 +11,7 @@
                 <form string="Projects">
                     <field name="name"/>
                     <field name="value_type"/>
+                    <field name="required"/>
                 </form>
             </field>
         </record>
@@ -24,6 +25,7 @@
                 <tree string="Project">
                     <field name="name"/>
                     <field name="value_type"/>
+                    <field name="required"/>
                 </tree>
             </field>
         </record>

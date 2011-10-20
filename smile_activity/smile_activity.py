@@ -43,19 +43,20 @@ class matrix(fields.dummy):
             matrix_data = []
             # Get the list of all objects new rows of the matrix can be linked to
             p = parent_obj.pool.get('smile.activity.project')
-            new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context) if o.value_type == 'float']
+            new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [('value_type', '=', 'float'), ('required', '=', False)], context=context), context)]
             # Get the list of all dates (active and inactive) composing the period
             date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.activity.period').get_date_range(parent_obj.period_id)]
             # Browse all lines that will compose our matrix
             lines = getattr(parent_obj, line_ids_property_name, [])
             for line in lines:
-                line_data = {}
-                # Get all cells of the line
-                line_data.update({
+                # Transfer some line data to the matrix widget
+                line_data = {
                     'id': line.id,
                     'name': line.name,
                     'type': line.line_type,
-                    })
+                    'required': line.project_id.required,
+                    }
+                # Get all cells of the line
                 cells = getattr(line, cell_ids_property_name, [])
                 cells_data = {}
                 for cell in cells:
@@ -98,6 +99,17 @@ class smile_activity_report(osv.osv):
 
 
     ## Native methods
+
+    def create(self, cr, uid, vals, context=None):
+        report_id = super(smile_activity_report, self).create(cr, uid, vals, context)
+        # Create default report lines
+        for project_id in self.pool.get('smile.activity.project').search(cr, uid, [('required', '=', True)], context=context):
+            vals = {
+                'report_id': report_id,
+                'project_id': project_id,
+                }
+            line_id = self.pool.get('smile.activity.report.line').create(cr, uid, vals, context)
+        return report_id
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         result = super(smile_activity_report, self).read(cr, uid, ids, fields, context, load)

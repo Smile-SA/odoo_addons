@@ -32,10 +32,12 @@ class smile_activity_project(osv.osv):
             ('float', 'Float'),
             ('boolean', 'Boolean'),
             ], 'Value type', select=True, required=True),
+        'required': fields.boolean('Required in report'),
         }
 
     _defaults = {
         'value_type': 'float',
+        'required': False,
         }
 
 smile_activity_project()
