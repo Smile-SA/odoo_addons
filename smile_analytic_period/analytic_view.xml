@@ -12,7 +12,6 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
                 	<newline/>
-	                <field name="analysis_period_id"/>
 	                <field name="period_id"/>
                 </field>
 			</field>
@@ -41,7 +40,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="date_start"/>
-                    <field name="date_end"/>
+                    <field name="date_stop"/>
                     <field name="general_period_id" widget="selection"/>
                     <field name="fiscalyear_id"/>
                     <separator colspan="4" string="States"/>
@@ -59,7 +58,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="date_start"/>
-                    <field name="date_end"/>
+                    <field name="date_stop"/>
                     <field name="general_period_id" widget="selection"/>
                     <field name="fiscalyear_id"/>
                     <field name="state"/>

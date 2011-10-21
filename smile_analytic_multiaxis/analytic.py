@@ -27,12 +27,13 @@ class AnalyticAxis(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'ref': fields.char('Analytic line column label', size=64, required=True),
+        'ref': fields.char('Analytic line column label', size=55, required=True),
         'active': fields.boolean('Active'),
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='restrict'),
         'model': fields.related('model_id', 'model', type='char', string="Model"),
         'domain': fields.char("Domain", size=256, required=True),
         'required': fields.boolean('Required'),
+        'field_ids': fields.many2many('ir.model.fields', 'account_analytic_axis_field_rel', 'axis_id', 'field_id', 'Fields to historicize'),
     }
     
     _defaults = {
@@ -62,12 +63,22 @@ class AnalyticAxis(osv.osv):
             ids = self.search(cr, 1, [], context={'active_test': False})
 
         line_obj = self.pool.get('account.analytic.line')
-        for axis in self.read(cr, 1, ids, context=context):
-            if (not axis['active'] or context.get('ids_to_unlink')) and axis['ref'] in line_obj._columns:
-                del line_obj._columns[axis['ref']]
-            elif axis['active']:
-                line_obj._columns[axis['ref']] = fields.many2one(axis['model'], axis['name'], \
-                    domain=axis['domain'] and eval(axis['domain']) or [], required=axis['required'])
+        for axis in self.browse(cr, 1, ids, context):
+            if (not axis.active or context.get('ids_to_unlink')) and axis.ref in line_obj._columns:
+                del line_obj._columns[axis.ref]
+                if axis.field_ids:
+                    for field in axis.field_ids:
+                        column = '%s_%s' % (axis.ref, field.id)
+                        if column in line_obj._columns:
+                            del line_obj._columns[column]
+            elif axis.active:
+                line_obj._columns[axis.ref] = fields.many2one(axis.model, axis.name, \
+                    domain=axis.domain and eval(axis.domain) or [], required=axis.required)
+                if axis.field_ids:
+                    for field in axis.field_ids:
+                        column = '%s_%s' % (axis.ref, field.id)
+                        line_obj._columns[column] = fields.related(axis.ref, field.name, \
+                            type=field.ttype, relation=field.relation, store=True)
         line_obj._auto_init(cr, context)
         return True
 

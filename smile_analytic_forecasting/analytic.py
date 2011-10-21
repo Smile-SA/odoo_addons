@@ -29,6 +29,7 @@ class AnalyticPeriod(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
+        'code': fields.char('Code', size=12),
         'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly', True)]}),
         'date_end': fields.date('End of Period', required=True, states={'done':[('readonly', True)]}),
         'state': fields.selection([('draft', 'Opened'), ('done', 'Closed')], 'State', required=True),
