@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
-from matrix_field import matrix
+from matrix_field import multiline_matrix
 
 
 
@@ -29,11 +29,14 @@ class smile_activity_workload(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=32),
-        'period_id': fields.many2one('smile.activity.period', "Period", required=True),
-        'start_date': fields.related('period_id', 'start_date', type='date', string="Start date", readonly=True),
-        'end_date': fields.related('period_id', 'end_date', type='date', string="End date", readonly=True),
+        'project_id': fields.many2one('smile.activity.project', "Project", required=True),
+        'start_date': fields.related('project_id', 'start_date', type='date', string="Start date", readonly=True),
+        'end_date': fields.related('project_id', 'end_date', type='date', string="End date", readonly=True),
         'line_ids': fields.one2many('smile.activity.workload.line', 'workload_id', "Workload lines"),
-        #'matrix_line_ids': matrix('line_ids', 'cell_ids', string="Workload lines", readonly=False),
+        'matrix_line_ids': multiline_matrix(
+            'line_ids',
+            #'cell_ids',
+            string="Workload lines", readonly=False),
         }
 
 smile_activity_workload()

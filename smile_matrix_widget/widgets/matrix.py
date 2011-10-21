@@ -44,3 +44,11 @@ class Matrix(TinyInputWidget):
         self.default = value
 
 register_widget(Matrix, ["matrix"])
+
+
+
+class MultilineMatrix(Matrix):
+
+    template = "/smile_matrix_widget/widgets/templates/multiline_matrix.mako"
+
+register_widget(MultilineMatrix, ["multiline_matrix"])

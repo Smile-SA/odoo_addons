@@ -19,6 +19,9 @@
 #
 ##############################################################################
 
+import datetime
+from dateutil.relativedelta import relativedelta
+
 from osv import osv, fields
 
 
@@ -33,11 +36,45 @@ class smile_activity_project(osv.osv):
             ('boolean', 'Boolean'),
             ], 'Value type', select=True, required=True),
         'required': fields.boolean('Required in report'),
+        'start_date': fields.date('Start', required=True),
+        'end_date': fields.date('End', required=True),
         }
 
     _defaults = {
         'value_type': 'float',
         'required': False,
         }
+
+
+    ## Utility methods
+
+    def _str_to_date(self, date):
+        """ Transform string date to a proper date object
+        """
+        if not isinstance(date, (datetime.date, datetime.datetime)):
+            date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+        return date
+
+    def _get_month_start(self, date):
+        return datetime.date(date.year, date.month, 1)
+
+    def _get_month_end(self, date):
+        return (self._get_month_start(date) + relativedelta(months=1)) - datetime.timedelta(days=1)
+
+
+    ## Custom methods
+
+    def get_month_range(self, project):
+        """ Get a list of date objects set to the first day of each month covering date range of the project.
+            XXX It may make sense later to link the project to a set of smile.activity.period objects instead.
+        """
+        date_range = []
+        range_start = self._get_month_start(self._str_to_date(project.start_date))
+        range_end   = self._get_month_end(self._str_to_date(project.end_date))
+        date = range_start
+        while date <= range_end:
+            date_range.append(date)
+            date = date + relativedelta(months=1)
+        return date_range
 
 smile_activity_project()
