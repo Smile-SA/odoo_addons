@@ -47,10 +47,18 @@ class AccountFiscalyear(osv.osv):
                     raise osv.except_osv(_('Error'), _('Analytic periods must be shorter than general ones!'))
                 self.pool.get('account.analytic.period').create(cr, uid, {
                     'name': date_start.strftime('%m/%Y'),
+                    'code': date_start.strftime('%m/%Y'),
                     'date_start': date_start.strftime('%Y-%m-%d'),
                     'date_stop': date_stop.strftime('%Y-%m-%d'),
                     'general_period_id': general_period_id[0],
                 })
                 date_start = date_start + relativedelta(months=interval)
-        return True
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.analytic.period',
+            'target': 'new',
+            'context': context,
+        }
 AccountFiscalyear()
