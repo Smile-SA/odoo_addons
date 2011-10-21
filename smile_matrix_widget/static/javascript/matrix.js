@@ -69,11 +69,11 @@ $(document).ready(function(){
     });
 
     // Compute boolean totals
+    // TODO: merge this with the code above
     $("input[type='hidden'][kind='boolean'][name^='cell_']:not(:disabled)").change(function(){
         name_fragments = $(this).attr("id").split("_");
         column_index = name_fragments[2];
         row_index = name_fragments[1];
-
         // Select all fields of the row we clicked in and sum them up
         var row_total = 0;
         $(".matrix input[type='hidden'][kind='boolean'][name^='cell_" + row_index + "_']:not(:disabled)").each(function(){
@@ -83,7 +83,6 @@ $(document).ready(function(){
             };
         });
         $("#row_total_" + row_index).text(row_total).effect("highlight");
-
     });
 
     // Cycles buttons
