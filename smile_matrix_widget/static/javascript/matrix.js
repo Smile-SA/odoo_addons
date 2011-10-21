@@ -37,7 +37,7 @@ $(document).ready(function(){
         }
     });
 
-    // Compute totals
+    // Compute float totals
     $(global_float_cells_selector).change(function(){
         name_fragments = $(this).attr("id").split("_");
         column_index = name_fragments[2];
@@ -47,7 +47,7 @@ $(document).ready(function(){
         $(".matrix input[kind!='boolean'][name^='cell_'][name$='_" + column_index + "']:not(:disabled)").each(function(){
             column_total += parseFloat($(this).val());
         });
-        $(".matrix tfoot span#column_total_" + column_index).text(column_total).effect("highlight", function(){
+        $("#column_total_" + column_index).text(column_total).effect("highlight", function(){
             if(column_total > 1){
                 $(this).addClass("warning");
             } else {
@@ -59,13 +59,31 @@ $(document).ready(function(){
         $(".matrix input[kind!='boolean'][name^='cell_" + row_index + "_']:not(:disabled)").each(function(){
             row_total += parseFloat($(this).val());
         });
-        $(".matrix tbody span#row_total_" + row_index).text(row_total).effect("highlight");
+        $("#row_total_" + row_index).text(row_total).effect("highlight");
         // Compute the grand-total
         var grand_total = 0;
         $(".matrix tbody span[id^='row_total_']").each(function(){
             grand_total += parseFloat($(this).text());
         });
-        $(".matrix #grand_total").text(grand_total).effect("highlight");
+        $("#grand_total").text(grand_total).effect("highlight");
+    });
+
+    // Compute boolean totals
+    $("input[type='hidden'][kind='boolean'][name^='cell_']:not(:disabled)").change(function(){
+        name_fragments = $(this).attr("id").split("_");
+        column_index = name_fragments[2];
+        row_index = name_fragments[1];
+
+        // Select all fields of the row we clicked in and sum them up
+        var row_total = 0;
+        $(".matrix input[type='hidden'][kind='boolean'][name^='cell_" + row_index + "_']:not(:disabled)").each(function(){
+            cell_value = parseFloat($(this).val());
+            if (!isNaN(cell_value)) {
+                row_total += cell_value;
+            };
+        });
+        $("#row_total_" + row_index).text(row_total).effect("highlight");
+
     });
 
     // Cycles buttons

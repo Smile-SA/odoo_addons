@@ -208,7 +208,18 @@
                                 %endif
                             </td>
                         %endfor
-                        <td class="total"></td>
+                        <td class="total">
+                            <%
+                                row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
+                            %>
+                            <span id="row_total_${line['id']}"
+                                %if not editable and row_total <= 0.0:
+                                    class="zero"
+                                %endif
+                                >
+                                ${render_float(row_total)}
+                            </span>
+                        </td>
                     </tr>
                 %endfor
             </tfoot>
