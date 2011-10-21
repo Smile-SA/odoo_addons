@@ -3,6 +3,17 @@
 %>
 
 <style type="text/css">
+    /* Reset OpenERP default styles */
+    .matrix table tfoot td {
+        font-weight: normal;
+    }
+
+    .matrix table th {
+        text-transform: none;
+    }
+
+    /* Set our style */
+
     .matrix .toolbar {
         margin-bottom: 1em;
     }
@@ -11,9 +22,8 @@
         width: 30em;
     }
 
-    .matrix table {
-        text-align: center;
-        margin-bottom: 1em;
+    .matrix .zero {
+        color: #ccc;
     }
 
     .matrix .warning {
@@ -21,42 +31,29 @@
         color: #fff;
     }
 
-    .matrix td,
-    .matrix th {
-        min-width: 1.5em;
-        height: 1.5em;
+    .matrix .total,
+    .matrix .total td {
+        font-weight: bold;
     }
 
-    .non-editable .matrix td,
-    .non-editable .matrix th {
-        padding: 0 .4em;
-    }
-
-    .matrix table .button {
-        padding-left: .3em;
-        padding-right: .3em;
-    }
-
-    .matrix table .button.increment {
-        width: 1.5em;
-        height: 1.5em;
-        line-height: inherit;
-    }
-
-    .matrix .zero {
-        color: #ccc;
-    }
-
-    .matrix table thead th {
-        text-transform: none;
+    .matrix table {
+        text-align: center;
+        margin-bottom: 1em;
     }
 
     .matrix table .first_column {
         text-align: left;
     }
 
-    .matrix table .total {
-        font-weight: bold;
+    .matrix td,
+    .matrix th {
+        min-width: 2.2em;
+        height: 1.5em;
+    }
+
+    .matrix table span {
+        display: block;
+        padding: .3em;
     }
 
     .matrix table tbody td,
@@ -75,16 +72,6 @@
     }
     .matrix table tfoot tr.boolean_line td {
         border-width: 1px 0 0;
-        font-weight: normal;
-    }
-
-    .matrix table tfoot span,
-    .matrix table tbody span {
-        display: block;
-    }
-
-    .matrix table tfoot input {
-        width: none;
     }
 </style>
 
@@ -142,7 +129,7 @@
                 </tr>
             </thead>
             <tfoot>
-                <tr class="total_line">
+                <tr class="total">
                     <td class="first_column">Total</td>
                     <td></td>
                     %for date in value['date_range']:
@@ -167,7 +154,7 @@
                             %endif
                         </td>
                     %endfor
-                    <td class="total">
+                    <td>
                         <%
                             grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['type'] == 'float'])
                         %>
