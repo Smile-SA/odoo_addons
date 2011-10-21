@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record model="ir.ui.view" id="view_smile_activity_workload_form">
+            <field name="name">smile_activity.view_workload</field>
+            <field name="model">smile.activity.workload</field>
+            <field name="type">form</field>
+            <field name="priority">17</field>
+            <field name="arch" type="xml">
+                <form string="Workload">
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="period_id"/>
+                    <field name="end_date"/>
+                    <separator string="Workload lines" colspan="4"/>
+<!--                     <field name="matrix_line_ids" colspan="4" widget="matrix" nolabel="1"/> -->
+                    <field name="line_ids" colspan="4" nolabel="1">
+                        <tree string="Lines">
+                            <field name="name"/>
+                        </tree>
+                        <form string="Lines">
+                            <field name="name"/>
+                        </form>
+                    </field>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_smile_activity_workload_tree">
+            <field name="name">smile_activity.view_workload</field>
+            <field name="model">smile.activity.workload</field>
+            <field name="type">tree</field>
+            <field name="priority">17</field>
+            <field name="arch" type="xml">
+                <tree string="Workload">
+                    <field name="name"/>
+                    <field name="period_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="line_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <act_window name="Workload" res_model="smile.activity.workload" id="action_activity_workload_list"/>
+
+        <menuitem id="act_activity_workload_menu" parent="activity_report_menu" action="action_activity_workload_list" sequence="13"/>
+
+    </data>
+</openerp>

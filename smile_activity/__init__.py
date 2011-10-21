@@ -19,7 +19,10 @@
 #
 ##############################################################################
 
+import matrix_field
+
 import smile_project
 import smile_period
+import smile_workload
 import smile_activity
 
