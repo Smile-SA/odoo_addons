@@ -534,7 +534,7 @@ class SartreTrigger(osv.osv):
             for action in trigger.action_ids:
                 if action.active:
                     if trigger.exception_handling == 'continue':
-                        cr.execute("SAVEPOINT smile_action_trigger_%s_%s" % (trigger.id, trigger.action.id))
+                        cr.execute("SAVEPOINT smile_action_trigger_%s_%s" % (trigger.id, action.id))
                     try:
                         logger.debug('[%s] Launch Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
                         self._run_action_for_object_ids(cr, uid, action, filtered_object_ids, context)
@@ -542,7 +542,7 @@ class SartreTrigger(osv.osv):
                     except Exception, e:
                         logger.exception('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
                         if trigger.exception_handling == 'continue' and not action.force_rollback:
-                            cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_%s_%s" % (trigger.id, trigger.action.id))
+                            cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_%s_%s" % (trigger.id, action.id))
                         else:
                             cr.rollback()
                             logger.time_info("[%s] Transaction rolled back" % (pid,))
