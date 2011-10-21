@@ -22,67 +22,6 @@
 import time
 
 from osv import osv, fields
-from tools.translate import _
-
-class AnalyticPeriod(osv.osv):
-    _name = 'account.analytic.period'
-
-    _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'code': fields.char('Code', size=12),
-        'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly', True)]}),
-        'date_end': fields.date('End of Period', required=True, states={'done':[('readonly', True)]}),
-        'state': fields.selection([('draft', 'Opened'), ('done', 'Closed')], 'State', required=True),
-        'general_period_id': fields.many2one('account.period', 'General Period', required=True),
-        'fiscalyear_id': fields.related('general_period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear', readonly=True),
-        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
-    }
-
-    _defaults = {
-        'state': 'draft',
-    }
-
-    _order = "date_start"
-
-    def _check_duration(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        period = self.browse(cr, uid, ids[0], context)
-        if period.date_end < period.date_start \
-        or period.date_start < period.general_period_id.date_start \
-        or period.date_end > period.general_period_id.date_end:
-            return False            
-        return True
-
-    def _check_periods_overlap(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for period in self.browse(cr, uid, ids, context):
-            domain = [
-                ('id', '<>', period.id),
-                '|', '|',
-                '&', ('date_start', '>=', period.date_start), ('date_start', '<=', period.date_end),
-                '&', ('date_end', '>=', period.date_start), ('date_end', '<=', period.date_end),
-                '&', ('date_start', '<=', period.date_start), ('date_end', '>=', period.date_end),
-            ]
-            if self.search(cr, uid, domain, context=context):
-                return False
-        return True
-
-    _constraints = [
-        (_check_duration, 'The duration of the period is invalid or the period dates are not in the scope of the account period!', ['date_start', 'date_end']),
-        (_check_periods_overlap, 'Some periods overlap!', ['date_start', 'date_end']),
-    ]
-
-    def get_period_id_from_date(self, cr, uid, date=False, context=None):
-        date = date or time.strftime('%Y-%m-%d')
-        period_id = self.search(cr, uid, [('date_start', '<=', date), ('date_end', '>=', date)], limit=1, context=context)
-        if not period_id:
-            return False
-        if self.read(cr, uid, period_id[0], ['state'], context)['state'] == 'done':
-            raise osv.except_osv(_('Error'), _('You cannot pass a journal entry in a period closed!'))
-        return period_id[0]
-AnalyticPeriod()
 
 class AnalyticLine(osv.osv):
     _inherit = 'account.analytic.line'
@@ -91,7 +30,7 @@ class AnalyticLine(osv.osv):
         super(AnalyticLine, self).__init__(pool, cr)
         self._unicity_fields = [field for field in self._columns \
             if self._columns[field]._type not in ('one2many', 'many2many') \
-            and field not in ('name', 'code', 'ref', 'date', 'period_id', \
+            and field not in ('name', 'code', 'ref', 'date', 'create_period_id', \
                               'amount', 'unit_amount', 'amount_currency', \
                               'currency_id', 'move_id')]
 
@@ -105,12 +44,9 @@ class AnalyticLine(osv.osv):
         return res
 
     _columns = {
-        'type': fields.selection([('actual', 'Actual'), ('forecast', 'Forecast')], 'Type', required=True),
-        'period_id': fields.many2one('account.analytic.period', 'Period', domain=[('state', '!=', 'done')]),
-        'analysis_period_id': fields.function(_get_period_id, method=True, type='many2one', relation='account.analytic.period', string='Analysis Period', store={
-            'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['date'], 10),
-        }),
         'active': fields.boolean('Active'),
+        'type': fields.selection([('actual', 'Actual'), ('forecast', 'Forecast')], 'Type', required=True),
+        'create_period_id': fields.many2one('account.analytic.period', 'Create Period', domain=[('state', '!=', 'done')]),
     }
 
     def _get_default_period_id(self, cr, uid, context=None):
@@ -119,14 +55,14 @@ class AnalyticLine(osv.osv):
     _defaults = {
         'active': True,
         'type': 'actual',
-        'period_id': _get_default_period_id,
+        'create_period_id': _get_default_period_id,
     }
 
-    def _check_period(self, cr, uid, ids, context=None):
+    def _check_create_period(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for line in self.browse(cr, uid, ids, context):
-            if line.period_id.state == 'done':
+            if line.create_period_id.state == 'done':
                 return False
         return True
 
@@ -135,7 +71,7 @@ class AnalyticLine(osv.osv):
             ids = [ids]
         operator_ = entry_type == 'actual' and '__gt__' or '__lt__'
         for line in self.browse(cr, uid, ids, context):
-            if line.analysis_period_id and getattr(line.analysis_period_id.date_start, operator_)(time.strftime('%Y-%m-%d')) and line.type == entry_type:
+            if line.period_id and getattr(line.period_id.date_start, operator_)(time.strftime('%Y-%m-%d')) and line.type == entry_type:
                 return False
         return True
 
@@ -146,9 +82,9 @@ class AnalyticLine(osv.osv):
         return self._check_type_from_analysis_period(cr, uid, ids, 'forecast', context)
     
     _constraints = [
-        (_check_period, 'You cannot pass/update a journal entry in a period closed!', ['period_id']),
-        (_check_actual_from_analysis_period, 'You cannot pass an actual entry in a future period!', ['type', 'period']),
-        (_check_forecast_from_analysis_period, 'You cannot pass a forecast entry in a past period!', ['type', 'period']),
+        (_check_create_period, 'You cannot pass/update a journal entry in a period closed!', ['create_period_id']),
+        (_check_actual_from_analysis_period, 'You cannot pass an actual entry in a future period!', ['type', 'create_period_id']),
+        (_check_forecast_from_analysis_period, 'You cannot pass a forecast entry in a past period!', ['type', 'create_period_id']),
     ]
 
     def _deactivate_old_forecast_lines(self, cr, uid, ids, context=None):
@@ -165,9 +101,9 @@ class AnalyticLine(osv.osv):
             for field in unicity_fields:
                 value = isinstance(line[field], tuple) and line[field][0] or line[field]
                 domain.append((field, '=', value))
-            key_line_ids = self.search(cr, uid, domain, order='period_id desc, type asc', context=context)
+            key_line_ids = self.search(cr, uid, domain, order='create_period_id desc, type asc', context=context)
             no_actual_lines = 1
-            for index, key_line in enumerate(self.read(cr, uid, key_line_ids, ['period_id', 'type'], context)):
+            for index, key_line in enumerate(self.read(cr, uid, key_line_ids, ['type'], context)):
                 if key_line['type'] == 'actual':
                     no_actual_lines = 0
                 if key_line['type'] == 'forecast':

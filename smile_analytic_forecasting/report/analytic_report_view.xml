@@ -12,8 +12,8 @@
                 <form string="Analytic Forecasting Analysis">
                     <field name="measure"/>
                     <field name="x_axis"/>
+                    <field name="create_period_ids"/>
                     <field name="period_ids"/>
-                    <field name="analysis_period_ids"/>
                     <field name="field_ids"/>
                     <button string="Open Window" name="button_open_window" type="object" colspan="4"/>
                 </form>

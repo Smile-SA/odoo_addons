@@ -27,16 +27,16 @@ class AnalyticForecastingWizard(osv.osv_memory):
     _description = 'Analytic Forecasting Wizard'
 
     _columns = {
-        'period_ids': fields.dummy(type='many2many', relation='account.analytic.period', string="Reference Periods", required=True),
-        'analysis_period_ids': fields.dummy(type='many2many', relation='account.analytic.period', string="Analysis Periods", required=True),
+        'create_period_ids': fields.dummy(type='many2many', relation='account.analytic.period', string="Reference Periods", required=True),
+        'period_ids': fields.dummy(type='many2many', relation='account.analytic.period', string="Analysis Periods", required=True),
         'field_ids': fields.dummy(type='many2many', relation='ir.model.fields', string="Visible Fields", domain=[
             ('model', '=', 'account.analytic.line'),
             ('name', 'not in', ('period_id', 'analysis_period_id', 'type')),
             ('ttype', '!=', 'float'),
         ]),
         'x_axis': fields.selection([
-            ('analysis_period_ids', 'Analysis Periods'),
-            ('period_ids', 'Reference Periods'),
+            ('period_ids', 'Analysis Periods'),
+            ('create_period_ids', 'Reference Periods'),
         ], "X-axis", required=True),
         'measure': fields.selection([
             ('amount', 'Amount'),
@@ -47,7 +47,7 @@ class AnalyticForecastingWizard(osv.osv_memory):
 
     _defaults = {
         'measure': 'amount',
-        'x_axis': 'analysis_period_id',
+        'x_axis': 'period_ids',
     }
 
     def create(self, cr, uid, vals, context=None):
@@ -75,7 +75,7 @@ class AnalyticForecastingWizard(osv.osv_memory):
         }
 AnalyticForecastingWizard()
 
-PERIOD_FIELDS = ['period_id', 'analysis_period_id']
+PERIOD_FIELDS = ['create_period_id', 'period_id']
 
 def _get_period_ids_for_dynamic_columns(context):
     return context[context['x_axis']]
@@ -128,11 +128,11 @@ class AnalyticForecastingReport(osv.osv):
         fields_to_read = []
         analysis_period_fields = []
         for field in fields:
-            if field.startswith('analysis_period_'):
+            if field.startswith('period_'):
                 analysis_period_fields.append(field)
             else:
                 fields_to_read.append(field)
-        fields_to_read.append('analysis_period_id')
+        fields_to_read.append('period_id')
         measures = []
         if context.get('measure'):
             if context['measure'] == 'ratio':
@@ -143,11 +143,11 @@ class AnalyticForecastingReport(osv.osv):
         res = self.pool.get(self._inherit).read(cr, uid, ids, fields_to_read, context, load)
         for index, line_vals in enumerate(res):
             for field in analysis_period_fields:
-                if field == 'analysis_period_%s' % line_vals['analysis_period_id'][0]:
+                if field == 'period_%s' % line_vals['period_id'][0]:
                     line_vals[field] = line_vals[measures[0]] * line_vals.get(len(measures) > 1 and measures[1], 1.0)
                 else:
                     line_vals[field] = 0.0
-            for field_to_remove in ['analysis_period_id'] + measures:
+            for field_to_remove in ['period_id'] + measures:
                 del line_vals[field_to_remove]
             res[index] = line_vals
         return res
