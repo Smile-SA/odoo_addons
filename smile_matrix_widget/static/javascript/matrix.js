@@ -163,4 +163,9 @@ $(document).ready(function(){
         });
     });
 
+    // Activate the experimental timeline slider
+    $(".matrix.slider").each(function(){
+        // TODO
+    });
+
 });

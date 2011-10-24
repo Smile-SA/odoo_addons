@@ -50,6 +50,8 @@ class matrix(fields.dummy):
         new_row_source_type = self.__dict__.get('new_row_source_type', None)
         # Get the property of line from which we derive the matrix row UID
         row_uid_source = self.__dict__.get('row_uid_source', None)
+        # Additional classes can be manually added
+        css_class = self.__dict__.get('css_class', [])
 
         # Check that all required parameters are there
         for p_name in ['line_source', 'cell_source', 'date_range_source']:
@@ -125,12 +127,16 @@ class matrix(fields.dummy):
                 })
 
             # Pack all data required to render the matrix
-            matrix_list.update({
-                base_object.id: {
-                    'matrix_data': matrix_data,
-                    'date_range': date_range,
-                    'new_row_list': new_row_list,
-                    'column_date_label_format': date_format,
-                    }
-                })
+            matrix_def = {
+                'matrix_data': matrix_data,
+                'date_range': date_range,
+                'new_row_list': new_row_list,
+                'column_date_label_format': date_format,
+                'class': css_class
+                }
+
+            if self.__dict__.get('experimental_slider', False):
+                matrix_def['class'] = matrix_def['class'] + ['slider']
+
+            matrix_list.update({base_object.id: matrix_def})
         return matrix_list

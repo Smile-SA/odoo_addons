@@ -39,6 +39,8 @@ class smile_activity_workload(osv.osv):
             date_range_source='project_id',
             date_format='%m/%y',
             new_row_source_type='smile.activity.profile',
+            css_class=['workload'],
+            experimental_slider=True,
             string="Workload lines",
             readonly=False,
             ),

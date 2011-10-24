@@ -89,7 +89,7 @@
 </%def>
 
 
-<div class="matrix ${value.get('class', None)}">
+<div class="matrix ${' '.join(value.get('class', []))}">
 
     %if type(value) == type({}) and 'date_range' in value:
 
