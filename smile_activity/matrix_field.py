@@ -87,7 +87,8 @@ class matrix(fields.dummy):
 
 
 class multiline_matrix(fields.dummy):
-    """ A custom field to prepare data for, and mangle data from, the matrix widget
+    """ A custom field to prepare data for, and mangle data from, the matrix widget.
+        TODO: merge this field definition with the one above and let all matrix options be passed as parameter for high configurability
     """
 
     def date_to_str(self, date):
