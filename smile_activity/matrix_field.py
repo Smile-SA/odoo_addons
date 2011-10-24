@@ -43,7 +43,7 @@ class matrix(fields.dummy):
             matrix_data = []
             # Get the list of all objects new rows of the matrix can be linked to
             p = parent_obj.pool.get('smile.activity.project')
-            new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [('value_type', '=', 'float'), ('required', '=', False)], context=context), context)]
+            new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [('value_type', '=', 'float')], context=context), context)]
             # Get the list of all dates (active and inactive) composing the period
             date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.activity.period').get_date_range(parent_obj.period_id)]
             # Browse all lines that will compose our matrix
@@ -117,6 +117,7 @@ class multiline_matrix(fields.dummy):
         matrix_list = {}
         for base_object in obj.browse(cr, uid, ids, context):
             matrix_data = []
+
             # Get the list of all objects new rows of the matrix can be linked to
             p = base_object.pool.get('smile.activity.profile')
             new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)]
