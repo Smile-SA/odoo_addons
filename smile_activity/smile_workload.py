@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
-from matrix_field import multiline_matrix
+from matrix_field import matrix
 
 
 
@@ -33,7 +33,7 @@ class smile_activity_workload(osv.osv):
         'start_date': fields.related('project_id', 'start_date', type='date', string="Start date", readonly=True),
         'end_date': fields.related('project_id', 'end_date', type='date', string="End date", readonly=True),
         'line_ids': fields.one2many('smile.activity.workload.line', 'workload_id', "Workload lines"),
-        'matrix_line_ids': multiline_matrix(
+        'matrix_line_ids': matrix(
             line_source='line_ids',
             cell_source='cell_ids',
             date_range_source='project_id',

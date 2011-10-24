@@ -36,7 +36,16 @@ class smile_activity_report(osv.osv):
         'start_date': fields.related('period_id', 'start_date', type='date', string="Start date", readonly=True),
         'end_date': fields.related('period_id', 'end_date', type='date', string="End date", readonly=True),
         'line_ids': fields.one2many('smile.activity.report.line', 'report_id', "Activity lines"),
-        'matrix_line_ids': matrix('line_ids', 'cell_ids', string="Activity report lines", readonly=False),
+        'matrix_line_ids': matrix(
+            line_source='line_ids',
+            cell_source='cell_ids',
+            date_range_source='period_id',
+            date_format='%d',
+            new_row_source_type='smile.activity.project',
+            row_uid_source='project_id',
+            string="Activity report lines",
+            readonly=False,
+            ),
         }
 
 

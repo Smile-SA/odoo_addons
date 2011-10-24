@@ -88,6 +88,29 @@ class smile_activity_period(osv.osv):
             res[period.id] = self.pool.get('smile.activity.period.line').search(cr, uid, [('period_id', '=', period.id), ('active_day', '=', True)], context=context)
         return res
 
+    def _get_day_range(self, cr, uid, ids, name, arg, context=None):
+        """ Get a list of date objects covering the given date range
+        """
+        result = {}
+        for period in self.browse(cr, uid, ids, context):
+            day_range = []
+            start_date = self._str_to_date(period.start_date)
+            end_date = self._str_to_date(period.end_date)
+            date = start_date
+            while date <= end_date:
+                day_range.append(date)
+                date = date + datetime.timedelta(days=1)
+            result[period.id] = [(d, d) for d in day_range]
+        return result
+
+    def _get_active_day_range(self, cr, uid, ids, name, arg, context=None):
+        """ Get a list of active date objects covering the given date range
+        """
+        res = {}
+        for period in self.browse(cr, uid, ids, context):
+            res[period.id] = [(l.date, l.date) for l in period.active_line_ids]
+        return res
+
 
     ## Object fields definition
 
@@ -99,6 +122,10 @@ class smile_activity_period(osv.osv):
         'line_ids': fields.one2many('smile.activity.period.line', 'period_id', "Period lines"),
         'active_line_ids': fields.function(_get_active_line_ids, string="Active lines", type='one2many', relation='smile.activity.period.line', method=True),
         'report_ids': fields.one2many('smile.activity.report', 'period_id', "Activity reports", readonly=True),
+        # date_range is a requirement for the matrix widget
+        'date_range': fields.function(_get_day_range, string="Day range", type='selection', readonly=True, method=True),
+        # The active_date_range is a matrix widget convention
+        'active_date_range': fields.function(_get_active_day_range, string="Active day range", type='selection', readonly=True, method=True),
         }
 
     _defaults = {
@@ -186,18 +213,6 @@ class smile_activity_period(osv.osv):
 
     ## Custom methods
 
-    def get_date_range(self, period, day_delta=1):
-        """ Get a list of date objects covering the given date range
-        """
-        date_range = []
-        start_date = self._str_to_date(period.start_date)
-        end_date = self._str_to_date(period.end_date)
-        date = start_date
-        while date <= end_date:
-            date_range.append(date)
-            date = date + datetime.timedelta(days=day_delta)
-        return date_range
-
     def update_lines(self, cr, uid, ids, context):
         """ This method create and remove lines to fill the period
         """
@@ -216,7 +231,7 @@ class smile_activity_period(osv.osv):
                 self.pool.get('smile.activity.period.line').unlink(cr, uid, outdated_lines, context)
             # Create missing lines to cover the whole period
             exiting_line_dates = [self._str_to_date(l.date) for l in period.line_ids]
-            for date in self.get_date_range(period):
+            for date in [d[0] for d in period.date_range]:
                 if date not in exiting_line_dates:
                     vals = {
                         'date': date,

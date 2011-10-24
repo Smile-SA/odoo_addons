@@ -140,7 +140,7 @@ $(document).ready(function(){
     // Deduplicate the add line list content with lines in the matrix
     function deduplicate_new_line_selector() {
         var displayed_lines = new Array();
-        $(".matrix tbody tr[id!='line_template']").each(function(){
+        $(".matrix tr[id!='line_template']").each(function(){
             displayed_lines.push(parseInt($(this).attr("id").split("_")[1]));
         });
         $(".matrix #new_row_data option").each(function(){
