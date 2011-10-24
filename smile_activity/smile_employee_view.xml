@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record model="ir.ui.view" id="view_smile_activity_employee_form">
+            <field name="name">smile_activity.view_employee</field>
+            <field name="model">smile.activity.employee</field>
+            <field name="type">form</field>
+            <field name="priority">17</field>
+            <field name="arch" type="xml">
+                <form string="Employee">
+                    <field name="name"/>
+                    <field name="profile_id"/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_smile_activity_employee_tree">
+            <field name="name">smile_activity.view_employee</field>
+            <field name="model">smile.activity.employee</field>
+            <field name="type">tree</field>
+            <field name="priority">17</field>
+            <field name="arch" type="xml">
+                <tree string="Employees">
+                    <field name="name"/>
+                    <field name="profile_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <act_window name="Employee" res_model="smile.activity.employee" id="action_activity_employee_list"/>
+
+        <menuitem id="act_activity_employee_menu" parent="activity_report_menu" action="action_activity_employee_list" sequence="14"/>
+
+    </data>
+</openerp>

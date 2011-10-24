@@ -49,6 +49,8 @@ class smile_activity_workload_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=32),
         'workload_id': fields.many2one('smile.activity.workload', "Workload", required=True, ondelete='cascade'),
+        'profile_id': fields.many2one('smile.activity.profile', "Profile", required=True),
+        'employee_id': fields.many2one('smile.activity.employee', "Employee", required=False),
         }
 
 smile_activity_workload_line()

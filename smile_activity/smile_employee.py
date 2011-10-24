@@ -19,23 +19,16 @@
 #
 ##############################################################################
 
-{
-    "name" : "Smile - Activity",
-    "version" : "0.1",
-    "author" : "Smile",
-    "website": 'http://www.smile.fr',
-    "category" : "Custom",
-    "description": "Smile - Activity",
-    "depends" : ['base'],
-    "init_xml" : [],
-    "update_xml": [
-        'smile_activity_view.xml',
-        'smile_workload_view.xml',
-        'smile_project_view.xml',
-        'smile_period_view.xml',
-        'smile_profile_view.xml',
-        'smile_employee_view.xml',
-    ],
-    "installable": True,
-    "active": False,
-}
+from osv import osv, fields
+
+
+
+class smile_activity_employee(osv.osv):
+    _name = 'smile.activity.employee'
+
+    _columns = {
+        'name': fields.char('Name', size=32, required=True),
+        'profile_id': fields.many2one('smile.activity.profile', "Default profile", required=True),
+        }
+
+smile_activity_employee()

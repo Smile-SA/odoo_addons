@@ -18,9 +18,13 @@
                     <field name="line_ids" colspan="4" nolabel="1">
                         <tree string="Lines">
                             <field name="name"/>
+                            <field name="profile_id"/>
+                            <field name="employee_id"/>
                         </tree>
                         <form string="Lines">
                             <field name="name"/>
+                            <field name="profile_id"/>
+                            <field name="employee_id"/>
                         </form>
                     </field>
                 </form>
