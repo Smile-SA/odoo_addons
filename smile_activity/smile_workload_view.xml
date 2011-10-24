@@ -14,7 +14,7 @@
                     <field name="project_id"/>
                     <field name="end_date"/>
                     <separator string="Workload lines" colspan="4"/>
-                    <field name="matrix_line_ids" colspan="4" widget="multiline_matrix" nolabel="1"/>
+                    <field name="matrix_line_ids" colspan="4" widget="matrix" nolabel="1"/>
                     <field name="line_ids" colspan="4" nolabel="1">
                         <tree string="Lines">
                             <field name="name"/>

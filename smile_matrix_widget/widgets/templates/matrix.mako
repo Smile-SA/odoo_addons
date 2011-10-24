@@ -89,12 +89,13 @@
 </%def>
 
 
-<div class="matrix">
+<div class="matrix ${value.get('class', None)}">
 
     %if type(value) == type({}) and 'date_range' in value:
 
         <%
             lines = value.get('matrix_data', [])
+            column_date_label_format = value.get('column_date_label_format', '%Y-%m-%d')
         %>
 
         %if editable:
@@ -123,7 +124,7 @@
                     <th class="first_column">Line</th>
                     <th></th>
                     %for date in value['date_range']:
-                        <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime('%d')}</th>
+                        <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(column_date_label_format)}</th>
                     %endfor
                     <th class="total">Total</th>
                 </tr>

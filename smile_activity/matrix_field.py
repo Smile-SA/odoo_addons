@@ -77,6 +77,7 @@ class matrix(fields.dummy):
                     'matrix_data': matrix_data,
                     'date_range': date_range,
                     'new_row_list': new_row_list,
+                    'column_date_label_format': '%d',
                     }
                 })
         return matrix_list
@@ -99,9 +100,9 @@ class multiline_matrix(fields.dummy):
         obj_list = obj.browse(cr, uid, ids, context)
         for parent_obj in obj_list:
             matrix_data = []
-            ## Get the list of all objects new rows of the matrix can be linked to
-            #p = parent_obj.pool.get('smile.activity.project')
-            #new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [('value_type', '=', 'float'), ('required', '=', False)], context=context), context)]
+            # Get the list of all objects new rows of the matrix can be linked to
+            p = parent_obj.pool.get('smile.activity.profile')
+            new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)]
 
             # Get the list of all months composing the timeline
             date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.activity.project').get_month_range(parent_obj.project_id)]
@@ -137,7 +138,9 @@ class multiline_matrix(fields.dummy):
                 parent_obj.id: {
                     #'matrix_data': matrix_data,
                     'date_range': date_range,
-                    #'new_row_list': new_row_list,
+                    'new_row_list': new_row_list,
+                    'column_date_label_format': '%m/%y',
+                    'class': 'multiline',
                     }
                 })
         return matrix_list
