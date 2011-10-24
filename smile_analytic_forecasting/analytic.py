@@ -32,46 +32,24 @@ class AnalyticLine(osv.osv):
             if self._columns[field]._type not in ('one2many', 'many2many') \
             and field not in ('name', 'code', 'ref', 'date', 'create_period_id', \
                               'amount', 'unit_amount', 'amount_currency', \
-                              'currency_id', 'move_id')]
-
-    def _get_period_id(self, cr, uid, ids, name, arg, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        res = {}.fromkeys(ids, False)
-        period_obj = self.pool.get('account.analytic.period')
-        for line in self.read(cr, uid, ids, ['date'], context):
-            res[line['id']] = period_obj.get_period_id_from_date(cr, uid, line['date'], context)
-        return res
+                              'currency_id', 'move_id', 'user_id', 'active', 'type')]
 
     _columns = {
         'active': fields.boolean('Active'),
         'type': fields.selection([('actual', 'Actual'), ('forecast', 'Forecast')], 'Type', required=True),
-        'create_period_id': fields.many2one('account.analytic.period', 'Create Period', domain=[('state', '!=', 'done')]),
     }
-
-    def _get_default_period_id(self, cr, uid, context=None):
-        return self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, context=context)
 
     _defaults = {
         'active': True,
         'type': 'actual',
-        'create_period_id': _get_default_period_id,
     }
-
-    def _check_create_period(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for line in self.browse(cr, uid, ids, context):
-            if line.create_period_id.state == 'done':
-                return False
-        return True
 
     def _check_type_from_analysis_period(self, cr, uid, ids, entry_type='actual', context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         operator_ = entry_type == 'actual' and '__gt__' or '__lt__'
         for line in self.browse(cr, uid, ids, context):
-            if line.period_id and getattr(line.period_id.date_start, operator_)(time.strftime('%Y-%m-%d')) and line.type == entry_type:
+            if line.active and line.period_id and getattr(line.period_id.date_start, operator_)(time.strftime('%Y-%m-%d')) and line.type == entry_type:
                 return False
         return True
 
@@ -82,15 +60,15 @@ class AnalyticLine(osv.osv):
         return self._check_type_from_analysis_period(cr, uid, ids, 'forecast', context)
     
     _constraints = [
-        (_check_create_period, 'You cannot pass/update a journal entry in a period closed!', ['create_period_id']),
-        (_check_actual_from_analysis_period, 'You cannot pass an actual entry in a future period!', ['type', 'create_period_id']),
-        (_check_forecast_from_analysis_period, 'You cannot pass a forecast entry in a past period!', ['type', 'create_period_id']),
+        (_check_actual_from_analysis_period, 'You cannot pass an actual entry in a future period!', ['type', 'period_id']),
+        (_check_forecast_from_analysis_period, 'You cannot pass a forecast entry in a past/current period!', ['type', 'period_id']),
     ]
 
     def _deactivate_old_forecast_lines(self, cr, uid, ids, context=None):
         line_ids_to_deactivate = []
         context = context or {}
         context['active_test'] = not context.has_key('ids_to_exclude')
+        context['bypass_forecast_lines_deactivation'] = True
         unicity_fields = self._unicity_fields
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -118,11 +96,13 @@ class AnalyticLine(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(AnalyticLine, self).write(cr, uid, ids, vals, context)
-        unicity_fields = self._unicity_fields + ['period_id', 'type']
-        for field in vals:
-            if field in unicity_fields:
-                self._deactivate_old_forecast_lines(cr, uid, ids, context)
-                break
+        context = context or {}
+        if not context.get('bypass_forecast_lines_deactivation'):
+            fields_to_check = self._unicity_fields + ['type']
+            for field in vals:
+                if field in fields_to_check:
+                    self._deactivate_old_forecast_lines(cr, uid, ids, context)
+                    break
         return res
 
     def unlink(self, cr, uid, ids, context=None):
