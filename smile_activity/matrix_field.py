@@ -42,7 +42,7 @@ class matrix(fields.dummy):
         # Property name from which we get the cells composing the matrix.
         # Cells are fetched from the lines as defined above.
         cell_source = self.__dict__.get('cell_source', None)
-        # Property name of the relation field on which we'll call a get_date_range() method
+        # Property name of the relation field on which we'll call the date_range property
         date_range_source = self.__dict__.get('date_range_source', None)
         # The format we use to display date labels
         date_format = self.__dict__.get('date_format', None)
