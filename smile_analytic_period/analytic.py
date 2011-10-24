@@ -62,10 +62,8 @@ class AnalyticPeriod(osv.osv):
         for period in self.browse(cr, uid, ids, context):
             domain = [
                 ('id', '<>', period.id),
-                '|', '|',
-                '&', ('date_start', '>=', period.date_start), ('date_start', '<=', period.date_stop),
-                '&', ('date_stop', '>=', period.date_start), ('date_stop', '<=', period.date_stop),
-                '&', ('date_start', '<=', period.date_start), ('date_stop', '>=', period.date_stop),
+                ('date_start', '<=', period.date_stop),
+                ('date_stop', '>=', period.date_start),
             ]
             if self.search(cr, uid, domain, context=context):
                 return False
@@ -78,12 +76,12 @@ class AnalyticPeriod(osv.osv):
 
     def get_period_id_from_date(self, cr, uid, date=False, context=None):
         date = date or time.strftime('%Y-%m-%d')
-        period_id = self.search(cr, uid, [('date_start', '<=', date), ('date_stop', '>=', date)], limit=1, context=context)
-        if not period_id:
+        period_ids = self.search(cr, uid, [('date_start', '<=', date), ('date_stop', '>=', date)], limit=1, context=context)
+        if not period_ids:
             return False
-        if self.read(cr, uid, period_id[0], ['state'], context)['state'] == 'done':
+        if self.read(cr, uid, period_ids[0], ['state'], context)['state'] == 'done':
             raise osv.except_osv(_('Error'), _('You cannot pass a journal entry in a period closed!'))
-        return period_id[0]
+        return period_ids[0]
 
     def get_next_period_id(self, cr, uid, period_id, state=None, context=None):
         if not isinstance(period_id, (int, long)):
@@ -131,6 +129,6 @@ class AnalyticLine(osv.osv):
         return True
 
     _constraints = [
-        (_check_create_period, 'You cannot pass/update a journal entry in a period closed!', ['create_period_id']),
+        (_check_create_period, 'You cannot pass/update a journal entry in a closed period!', ['create_period_id']),
     ]
 AnalyticLine()

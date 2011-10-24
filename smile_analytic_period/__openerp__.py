@@ -26,7 +26,10 @@
     "website" : "http://www.smile.fr",
     "category" : "Generic Modules/Accounting",
     "depends" : ["account"],
-    "description": """Define an analytic period""",
+    "description": """Define an analytic period
+
+Development in progress
+    """,
     "init_xml" : [
         'security/ir.model.access.csv',
     ],

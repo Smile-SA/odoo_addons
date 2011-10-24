@@ -35,13 +35,12 @@ class AccountFiscalyear(osv.osv):
             if not fiscalyear.period_ids:
                 raise osv.except_osv(_('Error'), _('Please, create general periods before analytic ones!'))
             date_start = datetime.strptime(fiscalyear.date_start, '%Y-%m-%d')
-            while date_start.strftime('%Y-%m-%d') < fiscalyear.date_stop:
-                date_stop = date_start + relativedelta(months=interval, days= -1)
-                if date_stop.strftime('%Y-%m-%d') > fiscalyear.date_stop:
-                    date_stop = datetime.strptime(fiscalyear.date_stop, '%Y-%m-%d')
+            fiscalyear_date_stop = datetime.strptime(fiscalyear.date_stop, '%Y-%m-%d')
+            while date_start < fiscalyear_date_stop:
+                date_stop = max(date_start + relativedelta(months=interval, days= -1), fiscalyear_date_stop)
                 general_period_id = self.pool.get('account.period').search(cr, uid, [
-                    ('date_start', '<=', date_start),
-                    ('date_stop', '>=', date_stop),
+                    ('date_start', '<=', date_start.strftime('%Y-%m-%d')),
+                    ('date_stop', '>=', date_stop.strftime('%Y-%m-%d')),
                 ], limit=1, context=context)
                 if not general_period_id:
                     raise osv.except_osv(_('Error'), _('Analytic periods must be shorter than general ones!'))

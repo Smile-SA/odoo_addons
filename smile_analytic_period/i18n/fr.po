@@ -49,7 +49,7 @@ msgstr "Vous ne pouvez pas passer/mettre à jour une écriture sur une période 
 #. module: smile_analytic_period
 #: view:account.fiscalyear:0
 msgid "Create Monthly Analytic Periods"
-msgstr "Créer les périodes analytiques"
+msgstr "Créer des périodes analytiques"
 
 #. module: smile_analytic_period
 #: code:addons/smile_analytic_period/analytic.py:89
