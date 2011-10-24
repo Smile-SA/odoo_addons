@@ -13,6 +13,7 @@
                 <field name="company_id" position="after">
                 	<newline/>
 	                <field name="period_id"/>
+	                <field name="create_period_id"/>
                 </field>
 			</field>
 		</record>
@@ -23,9 +24,14 @@
             <field name="type">tree</field>
 			<field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
-                <field name="user_id" position="after">
-	                <field name="period_id" invisible="1"/>
-                </field>
+				<data>
+	                <field name="date" position="replace">
+		                <field name="period_id"/>
+	                </field>
+					<field name="user_id" position="after">
+		                <field name="create_period_id"/>
+					</field>
+	            </data>
             </field>
         </record>
 

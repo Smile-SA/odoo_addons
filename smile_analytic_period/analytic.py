@@ -27,6 +27,7 @@ from tools.translate import _
 
 class AnalyticPeriod(osv.osv):
     _name = 'account.analytic.period'
+    _description = 'Analytic Period'
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -83,6 +84,16 @@ class AnalyticPeriod(osv.osv):
         if self.read(cr, uid, period_id[0], ['state'], context)['state'] == 'done':
             raise osv.except_osv(_('Error'), _('You cannot pass a journal entry in a period closed!'))
         return period_id[0]
+
+    def get_next_period_id(self, cr, uid, period_id, state=None, context=None):
+        if not isinstance(period_id, (int, long)):
+            raise osv.except_osv(_('Error'), _('Please indicate a period id!'))
+        period = self.read(cr, uid, period_id, ['date_start'], context)
+        domain = [('date_start', '>', period['date_start'])]
+        if state:
+            domain.append(('state', '=', state))
+        next_period_ids = self.search(cr, uid, domain, limit=1, order='date_start asc', context=context)
+        return next_period_ids and next_period_ids[0] or 0
 AnalyticPeriod()
 
 class AnalyticLine(osv.osv):
@@ -101,5 +112,25 @@ class AnalyticLine(osv.osv):
         'period_id': fields.function(_get_period_id, method=True, type='many2one', relation='account.analytic.period', string='Period', store={
             'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['date'], 10),
         }),
+        'create_period_id': fields.many2one('account.analytic.period', 'Create Period', domain=[('state', '!=', 'done')]),
     }
+
+    def _get_default_period_id(self, cr, uid, context=None):
+        return self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, context=context)
+
+    _defaults = {
+        'create_period_id': _get_default_period_id,
+    }
+
+    def _check_create_period(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for line in self.browse(cr, uid, ids, context):
+            if line.create_period_id.state == 'done':
+                return False
+        return True
+
+    _constraints = [
+        (_check_create_period, 'You cannot pass/update a journal entry in a period closed!', ['create_period_id']),
+    ]
 AnalyticLine()
