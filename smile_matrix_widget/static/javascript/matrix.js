@@ -33,8 +33,8 @@ $(document).ready(function(){
                 $button.text(cycling_values[i]);
                 $button.parent().find("input").val(cycling_values[i]);
                 break;
-            }
-        }
+            };
+        };
     });
 
     // Compute float totals
@@ -52,7 +52,7 @@ $(document).ready(function(){
                 $(this).addClass("warning");
             } else {
                 $(this).removeClass("warning");
-            }
+            };
         });
         // Select all fields of the row we clicked in and sum them up
         var row_total = 0;
@@ -122,25 +122,45 @@ $(document).ready(function(){
             // Compute new cell and button ID
             name_fragments = $(this).attr("id").split("_");
             column_index = name_fragments[2];
-            var new_cell_id   =        "cell_" + new_row_index + "_" + column_index;
-            var new_button_id = "button_cell_" + new_row_index + "_" + column_index;
+            var new_cell_id = "cell_" + new_row_index + "_" + column_index;
+            var new_button_id = "button_" + new_cell_id;
             // Apply new IDs and reset values
             $(this).attr('id', new_cell_id).attr('name', new_cell_id).val(cycling_values[0]);
             $(this).parent().find(increment_button_selector).first().attr('id', new_button_id).text(cycling_values[0]);
         });
         new_row.find("span[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
+        $(new_row).attr('id', "line_" + row_id);
         new_row.find(".first_column").text(row_name);
         // Insert our new row at the end of the matrix
         last_row.before(new_row.hide());
         new_row.fadeIn('fast');
+        $(deduplicate_new_line_selector());
     });
+
+    // Deduplicate the add line list content with lines in the matrix
+    function deduplicate_new_line_selector() {
+        var displayed_lines = new Array();
+        $(".matrix tbody tr[id!='line_template']").each(function(){
+            displayed_lines.push(parseInt($(this).attr("id").split("_")[1]));
+        });
+        $(".matrix #new_row_data option").each(function(){
+            if ($.inArray(parseInt($(this).val()), displayed_lines) != -1) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            };
+        });
+        $("#new_row_data").val("default");
+    };
+    $(deduplicate_new_line_selector());
 
     // Activate delete row button
     $(".matrix .delete_row").click(function(){
         $(this).parent().parent().fadeOut('fast', function(){
             $(this).remove();
+            $(deduplicate_new_line_selector());
+            // TODO: update column totals
         });
-        // TODO: update column totals
     });
 
 });

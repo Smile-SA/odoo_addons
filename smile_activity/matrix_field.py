@@ -52,6 +52,7 @@ class matrix(fields.dummy):
                 # Transfer some line data to the matrix widget
                 line_data = {
                     'id': line.id,
+                    'uid': line.project_id.id,
                     'name': line.name,
                     'type': line.line_type,
                     'required': line.project_id.required,
@@ -67,6 +68,7 @@ class matrix(fields.dummy):
             # Add a row template at the end
             matrix_data.append({
                 'id': "template",
+                'uid': "template",
                 'name': "Row template",
                 'type': "float",
                 'cells_data': dict([(datetime.datetime.strptime(l.date, '%Y-%m-%d').strftime('%Y%m%d'), 0.0) for l in parent_obj.period_id.active_line_ids]),
@@ -129,6 +131,7 @@ class multiline_matrix(fields.dummy):
             # Add a row template at the end
             matrix_data.append({
                 'id': "template",
+                'uid': "template",
                 'name': "Row template",
                 'type': "float",
                 'cells_data': {},
