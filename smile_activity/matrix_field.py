@@ -125,18 +125,19 @@ class multiline_matrix(fields.dummy):
                     #cells_data[cell_date.strftime('%Y%m%d')] = cell.cell_value
                 #line_data.update({'cells_data': cells_data})
                 #matrix_data.append(line_data)
-            ## Add a row template at the end
-            #matrix_data.append({
-                #'id': "template",
-                #'name': "Row template",
-                #'type': "float",
-                #'cells_data': dict([(datetime.datetime.strptime(l.date, '%Y-%m-%d').strftime('%Y%m%d'), 0.0) for l in parent_obj.period_id.active_line_ids]),
-                #})
+
+            # Add a row template at the end
+            matrix_data.append({
+                'id': "template",
+                'name': "Row template",
+                'type': "float",
+                'cells_data': {},
+                })
 
             # Pack all data required to render the matrix
             matrix_list.update({
                 parent_obj.id: {
-                    #'matrix_data': matrix_data,
+                    'matrix_data': matrix_data,
                     'date_range': date_range,
                     'new_row_list': new_row_list,
                     'column_date_label_format': '%m/%y',
