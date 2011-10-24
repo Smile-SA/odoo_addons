@@ -64,51 +64,65 @@ class AnalyticLine(osv.osv):
         (_check_forecast_from_analysis_period, 'You cannot pass a forecast entry in a past/current period!', ['type', 'period_id']),
     ]
 
-    def _deactivate_old_forecast_lines(self, cr, uid, ids, context=None):
+    def _build_unicity_domain(self, line, domain=None):
+        domain = list(domain or [])
+        for field in self._unicity_fields:
+            value = isinstance(line[field], tuple) and line[field][0] or line[field]
+            domain.append((field, '=', value))
+        return domain
+
+    def _deactivate_old_forecast_lines(self, cr, uid, ids, initial_domain=None, context=None):
         line_ids_to_deactivate = []
         context = context or {}
-        context['active_test'] = not context.has_key('ids_to_exclude')
         context['bypass_forecast_lines_deactivation'] = True
-        unicity_fields = self._unicity_fields
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for line in self.read(cr, uid, ids, unicity_fields, {}):
-            domain = []
-            if context.get('ids_to_exclude'):
-                domain.append(('id', 'not in', context['ids_to_exclude']))
-            for field in unicity_fields:
-                value = isinstance(line[field], tuple) and line[field][0] or line[field]
-                domain.append((field, '=', value))
+        for line in self.read(cr, uid, ids, self._unicity_fields, {}):
+            domain = self._build_unicity_domain(line, initial_domain)
             key_line_ids = self.search(cr, uid, domain, order='create_period_id desc, type asc', context=context)
             no_actual_lines = 1
-            for index, key_line in enumerate(self.read(cr, uid, key_line_ids, ['type'], context)):
-                if key_line['type'] == 'actual':
+            key_line_id_to_type = dict([(line['id'], line['type']) for line in self.read(cr, uid, key_line_ids, ['type'], context)])
+            for index, key_line_id in enumerate(key_line_ids):
+                if key_line_id_to_type[key_line_id] == 'actual':
                     no_actual_lines = 0
-                if key_line['type'] == 'forecast':
+                if key_line_id_to_type[key_line_id] == 'forecast':
                     line_ids_to_deactivate.extend(key_line_ids[index + no_actual_lines:])
                     break
         return self.write(cr, uid, line_ids_to_deactivate, {'active': False}, context)
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(AnalyticLine, self).create(cr, uid, vals, context)
-        self._deactivate_old_forecast_lines(cr, uid, res_id, context)
+        context_copy = dict(context or {})
+        context_copy['active_test'] = True
+        self._deactivate_old_forecast_lines(cr, uid, res_id, context=context_copy)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        res = super(AnalyticLine, self).write(cr, uid, ids, vals, context)
-        context = context or {}
-        if not context.get('bypass_forecast_lines_deactivation'):
-            fields_to_check = self._unicity_fields + ['type']
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        if context and not context.get('bypass_forecast_lines_deactivation'):
+            context_copy = dict(context or {})
+            context_copy['active_test'] = False
+            vals = vals or {}
             for field in vals:
-                if field in fields_to_check:
-                    self._deactivate_old_forecast_lines(cr, uid, ids, context)
+                if field in self._unicity_fields:
+                    self._deactivate_old_forecast_lines(cr, uid, ids, [('id', 'not in', ids)], context_copy)
+                    break
+        res = super(AnalyticLine, self).write(cr, uid, ids, vals, context)
+        if context and not context.get('bypass_forecast_lines_deactivation'):
+            context_copy = dict(context or {})
+            context_copy['active_test'] = False
+            for field in vals:
+                if field in self._unicity_fields + ['type']:
+                    self._deactivate_old_forecast_lines(cr, uid, ids, context=context_copy)
                     break
         return res
 
     def unlink(self, cr, uid, ids, context=None):
-        context = context or {}
-        context['ids_to_exclude'] = isinstance(ids, (int, long)) and [ids] or ids
-        res = super(AnalyticLine, self).unlink(cr, uid, ids, context)
-        self._deactivate_old_forecast_lines(cr, uid, ids, context)
-        return res
+        context_copy = dict(context or {})
+        context_copy['active_test'] = False
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        self._deactivate_old_forecast_lines(cr, uid, ids, [('id', 'not in', ids)], context_copy)
+        return super(AnalyticLine, self).unlink(cr, uid, ids, context)
 AnalyticLine()

@@ -26,7 +26,10 @@
     "website" : "http://www.smile.fr",
     "category" : "Generic Modules/Accounting",
     "depends" : ["smile_analytic_period"],
-    "description": """Forecasting Analytic Account""",
+    "description": """Forecasting Analytic Account
+
+Development in progress
+	""",
     "init_xml" : [
         'security/ir.model.access.csv',
     ],
