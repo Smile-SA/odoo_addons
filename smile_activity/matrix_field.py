@@ -50,6 +50,7 @@ class matrix(fields.dummy):
         new_row_source_type = self.__dict__.get('new_row_source_type', None)
         # Get the property of line from which we derive the matrix row UID
         row_uid_source = self.__dict__.get('row_uid_source', None)
+
         # Check that all required parameters are there
         for p_name in ['line_source', 'cell_source', 'date_range_source']:
             if not p_name:
@@ -130,7 +131,6 @@ class matrix(fields.dummy):
                     'date_range': date_range,
                     'new_row_list': new_row_list,
                     'column_date_label_format': date_format,
-                    'class': 'multiline',
                     }
                 })
         return matrix_list
