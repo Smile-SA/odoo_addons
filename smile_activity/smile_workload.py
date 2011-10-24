@@ -38,6 +38,7 @@ class smile_activity_workload(osv.osv):
             cell_source='cell_ids',
             date_range_source='project_id',
             date_format='%m/%y',
+            new_row_source_type='smile.activity.profile',
             string="Workload lines",
             readonly=False,
             ),

@@ -108,6 +108,8 @@ class multiline_matrix(fields.dummy):
         date_range_source = self.__dict__.get('date_range_source', None)
         # The format we use to display date labels
         date_format = self.__dict__.get('date_format', None)
+        # The object type we use to create new rows
+        new_row_source_type = self.__dict__.get('new_row_source_type', None)
         # Check that all required parameters are there
         for p_name in ['line_source', 'cell_source', 'date_range_source']:
             if not p_name:
@@ -119,8 +121,10 @@ class multiline_matrix(fields.dummy):
             matrix_data = []
 
             # Get the list of all objects new rows of the matrix can be linked to
-            p = base_object.pool.get('smile.activity.profile')
-            new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)]
+            new_row_list = []
+            if new_row_source_type:
+                p = base_object.pool.get(new_row_source_type)
+                new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)]
 
             # Get the date range composing the timeline
             date_range_source_object = getattr(base_object, date_range_source, None)
