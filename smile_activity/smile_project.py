@@ -29,22 +29,6 @@ from osv import osv, fields
 class smile_activity_project(osv.osv):
     _name = 'smile.activity.project'
 
-    _columns = {
-        'name': fields.char('Name', size=32),
-        'value_type': fields.selection([
-            ('float', 'Float'),
-            ('boolean', 'Boolean'),
-            ], 'Value type', select=True, required=True),
-        'required': fields.boolean('Required in report'),
-        'start_date': fields.date('Start', required=True),
-        'end_date': fields.date('End', required=True),
-        }
-
-    _defaults = {
-        'value_type': 'float',
-        'required': False,
-        }
-
 
     ## Utility methods
 
@@ -62,19 +46,43 @@ class smile_activity_project(osv.osv):
         return (self._get_month_start(date) + relativedelta(months=1)) - datetime.timedelta(days=1)
 
 
-    ## Custom methods
+    ## Function fields
 
-    def get_month_range(self, project):
+    def _get_month_range(self, cr, uid, ids, name, arg, context=None):
         """ Get a list of date objects set to the first day of each month covering date range of the project.
-            XXX It may make sense later to link the project to a set of smile.activity.period objects instead.
+            XXX It may make sense later to link the project to a set of smile.activity.period objects instead. This proposition has to be carefully evaluated.
         """
-        date_range = []
-        range_start = self._get_month_start(self._str_to_date(project.start_date))
-        range_end   = self._get_month_end(self._str_to_date(project.end_date))
-        date = range_start
-        while date <= range_end:
-            date_range.append(date)
-            date = date + relativedelta(months=1)
-        return date_range
+        result = {}
+        for project in self.browse(cr, uid, ids, context):
+            month_range = []
+            range_start = self._get_month_start(self._str_to_date(project.start_date))
+            range_end   = self._get_month_end(self._str_to_date(project.end_date))
+            date = range_start
+            while date <= range_end:
+                month_range.append(date)
+                date = date + relativedelta(months=1)
+            result[project.id] = [(m, m) for m in month_range]
+        return result
+
+
+    ## Fields definition
+
+    _columns = {
+        'name': fields.char('Name', size=32),
+        'value_type': fields.selection([
+            ('float', 'Float'),
+            ('boolean', 'Boolean'),
+            ], 'Value type', select=True, required=True),
+        'required': fields.boolean('Required in report'),
+        'start_date': fields.date('Start', required=True),
+        'end_date': fields.date('End', required=True),
+        # date_range is a requirement for the matrix widget
+        'date_range': fields.function(_get_month_range, string="Month range", type='selection', readonly=True, method=True),
+        }
+
+    _defaults = {
+        'value_type': 'float',
+        'required': False,
+        }
 
 smile_activity_project()

@@ -97,21 +97,44 @@ class multiline_matrix(fields.dummy):
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
         """
-        line_ids_property_name = args[0]
-        #cell_ids_property_name = args[1]
+        # Get the matrix parameters
+        # XXX Haven't found a cleaner way to get my matrix parameters... Any help is welcome ! :)
+        # Property name from which we get the lines composing the matrix
+        line_source = self.__dict__.get('line_source', None)
+        # Property name from which we get the cells composing the matrix.
+        # Cells are fetched from the lines as defined above.
+        cell_source = self.__dict__.get('cell_source', None)
+        # Property name of the relation field on which we'll call a get_date_range() method
+        date_range_source = self.__dict__.get('date_range_source', None)
+        # The format we use to display date labels
+        date_format = self.__dict__.get('date_format', None)
+        # Check that all required parameters are there
+        for p_name in ['line_source', 'cell_source', 'date_range_source']:
+            if not p_name:
+                raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
+
+        # Browse through all objects on which our matrix field is defined
         matrix_list = {}
-        obj_list = obj.browse(cr, uid, ids, context)
-        for parent_obj in obj_list:
+        for base_object in obj.browse(cr, uid, ids, context):
             matrix_data = []
             # Get the list of all objects new rows of the matrix can be linked to
-            p = parent_obj.pool.get('smile.activity.profile')
+            p = base_object.pool.get('smile.activity.profile')
             new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)]
 
-            # Get the list of all months composing the timeline
-            date_range = [self.date_to_str(d) for d in parent_obj.pool.get('smile.activity.project').get_month_range(parent_obj.project_id)]
+            # Get the date range composing the timeline
+            date_range_source_object = getattr(base_object, date_range_source, None)
+            if not date_range_source_object:
+                raise osv.except_osv('Error !', "%r has no %s property." % (base_object, date_range_source))
+            date_range = getattr(date_range_source_object, 'date_range', None)
+            if date_range is None:
+                raise osv.except_osv('Error !', "%r has no date_range property." % date_range_source_object)
+            if type(date_range) is not type([]):
+                raise osv.except_osv('Error !', "date_range must return data that looks like selection field data.")
+            # Format our date range for our matrix
+            date_range = [self.date_to_str(d) for (d, l) in date_range]
 
             ## Browse all lines that will compose our matrix
-            #lines = getattr(parent_obj, line_ids_property_name, [])
+            #lines = getattr(base_object, line_source, [])
             #for line in lines:
                 ## Transfer some line data to the matrix widget
                 #line_data = {
@@ -121,7 +144,7 @@ class multiline_matrix(fields.dummy):
                     #'required': line.project_id.required,
                     #}
                 ## Get all cells of the line
-                #cells = getattr(line, cell_ids_property_name, [])
+                #cells = getattr(line, cell_source, [])
                 #cells_data = {}
                 #for cell in cells:
                     #cell_date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
@@ -140,11 +163,11 @@ class multiline_matrix(fields.dummy):
 
             # Pack all data required to render the matrix
             matrix_list.update({
-                parent_obj.id: {
+                base_object.id: {
                     'matrix_data': matrix_data,
                     'date_range': date_range,
                     'new_row_list': new_row_list,
-                    'column_date_label_format': '%m/%y',
+                    'column_date_label_format': date_format,
                     'class': 'multiline',
                     }
                 })

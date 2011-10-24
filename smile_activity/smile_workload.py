@@ -34,9 +34,13 @@ class smile_activity_workload(osv.osv):
         'end_date': fields.related('project_id', 'end_date', type='date', string="End date", readonly=True),
         'line_ids': fields.one2many('smile.activity.workload.line', 'workload_id', "Workload lines"),
         'matrix_line_ids': multiline_matrix(
-            'line_ids',
-            #'cell_ids',
-            string="Workload lines", readonly=False),
+            line_source='line_ids',
+            cell_source='cell_ids',
+            date_range_source='project_id',
+            date_format='%m/%y',
+            string="Workload lines",
+            readonly=False,
+            ),
         }
 
 smile_activity_workload()
