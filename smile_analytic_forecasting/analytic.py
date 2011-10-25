@@ -26,16 +26,37 @@ from osv import osv, fields
 class AnalyticLine(osv.osv):
     _inherit = 'account.analytic.line'
 
-    def __init__(self, pool, cr):
-        super(AnalyticLine, self).__init__(pool, cr)
-        self._unicity_fields = [field for field in self._columns \
+    def _sort_unicity_fields(self, unicity_fields):
+        ordered_list = []
+        for field in unicity_fields:
+            if self._columns[field].required:
+                ordered_list.insert(0, field)
+            else:
+                ordered_list.append(field)
+        return ordered_list
+
+    def _update_index(self, cr, unicity_fields):
+        unicity_fields = self._sort_unicity_fields(unicity_fields)
+        cr.execute("SELECT count(0) FROM pg_class WHERE relname = 'account_analytic_line_multi_columns_index'")
+        exists = cr.fetchone()
+        if not exists:
+            cr.execute('CREATE INDEX account_analytic_line_multi_columns_index '\
+		               'ON account_analytic_line (%s)' % ','.join(unicity_fields))
+
+    def _get_unicity_fields(self):
+        return [field for field in self._columns \
             if self._columns[field]._type not in ('one2many', 'many2many') \
             and field not in ('name', 'code', 'ref', 'date', 'create_period_id', \
                               'amount', 'unit_amount', 'amount_currency', \
                               'currency_id', 'move_id', 'user_id', 'active', 'type')]
 
+    def __init__(self, pool, cr):
+        super(AnalyticLine, self).__init__(pool, cr)
+        self._unicity_fields = self._get_unicity_fields()
+        self._update_index(cr, self._unicity_fields)
+
     _columns = {
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', readonly=True),
         'type': fields.selection([('actual', 'Actual'), ('forecast', 'Forecast')], 'Type', required=True),
     }
 
@@ -86,6 +107,8 @@ class AnalyticLine(osv.osv):
                 if key_line_id_to_type[key_line_id] == 'actual':
                     no_actual_lines = 0
                 if key_line_id_to_type[key_line_id] == 'forecast':
+                    if context.get('forecast_line_to_activate') and no_actual_lines:
+                        self.write(cr, uid, key_line_id, {'active': True}, context)
                     line_ids_to_deactivate.extend(key_line_ids[index + no_actual_lines:])
                     break
         return self.write(cr, uid, line_ids_to_deactivate, {'active': False}, context)
@@ -103,6 +126,7 @@ class AnalyticLine(osv.osv):
         if context and not context.get('bypass_forecast_lines_deactivation'):
             context_copy = dict(context or {})
             context_copy['active_test'] = False
+            context_copy['forecast_line_to_activate'] = True
             vals = vals or {}
             for field in vals:
                 if field in self._unicity_fields:
