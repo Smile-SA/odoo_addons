@@ -47,7 +47,7 @@ class AnalyticLine(osv.osv):
         return [field for field in self._columns \
             if self._columns[field]._type not in ('one2many', 'many2many') \
             and field not in ('name', 'code', 'ref', 'date', 'create_period_id', \
-                              'amount', 'unit_amount', 'amount_currency', \
+                              'amount', 'unit_amount', 'amount_currency', 'product_uom_id', \
                               'currency_id', 'move_id', 'user_id', 'active', 'type')]
 
     def __init__(self, pool, cr):
