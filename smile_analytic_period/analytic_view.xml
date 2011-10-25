@@ -51,7 +51,7 @@
                     <field name="fiscalyear_id"/>
                     <separator colspan="4" string="States"/>
                     <field name="state"/>
-		   			<button name="action_close" type="object" string="Close" colspan="2" icon="terp-camera_test"/>
+		   			<button name="action_close" type="object" string="Close" colspan="2" icon="terp-camera_test" states="draft"/>
                 </form>
             </field>
         </record>
@@ -69,7 +69,7 @@
                     <field name="general_period_id" widget="selection"/>
                     <field name="fiscalyear_id"/>
                     <field name="state"/>
-		    		<button name="action_close" type="object" string="Close" icon="terp-camera_test"/>
+		    		<button name="action_close" type="object" string="Close" icon="terp-camera_test" states="draft"/>
                 </tree>
             </field>
         </record>
