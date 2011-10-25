@@ -34,7 +34,7 @@ class AnalyticPeriod(osv.osv):
         'code': fields.char('Code', size=12),
         'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly', True)]}),
         'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly', True)]}),
-        'state': fields.selection([('draft', 'Opened'), ('done', 'Closed')], 'State', required=True),
+        'state': fields.selection([('draft', 'Opened'), ('done', 'Closed')], 'State', required=True, readonly=True),
         'general_period_id': fields.many2one('account.period', 'General Period', required=True),
         'fiscalyear_id': fields.related('general_period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear', readonly=True),
         'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
