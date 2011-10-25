@@ -15,8 +15,8 @@
 	                <field name="period_id"/>
 	                <field name="create_period_id"/>
                 </field>
-	    </field>
-	</record>
+		    </field>
+		</record>
 
         <record id="view_account_analytic_line_tree" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.inherit</field>
@@ -24,14 +24,14 @@
             <field name="type">tree</field>
 			<field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
-		<data>
+				<data>
 	                <field name="date" position="replace">
 		                <field name="period_id"/>
 	                </field>
-			<field name="user_id" position="after">
+					<field name="user_id" position="after">
 		                <field name="create_period_id"/>
-			</field>
-	        </data>
+					</field>
+	        	</data>
             </field>
         </record>
 
@@ -51,7 +51,7 @@
                     <field name="fiscalyear_id"/>
                     <separator colspan="4" string="States"/>
                     <field name="state"/>
-		    <button name="action_close" type="object" string="Close" colspan="2" icon="terp-camera_test"/>
+		   			<button name="action_close" type="object" string="Close" colspan="2" icon="terp-camera_test"/>
                 </form>
             </field>
         </record>
@@ -69,7 +69,7 @@
                     <field name="general_period_id" widget="selection"/>
                     <field name="fiscalyear_id"/>
                     <field name="state"/>
-		    <button name="action_close" type="object" string="Close" icon="terp-camera_test"/>
+		    		<button name="action_close" type="object" string="Close" icon="terp-camera_test"/>
                 </tree>
             </field>
         </record>

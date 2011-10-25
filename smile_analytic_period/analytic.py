@@ -94,7 +94,7 @@ class AnalyticPeriod(osv.osv):
         return next_period_ids and next_period_ids[0] or 0
 
     def action_close(self, cr, uid, ids, context=None):
-	return self.write(cr, uid, ids, {'state': 'done'}, context)
+        return self.write(cr, uid, ids, {'state': 'done'}, context)
 AnalyticPeriod()
 
 class AnalyticLine(osv.osv):
