@@ -37,7 +37,7 @@ class AccountFiscalyear(osv.osv):
             date_start = datetime.strptime(fiscalyear.date_start, '%Y-%m-%d')
             fiscalyear_date_stop = datetime.strptime(fiscalyear.date_stop, '%Y-%m-%d')
             while date_start < fiscalyear_date_stop:
-                date_stop = max(date_start + relativedelta(months=interval, days= -1), fiscalyear_date_stop)
+                date_stop = min(date_start + relativedelta(months=interval, days= -1), fiscalyear_date_stop)
                 general_period_id = self.pool.get('account.period').search(cr, uid, [
                     ('date_start', '<=', date_start.strftime('%Y-%m-%d')),
                     ('date_stop', '>=', date_stop.strftime('%Y-%m-%d')),
