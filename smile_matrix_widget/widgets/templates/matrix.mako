@@ -105,7 +105,7 @@
                 %>
                 %if len(new_row_list):
                     <select id="new_row_data" kind="char" name="new_row_data" type2="" operator="=" class="selection_search selection">
-                        <option value="default" selected="selected">&mdash; Select a project in the list &mdash;</option>
+                        <option value="default" selected="selected">&mdash; Select a new line in the list &mdash;</option>
                         %for new_row in new_row_list:
                             <option value="${new_row[0]}">${new_row[1]}</option>
                         %endfor
