@@ -90,8 +90,10 @@ class matrix(fields.dummy):
                 line_data = {
                     'id': line.id,
                     'name': line.name,
-                    'type': line.line_type,
-                    'required': line.project_id.required,
+                    # Is the field a boolean or a float ?
+                    'type': getattr(line, 'line_type', 'float'),
+                    # Is this resource required ?
+                    'required': getattr(getattr(line, line_resource_source), 'required', False),
                     }
 
                 # Get the row UID corresponding to the line
@@ -247,43 +249,40 @@ def matrix_write_patch(func):
             obj.update_cells(cr, uid, ids, context)
         written_lines = []
         for report in obj.browse(cr, uid, ids, context):
-            new_lines = {}
-            # Parse and clean-up data coming from the matrix
-            for (cell_name, cell_value) in vals.items():
-                # Filters out non cell values and template row
-                if not cell_name.startswith('cell_') or cell_name.startswith('cell_template'):
-                    continue
-                cell_name_fragments = cell_name.split('_')
-                cell_date = datetime.datetime.strptime(cell_name_fragments[2], '%Y%m%d')
+            line_id_map = {}
+
+            # Handle resources first, as they trigger the creation of lines
+            resource_fields = [(k, v) for (k, v) in vals.items() if k.startswith('res_')]
+            for (f_id, f_value) in resource_fields:
+                f_id_elements = parse_virtual_field_id(f_id)
                 # Are we updating an existing line or creating a new one ?
-                line_id = cell_name_fragments[1]
+                line_id = f_id_elements[1]
                 if line_id.startswith('new'):
-                    line_project_id = int(line_id[3:])
-                    line_id = None
-                    if line_project_id in new_lines:
-                        line_id = new_lines[line_project_id]
-                    else:
-                        vals = {
-                            'report_id': report.id,
-                            'project_id': line_project_id,
-                            }
-                        line_id = obj.pool.get(conf['line_type']).create(cr, uid, vals, context)
-                        new_lines[line_project_id] = line_id
-                else:
-                    line_id = int(line_id)
-                written_lines.append(line_id)
+                    res_id = int(f_value)
+                    line_vals = {
+                        conf['line_relation_property']: report.id,
+                        conf['line_resource_source']: res_id,
+                        }
+                    line_id = obj.pool.get(conf['line_type']).create(cr, uid, line_vals, context)
+                line_id_map[f_id_elements[1]] = int(line_id)
+            written_lines += line_id_map.values()
+
+            # Parse and clean-up data coming from the matrix
+            for (f_id, f_value) in [(k, v) for (k, v) in vals.items() if k.startswith('cell_')]:
+                cell_id_fragments = parse_virtual_field_id(f_id)
+                # Are we updating an existing line or creating a new one ?
+                line_id = line_id_map[cell_id_fragments[1]]
                 # Get the line
                 line = obj.pool.get(conf['line_type']).browse(cr, uid, line_id, context)
                 # Convert the raw value to the right one depending on the type of the line
+                cell_value = None
                 if line.line_type != 'boolean':
                     # Quantity conversion
-                    if type(cell_value) is type(''):
-                        cell_value = float(cell_value)
-                    else:
-                        cell_value = None
+                    if type(f_value) is type(''):
+                        cell_value = float(f_value)
                 else:
                     # Boolean conversion
-                    if cell_value == '1':
+                    if f_value == '1':
                         cell_value = True
                     else:
                         cell_value = False
@@ -295,6 +294,7 @@ def matrix_write_patch(func):
                     'quantity': cell_value,
                     }
                 # Search for an existing cell at the given date
+                cell_date = datetime.datetime.strptime(cell_id_fragments[2], '%Y%m%d')
                 cell = obj.pool.get(conf['cell_type']).search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
                 # Cell doesn't exists, create it
                 if not cell:
@@ -307,9 +307,12 @@ def matrix_write_patch(func):
                 else:
                     cell_id = cell[0]
                     obj.pool.get(conf['cell_type']).write(cr, uid, cell_id, cell_vals, context)
+
         # If there was no references to one of our line it means it was deleted
         for report in obj.browse(cr, uid, ids, context):
             removed_lines = list(set([l.id for l in report.line_ids]).difference(set(written_lines)))
             obj.pool.get(conf['line_type']).unlink(cr, uid, removed_lines, context)
+
         return result
+
     return write_matrix_virtual_fields

@@ -42,6 +42,7 @@ class smile_activity_workload(osv.osv):
             date_format='%m/%y',
             resource_type='smile.activity.profile',
             line_resource_source='profile_id',
+            line_relation_property='workload_id',
             css_class=['workload'],
             experimental_slider=True,
             string="Workload lines",
@@ -68,7 +69,7 @@ class smile_activity_workload_line(osv.osv):
     _name = 'smile.activity.workload.line'
 
     _columns = {
-        'name': fields.char('Name', size=32),
+        'name': fields.related('profile_id', 'name', type='char', string='Profile name', size=32, readonly=True),
         'workload_id': fields.many2one('smile.activity.workload', "Workload", required=True, ondelete='cascade'),
         'profile_id': fields.many2one('smile.activity.profile', "Profile", required=True),
         'employee_id': fields.many2one('smile.activity.employee', "Employee", required=False),

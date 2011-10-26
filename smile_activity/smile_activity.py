@@ -46,6 +46,7 @@ class smile_activity_report(osv.osv):
             date_format='%d',
             resource_type='smile.activity.project',
             line_resource_source='project_id',
+            line_relation_property='report_id',
             string="Activity report lines",
             readonly=False,
             ),
