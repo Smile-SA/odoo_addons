@@ -33,12 +33,12 @@ msgstr "aucun"
 #. module: smile_action_trigger
 #: help:ir.actions.server,user_id:0
 msgid "If empty, the action is executed by the current user"
-msgstr "If empty, the action is executed by the current user"
+msgstr "Si vide, l'action est exécutée par l'utilisateur courant"
 
 #. module: smile_action_trigger
 #: field:ir.actions.server,group_by:0
 msgid "Group by"
-msgstr "Group by"
+msgstr "Grouper par"
 
 #. module: smile_action_trigger
 #: view:sartre.trigger:0
@@ -150,86 +150,8 @@ msgstr "Format date et heure - AAAA-MM-JJ HH:MM:SS"
 #. module: smile_action_trigger
 #: code:addons/smile_action_trigger/sartre.py:661
 #, python-format
-msgid "The field %s is not in the model %s !\" % (f_name, model)))\n"
-"                f_obj = field_pool.read(cr, uid, f_id[0], ['name', 'ttype', 'relation'])\n"
-"                if f_obj['ttype'] in ['many2one', 'one2many', 'many2many']:\n"
-"                    model = f_obj['relation']\n"
-"                    model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model)], limit=1, context=context)[0]\n"
-"                elif len(field_expression.split('.')) > 1:\n"
-"                    raise osv.except_osv(_('Error'), _(\"The field %s is not a relation field !\" % f_obj['name']))\n"
-"        return model_id\n"
-"\n"
-"    def onchange_get_field_domain(self, cr, uid, ids, model_id, field_expression='', context=None):\n"
-"        \"Get field domain\"\n"
-"        model_id = self._check_field_expression(cr, uid, model_id, field_expression, context)\n"
-"        return {'value': {'field_id': False}, 'domain': {'field_id': \"[('model_id', '=', %d)]\" % model_id}}\n"
-"\n"
-"    def onchange_get_field_expression(self, cr, uid, ids, model_id, field_expression='', field_id=False, context=None):\n"
-"        \"Update the field expression\"\n"
-"        if field_id:\n"
-"            field_expression = self._build_field_expression(cr, uid, field_id, field_expression, context)\n"
-"        res = self.onchange_get_field_domain(cr, uid, ids, model_id, field_expression, context)\n"
-"        res.setdefault('value', {}).update({'field_expression': field_expression})\n"
-"        return res\n"
-"\n"
-"    def onchange_get_value_age_domain(self, cr, uid, ids, field='', operator_id=False, opposite=False, value='', value_age='current', value_type='static', context=None):\n"
-"        \"Update the field 'value_age'\"\n"
-"        value_age_filter = operator_id and self.pool.get('sartre.operator').read(cr, uid, operator_id, ['value_age_filter'])['value_age_filter']\n"
-"        if value_age_filter != 'both':\n"
-"            value_age = value_age_filter\n"
-"        res = self.onchange_get_domain(cr, uid, ids, field, operator_id, opposite, value, value_age, value_type, context)\n"
-"        res.setdefault('value', {})\n"
-"        res['value'] = {'value_age': value_age, 'value_age_readonly': value_age_filter != 'both'}\n"
-"        return res\n"
-"\n"
-"    _columns = {\n"
-"        \"trigger_id\": fields.many2one('sartre.trigger', \"Trigger\", required=True, ondelete='cascade'),\n"
-"        \"field_name\": fields.char(\"Field\", size=256),\n"
-"        \"value_age\": fields.selection([\n"
-"            ('current', 'Current Value'),\n"
-"            ('old', 'Old Value'),\n"
-"        ], \"Value Age\", select=True),\n"
-"        \"value_age_readonly\": fields.boolean(\"Value Age Readonly"
-msgstr "The field %s is not in the model %s !\" % (f_name, model)))\n"
-"                f_obj = field_pool.read(cr, uid, f_id[0], ['name', 'ttype', 'relation'])\n"
-"                if f_obj['ttype'] in ['many2one', 'one2many', 'many2many']:\n"
-"                    model = f_obj['relation']\n"
-"                    model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model)], limit=1, context=context)[0]\n"
-"                elif len(field_expression.split('.')) > 1:\n"
-"                    raise osv.except_osv(_('Error'), _(\"The field %s is not a relation field !\" % f_obj['name']))\n"
-"        return model_id\n"
-"\n"
-"    def onchange_get_field_domain(self, cr, uid, ids, model_id, field_expression='', context=None):\n"
-"        \"Get field domain\"\n"
-"        model_id = self._check_field_expression(cr, uid, model_id, field_expression, context)\n"
-"        return {'value': {'field_id': False}, 'domain': {'field_id': \"[('model_id', '=', %d)]\" % model_id}}\n"
-"\n"
-"    def onchange_get_field_expression(self, cr, uid, ids, model_id, field_expression='', field_id=False, context=None):\n"
-"        \"Update the field expression\"\n"
-"        if field_id:\n"
-"            field_expression = self._build_field_expression(cr, uid, field_id, field_expression, context)\n"
-"        res = self.onchange_get_field_domain(cr, uid, ids, model_id, field_expression, context)\n"
-"        res.setdefault('value', {}).update({'field_expression': field_expression})\n"
-"        return res\n"
-"\n"
-"    def onchange_get_value_age_domain(self, cr, uid, ids, field='', operator_id=False, opposite=False, value='', value_age='current', value_type='static', context=None):\n"
-"        \"Update the field 'value_age'\"\n"
-"        value_age_filter = operator_id and self.pool.get('sartre.operator').read(cr, uid, operator_id, ['value_age_filter'])['value_age_filter']\n"
-"        if value_age_filter != 'both':\n"
-"            value_age = value_age_filter\n"
-"        res = self.onchange_get_domain(cr, uid, ids, field, operator_id, opposite, value, value_age, value_type, context)\n"
-"        res.setdefault('value', {})\n"
-"        res['value'] = {'value_age': value_age, 'value_age_readonly': value_age_filter != 'both'}\n"
-"        return res\n"
-"\n"
-"    _columns = {\n"
-"        \"trigger_id\": fields.many2one('sartre.trigger', \"Trigger\", required=True, ondelete='cascade'),\n"
-"        \"field_name\": fields.char(\"Field\", size=256),\n"
-"        \"value_age\": fields.selection([\n"
-"            ('current', 'Current Value'),\n"
-"            ('old', 'Old Value'),\n"
-"        ], \"Value Age\", select=True),\n"
-"        \"value_age_readonly\": fields.boolean(\"Value Age Readonly"
+msgid "The field %s is not in the model %s !"
+msgstr "Le champ %s n'est pas présent sur le modèle %s !"
 
 #. module: smile_action_trigger
 #: model:ir.model,name:smile_action_trigger.model_ir_model_methods
@@ -404,13 +326,13 @@ msgstr "Exécutions"
 #. module: smile_action_trigger
 #: field:ir.actions.server,force_rollback:0
 msgid "Force transaction rollback"
-msgstr "Force transaction rollback"
+msgstr "Forcer l'annulation de la transaction"
 
 #. module: smile_action_trigger
 #: code:addons/smile_action_trigger/sartre.py:248
 #, python-format
 msgid "Error !"
-msgstr "Error !"
+msgstr "Erreur !"
 
 #. module: smile_action_trigger
 #: field:sartre.trigger,on_other:0
@@ -430,7 +352,7 @@ msgstr "Echec de l'action. Merci de contacter votre administrateur."
 #. module: smile_action_trigger
 #: view:sartre.trigger:0
 msgid "Trigger on client action"
-msgstr "Trigger on client action"
+msgstr "Déclencheur sur une action client"
 
 #. module: smile_action_trigger
 #: selection:sartre.trigger,interval_type:0
@@ -487,11 +409,6 @@ msgstr "Champ fonction"
 #: selection:sartre.operator,native_operator:0
 msgid "contains (case-insensitive matching)"
 msgstr "contient (insensible à la casse)"
-
-#. module: smile_action_trigger
-#: model:ir.actions.server,message:smile_action_trigger.ir_actions_server_youremailchanged0
-msgid "<p>Dear [[ object.partner_id.title ]]&nbsp;[[ object.name ]],</p> <p>In accordance with your wishes,&nbsp;you will receive our newsletter via the following email:&nbsp;[[ object.email ]]</p> <p>Yours Sincerely,<br />The OpenERP Team</p> <p>&nbsp;</p>"
-msgstr "<p>Dear [[ object.partner_id.title ]]&nbsp;[[ object.name ]],</p> <p>In accordance with your wishes,&nbsp;you will receive our newsletter via the following email:&nbsp;[[ object.email ]]</p> <p>Yours Sincerely,<br />The OpenERP Team</p> <p>&nbsp;</p>"
 
 #. module: smile_action_trigger
 #: field:sartre.trigger,interval_number:0
@@ -736,13 +653,21 @@ msgstr "Your email changed"
 #: model:ir.ui.menu,name:smile_action_trigger.sartre_operator_menu
 #: view:sartre.operator:0
 msgid "Filter Operators"
-msgstr "Filter Operators"
+msgstr "Opérateurs"
+
+
+#. module: smile_action_trigger
+#: model:ir.actions.act_window,name:smile_action_trigger.sartre_category_action
+#: model:ir.ui.menu,name:smile_action_trigger.sartre_category_menu
+#: view:sartre.category:0
+msgid "Trigger Categories"
+msgstr "Catégories"
 
 #. module: smile_action_trigger
 #: code:addons/smile_action_trigger/sartre.py:248
 #, python-format
 msgid "Pid search field: please enter an integer"
-msgstr "Pid search field: please enter an integer"
+msgstr "Merci d'indiquer un entier"
 
 #. module: smile_action_trigger
 #: field:sartre.operator,value_age_filter:0
@@ -797,7 +722,7 @@ msgstr "dans"
 #. module: smile_action_trigger
 #: field:ir.model.methods,name:0
 msgid "Method name"
-msgstr "Method name"
+msgstr "Méthode"
 
 #. module: smile_action_trigger
 #: help:sartre.operator,opposite_symbol:0
@@ -841,6 +766,7 @@ msgstr "Ressource"
 
 #. module: smile_action_trigger
 #: field:sartre.operator,name:0
+#: field:sartre.category,name:0
 #: field:sartre.trigger,name:0
 msgid "Name"
 msgstr "Nom"
@@ -926,3 +852,13 @@ msgstr "Filtres"
 #: view:sartre.trigger:0
 msgid "Force domain"
 msgstr "Domaine forcé"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,force_actions_execution:0
+msgid "Force actions execution when resources list is empty"
+msgstr "Forcer l'exécution des actions quand la liste des ressources est vide"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,category_id:0
+msgid "Category"
+msgstr "Catégorie"

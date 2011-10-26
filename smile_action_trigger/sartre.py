@@ -134,6 +134,15 @@ def cache_restarter(method):
         return res
     return restart
 
+class SartreCategory(osv.osv):
+    _name = 'sartre.category'
+    _description = 'Action Trigger Category'
+
+    _columns = {
+        'name': fields.char('Name', size=64, required=True),
+    }
+SartreCategory()
+
 class SartreTrigger(osv.osv):
     _name = 'sartre.trigger'
     _description = 'Action Trigger'
@@ -281,6 +290,7 @@ class SartreTrigger(osv.osv):
         'filter_ids': fields.one2many('sartre.filter', 'trigger_id', "Filters", help="The trigger is satisfied if all filters are True"),
         'domain_force': fields.char('Force Domain', size=256, help="Warning: using a Force domain makes all other filters useless"),
         'action_ids': fields.many2many('ir.actions.server', 'sartre_trigger_server_action_rel', 'trigger_id', 'action_id', "Actions"),
+        'force_actions_execution': fields.boolean('Force actions execution when resources list is empty'),
         'executions_max_number': fields.integer('Max executions', help="Number of time actions are runned, indicates that actions will always be executed"),
         'log_ids': fields.function(_get_logs, method=True, type='one2many', relation='smile.log', string="Logs"),
         'test_mode': fields.boolean('Test Mode'),
@@ -293,7 +303,16 @@ class SartreTrigger(osv.osv):
             'sartre.operator': (_get_trigger_ids_from_operators, None, 10),
         }),
         'pid_search': fields.function(_dummy, fnct_search=_search_pid, method=True, type='char', string='Pid'),
+        'category_id': fields.many2one('sartre.category', 'Category'),
     }
+
+    def _get_default_category_id(self, cr, uid, context=None):
+        category_id = False
+        try:
+            dummy, category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'smile_action_trigger', 'sartre_category_default0')
+        except:
+            pass
+        return category_id
 
     _defaults = {
         'active': True,
@@ -309,6 +328,7 @@ class SartreTrigger(osv.osv):
         'exception_handling': 'continue',
         'exception_warning': 'custom',
         'exception_message': 'Action failed. Please, contact your administrator.',
+        'category_id': _get_default_category_id,
     }
 
     def create_client_action(self, cr, uid, ids, context=None):
@@ -526,7 +546,7 @@ class SartreTrigger(osv.osv):
             logger.exception('[%s] Objects Filtering failed: %s' % (pid, _get_exception_message(e)))
             raise e
         # Execute server actions for filtered objects
-        if filtered_object_ids:
+        if filtered_object_ids or trigger.force_actions_execution:
             logger.info('[%s] Trigger on %s for objects %s,%s' % (pid, context.get('trigger', 'manual'), trigger.model_id.model, filtered_object_ids))
             context.setdefault('triggers', {}).setdefault(trigger.id, []).extend(filtered_object_ids)
             if context.get('test_mode', False):

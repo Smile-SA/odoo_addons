@@ -2,6 +2,8 @@
 <openerp>
 	<data noupdate="0">
 
+		<!-- Sartre Trigger -->
+
 		<record id="sartre_trigger_form_view" model="ir.ui.view">
 			<field name="name">Action Trigger - Form</field>
 			<field name="model">sartre.trigger</field>
@@ -9,6 +11,8 @@
 			<field name="arch" type="xml">
 				<form string="Action Trigger">
 					<group colspan="4">
+						<label colspan="2" />
+						<field name="category_id" widget="selection" />
 						<field name="name" select="1" />
 						<field name="active" select="1" />
 						<field name="model_id" select="1" on_change="onchange_model_id(model_id, on_function, on_other)"/>
@@ -89,6 +93,7 @@
 							<field name="domain_force" colspan="4"/>
 						</page>
 						<page string="Actions">
+							<field name="force_actions_execution"/>
 							<field name="action_ids" colspan="4" nolabel="1" domain="[('model_id','=',model_id)]" />
 							<group name="exception_management" attrs="{'invisible': [('test_mode', '=', True)]}">
 								<field name="exception_handling"/>
@@ -119,6 +124,7 @@
 					<field name="name" />
 					<field name="model_id" />
 					<field name="active" />
+					<field name="category_id" />
 				</tree>
 			</field>
 		</record>
@@ -141,6 +147,7 @@
 	                </group>
 	                <newline/>
 	                <group expand="0" string="Extended..." groups="base.group_extended">
+	                    <field name="category_id"/>
 	                    <field name="active"/>
 	                    <field name="pid_search"/>
 	                </group>
@@ -160,6 +167,8 @@
 			<field name="context">{'active_test': False}</field>
 		</record>
 		<menuitem action="sartre_trigger_action" id="sartre_trigger_menu" parent="base.next_id_6" sequence="10" />
+
+		<!-- Sartre Operator -->
 
 		<record id="sartre_operator_tree_view" model="ir.ui.view">
 			<field name="name">Filter Operators</field>
@@ -202,7 +211,7 @@
 	                    <field name="name"/>
 	               		<field name="symbol"/>
 	                	<field name="opposite_symbol"/>
-						<field name="native_operator" />
+						<field name="native_operator"/>
 	                </group>
                 </search>
             </field>
@@ -215,6 +224,47 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 		<menuitem action="sartre_operator_action" id="sartre_operator_menu" parent="sartre_trigger_menu" sequence="30" />
+
+		<!-- Sartre Category -->
+
+		<record id="sartre_category_tree_view" model="ir.ui.view">
+			<field name="name">sartre.category.tree</field>
+			<field name="model">sartre.category</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Trigger Categories">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		<record id="sartre_category_form_view" model="ir.ui.view">
+			<field name="name">sartre.category.form</field>
+			<field name="model">sartre.category</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Trigger Category">
+					<field name="name" />
+				</form>
+			</field>
+		</record>
+		<record id="sartre_category_search_view" model="ir.ui.view">
+			<field name="name">sartre.category.search</field>
+			<field name="model">sartre.category</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<search string="Trigger Categories">
+					<field name="name" />
+				</search>
+			</field>
+		</record>
+		<record id="sartre_category_action" model="ir.actions.act_window">
+			<field name="name">Trigger Categories</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sartre.category</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem action="sartre_category_action" id="sartre_category_menu" parent="sartre_trigger_menu" sequence="50" />
 
 	</data>
 </openerp>
