@@ -22,7 +22,8 @@
 import datetime
 
 from osv import osv, fields
-from matrix_field import matrix
+from matrix_field import matrix, matrix_read_patch
+
 
 
 class smile_activity_report(osv.osv):
@@ -62,31 +63,9 @@ class smile_activity_report(osv.osv):
             line_id = self.pool.get('smile.activity.report.line').create(cr, uid, vals, context)
         return report_id
 
+    @matrix_read_patch
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = super(smile_activity_report, self).read(cr, uid, ids, fields, context, load)
-        #import pdb; pdb.set_trace()
-        # Let anyone read a cell value directly using the cell_LineID_YYYYMMMDD scheme
-        if isinstance(ids, (int, long)):
-            result = [result]
-        updated_result = []
-        for props in result:
-            unread_fields = set(fields).difference(set(props.keys()))
-            for f_id in unread_fields:
-                f_id_elements = f_id.split('_')
-                if len(f_id_elements) == 3 and f_id_elements[0] == 'cell':
-                    cell_value = None
-                    if not (f_id_elements[1].startswith('new') or f_id_elements[1].startswith('template')):
-                        line_id = int(f_id_elements[1])
-                        cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
-                        cell_id = self.pool.get('smile.activity.report.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
-                        if cell_id:
-                            cell = self.pool.get('smile.activity.report.cell').browse(cr, uid, cell_id, context)[0]
-                            cell_value = cell.cell_value
-                    props.update({f_id: cell_value})
-            updated_result.append(props)
-        if isinstance(ids, (int, long)):
-            updated_result = updated_result[0]
-        return updated_result
+        return super(smile_activity_report, self).read(cr, uid, ids, fields, context, load)
 
     def write(self, cr, uid, ids, vals, context=None):
         ret = super(smile_activity_report, self).write(cr, uid, ids, vals, context)

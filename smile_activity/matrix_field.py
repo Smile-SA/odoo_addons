@@ -140,3 +140,60 @@ class matrix(fields.dummy):
 
             matrix_list.update({base_object.id: matrix_def})
         return matrix_list
+
+
+
+def matrix_read_patch(func):
+    """
+    Let the matrix read the temporary fields that are not persistent in database.
+    Raise an exception if it tries to read a field that doesn't follow Matrix widget conventions.
+    Valid matrix field names:
+        * resource_list  (ignored)
+        * res_template  (ignored)
+        * res_XX
+        * cell_XX_YYYYMMDD
+        * cell_template_YYYYMMDD  (ignored)
+    """
+    def read_matrix_virtual_fields(*arg, **kw):
+        result = func(*arg, **kw)
+        obj = arg[0]
+        cr = arg[1]
+        uid = arg[2]
+        ids = arg[3]
+        fields = arg[4]
+        context = kw.get('context', None)
+        if isinstance(ids, (int, long)):
+            result = [result]
+        updated_result = []
+        cell_pool = obj.pool.get('smile.activity.report.cell')
+        for props in result:
+            unread_fields = set(fields).difference(set(props.keys()))
+            for f_id in unread_fields:
+                f_id_elements = f_id.split('_')
+                # Ignore valid but unneccesary fields
+                if f_id in ['resource_list', 'res_template'] or f_id.startswith('cell_template_'):
+                    continue
+                # Handle cell_XX_YYYYMMDD fields
+                elif f_id_elements[0] == 'cell' and len(f_id_elements) == 3:
+                    cell_value = None
+                    if not f_id_elements[1].startswith('new'):
+                        line_id = int(f_id_elements[1])
+                        cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
+                        cell_id = cell_pool.search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
+                        if cell_id:
+                            cell = cell_pool.browse(cr, uid, cell_id, context)[0]
+                            cell_value = cell.cell_value
+                    props.update({f_id: cell_value})
+                # Handle res_XX fields
+                elif f_id_elements[0] == 'res' and len(f_id_elements) == 2:
+                    #TODO
+                    pass
+                # Requested field doesn't follow matrix convention
+                else:
+                    import pdb; pdb.set_trace()
+                    raise osv.except_osv('Error !', "Field %s doesn't respect matrix widget conventions." % f_id)
+            updated_result.append(props)
+        if isinstance(ids, (int, long)):
+            updated_result = updated_result[0]
+        return updated_result
+    return read_matrix_virtual_fields

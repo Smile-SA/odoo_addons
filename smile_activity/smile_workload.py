@@ -47,6 +47,13 @@ class smile_activity_workload(osv.osv):
             ),
         }
 
+    ## Native methods
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        # TODO: deduplicate this code with smile_activity_report.read()
+        result = super(smile_activity_workload, self).read(cr, uid, ids, fields, context, load)
+        return result
+
 smile_activity_workload()
 
 
