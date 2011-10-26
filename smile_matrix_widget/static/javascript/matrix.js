@@ -132,7 +132,8 @@ $(document).ready(function(){
         new_row.find("span[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
         $(new_row).attr('id', "line_" + new_row_index);
         new_row.find(".resource .name").text(res_name);
-        new_row.find(".resource input").val(res_id).attr('id', "res_" + res_id).attr('name', "res_" + res_id);
+        new_res_index = "res_" + new_row_index;
+        new_row.find(".resource input").val(res_id).attr('id', new_res_index).attr('name', new_res_index);
         // Insert our new row at the end of the matrix
         last_row.before(new_row.hide());
         new_row.fadeIn('fast');

@@ -56,7 +56,7 @@ class matrix(fields.dummy):
         css_class = self.__dict__.get('css_class', [])
 
         # Check that all required parameters are there
-        for p_name in ['line_source', 'cell_source', 'date_range_source']:
+        for p_name in ['line_source', 'line_type', 'line_resource_source', 'cell_source', 'cell_type', 'date_range_source']:
             if not p_name:
                 raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
 
@@ -165,8 +165,8 @@ def matrix_read_patch(func):
     Raise an exception if it tries to read a field that doesn't follow Matrix widget conventions.
     Valid matrix field names:
         * resource_list  (ignored)
-        * res_template  (ignored)
         * res_XX
+        * res_template  (ignored)
         * cell_XX_YYYYMMDD
         * cell_template_YYYYMMDD  (ignored)
     """
@@ -183,31 +183,32 @@ def matrix_read_patch(func):
             result = [result]
         updated_result = []
         cell_pool = obj.pool.get(conf['cell_type'])
+        line_pool = obj.pool.get(conf['line_type'])
         for props in result:
             unread_fields = set(fields).difference(set(props.keys()))
             for f_id in unread_fields:
                 f_id_elements = f_id.split('_')
                 # Ignore valid but unneccesary fields
-                if f_id in ['resource_list', 'res_template'] or f_id.startswith('cell_template_'):
+                if f_id in ['resource_list', 'res_template'] or (len(f_id_elements) == 3 and f_id.startswith('cell_template_')):
                     continue
-                # Handle cell_XX_YYYYMMDD fields
-                elif f_id_elements[0] == 'cell' and len(f_id_elements) == 3:
-                    cell_value = None
+                # Handle cell_XX_YYYYMMDD and res_XX_XX fields
+                elif (f_id_elements[0] == 'cell' and len(f_id_elements) == 3) or (f_id_elements[0] == 'res' and len(f_id_elements) == 2):
+                    field_value = None
                     if not f_id_elements[1].startswith('new'):
                         line_id = int(f_id_elements[1])
-                        cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
-                        cell_id = cell_pool.search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
-                        if cell_id:
-                            cell = cell_pool.browse(cr, uid, cell_id, context)[0]
-                            cell_value = cell.cell_value
-                    props.update({f_id: cell_value})
-                # Handle res_XX fields
-                elif f_id_elements[0] == 'res' and len(f_id_elements) == 2:
-                    #TODO
-                    pass
+                        if f_id_elements[0] == 'cell':
+                            cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
+                            cell_id = cell_pool.search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
+                            if cell_id:
+                                cell = cell_pool.browse(cr, uid, cell_id, context)[0]
+                                field_value = cell.cell_value
+                        elif f_id_elements[0] == 'res':
+                            if line_id:
+                                line = line_pool.browse(cr, uid, line_id, context)
+                                field_value = getattr(line, conf['line_resource_source']).id
+                    props.update({f_id: field_value})
                 # Requested field doesn't follow matrix convention
                 else:
-                    import pdb; pdb.set_trace()
                     raise osv.except_osv('Error !', "Field %s doesn't respect matrix widget conventions." % f_id)
             updated_result.append(props)
         if isinstance(ids, (int, long)):

@@ -35,7 +35,9 @@ class smile_activity_workload(osv.osv):
         'line_ids': fields.one2many('smile.activity.workload.line', 'workload_id', "Workload lines"),
         'matrix_line_ids': matrix(
             line_source='line_ids',
+            line_type='smile.activity.workload.line',
             cell_source='cell_ids',
+            cell_type='smile.activity.workload.cell',
             date_range_source='project_id',
             date_format='%m/%y',
             resource_type='smile.activity.profile',
@@ -46,6 +48,7 @@ class smile_activity_workload(osv.osv):
             readonly=False,
             ),
         }
+
 
     ## Native methods
 

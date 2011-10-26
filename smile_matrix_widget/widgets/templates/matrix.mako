@@ -89,6 +89,19 @@
 </%def>
 
 
+<%def name="render_resource(line)">
+    <td class="resource">
+        <%
+            res_field_id = "res_%s" % line['id']
+        %>
+        <span class="name">${line['name']}</span>
+        %if editable:
+            <input type="hidden" id="${res_field_id}" name="${res_field_id}" value="${line.get('res_id', '')}"/>
+        %endif
+    </td>
+</%def>
+
+
 <div class="matrix ${' '.join(value.get('class', []))}">
 
     %if type(value) == type({}) and 'date_range' in value:
@@ -172,16 +185,7 @@
                 </tr>
                 %for line in [l for l in lines if l['type'] == 'boolean']:
                     <tr id="${'line_%s' % line['id']}" class="boolean_line">
-                        <td class="resource">
-                            <%
-                                res_id = line.get('res_id', None)
-                                res_field_id = "res_%s" % res_id
-                            %>
-                            <span class="name">${line['name']}</span>
-                            %if editable:
-                                <input type="hidden" id="${res_field_id}" name="${res_field_id}" value="${res_id}"/>
-                            %endif
-                        </td>
+                        ${render_resource(line)}
                         <td></td>
                         %for date in value['date_range']:
                             <td class="boolean">
@@ -225,16 +229,7 @@
             <tbody>
                 %for line in [l for l in lines if l['type'] != 'boolean']:
                     <tr id="${'line_%s' % line['id']}">
-                        <td class="resource">
-                            <%
-                                res_id = line.get('res_id', None)
-                                res_field_id = "res_%s" % res_id
-                            %>
-                            <span class="name">${line['name']}</span>
-                            %if editable:
-                                <input type="hidden" id="${res_field_id}" name="${res_field_id}" value="${res_id}"/>
-                            %endif
-                        </td>
+                        ${render_resource(line)}
                         <td>
                             %if editable and not line.get('required', False):
                                 <span class="button delete_row">X</span>
