@@ -41,7 +41,7 @@
         margin-bottom: 1em;
     }
 
-    .matrix table .first_column {
+    .matrix table .resource {
         text-align: left;
     }
 
@@ -101,17 +101,17 @@
         %if editable:
             <div class="toolbar">
                 <%
-                    new_row_list = value.get('new_row_list', [])
+                    resource_list = value.get('resource_list', [])
                 %>
-                %if len(new_row_list):
-                    <select id="new_row_data" kind="char" name="new_row_data" type2="" operator="=" class="selection_search selection">
-                        <option value="default" selected="selected">&mdash; Select a new line in the list &mdash;</option>
-                        %for new_row in new_row_list:
-                            <option value="${new_row[0]}">${new_row[1]}</option>
+                %if len(resource_list):
+                    <select id="resource_list" kind="char" name="resource_list" type2="" operator="=" class="selection_search selection">
+                        <option value="default" selected="selected">&mdash; Select here new line's resource &mdash;</option>
+                        %for res in resource_list:
+                            <option value="${res[0]}">${res[1]}</option>
                         %endfor
                     </select>
                     <span id="matrix_add_row" class="button">
-                        Add line
+                        Add new line
                     </span>
                 %endif
                 <span id="matrix_button_template" class="button increment">
@@ -123,7 +123,7 @@
         <table id="${name}">
             <thead>
                 <tr>
-                    <th class="first_column">Line</th>
+                    <th class="resource">Line</th>
                     <th></th>
                     %for date in value['date_range']:
                         <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(column_date_label_format)}</th>
@@ -133,7 +133,7 @@
             </thead>
             <tfoot>
                 <tr class="total">
-                    <td class="first_column">Total</td>
+                    <td class="resource">Total</td>
                     <td></td>
                     %for date in value['date_range']:
                         <td>
@@ -171,8 +171,17 @@
                     </td>
                 </tr>
                 %for line in [l for l in lines if l['type'] == 'boolean']:
-                    <tr class="boolean_line" id="line_${line.get('uid', None)}">
-                        <td class="first_column">${line['name']}</td>
+                    <tr id="${'line_%s' % line['id']}" class="boolean_line">
+                        <td class="resource">
+                            <%
+                                res_id = line.get('res_id', None)
+                                res_field_id = "res_%s" % res_id
+                            %>
+                            <span class="name">${line['name']}</span>
+                            %if editable:
+                                <input type="hidden" id="${res_field_id}" name="${res_field_id}" value="${res_id}"/>
+                            %endif
+                        </td>
                         <td></td>
                         %for date in value['date_range']:
                             <td class="boolean">
@@ -215,8 +224,17 @@
             </tfoot>
             <tbody>
                 %for line in [l for l in lines if l['type'] != 'boolean']:
-                    <tr id="line_${line.get('uid', None)}">
-                        <td class="first_column">${line['name']}</td>
+                    <tr id="${'line_%s' % line['id']}">
+                        <td class="resource">
+                            <%
+                                res_id = line.get('res_id', None)
+                                res_field_id = "res_%s" % res_id
+                            %>
+                            <span class="name">${line['name']}</span>
+                            %if editable:
+                                <input type="hidden" id="${res_field_id}" name="${res_field_id}" value="${res_id}"/>
+                            %endif
+                        </td>
                         <td>
                             %if editable and not line.get('required', False):
                                 <span class="button delete_row">X</span>

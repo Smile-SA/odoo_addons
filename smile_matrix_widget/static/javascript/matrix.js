@@ -101,23 +101,24 @@ $(document).ready(function(){
     });
 
     // Make the add line button working
+    // Create one new row for the selected resource
     $(".matrix #matrix_add_row").click(function(){
         // Check that we selected a row in the select widget
-        var new_row_data = $(".matrix #new_row_data option:selected").first();
-        var row_id = new_row_data.val();
-        if(isNaN(row_id)) {
+        var new_res_data = $(".matrix #resource_list option:selected").first();
+        var res_id = new_res_data.val();
+        var res_name = new_res_data.text();
+        if(isNaN(res_id)) {
             return;
         };
-        row_id = parseInt(row_id);
-        // We can't add a line twice in the matrix
-        new_row_index = "new" + row_id;
-        if($(".matrix input[id^='cell_" + new_row_index + "_']").length > 0) {
+        res_id = parseInt(res_id);
+        // Two lines can't share the same resource
+        if($(".matrix .resource input[value='" + res_id + "']").length > 0) {
             return;
         };
         // Construct our new row based on the row template
-        var row_name = new_row_data.text();
         var last_row = $(last_row_selector);
         var new_row = last_row.clone(true).hide();
+        new_row_index = "new" + res_id;
         new_row.find(float_cells_selector).each(function(){
             // Compute new cell and button ID
             name_fragments = $(this).attr("id").split("_");
@@ -129,8 +130,9 @@ $(document).ready(function(){
             $(this).parent().find(increment_button_selector).first().attr('id', new_button_id).text(cycling_values[0]);
         });
         new_row.find("span[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
-        $(new_row).attr('id', "line_" + row_id);
-        new_row.find(".first_column").text(row_name);
+        $(new_row).attr('id', "line_" + new_row_index);
+        new_row.find(".resource .name").text(res_name);
+        new_row.find(".resource input").val(res_id).attr('id', "res_" + res_id).attr('name', "res_" + res_id);
         // Insert our new row at the end of the matrix
         last_row.before(new_row.hide());
         new_row.fadeIn('fast');
@@ -140,17 +142,17 @@ $(document).ready(function(){
     // Deduplicate the add line list content with lines in the matrix
     function deduplicate_new_line_selector() {
         var displayed_lines = new Array();
-        $(".matrix tr[id!='line_template']").each(function(){
-            displayed_lines.push(parseInt($(this).attr("id").split("_")[1]));
+        $(".matrix tr[id!='line_template'] .resource input").each(function(){
+            displayed_lines.push(parseInt($(this).val()));
         });
-        $(".matrix #new_row_data option").each(function(){
+        $(".matrix #resource_list option").each(function(){
             if ($.inArray(parseInt($(this).val()), displayed_lines) != -1) {
                 $(this).hide();
             } else {
                 $(this).show();
             };
         });
-        $("#new_row_data").val("default");
+        $("#resource_list").val("default");
     };
     $(deduplicate_new_line_selector());
 
