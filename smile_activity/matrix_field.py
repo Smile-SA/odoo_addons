@@ -47,9 +47,9 @@ class matrix(fields.dummy):
         # The format we use to display date labels
         date_format = self.__dict__.get('date_format', None)
         # The object type we use to create new rows
-        new_row_source_type = self.__dict__.get('new_row_source_type', None)
-        # Get the property of line from which we derive the matrix row UID
-        row_uid_source = self.__dict__.get('row_uid_source', None)
+        resource_type = self.__dict__.get('resource_type', None)
+        # Get the property of line from which we derive the matrix resource
+        line_resource_source = self.__dict__.get('line_resource_source', None)
         # Additional classes can be manually added
         css_class = self.__dict__.get('css_class', [])
 
@@ -76,10 +76,10 @@ class matrix(fields.dummy):
             date_range = [self.date_to_str(d) for (d, l) in date_range]
 
             # Get the list of all objects new rows of the matrix can be linked to
-            new_row_list = []
-            if new_row_source_type:
-                p = base_object.pool.get(new_row_source_type)
-                new_row_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)]
+            resource_list = []
+            if resource_type:
+                p = base_object.pool.get(resource_type)
+                resource_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)]
 
             # Browse all lines that will compose our matrix
             lines = getattr(base_object, line_source, [])
@@ -93,11 +93,11 @@ class matrix(fields.dummy):
                     }
 
                 # Get the row UID corresponding to the line
-                if row_uid_source is not None:
-                    row_uid_source_object = getattr(line, row_uid_source, None)
-                    if not row_uid_source_object:
-                        raise osv.except_osv('Error !', "%r has no %s property." % (line, row_uid_source))
-                    line_data.update({'uid': row_uid_source_object.id})
+                if line_resource_source is not None:
+                    line_ressource = getattr(line, line_resource_source, None)
+                    if line_ressource is None:
+                        raise osv.except_osv('Error !', "%r has no %s property." % (line, line_ressource))
+                    line_data.update({'res_id': line_ressource.id})
 
                 # Get all cells of the line
                 cells = getattr(line, cell_source, [])
@@ -120,7 +120,7 @@ class matrix(fields.dummy):
             # Add a row template at the end
             matrix_data.append({
                 'id': "template",
-                'uid': "template",
+                'res_id': "template",
                 'name': "Row template",
                 'type': "float",
                 'cells_data': active_dates,
@@ -130,7 +130,7 @@ class matrix(fields.dummy):
             matrix_def = {
                 'matrix_data': matrix_data,
                 'date_range': date_range,
-                'new_row_list': new_row_list,
+                'resource_list': resource_list,
                 'column_date_label_format': date_format,
                 'class': css_class
                 }

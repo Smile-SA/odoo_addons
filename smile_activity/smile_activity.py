@@ -41,8 +41,8 @@ class smile_activity_report(osv.osv):
             cell_source='cell_ids',
             date_range_source='period_id',
             date_format='%d',
-            new_row_source_type='smile.activity.project',
-            row_uid_source='project_id',
+            resource_type='smile.activity.project',
+            line_resource_source='project_id',
             string="Activity report lines",
             readonly=False,
             ),
@@ -64,6 +64,7 @@ class smile_activity_report(osv.osv):
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         result = super(smile_activity_report, self).read(cr, uid, ids, fields, context, load)
+        #import pdb; pdb.set_trace()
         # Let anyone read a cell value directly using the cell_LineID_YYYYMMMDD scheme
         if isinstance(ids, (int, long)):
             result = [result]
