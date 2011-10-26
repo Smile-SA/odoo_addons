@@ -16,6 +16,7 @@
                     <field name="active"/>
                     <field name="domain"/>
                     <field name="required"/>
+                    <field name="field_ids" colspan="4"/>
                 </form>
             </field>
         </record>
@@ -69,10 +70,27 @@
                 <form string="Analytic Distribution">
                     <field name="name"/>
                     <field name="active"/>
-                    <field name="axis1_id"/>
-                    <field name="axis2_id"/>
-                    <field name="version_ids" mode="tree,form" context="{'distribution_id': active_id}">
-                    </field>
+                    <field name="axis_src_id"/>
+                    <field name="axis_dest_id"/>
+                    <field name="period_ids" colspan="4" mode="tree,form">
+		                <tree string="Analytic Distribution Application Periods">
+		                    <field name="date_start"/>
+		                    <field name="date_stop"/>
+		                    <field name="key_ids"/>
+		                </tree>
+		                <form string="Analytic Distribution Application Period">
+		                    <field name="date_start"/>
+		                    <field name="date_stop"/>
+		                    <field name="key_ids" mode="tree,form" colspan="4" context="{'distribution_id': active_id}">
+								<tree string="Distribution Keys">
+				                    <field name="axis_src_item_name"/>
+				                    <field name="axis_dest_item_name"/>
+				                    <field name="rate"/>
+								</tree>
+		                    </field>
+		                </form>
+					</field>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </form>
             </field>
         </record>
@@ -84,9 +102,10 @@
             <field name="arch" type="xml">
                 <tree string="Analytic Distributions">
                     <field name="name"/>
-                    <field name="axis1_id"/>
-                    <field name="axis2_id"/>
+                    <field name="axis_src_id"/>
+                    <field name="axis_dest_id"/>
                     <field name="active"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -99,8 +118,8 @@
                 <search string="Analytic Distributions">
                     <group>
                         <field name="name"/>
-                        <field name="axis1_id"/>
-                        <field name="axis2_id"/>
+                        <field name="axis_src_id"/>
+                        <field name="axis_dest_id"/>
                     </group>
                 </search>
             </field>
@@ -111,7 +130,7 @@
             <field name="res_model">account.analytic.distribution</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'active_test': False}</field>
+            <field name="context">{'distribution_id':active_id}</field>
         </record>
         <menuitem action="action_account_analytic_distribution_form" id="menu_action_account_analytic_distribution_form" parent="account.menu_analytic_accounting" sequence="60"/>
 

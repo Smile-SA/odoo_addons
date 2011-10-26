@@ -19,7 +19,18 @@
 #
 ##############################################################################
 
+import time
+
 from osv import osv, fields
+
+def analytic_decorator(original_method):
+    def update_analytic_line(self, cr, *args, **kwargs):
+        res = original_method(self, cr, *args, **kwargs)        
+        if isinstance(self, osv.osv_pool) and self.get('account.analytic.axis') \
+        and hasattr(self.get('account.analytic.axis'), '_update_analytic_line_columns'):
+            self.get('account.analytic.axis')._update_analytic_line_columns(cr)
+        return res
+    return update_analytic_line
 
 class AnalyticAxis(osv.osv):
     _name = 'account.analytic.axis'
@@ -64,7 +75,7 @@ class AnalyticAxis(osv.osv):
 
         line_obj = self.pool.get('account.analytic.line')
         for axis in self.browse(cr, 1, ids, context):
-            if (not axis.active or context.get('ids_to_unlink')) and axis.ref in line_obj._columns:
+            if (not axis.active or context.get('unlink_axis')) and axis.ref in line_obj._columns:
                 del line_obj._columns[axis.ref]
                 if axis.field_ids:
                     for field in axis.field_ids:
@@ -78,13 +89,16 @@ class AnalyticAxis(osv.osv):
                     for field in axis.field_ids:
                         column = '%s_%s' % (axis.ref, field.id)
                         line_obj._columns[column] = fields.related(axis.ref, field.name, \
-                            type=field.ttype, relation=field.relation, store=True)
+                            type=field.ttype, relation=field.relation, store={
+                                # To store and to avoid the field re-computation
+                                'account.analytic.line': (lambda self, cr, uid, ids, context=None: [], None, 10),
+                            })
         line_obj._auto_init(cr, context)
         return True
 
     def __init__(self, pool, cr):
         super(AnalyticAxis, self).__init__(pool, cr)
-        self._update_analytic_line_columns(cr)
+        setattr(osv.osv_pool, 'init_set', analytic_decorator(getattr(osv.osv_pool, 'init_set')))
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(AnalyticAxis, self).create(cr, uid, vals, context)
@@ -98,7 +112,7 @@ class AnalyticAxis(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         context = context or {}
-        context['ids_to_unlink'] = True
+        context['unlink_axis'] = True
         self._update_analytic_line_columns(cr, ids, context)
         return super(AnalyticAxis, self).unlink(cr, uid, ids, context)
 AnalyticAxis()
@@ -112,7 +126,7 @@ class AnalyticDistribution(osv.osv):
         'active': fields.boolean('Active'),
         'axis_src_id': fields.many2one('account.analytic.axis', 'Source Axis', required=True),
         'axis_dest_id': fields.many2one('account.analytic.axis', 'Destination Axis', required=True),
-        'version_ids': fields.one2many('account.analytic.distribution.version', 'distribution_id', 'Versions'),
+        'period_ids': fields.one2many('account.analytic.distribution.period', 'distribution_id', 'Application Periods'),
         'company_id': fields.many2one('res.company', 'Company'),
     }
 
@@ -121,53 +135,74 @@ class AnalyticDistribution(osv.osv):
     }
 AnalyticDistribution()
 
-class AnalyticDistributionVersion(osv.osv):
-    _name = 'account.analytic.distribution.version'
-    _description = 'Analytic Distribution Version'
+class AnalyticDistributionApplicationPeriod(osv.osv):
+    _name = 'account.analytic.distribution.period'
+    _description = 'Analytic Distribution Application Period'
+    _rec_name = 'distribution_id'
 
     _columns = {
         'distribution_id': fields.many2one('account.analytic.distribution', 'Distribution', required=True),
-#        'active': fields.date('Active'),
         'date_start': fields.date('Start Date'),
-        'date_end': fields.date('End Date'),
-        'item_ids': fields.one2many('account.analytic.distribution.version.item', 'version_id', 'Keys'),
+        'date_stop': fields.date('End Date'),
+        'key_ids': fields.one2many('account.analytic.distribution.key', 'period_id', 'Keys'),
         'company_id': fields.related('distribution_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
     }
 
-    def _check_versions_overlap(self, cr, uid, ids, context=None):
+    def _check_periods_overlap(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for version in self.browse(cr, uid, ids, context):
-            domain = [
-                ('id', '<>', version.id),
-                '|', '|',
-                '&', ('date_start', '>=', version.date_start), ('date_start', '<=', version.date_end),
-                '&', ('date_end', '>=', version.date_start), ('date_end', '<=', version.date_end),
-                '&', ('date_start', '<=', version.date_start), ('date_end', '>=', version.date_end),
-            ]
+        for period in self.browse(cr, uid, ids, context):
+            domain = [('id', '<>', period.id)]
+            if period.date_start:
+                domain += ['|', ('date_stop', '>=', period.date_start), ('date_stop', '=', False)]
+            if period.date_stop:
+                domain += ['|', ('date_start', '>=', period.date_stop), ('date_start', '=', False)]
             if self.search(cr, uid, domain, context={'active_test': True}):
                 return False
         return True
 
     _constraints = [
-        (_check_versions_overlap, 'Some versions overlap!', ['date_start', 'date_end']),
+        (_check_periods_overlap, 'Some application periods overlap!', ['date_start', 'date_stop']),
     ]
-AnalyticDistributionVersion()
+AnalyticDistributionApplicationPeriod()
 
 class AnalyticDistributionItem(osv.osv):
-    _name = 'account.analytic.distribution.item'
+    _name = 'account.analytic.distribution.key'
     _description = 'Analytic Distribution Key'
+    _rec_name = 'period_id'
+
+    def _get_items(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for key in self.browse(cr, uid, ids, context):
+            distribution = key.period_id.distribution_id
+            axis_src_item_id = isinstance(key.axis_src_item_id, tuple) and key.axis_src_item_id[0] or key.axis_src_item_id
+            axis_dest_item_id = isinstance(key.axis_dest_item_id, tuple) and key.axis_dest_item_id[0] or key.axis_dest_item_id
+            axis_src_item_name = self.pool.get(distribution.axis_src_id.model).name_get(cr, uid, axis_src_item_id, context)
+            axis_dest_item_name = self.pool.get(distribution.axis_dest_id.model).name_get(cr, uid, axis_dest_item_id, context)
+            res[key.id] = {
+                'axis_src_item_name': axis_src_item_name and axis_src_item_name[0][1] or '',
+                'axis_dest_item_name': axis_dest_item_name and axis_dest_item_name[0][1] or '',
+            }
+        return res
 
     _columns = {
-        'version_id': fields.many2one('account.analytic.distribution.version', 'Distribution Version', required=True),
+        'period_id': fields.many2one('account.analytic.distribution.period', 'Distribution Application Period', required=True),
         'axis_src_item_id': fields.integer('Item of Source Axis', required=True),
-        'axis_dest_item_id': fields.integer('Item or Destination Axis', required=True),
+        'axis_src_item_name': fields.function(_get_items, method=True, type='char', string='Item of Source Axis', readonly=True, multi='distribution_key'),
+        'axis_dest_item_id': fields.integer('Item of Destination Axis', required=True),
+        'axis_dest_item_name': fields.function(_get_items, method=True, type='char', string='Item of Destination Axis', readonly=True, multi='distribution_key'),
         'rate': fields.float('Rate (%)', digits=(1, 2), required=True),
-        'company_id': fields.related('version_id', 'distribution_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
-        # Useful ?
-        'active': fields.date('Active'),
-        'date_start': fields.date('Start Date'),
-        'date_end': fields.date('End Date'),
+        'company_id': fields.related('period_id', 'distribution_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
+        'active': fields.boolean('Active', readonly=True),
+        'date_start': fields.date('Start Date', readonly=True),
+        'date_stop': fields.date('End Date', readonly=True),
+    }
+
+    _defaults = {
+        'active': True,
+        'date_start': time.strftime('%Y-%m-%d'),
     }
 
     def read(self, cr, uid, ids, allfields=None, context=None, load='_classic_read'):
@@ -183,7 +218,8 @@ class AnalyticDistributionItem(osv.osv):
                         res[field] = model_obj.name_get(cr, uid, res[field], context)[0]
                     elif isinstance(res, list):
                         for index in range(len(res)):
-                            res[index][field] = model_obj.name_get(cr, uid, res[index][field], context)[0]
+                            obj_name = model_obj.name_get(cr, uid, res[index][field], context)
+                            res[index][field] = obj_name and obj_name[0] or ''
         return res
 
     def fields_get(self, cr, uid, allfields=None, context=None):
@@ -198,7 +234,69 @@ class AnalyticDistributionItem(osv.osv):
                         'type': 'many2one',
                         'relation': axis.model,
                         'domain': axis.domain and eval(axis.domain),
-                        'context': context,
                     })
         return res
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(AnalyticDistributionItem, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        if view_type == 'form':
+            res['arch'] = """<form string="Distribution Key">
+    <field name="axis_src_item_id"/>
+    <field name="axis_dest_item_id"/>
+    <field name="rate"/>
+</form>"""
+        return res
+
+    def _deactivate_old_key(self, cr, uid, key_id, context=None):
+        context = context or {}
+        context['distribution_key_deactivation_in_progress'] = True
+        key = self.browse(cr, uid, key_id)#Do not pass context in order to have integer type fields
+        domain = [
+            ('id', '!=', key.id),
+            ('period_id', '=', key.period_id.id),
+            ('axis_src_item_id', '=', key.axis_src_item_id),
+            ('axis_dest_item_id', '=', key.axis_dest_item_id),
+        ]
+        old_key_ids = self.search(cr, uid, domain, context={'active_test': True})
+        if old_key_ids:
+            self.write(cr, uid, old_key_ids, {'active': False, 'date_stop': time.strftime('%Y-%m-%d')}, context)
+        return True
+
+    def create(self, cr, uid, vals, context=None):
+        new_key_id = super(AnalyticDistributionItem, self).create(cr, uid, vals, context)
+        self._deactivate_old_key(cr, uid, new_key_id, context)
+        return new_key_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        context = context or {}
+        if not context.get('distribution_key_deactivation_in_progress'):
+            if isinstance(ids, (int, long)):
+                ids = [ids]
+            vals.update({'date_start': time.strftime('%Y-%m-%d'), 'date_stop': False, 'active': True})
+            for key_id in ids:
+                new_key_id = self.copy(cr, uid, key_id, vals, context)
+                self._deactivate_old_key(cr, uid, new_key_id, context)
+            return True
+        else:
+            return super(AnalyticDistributionItem, self).write(cr, uid, ids, vals, context)
+
+    def _reactivate_old_keys(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        old_key_ids = []
+        for key in self.browse(cr, uid, ids):#Do not pass context in order to have integer type fields
+            domain = [
+                ('id', '!=', key.id),
+                ('period_id', '=', key.period_id.id),
+                ('axis_src_item_id', '=', key.axis_src_item_id),
+                ('axis_dest_item_id', '=', key.axis_dest_item_id),
+            ]
+            old_key_ids.extend(self.search(cr, uid, domain, limit=1, order='date_stop desc', context={'active_test': True}))
+        if old_key_ids:
+            self.write(cr, uid, old_key_ids, {'active': True, 'date_stop': False}, context)
+        return True
+
+    def unlink(self, cr, uid, ids, context=None):
+        self._reactivate_old_keys(cr, uid, ids, context)
+        return super(AnalyticDistributionItem, self).unlink(cr, uid, ids, context)
 AnalyticDistributionItem()
