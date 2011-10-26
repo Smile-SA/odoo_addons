@@ -39,9 +39,11 @@ class matrix(fields.dummy):
         # XXX Haven't found a cleaner way to get my matrix parameters... Any help is welcome ! :)
         # Property name from which we get the lines composing the matrix
         line_source = self.__dict__.get('line_source', None)
+        line_type = self.__dict__.get('line_type', None)
         # Property name from which we get the cells composing the matrix.
         # Cells are fetched from the lines as defined above.
         cell_source = self.__dict__.get('cell_source', None)
+        cell_type = self.__dict__.get('cell_type', None)
         # Property name of the relation field on which we'll call the date_range property
         date_range_source = self.__dict__.get('date_range_source', None)
         # The format we use to display date labels
@@ -143,6 +145,20 @@ class matrix(fields.dummy):
 
 
 
+def get_matrix_conf(osv_instance):
+    """ Utility method to get the configuration of the matrix field defined on the class the provided object is an instance of.
+        XXX only one matrix field is allowed per object class.
+    """
+    field_defs = osv_instance.__dict__['_columns'].values()
+    matrix_fields = [f for f in field_defs if f.__dict__.get('_fnct', None) and f.__dict__['_fnct'].im_class.__module__ == 'smile_activity.matrix_field']
+    if not len(matrix_fields):
+        return None
+    elif len(matrix_fields) > 1:
+        raise osv.except_osv('Error !', "You can't define more than one Matrix field on an object.")
+    return matrix_fields[0].__dict__
+
+
+
 def matrix_read_patch(func):
     """
     Let the matrix read the temporary fields that are not persistent in database.
@@ -162,10 +178,11 @@ def matrix_read_patch(func):
         ids = arg[3]
         fields = arg[4]
         context = kw.get('context', None)
+        conf = get_matrix_conf(obj)
         if isinstance(ids, (int, long)):
             result = [result]
         updated_result = []
-        cell_pool = obj.pool.get('smile.activity.report.cell')
+        cell_pool = obj.pool.get(conf['cell_type'])
         for props in result:
             unread_fields = set(fields).difference(set(props.keys()))
             for f_id in unread_fields:
@@ -211,6 +228,7 @@ def matrix_write_patch(func):
         ids = arg[3]
         vals = arg[4]
         context = kw.get('context', None)
+        conf = get_matrix_conf(obj)
         # Automaticcaly remove out of range cells if dates changes
         if 'start_date' in vals or 'end_date' in vals:
             obj.update_cells(cr, uid, ids, context)
@@ -236,13 +254,13 @@ def matrix_write_patch(func):
                             'report_id': report.id,
                             'project_id': line_project_id,
                             }
-                        line_id = obj.pool.get('smile.activity.report.line').create(cr, uid, vals, context)
+                        line_id = obj.pool.get(conf['line_type']).create(cr, uid, vals, context)
                         new_lines[line_project_id] = line_id
                 else:
                     line_id = int(line_id)
                 written_lines.append(line_id)
                 # Get the line
-                line = obj.pool.get('smile.activity.report.line').browse(cr, uid, line_id, context)
+                line = obj.pool.get(conf['line_type']).browse(cr, uid, line_id, context)
                 # Convert the raw value to the right one depending on the type of the line
                 if line.line_type != 'boolean':
                     # Quantity conversion
@@ -264,21 +282,21 @@ def matrix_write_patch(func):
                     'quantity': cell_value,
                     }
                 # Search for an existing cell at the given date
-                cell = obj.pool.get('smile.activity.report.cell').search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
+                cell = obj.pool.get(conf['cell_type']).search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
                 # Cell doesn't exists, create it
                 if not cell:
                     cell_vals.update({
                         'date': cell_date,
                         'line_id': line_id,
                         })
-                    obj.pool.get('smile.activity.report.cell').create(cr, uid, cell_vals, context)
+                    obj.pool.get(conf['cell_type']).create(cr, uid, cell_vals, context)
                 # Update cell with our data
                 else:
                     cell_id = cell[0]
-                    obj.pool.get('smile.activity.report.cell').write(cr, uid, cell_id, cell_vals, context)
+                    obj.pool.get(conf['cell_type']).write(cr, uid, cell_id, cell_vals, context)
         # If there was no references to one of our line it means it was deleted
         for report in obj.browse(cr, uid, ids, context):
             removed_lines = list(set([l.id for l in report.line_ids]).difference(set(written_lines)))
-            obj.pool.get('smile.activity.report.line').unlink(cr, uid, removed_lines, context)
+            obj.pool.get(conf['line_type']).unlink(cr, uid, removed_lines, context)
         return result
     return write_matrix_virtual_fields

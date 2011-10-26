@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
-from matrix_field import matrix
+from matrix_field import matrix, matrix_read_patch, matrix_write_patch
 
 
 
@@ -49,10 +49,13 @@ class smile_activity_workload(osv.osv):
 
     ## Native methods
 
+    @matrix_read_patch
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        # TODO: deduplicate this code with smile_activity_report.read()
-        result = super(smile_activity_workload, self).read(cr, uid, ids, fields, context, load)
-        return result
+        return super(smile_activity_workload, self).read(cr, uid, ids, fields, context, load)
+
+    @matrix_write_patch
+    def write(self, cr, uid, ids, vals, context=None):
+        return super(smile_activity_workload, self).write(cr, uid, ids, vals, context)
 
 smile_activity_workload()
 

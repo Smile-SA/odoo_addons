@@ -39,7 +39,9 @@ class smile_activity_report(osv.osv):
         'line_ids': fields.one2many('smile.activity.report.line', 'report_id', "Activity lines"),
         'matrix_line_ids': matrix(
             line_source='line_ids',
+            line_type='smile.activity.report.line',
             cell_source='cell_ids',
+            cell_type='smile.activity.report.cell',
             date_range_source='period_id',
             date_format='%d',
             resource_type='smile.activity.project',
