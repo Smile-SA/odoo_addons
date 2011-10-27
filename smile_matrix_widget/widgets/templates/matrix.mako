@@ -151,7 +151,7 @@
                     %for date in value['date_range']:
                         <td>
                             <%
-                                column_values = [line['cells_data'][date] for line in lines if line['type'] == 'float' and date in line['cells_data']]
+                                column_values = [line['cells_data'][date] for line in lines if line['widget'] == 'float' and date in line['cells_data']]
                             %>
                             %if len(column_values):
                                 <%
@@ -172,7 +172,7 @@
                     %endfor
                     <td>
                         <%
-                            grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['type'] == 'float'])
+                            grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['widget'] == 'float'])
                         %>
                         <span id="grand_total"
                             %if not editable and grand_total <= 0.0:
@@ -183,7 +183,7 @@
                         </span>
                     </td>
                 </tr>
-                %for line in [l for l in lines if l['type'] == 'boolean']:
+                %for line in [l for l in lines if l['widget'] == 'boolean']:
                     <tr id="${'line_%s' % line['id']}" class="boolean_line">
                         ${render_resource(line)}
                         <td></td>
@@ -227,7 +227,7 @@
                 %endfor
             </tfoot>
             <tbody>
-                %for line in [l for l in lines if l['type'] != 'boolean']:
+                %for line in [l for l in lines if l['widget'] != 'boolean']:
                     <tr id="${'line_%s' % line['id']}">
                         ${render_resource(line)}
                         <td>

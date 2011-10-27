@@ -41,6 +41,7 @@ class smile_activity_report(osv.osv):
             line_property='line_ids',
             line_type='smile.activity.report.line',
             line_inverse_property='report_id',
+            line_widget_property='line_type',
             cell_property='cell_ids',
             cell_type='smile.activity.report.cell',
             cell_value_property='cell_value',
@@ -185,11 +186,22 @@ class smile_activity_report_cell(osv.osv):
     def _set_cell_value(self, cr, uid, ids, name, value, arg, context=None):
         """ Transform and save the cell value to the quantity
         """
-        if not value:
-            return False
         if isinstance(ids, (int, long)):
             ids = [ids]
-        self.write(cr, uid, [cell.id for cell in self.browse(cr, uid, ids, context=context)], {'quantity': value}, context)
+        for cell in self.browse(cr, uid, ids, context=context):
+            # Convert the raw value to the right one depending on the type of the line
+            cell_value = None
+            if cell.line_id.line_type != 'boolean':
+                # Float conversion
+                if type(value) is type(''):
+                    cell_value = float(value)
+            else:
+                # Boolean conversion
+                if value == '1':
+                    cell_value = 1.0
+                else:
+                    cell_value = 0.0
+            self.write(cr, uid, cell.id, {'quantity': cell_value}, context)
         return True
 
 

@@ -58,6 +58,7 @@ class matrix(fields.dummy):
         line_type = self.__dict__.get('line_type', None)
         # Get the property of line from which we derive the matrix resource
         line_resource_property = self.__dict__.get('line_resource_property', None)
+        line_widget_property = self.__dict__.get('line_widget_property', None)
         # Property name from which we get the cells composing the matrix.
         # Cells are fetched from the lines as defined above.
         cell_property = self.__dict__.get('cell_property', None)
@@ -106,11 +107,18 @@ class matrix(fields.dummy):
                 line_data = {
                     'id': line.id,
                     'name': line.name,
-                    # Is the field a boolean or a float ?
-                    'type': getattr(line, 'line_type', 'float'),
                     # Is this resource required ?
                     'required': getattr(getattr(line, line_resource_property), 'required', False),
                     }
+
+                # Get the type of the widget we'll use to display cell values
+                widget_type = 'float'
+                if line_widget_property is not None:
+                    line_widget = getattr(line, line_widget_property, None)
+                    if line_widget is None:
+                        raise osv.except_osv('Error !', "%r has no %s property." % (line, line_widget_property))
+                    widget_type = line_widget
+                line_data.update({'widget': widget_type})
 
                 # Get the row UID corresponding to the line
                 if line_resource_property is not None:
@@ -148,7 +156,7 @@ class matrix(fields.dummy):
                 'id': "template",
                 'res_id': "template",
                 'name': "Row template",
-                'type': "float",
+                'widget': "float",
                 'cells_data': template_cells_data,
                 })
 
@@ -294,27 +302,9 @@ def matrix_write_patch(func):
                 cell_id_fragments = parse_virtual_field_id(f_id)
                 # Are we updating an existing line or creating a new one ?
                 line_id = line_id_map[cell_id_fragments[1]]
-                # Get the line
-                line = obj.pool.get(conf['line_type']).browse(cr, uid, line_id, context)
-                # Convert the raw value to the right one depending on the type of the line
-                cell_value = None
-                line_data_type = getattr(line, 'line_type', 'float')
-                if line_data_type != 'boolean':
-                    # Quantity conversion
-                    if type(f_value) is type(''):
-                        cell_value = float(f_value)
-                else:
-                    # Boolean conversion
-                    if f_value == '1':
-                        cell_value = True
-                    else:
-                        cell_value = False
-                # Ignore non-modified cells
-                if cell_value is None:
-                    continue
                 # Prepare the cell value
                 cell_vals = {
-                    conf['cell_value_property']: cell_value,
+                    conf['cell_value_property']: f_value,
                     }
                 # Search for an existing cell at the given date
                 cell_date = datetime.datetime.strptime(cell_id_fragments[2], '%Y%m%d')
