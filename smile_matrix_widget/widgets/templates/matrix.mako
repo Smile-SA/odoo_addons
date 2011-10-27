@@ -151,7 +151,7 @@
                     %for date in value['date_range']:
                         <td>
                             <%
-                                column_values = [line['cells_data'][date] for line in lines if line['widget'] == 'float' and date in line['cells_data']]
+                                column_values = [line['cells_data'][date] for line in lines if line['widget'] != 'boolean' and date in line['cells_data']]
                             %>
                             %if len(column_values):
                                 <%
@@ -172,7 +172,7 @@
                     %endfor
                     <td>
                         <%
-                            grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['widget'] == 'float'])
+                            grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['widget'] != 'boolean'])
                         %>
                         <span id="grand_total"
                             %if not editable and grand_total <= 0.0:
@@ -243,7 +243,7 @@
                                 %>
                                 %if cell_value is not None:
                                     %if editable:
-                                        <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${render_float(cell_value)}" size="1" class="float"/>
+                                        <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${render_float(cell_value)}" size="1" class="${line['widget']}"/>
                                     %else:
                                         <span kind="float" id="${cell_id}" value="${render_float(cell_value)}"
                                             %if not editable and cell_value <= 0.0:

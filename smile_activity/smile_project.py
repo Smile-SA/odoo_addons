@@ -70,9 +70,9 @@ class smile_activity_project(osv.osv):
     _columns = {
         'name': fields.char('Name', size=32),
         'value_type': fields.selection([
-            ('float', 'Float'),
-            ('boolean', 'Boolean'),
-            ], 'Value type', select=True, required=True),
+            ('increment', 'Increment button'),
+            ('boolean', 'Check box'),
+            ], 'Matrix widget type', select=True, required=True),
         'required': fields.boolean('Required in report'),
         'start_date': fields.date('Start', required=True),
         'end_date': fields.date('End', required=True),
@@ -81,7 +81,7 @@ class smile_activity_project(osv.osv):
         }
 
     _defaults = {
-        'value_type': 'float',
+        'value_type': 'increment',
         'required': False,
         }
 

@@ -58,6 +58,7 @@ class matrix(fields.dummy):
         line_type = self.__dict__.get('line_type', None)
         # Get the property of line from which we derive the matrix resource
         line_resource_property = self.__dict__.get('line_resource_property', None)
+        default_widget_type = self.__dict__.get('default_widget_type', 'float')
         line_widget_property = self.__dict__.get('line_widget_property', None)
         # Property name from which we get the cells composing the matrix.
         # Cells are fetched from the lines as defined above.
@@ -112,7 +113,7 @@ class matrix(fields.dummy):
                     }
 
                 # Get the type of the widget we'll use to display cell values
-                widget_type = 'float'
+                widget_type = default_widget_type
                 if line_widget_property is not None:
                     line_widget = getattr(line, line_widget_property, None)
                     if line_widget is None:
@@ -156,7 +157,7 @@ class matrix(fields.dummy):
                 'id': "template",
                 'res_id': "template",
                 'name': "Row template",
-                'widget': "float",
+                'widget': default_widget_type,
                 'cells_data': template_cells_data,
                 })
 

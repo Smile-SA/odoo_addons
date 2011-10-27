@@ -1,15 +1,16 @@
 $(document).ready(function(){
 
     // Selector expressions
-    var float_cells_selector = "input[kind!='boolean'][name^='cell_']:not(:disabled)";
+    var increment_cells_selector = "input[kind='float'][class='increment'][name^='cell_']:not(:disabled)";
+
     var increment_button_selector = ".button.increment:not(:disabled)";
-    var global_float_cells_selector = ".matrix " + float_cells_selector;
+    var global_increment_cells_selector = ".matrix " + increment_cells_selector;
     var global_increment_button_selector = ".matrix " + increment_button_selector;
     var last_row_selector = ".matrix tbody tr:last";
 
     // Replace all integer fields by a button template, then hide the original field
     var button_template = $("#matrix_button_template");
-    var cells = $(global_float_cells_selector);
+    var cells = $(global_increment_cells_selector);
     cells.each(function(i, cell){
         var $cell = $(cell);
         $cell.after($(button_template).clone().attr('id', 'button_' + $cell.attr("id")).text($cell.val()));
@@ -38,7 +39,7 @@ $(document).ready(function(){
     });
 
     // Compute float totals
-    $(global_float_cells_selector).change(function(){
+    $(global_increment_cells_selector).change(function(){
         name_fragments = $(this).attr("id").split("_");
         column_index = name_fragments[2];
         row_index = name_fragments[1];
@@ -119,7 +120,7 @@ $(document).ready(function(){
         var last_row = $(last_row_selector);
         var new_row = last_row.clone(true).hide();
         new_row_index = "new" + res_id;
-        new_row.find(float_cells_selector).each(function(){
+        new_row.find(increment_cells_selector).each(function(){
             // Compute new cell and button ID
             name_fragments = $(this).attr("id").split("_");
             column_index = name_fragments[2];
