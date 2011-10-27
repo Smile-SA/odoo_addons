@@ -37,12 +37,16 @@ class smile_activity_workload(osv.osv):
             line_property='line_ids',
             line_type='smile.activity.workload.line',
             line_inverse_property='workload_id',
+
             cell_property='cell_ids',
             cell_type='smile.activity.workload.cell',
+
             date_range_property='project_id',
             date_format='%m/%y',
-            resource_type='smile.activity.profile',
-            line_resource_property='profile_id',
+
+            resource_type='smile.activity.employee',
+            line_resource_property='employee_id',
+
             css_class=['workload'],
             experimental_slider=True,
             string="Workload lines",
@@ -69,10 +73,64 @@ class smile_activity_workload_line(osv.osv):
     _name = 'smile.activity.workload.line'
 
     _columns = {
-        'name': fields.related('profile_id', 'name', type='char', string='Profile name', size=32, readonly=True),
+        'name': fields.related('employee_id', 'name', type='char', string='Name', size=32, readonly=True),
         'workload_id': fields.many2one('smile.activity.workload', "Workload", required=True, ondelete='cascade'),
-        'profile_id': fields.many2one('smile.activity.profile', "Profile", required=True),
+        'profile_id': fields.many2one('smile.activity.profile', "Profile", required=False),
         'employee_id': fields.many2one('smile.activity.employee', "Employee", required=False),
+        'cell_ids': fields.one2many('smile.activity.workload.cell', 'line_id', "Cells"),
         }
 
 smile_activity_workload_line()
+
+
+
+class smile_activity_workload_cell(osv.osv):
+    _name = 'smile.activity.workload.cell'
+
+    _order = "date"
+
+
+    ## Fields definition
+
+    _columns = {
+        'date': fields.date('Date', required=True),
+        'quantity': fields.float('Quantity', required=True),
+        'line_id': fields.many2one('smile.activity.workload.line', "Workload line", required=True, ondelete='cascade'),
+        }
+
+    _defaults = {
+        'quantity': 0.0,
+        }
+
+
+    ## Constraints
+
+    def _check_quantity(self, cr, uid, ids, context=None):
+        for cell in self.browse(cr, uid, ids, context):
+            if cell.quantity < 0:
+                return False
+        return True
+
+    def _check_date(self, cr, uid, ids, context=None):
+        for cell in self.browse(cr, uid, ids,context):
+            date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
+            workload = cell.line_id.workload_id
+            start_date = datetime.datetime.strptime(workload.start_date, '%Y-%m-%d')
+            end_date = datetime.datetime.strptime(workload.end_date, '%Y-%m-%d')
+            if date < start_date or date > end_date:
+                return False
+        return True
+
+    def _check_duplicate(self, cr, uid, ids, context=None):
+        for cell in self.browse(cr, uid, ids, context):
+            if len(self.search(cr, uid, [('date', '=', cell.date), ('line_id', '=', cell.line_id.id)], context=context)) > 1:
+                return False
+        return True
+
+    _constraints = [
+        (_check_quantity, "Quantity can't be negative.", ['quantity']),
+        (_check_date, "Cell date is out of the activity report date range.", ['date']),
+        (_check_duplicate, "Two cells can't share the same date.", ['date']),
+        ]
+
+smile_activity_workload_cell()

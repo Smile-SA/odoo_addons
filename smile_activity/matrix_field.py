@@ -36,6 +36,7 @@ class matrix(fields.dummy):
         """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
         """
         # Get the matrix parameters
+        # TODO: guess line_type, cell_type and resource_type based on their xxx_property parameter counterparts
         # XXX Haven't found a cleaner way to get my matrix parameters... Any help is welcome ! :)
         # Property name from which we get the lines composing the matrix
         line_property = self.__dict__.get('line_property', None)
