@@ -12,6 +12,12 @@
         text-transform: none;
     }
 
+    .item .matrix input {
+        width: inherit;
+        min-width: inherit;
+    }
+
+
     /* Set our style */
 
     .matrix .toolbar {
@@ -80,12 +86,10 @@
     <%
         if type(f) != type(0.0):
             f = float(f)
+        if int(f) == f:
+            f = int(f)
+        return f
     %>
-    %if int(f) == f:
-        ${int(f)}
-    %else:
-        ${f}
-    %endif
 </%def>
 
 
