@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import datetime
+
 from osv import osv, fields
 from matrix_field import matrix, matrix_read_patch, matrix_write_patch
 
@@ -37,16 +39,13 @@ class smile_activity_workload(osv.osv):
             line_property='line_ids',
             line_type='smile.activity.workload.line',
             line_inverse_property='workload_id',
-
             cell_property='cell_ids',
             cell_type='smile.activity.workload.cell',
-
+            cell_value_property='quantity',
             date_range_property='project_id',
             date_format='%m/%y',
-
             resource_type='smile.activity.employee',
             line_resource_property='employee_id',
-
             css_class=['workload'],
             experimental_slider=True,
             string="Workload lines",
@@ -96,12 +95,11 @@ class smile_activity_workload_line(osv.osv):
     def generate_cells(self, cr, uid, line, context=None):
         """ This method generate all cells between the date range.
         """
-        project_lines = line.report_id.project_id.active_line_ids
         vals = {
             'line_id': line.id
             }
-        for project_line in project_lines:
-            vals.update({'date': period_line.date})
+        for cell_date in line.workload_id.project_id.date_range:
+            vals.update({'date': cell_date})
             self.pool.get('smile.activity.workload.cell').create(cr, uid, vals, context)
         return
 

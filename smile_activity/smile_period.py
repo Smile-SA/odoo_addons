@@ -196,7 +196,7 @@ class smile_activity_period(osv.osv):
 
     _constraints = [
         (_check_period_start, "It doesn't make sense to create a period starting before the current month.", ['start_date']),
-        (_check_period_range, "Stop date must be greater or equal to start date.", ['start_date', 'end_date']),
+        (_check_period_range, "End date must be greater or equal to start date.", ['start_date', 'end_date']),
         (_check_period_lenght, "A period must cover the whole month.", ['start_date', 'end_date']),
         (_check_overlapping, "A period can't overlap another one.", ['start_date', 'end_date']),
         ]

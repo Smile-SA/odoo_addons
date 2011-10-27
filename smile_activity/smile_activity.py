@@ -43,6 +43,7 @@ class smile_activity_report(osv.osv):
             line_inverse_property='report_id',
             cell_property='cell_ids',
             cell_type='smile.activity.report.cell',
+            cell_value_property='cell_value',
             date_range_property='period_id',
             active_date_range_property='active_date_range',
             date_format='%d',
@@ -181,6 +182,16 @@ class smile_activity_report_cell(osv.osv):
             result[cell.id] = val
         return result
 
+    def _set_cell_value(self, cr, uid, ids, name, value, arg, context=None):
+        """ Transform and save the cell value to the quantity
+        """
+        if not value:
+            return False
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        self.write(cr, uid, [cell.id for cell in self.browse(cr, uid, ids, context=context)], {'quantity': value}, context)
+        return True
+
 
     ## Fields definition
 
@@ -188,7 +199,8 @@ class smile_activity_report_cell(osv.osv):
         'date': fields.date('Date', required=True),
         'quantity': fields.float('Quantity', required=True),
         'line_id': fields.many2one('smile.activity.report.line', "Activity report line", required=True, ondelete='cascade'),
-        'cell_value': fields.function(_get_cell_value, string="Cell value", type='string', readonly=True, method=True),
+        # cell_value is a proxy of quantity that is transforming the value according the line_type
+        'cell_value': fields.function(_get_cell_value, fnct_inv=_set_cell_value, string="Cell value", type='string', readonly=True, method=True),
         }
 
     _defaults = {

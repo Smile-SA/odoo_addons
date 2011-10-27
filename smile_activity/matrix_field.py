@@ -62,6 +62,7 @@ class matrix(fields.dummy):
         # Cells are fetched from the lines as defined above.
         cell_property = self.__dict__.get('cell_property', None)
         cell_type = self.__dict__.get('cell_type', None)
+        cell_value_property = self.__dict__.get('cell_value_property', None)
         # Property name of the relation field on which we'll call the date_range property
         date_range_property = self.__dict__.get('date_range_property', None)
         active_date_range_property = self.__dict__.get('active_date_range_property', None)
@@ -73,7 +74,7 @@ class matrix(fields.dummy):
         css_class = self.__dict__.get('css_class', [])
 
         # Check that all required parameters are there
-        for p_name in ['line_property', 'line_type', 'line_resource_property', 'cell_property', 'cell_type', 'date_range_property']:
+        for p_name in ['line_property', 'line_type', 'line_resource_property', 'cell_property', 'cell_type', 'cell_value_property', 'date_range_property']:
             if not p_name:
                 raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
 
@@ -123,7 +124,7 @@ class matrix(fields.dummy):
                 cells_data = {}
                 for cell in cells:
                     cell_date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
-                    cells_data[cell_date.strftime('%Y%m%d')] = cell.cell_value
+                    cells_data[cell_date.strftime('%Y%m%d')] = getattr(cell, cell_value_property)
                 line_data.update({'cells_data': cells_data})
                 matrix_data.append(line_data)
 
@@ -239,7 +240,7 @@ def matrix_read_patch(func):
                             cell_id = cell_pool.search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
                             if cell_id:
                                 cell = cell_pool.browse(cr, uid, cell_id, context)[0]
-                                field_value = cell.cell_value
+                                field_value = getattr(cell, conf['cell_value_property'])
                         elif f_id_elements[0] == 'res':
                             if line_id:
                                 line = line_pool.browse(cr, uid, line_id, context)
@@ -297,7 +298,8 @@ def matrix_write_patch(func):
                 line = obj.pool.get(conf['line_type']).browse(cr, uid, line_id, context)
                 # Convert the raw value to the right one depending on the type of the line
                 cell_value = None
-                if line.line_type != 'boolean':
+                line_data_type = getattr(line, 'line_type', 'float')
+                if line_data_type != 'boolean':
                     # Quantity conversion
                     if type(f_value) is type(''):
                         cell_value = float(f_value)
@@ -312,7 +314,7 @@ def matrix_write_patch(func):
                     continue
                 # Prepare the cell value
                 cell_vals = {
-                    'quantity': cell_value,
+                    conf['cell_value_property']: cell_value,
                     }
                 # Search for an existing cell at the given date
                 cell_date = datetime.datetime.strptime(cell_id_fragments[2], '%Y%m%d')

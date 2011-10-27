@@ -85,4 +85,34 @@ class smile_activity_project(osv.osv):
         'required': False,
         }
 
+
+    ## Constraints methods
+
+    def _check_start_date(self, cr, uid, ids, context=None):
+        for project in self.browse(cr, uid, ids, context):
+            start_date = self._str_to_date(project.start_date)
+            if start_date != self._get_month_start(start_date):
+                return False
+        return True
+
+    def _check_end_date(self, cr, uid, ids, context=None):
+        for project in self.browse(cr, uid, ids, context):
+            end_date = self._str_to_date(project.end_date)
+            if end_date != self._get_month_end(end_date):
+                return False
+        return True
+
+    def _check_date_range(self, cr, uid, ids, context=None):
+        for period in self.browse(cr, uid, ids, context):
+            # Dates are YYYY-MM-DD strings, so can be compared as-is
+            if period.start_date > period.end_date:
+                return False
+        return True
+
+    _constraints = [
+        (_check_start_date, "Start date should be set to the first day of a month.", ['start_date']),
+        (_check_end_date, "End date should be set to the last day of a month.", ['end_date']),
+        (_check_date_range, "Stop date must be greater or equal to end date.", ['start_date', 'end_date']),
+        ]
+
 smile_activity_project()
