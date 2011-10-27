@@ -44,6 +44,7 @@ class smile_activity_report(osv.osv):
             cell_property='cell_ids',
             cell_type='smile.activity.report.cell',
             date_range_property='period_id',
+            active_date_range_property='active_date_range',
             date_format='%d',
             resource_type='smile.activity.project',
             line_resource_property='project_id',

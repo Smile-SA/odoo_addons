@@ -61,7 +61,7 @@ class smile_activity_project(osv.osv):
             while date <= range_end:
                 month_range.append(date)
                 date = date + relativedelta(months=1)
-            result[project.id] = [(m, m) for m in month_range]
+            result[project.id] = month_range
         return result
 
 

@@ -80,6 +80,31 @@ class smile_activity_workload_line(osv.osv):
         'cell_ids': fields.one2many('smile.activity.workload.cell', 'line_id', "Cells"),
         }
 
+
+    ## Native methods
+
+    def create(self, cr, uid, vals, context=None):
+        line_id = super(smile_activity_workload_line, self).create(cr, uid, vals, context)
+        # Create default cells
+        line = self.browse(cr, uid, line_id, context)
+        self.generate_cells(cr, uid, line, context)
+        return line_id
+
+
+    ## Custom methods
+
+    def generate_cells(self, cr, uid, line, context=None):
+        """ This method generate all cells between the date range.
+        """
+        project_lines = line.report_id.project_id.active_line_ids
+        vals = {
+            'line_id': line.id
+            }
+        for project_line in project_lines:
+            vals.update({'date': period_line.date})
+            self.pool.get('smile.activity.workload.cell').create(cr, uid, vals, context)
+        return
+
 smile_activity_workload_line()
 
 

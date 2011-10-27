@@ -100,7 +100,7 @@ class smile_activity_period(osv.osv):
             while date <= end_date:
                 day_range.append(date)
                 date = date + datetime.timedelta(days=1)
-            result[period.id] = [(d, d) for d in day_range]
+            result[period.id] = day_range
         return result
 
     def _get_active_day_range(self, cr, uid, ids, name, arg, context=None):
@@ -108,7 +108,7 @@ class smile_activity_period(osv.osv):
         """
         res = {}
         for period in self.browse(cr, uid, ids, context):
-            res[period.id] = [(l.date, l.date) for l in period.active_line_ids]
+            res[period.id] = [self._str_to_date(l.date) for l in period.active_line_ids]
         return res
 
 
@@ -231,7 +231,7 @@ class smile_activity_period(osv.osv):
                 self.pool.get('smile.activity.period.line').unlink(cr, uid, outdated_lines, context)
             # Create missing lines to cover the whole period
             exiting_line_dates = [self._str_to_date(l.date) for l in period.line_ids]
-            for date in [d[0] for d in period.date_range]:
+            for date in [self._str_to_date(d) for d in period.date_range]:
                 if date not in exiting_line_dates:
                     vals = {
                         'date': date,

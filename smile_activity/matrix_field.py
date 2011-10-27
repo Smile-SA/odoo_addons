@@ -29,8 +29,23 @@ class matrix(fields.dummy):
     """ A custom field to prepare data for, and mangle data from, the matrix widget.
     """
 
-    def date_to_str(self, date):
+    ## Utility methods
+
+    def _date_to_str(self, date):
         return date.strftime('%Y%m%d')
+
+    def _is_date(self, date):
+        return isinstance(date, (datetime.date, datetime.datetime))
+
+    def _str_to_date(self, date):
+        """ Transform string date to a proper date object
+        """
+        if not self._is_date(date):
+            date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+        return date
+
+
+    ## Native methods
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
@@ -49,6 +64,7 @@ class matrix(fields.dummy):
         cell_type = self.__dict__.get('cell_type', None)
         # Property name of the relation field on which we'll call the date_range property
         date_range_property = self.__dict__.get('date_range_property', None)
+        active_date_range_property = self.__dict__.get('active_date_range_property', None)
         # The format we use to display date labels
         date_format = self.__dict__.get('date_format', None)
         # The object type we use to create new rows
@@ -75,8 +91,6 @@ class matrix(fields.dummy):
                 raise osv.except_osv('Error !', "%r has no date_range property." % date_range_property_object)
             if type(date_range) is not type([]):
                 raise osv.except_osv('Error !', "date_range must return data that looks like selection field data.")
-            # Format our date range for our matrix
-            date_range = [self.date_to_str(d) for (d, l) in date_range]
 
             # Get the list of all objects new rows of the matrix can be linked to
             resource_list = []
@@ -113,28 +127,34 @@ class matrix(fields.dummy):
                 line_data.update({'cells_data': cells_data})
                 matrix_data.append(line_data)
 
-            # Get the list of active dates that will serve us to populate default content of the row template cells.
-            # TODO: Make a little bit more clear by defining a "default_cell_value" method of some sort
-            active_dates = {}
-            active_date_range = getattr(date_range_property_object, 'active_date_range', None)
-            if active_date_range is not None:
-                if type(active_date_range) is not type([]):
-                    raise osv.except_osv('Error !', "active_date_range must return data that looks like selection field data.")
-                active_dates = dict([(datetime.datetime.strptime(d, '%Y-%m-%d').strftime('%Y%m%d'), 0.0) for (d, l) in active_date_range])
-
+            # Get default cells and their values for the template row.
+            template_cells_data = {}
+            # Get active date range. Default is to let all dates active.
+            if active_date_range_property is None:
+                active_date_range = date_range
+            else:
+                active_date_range = getattr(date_range_property_object, active_date_range_property, None)
+                if active_date_range is None:
+                    raise osv.except_osv('Error !', "%r has no %s property." % (date_range_property_object, active_date_range_property))
+            for d in active_date_range:
+                if not self._is_date(d):
+                    raise osv.except_osv('Error !', "%s must return a list of dates." % active_date_range_property)
+            # TODO: Add a "default_cell_value" method of some sort ?
+            default_template_value = 0.0
+            template_cells_data = dict([(self._date_to_str(d), default_template_value) for d in active_date_range])
             # Add a row template at the end
             matrix_data.append({
                 'id': "template",
                 'res_id': "template",
                 'name': "Row template",
                 'type': "float",
-                'cells_data': active_dates,
+                'cells_data': template_cells_data,
                 })
 
             # Pack all data required to render the matrix
             matrix_def = {
                 'matrix_data': matrix_data,
-                'date_range': date_range,
+                'date_range': [self._date_to_str(d) for d in date_range],  # Format our date range for our matrix # XXX Keep them as date objects ?
                 'resource_list': resource_list,
                 'column_date_label_format': date_format,
                 'class': css_class
