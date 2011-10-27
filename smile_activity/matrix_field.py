@@ -38,25 +38,25 @@ class matrix(fields.dummy):
         # Get the matrix parameters
         # XXX Haven't found a cleaner way to get my matrix parameters... Any help is welcome ! :)
         # Property name from which we get the lines composing the matrix
-        line_source = self.__dict__.get('line_source', None)
+        line_property = self.__dict__.get('line_property', None)
         line_type = self.__dict__.get('line_type', None)
+        # Get the property of line from which we derive the matrix resource
+        line_resource_property = self.__dict__.get('line_resource_property', None)
         # Property name from which we get the cells composing the matrix.
         # Cells are fetched from the lines as defined above.
-        cell_source = self.__dict__.get('cell_source', None)
+        cell_property = self.__dict__.get('cell_property', None)
         cell_type = self.__dict__.get('cell_type', None)
         # Property name of the relation field on which we'll call the date_range property
-        date_range_source = self.__dict__.get('date_range_source', None)
+        date_range_property = self.__dict__.get('date_range_property', None)
         # The format we use to display date labels
         date_format = self.__dict__.get('date_format', None)
         # The object type we use to create new rows
         resource_type = self.__dict__.get('resource_type', None)
-        # Get the property of line from which we derive the matrix resource
-        line_resource_source = self.__dict__.get('line_resource_source', None)
         # Additional classes can be manually added
         css_class = self.__dict__.get('css_class', [])
 
         # Check that all required parameters are there
-        for p_name in ['line_source', 'line_type', 'line_resource_source', 'cell_source', 'cell_type', 'date_range_source']:
+        for p_name in ['line_property', 'line_type', 'line_resource_property', 'cell_property', 'cell_type', 'date_range_property']:
             if not p_name:
                 raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
 
@@ -66,12 +66,12 @@ class matrix(fields.dummy):
             matrix_data = []
 
             # Get the date range composing the timeline
-            date_range_source_object = getattr(base_object, date_range_source, None)
-            if not date_range_source_object:
-                raise osv.except_osv('Error !', "%r has no %s property." % (base_object, date_range_source))
-            date_range = getattr(date_range_source_object, 'date_range', None)
+            date_range_property_object = getattr(base_object, date_range_property, None)
+            if not date_range_property_object:
+                raise osv.except_osv('Error !', "%r has no %s property." % (base_object, date_range_property))
+            date_range = getattr(date_range_property_object, 'date_range', None)
             if date_range is None:
-                raise osv.except_osv('Error !', "%r has no date_range property." % date_range_source_object)
+                raise osv.except_osv('Error !', "%r has no date_range property." % date_range_property_object)
             if type(date_range) is not type([]):
                 raise osv.except_osv('Error !', "date_range must return data that looks like selection field data.")
             # Format our date range for our matrix
@@ -84,7 +84,7 @@ class matrix(fields.dummy):
                 resource_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)]
 
             # Browse all lines that will compose our matrix
-            lines = getattr(base_object, line_source, [])
+            lines = getattr(base_object, line_property, [])
             for line in lines:
                 # Transfer some line data to the matrix widget
                 line_data = {
@@ -93,18 +93,18 @@ class matrix(fields.dummy):
                     # Is the field a boolean or a float ?
                     'type': getattr(line, 'line_type', 'float'),
                     # Is this resource required ?
-                    'required': getattr(getattr(line, line_resource_source), 'required', False),
+                    'required': getattr(getattr(line, line_resource_property), 'required', False),
                     }
 
                 # Get the row UID corresponding to the line
-                if line_resource_source is not None:
-                    line_ressource = getattr(line, line_resource_source, None)
+                if line_resource_property is not None:
+                    line_ressource = getattr(line, line_resource_property, None)
                     if line_ressource is None:
                         raise osv.except_osv('Error !', "%r has no %s property." % (line, line_ressource))
                     line_data.update({'res_id': line_ressource.id})
 
                 # Get all cells of the line
-                cells = getattr(line, cell_source, [])
+                cells = getattr(line, cell_property, [])
                 cells_data = {}
                 for cell in cells:
                     cell_date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
@@ -115,7 +115,7 @@ class matrix(fields.dummy):
             # Get the list of active dates that will serve us to populate default content of the row template cells.
             # TODO: Make a little bit more clear by defining a "default_cell_value" method of some sort
             active_dates = {}
-            active_date_range = getattr(date_range_source_object, 'active_date_range', None)
+            active_date_range = getattr(date_range_property_object, 'active_date_range', None)
             if active_date_range is not None:
                 if type(active_date_range) is not type([]):
                     raise osv.except_osv('Error !', "active_date_range must return data that looks like selection field data.")
@@ -222,7 +222,7 @@ def matrix_read_patch(func):
                         elif f_id_elements[0] == 'res':
                             if line_id:
                                 line = line_pool.browse(cr, uid, line_id, context)
-                                field_value = getattr(line, conf['line_resource_source']).id
+                                field_value = getattr(line, conf['line_resource_property']).id
                     props.update({f_id: field_value})
             updated_result.append(props)
         if isinstance(ids, (int, long)):
@@ -260,8 +260,8 @@ def matrix_write_patch(func):
                 if line_id.startswith('new'):
                     res_id = int(f_value)
                     line_vals = {
-                        conf['line_relation_property']: report.id,
-                        conf['line_resource_source']: res_id,
+                        conf['line_inverse_property']: report.id,
+                        conf['line_resource_property']: res_id,
                         }
                     line_id = obj.pool.get(conf['line_type']).create(cr, uid, line_vals, context)
                 line_id_map[f_id_elements[1]] = int(line_id)
