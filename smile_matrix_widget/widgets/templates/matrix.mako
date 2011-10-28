@@ -83,13 +83,13 @@
 
 
 <%def name="render_float(f)">
-    <%
-        if type(f) != type(0.0):
-            f = float(f)
-        if int(f) == f:
-            f = int(f)
-        return f
-    %>
+<%
+    if type(f) != type(0.0):
+        f = float(f)
+    if int(f) == f:
+        f = int(f)
+    return f
+%>
 </%def>
 
 
