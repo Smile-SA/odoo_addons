@@ -47,6 +47,10 @@
         margin-bottom: 1em;
     }
 
+    .matrix input {
+        text-align: center;
+    }
+
     .matrix table .resource {
         text-align: left;
     }
