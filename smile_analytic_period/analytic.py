@@ -110,7 +110,7 @@ class AnalyticLine(osv.osv):
         return res
 
     _columns = {
-        'period_id': fields.function(_get_period_id, method=True, type='many2one', relation='account.analytic.period', string='Period', required=True, store={
+        'period_id': fields.function(_get_period_id, method=True, type='many2one', relation='account.analytic.period', string='Period', store={
             'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['date'], 10),
         }),
         'create_period_id': fields.many2one('account.analytic.period', 'Create Period', domain=[('state', '!=', 'done')]),
