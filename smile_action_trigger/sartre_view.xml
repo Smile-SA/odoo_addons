@@ -95,7 +95,7 @@
 						<page string="Actions">
 							<field name="force_actions_execution"/>
 							<field name="action_ids" colspan="4" nolabel="1" domain="[('model_id','=',model_id)]" />
-							<group name="exception_management" attrs="{'invisible': [('test_mode', '=', True)]}">
+							<group name="exception_management" attrs="{'invisible': [('test_mode', '=', True)]}" colspan="4">
 								<field name="exception_handling"/>
 								<field name="exception_warning" attrs="{'invisible': [('exception_handling', '!=', 'rollback')]}"/>
 								<field name="exception_message" colspan="4" attrs="{'invisible': ['|', ('exception_handling', '!=', 'rollback'), ('exception_warning', '!=', 'custom')]}"/>
