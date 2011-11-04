@@ -33,30 +33,38 @@ class SmileDBHandler(logging.Handler):
         logging.Handler.__init__(self, level)
         self._dbname_to_cr = {}
 
+    def _get_cursor(self, dbname):
+        cr = self._dbname_to_cr.get(dbname)
+        if not cr or (cr and cr.closed):
+            db, pool = pooler.get_db_and_pool(dbname, pooljobs=False)
+            cr = db.cursor()
+            self._dbname_to_cr[dbname] = cr
+        return cr
+
     def emit(self, record):
         if not (record.args and isinstance(record.args, dict)):
             return False
 
         dbname = record.args.get('dbname', '')
-        cr = self._dbname_to_cr.get(dbname)
-        if not cr:
-            db, pool = pooler.get_db_and_pool(dbname, pooljobs=False)
-            cr = self._dbname_to_cr[dbname] = db.cursor()
+        cr = self._get_cursor(dbname)
 
         res_id = record.args.get('res_id', 0)
         pid = record.args.get('pid', 0)
         uid = record.args.get('uid', 0)
         model_name = record.args.get('model_name', '')
 
-        cr.execute("INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message) VALUES (now(), %s, %s, %s, %s, %s, %s)",
-                   (uid,
-                    model_name,
-                    res_id,
-                    pid,
-                    record.levelname,
-                    record.msg,))
+        request = "INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message) VALUES (now(), %s, %s, %s, %s, %s, %s)"
+        params = (uid, model_name, res_id, pid, record.levelname, record.msg,)
+
+        try:
+            cr.execute(request, params)
+        except:
+            # retry
+            cr = self._get_cursor(dbname)
+            cr.execute(request, params)
 
         cr.commit()
+
         return True
 
     def close(self):
