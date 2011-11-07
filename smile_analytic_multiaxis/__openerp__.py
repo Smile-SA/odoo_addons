@@ -35,6 +35,7 @@ Development in progress
     ],
     "update_xml": [
         'analytic_view.xml',
+        'wizard/analytic_wizard_view.xml',
     ],
     'demo_xml': [],
     'installable': True,

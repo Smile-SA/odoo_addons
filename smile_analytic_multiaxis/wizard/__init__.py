@@ -19,5 +19,4 @@
 #
 ##############################################################################
 
-import analytic
-import wizard
+import analytic_wizard

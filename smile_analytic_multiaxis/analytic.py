@@ -22,7 +22,9 @@
 import datetime
 import time
 
-from osv import osv, fields
+from osv import osv, fields, orm
+import tools
+from tools.translate import _
 
 def analytic_decorator(original_method):
     def update_analytic_line(self, cr, *args, **kwargs):
@@ -95,6 +97,18 @@ class AnalyticAxis(osv.osv):
                                 'account.analytic.line': (lambda self, cr, uid, ids, context=None: [], None, 10),
                             })
         line_obj._auto_init(cr, context)
+
+        # To be compatible with smile_analytic_forecasting
+        if hasattr(line_obj, '_unicity_fields'):
+            unicity_fields = line_obj._get_unicity_fields()
+            if line_obj._unicity_fields != unicity_fields:
+                cr.execute("SELECT count(0) FROM pg_class WHERE relname = 'account_analytic_line_multi_columns_index'")
+                exists = cr.fetchone()
+                if exists[0]:
+                    cr.execute('DROP INDEX account_analytic_line_multi_columns_index')
+                cr.execute('CREATE INDEX account_analytic_line_multi_columns_index '\
+                           'ON account_analytic_line (%s)' % ','.join(unicity_fields))
+        
         return True
 
     def __init__(self, pool, cr):
@@ -147,9 +161,29 @@ class AnalyticDistribution(osv.osv):
 #    - uid
 #    - ids
 #    - date
-# You must return a dictionary, assign: result = {axis_src_item_id: {axis_dest_item_id: {'rate': rate, 'key_id': key_id}}}
+# You must return a dictionary, assign: result = {axis_src_item_id: {axis_dest_item_id: rate}}
 """,
     }
+
+    @tools.cache(skiparg=3)
+    def get_distribution_destinations(self, cr, uid):
+        distribution_ids = self.search(cr, uid, [], context={'active_test': True})
+        return [distrib.axis_dest_id.model for distrib in self.browse(cr, uid, distribution_ids) if distrib.type == 'static']
+
+    def create(self, cr, uid, vals, context=None):
+        distribution_id = super(AnalyticDistribution, self).create(cr, uid, vals, context)
+        self.get_distribution_destinations.clear_cache(cr.dbname)
+        return distribution_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(AnalyticDistribution, self).write(cr, uid, ids, vals, context)
+        self.get_distribution_destinations.clear_cache(cr.dbname)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(AnalyticDistribution, self).unlink(cr, uid, ids, context)
+        self.get_distribution_destinations.clear_cache(cr.dbname)
+        return res
 
     def _get_static_distribution(self, cr, uid, distribution_id, date, res_ids, context):
         res = {}
@@ -166,7 +200,7 @@ class AnalyticDistribution(osv.osv):
             key_domain.append(('axis_src_item_id', 'in', res_ids))
         key_ids = key_obj.search(cr, uid, key_domain, context=context)
         for key in key_obj.browse(cr, uid, key_ids, context):
-            res.setdefault(key['axis_src_item_id'], {}).update({key['axis_dest_item_id']: {'rate': key['rate'], 'key_id': key['id']}})
+            res.setdefault(key['axis_src_item_id'], {}).update({key['axis_dest_item_id']: key['rate']})
         return res
 
     def _get_dynamic_distribution(self, cr, uid, distribution_id, date, res_ids, context):
@@ -186,7 +220,7 @@ class AnalyticDistribution(osv.osv):
         return localdict.get('result', {})
 
     def get_distribution(self, cr, uid, distribution_id, date=None, res_ids=None, context=None):
-        assert isinstance(distribution_id, (int, long)), 'distribution_id must be an integer'
+        assert distribution_id and isinstance(distribution_id, (int, long)), 'distribution_id must be an integer'
         assert res_ids is None or isinstance(res_ids, (list, tuple)), 'res_ids must be a list or a tuple'
         date = date or time.strftime('%Y-%m-%d')
         context = dict(context or {})
@@ -197,7 +231,7 @@ class AnalyticDistribution(osv.osv):
         return getattr(self, '_get_%s_distribution' % distribution['type'])(cr, uid, distribution['id'], date, res_ids, context)
 
     def apply_distribution_keys(self, cr, uid, distribution_id, line_vals, context=None):
-        assert isinstance(distribution_id, (int, long)), 'distribution_id must be an integer'
+        assert distribution_id and isinstance(distribution_id, (int, long)), 'distribution_id must be an integer'
         assert line_vals and isinstance(line_vals, dict), 'line_vals must be a dictionary'
         res = []
         distribution = self.browse(cr, uid, distribution_id, context)
@@ -210,15 +244,13 @@ class AnalyticDistribution(osv.osv):
         else:# elif distribution_keys:
             axis_src_item_id = line_vals.get(column_src)
             for axis_dest_item_id in distribution_keys.get(axis_src_item_id, []):
-                rate = distribution_keys[axis_src_item_id][axis_dest_item_id]['rate'] / 100
-                key_id = distribution_keys[axis_src_item_id][axis_dest_item_id]['key_id']
+                rate = distribution_keys[axis_src_item_id][axis_dest_item_id] / 100
                 new_vals = dict(line_vals)
                 new_vals.update({
                     column_dest: axis_dest_item_id,
                     'amount': line_vals.get('amount', 0.0) * rate,
                     'unit_amount': line_vals.get('unit_amount', 0.0) * rate,
                     'amount_currency': line_vals.get('amount_currency', 0.0) * rate,
-                    'distribution_keys': line_vals.get('distribution_keys') and '%s,%s' % (line_vals['distribution_keys'], key_id) or '%s' % key_id,
                 })
                 res.append(new_vals)
         return res
@@ -241,7 +273,7 @@ class AnalyticDistributionPeriod(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for period in self.browse(cr, uid, ids, context):
-            domain = [('id', '<>', period.id)]
+            domain = [('id', '<>', period.id), ('distribution_id', '=', period.distribution_id.id)]
             if period.date_start:
                 domain += ['|', ('date_stop', '>=', period.date_start), ('date_stop', '=', False)]
             if period.date_stop:
@@ -282,6 +314,7 @@ class AnalyticDistributionKey(osv.osv):
     _columns = {
         'period_id': fields.many2one('account.analytic.distribution.period', 'Distribution Application Period', required=True, ondelete='cascade'),
         'axis_src_item_id': fields.integer('Item of Source Axis', required=True),
+        'axis_src_model': fields.related('period_id', 'distribution_id', 'axis_src_id', 'model', string="Model of Source Axis", readonly=True),
         'axis_src_item_name': fields.function(_get_items, method=True, type='char', string='Item of Source Axis', readonly=True, multi='distribution_key'),
         'axis_dest_item_id': fields.integer('Item of Destination Axis', required=True),
         'axis_dest_item_name': fields.function(_get_items, method=True, type='char', string='Item of Destination Axis', readonly=True, multi='distribution_key'),
@@ -349,9 +382,11 @@ class AnalyticDistributionKey(osv.osv):
             ('axis_src_item_id', '=', key.axis_src_item_id),
             ('axis_dest_item_id', '=', key.axis_dest_item_id),
         ]
-        old_key_ids = self.search(cr, uid, domain, context={'active_test': True})
-        if old_key_ids:
-            self.write(cr, uid, old_key_ids, {'active': False, 'date_stop': time.strftime('%Y-%m-%d')}, context)
+        key_ids_to_deactivate = self.search(cr, uid, domain, context={'active_test': True})
+        if not key.rate:
+            key_ids_to_deactivate.append(key.id)
+        if key_ids_to_deactivate:
+            self.write(cr, uid, key_ids_to_deactivate, {'active': False, 'date_stop': time.strftime('%Y-%m-%d')}, context)
         return True
 
     def create(self, cr, uid, vals, context=None):
@@ -409,10 +444,6 @@ class AnalyticLine(osv.osv):
         if self._columns.has_key('account_id'):
             self._columns['account_id'].required = False
 
-    _columns = {
-        'distribution_keys': fields.char('Distribution keys', size=64),
-    }
-
     def _distribute(self, cr, uid, vals, context=None):
         res = [vals]
         if vals.get('journal_id'):
@@ -435,3 +466,38 @@ class AnalyticLine(osv.osv):
             res_ids.append(super(AnalyticLine, self).create(cr, uid, new_vals, context))
         return res_ids[0]
 AnalyticLine()
+
+def _is_distribution_destination(self, cr, uid):
+    if self._name in self.pool.get('account.analytic.distribution').get_distribution_destinations(cr, 1):
+        return True
+    return False
+
+def analytic_multiaxis_decorator(original_method):
+    def check_deactivation(self, cr, uid, ids, *args, **kwargs):
+        # Check if resource is deactivated or deleted
+        method_name = original_method.__name__
+        if _is_distribution_destination(self, cr, uid):
+            exception = False
+            if isinstance(ids, (int, long)):
+                ids = [ids]
+            if method_name == 'unlink':
+                key_ids = self.pool.get('account.analytic.distribution.key').search(cr, uid, [('axis_dest_item_id', 'in', ids)], context={'active_test': True})
+                if key_ids:
+                    exception = True
+            elif method_name == 'write':
+                if args[0].get('active') == False:
+                    for resource in self.read(cr, uid, ids, ['active']):
+                        if resource['active']:
+                            exception = True
+                            break
+            if exception:
+                methods = {'write': _('modify'), 'unlink': _('delete')}
+                raise osv.except_osv(_('Error'), _('You cannot %s this resource before reviewing associated analytic distributions!') % methods[method_name])
+        # Execute original method
+        return original_method(self, cr, uid, ids, *args, **kwargs)
+    return check_deactivation
+
+# TODO: Deals with fields.function.get and fields.function.set
+for orm_method in [orm.orm.write, orm.orm.unlink]:
+    if hasattr(orm_method.im_class, orm_method.__name__):
+        setattr(orm_method.im_class, orm_method.__name__, analytic_multiaxis_decorator(getattr(orm_method.im_class, orm_method.__name__)))
