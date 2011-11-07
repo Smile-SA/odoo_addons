@@ -138,8 +138,9 @@ class matrix(fields.dummy):
                 matrix_data.append(line_data)
 
                 # If a group by property is defined, add its value to the line
-                group_value = self._get_prop(line, group_by_property)
-
+                group = self._get_prop(line, group_by_property)
+                if group:
+                    line_data.update({'group': (group.id, group.name)})
 
             # Get default cells and their values for the template row.
             template_cells_data = {}

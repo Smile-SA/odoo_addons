@@ -110,6 +110,51 @@
 </%def>
 
 
+<%def name="render_float_line(line, date_range)">
+    <tr id="${'line_%s' % line['id']}">
+        ${render_resource(line)}
+        <td>
+            %if editable and not line.get('required', False):
+                <span class="button delete_row">X</span>
+            %endif
+        </td>
+        %for date in date_range:
+            <td class="float">
+                <%
+                    cell_id = 'cell_%s_%s' % (line['id'], date)
+                    cell_value = line.get('cells_data', {}).get(date, None)
+                %>
+                %if cell_value is not None:
+                    %if editable:
+                        <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${render_float(cell_value)}" size="1" class="${line['widget']}"/>
+                    %else:
+                        <span kind="float" id="${cell_id}" value="${render_float(cell_value)}"
+                            %if not editable and cell_value <= 0.0:
+                                class="zero"
+                            %endif
+                            >
+                                ${render_float(cell_value)}
+                        </span>
+                    %endif
+                %endif
+            </td>
+        %endfor
+        <td class="total">
+            <%
+                row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
+            %>
+            <span id="row_total_${line['id']}"
+                %if not editable and row_total <= 0.0:
+                    class="zero"
+                %endif
+                >
+                ${render_float(row_total)}
+            </span>
+        </td>
+    </tr>
+</%def>
+
+
 <div class="matrix ${' '.join(value.get('class', []))}">
 
     %if type(value) == type({}) and 'date_range' in value:
@@ -235,49 +280,27 @@
                 %endfor
             </tfoot>
             <tbody>
-                %for line in [l for l in lines if l['widget'] != 'boolean']:
-                    <tr id="${'line_%s' % line['id']}">
-                        ${render_resource(line)}
-                        <td>
-                            %if editable and not line.get('required', False):
-                                <span class="button delete_row">X</span>
-                            %endif
-                        </td>
-                        %for date in value['date_range']:
-                            <td class="float">
-                                <%
-                                    cell_id = 'cell_%s_%s' % (line['id'], date)
-                                    cell_value = line.get('cells_data', {}).get(date, None)
-                                %>
-                                %if cell_value is not None:
-                                    %if editable:
-                                        <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${render_float(cell_value)}" size="1" class="${line['widget']}"/>
-                                    %else:
-                                        <span kind="float" id="${cell_id}" value="${render_float(cell_value)}"
-                                            %if not editable and cell_value <= 0.0:
-                                                class="zero"
-                                            %endif
-                                            >
-                                                ${render_float(cell_value)}
-                                        </span>
-                                    %endif
-                                %endif
-                            </td>
-                        %endfor
-                        <td class="total">
-                            <%
-                                row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
-                            %>
-                            <span id="row_total_${line['id']}"
-                                %if not editable and row_total <= 0.0:
-                                    class="zero"
-                                %endif
-                                >
-                                ${render_float(row_total)}
-                            </span>
-                        </td>
-                    </tr>
+                <%
+                    template_line = [l for l in lines if l['id'] == 'template'][0]
+                    non_boolean_lines = [l for l in lines if l['id'] != 'template' and l['widget'] != 'boolean']
+                    ungroupable_lines = [l for l in non_boolean_lines if 'group' not in l]
+                    groups = list(set([l['group'] for l in lines if 'group' in l]))
+                    date_range = value['date_range']
+                %>
+                %for line in ungroupable_lines:
+                    ${render_float_line(line, date_range)}
                 %endfor
+
+                %for group in groups:
+                    <tr id="${'group_%s' % group[0]}">
+                        <td>${group[1]}</td>
+                        <td colspan="${len(date_range) + 2}"></td>
+                    </tr>
+                    %for line in [l for l in non_boolean_lines if 'group' in l and l['group'][0] == group[0]]:
+                        ${render_float_line(line, value['date_range'])}
+                    %endfor
+                %endfor
+                ${render_float_line(template_line, value['date_range'])}
             </tbody>
         </table>
 
