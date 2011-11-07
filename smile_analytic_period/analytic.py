@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 ##############################################################################
 #    
@@ -93,7 +92,7 @@ class AnalyticPeriod(osv.osv):
         next_period_ids = self.search(cr, uid, domain, limit=1, order='date_start asc', context=context)
         return next_period_ids and next_period_ids[0] or 0
 
-    def action_close(self, cr, uid, ids, context=None):
+    def button_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context)
 AnalyticPeriod()
 
@@ -110,7 +109,7 @@ class AnalyticLine(osv.osv):
         return res
 
     _columns = {
-        'period_id': fields.function(_get_period_id, method=True, type='many2one', relation='account.analytic.period', string='Period', store={
+        'period_id': fields.function(_get_period_id, method=True, type='many2one', relation='account.analytic.period', string='Period', required=True, store={
             'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['date'], 10),
         }),
         'create_period_id': fields.many2one('account.analytic.period', 'Create Period', domain=[('state', '!=', 'done')]),
