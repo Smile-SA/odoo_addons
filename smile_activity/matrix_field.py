@@ -47,6 +47,8 @@ class matrix(fields.dummy):
     def _get_prop(self, obj, prop_name, default_value=None):
         """ Get a property value
         """
+        if not prop_name:
+            return default_value
         prop_value = getattr(obj, prop_name, default_value)
         if prop_value is None:
             raise osv.except_osv('Error !', "%r has no %s property." % (obj, prop_name))
@@ -80,6 +82,8 @@ class matrix(fields.dummy):
         date_format = self.__dict__.get('date_format', None)
         # The object type we use to create new rows
         resource_type = self.__dict__.get('resource_type', None)
+        # The property on resource we'll use to group lines by
+        group_by_property = self.__dict__.get('group_by_property', None)
         # Additional classes can be manually added
         css_class = self.__dict__.get('css_class', [])
 
@@ -117,14 +121,11 @@ class matrix(fields.dummy):
                     }
 
                 # Get the type of the widget we'll use to display cell values
-                widget_type = default_widget_type
-                if line_widget_property is not None:
-                    widget_type = self._get_prop(line, line_widget_property)
-                line_data.update({'widget': widget_type})
+                line_data.update({'widget': self._get_prop(line, line_widget_property, default_widget_type)})
 
                 # Get the row UID corresponding to the line
-                if line_resource_property is not None:
-                    line_ressource = self._get_prop(line, line_resource_property)
+                line_ressource = self._get_prop(line, line_resource_property)
+                if line_ressource:
                     line_data.update({'res_id': line_ressource.id})
 
                 # Get all cells of the line
@@ -136,13 +137,14 @@ class matrix(fields.dummy):
                 line_data.update({'cells_data': cells_data})
                 matrix_data.append(line_data)
 
+                # If a group by property is defined, add its value to the line
+                group_value = self._get_prop(line, group_by_property)
+
+
             # Get default cells and their values for the template row.
             template_cells_data = {}
             # Get active date range. Default is to let all dates active.
-            if active_date_range_property is None:
-                active_date_range = date_range
-            else:
-                active_date_range = self._get_prop(date_range_property_object, active_date_range_property)
+            active_date_range = self._get_prop(date_range_property_object, active_date_range_property, date_range)
             for d in active_date_range:
                 if not self._is_date(d):
                     raise osv.except_osv('Error !', "%s must return a list of dates." % active_date_range_property)

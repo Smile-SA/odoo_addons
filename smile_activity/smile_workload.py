@@ -46,6 +46,7 @@ class smile_activity_workload(osv.osv):
             date_format='%m/%y',
             resource_type='smile.activity.employee',
             line_resource_property='employee_id',
+            group_by_property='profile_id',
             css_class=['workload'],
             experimental_slider=True,
             string="Workload lines",
