@@ -44,6 +44,14 @@ class matrix(fields.dummy):
             date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
         return date
 
+    def _get_prop(self, obj, prop_name, default_value=None):
+        """ Get a property value
+        """
+        prop_value = getattr(obj, prop_name, default_value)
+        if prop_value is None:
+            raise osv.except_osv('Error !', "%r has no %s property." % (obj, prop_name))
+        return prop_value
+
 
     ## Native methods
 
@@ -86,12 +94,8 @@ class matrix(fields.dummy):
             matrix_data = []
 
             # Get the date range composing the timeline
-            date_range_property_object = getattr(base_object, date_range_property, None)
-            if not date_range_property_object:
-                raise osv.except_osv('Error !', "%r has no %s property." % (base_object, date_range_property))
-            date_range = getattr(date_range_property_object, 'date_range', None)
-            if date_range is None:
-                raise osv.except_osv('Error !', "%r has no date_range property." % date_range_property_object)
+            date_range_property_object = self._get_prop(base_object, date_range_property)
+            date_range = self._get_prop(date_range_property_object, 'date_range')
             if type(date_range) is not type([]):
                 raise osv.except_osv('Error !', "date_range must return data that looks like selection field data.")
 
@@ -115,17 +119,12 @@ class matrix(fields.dummy):
                 # Get the type of the widget we'll use to display cell values
                 widget_type = default_widget_type
                 if line_widget_property is not None:
-                    line_widget = getattr(line, line_widget_property, None)
-                    if line_widget is None:
-                        raise osv.except_osv('Error !', "%r has no %s property." % (line, line_widget_property))
-                    widget_type = line_widget
+                    widget_type = self._get_prop(line, line_widget_property)
                 line_data.update({'widget': widget_type})
 
                 # Get the row UID corresponding to the line
                 if line_resource_property is not None:
-                    line_ressource = getattr(line, line_resource_property, None)
-                    if line_ressource is None:
-                        raise osv.except_osv('Error !', "%r has no %s property." % (line, line_ressource))
+                    line_ressource = self._get_prop(line, line_resource_property)
                     line_data.update({'res_id': line_ressource.id})
 
                 # Get all cells of the line
@@ -143,9 +142,7 @@ class matrix(fields.dummy):
             if active_date_range_property is None:
                 active_date_range = date_range
             else:
-                active_date_range = getattr(date_range_property_object, active_date_range_property, None)
-                if active_date_range is None:
-                    raise osv.except_osv('Error !', "%r has no %s property." % (date_range_property_object, active_date_range_property))
+                active_date_range = self._get_prop(date_range_property_object, active_date_range_property)
             for d in active_date_range:
                 if not self._is_date(d):
                     raise osv.except_osv('Error !', "%s must return a list of dates." % active_date_range_property)
