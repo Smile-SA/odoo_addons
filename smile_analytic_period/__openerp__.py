@@ -26,9 +26,9 @@
     "website" : "http://www.smile.fr",
     "category" : "Generic Modules/Accounting",
     "depends" : ["account"],
-    "description": """Define an analytic period
+    "description": """Analytic periods
 
-Development in progress
+Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "init_xml" : [
         'security/ir.model.access.csv',

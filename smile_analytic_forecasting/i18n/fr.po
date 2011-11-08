@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-10-24 10:00+0000\n"
-"PO-Revision-Date: 2011-10-24 10:00+0000\n"
+"POT-Creation-Date: 2011-11-08 11:06+0000\n"
+"PO-Revision-Date: 2011-11-08 11:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,20 +21,15 @@ msgid "Ratio"
 msgstr "Ratio"
 
 #. module: smile_analytic_forecasting
-#: constraint:account.analytic.forecasting.report:0
-msgid "You cannot pass/update a journal entry in a period closed!"
-msgstr "Vous ne pouvez pas passer/mettre à jour une écriture sur une période close !"
-
-#. module: smile_analytic_forecasting
 #: help:account.analytic.forecasting.report,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr "Specifie la quantité"
+msgstr "Spécifie la quantité"
 
 #. module: smile_analytic_forecasting
 #: field:account.analytic.forecasting.wizard,period_ids:0
 #: selection:account.analytic.forecasting.wizard,x_axis:0
 msgid "Analysis Periods"
-msgstr "Periodes d'analyse"
+msgstr "Périodes d'analyse"
 
 #. module: smile_analytic_forecasting
 #: field:account.analytic.forecasting.report,move_id:0
@@ -54,9 +49,10 @@ msgid "You cannot delete an entry of this view!"
 msgstr "Vous ne pouvez pas supprimer une entrée depuis cette vue !"
 
 #. module: smile_analytic_forecasting
-#: field:account.analytic.forecasting.report,period_id:0
-msgid "Period"
-msgstr "Periode d'analyse"
+#: constraint:account.analytic.forecasting.report:0
+#: constraint:account.analytic.line:0
+msgid "You cannot pass an actual entry in a future period!"
+msgstr "Vous ne pouvez pas passer d'écritures de type réalisé sur une période future !"
 
 #. module: smile_analytic_forecasting
 #: field:account.analytic.forecasting.wizard,field_ids:0
@@ -70,9 +66,9 @@ msgid "Type"
 msgstr "Type"
 
 #. module: smile_analytic_forecasting
-#: constraint:account.fiscalyear:0
-msgid "Error! You cannot define overlapping fiscal years"
-msgstr "Erreur ! Les exercices ne doivent pas se chevaucher."
+#: field:account.analytic.forecasting.report,product_id:0
+msgid "Product"
+msgstr "Produit"
 
 #. module: smile_analytic_forecasting
 #: constraint:account.analytic.forecasting.report:0
@@ -149,25 +145,27 @@ msgid "Actual"
 msgstr "Réalisé"
 
 #. module: smile_analytic_forecasting
+#: constraint:account.analytic.forecasting.report:0
+#: constraint:account.analytic.line:0
+msgid "You cannot pass/update a journal entry in a closed period!"
+msgstr "Vous ne pouvez pas passer d'écritures sur une période close !"
+
+#. module: smile_analytic_forecasting
 #: view:account.analytic.forecasting.wizard:0
 msgid "Open Window"
 msgstr "Ouvrir la fenêtre"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,active:0
+#: field:account.analytic.line,active:0
+msgid "Active"
+msgstr "Active"
 
 #. module: smile_analytic_forecasting
 #: field:account.analytic.forecasting.report,amount:0
 #: selection:account.analytic.forecasting.wizard,measure:0
 msgid "Amount"
 msgstr "Montant"
-
-#. module: smile_analytic_forecasting
-#: constraint:account.fiscalyear:0
-msgid "Error! The duration of the Fiscal Year is invalid. "
-msgstr "Erreur ! La durée de l'exercice comptable est incorrecte. "
-
-#. module: smile_analytic_forecasting
-#: model:ir.model,name:smile_analytic_forecasting.model_account_analytic_period
-msgid "Analytic Period"
-msgstr "Période analytique"
 
 #. module: smile_analytic_forecasting
 #: code:addons/smile_analytic_forecasting/report/analytic_report.py:108
@@ -205,15 +203,14 @@ msgid "Code"
 msgstr "Code"
 
 #. module: smile_analytic_forecasting
-#: constraint:account.analytic.forecasting.report:0
-#: constraint:account.analytic.line:0
-msgid "You cannot pass an actual entry in a future period!"
-msgstr "Vous ne pouvez pas passer d'écritures de type réalisé sur une période future !"
+#: model:ir.module.module,shortdesc:smile_analytic_forecasting.module_meta_information
+msgid "Smile Analytic Forecasting"
+msgstr "Smile Analytic Forecasting"
 
 #. module: smile_analytic_forecasting
-#: field:account.analytic.forecasting.report,product_id:0
-msgid "Product"
-msgstr "Produit"
+#: field:account.analytic.forecasting.report,period_id:0
+msgid "Period"
+msgstr "Periode d'analyse"
 
 #. module: smile_analytic_forecasting
 #: field:account.analytic.forecasting.report,account_id:0
@@ -238,6 +235,7 @@ msgstr "Mesure"
 
 #. module: smile_analytic_forecasting
 #: field:account.analytic.forecasting.report,create_period_id:0
+#: field:account.analytic.line,create_period_id:0
 msgid "Create Period"
 msgstr "Période de référence"
 
@@ -246,9 +244,3 @@ msgstr "Période de référence"
 #, python-format
 msgid "You cannot add an entry of this view!"
 msgstr "Vous ne pouvez pas ajouter une entrée depuis cette vue !"
-
-#. module: smile_analytic_forecasting
-#: field:account.analytic.forecasting.report,active:0
-#: field:account.analytic.line,active:0
-msgid "Active"
-msgstr "Active"

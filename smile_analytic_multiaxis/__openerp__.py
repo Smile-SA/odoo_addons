@@ -28,7 +28,7 @@
     "depends" : ["smile_analytic_period"],
     "description": """Multi-Axis Analytic Account
 
-Development in progress
+Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "init_xml" : [
         'security/ir.model.access.csv',
