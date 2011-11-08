@@ -155,6 +155,21 @@
 </%def>
 
 
+<%def name="render_resource_list(resource_list)">
+    %if len(resource_list) and editable:
+        <select id="resource_list" kind="char" name="resource_list" type2="" operator="=" class="selection_search selection">
+            <option value="default" selected="selected">&mdash; Select here new line's resource &mdash;</option>
+            %for res in resource_list:
+                <option value="${res[0]}">${res[1]}</option>
+            %endfor
+        </select>
+        <span id="matrix_add_row" class="button">
+            Add new line
+        </span>
+    %endif
+</%def>
+
+
 <div class="matrix ${' '.join(value.get('class', []))}">
 
     %if type(value) == type({}) and 'date_range' in value:
@@ -166,20 +181,7 @@
 
         %if editable:
             <div class="toolbar">
-                <%
-                    resource_list = value.get('resource_list', [])
-                %>
-                %if len(resource_list):
-                    <select id="resource_list" kind="char" name="resource_list" type2="" operator="=" class="selection_search selection">
-                        <option value="default" selected="selected">&mdash; Select here new line's resource &mdash;</option>
-                        %for res in resource_list:
-                            <option value="${res[0]}">${res[1]}</option>
-                        %endfor
-                    </select>
-                    <span id="matrix_add_row" class="button">
-                        Add new line
-                    </span>
-                %endif
+                ${render_resource_list(value.get('resource_list', []))}
                 <span id="matrix_button_template" class="button increment">
                     Button template
                 </span>
@@ -290,11 +292,14 @@
                 %for line in ungroupable_lines:
                     ${render_float_line(line, date_range)}
                 %endfor
-
                 %for group in groups:
                     <tr id="${'group_%s' % group[0]}">
-                        <td>${group[1]}</td>
-                        <td colspan="${len(date_range) + 2}"></td>
+                        <td>
+                            ${group[1]}
+                        </td>
+                        <td colspan="${len(date_range) + 2}">
+                            ${render_resource_list(value.get('resource_list', []))}
+                        </td>
                     </tr>
                     %for line in [l for l in non_boolean_lines if 'group' in l and l['group'][0] == group[0]]:
                         ${render_float_line(line, value['date_range'])}
