@@ -2,6 +2,7 @@
     import datetime
 %>
 
+
 <style type="text/css">
     /* Reset OpenERP default styles */
     .matrix table tfoot td {
@@ -170,7 +171,14 @@
 </%def>
 
 
-<div class="matrix ${' '.join(value.get('class', []))}">
+<%
+    css_classes = ''
+    if value is not None:
+        css_classes = ' '.join(value.get('class', []))
+%>
+
+
+<div class="matrix ${css_classes}">
 
     %if type(value) == type({}) and 'date_range' in value:
 
