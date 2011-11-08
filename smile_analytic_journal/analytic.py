@@ -29,6 +29,7 @@ class AnalyticJournalView(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'column_ids': fields.one2many('account.analytic.journal.view.column', 'view_id', 'Columns'),
+        'group_ids': fields.many2many('res.groups', 'account_analytic_journal_view_groups_rel', 'view_id', 'group_id', 'Groups'),
     }
 
     _order = "name"
@@ -115,15 +116,16 @@ class AnalyticJournal(osv.osv):
             raise osv.except_osv(_('Error'), _('The menu [xml_id=account.menu_finance_entries] is not found!'))
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for journal_id in ids:
-            action_window_vals = self.open_window(cr, uid, journal_id, context)
+        for journal in self.browse(cr, uid, ids, context):
+            action_window_vals = self.open_window(cr, uid, journal.id, context)
             action_window_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_window_vals, context)
             menu_id = self.pool.get('ir.ui.menu').create(cr, uid, {
                 'name': action_window_vals['name'],
                 'parent_id': parent_id,
                 'action': 'ir.actions.act_window,%s' % action_window_id,
+                'groups_id': [(6, 0, [group.id for group in journal.view_id.group_ids])],
             }, context)
-            self.write(cr, uid, journal_id, {'menu_id': menu_id}, context)
+            journal.write({'menu_id': menu_id}, context)
         return True
 AnalyticJournal()
 
