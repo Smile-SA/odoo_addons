@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_account_analytic_journal_view_manager","account.analytic.journal.view manager","model_account_analytic_journal_view","account.group_account_manager",1,1,1,1
+"access_account_analytic_journal_view_user","account.analytic.journal.view user","model_account_analytic_journal_view","account.group_account_user",1,0,0,0
+"access_account_analytic_journal_view_column_manager","account.analytic.journal.view.column manager","model_account_analytic_journal_view_column","account.group_account_manager",1,1,1,1
+"access_account_analytic_journal_view_column_user","account.analytic.journal.view.column user","model_account_analytic_journal_view_column","account.group_account_user",1,0,0,0

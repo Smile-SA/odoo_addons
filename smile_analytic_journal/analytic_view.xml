@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+		<!-- Analytic Journal View -->
+
+        <record id="view_account_analytic_journal_view_tree" model="ir.ui.view">
+            <field name="name">account.analytic.journal.view.tree</field>
+            <field name="model">account.analytic.journal.view</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Journal Views">
+                	<field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_journal_view_form" model="ir.ui.view">
+            <field name="name">account.analytic.journal.view.form</field>
+            <field name="model">account.analytic.journal.view</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Journal View">
+                	<field name="name"/>
+                	<field name="column_ids" colspan="4" nolabel="1" mode="tree,form">
+						<tree string="Columns">
+							<field name='name'/>
+							<field name='field_id'/>
+							<field name='required'/>
+							<field name='readonly'/>
+							<field name='searchable'/>
+							<field name='groupable'/>
+							<field name='sequence'/>
+						</tree>
+						<form string="Column">
+							<group col="2">
+								<field name='field_id' on_change="onchange_field_id(field_id)"/>
+								<field name='name'/>
+								<field name='sequence'/>
+							</group>
+							<group col="2">
+								<field name='required'/>
+								<field name='readonly'/>
+								<field name='searchable'/>
+								<field name='groupable'/>
+							</group>
+						</form>
+                	</field>
+                </form>
+            </field>
+        </record>
+
+
+		<!-- Analytic Journal -->
+
+        <record id="view_account_analytic_journal_tree" model="ir.ui.view">
+            <field name="name">account.analytic.journal.tree</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="account.view_account_analytic_journal_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="replace">
+                	<field name="complete_name"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_journal_form" model="ir.ui.view">
+            <field name="name">account.analytic.journal.form</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_analytic_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+					<field name="parent_id"/>
+					<newline/>
+					<field name="view_id"/>
+					<button type='object' name="open_window" string="Show View" colspan="2" context="{'journal_view_id': view_id, 'target':'new'}"/>
+					<newline/>
+					<field name="menu_id"/>
+					<button type='object' name="create_menu" string="Create Menu" colspan="2" attrs="{'readonly': ['|', ('view_id', '=', False), ('menu_id', '!=', False)]}" context="{'journal_view_id': view_id}"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
