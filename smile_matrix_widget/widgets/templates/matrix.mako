@@ -98,14 +98,22 @@
 </%def>
 
 
-<%def name="render_resource(line)">
+<%def name="render_resources(line)">
     <td class="resource">
         <%
-            res_field_id = "res_%s" % line['id']
+            resources = line.get('resources', [])
         %>
-        <span class="name">${line['name']}</span>
+        <span class="name">${resources[0]['label']}</span>
         %if editable:
-            <input type="hidden" id="${res_field_id}" name="${res_field_id}" value="${line.get('res_id', '')}"/>
+            %for res in resources:
+                <%
+                    res_id = res['id']
+                    res_label = res['label']
+                    res_value = res['value']
+                    res_field_id = "res_%s_%s" % (line['id'], res_id)
+                %>
+                <input type="hidden" id="${res_field_id}" name="${res_field_id}" value="${res_value}" title="${res_label}"/>
+            %endfor
         %endif
     </td>
 </%def>
@@ -113,7 +121,7 @@
 
 <%def name="render_float_line(line, date_range)">
     <tr id="${'line_%s' % line['id']}">
-        ${render_resource(line)}
+        ${render_resources(line)}
         <td>
             %if editable and not line.get('required', False):
                 <span class="button delete_row">X</span>
@@ -156,17 +164,27 @@
 </%def>
 
 
-<%def name="render_resource_list(resource_list)">
-    %if len(resource_list) and editable:
-        <select id="resource_list" kind="char" name="resource_list" type2="" operator="=" class="selection_search selection">
-            <option value="default" selected="selected">&mdash; Select here new line's resource &mdash;</option>
-            %for res in resource_list:
-                <option value="${res[0]}">${res[1]}</option>
-            %endfor
-        </select>
-        <span id="matrix_add_row" class="button">
-            Add new line
-        </span>
+<%def name="render_resource_selector(res_def)">
+    <%
+        res_id = res_def.get('id', None)
+        res_values = res_def.get('values', [])
+    %>
+    %if len(res_values) and editable:
+        <%
+            selector_id = "resource_list_%s" % res_id
+            button_id = "resource_add_%s" % res_id
+        %>
+        <div class="resource_values">
+            <select id="${selector_id}" kind="char" name="${selector_id}" type2="" operator="=" class="selection_search selection">
+                <option value="default" selected="selected">&mdash; Select here new line's resource &mdash;</option>
+                %for (res_value, res_label) in res_values:
+                    <option value="${res_value}">${res_label}</option>
+                %endfor
+            </select>
+            <span id="${button_id}" class="button">
+                Add new line
+            </span>
+        </div>
     %endif
 </%def>
 
@@ -185,11 +203,12 @@
         <%
             lines = value.get('matrix_data', [])
             column_date_label_format = value.get('column_date_label_format', '%Y-%m-%d')
+            resource_value_list = value.get('resource_value_list', [])
         %>
 
         %if editable:
             <div class="toolbar">
-                ${render_resource_list(value.get('resource_list', []))}
+                ${render_resource_selector(resource_value_list[0])}
                 <span id="matrix_button_template" class="button increment">
                     Button template
                 </span>
@@ -248,7 +267,7 @@
                 </tr>
                 %for line in [l for l in lines if l['widget'] == 'boolean']:
                     <tr id="${'line_%s' % line['id']}" class="boolean_line">
-                        ${render_resource(line)}
+                        ${render_resources(line)}
                         <td></td>
                         %for date in value['date_range']:
                             <td class="boolean">
@@ -306,7 +325,7 @@
                             ${group[1]}
                         </td>
                         <td colspan="${len(date_range) + 2}">
-                            ${render_resource_list(value.get('resource_list', []))}
+                            <!-- render_resource_selector(value.get('resource_list', []), value['resource_type_id']) -->
                         </td>
                     </tr>
                     %for line in [l for l in non_boolean_lines if 'group' in l and l['group'][0] == group[0]]:

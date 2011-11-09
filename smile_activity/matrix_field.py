@@ -66,8 +66,11 @@ class matrix(fields.dummy):
         # Property name from which we get the lines composing the matrix
         line_property = self.__dict__.get('line_property', None)
         line_type = self.__dict__.get('line_type', None)
-        # Get the property of line from which we derive the matrix resource
-        line_resource_property = self.__dict__.get('line_resource_property', None)
+        # Get line properties from which we derive the matrix resources
+
+
+        line_resource_property_list = self.__dict__.get('line_resource_property_list', None)
+
         default_widget_type = self.__dict__.get('default_widget_type', 'float')
         line_widget_property = self.__dict__.get('line_widget_property', None)
         # Property name from which we get the cells composing the matrix.
@@ -88,9 +91,13 @@ class matrix(fields.dummy):
         css_class = self.__dict__.get('css_class', [])
 
         # Check that all required parameters are there
-        for p_name in ['line_property', 'line_type', 'line_resource_property', 'cell_property', 'cell_type', 'cell_value_property', 'date_range_property']:
+        for p_name in ['line_property', 'line_type', 'line_resource_property_list', 'cell_property', 'cell_type', 'cell_value_property', 'date_range_property']:
             if not p_name:
                 raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
+
+        # line_resource_property_list required at least one parameter
+        if type(line_resource_property_list) != type([]) or len(line_resource_property_list) < 1:
+            raise osv.except_osv('Error !', "line_resource_property_list parameter must be a list with at least one element.")
 
         # Browse through all objects on which our matrix field is defined
         matrix_list = {}
@@ -104,10 +111,14 @@ class matrix(fields.dummy):
                 raise osv.except_osv('Error !', "date_range must return data that looks like selection field data.")
 
             # Get the list of all objects new rows of the matrix can be linked to
-            resource_list = []
-            if resource_type:
-                p = base_object.pool.get(resource_type)
-                resource_list = [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)]
+            # Keep the original order defined in matrix properties
+            resource_value_list = []
+            for (res_id, res_type) in line_resource_property_list:
+                p = base_object.pool.get(res_type)
+                resource_value_list.append({
+                    'id': res_id,
+                    'values': [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)],
+                    })
 
             # Browse all lines that will compose our matrix
             lines = getattr(base_object, line_property, [])
@@ -116,17 +127,26 @@ class matrix(fields.dummy):
                 line_data = {
                     'id': line.id,
                     'name': line.name,
+
                     # Is this resource required ?
-                    'required': getattr(getattr(line, line_resource_property), 'required', False),
+                    # FIX: 'required': getattr(getattr(line, line_resource_property), 'required', False),
+
                     }
 
                 # Get the type of the widget we'll use to display cell values
                 line_data.update({'widget': self._get_prop(line, line_widget_property, default_widget_type)})
 
-                # Get the row UID corresponding to the line
-                line_ressource = self._get_prop(line, line_resource_property)
-                if line_ressource:
-                    line_data.update({'res_id': line_ressource.id})
+                # Get all resources of the line
+                # Keep the order defined by matrix field's properties
+                res_list = []
+                for (res_id, res_type) in line_resource_property_list:
+                    res = self._get_prop(line, res_id)
+                    res_list.append({
+                        'id': res_id,
+                        'label': res.name,
+                        'value': res.id,
+                        })
+                line_data.update({'resources': res_list})
 
                 # Get all cells of the line
                 cells = getattr(line, cell_property, [])
@@ -152,20 +172,25 @@ class matrix(fields.dummy):
             # TODO: Add a "default_cell_value" method of some sort ?
             default_template_value = 0.0
             template_cells_data = dict([(self._date_to_str(d), default_template_value) for d in active_date_range])
+            template_resources = [{
+                    'id': res_id,
+                    'label': res_id.replace('_', ' ').title(),
+                    'value': 0,
+                    } for (res_id, res_type) in line_resource_property_list]
             # Add a row template at the end
             matrix_data.append({
                 'id': "template",
-                'res_id': "template",
                 'name': "Row template",
                 'widget': default_widget_type,
                 'cells_data': template_cells_data,
+                'resources': template_resources,
                 })
 
             # Pack all data required to render the matrix
             matrix_def = {
                 'matrix_data': matrix_data,
                 'date_range': [self._date_to_str(d) for d in date_range],  # Format our date range for our matrix # XXX Keep them as date objects ?
-                'resource_list': resource_list,
+                'resource_value_list': resource_value_list,
                 'column_date_label_format': date_format,
                 'class': css_class
                 }
@@ -197,25 +222,38 @@ def parse_virtual_field_id(f_id):
         Return None for fields generated by the matrix but not usefull for data input.
         Valid matrix field names:
             * resource_list  (ignored)
-            * res_XX
+            * res_XX_PROPERTY_ID
             * res_template  (ignored)
             * cell_XX_YYYYMMDD
             * cell_template_YYYYMMDD  (ignored)
-        TODO: rewrite this method using reg exps ?
+        XXX Can we increase the readability of the validation rules embedded in this method by using reg exps ?
     """
     f_id_elements = f_id.split('_')
-    if f_id in ['resource_list', 'res_template'] or (len(f_id_elements) == 3 and f_id.startswith('cell_template_')):
+    if (f_id.startswith('cell_template_') and len(f_id_elements) == 3) or \
+       (f_id.startswith('res_template_')  and len(f_id_elements) >  2) or \
+       (f_id.startswith('resource_list_') and len(f_id_elements) >  2):
         return None
-    elif (f_id_elements[0] == 'cell' and len(f_id_elements) == 3) or (f_id_elements[0] == 'res' and len(f_id_elements) == 2):
+    elif (f_id_elements[0] == 'cell' and len(f_id_elements) == 3) or (f_id_elements[0] == 'res' and len(f_id_elements) > 2):
+        # For ressource, the last parameter is the property ID of the line the resource belong to. Recompose it
+        if f_id_elements[0] == 'res':
+            f_id_elements = f_id_elements[:2] + ['_'.join(f_id_elements[2:])]
+            # TODO: check that the PROPERTY_ID (aka f_id_elements[2]) exist as a column in the line data model
+        # Check that the date is valid
+        if f_id_elements[0] == 'cell':
+            date_element = f_id_elements[2]
+            try:
+                datetime.datetime.strptime(date_element, '%Y%m%d').date()
+            except ValueError:
+                raise osv.except_osv('Error !', "Field %r doesn't has an invalid %r date element." % (f_id, date_element))
         # Check that that the second element is an integer. It is allowed to starts with the 'new' prefix.
         id_element = f_id_elements[1]
         if id_element.startswith('new'):
             id_element = id_element[3:]
         if str(int(id_element)) == id_element:
-            # TODO: check data format too ?
             return f_id_elements
     # Requested field doesn't follow matrix convention
-    raise osv.except_osv('Error !', "Field %s doesn't respect matrix widget conventions." % f_id)
+    import pdb; pdb.set_trace()
+    raise osv.except_osv('Error !', "Field %r doesn't respect matrix widget conventions." % f_id)
 
 
 def matrix_read_patch(func):
@@ -252,8 +290,9 @@ def matrix_read_patch(func):
                                 field_value = getattr(cell, conf['cell_value_property'])
                         elif f_id_elements[0] == 'res':
                             if line_id:
+                                resource_property = f_id_elements[2]
                                 line = line_pool.browse(cr, uid, line_id, context)
-                                field_value = getattr(line, conf['line_resource_property']).id
+                                field_value = getattr(line, resource_property).id
                     props.update({f_id: field_value})
             updated_result.append(props)
         if isinstance(ids, (int, long)):
@@ -278,49 +317,54 @@ def matrix_write_patch(func):
         # Automaticcaly remove out of range cells if dates changes
         if 'start_date' in vals or 'end_date' in vals:
             obj.update_cells(cr, uid, ids, context)
+
         written_lines = []
         for report in obj.browse(cr, uid, ids, context):
-            line_id_map = {}
 
-            # Handle resources first, as they trigger the creation of lines
-            resource_fields = [(k, v) for (k, v) in vals.items() if k.startswith('res_')]
-            for (f_id, f_value) in resource_fields:
+            # Regroup fields by lines
+            lines = {}
+            for (f_id, f_value) in vals.items():
+                # Ignore non-matrix cells
+                if not(f_id.startswith('res_') or f_id.startswith('cell_')):
+                    continue
                 f_id_elements = parse_virtual_field_id(f_id)
-                # Are we updating an existing line or creating a new one ?
                 line_id = f_id_elements[1]
-                if line_id.startswith('new'):
-                    res_id = int(f_value)
-                    line_vals = {
-                        conf['line_inverse_property']: report.id,
-                        conf['line_resource_property']: res_id,
-                        }
-                    line_id = obj.pool.get(conf['line_type']).create(cr, uid, line_vals, context)
-                line_id_map[f_id_elements[1]] = int(line_id)
-            written_lines += line_id_map.values()
+                line_data = lines.get(line_id, {})
+                line_data.update({f_id: f_value})
+                lines[line_id] = line_data
 
-            # Parse and clean-up data coming from the matrix
-            for (f_id, f_value) in [(k, v) for (k, v) in vals.items() if k.startswith('cell_')]:
-                cell_id_fragments = parse_virtual_field_id(f_id)
+            # Write data of each line
+            for (line_id, line_data) in lines.items():
+                # Separate line resources and line cells
+                line_resources = dict([(parse_virtual_field_id(f_id)[2], int(v)) for (f_id, v) in line_data.items() if f_id.startswith('res_')])
+                line_cells = dict([(datetime.datetime.strptime(parse_virtual_field_id(f_id)[2], '%Y%m%d'), v) for (f_id, v) in line_data.items() if f_id.startswith('cell_')])
                 # Are we updating an existing line or creating a new one ?
-                line_id = line_id_map[cell_id_fragments[1]]
-                # Prepare the cell value
-                cell_vals = {
-                    conf['cell_value_property']: f_value,
-                    }
-                # Search for an existing cell at the given date
-                cell_date = datetime.datetime.strptime(cell_id_fragments[2], '%Y%m%d')
-                cell = obj.pool.get(conf['cell_type']).search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
-                # Cell doesn't exists, create it
-                if not cell:
-                    cell_vals.update({
-                        'date': cell_date,
-                        'line_id': line_id,
-                        })
-                    obj.pool.get(conf['cell_type']).create(cr, uid, cell_vals, context)
-                # Update cell with our data
-                else:
-                    cell_id = cell[0]
-                    obj.pool.get(conf['cell_type']).write(cr, uid, cell_id, cell_vals, context)
+                if line_id.startswith('new'):
+                    line_vals = line_resources
+                    line_vals.update({conf['line_inverse_property']: report.id})
+                    line_id = obj.pool.get(conf['line_type']).create(cr, uid, line_vals, context)
+                line_id = int(line_id)
+                written_lines.append(line_id)
+
+                # Save cells data
+                for (cell_date, cell_value) in line_cells.items():
+                    # Prepare the cell value
+                    cell_vals = {
+                        conf['cell_value_property']: cell_value,
+                        }
+                    # Search for an existing cell at the given date
+                    cell = obj.pool.get(conf['cell_type']).search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
+                    # Cell doesn't exists, create it
+                    if not cell:
+                        cell_vals.update({
+                            'date': cell_date,
+                            'line_id': line_id,
+                            })
+                        obj.pool.get(conf['cell_type']).create(cr, uid, cell_vals, context)
+                    # Update cell with our data
+                    else:
+                        cell_id = cell[0]
+                        obj.pool.get(conf['cell_type']).write(cr, uid, cell_id, cell_vals, context)
 
         # If there was no references to one of our line it means it was deleted
         for report in obj.browse(cr, uid, ids, context):
