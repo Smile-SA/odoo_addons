@@ -103,7 +103,7 @@
         <%
             resources = line.get('resources', [])
         %>
-        <span class="name">${resources[0]['label']}</span>
+        <span class="name">${'-' * (len(resources) - 1)} ${resources[-1]['label']}</span>
         %if editable:
             %for res in resources:
                 <%
@@ -185,6 +185,42 @@
                 Add new line
             </span>
         </div>
+    %endif
+</%def>
+
+
+<%def name="render_sub_matrix(lines, resource_value_list, date_range)">
+    %if len(resource_value_list) > 1:
+        <%
+            res_def = resource_value_list[0]
+            res_id = res_def.get('id', None)
+            res_values = res_def.get('values', [])
+        %>
+        %for (res_value, res_label) in res_values:
+            <%
+                sub_lines = []
+                for line in lines:
+                    matching_resources = [r for r in line.get('resources') if r['id'] == res_id and r['value'] == res_value]
+                    if len(matching_resources):
+                        sub_lines.append(line)
+            %>
+            %if len(sub_lines):
+                <tr id="${'group_%s_%s' % (res_value, res_id)}">
+                    <td class="resource">
+                        <span class="name">${'-' * (len(sub_lines[0].get('resources')) - len(resource_value_list))} ${res_label}</span>
+                    </td>
+                    <td colspan="${len(date_range) + 2}">
+                        ${render_resource_selector(resource_value_list[1])}
+                    </td>
+                </tr>
+                ${render_sub_matrix(sub_lines, resource_value_list[1:], date_range)}
+            %endif
+        %endfor
+    %endif
+    %if len(resource_value_list) == 1:
+        %for line in lines:
+            ${render_float_line(line, date_range)}
+        %endfor
     %endif
 </%def>
 
@@ -312,27 +348,10 @@
                 <%
                     template_line = [l for l in lines if l['id'] == 'template'][0]
                     non_boolean_lines = [l for l in lines if l['id'] != 'template' and l['widget'] != 'boolean']
-                    ungroupable_lines = [l for l in non_boolean_lines if 'group' not in l]
-                    groups = list(set([l['group'] for l in lines if 'group' in l]))
                     date_range = value['date_range']
                 %>
-                %for line in ungroupable_lines:
-                    ${render_float_line(line, date_range)}
-                %endfor
-                %for group in groups:
-                    <tr id="${'group_%s' % group[0]}">
-                        <td>
-                            ${group[1]}
-                        </td>
-                        <td colspan="${len(date_range) + 2}">
-                            <!-- render_resource_selector(value.get('resource_list', []), value['resource_type_id']) -->
-                        </td>
-                    </tr>
-                    %for line in [l for l in non_boolean_lines if 'group' in l and l['group'][0] == group[0]]:
-                        ${render_float_line(line, value['date_range'])}
-                    %endfor
-                %endfor
-                ${render_float_line(template_line, value['date_range'])}
+                ${render_sub_matrix(non_boolean_lines, resource_value_list, date_range)}
+                ${render_float_line(template_line, date_range)}
             </tbody>
         </table>
 

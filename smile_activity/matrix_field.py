@@ -67,10 +67,7 @@ class matrix(fields.dummy):
         line_property = self.__dict__.get('line_property', None)
         line_type = self.__dict__.get('line_type', None)
         # Get line properties from which we derive the matrix resources
-
-
         line_resource_property_list = self.__dict__.get('line_resource_property_list', None)
-
         default_widget_type = self.__dict__.get('default_widget_type', 'float')
         line_widget_property = self.__dict__.get('line_widget_property', None)
         # Property name from which we get the cells composing the matrix.
@@ -85,8 +82,6 @@ class matrix(fields.dummy):
         date_format = self.__dict__.get('date_format', None)
         # The object type we use to create new rows
         resource_type = self.__dict__.get('resource_type', None)
-        # The property on resource we'll use to group lines by
-        group_by_property = self.__dict__.get('group_by_property', None)
         # Additional classes can be manually added
         css_class = self.__dict__.get('css_class', [])
 
@@ -156,11 +151,6 @@ class matrix(fields.dummy):
                     cells_data[cell_date.strftime('%Y%m%d')] = getattr(cell, cell_value_property)
                 line_data.update({'cells_data': cells_data})
                 matrix_data.append(line_data)
-
-                # If a group by property is defined, add its value to the line
-                group = self._get_prop(line, group_by_property)
-                if group:
-                    line_data.update({'group': (group.id, group.name)})
 
             # Get default cells and their values for the template row.
             template_cells_data = {}
@@ -252,7 +242,6 @@ def parse_virtual_field_id(f_id):
         if str(int(id_element)) == id_element:
             return f_id_elements
     # Requested field doesn't follow matrix convention
-    import pdb; pdb.set_trace()
     raise osv.except_osv('Error !', "Field %r doesn't respect matrix widget conventions." % f_id)
 
 
