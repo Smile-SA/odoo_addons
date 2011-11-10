@@ -100,12 +100,13 @@
 </%def>
 
 
-<%def name="render_resources(line)">
+<%def name="render_resources(line, level=1)">
     <td class="resource">
         <%
             resources = line.get('resources', [])
         %>
-        <span class="name">${'-' * (len(resources) - 1)} ${resources[-1]['label']}</span>
+        ${"&mdash;" * (level - 1)|n}
+        <span class="name">${resources[-1]['label']}</span>
         %if editable:
             %for res in resources:
                 <%
@@ -121,9 +122,9 @@
 </%def>
 
 
-<%def name="render_float_line(line, date_range)">
+<%def name="render_float_line(line, date_range, level=1)">
     <tr id="${'line_%s' % line['id']}">
-        ${render_resources(line)}
+        ${render_resources(line, level)}
         <td>
             %if editable and not line.get('required', False):
                 <span class="button delete_row">X</span>
@@ -175,7 +176,7 @@
             selector_id = "resource_list_%s" % res_id
             button_id = "resource_add_%s" % res_id
         %>
-        <div class="resource_values">
+        <span class="resource_values">
             <select id="${selector_id}" kind="char" name="${selector_id}" type2="" operator="=" class="selection_search selection">
                 <option value="default" selected="selected">&mdash; Select here new line's resource &mdash;</option>
                 %for (res_value, res_label) in res_values:
@@ -185,12 +186,12 @@
             <span id="${button_id}" class="button">
                 Add new line
             </span>
-        </div>
+        </span>
     %endif
 </%def>
 
 
-<%def name="render_sub_matrix(lines, resource_value_list, date_range)">
+<%def name="render_sub_matrix(lines, resource_value_list, date_range, level=1)">
     %if len(resource_value_list) > 1:
         <%
             res_def = resource_value_list[0]
@@ -206,21 +207,23 @@
                         sub_lines.append(line)
             %>
             %if len(sub_lines):
-                <tr id="${'group_%s_%s' % (res_value, res_id)}" class="resource">
+                <tr id="${'group_%s_%s' % (res_value, res_id)}" class="resource level_${level}">
                     <td class="resource">
-                        <span class="name">${'-' * (len(sub_lines[0].get('resources')) - len(resource_value_list))} ${res_label}</span>
+                        ${"&mdash;" * (level - 1)|n}
+                        <span class="name">${res_label}</span>
                     </td>
                     <td colspan="${len(date_range) + 2}">
+                        ${"&mdash;" * (level - 1)|n}
                         ${render_resource_selector(resource_value_list[1])}
                     </td>
                 </tr>
-                ${render_sub_matrix(sub_lines, resource_value_list[1:], date_range)}
+                ${render_sub_matrix(sub_lines, resource_value_list[1:], date_range, level + 1)}
             %endif
         %endfor
     %endif
     %if len(resource_value_list) == 1:
         %for line in lines:
-            ${render_float_line(line, date_range)}
+            ${render_float_line(line, date_range, level)}
         %endfor
     %endif
 </%def>
