@@ -54,6 +54,11 @@ class matrix(fields.dummy):
             raise osv.except_osv('Error !', "%r has no %s property." % (obj, prop_name))
         return prop_value
 
+    def _get_title_or_id(self, obj):
+        """ Return the title of the object or a descriptive string
+        """
+        return getattr(obj, 'name', None) or getattr(obj, 'title', None) or 'Untitled (ID: %s)' % obj.id
+
 
     ## Native methods
 
@@ -112,7 +117,7 @@ class matrix(fields.dummy):
                 p = base_object.pool.get(res_type)
                 resource_value_list.append({
                     'id': res_id,
-                    'values': [(o.id, o.name) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)],
+                    'values': [(o.id, self._get_title_or_id(o)) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)],
                     })
 
             # Browse all lines that will compose our matrix
@@ -121,7 +126,7 @@ class matrix(fields.dummy):
                 # Transfer some line data to the matrix widget
                 line_data = {
                     'id': line.id,
-                    'name': line.name,
+                    'name': self._get_title_or_id(line),
 
                     # Is this resource required ?
                     # FIX: 'required': getattr(getattr(line, line_resource_property), 'required', False),
@@ -138,7 +143,7 @@ class matrix(fields.dummy):
                     res = self._get_prop(line, res_id)
                     res_list.append({
                         'id': res_id,
-                        'label': res.name,
+                        'label': self._get_title_or_id(res),
                         'value': res.id,
                         })
                 line_data.update({'resources': res_list})
