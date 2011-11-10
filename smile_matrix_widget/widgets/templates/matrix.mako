@@ -170,12 +170,9 @@
     <%
         res_id = res_def.get('id', None)
         res_values = res_def.get('values', [])
+        selector_id = "resource_list_%s" % res_id
     %>
     %if len(res_values) and editable:
-        <%
-            selector_id = "resource_list_%s" % res_id
-            button_id = "resource_add_%s" % res_id
-        %>
         <span class="resource_values">
             <select id="${selector_id}" kind="char" name="${selector_id}" type2="" operator="=" class="selection_search selection">
                 <option value="default" selected="selected">&mdash; Select here new line's resource &mdash;</option>
@@ -183,23 +180,26 @@
                     <option value="${res_value}">${res_label}</option>
                 %endfor
             </select>
-            <span id="${button_id}" class="button">
-                Add new line
-            </span>
+            <span class="button add_row">+</span>
         </span>
     %endif
 </%def>
 
 
-<%def name="render_sub_matrix(lines, resource_value_list, date_range, level=1)">
-    %if len(resource_value_list) > 1:
+<%def name="render_sub_matrix(lines, resource_value_list, date_range, level=1, level_resources=[])">
+    %if level < len(resource_value_list):
         <%
-            res_def = resource_value_list[0]
+            res_def = resource_value_list[level - 1]
             res_id = res_def.get('id', None)
             res_values = res_def.get('values', [])
         %>
         %for (res_value, res_label) in res_values:
             <%
+                level_res = level_resources + [{
+                    'id': res_id,
+                    'label': res_label,
+                    'value': res_value,
+                    }]
                 sub_lines = []
                 for line in lines:
                     matching_resources = [r for r in line.get('resources') if r['id'] == res_id and r['value'] == res_value]
@@ -207,21 +207,25 @@
                         sub_lines.append(line)
             %>
             %if len(sub_lines):
-                <tr id="${'group_%s_%s' % (res_value, res_id)}" class="resource level_${level}">
-                    <td class="resource">
-                        ${"&mdash;" * (level - 1)|n}
-                        <span class="name">${res_label}</span>
-                    </td>
+                <%
+                    # Build a virtual line to freeze resources at that level
+                    virtual_line = {
+                        'id': 'template',
+                        'resources': level_res,
+                        }
+                %>
+                <tr class="resource level_${level}">
+                    ${render_resources(virtual_line, level)}
                     <td colspan="${len(date_range) + 2}">
                         ${"&mdash;" * (level - 1)|n}
-                        ${render_resource_selector(resource_value_list[1])}
+                        ${render_resource_selector(resource_value_list[level])}
                     </td>
                 </tr>
-                ${render_sub_matrix(sub_lines, resource_value_list[1:], date_range, level + 1)}
+                ${render_sub_matrix(sub_lines, resource_value_list, date_range, level + 1, level_res)}
             %endif
         %endfor
     %endif
-    %if len(resource_value_list) == 1:
+    %if level == len(resource_value_list):
         %for line in lines:
             ${render_float_line(line, date_range, level)}
         %endfor

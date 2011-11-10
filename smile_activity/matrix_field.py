@@ -218,7 +218,7 @@ def parse_virtual_field_id(f_id):
         Valid matrix field names:
             * resource_list  (ignored)
             * res_XX_PROPERTY_ID
-            * res_template  (ignored)
+            * res_template_PROPERTY_ID  (ignored)
             * cell_XX_YYYYMMDD
             * cell_template_YYYYMMDD  (ignored)
         XXX Can we increase the readability of the validation rules embedded in this method by using reg exps ?
