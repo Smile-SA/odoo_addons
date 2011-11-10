@@ -13,7 +13,8 @@
         text-transform: none;
     }
 
-    .item .matrix input {
+    .item .matrix input,
+    .item .matrix select {
         width: inherit;
         min-width: inherit;
     }
@@ -25,7 +26,7 @@
         margin-bottom: 1em;
     }
 
-    .matrix .toolbar select {
+    .matrix select {
         width: 30em;
     }
 
@@ -56,15 +57,16 @@
         text-align: left;
     }
 
+    .matrix table .button.delete_row,
+    .matrix table .button.increment {
+        display: block;
+        padding: .3em;
+    }
+
     .matrix td,
     .matrix th {
         min-width: 2.2em;
         height: 1.5em;
-    }
-
-    .matrix table span {
-        display: block;
-        padding: .3em;
     }
 
     .matrix table tbody td,
@@ -148,17 +150,16 @@
                 %endif
             </td>
         %endfor
-        <td class="total">
-            <%
-                row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
-            %>
-            <span id="row_total_${line['id']}"
-                %if not editable and row_total <= 0.0:
-                    class="zero"
-                %endif
-                >
-                ${render_float(row_total)}
-            </span>
+        <%
+            row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
+        %>
+        <td class="total"
+            id="row_total_${line['id']}"
+            %if not editable and row_total <= 0.0:
+                class="zero"
+            %endif
+            >
+            ${render_float(row_total)}
         </td>
     </tr>
 </%def>
@@ -205,7 +206,7 @@
                         sub_lines.append(line)
             %>
             %if len(sub_lines):
-                <tr id="${'group_%s_%s' % (res_value, res_id)}">
+                <tr id="${'group_%s_%s' % (res_value, res_id)}" class="resource">
                     <td class="resource">
                         <span class="name">${'-' * (len(sub_lines[0].get('resources')) - len(resource_value_list))} ${res_label}</span>
                     </td>
@@ -267,38 +268,36 @@
                     <td class="resource">Total</td>
                     <td></td>
                     %for date in value['date_range']:
-                        <td>
+                        <%
+                            column_values = [line['cells_data'][date] for line in lines if line['widget'] != 'boolean' and date in line['cells_data']]
+                        %>
+                        %if len(column_values):
                             <%
-                                column_values = [line['cells_data'][date] for line in lines if line['widget'] != 'boolean' and date in line['cells_data']]
+                                column_total = sum(column_values)
                             %>
-                            %if len(column_values):
-                                <%
-                                    column_total = sum(column_values)
-                                %>
-                                <span id="column_total_${date}" class="
-                                    %if not editable and column_total <= 0.0:
-                                        zero
-                                    %endif
-                                    %if column_total > 1:
-                                        warning
-                                    %endif
-                                    ">
-                                        ${render_float(column_total)}
-                                </span>
-                            %endif
+                            <td id="column_total_${date}" class="
+                                %if not editable and column_total <= 0.0:
+                                    zero
+                                %endif
+                                %if column_total > 1:
+                                    warning
+                                %endif
+                                ">
+                                ${render_float(column_total)}
+                        %else:
+                            <td>
+                        %endif
                         </td>
                     %endfor
-                    <td>
-                        <%
-                            grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['widget'] != 'boolean'])
-                        %>
-                        <span id="grand_total"
-                            %if not editable and grand_total <= 0.0:
-                                class="zero"
-                            %endif
-                            >
-                            ${render_float(grand_total)}
-                        </span>
+                    <%
+                        grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['widget'] != 'boolean'])
+                    %>
+                    <td id="grand_total"
+                        %if not editable and grand_total <= 0.0:
+                            class="zero"
+                        %endif
+                        >
+                        ${render_float(grand_total)}
                     </td>
                 </tr>
                 %for line in [l for l in lines if l['widget'] == 'boolean']:
@@ -329,17 +328,17 @@
                                 %endif
                             </td>
                         %endfor
-                        <td class="total">
-                            <%
-                                row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
-                            %>
-                            <span id="row_total_${line['id']}"
-                                %if not editable and row_total <= 0.0:
-                                    class="zero"
-                                %endif
-                                >
-                                ${render_float(row_total)}
-                            </span>
+                        <%
+                            row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
+                        %>
+
+                        <td class="total"
+                            id="row_total_${line['id']}"
+                            %if not editable and row_total <= 0.0:
+                                class="zero"
+                            %endif
+                            >
+                            ${render_float(row_total)}
                         </td>
                     </tr>
                 %endfor
