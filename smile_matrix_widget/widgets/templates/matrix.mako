@@ -39,6 +39,10 @@
         color: #fff;
     }
 
+    .matrix .template {
+        display: none;
+    }
+
     .matrix .total,
     .matrix .total td {
         font-weight: bold;
@@ -68,6 +72,12 @@
         min-width: 2.2em;
         height: 1.5em;
     }
+
+    .matrix .level_2 td.resource, .matrix .level_2 td.resource_selector, .matrix .level_2 td.delete_line{padding-left: 1em}
+    .matrix .level_3 td.resource, .matrix .level_3 td.resource_selector, .matrix .level_3 td.delete_line{padding-left: 2em}
+    .matrix .level_4 td.resource, .matrix .level_4 td.resource_selector, .matrix .level_4 td.delete_line{padding-left: 3em}
+    .matrix .level_5 td.resource, .matrix .level_5 td.resource_selector, .matrix .level_5 td.delete_line{padding-left: 4em}
+    .matrix .level_6 td.resource, .matrix .level_6 td.resource_selector, .matrix .level_6 td.delete_line{padding-left: 5em}
 
     .matrix table tbody td,
     div.non-editable .matrix table tbody td,
@@ -100,12 +110,11 @@
 </%def>
 
 
-<%def name="render_resources(line, level=1)">
+<%def name="render_resources(line)">
     <td class="resource">
         <%
             resources = line.get('resources', [])
         %>
-        ${"&mdash;" * (level - 1)|n}
         <span class="name">${resources[-1]['label']}</span>
         %if editable:
             %for res in resources:
@@ -123,9 +132,13 @@
 
 
 <%def name="render_float_line(line, date_range, level=1)">
-    <tr id="${'line_%s' % line['id']}">
-        ${render_resources(line, level)}
-        <td>
+    <tr id="${'line_%s' % line['id']}" class="level level_${level}
+        %if line['id'] == 'template':
+            template
+        %endif
+        ">
+        ${render_resources(line)}
+        <td class="delete_line">
             %if editable and not line.get('required', False):
                 <span class="button delete_row">X</span>
             %endif
@@ -186,6 +199,27 @@
 </%def>
 
 
+<%def name="render_sub_matrix_header(level_res, res_values, level, date_range, css_class=None)">
+    <%
+        # Build a virtual line to freeze resources at that level
+        virtual_line = {
+            'id': 'template',
+            'resources': level_res,
+            }
+    %>
+    <tr class="resource level level_${level}
+        %if css_class:
+            ${css_class}
+        %endif
+        ">
+        ${render_resources(virtual_line)}
+        <td colspan="${len(date_range) + 2}" class="resource_selector">
+            ${render_resource_selector(res_values)}
+        </td>
+    </tr>
+</%def>
+
+
 <%def name="render_sub_matrix(lines, resource_value_list, date_range, level=1, level_resources=[])">
     %if level < len(resource_value_list):
         <%
@@ -207,20 +241,7 @@
                         sub_lines.append(line)
             %>
             %if len(sub_lines):
-                <%
-                    # Build a virtual line to freeze resources at that level
-                    virtual_line = {
-                        'id': 'template',
-                        'resources': level_res,
-                        }
-                %>
-                <tr class="resource level_${level}">
-                    ${render_resources(virtual_line, level)}
-                    <td colspan="${len(date_range) + 2}">
-                        ${"&mdash;" * (level - 1)|n}
-                        ${render_resource_selector(resource_value_list[level])}
-                    </td>
-                </tr>
+                ${render_sub_matrix_header(level_res, resource_value_list[level], level, date_range)}
                 ${render_sub_matrix(sub_lines, resource_value_list, date_range, level + 1, level_res)}
             %endif
         %endfor
@@ -251,9 +272,9 @@
         %>
 
         %if editable:
-            <div class="toolbar">
+            <div class="toolbar level level_0">
                 ${render_resource_selector(resource_value_list[0])}
-                <span id="matrix_button_template" class="button increment">
+                <span id="matrix_button_template" class="button increment template">
                     Button template
                 </span>
             </div>
@@ -357,7 +378,32 @@
                     date_range = value['date_range']
                 %>
                 ${render_sub_matrix(non_boolean_lines, resource_value_list, date_range)}
-                ${render_float_line(template_line, date_range)}
+
+                <%doc>
+                    Render a sub-matrix header template for each level of resource.
+                    Level 0 is skipped as it's already rendered outside of the matrix table.
+                </%doc>
+                <%
+                    level_res = []
+                %>
+                %for (res_index, res_def) in enumerate(resource_value_list):
+                    %if res_index != 0:
+                        ${render_sub_matrix_header(level_res, res_def, res_index, date_range, css_class='template')}
+                    %endif
+                    <%
+                        res_id = res_def.get('id', None)
+                        level_res.append({
+                            'id': res_id,
+                            'label': '%s template label' % res_id,
+                            'value': 0,
+                            })
+                    %>
+                %endfor
+
+                <%doc>
+                    Render a template float line to help the interactive Javascript code render consistent stuff.
+                </%doc>
+                ${render_float_line(template_line, date_range, level=len(resource_value_list))}
             </tbody>
         </table>
 

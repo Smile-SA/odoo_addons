@@ -6,7 +6,6 @@ $(document).ready(function(){
     var increment_button_selector = ".button.increment:not(:disabled)";
     var global_increment_cells_selector = ".matrix " + increment_cells_selector;
     var global_increment_button_selector = ".matrix " + increment_button_selector;
-    var last_row_selector = ".matrix tbody tr:last";
 
 
     // Replace all integer fields by a button template, then hide the original field
@@ -14,15 +13,9 @@ $(document).ready(function(){
     var cells = $(global_increment_cells_selector);
     cells.each(function(i, cell){
         var $cell = $(cell);
-        $cell.after($(button_template).clone().attr('id', 'button_' + $cell.attr("id")).text($cell.val()));
+        $cell.after($(button_template).clone().removeClass('template').attr('id', 'button_' + $cell.attr("id")).text($cell.val()));
         $cell.hide();
     });
-
-
-    // Hide the button and row template
-    $(button_template).hide();
-    $(last_row_selector).hide();
-
 
     // Label of buttons
     var cycling_values = ['0', '0.5', '1'];
@@ -109,41 +102,52 @@ $(document).ready(function(){
     });
 
 
+    // Utility method to get the level we're currently at
+    function get_level(elmnt) {
+        // Search up parents until we find level indication
+        leveled_parent = $(elmnt).parentsUntil(".matrix", ".level").first();
+        css_classes = $(leveled_parent).attr('class')
+        if(css_classes){
+            css_classes = css_classes.split(/\s+/);
+            for(i = 0; i < css_classes.length; i++){
+                c = css_classes[i];
+                if(c.substring(6, 0) == "level_"){
+                    level = c.split("_")[1];
+                    if(!isNaN(level)){
+                        return parseInt(level);
+                    };
+                };
+            };
+        };
+        return;
+    };
+
+
     // Make the add line button working
     // Create one new row for the selected resource
     $(".matrix .button.add_row").click(function(){
         // Get the value selected in the associated select widget
-        var new_res_data = $(this).parent().find("select").first().find("option:selected").first();
+        var selector = $(this).parent().find("select").first();
+        var new_res_data = selector.find("option:selected").first();
         var res_value = new_res_data.val();
         var res_name = new_res_data.text();
         if(isNaN(res_value)) {
+            $(selector).effect("shake", {times:3, direction:"left"}, 50);
             return;
         };
         res_value = parseInt(res_value);
 
-        // Get the table row we're sitting in
-        var current_table_row = $(this).parent().parent().parent();
+        // Get the template of an editable line, i.e. the kind of matrix row we had at the leaf of the level tree
+        var line_template = $(".matrix tbody tr#line_template");
+        var line_template_resources = $(line_template).find("td.resource").first().find("input[id^='res_template_']");
 
+        // Get the current and highest level
+        var level = get_level($(this));
+        var highest_level = line_template_resources.length - 1;
+        console.log("We're at level " + level + " out of " + highest_level);
 
-        // Get our row template
-        var row_template = $(last_row_selector);
-        var row_template_resources = $(row_template).find("td.resource").first().find("input[id^='res_template_']");
-
-
-        // If we have all required resources, we are at the leaf of the resource tree, so we can create a new row
-        var level_resources = $(current_table_row).find("td.resource").first().find("input[id^='res_template_']");
-        if((level_resources.length + 1) == row_template_resources.length){
-
-            // We are at the leaf: create a new row
-//             alert("We are at the leaf: create a new row");
-            var new_row = row_template.clone(true).hide();
-
-            // TODO: Two lines can't share the same set of resources in the matrix
-                    // Two lines can't share the same resource
-//             if($(".matrix .resource input[value='" + res_id + "']").length > 0) {
-//                 return;
-//             };
-
+        // If we have all required resources, we are at the leaf of the resource tree, so we can create a new editable line
+        if(level == highest_level){
 
             // Compute a new unique row index based on the other new rows in the matrix
             var new_row_index = 0;
@@ -154,6 +158,15 @@ $(document).ready(function(){
                 };
             });
             new_row_index = "new" + (new_row_index + 1);
+
+            // We are at the leaf: create a new editable line
+            var new_row = line_template.clone(true).removeAttr('id').removeClass('template').hide();
+
+            // TODO: Two lines can't share the same set of resources in the matrix
+                    // Two lines can't share the same resource
+//             if($(".matrix .resource input[value='" + res_id + "']").length > 0) {
+//                 return;
+//             };
 
             // Update our new row with its true values
 
@@ -186,45 +199,44 @@ $(document).ready(function(){
             new_row.find(".resource input").val(res_value);
             new_row.find(".resource input").attr('title', res_name);
 
-
-            // Search the row in the table after which we'll add our new content
-            if(level_resources.length == 0){
-                // We're at the top level, add stuff at the end of the table, just before the line template.
-                var level_last_row = row_template.prev();
-            } else {
-                // Search the last row of the current level
-                var level_last_row = current_table_row;
-                while(true){
-                    if(!level_last_row){
-                        break;
-                    };
-                    var next_row = level_last_row.next();
-                    if(!next_row){
-                        break;
-                    };
-                    var next_row_id = next_row.attr("id");
-                    if (!next_row_id){
-                        break;
-                    };
-                    if(next_row_id.substring(5, 0) != "line_" || next_row_id == "line_template"){
-                        break;
-                    };
-                    level_last_row = next_row;
-                };
-            };
-
-            // Insert our new row at the end of the current level
-            level_last_row.after(new_row.hide());
-            new_row.fadeIn('fast');
-
-            //TODO: $(deduplicate_new_line_selector());
-
+        // We're in the middle of the matrix: display a new sub resource selector
         } else {
+            // Get the template for that level
+            var level_template = $(".matrix tbody tr.template.level_" + (level + 1));
 
-            // We're in the middle of the matrix: display a new sub resource selector
-            alert("We're in the middle of the matrix: display a new sub resource selector");
+            // Create a new row
+            var new_row = level_template.clone(true).removeAttr('id').removeClass('template').hide();
+
+            // TODO: update content
 
         };
+
+        // By default the place we add our new stuff is at the end of the table
+        var level_last_row = $(".matrix tbody tr:last");
+
+        // Search the row in the table after which we'll add our new content
+        if(level > 0){
+            // Get the table row we're sitting in
+            var current_table_row = $(this).parentsUntil("tbody").last();
+            // Search the last row of the current level
+            var level_last_row = current_table_row;
+            var next_row_list = current_table_row.nextAll("tr:not(.template)");
+            for(i = 0; i < next_row_list.length; i++){
+                var next_row = next_row_list[i];
+                var next_row_level = get_level($(next_row));
+                console.log("next_row_level: " + next_row_level);
+                if (next_row_level && next_row_level <= level){
+                    break;
+                };
+                level_last_row = next_row;
+            };
+        };
+
+        // Insert our new row at the end of the current level
+        $(level_last_row).after(new_row.hide());
+        $(new_row).fadeIn('fast');
+
+        //TODO: $(deduplicate_new_line_selector());
 
     });
 
