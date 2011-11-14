@@ -123,6 +123,17 @@ $(document).ready(function(){
     };
 
 
+    // Utility method to parse the ID of field and get its resource
+    function get_res_id(elmnt){
+        l = $(elmnt).attr("id").split("_");
+        var res_id = new Array();
+        for(i = 2; i < l.length; i++){
+            res_id.push(l[i]);
+        };
+        return res_id.join("_");
+    };
+
+
     // Make the add line button working
     // Create one new row for the selected resource
     $(".matrix .button.add_row").click(function(){
@@ -146,21 +157,24 @@ $(document).ready(function(){
         var highest_level = line_template_resources.length - 1;
         console.log("We're at level " + level + " out of " + highest_level);
 
+        // Compute a new unique row index based on the other new rows in the matrix
+        var new_row_index = 0;
+        $(".matrix tr[id^='line_new']").each(function(){
+            var row_id = parseInt($(this).attr("id").split("new")[1]);
+            if(row_id > new_row_index){
+                new_row_index = row_id;
+            };
+        });
+        new_row_index = "new" + (new_row_index + 1);
+
+        // Get the ID of the resource from the ID of the selector: just remove the "resource_list_" prefix
+        var resource_id = get_res_id(selector);
+
         // If we have all required resources, we are at the leaf of the resource tree, so we can create a new editable line
         if(level == highest_level){
 
-            // Compute a new unique row index based on the other new rows in the matrix
-            var new_row_index = 0;
-            $(".matrix tr[id^='line_new']").each(function(){
-                var row_id = parseInt($(this).attr("id").split("new")[1]);
-                if(row_id > new_row_index){
-                    new_row_index = row_id;
-                };
-            });
-            new_row_index = "new" + (new_row_index + 1);
-
             // We are at the leaf: create a new editable line
-            var new_row = line_template.clone(true).removeAttr('id').removeClass('template').hide();
+            var new_row = line_template.clone(true).attr('id', "line_" + new_row_index).removeClass('template').hide();
 
             // TODO: Two lines can't share the same set of resources in the matrix
                     // Two lines can't share the same resource
@@ -185,46 +199,56 @@ $(document).ready(function(){
             // Update the total column
             new_row.find("span[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
 
-            // Update the line ID
-            $(new_row).attr('id', "line_" + new_row_index);
-
-            // Update the resources
-            new_row.find(".resource input").each(function(){
-                // Replace the res_template_ prefix by our own
-                var new_res_index = "res_" + new_row_index + $(this).attr('id').substring(12);
-                $(this).attr('id', new_res_index).attr('name', new_res_index);
-            });
-            // TODO: use a loop for multi-resource lines
-            new_row.find(".resource .name").text(res_name);
-            new_row.find(".resource input").val(res_value);
-            new_row.find(".resource input").attr('title', res_name);
-
         // We're in the middle of the matrix: display a new sub resource selector
         } else {
             // Get the template for that level
             var level_template = $(".matrix tbody tr.template.level_" + (level + 1));
-
             // Create a new row
-            var new_row = level_template.clone(true).removeAttr('id').removeClass('template').hide();
-
-            // TODO: update content
-
+            var new_row = level_template.clone(true).attr('id', "line_" + new_row_index).removeClass('template').hide();
         };
+
+        // If we're deeper than the first level, get the parent's resource value to populate our template later
+        if(level > 0){
+            // Get the table row we're sitting in
+            var current_table_row = $(this).parentsUntil("tbody").last();
+            // Use parent's resource value to populate our template
+            var parent_resources = new Array();
+            $(current_table_row).find(".resource input[id^='res_']").each(function(){
+                res_id = get_res_id(this);
+                parent_resources[res_id] = {
+                    "label": $(this).attr("title"),
+                    "value": $(this).val(),
+                    };
+            });
+        };
+
+        // Set row's label
+        new_row.find(".resource .name").text(res_name);
+
+        // Force all resource field ID's to use our new line unique prefix
+        new_row.find(".resource input[id^='res_']").each(function(){
+            res_id = get_res_id(this);
+            var new_res_index = "res_" + new_row_index + "_" + res_id;
+            $(this).attr('id', new_res_index).attr('name', new_res_index);
+            if(parent_resources && parent_resources[res_id]){
+                $(this).attr('value', parent_resources[res_id]['value']).attr('title', parent_resources[res_id]['label']);
+            };
+        });
+
+        // Set value of the new resource field
+        new_row.find(".resource input[id^='res_" + new_row_index + "_" + resource_id + "']").val(res_value).attr('title', res_name);
 
         // By default the place we add our new stuff is at the end of the table
         var level_last_row = $(".matrix tbody tr:last");
 
         // Search the row in the table after which we'll add our new content
         if(level > 0){
-            // Get the table row we're sitting in
-            var current_table_row = $(this).parentsUntil("tbody").last();
             // Search the last row of the current level
             var level_last_row = current_table_row;
             var next_row_list = current_table_row.nextAll("tr:not(.template)");
             for(i = 0; i < next_row_list.length; i++){
                 var next_row = next_row_list[i];
                 var next_row_level = get_level($(next_row));
-                console.log("next_row_level: " + next_row_level);
                 if (next_row_level && next_row_level <= level){
                     break;
                 };
@@ -261,7 +285,7 @@ $(document).ready(function(){
 
     // Activate delete row button
     $(".matrix .delete_row").click(function(){
-        $(this).parent().parent().fadeOut('fast', function(){
+        $(this).parentsUntil(".matrix", "tr").first().fadeOut('fast', function(){
             $(this).remove();
             $(deduplicate_new_line_selector());
             // TODO: update column totals
