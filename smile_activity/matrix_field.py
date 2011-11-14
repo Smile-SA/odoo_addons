@@ -91,7 +91,7 @@ class matrix(fields.dummy):
         css_class = self.__dict__.get('css_class', [])
 
         # Check that all required parameters are there
-        for p_name in ['line_property', 'line_type', 'line_resource_property_list', 'cell_property', 'cell_type', 'cell_value_property', 'date_range_property']:
+        for p_name in ['line_property', 'line_type', 'line_resource_property_list', 'cell_property', 'cell_type', 'cell_value_property']:
             if not p_name:
                 raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
 
@@ -104,8 +104,10 @@ class matrix(fields.dummy):
         for base_object in obj.browse(cr, uid, ids, context):
             matrix_data = []
 
-            # Get the date range composing the timeline
-            date_range_property_object = self._get_prop(base_object, date_range_property)
+            # Get the date range composing the timeline either on the current object or another one through a property
+            date_range_property_object = base_object
+            if date_range_property:
+                date_range_property_object = self._get_prop(base_object, date_range_property)
             date_range = self._get_prop(date_range_property_object, 'date_range')
             if type(date_range) is not type([]):
                 raise osv.except_osv('Error !', "date_range must return data that looks like selection field data.")
