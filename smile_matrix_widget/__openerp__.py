@@ -26,5 +26,5 @@
     "author" : "Smile.fr",
     "description": """Widget to display and edit a matrix of cell objects grouped by lines.""",
     'website': 'www.smile.fr',
-    'active': True,
+    'active': False,
 }
