@@ -205,7 +205,7 @@ def get_matrix_conf(osv_instance):
         XXX only one matrix field is allowed per object class.
     """
     field_defs = osv_instance.__dict__['_columns'].values()
-    matrix_fields = [f for f in field_defs if f.__dict__.get('_fnct', None) and f.__dict__['_fnct'].im_class.__module__ == globals()['__name__']]
+    matrix_fields = [f for f in field_defs if f.__dict__.get('_fnct', None) and getattr(f.__dict__['_fnct'], 'im_class', None) and f.__dict__['_fnct'].im_class.__module__ == globals()['__name__']]
     if not len(matrix_fields):
         return None
     elif len(matrix_fields) > 1:
