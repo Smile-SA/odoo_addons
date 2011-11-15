@@ -104,9 +104,12 @@ $(document).ready(function(){
 
     // Utility method to get the level we're currently at
     function get_level(elmnt) {
-        // Search up parents until we find level indication
-        leveled_parent = $(elmnt).parentsUntil(".matrix", ".level").first();
-        css_classes = $(leveled_parent).attr('class')
+        // If the provided element has no level indication, search its parents
+        var leveled_parent = $(elmnt);
+        if(!$(elmnt).hasClass("level")){
+            leveled_parent = $(elmnt).parentsUntil(".matrix", ".level").first();
+        };
+        css_classes = $(leveled_parent).attr('class');
         if(css_classes){
             css_classes = css_classes.split(/\s+/);
             for(i = 0; i < css_classes.length; i++){
@@ -155,7 +158,6 @@ $(document).ready(function(){
         // Get the current and highest level
         var level = get_level($(this));
         var highest_level = line_template_resources.length - 1;
-        console.log("We're at level " + level + " out of " + highest_level);
 
         // Compute a new unique row index based on the other new rows in the matrix
         var new_row_index = 0;
@@ -247,26 +249,29 @@ $(document).ready(function(){
         // Set value of the new resource field
         new_row.find(".resource input[id^='res_" + new_row_index + "_" + resource_id + "']").val(res_value).attr('title', res_name);
 
-        // By default the place we add our new stuff is at the end of the table
-        var level_last_row = $(".matrix tbody tr:last");
-
         // Search the row in the table after which we'll add our new content
+        // By default the place we add our new stuff is at the start of the table
+        var level_last_row = $(".matrix tbody tr:first");
         if(level > 0){
             // Search the last row of the current level
             var level_last_row = current_table_row;
-            var next_row_list = current_table_row.nextAll("tr:not(.template)");
-            for(i = 0; i < next_row_list.length; i++){
-                var next_row = next_row_list[i];
-                var next_row_level = get_level($(next_row));
-                if (next_row_level && next_row_level <= level){
-                    break;
+            current_table_row.nextAll(".matrix tbody tr:not(.template)").each(function(){
+                var next_row_level = get_level($(this));
+                if(next_row_level){
+                    if(next_row_level <= level){
+                        return false;
+                    };
+                    var level_last_row = $(this);
                 };
-                level_last_row = next_row;
-            };
+            });
         };
 
-        // Insert our new row at the end of the current level
-        $(level_last_row).after(new_row.hide());
+        // Insert our new row at the start of the sub-level: it enhance usability as it make the new row as close as the button we just clicked.
+        if(level > 0){
+            $(level_last_row).after(new_row.hide());
+        } else {
+            $(level_last_row).before(new_row.hide());
+        };
         $(new_row).fadeIn('fast');
 
         //TODO: $(deduplicate_new_line_selector());
