@@ -74,7 +74,7 @@ class matrix(fields.dummy):
         # Get line properties from which we derive the matrix resources
         line_resource_property_list = self.__dict__.get('line_resource_property_list', None)
         default_widget_type = self.__dict__.get('default_widget_type', 'float')
-        line_widget_property = self.__dict__.get('line_widget_property', None)
+        dynamic_widget_type_property = self.__dict__.get('dynamic_widget_type_property', None)
         # Property name from which we get the cells composing the matrix.
         # Cells are fetched from the lines as defined above.
         cell_property = self.__dict__.get('cell_property', None)
@@ -136,7 +136,7 @@ class matrix(fields.dummy):
                     }
 
                 # Get the type of the widget we'll use to display cell values
-                line_data.update({'widget': self._get_prop(line, line_widget_property, default_widget_type)})
+                line_data.update({'widget': self._get_prop(line, dynamic_widget_type_property, default_widget_type)})
 
                 # Get all resources of the line
                 # Keep the order defined by matrix field's properties

@@ -42,7 +42,7 @@ class smile_activity_report(osv.osv):
             line_type='smile.activity.report.line',
             line_inverse_property='report_id',
             default_widget_type='increment',
-            line_widget_property='line_type',
+            dynamic_widget_type_property='line_type',
             cell_property='cell_ids',
             cell_type='smile.activity.report.cell',
             cell_value_property='cell_value',
