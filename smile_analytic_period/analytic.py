@@ -22,6 +22,7 @@
 import time
 
 from osv import osv, fields
+import tools
 from tools.translate import _
 
 class AnalyticPeriod(osv.osv):
@@ -82,18 +83,43 @@ class AnalyticPeriod(osv.osv):
             raise osv.except_osv(_('Error'), _('You cannot pass a journal entry in a period closed!'))
         return period_ids[0]
 
-    def get_next_period_id(self, cr, uid, period_id, state=None, context=None):
+    def _get_period_id(self, cr, uid, period_id, operator='>', state=None, context=None):
         if not isinstance(period_id, (int, long)):
             raise osv.except_osv(_('Error'), _('Please indicate a period id!'))
         period = self.read(cr, uid, period_id, ['date_start'], context)
-        domain = [('date_start', '>', period['date_start'])]
+        domain = [('date_start', operator, period['date_start'])]
         if state:
             domain.append(('state', '=', state))
-        next_period_ids = self.search(cr, uid, domain, limit=1, order='date_start asc', context=context)
-        return next_period_ids and next_period_ids[0] or 0
+        order = 'date_start ' + (operator == '>' and 'asc' or 'desc')
+        period_ids = self.search(cr, uid, domain, limit=1, order=order, context=context)
+        return period_ids and period_ids[0] or 0
+
+    @tools.cache()
+    def get_previous_period_id(self, cr, uid, period_id, state=None, context=None):
+        return self._get_period_id(cr, uid, period_id, '<', state, context)
+
+    @tools.cache()
+    def get_next_period_id(self, cr, uid, period_id, state=None, context=None):
+        return self._get_period_id(cr, uid, period_id, '>', state, context)
 
     def button_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context)
+
+    def clear_caches(self, cr):
+        self.get_previous_period_id.clear_cache(cr.dbname)
+        self.get_next_period_id.clear_cache(cr.dbname)
+
+    def create(self, cr, uid, vals, context=None):
+        self.clear_caches(cr)
+        return super(AnalyticPeriod, self).create(cr, uid, vals, context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self.clear_caches(cr)
+        return super(AnalyticPeriod, self).write(cr, uid, ids, vals, context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        self.clear_caches(cr)
+        return super(AnalyticPeriod, self).unlink(cr, uid, ids, context)
 AnalyticPeriod()
 
 class AnalyticLine(osv.osv):
