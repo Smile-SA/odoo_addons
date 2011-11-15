@@ -148,7 +148,7 @@ class AnalyticDistribution(osv.osv):
             ('dynamic', 'Dynamic'),
         ], 'Type', required=True),
         'python_code': fields.text('Python code', help=""),
-        'journal_ids': fields.many2many('account.analytic.journal', 'analytic_distribution_journal_rel', 'distribution_id', 'journal_id', 'Journals'),
+        'journal_ids': fields.many2many('account.analytic.journal', 'account_analytic_distribution_journal_rel', 'distribution_id', 'journal_id', 'Journals'),
     }
 
     _defaults = {
@@ -468,7 +468,8 @@ class AnalyticLine(osv.osv):
 AnalyticLine()
 
 def _is_distribution_destination(self, cr, uid):
-    if self._name in self.pool.get('account.analytic.distribution').get_distribution_destinations(cr, 1):
+    if self.pool.get('account.analytic.distribution') \
+    and self._name in self.pool.get('account.analytic.distribution').get_distribution_destinations(cr, 1):
         return True
     return False
 
