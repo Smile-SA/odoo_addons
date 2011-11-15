@@ -189,7 +189,7 @@ class matrix(fields.dummy):
                 'date_range': [self._date_to_str(d) for d in date_range],  # Format our date range for our matrix # XXX Keep them as date objects ?
                 'resource_value_list': resource_value_list,
                 'column_date_label_format': date_format,
-                'class': css_class
+                'class': css_class,
                 }
 
             if self.__dict__.get('experimental_slider', False):
@@ -221,6 +221,7 @@ def parse_virtual_field_id(f_id):
             * resource_list  (ignored)
             * res_XX_PROPERTY_ID
             * res_template_PROPERTY_ID  (ignored)
+            * res_dummyXX_PROPERTY_ID  (ignored)
             * cell_XX_YYYYMMDD
             * cell_template_YYYYMMDD  (ignored)
         XXX Can we increase the readability of the validation rules embedded in this method by using reg exps ?
@@ -228,6 +229,7 @@ def parse_virtual_field_id(f_id):
     f_id_elements = f_id.split('_')
     if (f_id.startswith('cell_template_') and len(f_id_elements) == 3) or \
        (f_id.startswith('res_template_')  and len(f_id_elements) >  2) or \
+       (f_id.startswith('res_dummy')      and len(f_id_elements) >  2) or \
        (f_id.startswith('resource_list_') and len(f_id_elements) >  2):
         return None
     elif (f_id_elements[0] == 'cell' and len(f_id_elements) == 3) or (f_id_elements[0] == 'res' and len(f_id_elements) > 2):

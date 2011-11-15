@@ -1,5 +1,10 @@
-<%
+<%!
     import datetime
+%>
+
+<%
+    #
+    value['row_uid'] = 1
 %>
 
 
@@ -203,9 +208,10 @@
     <%
         # Build a virtual line to freeze resources at that level
         virtual_line = {
-            'id': 'template',
+            'id': 'dummy%s' % value['row_uid'],
             'resources': level_res,
             }
+        value['row_uid'] += 1
     %>
     <tr class="resource level level_${level}
         %if css_class:

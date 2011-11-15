@@ -159,13 +159,23 @@ $(document).ready(function(){
 
         // Compute a new unique row index based on the other new rows in the matrix
         var new_row_index = 0;
-        $(".matrix tr[id^='line_new']").each(function(){
-            var row_id = parseInt($(this).attr("id").split("new")[1]);
+        $(".matrix tr[id^='line_new'],.matrix tr[id^='line_dummy']").each(function(){
+            var row_id = $(this).attr("id");
+            var split_by = "new";
+            if(row_id.substring(10,5) == "dummy"){
+                split_by = "dummy";
+            };
+            row_id = parseInt(row_id.split(split_by)[1]);
             if(row_id > new_row_index){
                 new_row_index = row_id;
             };
         });
-        new_row_index = "new" + (new_row_index + 1);
+        new_row_index = new_row_index + 1;
+        if(level == highest_level){
+            new_row_index = "new" + new_row_index;
+        } else {
+            new_row_index = "dummy" + new_row_index;
+        };
 
         // Get the ID of the resource from the ID of the selector: just remove the "resource_list_" prefix
         var resource_id = get_res_id(selector);
@@ -182,18 +192,15 @@ $(document).ready(function(){
 //                 return;
 //             };
 
-            // Update our new row with its true values
-
             // Update the cells
-            new_row.find(increment_cells_selector).each(function(){
-                // Compute new cell and button ID
+            new_row.find("td.float input[id^='cell_']").each(function(){
                 name_fragments = $(this).attr("id").split("_");
                 column_index = name_fragments[2];
                 var new_cell_id = "cell_" + new_row_index + "_" + column_index;
-                var new_button_id = "button_" + new_cell_id;
-                // Apply new IDs and reset values
                 $(this).attr('id', new_cell_id).attr('name', new_cell_id).val(cycling_values[0]);
-                $(this).parent().find(increment_button_selector).first().attr('id', new_button_id).text(cycling_values[0]);
+                // If there is a sibling button increment, update it too
+                var new_button_id = "button_" + new_cell_id;
+                $(this).parent().find(increment_button_selector).attr('id', new_button_id).text(cycling_values[0]);
             });
 
             // Update the total column
@@ -225,11 +232,13 @@ $(document).ready(function(){
         // Set row's label
         new_row.find(".resource .name").text(res_name);
 
-        // Force all resource field ID's to use our new line unique prefix
+        // Update the local copy of resources
         new_row.find(".resource input[id^='res_']").each(function(){
             res_id = get_res_id(this);
+            // Only update the local resources ID on leafs: all others stays declared as template
             var new_res_index = "res_" + new_row_index + "_" + res_id;
             $(this).attr('id', new_res_index).attr('name', new_res_index);
+            // Let local resources inherit values from its parent
             if(parent_resources && parent_resources[res_id]){
                 $(this).attr('value', parent_resources[res_id]['value']).attr('title', parent_resources[res_id]['label']);
             };
