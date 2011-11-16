@@ -213,6 +213,9 @@ $(document).ready(function(){
             var new_row = level_template.clone(true).attr('id', "line_" + new_row_index).removeClass('template');
         };
 
+        // Set row's label
+        new_row.find(".resource .name").text(res_name);
+
         // Update the total column
         new_row.find("td[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
 
@@ -230,9 +233,6 @@ $(document).ready(function(){
                     };
             });
         };
-
-        // Set row's label
-        new_row.find(".resource .name").text(res_name);
 
         // Update the local copy of resources
         new_row.find(".resource input[id^='res_']").each(function(){
@@ -274,37 +274,50 @@ $(document).ready(function(){
             new_row.insertBefore(level_last_row).hide().fadeIn('fast');
         };
 
-        //TODO: $(deduplicate_new_line_selector());
+        // Remove the entry from the selector
+        $(update_parent_selector(level_last_row.parent().find("[id='" + new_row.attr("id") + "']"), "hide"));
 
     });
 
 
-    // Deduplicate the add line list content with lines in the matrix
-    function deduplicate_new_line_selector() {
-        var displayed_lines = new Array();
-        $(".matrix tr[id!='line_template'] .resource input").each(function(){
-            displayed_lines.push(parseInt($(this).val()));
-        });
-        $(".matrix #resource_list option").each(function(){
-            if ($.inArray(parseInt($(this).val()), displayed_lines) != -1) {
-                $(this).hide();
-            } else {
-                $(this).show();
-            };
-        });
-        $("#resource_list").val("default");
+    // Search the parent selector of the provided row and either show or hide there the entry carried by the row
+    function update_parent_selector(table_row, action) {
+        var table_row_level = get_level($(table_row));
+        if(level > 1) {
+            var parent_line = $(table_row).prevAll(".matrix tbody tr.resource:not(.template)").first();
+        } else {
+            var parent_line = $(table_row).parent().parent().parent().find(".toolbar").first();
+        }
+        var parent_selector = parent_line.find("select[id^='resource_list_']").first();
+        var selector_property = get_res_id(parent_selector);
+        var res_value = $(table_row).find("input[id$='_" + selector_property + "']").first().val();
+        var option = parent_selector.find("option[value='" + res_value + "']");
+        if(action == "hide") {
+            option.hide();
+        } else {
+            option.show();
+        };
+        parent_selector.val("default");
     };
-    $(deduplicate_new_line_selector());
+
+
+    // Remove lines rendered by Mako from their parent selectors
+    $(".matrix tbody tr:not(.template)").each(function(){
+        $(update_parent_selector($(this), "hide"));
+    });
 
 
     // Activate delete row button
     $(".matrix .delete_row").click(function(){
         $(this).parentsUntil(".matrix", "tr").first().fadeOut('fast', function(){
+            // Save the table body for late column totals update
             var matrix_body = $(this).parentsUntil(".matrix", "tbody");
+            // Un-hide the entry from its selector
+            $(update_parent_selector($(this), "show"));
+            // Really remove the row
             $(this).remove();
-            $(deduplicate_new_line_selector());
             // Force update of column totals
-            matrix_body.find("tr").first().find("input[name^='cell_']").trigger("change");
+            matrix_body.find("tr:first [id^='cell_']").trigger("change");
         });
     });
 
