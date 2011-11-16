@@ -61,7 +61,7 @@ $(document).ready(function(){
         $("#row_total_" + row_index).text(row_total).effect("highlight");
         // Compute the grand-total
         var grand_total = 0;
-        $(".matrix tbody span[id^='row_total_']").each(function(){
+        $(".matrix tbody td[id^='row_total_']").each(function(){
             grand_total += parseFloat($(this).text());
         });
         $("#grand_total").text(grand_total).effect("highlight");
