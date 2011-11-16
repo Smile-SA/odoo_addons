@@ -73,6 +73,7 @@ class matrix(fields.dummy):
         # Property name from which we get the lines composing the matrix
         line_property = self.__dict__.get('line_property', None)
         line_type = self.__dict__.get('line_type', None)
+        line_inverse_property = self.__dict__.get('line_inverse_property', None)
         # Get line properties from which we derive the matrix resources
         line_resource_property_list = self.__dict__.get('line_resource_property_list', None)
         default_widget_type = self.__dict__.get('default_widget_type', 'float')
@@ -81,7 +82,9 @@ class matrix(fields.dummy):
         # Cells are fetched from the lines as defined above.
         cell_property = self.__dict__.get('cell_property', None)
         cell_type = self.__dict__.get('cell_type', None)
+        cell_inverse_property = self.__dict__.get('cell_inverse_property', None)
         cell_value_property = self.__dict__.get('cell_value_property', None)
+        cell_date_property = self.__dict__.get('cell_date_property', None)
         # Property name of the relation field on which we'll call the date_range property
         date_range_property = self.__dict__.get('date_range_property', None)
         active_date_range_property = self.__dict__.get('active_date_range_property', None)
@@ -93,7 +96,7 @@ class matrix(fields.dummy):
         css_class = self.__dict__.get('css_class', [])
 
         # Check that all required parameters are there
-        for p_name in ['line_property', 'line_type', 'line_resource_property_list', 'cell_property', 'cell_type', 'cell_value_property']:
+        for p_name in ['line_property', 'line_type', 'line_inverse_property', 'line_resource_property_list', 'cell_property', 'cell_type', 'cell_inverse_property', 'cell_value_property', 'cell_date_property']:
             if not p_name:
                 raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
 
@@ -286,7 +289,7 @@ def matrix_read_patch(func):
                         line_id = int(f_id_elements[1])
                         if f_id_elements[0] == 'cell':
                             cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
-                            cell_id = cell_pool.search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], limit=1, context=context)
+                            cell_id = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date), (conf['cell_inverse_property'], '=', line_id)], limit=1, context=context)
                             if cell_id:
                                 cell = cell_pool.browse(cr, uid, cell_id, context)[0]
                                 field_value = getattr(cell, conf['cell_value_property'])
@@ -355,12 +358,12 @@ def matrix_write_patch(func):
                         conf['cell_value_property']: cell_value,
                         }
                     # Search for an existing cell at the given date
-                    cell = obj.pool.get(conf['cell_type']).search(cr, uid, [('date', '=', cell_date), ('line_id', '=', line_id)], context=context, limit=1)
+                    cell = obj.pool.get(conf['cell_type']).search(cr, uid, [(conf['cell_date_property'], '=', cell_date), (conf['cell_inverse_property'], '=', line_id)], context=context, limit=1)
                     # Cell doesn't exists, create it
                     if not cell:
                         cell_vals.update({
-                            'date': cell_date,
-                            'line_id': line_id,
+                            conf['cell_date_property']: cell_date,
+                            conf['cell_inverse_property']: line_id,
                             })
                         obj.pool.get(conf['cell_type']).create(cr, uid, cell_vals, context)
                     # Update cell with our data
