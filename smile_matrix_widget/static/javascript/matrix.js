@@ -291,6 +291,18 @@ $(document).ready(function(){
             option.show();
         };
         parent_selector.val("default");
+        // Update selector look
+        var visible_options = parent_selector.find("option").size();
+        parent_selector.find("option").each(function(){
+            if($(this).css("display") == "none"){
+                visible_options--;
+            };
+        });
+        if(visible_options > 1) {
+            parent_selector.removeClass("readonlyfield").removeAttr("disabled");
+        } else {
+            parent_selector.addClass("readonlyfield").attr("disabled", "disabled");
+        };
     };
 
 
