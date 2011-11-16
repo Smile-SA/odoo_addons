@@ -186,7 +186,7 @@ $(document).ready(function(){
         if(level == highest_level){
 
             // We are at the leaf: create a new editable line
-            var new_row = line_template.clone(true).attr('id', "line_" + new_row_index).removeClass('template').hide();
+            var new_row = line_template.clone(true).attr('id', "line_" + new_row_index).removeClass('template');
 
             // TODO: Two lines can't share the same set of resources in the matrix
                     // Two lines can't share the same resource
@@ -213,7 +213,7 @@ $(document).ready(function(){
             // Get the template for that level
             var level_template = $(".matrix tbody tr.template.level_" + (level + 1));
             // Create a new row
-            var new_row = level_template.clone(true).attr('id', "line_" + new_row_index).removeClass('template').hide();
+            var new_row = level_template.clone(true).attr('id', "line_" + new_row_index).removeClass('template');
         };
 
         // If we're deeper than the first level, get the parent's resource value to populate our template later
@@ -267,12 +267,12 @@ $(document).ready(function(){
         };
 
         // Insert our new row at the start of the sub-level: it enhance usability as it make the new row as close as the button we just clicked.
+        // Beware of Firefox strange behaviour. See: http://api.jquery.com/fadeIn/#comment-47240324
         if(level > 0){
-            $(level_last_row).after(new_row.hide());
+            new_row.insertAfter(level_last_row).hide().fadeIn('fast');
         } else {
-            $(level_last_row).before(new_row.hide());
+            new_row.insertBefore(level_last_row).hide().fadeIn('fast');
         };
-        $(new_row).fadeIn('fast');
 
         //TODO: $(deduplicate_new_line_selector());
 
