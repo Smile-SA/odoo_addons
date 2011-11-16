@@ -25,6 +25,18 @@ from osv import osv, fields
 
 
 
+def _get_prop(obj, prop_name, default_value=None):
+    """ Get a property value
+    """
+    if not prop_name:
+        return default_value
+    prop_value = getattr(obj, prop_name, default_value)
+    if prop_value is None:
+        raise osv.except_osv('Error !', "%r has no %s property." % (obj, prop_name))
+    return prop_value
+
+
+
 class matrix(fields.dummy):
     """ A custom field to prepare data for, and mangle data from, the matrix widget.
     """
@@ -43,16 +55,6 @@ class matrix(fields.dummy):
         if not self._is_date(date):
             date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
         return date
-
-    def _get_prop(self, obj, prop_name, default_value=None):
-        """ Get a property value
-        """
-        if not prop_name:
-            return default_value
-        prop_value = getattr(obj, prop_name, default_value)
-        if prop_value is None:
-            raise osv.except_osv('Error !', "%r has no %s property." % (obj, prop_name))
-        return prop_value
 
     def _get_title_or_id(self, obj):
         """ Return the title of the object or a descriptive string
@@ -107,8 +109,8 @@ class matrix(fields.dummy):
             # Get the date range composing the timeline either on the current object or another one through a property
             date_range_property_object = base_object
             if date_range_property:
-                date_range_property_object = self._get_prop(base_object, date_range_property)
-            date_range = self._get_prop(date_range_property_object, 'date_range')
+                date_range_property_object = _get_prop(base_object, date_range_property)
+            date_range = _get_prop(date_range_property_object, 'date_range')
             if type(date_range) is not type([]):
                 raise osv.except_osv('Error !', "date_range must return data that looks like selection field data.")
 
@@ -136,13 +138,13 @@ class matrix(fields.dummy):
                     }
 
                 # Get the type of the widget we'll use to display cell values
-                line_data.update({'widget': self._get_prop(line, dynamic_widget_type_property, default_widget_type)})
+                line_data.update({'widget': _get_prop(line, dynamic_widget_type_property, default_widget_type)})
 
                 # Get all resources of the line
                 # Keep the order defined by matrix field's properties
                 res_list = []
                 for (res_id, res_type) in line_resource_property_list:
-                    res = self._get_prop(line, res_id)
+                    res = _get_prop(line, res_id)
                     res_list.append({
                         'id': res_id,
                         'label': self._get_title_or_id(res),
@@ -162,7 +164,7 @@ class matrix(fields.dummy):
             # Get default cells and their values for the template row.
             template_cells_data = {}
             # Get active date range. Default is to let all dates active.
-            active_date_range = self._get_prop(date_range_property_object, active_date_range_property, date_range)
+            active_date_range = _get_prop(date_range_property_object, active_date_range_property, date_range)
             for d in active_date_range:
                 if not self._is_date(d):
                     raise osv.except_osv('Error !', "%s must return a list of dates." % active_date_range_property)
@@ -213,6 +215,7 @@ def get_matrix_conf(osv_instance):
     return matrix_fields[0].__dict__
 
 
+
 def parse_virtual_field_id(f_id):
     """ This utility method parse and validate virtual fields coming from the matrix
         Raise an exception if it tries to read a field that doesn't follow Matrix widget conventions.
@@ -252,6 +255,7 @@ def parse_virtual_field_id(f_id):
             return f_id_elements
     # Requested field doesn't follow matrix convention
     raise osv.except_osv('Error !', "Field %r doesn't respect matrix widget conventions." % f_id)
+
 
 
 def matrix_read_patch(func):
@@ -366,7 +370,7 @@ def matrix_write_patch(func):
 
         # If there was no references to one of our line it means it was deleted
         for report in obj.browse(cr, uid, ids, context):
-            removed_lines = list(set([l.id for l in report.line_ids]).difference(set(written_lines)))
+            removed_lines = list(set([l.id for l in _get_prop(report, conf['line_property'])]).difference(set(written_lines)))
             obj.pool.get(conf['line_type']).unlink(cr, uid, removed_lines, context)
 
         return result
