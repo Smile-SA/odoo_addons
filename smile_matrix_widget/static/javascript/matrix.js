@@ -205,9 +205,6 @@ $(document).ready(function(){
                 $(this).parent().find(increment_button_selector).attr('id', new_button_id).text(cycling_values[0]);
             });
 
-            // Update the total column
-            new_row.find("span[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
-
         // We're in the middle of the matrix: display a new sub resource selector
         } else {
             // Get the template for that level
@@ -215,6 +212,9 @@ $(document).ready(function(){
             // Create a new row
             var new_row = level_template.clone(true).attr('id', "line_" + new_row_index).removeClass('template');
         };
+
+        // Update the total column
+        new_row.find("td[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
 
         // If we're deeper than the first level, get the parent's resource value to populate our template later
         if(level > 0){
@@ -300,9 +300,11 @@ $(document).ready(function(){
     // Activate delete row button
     $(".matrix .delete_row").click(function(){
         $(this).parentsUntil(".matrix", "tr").first().fadeOut('fast', function(){
+            var matrix_body = $(this).parentsUntil(".matrix", "tbody");
             $(this).remove();
             $(deduplicate_new_line_selector());
-            // TODO: update column totals
+            // Force update of column totals
+            matrix_body.find("tr").first().find("input[name^='cell_']").trigger("change");
         });
     });
 
