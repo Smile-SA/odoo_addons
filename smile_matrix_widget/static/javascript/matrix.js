@@ -188,12 +188,6 @@ $(document).ready(function(){
             // We are at the leaf: create a new editable line
             var new_row = line_template.clone(true).attr('id', "line_" + new_row_index).removeClass('template');
 
-            // TODO: Two lines can't share the same set of resources in the matrix
-                    // Two lines can't share the same resource
-//             if($(".matrix .resource input[value='" + res_id + "']").length > 0) {
-//                 return;
-//             };
-
             // Update the cells
             new_row.find("td.float input[id^='cell_']").each(function(){
                 name_fragments = $(this).attr("id").split("_");
@@ -276,7 +270,6 @@ $(document).ready(function(){
 
         // Remove the entry from the selector
         $(update_parent_selector(level_last_row.parent().find("[id='" + new_row.attr("id") + "']"), "hide"));
-
     });
 
 
