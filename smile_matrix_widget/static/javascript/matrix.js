@@ -300,8 +300,10 @@ $(document).ready(function(){
         });
         if(visible_options > 1) {
             parent_selector.removeClass("readonlyfield").removeAttr("disabled");
+            parent_selector.next(".add_row").show();
         } else {
             parent_selector.addClass("readonlyfield").attr("disabled", "disabled");
+            parent_selector.next(".add_row").hide();
         };
     };
 
