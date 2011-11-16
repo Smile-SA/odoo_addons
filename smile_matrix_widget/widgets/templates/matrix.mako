@@ -2,11 +2,6 @@
     import datetime
 %>
 
-<%
-    #
-    value['row_uid'] = 1
-%>
-
 
 <style type="text/css">
     /* Reset OpenERP default styles */
@@ -272,6 +267,9 @@
     %if type(value) == type({}) and 'date_range' in value:
 
         <%
+            # Initialize our global new row UID
+            value['row_uid'] = 1
+            # Extract some basic information
             lines = value.get('matrix_data', [])
             column_date_label_format = value.get('column_date_label_format', '%Y-%m-%d')
             resource_value_list = value.get('resource_value_list', [])
