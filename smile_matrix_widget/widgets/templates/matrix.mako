@@ -3,102 +3,6 @@
 %>
 
 
-<style type="text/css">
-    /* Reset OpenERP default styles */
-    .matrix table tfoot td {
-        font-weight: normal;
-    }
-
-    .matrix table th {
-        text-transform: none;
-    }
-
-    .item .matrix input,
-    .item .matrix select {
-        width: inherit;
-        min-width: inherit;
-    }
-
-
-    /* Set our style */
-
-    .matrix .toolbar {
-        margin-bottom: 1em;
-    }
-
-    .matrix select {
-        width: 30em;
-    }
-
-    .matrix .zero {
-        color: #ccc;
-    }
-
-    .matrix .warning {
-        background: #f00;
-        color: #fff;
-    }
-
-    .matrix .template {
-        display: none;
-    }
-
-    .matrix .total,
-    .matrix .total td {
-        font-weight: bold;
-    }
-
-    .matrix table {
-        text-align: center;
-        margin-bottom: 1em;
-    }
-
-    .matrix input {
-        text-align: center;
-    }
-
-    .matrix table .resource {
-        text-align: left;
-    }
-
-    .matrix table .button.delete_row,
-    .matrix table .button.increment {
-        display: block;
-        padding: .3em;
-    }
-
-    .matrix td,
-    .matrix th {
-        min-width: 2.2em;
-        height: 1.5em;
-    }
-
-    .matrix .level_2 td.resource, .matrix .level_2 td.resource_selector, .matrix .level_2 td.delete_line{padding-left: 1em}
-    .matrix .level_3 td.resource, .matrix .level_3 td.resource_selector, .matrix .level_3 td.delete_line{padding-left: 2em}
-    .matrix .level_4 td.resource, .matrix .level_4 td.resource_selector, .matrix .level_4 td.delete_line{padding-left: 3em}
-    .matrix .level_5 td.resource, .matrix .level_5 td.resource_selector, .matrix .level_5 td.delete_line{padding-left: 4em}
-    .matrix .level_6 td.resource, .matrix .level_6 td.resource_selector, .matrix .level_6 td.delete_line{padding-left: 5em}
-
-    .matrix table tbody td,
-    div.non-editable .matrix table tbody td,
-    .matrix table th,
-    .matrix table tfoot tr.boolean_line td {
-        border-style: solid;
-        border-color: #ccc;
-        margin: 0;
-        padding: 0 .1em;
-    }
-    .matrix table tbody td,
-    div.non-editable .matrix table tbody td,
-    .matrix table th {
-        border-width: 0 0 1px;
-    }
-    .matrix table tfoot tr.boolean_line td {
-        border-width: 1px 0 0;
-    }
-</style>
-
-
 <%def name="render_float(f)">
 <%
     if type(f) != type(0.0):
@@ -274,6 +178,103 @@
             column_date_label_format = value.get('column_date_label_format', '%Y-%m-%d')
             resource_value_list = value.get('resource_value_list', [])
         %>
+
+        <style type="text/css">
+            /* Reset OpenERP default styles */
+            .matrix table tfoot td {
+                font-weight: normal;
+            }
+
+            .matrix table th {
+                text-transform: none;
+            }
+
+            .item .matrix input,
+            .item .matrix select {
+                width: inherit;
+                min-width: inherit;
+            }
+
+
+            /* Set our style */
+
+            .matrix .toolbar {
+                margin-bottom: 1em;
+            }
+
+            .matrix select {
+                width: 30em;
+            }
+
+            .matrix .zero {
+                color: #ccc;
+            }
+
+            .matrix .warning {
+                background: #f00;
+                color: #fff;
+            }
+
+            .matrix .template {
+                display: none;
+            }
+
+            .matrix .total,
+            .matrix .total td {
+                font-weight: bold;
+            }
+
+            .matrix table {
+                text-align: center;
+                margin-bottom: 1em;
+            }
+
+            .matrix input {
+                text-align: center;
+            }
+
+            .matrix table .resource {
+                text-align: left;
+            }
+
+            .matrix table .button.delete_row,
+            .matrix table .button.increment {
+                display: block;
+                padding: .3em;
+            }
+
+            .matrix td,
+            .matrix th {
+                min-width: 2.2em;
+                height: 1.5em;
+            }
+
+            %for i in range(1, len(resource_value_list)):
+                .matrix .level_${i+1} td.resource,
+                .matrix .level_${i+1} td.resource_selector,
+                .matrix .level_${i+1} td.delete_line {
+                    padding-left: ${i}em;
+                }
+            %endfor
+
+            .matrix table tbody td,
+            div.non-editable .matrix table tbody td,
+            .matrix table th,
+            .matrix table tfoot tr.boolean_line td {
+                border-style: solid;
+                border-color: #ccc;
+                margin: 0;
+                padding: 0 .1em;
+            }
+            .matrix table tbody td,
+            div.non-editable .matrix table tbody td,
+            .matrix table th {
+                border-width: 0 0 1px;
+            }
+            .matrix table tfoot tr.boolean_line td {
+                border-width: 1px 0 0;
+            }
+        </style>
 
         %if editable:
             <div class="toolbar level level_0">
