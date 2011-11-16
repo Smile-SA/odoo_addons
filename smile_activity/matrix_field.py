@@ -340,8 +340,14 @@ def matrix_write_patch(func):
 
             # Write data of each line
             for (line_id, line_data) in lines.items():
-                # Separate line resources and line cells
+                # Get line resources
                 line_resources = dict([(parse_virtual_field_id(f_id)[2], int(v)) for (f_id, v) in line_data.items() if f_id.startswith('res_')])
+                # Check all required resources are provided by the matrix
+                res_ids = set(line_resources.keys())
+                required_res_ids = set([prop_id for (prop_id, prop_type) in conf['line_resource_property_list']])
+                if res_ids != required_res_ids:
+                    raise osv.except_osv('Error !', "Line %s resource mismatch: %r provided while we're expecting require %r." % (line_id, res_ids, required_res_ids))
+                # Get line cells
                 line_cells = dict([(datetime.datetime.strptime(parse_virtual_field_id(f_id)[2], '%Y%m%d'), v) for (f_id, v) in line_data.items() if f_id.startswith('cell_')])
                 # Are we updating an existing line or creating a new one ?
                 if line_id.startswith('new'):
