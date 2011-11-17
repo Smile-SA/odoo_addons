@@ -26,7 +26,7 @@
                     res_id = res['id']
                     res_label = res['label']
                     res_value = res['value']
-                    res_field_id = "res_%s_%s" % (line['id'], res_id)
+                    res_field_id = "%s_res_%s_%s" % (name, line['id'], res_id)
                 %>
                 <input type="hidden" id="${res_field_id}" name="${res_field_id}" value="${res_value}" title="${res_label}"/>
             %endfor
@@ -50,7 +50,7 @@
         %for date in date_range:
             <td class="float">
                 <%
-                    cell_id = 'cell_%s_%s' % (line['id'], date)
+                    cell_id = '%s_cell_%s_%s' % (name, line['id'], date)
                     cell_value = line.get('cells_data', {}).get(date, None)
                 %>
                 %if cell_value is not None:
@@ -87,7 +87,7 @@
     <%
         res_id = res_def.get('id', None)
         res_values = res_def.get('values', [])
-        selector_id = "resource_list_%s" % res_id
+        selector_id = "%s_resource_list_%s" % (name, res_id)
     %>
     %if len(res_values) and editable:
         <span class="resource_values">
@@ -166,7 +166,7 @@
 %>
 
 
-<div class="matrix ${css_classes}">
+<div id="${name}" class="matrix ${css_classes}">
 
     %if type(value) == type({}) and 'date_range' in value:
 
@@ -285,10 +285,10 @@
             </div>
         %endif
 
-        <table id="${name}">
+        <table>
             <thead>
                 <tr>
-                    <th class="resource">Line</th>
+                    <th class="resource">${value['title']}</th>
                     <th></th>
                     %for date in value['date_range']:
                         <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(column_date_label_format)}</th>
@@ -340,7 +340,7 @@
                         %for date in value['date_range']:
                             <td class="boolean">
                                 <%
-                                    cell_id = 'cell_%s_%s' % (line['id'], date)
+                                    cell_id = '%s_cell_%s_%s' % (name, line['id'], date)
                                     cell_value = line['cells_data'].get(date, None)
                                 %>
                                 %if cell_value is not None:

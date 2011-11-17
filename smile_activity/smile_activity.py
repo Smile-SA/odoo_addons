@@ -55,6 +55,25 @@ class smile_activity_report(osv.osv):
             string="Activity report lines",
             readonly=False,
             ),
+        # Test multiple matrix widget
+        'matrix_line_ids_2': matrix(
+            line_property='line_ids',
+            line_type='smile.activity.report.line',
+            line_inverse_property='report_id',
+            default_widget_type='increment',
+            dynamic_widget_type_property='line_type',
+            cell_property='cell_ids',
+            cell_type='smile.activity.report.cell',
+            cell_inverse_property='line_id',
+            cell_value_property='cell_value',
+            cell_date_property='date',
+            date_range_property='period_id',
+            active_date_range_property='active_date_range',
+            date_format='%d%d',
+            line_resource_property_list=[('project_id', 'smile.activity.project')],
+            string="Activity report lines 2",
+            readonly=False,
+            ),
         }
 
 
