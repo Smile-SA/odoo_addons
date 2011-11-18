@@ -72,7 +72,7 @@
             row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
         %>
         <td class="total"
-            id="row_total_${line['id']}"
+            id="${name}_row_total_${line['id']}"
             %if not editable and row_total <= 0.0:
                 class="zero"
             %endif
@@ -87,7 +87,7 @@
     <%
         res_id = res_def.get('id', None)
         res_values = res_def.get('values', [])
-        selector_id = "%s_resource_list_%s" % (name, res_id)
+        selector_id = "%s_res_list_%s" % (name, res_id)
     %>
     %if len(res_values) and editable:
         <span class="resource_values">
@@ -308,7 +308,7 @@
                             <%
                                 column_total = sum(column_values)
                             %>
-                            <td id="column_total_${date}" class="
+                            <td id="${name}_column_total_${date}" class="
                                 %if not editable and column_total <= 0.0:
                                     zero
                                 %endif
@@ -325,7 +325,7 @@
                     <%
                         grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['widget'] != 'boolean'])
                     %>
-                    <td id="grand_total"
+                    <td id="${name}_grand_total"
                         %if not editable and grand_total <= 0.0:
                             class="zero"
                         %endif
@@ -366,7 +366,7 @@
                         %>
 
                         <td class="total"
-                            id="row_total_${line['id']}"
+                            id="${name}_row_total_${line['id']}"
                             %if not editable and row_total <= 0.0:
                                 class="zero"
                             %endif

@@ -1,21 +1,55 @@
 $(document).ready(function(){
 
-    // Selector expressions
-    var increment_cells_selector = "input[kind='float'][class='increment'][name^='cell_']:not(:disabled)";
+    // Utility method to get the matrix element in which the provided object sit in
+    function get_parent_matrix(elmnt){
+        return $(elmnt).parents(".matrix").first();
+    };
 
-    var increment_button_selector = ".button.increment:not(:disabled)";
+
+    // Utility method to parse the ID of field following our naming conventions
+    function parse_id(field_id){
+        var id_parts = new Array();
+        // Extract the matrix ID
+        var matrix = get_parent_matrix("#" + field_id);
+        var matrix_id = matrix.attr("id");
+        var matrix_prefix = matrix_id + "_";
+        if(field_id.substring(matrix_prefix.length, 0) != matrix_prefix){
+            alert("Field ID " + field_id + " should start with its matrix prefix " + matrix_prefix);
+            return;
+        };
+        id_parts.push(matrix_id);
+        // Extract other field elements
+        var parts = field_id.slice(matrix_prefix.length).split("_");
+        if(!$.inArray(parts[0], ["res", "cell"])){
+            alert("Field ID " + field_id + " is not a ressource nor a cell");
+            return;
+        };
+        // If we're parsing a resource field id, then its ID elements past its 2 firsts compose a property ID.
+        if(parts[0] == "res"){
+            id_parts = id_parts.concat(parts.slice(0, 1));
+            id_parts.push(parts.slice(2).join("_"));
+        } else {
+            id_parts = id_parts.concat(parts);
+        };
+        return id_parts;
+    };
+
+
+
+    // Selector expressions
+    var increment_cells_selector = "input.increment[kind='float']";
+    var increment_button_selector = ".button.increment";
     var global_increment_cells_selector = ".matrix " + increment_cells_selector;
     var global_increment_button_selector = ".matrix " + increment_button_selector;
 
 
-    // Replace all integer fields by a button template, then hide the original field
-    var button_template = $("#matrix_button_template");
-    var cells = $(global_increment_cells_selector);
-    cells.each(function(i, cell){
+    // Replace all integer fields of all matrix by a button template, then hide the original field
+    var button_template = $(".matrix .button.increment.template").first();
+    $(global_increment_cells_selector).each(function(i, cell){
         var $cell = $(cell);
-        $cell.after($(button_template).clone().removeClass('template').attr('id', 'button_' + $cell.attr("id")).text($cell.val()));
-        $cell.hide();
+        $cell.after($(button_template).clone().removeClass('template').attr('id', 'button_' + $cell.attr("id")).text($cell.val())).hide();
     });
+
 
     // Label of buttons
     var cycling_values = ['0', '0.5', '1'];
@@ -36,56 +70,6 @@ $(document).ready(function(){
     });
 
 
-    // Compute float totals
-    $(global_increment_cells_selector).change(function(){
-        name_fragments = $(this).attr("id").split("_");
-        column_index = name_fragments[2];
-        row_index = name_fragments[1];
-        // Select all fields of the columns we clicked in and sum them up
-        var column_total = 0;
-        $(".matrix input[kind!='boolean'][name^='cell_'][name$='_" + column_index + "']:not(:disabled)").each(function(){
-            column_total += parseFloat($(this).val());
-        });
-        $("#column_total_" + column_index).text(column_total).effect("highlight", function(){
-            if(column_total > 1){
-                $(this).addClass("warning");
-            } else {
-                $(this).removeClass("warning");
-            };
-        });
-        // Select all fields of the row we clicked in and sum them up
-        var row_total = 0;
-        $(".matrix input[kind!='boolean'][name^='cell_" + row_index + "_']:not(:disabled)").each(function(){
-            row_total += parseFloat($(this).val());
-        });
-        $("#row_total_" + row_index).text(row_total).effect("highlight");
-        // Compute the grand-total
-        var grand_total = 0;
-        $(".matrix tbody td[id^='row_total_']").each(function(){
-            grand_total += parseFloat($(this).text());
-        });
-        $("#grand_total").text(grand_total).effect("highlight");
-    });
-
-
-    // Compute boolean totals
-    // TODO: merge this with the code above
-    $("input[type='hidden'][kind='boolean'][name^='cell_']:not(:disabled)").change(function(){
-        name_fragments = $(this).attr("id").split("_");
-        column_index = name_fragments[2];
-        row_index = name_fragments[1];
-        // Select all fields of the row we clicked in and sum them up
-        var row_total = 0;
-        $(".matrix input[type='hidden'][kind='boolean'][name^='cell_" + row_index + "_']:not(:disabled)").each(function(){
-            cell_value = parseFloat($(this).val());
-            if (!isNaN(cell_value)) {
-                row_total += cell_value;
-            };
-        });
-        $("#row_total_" + row_index).text(row_total).effect("highlight");
-    });
-
-
     // Cycles buttons
     buttons.click(function(){
         var button_value_tag = $(this).parent().find("input");
@@ -99,6 +83,54 @@ $(document).ready(function(){
         button_label_tag.text(new_value);
         button_value_tag.val(new_value);
         button_value_tag.trigger('change');
+    });
+
+
+    // Compute columns and row totals
+    $(".matrix input[id*='_cell_']").change(function(){
+        // Get current cell coordinates
+        var name_fragments = parse_id($(this).attr("id"));
+        var matrix_id = name_fragments[0];
+        var column_index = name_fragments[name_fragments.length - 1];
+        var row_index = name_fragments[name_fragments.length - 2];
+
+        // Select all fields of the row we clicked in and sum them up
+        var row_total = 0;
+        $("#" + matrix_id + " input[name*='_cell_" + row_index + "_']").each(function(){
+            cell_value = parseFloat($(this).val());
+            if (!isNaN(cell_value)) {
+                row_total += cell_value;
+            };
+        });
+        $("#" + matrix_id + "_row_total_" + row_index).text(row_total).effect("highlight");
+
+        // Only update column totals and grand totals for cell in the tbody
+        if($(this).parentsUntil("#" + matrix_id, "tbody").length > 0) {
+
+            // Select all fields of the columns we clicked in and sum them up
+            var column_total = 0;
+            // Only cells in the tbody of the table are sums up by columns
+            $("#" + matrix_id + " tbody input[name*='_cell_'][name$='_" + column_index + "']").each(function(){
+                cell_value = parseFloat($(this).val());
+                if (!isNaN(cell_value)) {
+                    column_total += cell_value;
+                };
+            });
+            $("#" + matrix_id + "_column_total_" + column_index).text(column_total).effect("highlight", function(){
+                if(column_total > 1){
+                    $(this).addClass("warning");
+                } else {
+                    $(this).removeClass("warning");
+                };
+            });
+
+            // Compute the grand-total
+            var grand_total = 0;
+            $("#" + matrix_id + " tbody [id^='" + matrix_id + "_row_total_']").each(function(){
+                grand_total += parseFloat($(this).text());
+            });
+            $("#" + matrix_id + "_grand_total").text(grand_total).effect("highlight");
+        };
     });
 
 
@@ -179,7 +211,7 @@ $(document).ready(function(){
             new_row_index = "dummy" + new_row_index;
         };
 
-        // Get the ID of the resource from the ID of the selector: just remove the "resource_list_" prefix
+        // Get the ID of the resource from the ID of the selector: just remove the "res_list_" prefix
         var resource_id = get_res_id(selector);
 
         // If we have all required resources, we are at the leaf of the resource tree, so we can create a new editable line
@@ -281,7 +313,7 @@ $(document).ready(function(){
         } else {
             var parent_line = $(table_row).parent().parent().parent().find(".toolbar").first();
         }
-        var parent_selector = parent_line.find("select[id^='resource_list_']").first();
+        var parent_selector = parent_line.find("select[id^='res_list_']").first();
         var selector_property = get_res_id(parent_selector);
         var res_value = $(table_row).find("input[id$='_" + selector_property + "']").first().val();
         var option = parent_selector.find("option[value='" + res_value + "']");
