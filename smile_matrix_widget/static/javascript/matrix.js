@@ -19,9 +19,7 @@ $(document).ready(function(){
         };
         id_parts.push(matrix_id);
         // Extract other field elements
-        console.log(matrix_prefix);
         var parts = field_id.slice(matrix_prefix.length).split("_");
-        console.log(parts);
         if($.inArray(parts[0], ["res", "cell", "line"]) == -1){
             alert("Matrix ERROR: field ID " + field_id + " is not a ressource, a cell or a line !");
             return;
@@ -189,7 +187,7 @@ $(document).ready(function(){
         // Get the current and highest level
         var level = get_level($(this));
         var highest_level = line_template_resources.length - 1;
-        console.log("We're at level " + level + " / " + highest_level);
+        // console.log("We're at level " + level + " / " + highest_level);
 
         // Compute a new unique row index based on the other new rows in the matrix
         var new_row_index = 0;
@@ -309,12 +307,14 @@ $(document).ready(function(){
     // Search the parent selector of the provided row and either show or hide there the entry carried by the row
     function update_parent_selector(table_row, action) {
         var table_row_level = get_level($(table_row));
+        var matrix = get_parent_matrix(table_row);
+        var matrix_id = matrix.attr("id");
         if(level > 1) {
-            var parent_line = $(table_row).prevAll(".matrix tbody tr.resource:not(.template)").first();
+            var parent_line = $(table_row).prevAll("#" + matrix_id + " tbody tr.resource:not(.template)").first();
         } else {
-            var parent_line = $(table_row).parent().parent().parent().find(".toolbar").first();
+            var parent_line = matrix.find(".toolbar").first();
         }
-        var parent_selector = parent_line.find("select[id^='res_list_']").first();
+        var parent_selector = parent_line.find("select[id^='" + matrix_id + "_res_list_']").first();
         var selector_property = get_res_id(parent_selector);
         var res_value = $(table_row).find("input[id$='_" + selector_property + "']").first().val();
         var option = parent_selector.find("option[value='" + res_value + "']");
@@ -350,6 +350,7 @@ $(document).ready(function(){
     // Activate delete row button
     $(".matrix .delete_row").click(function(){
         $(this).parentsUntil(".matrix", "tr").first().fadeOut('fast', function(){
+            console.log($(this).attr("id"));
             // Save the table body for late column totals update
             var matrix_body = $(this).parentsUntil(".matrix", "tbody");
             // Un-hide the entry from its selector
