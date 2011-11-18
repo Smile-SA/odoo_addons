@@ -36,7 +36,7 @@
 
 
 <%def name="render_float_line(line, date_range, level=1)">
-    <tr id="${'line_%s' % line['id']}" class="level level_${level}
+    <tr id="${'%s_line_%s' % (name, line['id'])}" class="level level_${level}
         %if line['id'] == 'template':
             template
         %endif
@@ -334,7 +334,7 @@
                     </td>
                 </tr>
                 %for line in [l for l in lines if l['widget'] == 'boolean']:
-                    <tr id="${'line_%s' % line['id']}" class="boolean_line">
+                    <tr id="${'%s_line_%s' % (name, line['id'])}" class="boolean_line">
                         ${render_resources(line)}
                         <td></td>
                         %for date in value['date_range']:

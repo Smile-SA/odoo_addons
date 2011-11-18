@@ -14,14 +14,16 @@ $(document).ready(function(){
         var matrix_id = matrix.attr("id");
         var matrix_prefix = matrix_id + "_";
         if(field_id.substring(matrix_prefix.length, 0) != matrix_prefix){
-            alert("Field ID " + field_id + " should start with its matrix prefix " + matrix_prefix);
+            alert("Matrix ERROR: field ID " + field_id + " should start with its matrix prefix " + matrix_prefix + " !");
             return;
         };
         id_parts.push(matrix_id);
         // Extract other field elements
+        console.log(matrix_prefix);
         var parts = field_id.slice(matrix_prefix.length).split("_");
-        if(!$.inArray(parts[0], ["res", "cell"])){
-            alert("Field ID " + field_id + " is not a ressource nor a cell");
+        console.log(parts);
+        if($.inArray(parts[0], ["res", "cell", "line"]) == -1){
+            alert("Matrix ERROR: field ID " + field_id + " is not a ressource, a cell or a line !");
             return;
         };
         // If we're parsing a resource field id, then its ID elements past its 2 firsts compose a property ID.
@@ -141,7 +143,7 @@ $(document).ready(function(){
         if(!$(elmnt).hasClass("level")){
             leveled_parent = $(elmnt).parentsUntil(".matrix", ".level").first();
         };
-        css_classes = $(leveled_parent).attr('class');
+        css_classes = $(leveled_parent).attr("class");
         if(css_classes){
             css_classes = css_classes.split(/\s+/);
             for(i = 0; i < css_classes.length; i++){
@@ -160,12 +162,7 @@ $(document).ready(function(){
 
     // Utility method to parse the ID of field and get its resource
     function get_res_id(elmnt){
-        l = $(elmnt).attr("id").split("_");
-        var res_id = new Array();
-        for(i = 2; i < l.length; i++){
-            res_id.push(l[i]);
-        };
-        return res_id.join("_");
+        return parse_id($(elmnt).attr("id")).slice(-1)[0];
     };
 
 
@@ -184,24 +181,28 @@ $(document).ready(function(){
         res_value = parseInt(res_value);
 
         // Get the template of an editable line, i.e. the kind of matrix row we had at the leaf of the level tree
-        var line_template = $(".matrix tbody tr#line_template");
-        var line_template_resources = $(line_template).find("td.resource").first().find("input[id^='res_template_']");
+        var matrix = get_parent_matrix($(this));
+        var matrix_id = matrix.attr("id");
+        var line_template = matrix.find("tbody tr#" + matrix_id + "_line_template");
+        var line_template_resources = $(line_template).find("td.resource").first().find("input[id^='" + matrix_id + "_res_template_']");
 
         // Get the current and highest level
         var level = get_level($(this));
         var highest_level = line_template_resources.length - 1;
+        console.log("We're at level " + level + " / " + highest_level);
 
         // Compute a new unique row index based on the other new rows in the matrix
         var new_row_index = 0;
-        $(".matrix tr[id^='line_new'],.matrix tr[id^='line_dummy']").each(function(){
-            var row_id = $(this).attr("id");
+        $("tr[id^='" + matrix_id + "_line_new'],tr[id^='" + matrix_id + "_line_dummy']").each(function(){
+            var id_parts = parse_id($(this).attr("id"));
+            var line_id = id_parts[2];
             var split_by = "new";
-            if(row_id.substring(10,5) == "dummy"){
+            if(line_id.substring(10,5) == "dummy"){
                 split_by = "dummy";
             };
-            row_id = parseInt(row_id.split(split_by)[1]);
-            if(row_id > new_row_index){
-                new_row_index = row_id;
+            line_id = parseInt(line_id.split(split_by)[1]);
+            if(line_id > new_row_index){
+                new_row_index = line_id;
             };
         });
         new_row_index = new_row_index + 1;
@@ -212,19 +213,19 @@ $(document).ready(function(){
         };
 
         // Get the ID of the resource from the ID of the selector: just remove the "res_list_" prefix
-        var resource_id = get_res_id(selector);
+        var resource_id = parse_id(selector.attr("id")).slice(-1)[0];
 
         // If we have all required resources, we are at the leaf of the resource tree, so we can create a new editable line
         if(level == highest_level){
 
             // We are at the leaf: create a new editable line
-            var new_row = line_template.clone(true).attr('id', "line_" + new_row_index).removeClass('template');
+            var new_row = line_template.clone(true).attr('id', matrix_id + "_line_" + new_row_index).removeClass('template');
 
             // Update the cells
-            new_row.find("td.float input[id^='cell_']").each(function(){
-                name_fragments = $(this).attr("id").split("_");
-                column_index = name_fragments[2];
-                var new_cell_id = "cell_" + new_row_index + "_" + column_index;
+            new_row.find("input[id*='_cell_']").each(function(){
+                var name_fragments = $(this).attr("id").split("_");
+                var column_index = name_fragments.slice(-1)[0];
+                var new_cell_id = matrix_id + "_cell_" + new_row_index + "_" + column_index;
                 $(this).attr('id', new_cell_id).attr('name', new_cell_id).val(cycling_values[0]);
                 // If there is a sibling button increment, update it too
                 var new_button_id = "button_" + new_cell_id;
@@ -234,16 +235,16 @@ $(document).ready(function(){
         // We're in the middle of the matrix: display a new sub resource selector
         } else {
             // Get the template for that level
-            var level_template = $(".matrix tbody tr.template.level_" + (level + 1));
+            var level_template = $("#" + matrix_id + " tbody tr.template.level_" + (level + 1));
             // Create a new row
-            var new_row = level_template.clone(true).attr('id', "line_" + new_row_index).removeClass('template');
+            var new_row = level_template.clone(true).attr('id', matrix_id + "_line_" + new_row_index).removeClass('template');
         };
 
         // Set row's label
         new_row.find(".resource .name").text(res_name);
 
         // Update the total column
-        new_row.find("td[id^='row_total_']").attr('id', "row_total_" + new_row_index).text(cycling_values[0]);
+        new_row.find("td[id*='_row_total_']").attr('id', matrix_id + "_row_total_" + new_row_index).text(cycling_values[0]);
 
         // If we're deeper than the first level, get the parent's resource value to populate our template later
         if(level > 0){
@@ -251,7 +252,7 @@ $(document).ready(function(){
             var current_table_row = $(this).parentsUntil("tbody").last();
             // Use parent's resource value to populate our template
             var parent_resources = new Array();
-            $(current_table_row).find(".resource input[id^='res_']").each(function(){
+            $(current_table_row).find(".resource input[id*='_res_']").each(function(){
                 res_id = get_res_id(this);
                 parent_resources[res_id] = {
                     "label": $(this).attr("title"),
@@ -261,10 +262,10 @@ $(document).ready(function(){
         };
 
         // Update the local copy of resources
-        new_row.find(".resource input[id^='res_']").each(function(){
+        new_row.find(".resource input[id*='_res_']").each(function(){
             res_id = get_res_id(this);
             // Only update the local resources ID on leafs: all others stays declared as template
-            var new_res_index = "res_" + new_row_index + "_" + res_id;
+            var new_res_index = matrix_id + "_res_" + new_row_index + "_" + res_id;
             $(this).attr('id', new_res_index).attr('name', new_res_index);
             // Let local resources inherit values from its parent
             if(parent_resources && parent_resources[res_id]){
@@ -273,15 +274,15 @@ $(document).ready(function(){
         });
 
         // Set value of the new resource field
-        new_row.find(".resource input[id^='res_" + new_row_index + "_" + resource_id + "']").val(res_value).attr('title', res_name);
+        new_row.find(".resource input#" + matrix_id + "_res_" + new_row_index + "_" + resource_id).val(res_value).attr('title', res_name);
 
         // Search the row in the table after which we'll add our new content
         // By default the place we add our new stuff is at the start of the table
-        var level_last_row = $(".matrix tbody tr:first");
+        var level_last_row = $("#" + matrix_id + " tbody tr:first");
         if(level > 0){
             // Search the last row of the current level
             var level_last_row = current_table_row;
-            current_table_row.nextAll(".matrix tbody tr:not(.template)").each(function(){
+            current_table_row.nextAll("#" + matrix_id + " tbody tr:not(.template)").each(function(){
                 var next_row_level = get_level($(this));
                 if(next_row_level){
                     if(next_row_level <= level){
