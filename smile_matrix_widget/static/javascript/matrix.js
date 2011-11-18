@@ -187,7 +187,6 @@ $(document).ready(function(){
         // Get the current and highest level
         var level = get_level($(this));
         var highest_level = line_template_resources.length - 1;
-        // console.log("We're at level " + level + " / " + highest_level);
 
         // Compute a new unique row index based on the other new rows in the matrix
         var new_row_index = 0;
@@ -350,7 +349,6 @@ $(document).ready(function(){
     // Activate delete row button
     $(".matrix .delete_row").click(function(){
         $(this).parentsUntil(".matrix", "tr").first().fadeOut('fast', function(){
-            console.log($(this).attr("id"));
             // Save the table body for late column totals update
             var matrix_body = $(this).parentsUntil(".matrix", "tbody");
             // Un-hide the entry from its selector
