@@ -90,12 +90,10 @@ class matrix(fields.dummy):
         active_date_range_property = self.__dict__.get('active_date_range_property', None)
         # The format we use to display date labels
         date_format = self.__dict__.get('date_format', None)
-        # The object type we use to create new rows
-        resource_type = self.__dict__.get('resource_type', None)
         # Additional classes can be manually added
-        css_class = self.__dict__.get('css_class', [])
+        css_classes = self.__dict__.get('css_classes', [])
         # Get the matrix title
-        title = self.__dict__.get('string', "Lines")
+        title = self.__dict__.get('title', "Lines")
 
         # Check that all required parameters are there
         for p_name in ['line_property', 'line_type', 'line_inverse_property', 'line_resource_property_list', 'cell_property', 'cell_type', 'cell_inverse_property', 'cell_value_property', 'cell_date_property']:
@@ -196,7 +194,7 @@ class matrix(fields.dummy):
                 'date_range': [self._date_to_str(d) for d in date_range],  # Format our date range for our matrix # XXX Keep them as date objects ?
                 'resource_value_list': resource_value_list,
                 'column_date_label_format': date_format,
-                'class': css_class,
+                'class': css_classes,
                 'title': title,
                 }
 

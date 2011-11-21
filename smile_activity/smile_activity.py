@@ -52,7 +52,7 @@ class smile_activity_report(osv.osv):
             active_date_range_property='active_date_range',
             date_format='%d',
             line_resource_property_list=[('project_id', 'smile.activity.project')],
-            string="Activity report lines",
+            title="Activity report lines",
             readonly=False,
             ),
         # Test multiple matrix widget
@@ -71,7 +71,7 @@ class smile_activity_report(osv.osv):
             active_date_range_property='active_date_range',
             date_format='%d%d',
             line_resource_property_list=[('project_id', 'smile.activity.project')],
-            string="Activity report lines 2",
+            title="Activity report lines 2",
             readonly=False,
             ),
         }
