@@ -115,7 +115,7 @@
             }
         value['row_uid'] += 1
     %>
-    <tr class="resource_line level level_${level}
+    <tr id="${'%s_line_%s' % (name, virtual_line['id'])}" class="resource_line level level_${level}
         %if css_class:
             ${css_class}
         %endif
@@ -124,7 +124,20 @@
         <td colspan="${len(date_range) + 1}" class="resource_selector">
             ${render_resource_selector(res_values)}
         </td>
-        <td class="total"></td>
+        <%
+            row_total = []
+            for line in sub_lines:
+                row_total += [v for (k, v) in line.get('cells_data', dict()).items()]
+            row_total = sum(row_total)
+        %>
+        <td class="total"
+            id="${name}_row_total_${virtual_line['id']}"
+            %if not editable and row_total <= 0.0:
+                class="zero"
+            %endif
+            >
+            ${render_float(row_total)}
+        </td>
         %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
             <%
                 additional_sum = sum([line.get(line_property, 0.0) for line in sub_lines])
