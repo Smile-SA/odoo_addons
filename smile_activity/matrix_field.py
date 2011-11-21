@@ -164,6 +164,13 @@ class matrix(fields.dummy):
                     cell_date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
                     cells_data[cell_date.strftime('%Y%m%d')] = getattr(cell, cell_value_property)
                 line_data.update({'cells_data': cells_data})
+
+                # Get data of additional columns
+                for line_property in [c['line_property'] for c in additional_columns if 'line_property' in c]:
+                    if line_property in line_data:
+                        raise osv.except_osv('Error !', "line property %s conflicts with matrix line definition." % line_property)
+                    line_data.update({line_property: _get_prop(line, line_property)})
+
                 matrix_data.append(line_data)
 
             # Get default cells and their values for the template row.

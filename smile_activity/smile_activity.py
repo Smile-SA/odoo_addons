@@ -20,6 +20,7 @@
 ##############################################################################
 
 import datetime
+import random
 
 from osv import osv, fields
 from matrix_field import matrix, matrix_read_patch, matrix_write_patch
@@ -72,8 +73,8 @@ class smile_activity_report(osv.osv):
             date_format='%d%d',
             line_resource_property_list=[('project_id', 'smile.activity.project')],
             additional_columns=[
-                {"label": "Column 1"},
-                {"label": "Column 2"},
+                {'label': "Productivity", 'line_property': "productivity_index"},
+                {'label': "Performance", 'line_property': "performance_index"},
                 ],
             title="Activity report lines 2",
             readonly=False,
@@ -149,6 +150,14 @@ class smile_activity_report_line(osv.osv):
             result[line.id] = line.project_id.value_type
         return result
 
+    def _get_random_int(self, cr, uid, ids, name, arg, context=None):
+        """ Get a random number between 0 and 100
+        """
+        result = {}
+        for line in self.browse(cr, uid, ids, context):
+            result[line.id] = random.randrange(0, 100)
+        return result
+
 
     ## Fields definition
 
@@ -158,6 +167,8 @@ class smile_activity_report_line(osv.osv):
         'project_id': fields.many2one('smile.activity.project', "Project", required=True),
         'cell_ids': fields.one2many('smile.activity.report.cell', 'line_id', "Cells"),
         'line_type': fields.function(_get_line_type, string="Line type", type='string', readonly=True, method=True),
+        'performance_index': fields.function(_get_random_int, string="Performance index", type='integer', readonly=True, method=True),
+        'productivity_index': fields.function(_get_random_int, string="Productivity index", type='integer', readonly=True, method=True),
         }
 
 

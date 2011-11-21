@@ -79,8 +79,8 @@
             >
             ${render_float(row_total)}
         </td>
-        %for i in range(len(value['additional_columns'])):
-            <td></td>
+        %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
+            <td>${line.get(line_property, "self.%s" % line_property)}</td>
         %endfor
     </tr>
 </%def>
@@ -121,7 +121,7 @@
         %endif
         ">
         ${render_resources(virtual_line)}
-        <td colspan="${len(date_range) + 2}" class="resource_selector">
+        <td colspan="${len(date_range) + len(value['additional_columns']) + 2}" class="resource_selector">
             ${render_resource_selector(res_values)}
         </td>
     </tr>
@@ -381,8 +381,8 @@
                             >
                             ${render_float(row_total)}
                         </td>
-                        %for i in range(len(value['additional_columns'])):
-                            <td></td>
+                        %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
+                            <td>${line.get(line_property, "self.%s" % line_property)}</td>
                         %endfor
                     </tr>
                 %endfor
