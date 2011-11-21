@@ -350,13 +350,13 @@ $(document).ready(function(){
     $(".matrix .delete_row").click(function(){
         $(this).parentsUntil(".matrix", "tr").first().fadeOut('fast', function(){
             // Save the table body for late column totals update
-            var matrix_body = $(this).parentsUntil(".matrix", "tbody");
+            var matrix = get_parent_matrix($(this));
             // Un-hide the entry from its selector
             $(update_parent_selector($(this), "show"));
             // Really remove the row
             $(this).remove();
             // Force update of column totals
-            matrix_body.find("tr:first [id^='cell_']").trigger("change");
+            matrix.find("tbody tr:first [id*='_cell_']").trigger("change");
         });
     });
 
