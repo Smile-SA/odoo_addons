@@ -19,9 +19,4 @@
 #
 ##############################################################################
 
-import smile_profile
-import smile_employee
-import smile_project
-import smile_period
-import smile_workload
-import smile_activity
+import matrix_field

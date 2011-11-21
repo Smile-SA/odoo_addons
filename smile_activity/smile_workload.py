@@ -23,7 +23,7 @@ import datetime
 import random
 
 from osv import osv, fields
-from matrix_field import matrix, matrix_read_patch, matrix_write_patch
+from smile_matrix_field.matrix_field import matrix, matrix_read_patch, matrix_write_patch
 
 
 

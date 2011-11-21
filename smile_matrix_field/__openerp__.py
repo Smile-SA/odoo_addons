@@ -19,9 +19,16 @@
 #
 ##############################################################################
 
-import smile_profile
-import smile_employee
-import smile_project
-import smile_period
-import smile_workload
-import smile_activity
+{
+    "name" : "Smile Matrix Field",
+    "version" : "0.1",
+    "author" : "Smile",
+    "website": 'http://www.smile.fr',
+    "category" : "Custom",
+    "description": "Smile Matrix Field",
+    "depends" : ['base'],
+    "init_xml" : [],
+    "update_xml": [],
+    "installable": True,
+    "active": False,
+}
