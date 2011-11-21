@@ -71,6 +71,10 @@ class smile_activity_report(osv.osv):
             active_date_range_property='active_date_range',
             date_format='%d%d',
             line_resource_property_list=[('project_id', 'smile.activity.project')],
+            additional_columns=[
+                {"label": "Column 1"},
+                {"label": "Column 2"},
+                ],
             title="Activity report lines 2",
             readonly=False,
             ),

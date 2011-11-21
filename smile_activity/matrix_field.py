@@ -90,6 +90,8 @@ class matrix(fields.dummy):
         active_date_range_property = self.__dict__.get('active_date_range_property', None)
         # The format we use to display date labels
         date_format = self.__dict__.get('date_format', None)
+        # We can add read-only columns at the end of the matrix
+        additional_columns = self.__dict__.get('additional_columns', [])
         # Additional classes can be manually added
         css_classes = self.__dict__.get('css_classes', [])
         # Get the matrix title
@@ -194,6 +196,7 @@ class matrix(fields.dummy):
                 'date_range': [self._date_to_str(d) for d in date_range],  # Format our date range for our matrix # XXX Keep them as date objects ?
                 'resource_value_list': resource_value_list,
                 'column_date_label_format': date_format,
+                'additional_columns': additional_columns,
                 'class': css_classes,
                 'title': title,
                 }

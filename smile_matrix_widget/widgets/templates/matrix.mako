@@ -79,6 +79,9 @@
             >
             ${render_float(row_total)}
         </td>
+        %for i in range(len(value['additional_columns'])):
+            <td></td>
+        %endfor
     </tr>
 </%def>
 
@@ -294,6 +297,9 @@
                         <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(column_date_label_format)}</th>
                     %endfor
                     <th class="total">Total</th>
+                    %for (i, c) in enumerate(value['additional_columns']):
+                        <th>${c.get('label', "Additional column %s" % i)}</th>
+                    %endfor
                 </tr>
             </thead>
             <tfoot>
@@ -332,6 +338,9 @@
                         >
                         ${render_float(grand_total)}
                     </td>
+                    %for i in range(len(value['additional_columns'])):
+                        <td></td>
+                    %endfor
                 </tr>
                 %for line in [l for l in lines if l['widget'] == 'boolean']:
                     <tr id="${'%s_line_%s' % (name, line['id'])}" class="boolean_line">
@@ -364,7 +373,6 @@
                         <%
                             row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
                         %>
-
                         <td class="total"
                             id="${name}_row_total_${line['id']}"
                             %if not editable and row_total <= 0.0:
@@ -373,6 +381,9 @@
                             >
                             ${render_float(row_total)}
                         </td>
+                        %for i in range(len(value['additional_columns'])):
+                            <td></td>
+                        %endfor
                     </tr>
                 %endfor
             </tfoot>
