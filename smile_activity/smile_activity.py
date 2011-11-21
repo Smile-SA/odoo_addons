@@ -70,9 +70,8 @@ class smile_activity_report(osv.osv):
             cell_date_property='date',
             date_range_property='period_id',
             active_date_range_property='active_date_range',
-            date_format='%d%d',
             line_resource_property_list=[('project_id', 'smile.activity.project')],
-            additional_columns=[
+            additional_sum_columns=[
                 {'label': "Productivity", 'line_property': "productivity_index"},
                 {'label': "Performance", 'line_property': "performance_index"},
                 ],
@@ -167,8 +166,8 @@ class smile_activity_report_line(osv.osv):
         'project_id': fields.many2one('smile.activity.project', "Project", required=True),
         'cell_ids': fields.one2many('smile.activity.report.cell', 'line_id', "Cells"),
         'line_type': fields.function(_get_line_type, string="Line type", type='string', readonly=True, method=True),
-        'performance_index': fields.function(_get_random_int, string="Performance index", type='integer', readonly=True, method=True),
-        'productivity_index': fields.function(_get_random_int, string="Productivity index", type='integer', readonly=True, method=True),
+        'performance_index': fields.function(_get_random_int, string="Performance index", type='float', readonly=True, method=True),
+        'productivity_index': fields.function(_get_random_int, string="Productivity index", type='float', readonly=True, method=True),
         }
 
 

@@ -309,7 +309,7 @@ $(document).ready(function(){
         var matrix = get_parent_matrix(table_row);
         var matrix_id = matrix.attr("id");
         if(level > 1) {
-            var parent_line = $(table_row).prevAll("#" + matrix_id + " tbody tr.resource:not(.template)").first();
+            var parent_line = $(table_row).prevAll("#" + matrix_id + " tbody tr.resource_line:not(.template)").first();
         } else {
             var parent_line = matrix.find(".toolbar").first();
         }

@@ -20,6 +20,7 @@
 ##############################################################################
 
 import datetime
+import random
 
 from osv import osv, fields
 from matrix_field import matrix, matrix_read_patch, matrix_write_patch
@@ -49,6 +50,10 @@ class smile_activity_workload(osv.osv):
             line_resource_property_list=[('profile_id', 'smile.activity.profile'), ('employee_id', 'smile.activity.employee')],
             # XXX 3-level resource test
             #line_resource_property_list=[('profile_id', 'smile.activity.profile'), ('employee_id', 'smile.activity.employee'), ('workload_id', 'smile.activity.workload')],
+            additional_sum_columns=[
+                {'label': "Productivity", 'line_property': "productivity_index"},
+                {'label': "Performance", 'line_property': "performance_index"},
+                ],
             css_classes=['workload'],
             title="Workload lines",
             experimental_slider=True,
@@ -74,12 +79,28 @@ smile_activity_workload()
 class smile_activity_workload_line(osv.osv):
     _name = 'smile.activity.workload.line'
 
+
+    ## Function fields
+
+    def _get_random_int(self, cr, uid, ids, name, arg, context=None):
+        """ Get a random number between 0 and 100
+        """
+        result = {}
+        for line in self.browse(cr, uid, ids, context):
+            result[line.id] = random.randrange(0, 100)
+        return result
+
+
+    ## Fields definition
+
     _columns = {
         'name': fields.related('employee_id', 'name', type='char', string='Name', size=32, readonly=True),
         'workload_id': fields.many2one('smile.activity.workload', "Workload", required=True, ondelete='cascade'),
         'profile_id': fields.many2one('smile.activity.profile', "Profile", required=False),
         'employee_id': fields.many2one('smile.activity.employee', "Employee", required=False),
         'cell_ids': fields.one2many('smile.activity.workload.cell', 'line_id', "Cells"),
+        'performance_index': fields.function(_get_random_int, string="Performance index", type='float', readonly=True, method=True),
+        'productivity_index': fields.function(_get_random_int, string="Productivity index", type='float', readonly=True, method=True),
         }
 
 

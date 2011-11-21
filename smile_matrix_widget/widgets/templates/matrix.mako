@@ -80,7 +80,7 @@
             ${render_float(row_total)}
         </td>
         %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
-            <td>${line.get(line_property, "self.%s" % line_property)}</td>
+            <td>${render_float(line.get(line_property, 0.0))}</td>
         %endfor
     </tr>
 </%def>
@@ -106,7 +106,7 @@
 </%def>
 
 
-<%def name="render_sub_matrix_header(level_res, res_values, level, date_range, css_class=None)">
+<%def name="render_sub_matrix_header(level_res, res_values, level, date_range, sub_lines=[], css_class=None)">
     <%
         # Build a virtual line to freeze resources at that level
         virtual_line = {
@@ -115,15 +115,28 @@
             }
         value['row_uid'] += 1
     %>
-    <tr class="resource level level_${level}
+    <tr class="resource_line level level_${level}
         %if css_class:
             ${css_class}
         %endif
         ">
         ${render_resources(virtual_line)}
-        <td colspan="${len(date_range) + len(value['additional_columns']) + 2}" class="resource_selector">
+        <td colspan="${len(date_range) + 1}" class="resource_selector">
             ${render_resource_selector(res_values)}
         </td>
+        <td class="total"></td>
+        %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
+            <%
+                additional_sum = sum([line.get(line_property, 0.0) for line in sub_lines])
+            %>
+            <td
+                %if not editable and additional_sum <= 0.0:
+                    class="zero"
+                %endif
+            >
+                ${render_float(additional_sum)}
+            </td>
+        %endfor
     </tr>
 </%def>
 
@@ -149,7 +162,7 @@
                         sub_lines.append(line)
             %>
             %if len(sub_lines):
-                ${render_sub_matrix_header(level_res, resource_value_list[level], level, date_range)}
+                ${render_sub_matrix_header(level_res, resource_value_list[level], level, date_range, sub_lines)}
                 ${render_sub_matrix(sub_lines, resource_value_list, date_range, level + 1, level_res)}
             %endif
         %endfor
@@ -236,7 +249,8 @@
                 text-align: center;
             }
 
-            .matrix table .resource {
+            .matrix table .resource,
+            .matrix table .resource_selector {
                 text-align: left;
             }
 
@@ -338,8 +352,17 @@
                         >
                         ${render_float(grand_total)}
                     </td>
-                    %for i in range(len(value['additional_columns'])):
-                        <td></td>
+                    %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
+                        <%
+                            additional_sum = sum([line.get(line_property, 0.0) for line in lines if line['widget'] != 'boolean'])
+                        %>
+                        <td class="total
+                            %if not editable and additional_sum <= 0.0:
+                                zero
+                            %endif
+                        ">
+                            ${render_float(additional_sum)}
+                        </td>
                     %endfor
                 </tr>
                 %for line in [l for l in lines if l['widget'] == 'boolean']:
@@ -382,7 +405,7 @@
                             ${render_float(row_total)}
                         </td>
                         %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
-                            <td>${line.get(line_property, "self.%s" % line_property)}</td>
+                            <td>${render_float(line.get(line_property, 0.0))}</td>
                         %endfor
                     </tr>
                 %endfor

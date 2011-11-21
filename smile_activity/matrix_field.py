@@ -89,9 +89,9 @@ class matrix(fields.dummy):
         date_range_property = self.__dict__.get('date_range_property', None)
         active_date_range_property = self.__dict__.get('active_date_range_property', None)
         # The format we use to display date labels
-        date_format = self.__dict__.get('date_format', None)
+        date_format = self.__dict__.get('date_format', "%Y-%m-%d")
         # We can add read-only columns at the end of the matrix
-        additional_columns = self.__dict__.get('additional_columns', [])
+        additional_sum_columns = self.__dict__.get('additional_sum_columns', [])
         # Additional classes can be manually added
         css_classes = self.__dict__.get('css_classes', [])
         # Get the matrix title
@@ -166,10 +166,13 @@ class matrix(fields.dummy):
                 line_data.update({'cells_data': cells_data})
 
                 # Get data of additional columns
-                for line_property in [c['line_property'] for c in additional_columns if 'line_property' in c]:
+                for line_property in [c['line_property'] for c in additional_sum_columns if 'line_property' in c]:
                     if line_property in line_data:
                         raise osv.except_osv('Error !', "line property %s conflicts with matrix line definition." % line_property)
-                    line_data.update({line_property: _get_prop(line, line_property)})
+                    v = _get_prop(line, line_property)
+                    if type(v) != type(0.0):
+                        v = float(v)
+                    line_data.update({line_property: v})
 
                 matrix_data.append(line_data)
 
@@ -203,7 +206,7 @@ class matrix(fields.dummy):
                 'date_range': [self._date_to_str(d) for d in date_range],  # Format our date range for our matrix # XXX Keep them as date objects ?
                 'resource_value_list': resource_value_list,
                 'column_date_label_format': date_format,
-                'additional_columns': additional_columns,
+                'additional_columns': additional_sum_columns,
                 'class': css_classes,
                 'title': title,
                 }
