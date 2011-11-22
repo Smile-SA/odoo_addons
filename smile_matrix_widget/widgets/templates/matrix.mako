@@ -71,16 +71,21 @@
         <%
             row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
         %>
-        <td class="total"
-            id="${name}_row_total_${line['id']}"
+        <td id="${name}_row_total_${line['id']}" class="total
             %if not editable and row_total <= 0.0:
-                class="zero"
+                zero
             %endif
-            >
+            ">
             ${render_float(row_total)}
         </td>
-        %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
-            <td>${render_float(line.get(line_property, 0.0))}</td>
+        %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_columns'] if 'line_property' in c]:
+            <td
+                %if not editable and line_property_value <= 0.0:
+                    class="zero"
+                %endif
+            >
+                ${render_float(line_property_value)}
+            </td>
         %endfor
     </tr>
 </%def>
@@ -130,12 +135,11 @@
                 row_total += [v for (k, v) in line.get('cells_data', dict()).items()]
             row_total = sum(row_total)
         %>
-        <td class="total"
-            id="${name}_row_total_${virtual_line['id']}"
+        <td id="${name}_row_total_${virtual_line['id']}" class="total
             %if not editable and row_total <= 0.0:
-                class="zero"
+                zero
             %endif
-            >
+            ">
             ${render_float(row_total)}
         </td>
         %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
@@ -417,8 +421,14 @@
                             >
                             ${render_float(row_total)}
                         </td>
-                        %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
-                            <td>${render_float(line.get(line_property, 0.0))}</td>
+                        %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_columns'] if 'line_property' in c]:
+                            <td
+                                %if not editable and line_property_value <= 0.0:
+                                    class="zero"
+                                %endif
+                            >
+                                ${render_float(line_property_value)}
+                            </td>
                         %endfor
                     </tr>
                 %endfor
