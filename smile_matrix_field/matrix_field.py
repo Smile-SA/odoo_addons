@@ -111,13 +111,17 @@ class matrix(fields.dummy):
         for base_object in obj.browse(cr, uid, ids, context):
             matrix_data = []
 
-            # Get the date range composing the timeline either on the current object or another one through a property
-            date_range_property_object = base_object
-            if date_range_property:
-                date_range_property_object = _get_prop(base_object, date_range_property)
-            date_range = _get_prop(date_range_property_object, 'date_range')
-            if type(date_range) is not type([]):
-                raise osv.except_osv('Error !', "date_range must return data that looks like selection field data.")
+            # Get on the current object the date range bounding the timeline
+            date_range = _get_prop(base_object, date_range_property)
+            # Get active date range. Default is to let all dates active.
+            active_date_range = _get_prop(base_object, active_date_range_property, date_range)
+            # Check the data structure returned by date ranges
+            for (range_name, range_data) in [(date_range_property, date_range), (active_date_range_property, active_date_range)]:
+                if type(range_data) is not type([]):
+                    raise osv.except_osv('Error !', "%s must return data that looks like selection field data." % range_name)
+                for d in range_data:
+                    if not self._is_date(d):
+                        raise osv.except_osv('Error !', "%s must return a list of dates." % range_name)
 
             # Get the list of all objects new rows of the matrix can be linked to
             # Keep the original order defined in matrix properties
@@ -178,11 +182,6 @@ class matrix(fields.dummy):
 
             # Get default cells and their values for the template row.
             template_cells_data = {}
-            # Get active date range. Default is to let all dates active.
-            active_date_range = _get_prop(date_range_property_object, active_date_range_property, date_range)
-            for d in active_date_range:
-                if not self._is_date(d):
-                    raise osv.except_osv('Error !', "%s must return a list of dates." % active_date_range_property)
             # TODO: Add a "default_cell_value" method of some sort ?
             default_template_value = 0.0
             template_cells_data = dict([(self._date_to_str(d), default_template_value) for d in active_date_range])

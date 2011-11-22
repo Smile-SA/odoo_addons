@@ -37,6 +37,8 @@ class smile_activity_report(osv.osv):
         'period_id': fields.many2one('smile.activity.period', "Period", required=True),
         'start_date': fields.related('period_id', 'start_date', type='date', string="Start date", readonly=True),
         'end_date': fields.related('period_id', 'end_date', type='date', string="End date", readonly=True),
+        'date_range': fields.related('period_id', 'date_range', type='selection', string="Period date range", readonly=True),
+        'active_date_range': fields.related('period_id', 'active_date_range', type='selection', string="Period active date range", readonly=True),
         'line_ids': fields.one2many('smile.activity.report.line', 'report_id', "Activity lines"),
         'matrix_line_ids': matrix(
             line_property='line_ids',
@@ -49,7 +51,7 @@ class smile_activity_report(osv.osv):
             cell_inverse_property='line_id',
             cell_value_property='cell_value',
             cell_date_property='date',
-            date_range_property='period_id',
+            date_range_property='date_range',
             active_date_range_property='active_date_range',
             date_format='%d',
             line_resource_property_list=[('project_id', 'smile.activity.project')],
@@ -68,7 +70,7 @@ class smile_activity_report(osv.osv):
             cell_inverse_property='line_id',
             cell_value_property='cell_value',
             cell_date_property='date',
-            date_range_property='period_id',
+            date_range_property='date_range',
             active_date_range_property='active_date_range',
             line_resource_property_list=[('project_id', 'smile.activity.project')],
             additional_sum_columns=[

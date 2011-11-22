@@ -35,6 +35,7 @@ class smile_activity_workload(osv.osv):
         'project_id': fields.many2one('smile.activity.project', "Project", required=True),
         'start_date': fields.related('project_id', 'start_date', type='date', string="Start date", readonly=True),
         'end_date': fields.related('project_id', 'end_date', type='date', string="End date", readonly=True),
+        'date_range': fields.related('project_id', 'date_range', type='selection', string="Period date range", readonly=True),
         'line_ids': fields.one2many('smile.activity.workload.line', 'workload_id', "Workload lines"),
         'matrix_line_ids': matrix(
             line_property='line_ids',
@@ -45,7 +46,7 @@ class smile_activity_workload(osv.osv):
             cell_inverse_property='line_id',
             cell_value_property='quantity',
             cell_date_property='date',
-            date_range_property='project_id',
+            date_range_property='date_range',
             date_format='%m/%y',
             #line_resource_property_list=[('profile_id', 'smile.activity.profile'), ('employee_id', 'smile.activity.employee')],
             # XXX 3-level resource test
@@ -54,6 +55,9 @@ class smile_activity_workload(osv.osv):
                 {'label': "Productivity", 'line_property': "productivity_index"},
                 {'label': "Performance", 'line_property': "performance_index"},
                 ],
+            #additional_lines=[
+                #('additional_line_ids', 'smile.activity.workload.line')
+                #],
             css_classes=['workload'],
             title="Workload lines",
             experimental_slider=True,
@@ -101,6 +105,7 @@ class smile_activity_workload_line(osv.osv):
         'cell_ids': fields.one2many('smile.activity.workload.cell', 'line_id', "Cells"),
         'performance_index': fields.function(_get_random_int, string="Performance index", type='float', readonly=True, method=True),
         'productivity_index': fields.function(_get_random_int, string="Productivity index", type='float', readonly=True, method=True),
+        #'additional_line_ids':
         }
 
 
