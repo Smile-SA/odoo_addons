@@ -187,7 +187,11 @@ class matrix(fields.dummy):
                 cells = _get_prop(line, cell_property, [])
                 cells_data = {}
                 for cell in cells:
-                    cell_date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
+                    cell_date = datetime.datetime.strptime(_get_prop(cell, cell_date_property), '%Y-%m-%d').date()
+                    # Remove cell if it's not in the displayed active date range
+                    if cell_date not in active_date_range:
+                        obj.pool.get(cell_type).unlink(cr, uid, [cell.id], context)
+                        continue
                     cells_data[cell_date.strftime('%Y%m%d')] = _get_prop(cell, cell_value_property)
                 line_data.update({'cells_data': cells_data})
 
@@ -351,7 +355,7 @@ def matrix_read_patch(func):
                         if not f_id_elements[1].startswith('new'):
                             line_id = int(f_id_elements[1])
                             if f_id_elements[0] == 'cell':
-                                cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d')
+                                cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d').date()
                                 cell_id = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date), (conf['cell_inverse_property'], '=', line_id)], limit=1, context=context)
                                 if cell_id:
                                     cell = cell_pool.browse(cr, uid, cell_id, context)[0]
@@ -381,9 +385,6 @@ def matrix_write_patch(func):
         ids = arg[3]
         vals = arg[4]
         context = kw.get('context', None)
-        # Automaticcaly remove out of range cells if dates changes
-        if 'start_date' in vals or 'end_date' in vals:
-            obj.update_cells(cr, uid, ids, context)
 
         written_lines = []
         for report in obj.browse(cr, uid, ids, context):
@@ -415,7 +416,7 @@ def matrix_write_patch(func):
                     if res_ids != required_res_ids:
                         raise osv.except_osv('Error !', "Line %s resource mismatch: %r provided while we're expecting require %r." % (line_id, res_ids, required_res_ids))
                     # Get line cells
-                    line_cells = dict([(datetime.datetime.strptime(parse_virtual_field_id(f_id)[3], '%Y%m%d'), v) for (f_id, v) in line_data.items() if f_id.startswith('%s_cell_' % matrix_id)])
+                    line_cells = dict([(datetime.datetime.strptime(parse_virtual_field_id(f_id)[3], '%Y%m%d').date(), v) for (f_id, v) in line_data.items() if f_id.startswith('%s_cell_' % matrix_id)])
                     # Are we updating an existing line or creating a new one ?
                     if line_id.startswith('new'):
                         line_vals = line_resources
