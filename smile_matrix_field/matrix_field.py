@@ -115,6 +115,14 @@ class matrix(fields.dummy):
             date_range = _get_prop(base_object, date_range_property)
             # Get active date range. Default is to let all dates active.
             active_date_range = _get_prop(base_object, active_date_range_property, date_range)
+            
+            #If the date_range and active_date_range values are stocked as text. So we need to evaluate them.
+            if isinstance(date_range, (str, unicode)):
+                date_range = eval(date_range)
+            if isinstance(active_date_range, (str, unicode)):
+                active_date_range = eval(active_date_range)
+                if not active_date_range:
+                    active_date_range = date_range
             # Check the data structure returned by date ranges
             for (range_name, range_data) in [(date_range_property, date_range), (active_date_range_property, active_date_range)]:
                 if type(range_data) is not type([]):
