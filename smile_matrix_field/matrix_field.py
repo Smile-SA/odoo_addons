@@ -36,6 +36,33 @@ def _get_prop(obj, prop_name, default_value=None):
     return prop_value
 
 
+def _get_date_range(base_object, date_range_property, active_date_range_property):
+    """ Utility method to get the displayed date range and the active date range.
+        This piece of code was moved in its own method as date range extraction requires some special handling.
+    """
+    # Get on the current object the date range bounding the timeline
+    date_range = _get_prop(base_object, date_range_property)
+    # Get the active date range. Default is to let all dates of the displayed range.
+    active_date_range = _get_prop(base_object, active_date_range_property, date_range)
+
+    # date_range and active_date_range values may be stored as text (or selection, which is the same). In this case, we need to evaluate them. It's bad, but it works.
+    if isinstance(date_range, (str, unicode)):
+        date_range = eval(date_range)
+    if isinstance(active_date_range, (str, unicode)):
+        active_date_range = eval(active_date_range)
+        if not active_date_range:
+            active_date_range = date_range
+
+    # Check the data structure returned by date ranges
+    for (range_name, range_data) in [(date_range_property, date_range), (active_date_range_property, active_date_range)]:
+        if type(range_data) is not type([]):
+            raise osv.except_osv('Error !', "%s must return data that looks like selection field data." % range_name)
+        for d in range_data:
+            if not isinstance(d, datetime.date):
+                raise osv.except_osv('Error !', "%s must return a list of dates." % range_name)
+
+    return (date_range, active_date_range)
+
 
 class matrix(fields.dummy):
     """ A custom field to prepare data for, and mangle data from, the matrix widget.
@@ -46,13 +73,10 @@ class matrix(fields.dummy):
     def _date_to_str(self, date):
         return date.strftime('%Y%m%d')
 
-    def _is_date(self, date):
-        return isinstance(date, (datetime.date, datetime.datetime))
-
     def _str_to_date(self, date):
         """ Transform string date to a proper date object
         """
-        if not self._is_date(date):
+        if not isinstance(date, datetime.date):
             date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
         return date
 
@@ -85,6 +109,7 @@ class matrix(fields.dummy):
         cell_inverse_property = self.__dict__.get('cell_inverse_property', None)
         cell_value_property = self.__dict__.get('cell_value_property', None)
         cell_date_property = self.__dict__.get('cell_date_property', None)
+        default_cell_value = self.__dict__.get('default_cell_value', 0.0)
         # Property name of the relation field on which we'll call the date_range property
         date_range_property = self.__dict__.get('date_range_property', None)
         active_date_range_property = self.__dict__.get('active_date_range_property', None)
@@ -113,24 +138,8 @@ class matrix(fields.dummy):
         for base_object in obj.browse(cr, uid, ids, context):
             matrix_data = []
 
-            # Get on the current object the date range bounding the timeline
-            date_range = _get_prop(base_object, date_range_property)
-            # Get active date range. Default is to let all dates active.
-            active_date_range = _get_prop(base_object, active_date_range_property, date_range)
-            # date_range and active_date_range values may be stored as text (or selection, which is the same). In this case, we need to evaluate them. It's bad, but it works.
-            if isinstance(date_range, (str, unicode)):
-                date_range = eval(date_range)
-            if isinstance(active_date_range, (str, unicode)):
-                active_date_range = eval(active_date_range)
-                if not active_date_range:
-                    active_date_range = date_range
-            # Check the data structure returned by date ranges
-            for (range_name, range_data) in [(date_range_property, date_range), (active_date_range_property, active_date_range)]:
-                if type(range_data) is not type([]):
-                    raise osv.except_osv('Error !', "%s must return data that looks like selection field data." % range_name)
-                for d in range_data:
-                    if not self._is_date(d):
-                        raise osv.except_osv('Error !', "%s must return a list of dates." % range_name)
+            # Get our date ranges
+            (date_range, active_date_range) = _get_date_range(base_object, date_range_property, active_date_range_property)
 
             # Get the list of all objects new rows of the matrix can be linked to
             # Keep the original order defined in matrix properties
@@ -183,17 +192,23 @@ class matrix(fields.dummy):
                         })
                 line_data.update({'resources': res_list})
 
-                # Get all cells of the line
-                cells = _get_prop(line, cell_property, [])
+                # Get all cells of the line, indexed by their IDs
+                cells = dict([(cell.id, cell) for cell in _get_prop(line, cell_property, [])])
+                # Provide to the matrix a cell for each active date in the range
                 cells_data = {}
-                for cell in cells:
-                    cell_date = datetime.datetime.strptime(_get_prop(cell, cell_date_property), '%Y-%m-%d').date()
-                    # Remove cell if it's not in the displayed active date range
-                    if cell_date not in active_date_range:
-                        obj.pool.get(cell_type).unlink(cr, uid, [cell.id], context)
-                        continue
-                    cells_data[cell_date.strftime('%Y%m%d')] = _get_prop(cell, cell_value_property)
+                for d in active_date_range:
+                    # Find a cell corresponding to the date in the date_range
+                    cell_value = default_cell_value
+                    for (cell_id, cell) in cells.items():
+                        cell_date = datetime.datetime.strptime(_get_prop(cell, cell_date_property), '%Y-%m-%d').date()
+                        if cell_date == d:
+                            cells.pop(cell_id)
+                            cell_value = _get_prop(cell, cell_value_property, default_cell_value)
+                            break
+                    cells_data[d.strftime('%Y%m%d')] = cell_value
                 line_data.update({'cells_data': cells_data})
+                # Remove all out of date and duplicate cells
+                obj.pool.get(cell_type).unlink(cr, uid, cells.keys(), context)
 
                 # Get data of additional columns
                 for line_property in [c['line_property'] for c in additional_sum_columns if 'line_property' in c]:
@@ -208,9 +223,7 @@ class matrix(fields.dummy):
 
             # Get default cells and their values for the template row.
             template_cells_data = {}
-            # TODO: Add a "default_cell_value" method of some sort ?
-            default_template_value = 0.0
-            template_cells_data = dict([(self._date_to_str(d), default_template_value) for d in active_date_range])
+            template_cells_data = dict([(self._date_to_str(d), default_cell_value) for d in active_date_range])
             template_resources = [{
                     'id': res_id,
                     'label': res_id.replace('_', ' ').title(),
@@ -392,6 +405,9 @@ def matrix_write_patch(func):
             # Write one matrix at a time
             for (matrix_id, conf) in get_matrix_conf(obj).items():
 
+                # Get our date ranges
+                (date_range, active_date_range) = _get_date_range(report, conf['date_range_property'], conf.get('active_date_range_property', None))
+
                 # Regroup fields by lines
                 lines = {}
                 for (f_id, f_value) in vals.items():
@@ -440,10 +456,13 @@ def matrix_write_patch(func):
                                 conf['cell_inverse_property']: line_id,
                                 })
                             obj.pool.get(conf['cell_type']).create(cr, uid, cell_vals, context)
-                        # Update cell with our data
+                        # Update cell with our data or delete it if it's out of range
                         else:
                             cell_id = cell[0]
-                            obj.pool.get(conf['cell_type']).write(cr, uid, cell_id, cell_vals, context)
+                            if cell_date not in active_date_range:
+                                obj.pool.get(conf['cell_type']).unlink(cr, uid, [cell_id], context)
+                            else:
+                                obj.pool.get(conf['cell_type']).write(cr, uid, cell_id, cell_vals, context)
 
         # If there was no references to one of our line it means it was deleted
         for report in obj.browse(cr, uid, ids, context):

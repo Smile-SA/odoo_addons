@@ -104,35 +104,6 @@ class smile_activity_report(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         return super(smile_activity_report, self).write(cr, uid, ids, vals, context)
 
-
-    ## Custom methods
-
-    def update_cells(self, cr, uid, ids, context):
-        """ This method maintain cells in sync with the period definition by
-            removing out of range and inactive cells, and creating missing ones
-            on each report lines.
-        """
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        outdated_cells = []
-        for report in self.browse(cr, uid, ids, context):
-            active_dates = [datetime.datetime.strptime(l.date, '%Y-%m-%d') for l in report.period_id.active_line_ids]
-            for line in report.line_ids:
-                # Get out of range cells
-                outdated_cells += [cell.id for cell in line.cell_ids if datetime.datetime.strptime(cell.date, '%Y-%m-%d') not in active_dates]
-                # Get missing cells
-                existing_days = set([datetime.datetime.strptime(cell.date, '%Y-%m-%d') for cell in line.cell_ids])
-                # Generate cells at missing dates
-                for d in set(active_dates).difference(existing_days):
-                    vals = {
-                        'line_id': line.id,
-                        'date': d,
-                        }
-                    self.pool.get('smile.activity.report.cell').create(cr, uid, vals, context)
-        if outdated_cells:
-            self.pool.get('smile.activity.report.cell').unlink(cr, uid, outdated_cells, context)
-        return
-
 smile_activity_report()
 
 
@@ -283,8 +254,9 @@ class smile_activity_report_cell(osv.osv):
 
     _constraints = [
         (_check_quantity, "Quantity can't be negative.", ['quantity']),
-        (_check_date, "Cell date is out of the activity report date range.", ['date']),
         (_check_duplicate, "Two cells can't share the same date.", ['date']),
+        # Constraint below is not required as the matrix code will remove out of range cells
+        #(_check_date, "Cell date is out of the activity report date range.", ['date']),
         ]
 
 smile_activity_report_cell()

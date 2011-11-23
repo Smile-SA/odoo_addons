@@ -263,18 +263,6 @@ class smile_activity_period_line(osv.osv):
         }
 
 
-    ## Native methods
-
-    def write(self, cr, uid, ids, vals, context=None):
-        ret = super(smile_activity_period_line, self).write(cr, uid, ids, vals, context)
-        # Each time we update the active_day boolean of one line we clean-up the activity reports
-        report_ids = []
-        for period_line in self.browse(cr, uid, ids, context):
-            report_ids += [p.id for p in period_line.period_id.report_ids]
-        self.pool.get('smile.activity.report').update_cells(cr, uid, report_ids, context)
-        return ret
-
-
     ## Constraints methods
 
     #def _check_overlapping(self, cr, uid, ids, context=None):
