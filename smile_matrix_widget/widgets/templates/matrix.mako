@@ -399,6 +399,7 @@
                 %endfor
 
                 %for line in bottom_lines:
+                    <!-- TODO: merge with render_float_line() -->
                     <tr id="${'%s_line_%s' % (name, line['id'])}" class="boolean_line">
                         ${render_resources(line)}
                         <td></td>
