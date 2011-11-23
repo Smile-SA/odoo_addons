@@ -15,7 +15,7 @@
                     <field name="end_date"/>
                     <separator string="Workload lines" colspan="4"/>
                     <field name="matrix_line_ids" colspan="4" widget="matrix" nolabel="1"/>
-                    <field name="line_ids" colspan="4" nolabel="1">
+                    <field name="line_ids" colspan="4" nolabel="1" context="{'form_view_ref': 'smile_activity.view_smile_activity_workload_line_form'}">
                         <tree string="Lines">
                             <field name="name"/>
                             <field name="profile_id"/>
@@ -24,19 +24,16 @@
                             <field name="performance_index"/>
                             <field name="cell_ids"/>
                         </tree>
-                        <form string="Lines">
+                    </field>
+                    <field name="additional_line_ids" colspan="4" nolabel="1" context="{'form_view_ref': 'smile_activity.view_smile_activity_workload_line_form'}">
+                        <tree string="Lines">
                             <field name="name"/>
                             <field name="profile_id"/>
                             <field name="employee_id"/>
                             <field name="productivity_index"/>
                             <field name="performance_index"/>
-                            <field name="cell_ids" colspan="4" nolabel="1" readonly="1">
-                                <tree string="Cells">
-                                    <field name="date"/>
-                                    <field name="quantity"/>
-                                </tree>
-                            </field>
-                        </form>
+                            <field name="cell_ids"/>
+                        </tree>
                     </field>
                 </form>
             </field>
@@ -55,6 +52,28 @@
                     <field name="end_date"/>
                     <field name="line_ids"/>
                 </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_smile_activity_workload_line_form">
+            <field name="name">smile_activity.view_workload_line</field>
+            <field name="model">smile.activity.workload.line</field>
+            <field name="type">form</field>
+            <field name="priority">17</field>
+            <field name="arch" type="xml">
+                <form string="Workload line">
+                    <field name="name"/>
+                    <field name="profile_id"/>
+                    <field name="employee_id"/>
+                    <field name="productivity_index"/>
+                    <field name="performance_index"/>
+                    <field name="cell_ids" colspan="4" nolabel="1" readonly="1">
+                        <tree string="Cells">
+                            <field name="date"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
+                </form>
             </field>
         </record>
 

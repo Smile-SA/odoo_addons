@@ -30,6 +30,21 @@ from smile_matrix_field.matrix_field import matrix, matrix_read_patch, matrix_wr
 class smile_activity_workload(osv.osv):
     _name = 'smile.activity.workload'
 
+
+    ## Function fields
+
+    def _get_additional_line_ids(self, cr, uid, ids, name, arg, context=None):
+        """ Randomly pick some lines to demonstrate the Matrix's additional_lines parameter
+        """
+        result = {}
+        for workload in self.browse(cr, uid, ids, context):
+            # Get even lines
+            result[workload.id] = [l.id for l in workload.line_ids][::2]
+        return result
+
+
+    ## Fields definition
+
     _columns = {
         'name': fields.char('Name', size=32),
         'project_id': fields.many2one('smile.activity.project', "Project", required=True),
@@ -37,6 +52,7 @@ class smile_activity_workload(osv.osv):
         'end_date': fields.related('project_id', 'end_date', type='date', string="End date", readonly=True),
         'date_range': fields.related('project_id', 'date_range', type='selection', string="Period date range", readonly=True),
         'line_ids': fields.one2many('smile.activity.workload.line', 'workload_id', "Workload lines"),
+        'additional_line_ids': fields.function(_get_additional_line_ids, string="Additional lines", type='one2many', relation='smile.activity.workload.line', readonly=True, method=True),
         'matrix_line_ids': matrix(
             line_property='line_ids',
             line_type='smile.activity.workload.line',
@@ -55,9 +71,7 @@ class smile_activity_workload(osv.osv):
                 {'label': "Productivity", 'line_property': "productivity_index"},
                 {'label': "Performance", 'line_property': "performance_index"},
                 ],
-            #additional_lines=[
-                #('additional_line_ids', 'smile.activity.workload.line')
-                #],
+            additional_line_property='additional_line_ids',
             css_classes=['workload'],
             title="Workload lines",
             experimental_slider=True,
@@ -105,7 +119,6 @@ class smile_activity_workload_line(osv.osv):
         'cell_ids': fields.one2many('smile.activity.workload.cell', 'line_id', "Cells"),
         'performance_index': fields.function(_get_random_int, string="Performance index", type='float', readonly=True, method=True),
         'productivity_index': fields.function(_get_random_int, string="Productivity index", type='float', readonly=True, method=True),
-        #'additional_line_ids':
         }
 
 

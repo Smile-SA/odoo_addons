@@ -20,7 +20,7 @@
             resources = line.get('resources', [])
         %>
         <span class="name">${resources[-1]['label']}</span>
-        %if editable:
+        %if editable and not read_only:
             %for res in resources:
                 <%
                     res_id = res['id']
@@ -36,14 +36,20 @@
 
 
 <%def name="render_float_line(line, date_range, level=1)">
+    <%
+        read_only = line.get('read_only', False)
+    %>
     <tr id="${'%s_line_%s' % (name, line['id'])}" class="level level_${level}
         %if line['id'] == 'template':
             template
         %endif
+        %if read_only:
+            read_only
+        %endif
         ">
         ${render_resources(line)}
         <td class="delete_line">
-            %if editable and not line.get('required', False):
+            %if editable and not read_only and not line.get('required', False):
                 <span class="button delete_row">X</span>
             %endif
         </td>
@@ -54,7 +60,7 @@
                     cell_value = line.get('cells_data', {}).get(date, None)
                 %>
                 %if cell_value is not None:
-                    %if editable:
+                    %if editable and not read_only:
                         <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${render_float(cell_value)}" size="1" class="${line['widget']}"/>
                     %else:
                         <span kind="float" id="${cell_id}" value="${render_float(cell_value)}"
@@ -206,10 +212,15 @@
         <%
             # Initialize our global new row UID
             value['row_uid'] = 1
+
             # Extract some basic information
             lines = value.get('matrix_data', [])
-            column_date_label_format = value.get('column_date_label_format', '%Y-%m-%d')
+            top_lines = [l for l in lines if l.get('position', 'body') == 'top']
+            bottom_lines = [l for l in lines if l.get('position', 'body') == 'bottom']
+            body_lines = [l for l in lines if l.get('position', 'body') not in ['top', 'bottom']]
             resource_value_list = value.get('resource_value_list', [])
+            date_range = value['date_range']
+            column_date_label_format = value.get('column_date_label_format', '%Y-%m-%d')
         %>
 
         <style type="text/css">
@@ -324,7 +335,7 @@
                 <tr>
                     <th class="resource">${value['title']}</th>
                     <th></th>
-                    %for date in value['date_range']:
+                    %for date in date_range:
                         <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(column_date_label_format)}</th>
                     %endfor
                     <th class="total">Total</th>
@@ -337,9 +348,9 @@
                 <tr class="total">
                     <td class="resource">Total</td>
                     <td></td>
-                    %for date in value['date_range']:
+                    %for date in date_range:
                         <%
-                            column_values = [line['cells_data'][date] for line in lines if line['widget'] != 'boolean' and date in line['cells_data']]
+                            column_values = [line['cells_data'][date] for line in body_lines if date in line['cells_data']]
                         %>
                         %if len(column_values):
                             <%
@@ -360,7 +371,7 @@
                         </td>
                     %endfor
                     <%
-                        grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in lines if line['widget'] != 'boolean'])
+                        grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in body_lines])
                     %>
                     <td id="${name}_grand_total"
                         %if not editable and grand_total <= 0.0:
@@ -371,7 +382,7 @@
                     </td>
                     %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
                         <%
-                            additional_sum = sum([line.get(line_property, 0.0) for line in lines if line['widget'] != 'boolean'])
+                            additional_sum = sum([line.get(line_property, 0.0) for line in body_lines])
                         %>
                         <td class="total
                             %if not editable and additional_sum <= 0.0:
@@ -382,11 +393,16 @@
                         </td>
                     %endfor
                 </tr>
-                %for line in [l for l in lines if l['widget'] == 'boolean']:
+
+                %for line in [l for l in bottom_lines if l['widget'] != "boolean"]:
+                    ${render_float_line(line, date_range)}
+                %endfor
+
+                %for line in bottom_lines:
                     <tr id="${'%s_line_%s' % (name, line['id'])}" class="boolean_line">
                         ${render_resources(line)}
                         <td></td>
-                        %for date in value['date_range']:
+                        %for date in date_range:
                             <td class="boolean">
                                 <%
                                     cell_id = '%s_cell_%s_%s' % (name, line['id'], date)
@@ -432,14 +448,14 @@
                         %endfor
                     </tr>
                 %endfor
+
             </tfoot>
             <tbody>
                 <%
                     template_line = [l for l in lines if l['id'] == 'template'][0]
-                    non_boolean_lines = [l for l in lines if l['id'] != 'template' and l['widget'] != 'boolean']
-                    date_range = value['date_range']
+                    non_templates_lines = [l for l in body_lines if l['id'] != 'template']
                 %>
-                ${render_sub_matrix(non_boolean_lines, resource_value_list, date_range)}
+                ${render_sub_matrix(non_templates_lines, resource_value_list, date_range)}
 
                 <%doc>
                     Render a sub-matrix header template for each level of resource.

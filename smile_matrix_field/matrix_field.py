@@ -92,6 +92,8 @@ class matrix(fields.dummy):
         date_format = self.__dict__.get('date_format', "%Y-%m-%d")
         # We can add read-only columns at the end of the matrix
         additional_sum_columns = self.__dict__.get('additional_sum_columns', [])
+        # Same as above, but for lines
+        additional_line_property =  self.__dict__.get('additional_line_property', None)
         # Additional classes can be manually added
         css_classes = self.__dict__.get('css_classes', [])
         # Get the matrix title
@@ -115,8 +117,7 @@ class matrix(fields.dummy):
             date_range = _get_prop(base_object, date_range_property)
             # Get active date range. Default is to let all dates active.
             active_date_range = _get_prop(base_object, active_date_range_property, date_range)
-            
-            #If the date_range and active_date_range values are stocked as text. So we need to evaluate them.
+            # date_range and active_date_range values may be stored as text (or selection, which is the same). In this case, we need to evaluate them. It's bad, but it works.
             if isinstance(date_range, (str, unicode)):
                 date_range = eval(date_range)
             if isinstance(active_date_range, (str, unicode)):
@@ -141,21 +142,34 @@ class matrix(fields.dummy):
                     'values': [(o.id, self._get_title_or_id(o)) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)],
                     })
 
-            # Browse all lines that will compose our matrix
-            lines = getattr(base_object, line_property, [])
-            for line in lines:
+            # Browse all lines that will compose our the main part of the matrix
+            lines = [(line, 'body') for line in _get_prop(base_object, line_property, [])]
+            # Add bottom lines if provided
+            if additional_line_property:
+                lines += [(line, 'bottom') for line in _get_prop(base_object, additional_line_property, [])]
+            for (line, line_position) in lines:
                 # Transfer some line data to the matrix widget
                 line_data = {
                     'id': line.id,
                     'name': self._get_title_or_id(line),
-
                     # Is this resource required ?
                     # FIX: 'required': getattr(getattr(line, line_resource_property), 'required', False),
-
                     }
 
                 # Get the type of the widget we'll use to display cell values
-                line_data.update({'widget': _get_prop(line, dynamic_widget_type_property, default_widget_type)})
+                line_widget = _get_prop(line, dynamic_widget_type_property, default_widget_type)
+                # In case if boolean widget, force the position to bottom
+                if line_widget == 'boolean':
+                    line_position = 'bottom'
+                # Force bottom line to be non-editable
+                line_read_only = False
+                if line_position == 'bottom':
+                    line_read_only = True
+                line_data.update({
+                    'widget': line_widget,
+                    'position': line_position,
+                    'read_only': line_read_only,
+                    })
 
                 # Get all resources of the line
                 # Keep the order defined by matrix field's properties
@@ -170,11 +184,11 @@ class matrix(fields.dummy):
                 line_data.update({'resources': res_list})
 
                 # Get all cells of the line
-                cells = getattr(line, cell_property, [])
+                cells = _get_prop(line, cell_property, [])
                 cells_data = {}
                 for cell in cells:
                     cell_date = datetime.datetime.strptime(cell.date, '%Y-%m-%d')
-                    cells_data[cell_date.strftime('%Y%m%d')] = getattr(cell, cell_value_property)
+                    cells_data[cell_date.strftime('%Y%m%d')] = _get_prop(cell, cell_value_property)
                 line_data.update({'cells_data': cells_data})
 
                 # Get data of additional columns
