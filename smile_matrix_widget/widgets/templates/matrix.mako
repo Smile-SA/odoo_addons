@@ -15,6 +15,9 @@
 
 
 <%def name="render_resources(line)">
+    <%
+        read_only = line.get('read_only', False)
+    %>
     <td class="resource">
         <%
             resources = line.get('resources', [])
@@ -398,7 +401,7 @@
                     ${render_float_line(line, date_range)}
                 %endfor
 
-                %for line in bottom_lines:
+                %for line in [l for l in bottom_lines if l['widget'] == "boolean"]:
                     <!-- TODO: merge with render_float_line() -->
                     <tr id="${'%s_line_%s' % (name, line['id'])}" class="boolean_line">
                         ${render_resources(line)}
