@@ -27,7 +27,17 @@
     "category" : "Tools",
     "description": """Manage users thanks to user profiles
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+This is a new way to manage your users' rights :
+you can manage users by functional profiles.
+
+Basically, a « profile » is a fictive user (res.users) tagged as a profile.
+It means that like before (with the basic rules of OpenERP) you can add groups to your profile.
+You can associate a profile to your user. Or in an other way, you can add users by profile.
+You can also set the fields which are private per user or global for all users.
+
+NB : to test your profile, you need to set him as « active », which will be disabled afterwards at the next update.
+
+Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & matthieu.choplin@smile.fr
 """,
     "depends" : ['base'],
     "init_xml" : [],
