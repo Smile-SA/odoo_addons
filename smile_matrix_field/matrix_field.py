@@ -398,6 +398,8 @@ def matrix_write_patch(func):
         ids = arg[3]
         vals = arg[4]
         context = kw.get('context', None)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
 
         written_lines = []
         for report in obj.browse(cr, uid, ids, context):
