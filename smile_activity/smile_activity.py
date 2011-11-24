@@ -54,7 +54,7 @@ class smile_activity_report(osv.osv):
             date_range_property='date_range',
             active_date_range_property='active_date_range',
             date_format='%d',
-            line_resource_property_list=[('project_id', 'smile.activity.project')],
+            line_tree_property_list=[('project_id', 'smile.activity.project')],
             column_totals_warning_threshold=1.0,
             title="Activity report lines",
             readonly=False,
@@ -73,7 +73,7 @@ class smile_activity_report(osv.osv):
             cell_date_property='date',
             date_range_property='date_range',
             active_date_range_property='active_date_range',
-            line_resource_property_list=[('project_id', 'smile.activity.project')],
+            line_tree_property_list=[('project_id', 'smile.activity.project')],
             additional_sum_columns=[
                 {'label': "Productivity", 'line_property': "productivity_index"},
                 {'label': "Performance", 'line_property': "performance_index"},
