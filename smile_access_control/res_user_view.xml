@@ -16,7 +16,8 @@
 					</field>
 					<field name="new_password" position="after">
 						<field name="user_profile_id" widget="selection"
-							attrs="{'invisible': [('user_profile', '=', True)], 'required': [('user_profile', '!=', True)]}"/>
+							attrs="{'invisible': [('user_profile', '=', True)], 'required': [('user_profile', '!=', True)]}"
+							context="{'active_test': False}"/>
 					</field>
 					<notebook position="inside">
 						<page string="Configuration" attrs="{'invisible': [('user_profile', '!=', True)]}">
@@ -45,7 +46,7 @@
 			parent="base.menu_users" />
 
 		<record id="base.action_res_users" model="ir.actions.act_window">
-			<field name="domain">[('user_profile_id', '=', False)]</field>
+			<field name="domain">[('user_profile', '=', False)]</field>
 		</record>
 
     </data>
