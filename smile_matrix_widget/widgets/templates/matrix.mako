@@ -242,6 +242,10 @@
                 min-width: inherit;
             }
 
+            div.non-editable .matrix table td {
+                border: 0;
+            }
+s
 
             /* Set our style */
 
@@ -291,10 +295,13 @@
                 padding: .3em;
             }
 
-            .matrix td,
-            .matrix th {
-                min-width: 2.2em;
-                height: 1.5em;
+            .matrix td, div.non-editable .matrix table td,
+            .matrix th, div.non-editable .matrix table th {
+                height: 2em;
+                min-width: 2em;
+                margin: 0;
+                padding: 0 .1em;
+                border-bottom: 1px solid #ccc;
             }
 
             %for i in range(1, len(resource_value_list)):
@@ -304,24 +311,6 @@
                     padding-left: ${i}em;
                 }
             %endfor
-
-            .matrix table tbody td,
-            div.non-editable .matrix table tbody td,
-            .matrix table th,
-            .matrix table tfoot tr.boolean_line td {
-                border-style: solid;
-                border-color: #ccc;
-                margin: 0;
-                padding: 0 .1em;
-            }
-            .matrix table tbody td,
-            div.non-editable .matrix table tbody td,
-            .matrix table th {
-                border-width: 0 0 1px;
-            }
-            .matrix table tfoot tr.boolean_line td {
-                border-width: 1px 0 0;
-            }
         </style>
 
         %if editable:
