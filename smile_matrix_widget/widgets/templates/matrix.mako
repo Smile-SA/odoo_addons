@@ -245,6 +245,7 @@
 
             .matrix table th {
                 text-transform: none;
+                border-bottom: 0;
             }
 
             .item .matrix input,
@@ -253,8 +254,7 @@
                 min-width: inherit;
             }
 
-            div.non-editable .matrix table td,
-            .matrix table thead th {
+            div.non-editable .matrix table td {
                 border: 0;
             }
 
@@ -319,11 +319,10 @@
                 border-top: 1px solid #ccc;
             }
 
-            .matrix tr.level_1 td, div.non-editable .matrix table tr.level_1 td {
-                border-top-width: 2px;
-            }
-
             %for i in range(1, len(resource_value_list)):
+                .matrix tbody tr.level_${i} td, div.non-editable .matrix table tbody tr.level_${i} td {
+                    border-top-width: ${len(resource_value_list) - i + 1}px;
+                }
                 .matrix .level_${i+1} td.resource,
                 .matrix .level_${i+1} td.resource_selector,
                 .matrix .level_${i+1} td.delete_line {
