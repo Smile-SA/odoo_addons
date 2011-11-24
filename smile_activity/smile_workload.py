@@ -72,6 +72,7 @@ class smile_activity_workload(osv.osv):
                 {'label': "Performance", 'line_property': "performance_index"},
                 ],
             additional_line_property='additional_line_ids',
+            column_totals_warning_threshold=None,
             css_classes=['workload'],
             title="Workload lines",
             experimental_slider=True,

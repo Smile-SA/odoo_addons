@@ -35,7 +35,6 @@ $(document).ready(function(){
     };
 
 
-
     // Selector expressions
     var increment_cells_selector = "input.increment[kind='float']";
     var increment_button_selector = ".button.increment";
@@ -117,10 +116,14 @@ $(document).ready(function(){
                 };
             });
             $("#" + matrix_id + "_column_total_" + column_index).text(column_total).effect("highlight", function(){
-                if(column_total > 1){
-                    $(this).addClass("warning");
-                } else {
-                    $(this).removeClass("warning");
+                // Get warning threshold
+                var column_threshold = parseFloat($("#" + matrix_id + "_column_warning_threshold").first().val());
+                if (!isNaN(column_threshold)) {
+                    if(column_total > column_threshold){
+                        $(this).addClass("warning");
+                    } else {
+                        $(this).removeClass("warning");
+                    };
                 };
             });
 

@@ -259,6 +259,7 @@
             column_date_label_format = value.get('column_date_label_format', '%Y-%m-%d')
             hide_column_totals = value['hide_column_totals'] and True or False
             hide_line_totals = value['hide_line_totals'] and True or False
+            column_warning_threshold = value['column_warning_threshold']
         %>
 
         <style type="text/css">
@@ -361,6 +362,9 @@
                 <span id="matrix_button_template" class="button increment template">
                     Button template
                 </span>
+                %if column_warning_threshold is not None:
+                    <input type="hidden" id="${"%s_column_warning_threshold" % name}" value="${column_warning_threshold}" title="Column warning threshold"/>
+                %endif
             </div>
         %endif
 
@@ -397,7 +401,7 @@
                                     %if not editable and column_total <= 0.0:
                                         zero
                                     %endif
-                                    %if column_total > 1:
+                                    %if column_warning_threshold is not None and column_total > column_warning_threshold:
                                         warning
                                     %endif
                                     ">

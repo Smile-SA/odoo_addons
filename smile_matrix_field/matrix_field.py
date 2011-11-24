@@ -122,6 +122,8 @@ class matrix(fields.dummy):
         # Columns and row totals are optionnal
         hide_column_totals = self.__dict__.get('hide_column_totals', False)
         hide_line_totals = self.__dict__.get('hide_line_totals', False)
+        # Set the threshold above which we set a column total in red. Set to None to desactivate the warning threshold.
+        column_totals_warning_threshold = self.__dict__.get('column_totals_warning_threshold', None)
         # Additional classes can be manually added
         css_classes = self.__dict__.get('css_classes', [])
         # Get the matrix title
@@ -250,6 +252,7 @@ class matrix(fields.dummy):
                 'additional_columns': additional_sum_columns,
                 'hide_column_totals': hide_column_totals,
                 'hide_line_totals': hide_line_totals,
+                'column_warning_threshold': column_totals_warning_threshold,
                 'class': css_classes,
                 'title': title,
                 }
