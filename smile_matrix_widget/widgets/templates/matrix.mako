@@ -38,11 +38,12 @@
 </%def>
 
 
-<%def name="render_float_line(line, date_range, level=1)">
+<%def name="render_line(line, date_range, level=1)">
     <%
         read_only = line.get('read_only', False)
+        line_widget = line.get('widget', 'float')
     %>
-    <tr class="level level_${level}
+    <tr class="level level_${level} widget_${line_widget}
         %if line['id'] == 'template':
             template
         %endif
@@ -61,25 +62,42 @@
             %endif
         </td>
         %for date in date_range:
-            <td class="float">
+            <td>
                 <%
                     cell_id = '%s_cell_%s_%s' % (name, line['id'], date)
                     cell_value = line.get('cells_data', {}).get(date, None)
                 %>
                 %if cell_value is not None:
                     %if editable and not read_only:
-                        <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${render_float(cell_value)}" size="1" class="${line['widget']}"/>
+                        %if line_widget == 'boolean':
+                            <input type="hidden" kind="boolean" name="${cell_id}" id="${cell_id}" value="${cell_value and '1' or '0'}"/>
+                            <input type="checkbox" enabled="enabled" kind="boolean" class="checkbox" id="${cell_id}_checkbox_"
+                                %if cell_value:
+                                    checked="checked"
+                                %endif
+                            />
+                        %else:
+                            <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${render_float(cell_value)}" size="1" class="${line['widget']}"/>
+                        %endif
                     %else:
-                        <span kind="float" value="${render_float(cell_value)}"
-                            %if not editable and cell_value <= 0.0:
-                                class="zero"
-                            %endif
-                            %if not read_only:
-                                id="${cell_id}"
-                            %endif
-                            >
-                                ${render_float(cell_value)}
-                        </span>
+                        %if line_widget == 'boolean':
+                            <input type="checkbox" name="${cell_id}" id="${cell_id}" kind="boolean" class="checkbox" readonly="readonly" disabled="disabled" value="${cell_value and '1' or '0'}"
+                                %if cell_value:
+                                    checked="checked"
+                                %endif
+                            />
+                        %else:
+                            <span kind="float" value="${render_float(cell_value)}"
+                                %if not editable and cell_value <= 0.0:
+                                    class="zero"
+                                %endif
+                                %if not read_only:
+                                    id="${cell_id}"
+                                %endif
+                                >
+                                    ${render_float(cell_value)}
+                            </span>
+                        %endif
                     %endif
                 %endif
             </td>
@@ -206,7 +224,7 @@
     %endif
     %if level == len(resource_value_list):
         %for line in lines:
-            ${render_float_line(line, date_range, level)}
+            ${render_line(line, date_range, level)}
         %endfor
     %endif
 </%def>
@@ -403,63 +421,9 @@
                         </td>
                     %endfor
                 </tr>
-
-                %for line in [l for l in bottom_lines if l['widget'] != "boolean"]:
-                    ${render_float_line(line, date_range)}
+                %for line in bottom_lines:
+                    ${render_line(line, date_range)}
                 %endfor
-
-                %for line in [l for l in bottom_lines if l['widget'] == "boolean"]:
-                    <!-- TODO: merge with render_float_line() -->
-                    <tr id="${'%s_line_%s' % (name, line['id'])}" class="boolean_line">
-                        ${render_resources(line)}
-                        <td></td>
-                        %for date in date_range:
-                            <td class="boolean">
-                                <%
-                                    cell_id = '%s_cell_%s_%s' % (name, line['id'], date)
-                                    cell_value = line['cells_data'].get(date, None)
-                                %>
-                                %if cell_value is not None:
-                                    %if editable:
-                                        <input type="hidden" kind="boolean" name="${cell_id}" id="${cell_id}" value="${cell_value and '1' or '0'}"/>
-                                        <input type="checkbox" enabled="enabled" kind="boolean" class="checkbox" id="${cell_id}_checkbox_"
-                                            %if cell_value:
-                                                checked="checked"
-                                            %endif
-                                        />
-                                    %else:
-                                        <input type="checkbox" name="${cell_id}" id="${cell_id}" kind="boolean" class="checkbox" readonly="readonly" disabled="disabled" value="${cell_value and '1' or '0'}"
-                                            %if cell_value:
-                                                checked="checked"
-                                            %endif
-                                        />
-                                    %endif
-                                %endif
-                            </td>
-                        %endfor
-                        <%
-                            row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
-                        %>
-                        <td class="total"
-                            id="${name}_row_total_${line['id']}"
-                            %if not editable and row_total <= 0.0:
-                                class="zero"
-                            %endif
-                            >
-                            ${render_float(row_total)}
-                        </td>
-                        %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_columns'] if 'line_property' in c]:
-                            <td
-                                %if not editable and line_property_value <= 0.0:
-                                    class="zero"
-                                %endif
-                            >
-                                ${render_float(line_property_value)}
-                            </td>
-                        %endfor
-                    </tr>
-                %endfor
-
             </tfoot>
             <tbody>
                 <%
@@ -492,7 +456,7 @@
                 <%doc>
                     Render a template float line to help the interactive Javascript code render consistent stuff.
                 </%doc>
-                ${render_float_line(template_line, date_range, level=len(resource_value_list))}
+                ${render_line(template_line, date_range, level=len(resource_value_list))}
             </tbody>
         </table>
 
