@@ -119,6 +119,9 @@ class matrix(fields.dummy):
         additional_sum_columns = self.__dict__.get('additional_sum_columns', [])
         # Same as above, but for lines
         additional_line_property =  self.__dict__.get('additional_line_property', None)
+        # Columns and row totals are optionnal
+        hide_column_totals = self.__dict__.get('hide_column_totals', False)
+        hide_line_totals = self.__dict__.get('hide_line_totals', False)
         # Additional classes can be manually added
         css_classes = self.__dict__.get('css_classes', [])
         # Get the matrix title
@@ -245,6 +248,8 @@ class matrix(fields.dummy):
                 'resource_value_list': resource_value_list,
                 'column_date_label_format': date_format,
                 'additional_columns': additional_sum_columns,
+                'hide_column_totals': hide_column_totals,
+                'hide_line_totals': hide_line_totals,
                 'class': css_classes,
                 'title': title,
                 }

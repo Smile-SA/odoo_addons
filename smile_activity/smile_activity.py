@@ -77,6 +77,8 @@ class smile_activity_report(osv.osv):
                 {'label': "Productivity", 'line_property': "productivity_index"},
                 {'label': "Performance", 'line_property': "performance_index"},
                 ],
+            hide_column_totals = True,
+            hide_line_totals = True,
             title="Activity report lines 2",
             readonly=False,
             ),
