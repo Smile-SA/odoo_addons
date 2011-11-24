@@ -29,6 +29,7 @@ from dateutil.relativedelta import relativedelta
 from osv import fields, osv, orm
 import pooler
 import tools
+from tools.func import wraps
 from tools.translate import _
 
 from smile_log.db_handler import SmileDBLogger
@@ -776,7 +777,8 @@ def _get_args(method, args, kwargs):
     return obj, cr, uid, ids, field_name, context
 
 def sartre_decorator(original_method):
-    def sartre_trigger(*args, **kwargs):
+    @wraps(original_method)
+    def wrapper(*args, **kwargs):
         # Get arguments
         obj, cr, uid, ids, field_name, context = _get_args(original_method, args, kwargs)
         method_name = original_method.__name__
@@ -807,7 +809,7 @@ def sartre_decorator(original_method):
                 context['active_object_ids'] = [result]
             trigger_obj.run_now(cr, uid, trigger_ids, context=context)
         return result
-    return sartre_trigger
+    return wrapper
 
 for orm_method in [orm.orm.create, orm.orm.write, orm.orm.unlink, fields.function.get, fields.function.set]:
     if hasattr(orm_method.im_class, orm_method.__name__):
