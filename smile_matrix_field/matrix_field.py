@@ -346,11 +346,7 @@ def matrix_read_patch(func):
     """
     def read_matrix_virtual_fields(*arg, **kw):
         result = func(*arg, **kw)
-        obj = arg[0]
-        cr = arg[1]
-        uid = arg[2]
-        ids = arg[3]
-        fields = arg[4]
+        (obj, cr, uid, ids, fields) = arg[:5]
         context = kw.get('context', None)
         if isinstance(ids, (int, long)):
             result = [result]
@@ -392,11 +388,7 @@ def matrix_write_patch(func):
     """
     def write_matrix_virtual_fields(*arg, **kw):
         result = func(*arg, **kw)
-        obj = arg[0]
-        cr = arg[1]
-        uid = arg[2]
-        ids = arg[3]
-        vals = arg[4]
+        (obj, cr, uid, ids, vals) = arg[:5]
         context = kw.get('context', None)
         if isinstance(ids, (int, long)):
             ids = [ids]
