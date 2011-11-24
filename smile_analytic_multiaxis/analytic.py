@@ -24,16 +24,18 @@ import time
 
 from osv import osv, fields, orm
 import tools
+from tools.func import wraps
 from tools.translate import _
 
 def analytic_decorator(original_method):
-    def update_analytic_line(self, cr, *args, **kwargs):
+    @wraps(original_method)
+    def wrapper(self, cr, *args, **kwargs):
         res = original_method(self, cr, *args, **kwargs)        
         if isinstance(self, osv.osv_pool) and self.get('account.analytic.axis') \
         and hasattr(self.get('account.analytic.axis'), '_update_analytic_line_columns'):
             self.get('account.analytic.axis')._update_analytic_line_columns(cr)
         return res
-    return update_analytic_line
+    return wrapper
 
 class AnalyticAxis(osv.osv):
     _name = 'account.analytic.axis'
@@ -161,7 +163,7 @@ class AnalyticDistribution(osv.osv):
 #    - uid
 #    - ids
 #    - date
-# You must return a dictionary, assign: result = {axis_src_item_id: {axis_dest_item_id: rate}}
+# You must return a dictionary, assign: result = {axis_src_item_id: {axis_dest_item_id: {'rate': rate, 'audit': 'dist%s' % distribution_id}}
 """,
     }
 
@@ -199,8 +201,11 @@ class AnalyticDistribution(osv.osv):
         if res_ids:
             key_domain.append(('axis_src_item_id', 'in', res_ids))
         key_ids = key_obj.search(cr, uid, key_domain, context=context)
-        for key in key_obj.browse(cr, uid, key_ids, context):
-            res.setdefault(key['axis_src_item_id'], {}).update({key['axis_dest_item_id']: key['rate']})
+        for key in key_obj.read(cr, uid, key_ids, ['axis_src_item_id', 'axis_dest_item_id', 'rate'], context):
+            res.setdefault(key['axis_src_item_id'], {}).update({key['axis_dest_item_id']: {
+                'rate': key['rate'],
+                'audit': 'dist%s_key%s' % (distribution_id, key['id']),
+            }})
         return res
 
     def _get_dynamic_distribution(self, cr, uid, distribution_id, date, res_ids, context):
@@ -244,13 +249,15 @@ class AnalyticDistribution(osv.osv):
         else:# elif distribution_keys:
             axis_src_item_id = line_vals.get(column_src)
             for axis_dest_item_id in distribution_keys.get(axis_src_item_id, []):
-                rate = distribution_keys[axis_src_item_id][axis_dest_item_id] / 100
+                rate = distribution_keys[axis_src_item_id][axis_dest_item_id]['rate'] / 100
+                audit = distribution_keys[axis_src_item_id][axis_dest_item_id]['audit']
                 new_vals = dict(line_vals)
                 new_vals.update({
                     column_dest: axis_dest_item_id,
                     'amount': line_vals.get('amount', 0.0) * rate,
                     'unit_amount': line_vals.get('unit_amount', 0.0) * rate,
                     'amount_currency': line_vals.get('amount_currency', 0.0) * rate,
+                    'audit': (line_vals.get('audit', '') and line_vals['audit'] + ',') + audit,
                 })
                 res.append(new_vals)
         return res
@@ -444,6 +451,11 @@ class AnalyticLine(osv.osv):
         if self._columns.has_key('account_id'):
             self._columns['account_id'].required = False
 
+    _columns = {
+        'audit': fields.text('Audit', readonly=True),
+        'audit_ref': fields.char('Audit Ref', size=12, readonly=True),
+    }
+
     def _distribute(self, cr, uid, vals, context=None):
         res = [vals]
         if vals.get('journal_id'):
@@ -462,7 +474,9 @@ class AnalyticLine(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         res_ids = []
+        audit_ref = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.line.audit')
         for new_vals in self._distribute(cr, uid, vals, context):
+            new_vals['audit_ref'] = audit_ref
             res_ids.append(super(AnalyticLine, self).create(cr, uid, new_vals, context))
         return res_ids[0]
 AnalyticLine()

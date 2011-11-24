@@ -32,6 +32,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "init_xml" : [
         'security/ir.model.access.csv',
+        'data/analytic_sequence.xml',
     ],
     "update_xml": [
         'analytic_view.xml',
