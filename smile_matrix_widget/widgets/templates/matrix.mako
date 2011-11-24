@@ -42,14 +42,18 @@
     <%
         read_only = line.get('read_only', False)
     %>
-    <tr id="${'%s_line_%s' % (name, line['id'])}" class="level level_${level}
+    <tr class="level level_${level}
         %if line['id'] == 'template':
             template
         %endif
         %if read_only:
             read_only
         %endif
-        ">
+        "
+        %if not read_only:
+            id="${'%s_line_%s' % (name, line['id'])}"
+        %endif
+        >
         ${render_resources(line)}
         <td class="delete_line">
             %if editable and not read_only and not line.get('required', False):
@@ -66,9 +70,12 @@
                     %if editable and not read_only:
                         <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${render_float(cell_value)}" size="1" class="${line['widget']}"/>
                     %else:
-                        <span kind="float" id="${cell_id}" value="${render_float(cell_value)}"
+                        <span kind="float" value="${render_float(cell_value)}"
                             %if not editable and cell_value <= 0.0:
                                 class="zero"
+                            %endif
+                            %if not read_only:
+                                id="${cell_id}"
                             %endif
                             >
                                 ${render_float(cell_value)}
@@ -80,11 +87,15 @@
         <%
             row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
         %>
-        <td id="${name}_row_total_${line['id']}" class="total
+        <td class="total
             %if not editable and row_total <= 0.0:
                 zero
             %endif
-            ">
+            "
+            %if not read_only:
+                id="${name}_row_total_${line['id']}"
+            %endif
+            >
             ${render_float(row_total)}
         </td>
         %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_columns'] if 'line_property' in c]:
@@ -242,10 +253,11 @@
                 min-width: inherit;
             }
 
-            div.non-editable .matrix table td {
+            div.non-editable .matrix table td,
+            .matrix table thead th {
                 border: 0;
             }
-s
+
 
             /* Set our style */
 
@@ -261,22 +273,25 @@ s
                 color: #ccc;
             }
 
-            .matrix .warning {
-                background: #f00;
-                color: #fff;
-            }
-
             .matrix .template {
                 display: none;
             }
 
             .matrix .total,
-            .matrix .total td {
+            .matrix .total td,
+            .matrix th {
                 font-weight: bold;
+                background-color: #ddd;
+            }
+
+            .matrix td.warning {
+                background: #f00;
+                color: #fff;
             }
 
             .matrix table {
                 text-align: center;
+                margin-top: 1em;
                 margin-bottom: 1em;
             }
 
@@ -301,7 +316,11 @@ s
                 min-width: 2em;
                 margin: 0;
                 padding: 0 .1em;
-                border-bottom: 1px solid #ccc;
+                border-top: 1px solid #ccc;
+            }
+
+            .matrix tr.level_1 td, div.non-editable .matrix table tr.level_1 td {
+                border-top-width: 2px;
             }
 
             %for i in range(1, len(resource_value_list)):
