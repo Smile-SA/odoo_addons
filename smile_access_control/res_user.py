@@ -49,9 +49,9 @@ class ResUser(osv.osv):
 
     def _get_user_vals_from_profile(self, cr, uid, user_profile_id, context=None):
         vals = {}
-        user_profile = self.read(cr, uid, user_profile_id, context=context)
-        for field in user_profile['field_ids']:
-            vals[field] = user_profile[field]
+        user_profile = self.browse(cr, uid, user_profile_id, context)
+        for field in user_profile.field_ids:
+            vals[field.name] = user_profile[field.name]
         return vals
 
     def create(self, cr, uid, vals, context=None):
