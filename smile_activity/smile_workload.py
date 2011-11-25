@@ -73,7 +73,6 @@ class smile_activity_workload(osv.osv):
                 ],
             additional_line_property='additional_line_ids',
             column_totals_warning_threshold=None,
-            frozen_tree=True,
             css_classes=['workload'],
             title="Workload lines",
             experimental_slider=True,
@@ -195,7 +194,7 @@ class smile_activity_workload_cell(osv.osv):
         return True
 
     _constraints = [
-        (_check_quantity, "Quantity can't be negative.", ['quantity']),
+        #(_check_quantity, "Quantity can't be negative.", ['quantity']),
         (_check_date, "Cell date is out of the activity report date range.", ['date']),
         (_check_duplicate, "Two cells can't share the same date.", ['date']),
         ]
