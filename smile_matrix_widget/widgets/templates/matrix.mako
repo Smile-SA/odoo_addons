@@ -282,7 +282,6 @@
 
             .item .matrix input,
             .item .matrix select {
-                width: inherit;
                 min-width: inherit;
             }
 
