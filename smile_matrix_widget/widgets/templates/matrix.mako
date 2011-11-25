@@ -14,6 +14,26 @@
 </%def>
 
 
+<%def name="render_float_cell(float_value, cell_id=None, css_classes=[])">
+    <td
+        %if cell_id:
+            id="${cell_id}"
+        %endif
+        class="${' '.join(css_classes)}
+        %if not editable:
+            %if float_value == 0.0:
+                zero
+            %elif float_value < 0.0:
+                negative
+            %endif
+        %endif
+        "
+    >
+        ${render_float(float_value)}
+    </td>
+</%def>
+
+
 <%def name="render_resources(line)">
     <%
         read_only = line.get('read_only', False)
@@ -109,35 +129,12 @@
         %if not hide_line_totals:
             <%
                 row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
+                row_total_cell_id = not read_only and "%s_row_total_%s" % (name, line['id']) or None
             %>
-            <td class="total
-                %if not editable:
-                    %if row_total == 0.0:
-                        zero
-                    %elif row_total < 0.0:
-                        negative
-                    %endif
-                %endif
-                "
-                %if not read_only:
-                    id="${name}_row_total_${line['id']}"
-                %endif
-                >
-                ${render_float(row_total)}
-            </td>
+            ${render_float_cell(row_total, cell_id=row_total_cell_id, css_classes=['total'])}
         %endif
         %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_sum_columns'] if 'line_property' in c]:
-            <td
-                %if not editable:
-                    %if line_property_value == 0.0:
-                        class="zero"
-                    %elif line_property_value < 0.0:
-                        class="negative"
-                    %endif
-                %endif
-            >
-                ${render_float(line_property_value)}
-            </td>
+            ${render_float_cell(line_property_value)}
         %endfor
     </tr>
 </%def>
@@ -190,33 +187,13 @@
                     row_total += [v for (k, v) in line.get('cells_data', dict()).items()]
                 row_total = sum(row_total)
             %>
-            <td id="${name}_row_total_${virtual_line['id']}" class="total
-                %if not editable:
-                    %if row_total == 0.0:
-                        zero
-                    %elif row_total < 0.0:
-                        negative
-                    %endif
-                %endif
-                ">
-                ${render_float(row_total)}
-            </td>
+            ${render_float_cell(row_total, cell_id="%s_row_total_%s" % (name, virtual_line['id']), css_classes=['total'])}
         %endif
         %for line_property in [c['line_property'] for c in value['additional_sum_columns'] if 'line_property' in c]:
             <%
                 additional_sum = sum([line.get(line_property, 0.0) for line in sub_lines])
             %>
-            <td
-                %if not editable:
-                    %if additional_sum == 0.0:
-                        class="zero"
-                    %elif additional_sum < 0.0:
-                        class="negative"
-                    %endif
-                %endif
-            >
-                ${render_float(additional_sum)}
-            </td>
+            ${render_float_cell(additional_sum)}
         %endfor
     </tr>
 </%def>
@@ -275,15 +252,16 @@
 
             # Extract some basic information
             lines = value.get('matrix_data', [])
-            top_lines = [l for l in lines if l.get('position', 'body') == 'top']
+            top_lines    = [l for l in lines if l.get('position', 'body') == 'top']
             bottom_lines = [l for l in lines if l.get('position', 'body') == 'bottom']
-            body_lines = [l for l in lines if l.get('position', 'body') not in ['top', 'bottom']]
-            resource_value_list = value.get('resource_value_list', [])
+            body_lines   = [l for l in lines if l.get('position', 'body') not in ['top', 'bottom']]
+
+            resource_value_list = value['resource_value_list']
             date_range = value['date_range']
-            date_format = value.get('date_format', '%Y-%m-%d')
-            hide_line_title = value['hide_line_title'] and True or False
-            hide_column_totals = value['hide_column_totals'] and True or False
-            hide_line_totals = value['hide_line_totals'] and True or False
+            date_format = value['date_format']
+            hide_line_title = value['hide_line_title']
+            hide_column_totals = value['hide_column_totals']
+            hide_line_totals = value['hide_line_totals']
             column_totals_warning_threshold = value['column_totals_warning_threshold']
             editable_tree = value['editable_tree']
             hide_tree = value['hide_tree']
@@ -455,56 +433,26 @@
                             %if len(column_values):
                                 <%
                                     column_total = sum(column_values)
+                                    column_total_css_classes = []
+                                    if column_totals_warning_threshold is not None and column_total > column_totals_warning_threshold:
+                                        column_total_css_classes.append('warning')
                                 %>
-                                <td id="${name}_column_total_${date}" class="
-                                    %if not editable:
-                                        %if column_total == 0.0:
-                                            zero
-                                        %elif column_total < 0.0:
-                                            negative
-                                        %endif
-                                    %endif
-                                    %if column_totals_warning_threshold is not None and column_total > column_totals_warning_threshold:
-                                        warning
-                                    %endif
-                                    ">
-                                    ${render_float(column_total)}
+                                ${render_float_cell(column_total, cell_id="%s_column_total_%s" % (name, date), css_classes=column_total_css_classes)}
                             %else:
-                                <td>
+                                <td></td>
                             %endif
-                            </td>
                         %endfor
                         %if not hide_line_totals:
                             <%
                                 grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in body_lines])
                             %>
-                            <td id="${name}_grand_total"
-                                %if not editable:
-                                    %if grand_total == 0.0:
-                                        class="zero"
-                                    %elif grand_total < 0.0:
-                                        class="negative"
-                                    %endif
-                                %endif
-                                >
-                                ${render_float(grand_total)}
-                            </td>
+                            ${render_float_cell(grand_total, cell_id="%s_grand_total" % name)}
                         %endif
                         %for line_property in [c['line_property'] for c in value['additional_sum_columns'] if 'line_property' in c]:
                             <%
                                 additional_sum = sum([line.get(line_property, 0.0) for line in body_lines])
                             %>
-                            <td class="total
-                                %if not editable:
-                                    %if additional_sum == 0.0:
-                                        zero
-                                    %elif additional_sum < 0.0:
-                                        negative
-                                    %endif
-                                %endif
-                            ">
-                                ${render_float(additional_sum)}
-                            </td>
+                            ${render_float_cell(additional_sum, css_classes=['total'])}
                         %endfor
                     </tr>
                 %endif
