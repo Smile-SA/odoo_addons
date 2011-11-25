@@ -16,7 +16,7 @@
                     <field name="active"/>
                     <field name="domain"/>
                     <field name="required"/>
-                    <field name="field_ids" colspan="4"/>
+                    <field name="field_ids" colspan="4" domain="[('model_id', '=', model_id)]"/>
                 </form>
             </field>
         </record>
