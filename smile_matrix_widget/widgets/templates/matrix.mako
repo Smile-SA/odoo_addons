@@ -351,6 +351,11 @@
                 border-top: 1px solid #ccc;
             }
 
+            .matrix th, div.non-editable .matrix table th {
+                padding-right: .3em;
+                padding-left: .3em;
+            }
+
             .matrix table,
             .matrix table tfoot .total td {
                 border-bottom: 1px solid #ccc;
