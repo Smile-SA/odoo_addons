@@ -356,6 +356,11 @@
                 padding-left: .3em;
             }
 
+            .matrix th.resource, div.non-editable .matrix table th.resource {
+                padding-right: .1em;
+                padding-left: .1em;
+            }
+
             .matrix table,
             .matrix table tfoot .total td {
                 border-bottom: 1px solid #ccc;
