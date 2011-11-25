@@ -508,9 +508,9 @@ def matrix_write_patch(func):
                         # Update cell with our data or delete it if it's out of range
                         else:
                             if cell_date not in active_date_range:
-                                obj.pool.get(conf['cell_type']).unlink(cr, uid, cell_id, context)
+                                obj.pool.get(conf['cell_type']).unlink(cr, uid, cell, context)
                             else:
-                                obj.pool.get(conf['cell_type']).write(cr, uid, cell_id, cell_vals, context)
+                                obj.pool.get(conf['cell_type']).write(cr, uid, cell, cell_vals, context)
 
         # If there was no references to one of our line it means it was deleted
         for report in obj.browse(cr, uid, ids, context):
