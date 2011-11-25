@@ -36,6 +36,7 @@ def _get_prop(obj, prop_name, default_value=None):
     return prop_value
 
 
+
 def _get_date_range(base_object, date_range_property, active_date_range_property):
     """ Utility method to get the displayed date range and the active date range.
         This piece of code was moved in its own method as date range extraction requires some special handling.
@@ -62,6 +63,115 @@ def _get_date_range(base_object, date_range_property, active_date_range_property
                 raise osv.except_osv('Error !', "%s must return a list of dates." % range_name)
 
     return (date_range, active_date_range)
+
+
+
+def _get_matrix_fields(osv_instance):
+    """ Utility method to get all matrix fields defined on the class the provided object is an instance of.
+    """
+    field_defs = osv_instance.__dict__['_columns']
+    matrix_fields = dict([(f_id, f) for (f_id, f) in field_defs.items() if f.__dict__.get('_fnct', None) and getattr(f.__dict__['_fnct'], 'im_class', None) and f.__dict__['_fnct'].im_class.__module__ == globals()['__name__']])
+    if not len(matrix_fields):
+        return None
+    return matrix_fields
+
+
+
+def _get_conf(o, matrix_id=None):
+    """ Utility method to get the matrix configuration from itself or from any other place.
+        The returned configuration is normalized and parsed.
+    """
+    # Get the matrix field
+    matrix_field = o
+    if not isinstance(o, matrix):
+        matrix_fields = _get_matrix_field(o)
+        if matrix_id not in matrix_fields:
+            raise osv.except_osv('Error !', "%r matrix field not found on %r." % (matrix_id, o))
+        matrix_field = matrix_fields[matrix_id]
+
+    conf = {
+        # TODO: guess line_type, cell_type and resource_type based on their xxx_property parameter counterparts
+        # XXX Haven't found a cleaner way to get my matrix parameters... Any help is welcome ! :)
+        # Property name from which we get the lines composing the matrix
+        'line_property': matrix_field.__dict__.get('line_property', None),
+        'line_type': matrix_field.__dict__.get('line_type', None),
+        'line_inverse_property': matrix_field.__dict__.get('line_inverse_property', None),
+
+        # Get line properties from which we derive the matrix resources
+        'line_tree_property_list': matrix_field.__dict__.get('line_tree_property_list', None),
+        'default_widget_type': matrix_field.__dict__.get('default_widget_type', 'float'),
+        'dynamic_widget_type_property': matrix_field.__dict__.get('dynamic_widget_type_property', None),
+
+        # Property name from which we get the cells composing the matrix.
+        # Cells are fetched from the lines as defined above.
+        'cell_property': matrix_field.__dict__.get('cell_property', None),
+        'cell_type': matrix_field.__dict__.get('cell_type', None),
+        'cell_inverse_property': matrix_field.__dict__.get('cell_inverse_property', None),
+        'cell_value_property': matrix_field.__dict__.get('cell_value_property', None),
+        'cell_date_property': matrix_field.__dict__.get('cell_date_property', None),
+        'default_cell_value': matrix_field.__dict__.get('default_cell_value', 0.0),
+
+        # Property name of the relation field on which we'll call the date_range property
+        'date_range_property': matrix_field.__dict__.get('date_range_property', None),
+        'active_date_range_property': matrix_field.__dict__.get('active_date_range_property', None),
+
+        # The format we use to display date labels
+        'date_format': matrix_field.__dict__.get('date_format', "%Y-%m-%d"),
+
+        # We can add read-only columns at the end of the matrix
+        'additional_sum_columns': matrix_field.__dict__.get('additional_sum_columns', []),
+
+        # Same as above, but for lines
+        'additional_line_property':  matrix_field.__dict__.get('additional_line_property', None),
+
+        # If set to true, hide the first column of the table.
+        'hide_line_title': matrix_field.__dict__.get('hide_line_title', False),
+
+        # Columns and row totals are optionnal
+        'hide_column_totals': matrix_field.__dict__.get('hide_column_totals', False),
+        'hide_line_totals': matrix_field.__dict__.get('hide_line_totals', False),
+
+        # Set the threshold above which we set a column total in red. Set to None to desactivate the warning threshold.
+        'column_totals_warning_threshold': matrix_field.__dict__.get('column_totals_warning_threshold', None),
+
+        # If set to True this option will hide all tree-level add-line selectors.
+        'editable_tree': not matrix_field.__dict__.get('non_editable_tree', False),
+
+        # If set to True this option will hide all tree-level add-line selectors.
+        'hide_tree': matrix_field.__dict__.get('hide_tree', False),
+
+        # Additional classes can be manually added
+        'css_classes': matrix_field.__dict__.get('css_classes', []),
+
+        # TODO
+        'experimental_slider': matrix_field.__dict__.get('experimental_slider', False),
+
+        # Get the matrix title
+        'title': matrix_field.__dict__.get('title', "Lines"),
+        }
+
+    # Check that all required parameters are there
+    for p_name in ['line_property', 'line_type', 'line_inverse_property', 'line_tree_property_list', 'cell_property', 'cell_type', 'cell_inverse_property', 'cell_value_property', 'cell_date_property']:
+        if not conf.get(p_name, None):
+            raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
+
+    # line_tree_property_list required at least one parameter
+    if type(conf['line_tree_property_list']) != type([]) or len(conf['line_tree_property_list']) < 1:
+        raise osv.except_osv('Error !', "line_tree_property_list parameter must be a list with at least one element.")
+
+    # Normalize parameters
+    if conf['hide_tree']:
+        conf['editable_tree'] = False
+    if conf['experimental_slider']:
+        conf['css_classes'] += ['slider']
+
+    return conf
+
+
+
+def _get_matrix_fields_conf(obj):
+    return dict([(matrix_id, _get_conf(matrix)) for (matrix_id, matrix) in _get_matrix_fields(obj).items()])
+
 
 
 class matrix(fields.dummy):
@@ -91,58 +201,7 @@ class matrix(fields.dummy):
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
         """
-        # Get the matrix parameters
-        # TODO: guess line_type, cell_type and resource_type based on their xxx_property parameter counterparts
-        # XXX Haven't found a cleaner way to get my matrix parameters... Any help is welcome ! :)
-        # Property name from which we get the lines composing the matrix
-        line_property = self.__dict__.get('line_property', None)
-        line_type = self.__dict__.get('line_type', None)
-        line_inverse_property = self.__dict__.get('line_inverse_property', None)
-        # Get line properties from which we derive the matrix resources
-        line_tree_property_list = self.__dict__.get('line_tree_property_list', None)
-        default_widget_type = self.__dict__.get('default_widget_type', 'float')
-        dynamic_widget_type_property = self.__dict__.get('dynamic_widget_type_property', None)
-        # Property name from which we get the cells composing the matrix.
-        # Cells are fetched from the lines as defined above.
-        cell_property = self.__dict__.get('cell_property', None)
-        cell_type = self.__dict__.get('cell_type', None)
-        cell_inverse_property = self.__dict__.get('cell_inverse_property', None)
-        cell_value_property = self.__dict__.get('cell_value_property', None)
-        cell_date_property = self.__dict__.get('cell_date_property', None)
-        default_cell_value = self.__dict__.get('default_cell_value', 0.0)
-        # Property name of the relation field on which we'll call the date_range property
-        date_range_property = self.__dict__.get('date_range_property', None)
-        active_date_range_property = self.__dict__.get('active_date_range_property', None)
-        # The format we use to display date labels
-        date_format = self.__dict__.get('date_format', "%Y-%m-%d")
-        # We can add read-only columns at the end of the matrix
-        additional_sum_columns = self.__dict__.get('additional_sum_columns', [])
-        # Same as above, but for lines
-        additional_line_property =  self.__dict__.get('additional_line_property', None)
-        # If set to true, hide the first column of the table.
-        hide_line_title = self.__dict__.get('hide_line_title', False)
-        # Columns and row totals are optionnal
-        hide_column_totals = self.__dict__.get('hide_column_totals', False)
-        hide_line_totals = self.__dict__.get('hide_line_totals', False)
-        # Set the threshold above which we set a column total in red. Set to None to desactivate the warning threshold.
-        column_totals_warning_threshold = self.__dict__.get('column_totals_warning_threshold', None)
-        # If set to True this option will hide all tree-level add-line selectors.
-        editable_tree = not self.__dict__.get('non_editable_tree', False)
-        # If set to True this option will hide all tree-level add-line selectors.
-        hide_tree = self.__dict__.get('hide_tree', False)
-        # Additional classes can be manually added
-        css_classes = self.__dict__.get('css_classes', [])
-        # Get the matrix title
-        title = self.__dict__.get('title', "Lines")
-
-        # Check that all required parameters are there
-        for p_name in ['line_property', 'line_type', 'line_inverse_property', 'line_tree_property_list', 'cell_property', 'cell_type', 'cell_inverse_property', 'cell_value_property', 'cell_date_property']:
-            if not p_name:
-                raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
-
-        # line_tree_property_list required at least one parameter
-        if type(line_tree_property_list) != type([]) or len(line_tree_property_list) < 1:
-            raise osv.except_osv('Error !', "line_tree_property_list parameter must be a list with at least one element.")
+        conf = _get_conf(self)
 
         # Browse through all objects on which our matrix field is defined
         matrix_list = {}
@@ -150,12 +209,12 @@ class matrix(fields.dummy):
             matrix_data = []
 
             # Get our date ranges
-            (date_range, active_date_range) = _get_date_range(base_object, date_range_property, active_date_range_property)
+            (date_range, active_date_range) = _get_date_range(base_object, conf['date_range_property'], conf['active_date_range_property'])
 
             # Get the list of all objects new rows of the matrix can be linked to
             # Keep the original order defined in matrix properties
             resource_value_list = []
-            for (res_id, res_type) in line_tree_property_list:
+            for (res_id, res_type) in conf['line_tree_property_list']:
                 p = base_object.pool.get(res_type)
                 resource_value_list.append({
                     'id': res_id,
@@ -163,21 +222,21 @@ class matrix(fields.dummy):
                     })
 
             # Browse all lines that will compose our the main part of the matrix
-            lines = [(line, 'body') for line in _get_prop(base_object, line_property, [])]
+            lines = [(line, 'body') for line in _get_prop(base_object, conf['line_property'], [])]
             # Add bottom lines if provided
-            if additional_line_property:
-                lines += [(line, 'bottom') for line in _get_prop(base_object, additional_line_property, [])]
+            if conf['additional_line_property']:
+                lines += [(line, 'bottom') for line in _get_prop(base_object, conf['additional_line_property'], [])]
             for (line, line_position) in lines:
                 # Transfer some line data to the matrix widget
                 line_data = {
                     'id': line.id,
                     'name': self._get_title_or_id(line),
                     # Is this resource required ?
-                    # FIX: 'required': getattr(getattr(line, line_resource_property), 'required', False),
+                    # FIX: 'required': getattr(getattr(line, conf['line_resource_property']), 'required', False),
                     }
 
                 # Get the type of the widget we'll use to display cell values
-                line_widget = _get_prop(line, dynamic_widget_type_property, default_widget_type)
+                line_widget = _get_prop(line, conf['dynamic_widget_type_property'], conf['default_widget_type'])
                 # In case if boolean widget, force the position to bottom
                 if line_widget == 'boolean':
                     line_position = 'bottom'
@@ -194,7 +253,7 @@ class matrix(fields.dummy):
                 # Get all resources of the line
                 # Keep the order defined by matrix field's properties
                 res_list = []
-                for (res_id, res_type) in line_tree_property_list:
+                for (res_id, res_type) in conf['line_tree_property_list']:
                     res = _get_prop(line, res_id)
                     res_list.append({
                         'id': res_id,
@@ -204,25 +263,25 @@ class matrix(fields.dummy):
                 line_data.update({'resources': res_list})
 
                 # Get all cells of the line, indexed by their IDs
-                cells = dict([(cell.id, cell) for cell in _get_prop(line, cell_property, [])])
+                cells = dict([(cell.id, cell) for cell in _get_prop(line, conf['cell_property'], [])])
                 # Provide to the matrix a cell for each active date in the range
                 cells_data = {}
                 for d in active_date_range:
                     # Find a cell corresponding to the date in the date_range
-                    cell_value = default_cell_value
+                    cell_value = conf['default_cell_value']
                     for (cell_id, cell) in cells.items():
-                        cell_date = datetime.datetime.strptime(_get_prop(cell, cell_date_property), '%Y-%m-%d').date()
+                        cell_date = datetime.datetime.strptime(_get_prop(cell, conf['cell_date_property']), '%Y-%m-%d').date()
                         if cell_date == d:
                             cells.pop(cell_id)
-                            cell_value = _get_prop(cell, cell_value_property, default_cell_value)
+                            cell_value = _get_prop(cell, conf['cell_value_property'], conf['default_cell_value'])
                             break
                     cells_data[d.strftime('%Y%m%d')] = cell_value
                 line_data.update({'cells_data': cells_data})
                 # Remove all out of date and duplicate cells
-                obj.pool.get(cell_type).unlink(cr, uid, cells.keys(), context)
+                obj.pool.get(conf['cell_type']).unlink(cr, uid, cells.keys(), context)
 
                 # Get data of additional columns
-                for line_property in [c['line_property'] for c in additional_sum_columns if 'line_property' in c]:
+                for line_property in [c['line_property'] for c in conf['additional_sum_columns'] if 'line_property' in c]:
                     if line_property in line_data:
                         raise osv.except_osv('Error !', "line property %s conflicts with matrix line definition." % line_property)
                     v = _get_prop(line, line_property)
@@ -234,60 +293,31 @@ class matrix(fields.dummy):
 
             # Get default cells and their values for the template row.
             template_cells_data = {}
-            template_cells_data = dict([(self._date_to_str(d), default_cell_value) for d in active_date_range])
+            template_cells_data = dict([(self._date_to_str(d), conf['default_cell_value']) for d in active_date_range])
             template_resources = [{
                     'id': res_id,
                     'label': res_id.replace('_', ' ').title(),
                     'value': 0,
-                    } for (res_id, res_type) in line_tree_property_list]
+                    } for (res_id, res_type) in conf['line_tree_property_list']]
             # Add a row template at the end
             matrix_data.append({
                 'id': "template",
                 'name': "Row template",
-                'widget': default_widget_type,
+                'widget': conf['default_widget_type'],
                 'cells_data': template_cells_data,
-                'resources': template_resources,
+                'resources':template_resources,
                 })
 
-            if hide_tree:
-                editable_tree = False
-
             # Pack all data required to render the matrix
-            matrix_def = {
+            matrix_def = conf
+            matrix_def.update({
                 'matrix_data': matrix_data,
                 'date_range': [self._date_to_str(d) for d in date_range],  # Format our date range for our matrix # XXX Keep them as date objects ?
                 'resource_value_list': resource_value_list,
-                'column_date_label_format': date_format,
-                'additional_columns': additional_sum_columns,
-                'hide_line_title': hide_line_title,
-                'hide_column_totals': hide_column_totals,
-                'hide_line_totals': hide_line_totals,
-                'column_warning_threshold': column_totals_warning_threshold,
-                'editable_tree': editable_tree,
-                'hide_tree': hide_tree,
-                'class': css_classes,
-                'title': title,
-                }
-
-            if self.__dict__.get('experimental_slider', False):
-                matrix_def['class'] = matrix_def['class'] + ['slider']
+                })
 
             matrix_list.update({base_object.id: matrix_def})
         return matrix_list
-
-
-
-def get_matrix_conf(osv_instance, matrix_id=None):
-    """ Utility method to get the configuration of the matrix field defined on the class the provided object is an instance of.
-        XXX only one matrix field is allowed per object class.
-    """
-    field_defs = osv_instance.__dict__['_columns']
-    matrix_fields = dict([(f_id, f.__dict__) for (f_id, f) in field_defs.items() if f.__dict__.get('_fnct', None) and getattr(f.__dict__['_fnct'], 'im_class', None) and f.__dict__['_fnct'].im_class.__module__ == globals()['__name__']])
-    if not len(matrix_fields):
-        return None
-    if matrix_id:
-        return matrix_fields.get(matrix_id, None)
-    return matrix_fields
 
 
 
@@ -373,7 +403,7 @@ def matrix_read_patch(func):
         updated_result = []
         for props in result:
             unread_fields = set(fields).difference(set(props.keys()))
-            for (matrix_id, conf) in get_matrix_conf(obj).items():
+            for (matrix_id, conf) in _get_matrix_fields_conf(obj).items():
                 cell_pool = obj.pool.get(conf['cell_type'])
                 line_pool = obj.pool.get(conf['line_type'])
                 for f_id in unread_fields:
@@ -417,10 +447,10 @@ def matrix_write_patch(func):
         for report in obj.browse(cr, uid, ids, context):
 
             # Write one matrix at a time
-            for (matrix_id, conf) in get_matrix_conf(obj).items():
+            for (matrix_id, conf) in _get_matrix_fields_conf(obj).items():
 
                 # Get our date ranges
-                (date_range, active_date_range) = _get_date_range(report, conf['date_range_property'], conf.get('active_date_range_property', None))
+                (date_range, active_date_range) = _get_date_range(report, conf['date_range_property'], conf['active_date_range_property'])
 
                 # Regroup fields by lines
                 lines = {}
@@ -462,7 +492,7 @@ def matrix_write_patch(func):
                         try:
                             cell_value = float(cell_value)
                         except ValueError:
-                            cell_value = conf.get('default_cell_value', 0.0)
+                            cell_value = conf['default_cell_value']
                         cell_vals = {
                             conf['cell_value_property']: cell_value,
                             }
@@ -477,9 +507,8 @@ def matrix_write_patch(func):
                             obj.pool.get(conf['cell_type']).create(cr, uid, cell_vals, context)
                         # Update cell with our data or delete it if it's out of range
                         else:
-                            cell_id = cell[0]
                             if cell_date not in active_date_range:
-                                obj.pool.get(conf['cell_type']).unlink(cr, uid, [cell_id], context)
+                                obj.pool.get(conf['cell_type']).unlink(cr, uid, cell_id, context)
                             else:
                                 obj.pool.get(conf['cell_type']).write(cr, uid, cell_id, cell_vals, context)
 

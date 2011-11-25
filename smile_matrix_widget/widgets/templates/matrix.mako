@@ -126,7 +126,7 @@
                 ${render_float(row_total)}
             </td>
         %endif
-        %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_columns'] if 'line_property' in c]:
+        %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_sum_columns'] if 'line_property' in c]:
             <td
                 %if not editable:
                     %if line_property_value == 0.0:
@@ -202,7 +202,7 @@
                 ${render_float(row_total)}
             </td>
         %endif
-        %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
+        %for line_property in [c['line_property'] for c in value['additional_sum_columns'] if 'line_property' in c]:
             <%
                 additional_sum = sum([line.get(line_property, 0.0) for line in sub_lines])
             %>
@@ -261,7 +261,7 @@
 <%
     css_classes = ''
     if value is not None:
-        css_classes = ' '.join(value.get('class', []))
+        css_classes = ' '.join(value.get('css_classes', []))
 %>
 
 
@@ -280,11 +280,11 @@
             body_lines = [l for l in lines if l.get('position', 'body') not in ['top', 'bottom']]
             resource_value_list = value.get('resource_value_list', [])
             date_range = value['date_range']
-            column_date_label_format = value.get('column_date_label_format', '%Y-%m-%d')
+            date_format = value.get('date_format', '%Y-%m-%d')
             hide_line_title = value['hide_line_title'] and True or False
             hide_column_totals = value['hide_column_totals'] and True or False
             hide_line_totals = value['hide_line_totals'] and True or False
-            column_warning_threshold = value['column_warning_threshold']
+            column_totals_warning_threshold = value['column_totals_warning_threshold']
             editable_tree = value['editable_tree']
             hide_tree = value['hide_tree']
         %>
@@ -421,8 +421,8 @@
                 <span id="matrix_button_template" class="button increment template">
                     Button template
                 </span>
-                %if column_warning_threshold is not None:
-                    <input type="hidden" id="${"%s_column_warning_threshold" % name}" value="${column_warning_threshold}" title="Column warning threshold"/>
+                %if column_totals_warning_threshold is not None:
+                    <input type="hidden" id="${"%s_column_warning_threshold" % name}" value="${column_totals_warning_threshold}" title="Column warning threshold"/>
                 %endif
             </div>
         %endif
@@ -433,12 +433,12 @@
                     <th class="resource">${value['title']}</th>
                     <th></th>
                     %for date in date_range:
-                        <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(column_date_label_format)}</th>
+                        <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(date_format)}</th>
                     %endfor
                     %if not hide_line_totals:
                         <th class="total">Total</th>
                     %endif
-                    %for (i, c) in enumerate(value['additional_columns']):
+                    %for (i, c) in enumerate(value['additional_sum_columns']):
                         <th>${c.get('label', "Additional column %s" % i)}</th>
                     %endfor
                 </tr>
@@ -464,7 +464,7 @@
                                             negative
                                         %endif
                                     %endif
-                                    %if column_warning_threshold is not None and column_total > column_warning_threshold:
+                                    %if column_totals_warning_threshold is not None and column_total > column_totals_warning_threshold:
                                         warning
                                     %endif
                                     ">
@@ -490,7 +490,7 @@
                                 ${render_float(grand_total)}
                             </td>
                         %endif
-                        %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
+                        %for line_property in [c['line_property'] for c in value['additional_sum_columns'] if 'line_property' in c]:
                             <%
                                 additional_sum = sum([line.get(line_property, 0.0) for line in body_lines])
                             %>
