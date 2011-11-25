@@ -120,7 +120,13 @@ class AnalyticPeriod(osv.osv):
                 ids = [ids]
             for period in self.read(cr, uid, ids, ['date_stop'], context):
                 if self.search(cr, uid, [('date_stop', '<', period['date_stop']), ('state', '=', 'draft')], context=context):
-                    raise osv.except_osv(_('Warning!'), _('You cannot close a period if previous periods are not closed!'))
+                    raise osv.except_osv(_('Warning!'), _('You cannot close a period if all previous periods are not closed!'))
+        if vals.get('state') == 'draft':
+            if isinstance(ids, (int, long)):
+                ids = [ids]
+            for period in self.read(cr, uid, ids, ['state', 'date_stop'], context):
+                if period['state'] == 'done' and self.search(cr, uid, [('date_stop', '>', period['date_stop']), ('state', '=', 'done')], context=context):
+                    raise osv.except_osv(_('Warning!'), _('You cannot reopen a period if some next periods are closed!'))
         return super(AnalyticPeriod, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):

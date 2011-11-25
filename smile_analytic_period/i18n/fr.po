@@ -88,6 +88,18 @@ msgid "Company"
 msgstr "Société"
 
 #. module: smile_analytic_period
+#: code:addons/smile_analytic_period/analytic.py:123
+#, python-format
+msgid "You cannot close a period if all previous periods are not closed!"
+msgstr "Vous ne pouvez pas clôturer une période si les précédentes ne sont pas déjà closes !"
+
+#. module: smile_analytic_period
+#: code:addons/smile_analytic_period/analytic.py:129
+#, python-format
+msgid "You cannot reopen a period if some next periods are closed!"
+msgstr "Vous ne pouvez pas réouvrir une période si des périodes suivantes sont déjà closes !"
+
+#. module: smile_analytic_period
 #: code:addons/smile_analytic_period/analytic.py:87
 #, python-format
 msgid "Please indicate a period id!"
@@ -179,4 +191,4 @@ msgstr "Etats"
 #. module: smile_analytic_period
 #: view:account.analytic.period:0
 msgid "Close"
-msgstr "Close"
+msgstr "Clôturer"
