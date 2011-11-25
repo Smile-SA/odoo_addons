@@ -151,7 +151,7 @@
 </%def>
 
 
-<%def name="render_sub_matrix_header(level_res, res_values, level, date_range, sub_lines=[], css_class=None)">
+<%def name="render_sub_matrix_header(level_res, res_values, level, date_range, sub_lines=[], css_class=None, show_selector=True)">
     <%
         # Build a virtual line to freeze resources at that level
         virtual_line = {
@@ -167,7 +167,9 @@
         ">
         ${render_resources(virtual_line)}
         <td colspan="${len(date_range) + 1}" class="resource_selector">
-            ${render_resource_selector(res_values)}
+            %if show_selector:
+                ${render_resource_selector(res_values)}
+            %endif
         </td>
         %if not hide_line_totals:
             <%
@@ -200,7 +202,7 @@
 </%def>
 
 
-<%def name="render_sub_matrix(lines, resource_value_list, date_range, level=1, level_resources=[])">
+<%def name="render_sub_matrix(lines, resource_value_list, date_range, level=1, level_resources=[], editable_tree=True)">
     %if level < len(resource_value_list):
         <%
             res_def = resource_value_list[level - 1]
@@ -221,8 +223,8 @@
                         sub_lines.append(line)
             %>
             %if len(sub_lines):
-                ${render_sub_matrix_header(level_res, resource_value_list[level], level, date_range, sub_lines)}
-                ${render_sub_matrix(sub_lines, resource_value_list, date_range, level + 1, level_res)}
+                ${render_sub_matrix_header(level_res, resource_value_list[level], level, date_range, sub_lines, show_selector=editable_tree)}
+                ${render_sub_matrix(sub_lines, resource_value_list, date_range, level + 1, level_res, editable_tree=editable_tree)}
             %endif
         %endfor
     %endif
@@ -260,6 +262,7 @@
             hide_column_totals = value['hide_column_totals'] and True or False
             hide_line_totals = value['hide_line_totals'] and True or False
             column_warning_threshold = value['column_warning_threshold']
+            editable_tree = value['editable_tree']
         %>
 
         <style type="text/css">
@@ -358,7 +361,9 @@
 
         %if editable:
             <div class="toolbar level level_0">
-                ${render_resource_selector(resource_value_list[0])}
+                %if editable_tree:
+                    ${render_resource_selector(resource_value_list[0])}
+                %endif
                 <span id="matrix_button_template" class="button increment template">
                     Button template
                 </span>
@@ -446,33 +451,34 @@
                     template_line = [l for l in lines if l['id'] == 'template'][0]
                     non_templates_lines = [l for l in body_lines if l['id'] != 'template']
                 %>
-                ${render_sub_matrix(non_templates_lines, resource_value_list, date_range)}
+                ${render_sub_matrix(non_templates_lines, resource_value_list, date_range, editable_tree=editable_tree)}
 
-                <%doc>
-                    Render a sub-matrix header template for each level of resource.
-                    Level 0 is skipped as it's already rendered outside of the matrix table.
-                </%doc>
-                <%
-                    level_res = []
-                %>
-                %for (res_index, res_def) in enumerate(resource_value_list):
-                    %if res_index != 0:
-                        ${render_sub_matrix_header(level_res, res_def, res_index, date_range, css_class='template')}
-                    %endif
+                %if editable_tree:
+                    <%doc>
+                        Render a sub-matrix header template for each level of resource.
+                        Level 0 is skipped as it's already rendered outside of the matrix table.
+                    </%doc>
                     <%
-                        res_id = res_def.get('id', None)
-                        level_res.append({
-                            'id': res_id,
-                            'label': '%s template label' % res_id,
-                            'value': 0,
-                            })
+                        level_res = []
                     %>
-                %endfor
-
-                <%doc>
-                    Render a template float line to help the interactive Javascript code render consistent stuff.
-                </%doc>
-                ${render_line(template_line, date_range, level=len(resource_value_list))}
+                    %for (res_index, res_def) in enumerate(resource_value_list):
+                        %if res_index != 0:
+                            ${render_sub_matrix_header(level_res, res_def, res_index, date_range, css_class='template')}
+                        %endif
+                        <%
+                            res_id = res_def.get('id', None)
+                            level_res.append({
+                                'id': res_id,
+                                'label': '%s template label' % res_id,
+                                'value': 0,
+                                })
+                        %>
+                    %endfor
+                    <%doc>
+                        Render a template float line to help the interactive Javascript code render consistent stuff.
+                    </%doc>
+                    ${render_line(template_line, date_range, level=len(resource_value_list))}
+                %endif
             </tbody>
         </table>
 

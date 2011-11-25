@@ -124,6 +124,8 @@ class matrix(fields.dummy):
         hide_line_totals = self.__dict__.get('hide_line_totals', False)
         # Set the threshold above which we set a column total in red. Set to None to desactivate the warning threshold.
         column_totals_warning_threshold = self.__dict__.get('column_totals_warning_threshold', None)
+        # If set to False this option will hide all tree-level add-line selectors.
+        editable_tree = not self.__dict__.get('frozen_tree', False)
         # Additional classes can be manually added
         css_classes = self.__dict__.get('css_classes', [])
         # Get the matrix title
@@ -253,6 +255,7 @@ class matrix(fields.dummy):
                 'hide_column_totals': hide_column_totals,
                 'hide_line_totals': hide_line_totals,
                 'column_warning_threshold': column_totals_warning_threshold,
+                'editable_tree': editable_tree,
                 'class': css_classes,
                 'title': title,
                 }
