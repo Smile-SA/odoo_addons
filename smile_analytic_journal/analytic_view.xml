@@ -72,15 +72,25 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_journal_form"/>
             <field name="arch" type="xml">
-                <field name="company_id" position="after">
-					<field name="parent_id"/>
-					<newline/>
-					<field name="view_id"/>
-					<button type='object' name="open_window" string="Show View" colspan="2" context="{'journal_view_id': view_id, 'target':'new'}"/>
-					<newline/>
-					<field name="menu_id"/>
-					<button type='object' name="create_menu" string="Create Menu" colspan="2" attrs="{'readonly': ['|', ('view_id', '=', False), ('menu_id', '!=', False)]}" context="{'journal_view_id': view_id}"/>
-                </field>
+            	<data>
+	                <field name="active" position="replace">
+						<field name="sign" attrs="{'invisible': [('type', '=', 'view')]}"/>
+						<newline/>
+	                </field>
+					<field name="name" position="before">
+						<label colspan="2"/>
+						<field name="active"/>
+					</field>
+	                <field name="company_id" position="after">
+						<field name="parent_id"/>
+						<newline/>
+						<field name="view_id"/>
+						<button type='object' name="open_window" string="Show View" colspan="2" context="{'journal_view_id': view_id, 'target':'new'}"/>
+						<newline/>
+						<field name="menu_id"/>
+						<button type='object' name="create_menu" string="Create Menu" colspan="2" attrs="{'readonly': ['|', ('view_id', '=', False), ('menu_id', '!=', False)]}" context="{'journal_view_id': view_id}"/>
+	                </field>
+	        	</data>
             </field>
         </record>
 

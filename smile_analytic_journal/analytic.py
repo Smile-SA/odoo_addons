@@ -70,7 +70,12 @@ AnalyticJournalColumn()
 
 class AnalyticJournal(osv.osv):
     _inherit = "account.analytic.journal"
-    
+    _parent_store = True
+
+    def __init__(self, pool, cr):
+        super(AnalyticJournal, self).__init__(pool, cr)
+        self._columns['type'].selection.append(('view', 'View'))
+
     def _get_complete_name(self, cr, uid, ids, name, args, context=None):
 
         def _get_one_full_name(journal):
@@ -136,6 +141,10 @@ AnalyticJournal()
 
 class AnalyticLine(osv.osv):
     _inherit = 'account.analytic.line'
+
+    def __init__(self, pool, cr):
+        super(AnalyticLine, self).__init__(pool, cr)
+        self._columns['journal_id']._domain.append(('type', '!=', 'view'))
 
     def _get_amount_currency(self, cr, uid, ids, name, arg, context=None):
         res = {}
