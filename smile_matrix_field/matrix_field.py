@@ -448,7 +448,12 @@ def matrix_write_patch(func):
 
                     # Save cells data
                     for (cell_date, cell_value) in line_cells.items():
-                        # Prepare the cell value
+                        # Transform the value to a float, if the user has entered nothing just use the default value
+                        cell_value = ''.join([c for c in cell_value if c.isdigit() or c in ['-', '.', ',']]).replace(',', '.')
+                        try:
+                            cell_value = float(cell_value)
+                        except ValueError:
+                            cell_value = conf.get('default_cell_value', 0.0)
                         cell_vals = {
                             conf['cell_value_property']: cell_value,
                             }
