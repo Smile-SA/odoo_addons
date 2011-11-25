@@ -153,7 +153,9 @@
 	                </group>
 	                <newline/>
 	                <group expand="0" string="Group By..." groups="base.group_extended">
-	                    <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
+	                    <filter string="Object" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'model_id'}"/>
+	                    <separator orientation="vertical"/>
+	                    <filter string="Category" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'category_id'}"/>
 	                </group>
                 </search>
             </field>
