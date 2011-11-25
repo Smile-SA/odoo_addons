@@ -267,6 +267,10 @@
 
         <style type="text/css">
             /* Reset OpenERP default styles */
+            .matrix table thead th {
+                font-size: inherit;
+            }
+
             .matrix table tfoot td {
                 font-weight: normal;
             }
@@ -345,6 +349,11 @@
                 margin: 0;
                 padding: 0 .1em;
                 border-top: 1px solid #ccc;
+            }
+
+            .matrix table,
+            .matrix table tfoot .total td {
+                border-bottom: 1px solid #ccc;
             }
 
             %for i in range(1, len(resource_value_list)):
