@@ -222,7 +222,7 @@
 </%def>
 
 
-<%def name="render_sub_matrix(lines, resource_value_list, date_range, level=1, level_resources=[], editable_tree=True)">
+<%def name="render_sub_matrix(lines, resource_value_list, date_range, level=1, level_resources=[], editable_tree=True, hide_tree=False)">
     %if level < len(resource_value_list):
         <%
             res_def = resource_value_list[level - 1]
@@ -243,8 +243,10 @@
                         sub_lines.append(line)
             %>
             %if len(sub_lines):
-                ${render_sub_matrix_header(level_res, resource_value_list[level], level, date_range, sub_lines, show_selector=editable_tree)}
-                ${render_sub_matrix(sub_lines, resource_value_list, date_range, level + 1, level_res, editable_tree=editable_tree)}
+                %if not hide_tree:
+                    ${render_sub_matrix_header(level_res, resource_value_list[level], level, date_range, sub_lines, show_selector=editable_tree)}
+                %endif
+                ${render_sub_matrix(sub_lines, resource_value_list, date_range, level + 1, level_res, editable_tree=editable_tree, hide_tree=hide_tree)}
             %endif
         %endfor
     %endif
@@ -279,10 +281,12 @@
             resource_value_list = value.get('resource_value_list', [])
             date_range = value['date_range']
             column_date_label_format = value.get('column_date_label_format', '%Y-%m-%d')
+            hide_line_title = value['hide_line_title'] and True or False
             hide_column_totals = value['hide_column_totals'] and True or False
             hide_line_totals = value['hide_line_totals'] and True or False
             column_warning_threshold = value['column_warning_threshold']
             editable_tree = value['editable_tree']
+            hide_tree = value['hide_tree']
         %>
 
         <style type="text/css">
@@ -359,6 +363,12 @@
                 text-align: left;
             }
 
+            %if hide_line_title:
+                .matrix table .resource {
+                    display: none;
+                }
+            %endif
+
             .matrix table .button.delete_row,
             .matrix table .button.increment {
                 display: block;
@@ -389,16 +399,18 @@
                 border-bottom: 1px solid #ccc;
             }
 
-            %for i in range(1, len(resource_value_list)):
-                .matrix tbody tr.level_${i} td, div.non-editable .matrix table tbody tr.level_${i} td {
-                    border-top-width: ${len(resource_value_list) - i + 1}px;
-                }
-                .matrix .level_${i+1} td.resource,
-                .matrix .level_${i+1} td.resource_selector,
-                .matrix .level_${i+1} td.delete_line {
-                    padding-left: ${i}em;
-                }
-            %endfor
+            %if not hide_tree:
+                %for i in range(1, len(resource_value_list)):
+                    .matrix tbody tr.level_${i} td, div.non-editable .matrix table tbody tr.level_${i} td {
+                        border-top-width: ${len(resource_value_list) - i + 1}px;
+                    }
+                    .matrix .level_${i+1} td.resource,
+                    .matrix .level_${i+1} td.resource_selector,
+                    .matrix .level_${i+1} td.delete_line {
+                        padding-left: ${i}em;
+                    }
+                %endfor
+            %endif
         </style>
 
         %if editable:
@@ -505,7 +517,7 @@
                     template_line = [l for l in lines if l['id'] == 'template'][0]
                     non_templates_lines = [l for l in body_lines if l['id'] != 'template']
                 %>
-                ${render_sub_matrix(non_templates_lines, resource_value_list, date_range, editable_tree=editable_tree)}
+                ${render_sub_matrix(non_templates_lines, resource_value_list, date_range, editable_tree=editable_tree, hide_tree=hide_tree)}
 
                 %if editable_tree:
                     <%doc>

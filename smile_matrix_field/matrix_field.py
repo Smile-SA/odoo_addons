@@ -119,13 +119,17 @@ class matrix(fields.dummy):
         additional_sum_columns = self.__dict__.get('additional_sum_columns', [])
         # Same as above, but for lines
         additional_line_property =  self.__dict__.get('additional_line_property', None)
+        # If set to true, hide the first column of the table.
+        hide_line_title = self.__dict__.get('hide_line_title', False)
         # Columns and row totals are optionnal
         hide_column_totals = self.__dict__.get('hide_column_totals', False)
         hide_line_totals = self.__dict__.get('hide_line_totals', False)
         # Set the threshold above which we set a column total in red. Set to None to desactivate the warning threshold.
         column_totals_warning_threshold = self.__dict__.get('column_totals_warning_threshold', None)
-        # If set to False this option will hide all tree-level add-line selectors.
-        editable_tree = not self.__dict__.get('frozen_tree', False)
+        # If set to True this option will hide all tree-level add-line selectors.
+        editable_tree = not self.__dict__.get('non_editable_tree', False)
+        # If set to True this option will hide all tree-level add-line selectors.
+        hide_tree = self.__dict__.get('hide_tree', False)
         # Additional classes can be manually added
         css_classes = self.__dict__.get('css_classes', [])
         # Get the matrix title
@@ -245,6 +249,9 @@ class matrix(fields.dummy):
                 'resources': template_resources,
                 })
 
+            if hide_tree:
+                editable_tree = False
+
             # Pack all data required to render the matrix
             matrix_def = {
                 'matrix_data': matrix_data,
@@ -252,10 +259,12 @@ class matrix(fields.dummy):
                 'resource_value_list': resource_value_list,
                 'column_date_label_format': date_format,
                 'additional_columns': additional_sum_columns,
+                'hide_line_title': hide_line_title,
                 'hide_column_totals': hide_column_totals,
                 'hide_line_totals': hide_line_totals,
                 'column_warning_threshold': column_totals_warning_threshold,
                 'editable_tree': editable_tree,
+                'hide_tree': hide_tree,
                 'class': css_classes,
                 'title': title,
                 }
