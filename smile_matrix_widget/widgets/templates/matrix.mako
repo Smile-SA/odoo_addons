@@ -88,8 +88,12 @@
                             />
                         %else:
                             <span kind="float" value="${render_float(cell_value)}"
-                                %if not editable and cell_value <= 0.0:
-                                    class="zero"
+                                %if not editable:
+                                    %if cell_value == 0.0:
+                                        class="zero"
+                                    %elif cell_value < 0.0:
+                                        class="negative"
+                                    %endif
                                 %endif
                                 %if not read_only:
                                     id="${cell_id}"
@@ -107,8 +111,12 @@
                 row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
             %>
             <td class="total
-                %if not editable and row_total <= 0.0:
-                    zero
+                %if not editable:
+                    %if row_total == 0.0:
+                        zero
+                    %elif row_total < 0.0:
+                        negative
+                    %endif
                 %endif
                 "
                 %if not read_only:
@@ -120,8 +128,12 @@
         %endif
         %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_columns'] if 'line_property' in c]:
             <td
-                %if not editable and line_property_value <= 0.0:
-                    class="zero"
+                %if not editable:
+                    %if line_property_value == 0.0:
+                        class="zero"
+                    %elif line_property_value < 0.0:
+                        class="negative"
+                    %endif
                 %endif
             >
                 ${render_float(line_property_value)}
@@ -179,8 +191,12 @@
                 row_total = sum(row_total)
             %>
             <td id="${name}_row_total_${virtual_line['id']}" class="total
-                %if not editable and row_total <= 0.0:
-                    zero
+                %if not editable:
+                    %if row_total == 0.0:
+                        zero
+                    %elif row_total < 0.0:
+                        negative
+                    %endif
                 %endif
                 ">
                 ${render_float(row_total)}
@@ -191,8 +207,12 @@
                 additional_sum = sum([line.get(line_property, 0.0) for line in sub_lines])
             %>
             <td
-                %if not editable and additional_sum <= 0.0:
-                    class="zero"
+                %if not editable:
+                    %if additional_sum == 0.0:
+                        class="zero"
+                    %elif additional_sum < 0.0:
+                        class="negative"
+                    %endif
                 %endif
             >
                 ${render_float(additional_sum)}
@@ -302,6 +322,10 @@
 
             .matrix .zero {
                 color: #ccc;
+            }
+
+            .matrix .negative {
+                color: #f00;
             }
 
             .matrix .template {
@@ -421,8 +445,12 @@
                                     column_total = sum(column_values)
                                 %>
                                 <td id="${name}_column_total_${date}" class="
-                                    %if not editable and column_total <= 0.0:
-                                        zero
+                                    %if not editable:
+                                        %if column_total == 0.0:
+                                            zero
+                                        %elif column_total < 0.0:
+                                            negative
+                                        %endif
                                     %endif
                                     %if column_warning_threshold is not None and column_total > column_warning_threshold:
                                         warning
@@ -439,8 +467,12 @@
                                 grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in body_lines])
                             %>
                             <td id="${name}_grand_total"
-                                %if not editable and grand_total <= 0.0:
-                                    class="zero"
+                                %if not editable:
+                                    %if grand_total == 0.0:
+                                        class="zero"
+                                    %elif grand_total < 0.0:
+                                        class="negative"
+                                    %endif
                                 %endif
                                 >
                                 ${render_float(grand_total)}
@@ -451,8 +483,12 @@
                                 additional_sum = sum([line.get(line_property, 0.0) for line in body_lines])
                             %>
                             <td class="total
-                                %if not editable and additional_sum <= 0.0:
-                                    zero
+                                %if not editable:
+                                    %if additional_sum == 0.0:
+                                        zero
+                                    %elif additional_sum < 0.0:
+                                        negative
+                                    %endif
                                 %endif
                             ">
                                 ${render_float(additional_sum)}
