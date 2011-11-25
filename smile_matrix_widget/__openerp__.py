@@ -27,5 +27,6 @@
     "description": """Widget to display and edit a matrix of cell objects grouped by lines.""",
     'website': 'www.smile.fr',
     'installable': True,
-    'active': False, # Respect OpenERP philosophy
+    # Force activation of this client addon. If you don't want it activated, don't symlink to it.
+    'active': True,
 }
