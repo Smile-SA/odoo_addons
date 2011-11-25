@@ -451,7 +451,26 @@ class AnalyticLine(osv.osv):
         if self._columns.has_key('account_id'):
             self._columns['account_id'].required = False
 
+    def _get_amount_currency(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        context = context or {}
+        company_obj = self.pool.get('res.company')
+        currency_obj = self.pool.get('res.currency')
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for analytic_line in self.read(cr, uid, ids, ['amount', 'date', 'currency_id', 'company_id'], context):
+            if analytic_line['currency_id'] and analytic_line['company_id']:
+                context['date'] = analytic_line['date']
+                company_currency_id = company_obj.read(cr, uid, analytic_line['company_id'][0], ['currency_id'], context)['currency_id'][0]
+                res[analytic_line['id']] = currency_obj.compute(cr, uid, company_currency_id, analytic_line['currency_id'][0], analytic_line['amount'], context=context)
+            else:
+                res[analytic_line['id']] = analytic_line['amount']
+        return res
+
     _columns = {
+        'amount_currency': fields.function(_get_amount_currency, method=True, type='float', string='Amount currency', store={
+            'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['amount', 'date', 'account_id', 'move_id'], 10),
+        }, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
         'audit': fields.text('Audit', readonly=True),
         'audit_ref': fields.char('Audit Ref', size=12, readonly=True),
     }

@@ -83,6 +83,7 @@ class AnalyticJournal(osv.osv):
         return res
 
     _columns = {
+        'sign': fields.selection([('1', 'Identical'), ('-1', 'Opposite')], 'Sign compared to original records', required=True),
         'view_id': fields.many2one('account.analytic.journal.view', 'Display Mode', help="Gives the view used when writing or browsing entries in this journal. The view tells OpenERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
         'menu_id': fields.many2one('ir.ui.menu', 'Menu', help="To access to display mode view"),
         'parent_id': fields.many2one('account.analytic.journal', 'Parent', ondelete='cascade'),
@@ -90,6 +91,10 @@ class AnalyticJournal(osv.osv):
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
         'complete_name': fields.function(_get_complete_name, method=True, type='char', size=256, string="Name"),
+    }
+
+    _defaults = {
+        'sign': '1',
     }
 
     def open_window(self, cr, uid, journal_id, context=None):
@@ -131,6 +136,32 @@ AnalyticJournal()
 
 class AnalyticLine(osv.osv):
     _inherit = 'account.analytic.line'
+
+    def _get_amount_currency(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        context = context or {}
+        company_obj = self.pool.get('res.company')
+        currency_obj = self.pool.get('res.currency')
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for analytic_line in self.read(cr, uid, ids, ['amount', 'date', 'currency_id', 'company_id'], context):
+            if analytic_line['currency_id'] and analytic_line['company_id']:
+                context['date'] = analytic_line['date']
+                company_currency_id = company_obj.read(cr, uid, analytic_line['company_id'][0], ['currency_id'], context)['currency_id'][0]
+                res[analytic_line['id']] = currency_obj.compute(cr, uid, company_currency_id, analytic_line['currency_id'][0], analytic_line['amount'], context=context)
+            else:
+                res[analytic_line['id']] = analytic_line['amount']
+        return res
+
+    _columns = {
+        'amount_currency': fields.function(_get_amount_currency, method=True, type='float', string='Amount currency', store={
+            'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['amount', 'date', 'account_id', 'move_id'], 10),
+        }, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
+    }
+
+    def create(self, cr, uid, vals, context=None):
+        vals['amount'] *= int(self.pool.get('account.analytic.journal').read(cr, uid, vals['journal_id'], ['sign'], context)['sign'])
+        return super(AnalyticLine, self).create(cr, uid, vals, context)
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(AnalyticLine, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)

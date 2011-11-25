@@ -41,7 +41,7 @@ class AnalyticLine(osv.osv):
         exists = cr.fetchone()
         if not exists:
             cr.execute('CREATE INDEX account_analytic_line_multi_columns_index '\
-		               'ON account_analytic_line (%s)' % ','.join(unicity_fields))
+                       'ON account_analytic_line %s', (tuple(unicity_fields),))
 
     def _get_unicity_fields(self):
         return [field for field in self._columns \
@@ -55,7 +55,54 @@ class AnalyticLine(osv.osv):
         self._unicity_fields = self._get_unicity_fields()
         self._update_index(cr, self._unicity_fields)
 
+    def _get_amount_currency(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        context = context or {}
+        company_obj = self.pool.get('res.company')
+        currency_obj = self.pool.get('res.currency')
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for analytic_line in self.read(cr, uid, ids, ['amount', 'date', 'currency_id', 'company_id'], context):
+            if analytic_line['currency_id'] and analytic_line['company_id']:
+                context['date'] = analytic_line['date']
+                company_currency_id = company_obj.read(cr, uid, analytic_line['company_id'][0], ['currency_id'], context)['currency_id'][0]
+                res[analytic_line['id']] = currency_obj.compute(cr, uid, company_currency_id, analytic_line['currency_id'][0], analytic_line['amount'], context=context)
+            else:
+                res[analytic_line['id']] = analytic_line['amount']
+        return res
+
+    def _get_currency_id(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        move_obj = self.pool.get('account.move.line')
+        for analytic_line in self.read(cr, uid, ids, ['move_id'], context):
+            res[analytic_line['id']] = False
+            if analytic_line['move_id']:
+                currency_id = move_obj.read(cr, uid, analytic_line['move_id'][0], ['currency_id'], context)['currency_id']
+                if currency_id:
+                    res[analytic_line['id']] = currency_id[0]
+        return res
+
+    def _set_currency_id(self, cr, uid, ids, name, value, arg, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        cr.execute('UPDATE account_analytic_line SET currency_id = %s WHERE id in %s', (value, tuple(ids)))
+        return True
+
+    def _get_analytic_line_ids_from_account_moves(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        return self.pool.get('account.analytic.line').search(cr, uid, [('move_id', 'in', ids)], context=context)
+
     _columns = {
+        'currency_id': fields.function(_get_currency_id, fnct_inv=_set_currency_id, method=True, type='many2one', relation='res.currency', string='Account currency', store={
+            'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['move_id'], 10),
+            'account.move.line': (_get_analytic_line_ids_from_account_moves, ['currency_id'], 10),
+        }, help="The related account currency if not equal to the company one.", readonly=True),
+        'amount_currency': fields.function(_get_amount_currency, method=True, type='float', string='Amount currency', store={
+            'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['amount', 'date', 'account_id', 'move_id'], 20),
+        }, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
         'active': fields.boolean('Active', readonly=True),
         'type': fields.selection([('actual', 'Actual'), ('forecast', 'Forecast')], 'Type', required=True),
     }
