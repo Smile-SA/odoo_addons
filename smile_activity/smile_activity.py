@@ -201,18 +201,17 @@ class smile_activity_report_cell(osv.osv):
             ids = [ids]
         for cell in self.browse(cr, uid, ids, context=context):
             # Convert the raw value to the right one depending on the type of the line
-            cell_value = None
             if cell.line_id.line_type != 'boolean':
                 # Float conversion
                 if type(value) is type(''):
-                    cell_value = float(value)
+                    value = float(value)
             else:
                 # Boolean conversion
                 if value == '1':
-                    cell_value = 1.0
+                    value = 1.0
                 else:
-                    cell_value = 0.0
-            self.write(cr, uid, cell.id, {'quantity': cell_value}, context)
+                    value = 0.0
+            self.write(cr, uid, cell.id, {'quantity': value}, context)
         return True
 
 
