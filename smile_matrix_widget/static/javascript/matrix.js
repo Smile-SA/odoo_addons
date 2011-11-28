@@ -315,8 +315,11 @@ $(document).ready(function(){
             var parent_line = $(table_row).prevAll("#" + matrix_id + " tbody tr.resource_line:not(.template)").first();
         } else {
             var parent_line = matrix.find(".toolbar").first();
-        }
+        };
         var parent_selector = parent_line.find("select[id^='" + matrix_id + "_res_list_']").first();
+        if (!parent_selector.length){
+            return;
+        };
         var selector_property = get_res_id(parent_selector);
         var res_value = $(table_row).find("input[id$='_" + selector_property + "']").first().val();
         var option = parent_selector.find("option[value='" + res_value + "']");
