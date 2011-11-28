@@ -15,9 +15,7 @@
 						<field name="user_profile" on_change="onchange_user_profile(user_profile)"/>
 					</field>
 					<field name="new_password" position="after">
-						<field name="user_profile_id" widget="selection"
-							attrs="{'invisible': [('user_profile', '=', True)], 'required': [('user_profile', '!=', True)]}"
-							context="{'active_test': False}"/>
+						<field name="user_profile_id" widget="selection" attrs="{'invisible': [('user_profile', '=', True)], 'required': [('user_profile', '!=', True)]}"/>
 					</field>
 					<notebook position="inside">
 						<page string="Configuration" attrs="{'invisible': [('user_profile', '!=', True)]}">

@@ -26,7 +26,7 @@ class ResUser(osv.osv):
 
     _columns = {
         'user_profile': fields.boolean('Is User Profile'),
-        'user_profile_id': fields.many2one('res.users', 'User Profile', domain=[('user_profile', '=', True)]),
+        'user_profile_id': fields.many2one('res.users', 'User Profile', domain=[('user_profile', '=', True)], context={'active_test': False}),
         'user_ids': fields.one2many('res.users', 'user_profile_id', 'Users', domain=[('user_profile', '=', False)]),
         'field_ids': fields.many2many('ir.model.fields', 'res_users_fields_rel', 'user_id', 'field_id', 'Fields to update',
                                       domain=[('model', '=', 'res.users'),
@@ -42,6 +42,10 @@ class ResUser(osv.osv):
     _defaults = {
         'field_ids': _get_default_field_ids,
     }
+
+    _sql_constraints = [
+        ('active_admin_check', 'CHECK (id = 1 AND active = TRUE OR id <> 1)', 'The user with id = 1 must be always active!'),
+    ]
 
     def onchange_user_profile(self, cr, uid, ids, user_profile):
         if user_profile:
