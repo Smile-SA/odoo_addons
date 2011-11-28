@@ -411,7 +411,7 @@
                     <th class="resource">${value['title']}</th>
                     <th></th>
                     %for date in date_range:
-                        <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(date_format)}</th>
+                        <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
                     %if not hide_line_totals:
                         <th class="total">Total</th>
