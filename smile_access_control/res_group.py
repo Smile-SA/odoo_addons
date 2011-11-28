@@ -65,13 +65,14 @@ class ResGroup(osv.osv):
 
     def button_complete_access_controls(self, cr, uid, ids, context=None):
         """Create access rules for the first level relation models of access rule models not only in readonly"""
+        context = context or {}
         if isinstance(ids, (int, long)):
             ids = [ids]
         access_obj = self.pool.get('ir.model.access')
         for group in self.browse(cr, uid, ids, context):
             model_ids = [access_rule.model_id.id for access_rule in group.model_access \
                          if access_rule.perm_write or access_rule.perm_create or access_rule.perm_unlink]
-            relation_model_ids = self.pool.get('ir.model').get_relations(cr, uid, model_ids, context=context)
+            relation_model_ids = self.pool.get('ir.model').get_relations(cr, uid, model_ids, context.get('relations_level', 1), context)
             for relation_model_id in relation_model_ids:
                 access_obj.create(cr, uid, {
                     'name': access_obj.get_name(cr, uid, relation_model_id, group.id),
@@ -84,4 +85,3 @@ class ResGroup(osv.osv):
                 }, context)
         return True
 ResGroup()
-    
