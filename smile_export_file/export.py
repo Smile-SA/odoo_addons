@@ -71,9 +71,9 @@ class ir_model_export(osv.osv):
             if export.model == export.export_file_template_id.model:
                 context['active_ids'] = object_ids
             else:
-                for object in self.pool.get(export.model).browse(cr, uid, object_ids):
+                for obj in self.pool.get(export.model).browse(cr, uid, object_ids):
                     if export.records:
-                        record_ids = eval(export.records, {'object': object})
+                        record_ids = eval(export.records, {'object': obj})
                         if isinstance(record_ids, (int, long)):
                             record_ids = [record_ids]
                         context['active_ids'] += record_ids
