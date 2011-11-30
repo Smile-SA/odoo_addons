@@ -127,6 +127,9 @@ def _get_conf(o, matrix_id=None):
         # If set to true, hide the first column of the table.
         'hide_line_title': matrix_field.__dict__.get('hide_line_title', False),
 
+        # Do not allow the removal of lines
+        'hide_remove_line_buttons': matrix_field.__dict__.get('hide_remove_line_buttons', False),
+
         # Columns and row totals are optionnal
         'hide_column_totals': matrix_field.__dict__.get('hide_column_totals', False),
         'hide_line_totals': matrix_field.__dict__.get('hide_line_totals', False),
@@ -234,9 +237,14 @@ class matrix(fields.dummy):
                 line_data = {
                     'id': line.id,
                     'name': self._get_title_or_id(line),
-                    # Is this resource required ?
-                    # FIX: 'required': getattr(getattr(line, conf['line_resource_property']), 'required', False),
                     }
+
+                # Is this resource required ?
+                # FIX: 'required': getattr(getattr(line, conf['line_resource_property']), 'required', False),
+
+                # By marking lines as required, we implicitely hide its remove button
+                if conf['hide_remove_line_buttons']:
+                    line_data.update({'required': True})
 
                 # Get the type of the widget we'll use to display cell values
                 line_widget = _get_prop(line, conf['dynamic_widget_type_property'], conf['default_widget_type'])
@@ -303,13 +311,16 @@ class matrix(fields.dummy):
                     'value': 0,
                     } for (res_id, res_type) in conf['line_tree_property_list']]
             # Add a row template at the end
-            matrix_data.append({
+            template_line_data = {
                 'id': "template",
                 'name': "Row template",
                 'widget': conf['default_widget_type'],
                 'cells_data': template_cells_data,
                 'resources':template_resources,
-                })
+                }
+            if conf['hide_remove_line_buttons']:
+                template_line_data.update({'required': True})
+            matrix_data.append(template_line_data)
 
             # Pack all data required to render the matrix
             matrix_def = conf
