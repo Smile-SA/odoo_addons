@@ -76,7 +76,6 @@ class smile_activity_workload(osv.osv):
             css_classes=['workload'],
             title="Workload lines",
             experimental_slider=True,
-            readonly=False,
             ),
         }
 

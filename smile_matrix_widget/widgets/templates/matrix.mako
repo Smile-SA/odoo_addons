@@ -3,6 +3,16 @@
 %>
 
 
+<%
+    # Initialize our global new row UID
+    value['row_uid'] = 1
+
+    # Merge readonly with editable property
+    if value['readonly']:
+        editable = False
+%>
+
+
 <%def name="render_float(f)">
 <%
     if type(f) != type(0.0):
@@ -247,9 +257,6 @@
     %if type(value) == type({}) and 'date_range' in value:
 
         <%
-            # Initialize our global new row UID
-            value['row_uid'] = 1
-
             # Extract some basic information
             lines = value.get('matrix_data', [])
             top_lines    = [l for l in lines if l.get('position', 'body') == 'top']

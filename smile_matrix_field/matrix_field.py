@@ -146,6 +146,9 @@ def _get_conf(o, matrix_id=None):
         # TODO
         'experimental_slider': matrix_field.__dict__.get('experimental_slider', False),
 
+        # Force the matrix in read only mode, even in editable mode
+        'readonly': matrix_field.__dict__.get('readonly', False),
+
         # Get the matrix title
         'title': matrix_field.__dict__.get('title', "Lines"),
         }
