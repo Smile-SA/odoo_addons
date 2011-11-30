@@ -63,10 +63,10 @@ def _get_date_range(base_object, date_range_property, active_date_range_property
     # Check the data structure returned by date ranges
     for (range_name, range_data) in [(date_range_property, date_range), (active_date_range_property, active_date_range), (editable_date_range_property, editable_date_range)]:
         if type(range_data) is not type([]):
-            raise osv.except_osv('Error !', "%s must return data that looks like selection field data." % range_name)
+            raise osv.except_osv('Error !', "%s must return a list of datetime.date objects." % range_name)
         for d in range_data:
             if not isinstance(d, datetime.date):
-                raise osv.except_osv('Error !', "%s must return a list of dates." % range_name)
+                raise osv.except_osv('Error !', "%s must return a list of datetime.date objects." % range_name)
 
     return (date_range, active_date_range, editable_date_range)
 
