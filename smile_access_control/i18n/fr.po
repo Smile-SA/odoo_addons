@@ -85,3 +85,15 @@ msgstr "Configuration"
 #: view:res.users:0
 msgid "Linked users"
 msgstr "Utilisateurs associés"
+
+#. module: smile_access_control
+#: code:addons/smile_access_control/res_users.py:80
+#, python-format
+msgid "Warning!"
+msgstr "Attention !"
+
+#. module: smile_access_control
+#: code:addons/smile_access_control/res_users.py:80
+#, python-format
+msgid "You cannot change the profile of a user which is itself a profile!"
+msgstr "Vous ne pouvez pas modifier le profil d'un utilisateur qui est lui-même un profil!"

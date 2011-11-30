@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.translate import _
 
 class ResUser(osv.osv):
     _inherit = 'res.users'
@@ -74,6 +75,9 @@ class ResUser(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         if vals.get('user_profile_id'):
+            for user in self.read(cr, uid, ids, ['user_profile'], context):
+                if user['user_profile']:
+                    raise osv.except_osv(_('Warning!'), _('You cannot change the profile of a user which is itself a profile!'))
             vals.update(self._get_user_vals_from_profile(cr, uid, vals['user_profile_id'], context))
         else:
             for user_profile in self.read(cr, uid, ids, ['user_profile', 'user_ids'], context):
