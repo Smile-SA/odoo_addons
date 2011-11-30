@@ -37,7 +37,7 @@ def _get_prop(obj, prop_name, default_value=None):
 
 
 
-def _get_date_range(base_object, date_range_property, active_date_range_property):
+def _get_date_range(base_object, date_range_property, active_date_range_property, editable_date_range_property):
     """ Utility method to get the displayed date range and the active date range.
         This piece of code was moved in its own method as date range extraction requires some special handling.
     """
@@ -45,6 +45,8 @@ def _get_date_range(base_object, date_range_property, active_date_range_property
     date_range = _get_prop(base_object, date_range_property)
     # Get the active date range. Default is to let all dates of the displayed range.
     active_date_range = _get_prop(base_object, active_date_range_property, date_range)
+    # Get the editable date range. Default is to align this range on the active date range.
+    editable_date_range = _get_prop(base_object, editable_date_range_property, active_date_range)
 
     # date_range and active_date_range values may be stored as text (or selection, which is the same). In this case, we need to evaluate them. It's bad, but it works.
     if isinstance(date_range, (str, unicode)):
@@ -53,16 +55,20 @@ def _get_date_range(base_object, date_range_property, active_date_range_property
         active_date_range = eval(active_date_range)
         if not active_date_range:
             active_date_range = date_range
+    if isinstance(editable_date_range, (str, unicode)):
+        editable_date_range = eval(editable_date_range)
+        if not editable_date_range:
+            editable_date_range = active_date_range
 
     # Check the data structure returned by date ranges
-    for (range_name, range_data) in [(date_range_property, date_range), (active_date_range_property, active_date_range)]:
+    for (range_name, range_data) in [(date_range_property, date_range), (active_date_range_property, active_date_range), (editable_date_range_property, editable_date_range)]:
         if type(range_data) is not type([]):
             raise osv.except_osv('Error !', "%s must return data that looks like selection field data." % range_name)
         for d in range_data:
             if not isinstance(d, datetime.date):
                 raise osv.except_osv('Error !', "%s must return a list of dates." % range_name)
 
-    return (date_range, active_date_range)
+    return (date_range, active_date_range, editable_date_range)
 
 
 
@@ -114,6 +120,7 @@ def _get_conf(o, matrix_id=None):
         # Property name of the relation field on which we'll call the date_range property
         'date_range_property': matrix_field.__dict__.get('date_range_property', None),
         'active_date_range_property': matrix_field.__dict__.get('active_date_range_property', None),
+        'editable_date_range_property': matrix_field.__dict__.get('editable_date_range_property', None),
 
         # The format we use to display date labels
         'date_format': matrix_field.__dict__.get('date_format', "%Y-%m-%d"),
@@ -215,7 +222,7 @@ class matrix(fields.dummy):
             matrix_data = []
 
             # Get our date ranges
-            (date_range, active_date_range) = _get_date_range(base_object, conf['date_range_property'], conf['active_date_range_property'])
+            (date_range, active_date_range, editable_date_range) = _get_date_range(base_object, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
 
             # Get the list of all objects new rows of the matrix can be linked to
             # Keep the original order defined in matrix properties
@@ -286,7 +293,16 @@ class matrix(fields.dummy):
                             cells.pop(cell_id)
                             cell_value = _get_prop(cell, conf['cell_value_property'], conf['default_cell_value'])
                             break
-                    cells_data[d.strftime('%Y%m%d')] = cell_value
+                    # Set the editability of the cell
+                    read_only_cell = False
+                    if d not in editable_date_range:
+                        read_only_cell = True
+                    # Pack all properties of the cell
+                    cells_data[d.strftime('%Y%m%d')] = {
+                        'value': cell_value,
+                        'read_only': read_only_cell,
+                        }
+
                 line_data.update({'cells_data': cells_data})
                 # Remove all out of date and duplicate cells
                 obj.pool.get(conf['cell_type']).unlink(cr, uid, cells.keys(), context)
@@ -304,7 +320,15 @@ class matrix(fields.dummy):
 
             # Get default cells and their values for the template row.
             template_cells_data = {}
-            template_cells_data = dict([(self._date_to_str(d), conf['default_cell_value']) for d in active_date_range])
+            for d in active_date_range:
+                # Set the editability of the cell
+                read_only_cell = False
+                if d not in editable_date_range:
+                    read_only_cell = True
+                template_cells_data[self._date_to_str(d)] = {
+                    'value': conf['default_cell_value'],
+                    'read_only': read_only_cell,
+                    }
             template_resources = [{
                     'id': res_id,
                     'label': res_id.replace('_', ' ').title(),
@@ -464,7 +488,7 @@ def matrix_write_patch(func):
             for (matrix_id, conf) in _get_matrix_fields_conf(obj).items():
 
                 # Get our date ranges
-                (date_range, active_date_range) = _get_date_range(report, conf['date_range_property'], conf['active_date_range_property'])
+                (date_range, active_date_range, editable_date_range) = _get_date_range(report, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
 
                 # Regroup fields by lines
                 lines = {}

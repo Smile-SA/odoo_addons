@@ -96,10 +96,13 @@
             <td>
                 <%
                     cell_id = '%s_cell_%s_%s' % (name, line['id'], date)
-                    cell_value = line.get('cells_data', {}).get(date, None)
+                    cell = line.get('cells_data', {}).get(date, None)
                 %>
-                %if cell_value is not None:
-                    %if editable_mode and not read_only:
+                %if cell is not None:
+                    <%
+                        cell_value = cell['value']
+                    %>
+                    %if editable_mode and not read_only and not cell['read_only']:
                         %if line_widget == 'boolean':
                             <input type="hidden" kind="boolean" name="${cell_id}" id="${cell_id}" value="${cell_value and '1' or '0'}"/>
                             <input type="checkbox" enabled="enabled" kind="boolean" class="checkbox" id="${cell_id}_checkbox_"
@@ -139,7 +142,7 @@
         %endfor
         %if not hide_line_totals:
             <%
-                row_total = sum([v for (k, v) in line.get('cells_data', dict()).items()])
+                row_total = sum([v['value'] for (k, v) in line.get('cells_data', dict()).items()])
                 row_total_cell_id = not read_only and "%s_row_total_%s" % (name, line['id']) or None
             %>
             ${render_float_cell(row_total, cell_id=row_total_cell_id, css_classes=['total'])}
@@ -195,7 +198,7 @@
             <%
                 row_total = []
                 for line in sub_lines:
-                    row_total += [v for (k, v) in line.get('cells_data', dict()).items()]
+                    row_total += [v['value'] for (k, v) in line.get('cells_data', dict()).items()]
                 row_total = sum(row_total)
             %>
             ${render_float_cell(row_total, cell_id="%s_row_total_%s" % (name, virtual_line['id']), css_classes=['total'])}
@@ -436,7 +439,7 @@
                         <td></td>
                         %for date in date_range:
                             <%
-                                column_values = [line['cells_data'][date] for line in body_lines if date in line['cells_data']]
+                                column_values = [line['cells_data'][date]['value'] for line in body_lines if date in line['cells_data']]
                             %>
                             %if len(column_values):
                                 <%
@@ -452,7 +455,7 @@
                         %endfor
                         %if not hide_line_totals:
                             <%
-                                grand_total = sum([sum([v for (k, v) in line['cells_data'].items()]) for line in body_lines])
+                                grand_total = sum([sum([v['value'] for (k, v) in line['cells_data'].items()]) for line in body_lines])
                             %>
                             ${render_float_cell(grand_total, cell_id="%s_grand_total" % name)}
                         %endif
