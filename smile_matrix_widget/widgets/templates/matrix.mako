@@ -8,8 +8,9 @@
     value['row_uid'] = 1
 
     # Merge readonly with editable property
+    editable_mode = editable
     if value['readonly']:
-        editable = False
+        editable_mode = False
 %>
 
 
@@ -30,7 +31,7 @@
             id="${cell_id}"
         %endif
         class="${' '.join(css_classes)}
-        %if not editable:
+        %if not editable_mode:
             %if float_value == 0.0:
                 zero
             %elif float_value < 0.0:
@@ -53,7 +54,7 @@
             resources = line.get('resources', [])
         %>
         <span class="name">${resources[-1]['label']}</span>
-        %if editable and not read_only:
+        %if editable_mode and not read_only:
             %for res in resources:
                 <%
                     res_id = res['id']
@@ -87,7 +88,7 @@
         >
         ${render_resources(line)}
         <td class="delete_line">
-            %if editable and not read_only and not line.get('required', False):
+            %if editable_mode and not read_only and not line.get('required', False):
                 <span class="button delete_row">X</span>
             %endif
         </td>
@@ -98,7 +99,7 @@
                     cell_value = line.get('cells_data', {}).get(date, None)
                 %>
                 %if cell_value is not None:
-                    %if editable and not read_only:
+                    %if editable_mode and not read_only:
                         %if line_widget == 'boolean':
                             <input type="hidden" kind="boolean" name="${cell_id}" id="${cell_id}" value="${cell_value and '1' or '0'}"/>
                             <input type="checkbox" enabled="enabled" kind="boolean" class="checkbox" id="${cell_id}_checkbox_"
@@ -118,7 +119,7 @@
                             />
                         %else:
                             <span kind="float" value="${render_float(cell_value)}"
-                                %if not editable:
+                                %if not editable_mode:
                                     %if cell_value == 0.0:
                                         class="zero"
                                     %elif cell_value < 0.0:
@@ -156,7 +157,7 @@
         res_values = res_def.get('values', [])
         selector_id = "%s_res_list_%s" % (name, res_id)
     %>
-    %if len(res_values) and editable:
+    %if len(res_values) and editable_mode:
         <span class="resource_values">
             <select id="${selector_id}" kind="char" name="${selector_id}" type2="" operator="=" class="selection_search selection">
                 <option value="default" selected="selected">&mdash; Select here new line's resource &mdash;</option>
@@ -398,7 +399,7 @@
             %endif
         </style>
 
-        %if editable:
+        %if editable_mode:
             <div class="toolbar level level_0">
                 %if editable_tree:
                     ${render_resource_selector(resource_value_list[0])}
@@ -418,7 +419,7 @@
                     <th class="resource">${value['title']}</th>
                     <th></th>
                     %for date in date_range:
-                        <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
+                        <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(date_format)}</th>
                     %endfor
                     %if not hide_line_totals:
                         <th class="total">Total</th>
