@@ -36,6 +36,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "update_xml": [
         'analytic_view.xml',
         'account_view.xml',
+        'analytic_installer.xml',
     ],
     'demo_xml': [],
     'installable': True,

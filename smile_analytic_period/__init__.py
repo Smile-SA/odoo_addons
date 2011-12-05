@@ -21,3 +21,4 @@
 
 import analytic
 import account
+import analytic_installer

@@ -192,3 +192,35 @@ msgstr "Etats"
 #: view:account.analytic.period:0
 msgid "Close"
 msgstr "Clôturer"
+
+#. module: smile_analytic_period
+#: code:addons/smile_analytic_period/analytic_installer.py:43
+#, python-format
+msgid "Warning!"
+msgstr "Attention !"
+
+#. module: smile_analytic_period
+#: code:addons/smile_analytic_period/analytic_installer.py:43
+#, python-format
+msgid "You cannot create specific analytic periods if you don\'t specify a company!"
+msgstr "Vous ne pouvez pas créer de périodes analytiques spécifiques à une société si celle-ci n'est pas précisée !"
+
+#. module: smile_analytic_period
+#: field:account.installer,analytic_period:0
+msgid "Analytic Periods"
+msgstr "Périodes analytiques"
+
+#. module: smile_analytic_period
+#: selection:account.installer,analytic_period:0
+msgid "None"
+msgstr "Aucune"
+
+#. module: smile_analytic_period
+#: selection:account.installer,analytic_period:0
+msgid "For this company"
+msgstr "spécifiques à la société sélectionnée"
+
+#. module: smile_analytic_period
+#: selection:account.installer,analytic_period:0
+msgid "For all companies"
+msgstr "communes à l'ensemble des sociétés"

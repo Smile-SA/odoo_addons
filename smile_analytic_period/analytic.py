@@ -35,9 +35,9 @@ class AnalyticPeriod(osv.osv):
         'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly', True)]}),
         'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly', True)]}),
         'state': fields.selection([('draft', 'Opened'), ('done', 'Closed')], 'State', required=True, readonly=True),
-        'general_period_id': fields.many2one('account.period', 'General Period', required=True),
-        'fiscalyear_id': fields.related('general_period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear', readonly=True),
-        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
+        'general_period_id': fields.many2one('account.period', 'General Period', required=False), #not required because we want to allow different companies to use the periods
+        'fiscalyear_id': fields.related('general_period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear', readonly=True, store=True),
+        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True, store=True),
     }
 
     _defaults = {
@@ -50,9 +50,11 @@ class AnalyticPeriod(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         period = self.browse(cr, uid, ids[0], context)
-        if period.date_stop < period.date_start \
-        or period.date_start < period.general_period_id.date_start \
-        or period.date_stop > period.general_period_id.date_stop:
+        if period.date_stop < period.date_start:
+            return False
+        if period.general_period_id \
+        and (period.date_start < period.general_period_id.date_start \
+        or period.date_stop > period.general_period_id.date_stop):
             return False            
         return True
 
@@ -64,6 +66,7 @@ class AnalyticPeriod(osv.osv):
                 ('id', '<>', period.id),
                 ('date_start', '<=', period.date_stop),
                 ('date_stop', '>=', period.date_start),
+                ('company_id', 'in', period.company_id and [period.company_id.id, False] or [False]),
             ]
             if self.search(cr, uid, domain, context=context):
                 return False
@@ -74,20 +77,27 @@ class AnalyticPeriod(osv.osv):
         (_check_periods_overlap, 'Some periods overlap!', ['date_start', 'date_stop']),
     ]
 
-    def get_period_id_from_date(self, cr, uid, date=False, context=None):
+    def get_period_id_from_date(self, cr, uid, date=False, company_id=False, context=None):
         date = date or time.strftime('%Y-%m-%d')
-        period_ids = self.search(cr, uid, [('date_start', '<=', date), ('date_stop', '>=', date)], limit=1, context=context)
+        period_ids = self.search(cr, uid, [
+            ('date_start', '<=', date),
+            ('date_stop', '>=', date),
+            ('company_id', 'in', [company_id, False])
+        ], limit=1, context=context)
         if not period_ids:
-            return False
+            return 0
         if self.read(cr, uid, period_ids[0], ['state'], context)['state'] == 'done':
-            raise osv.except_osv(_('Error'), _('You cannot pass a journal entry in a period closed!'))
+            raise osv.except_osv(_('Error'), _('You cannot pass a journal entry in a closed period!'))
         return period_ids[0]
 
     def _get_period_id(self, cr, uid, period_id, operator='>', state=None, context=None):
         if not isinstance(period_id, (int, long)):
             raise osv.except_osv(_('Error'), _('Please indicate a period id!'))
-        period = self.read(cr, uid, period_id, ['date_start'], context)
-        domain = [('date_start', operator, period['date_start'])]
+        period = self.read(cr, uid, period_id, ['date_start', 'company_id'], context)
+        domain = [
+            ('date_start', operator, period['date_start']),
+            ('company_id', 'in', [period['company_id'] and period['company_id'][0], False]),
+        ]
         if state:
             domain.append(('state', '=', state))
         order = 'date_start ' + (operator == '>' and 'asc' or 'desc')
@@ -118,14 +128,22 @@ class AnalyticPeriod(osv.osv):
         if vals.get('state') == 'done':
             if isinstance(ids, (int, long)):
                 ids = [ids]
-            for period in self.read(cr, uid, ids, ['date_stop'], context):
-                if self.search(cr, uid, [('date_stop', '<', period['date_stop']), ('state', '=', 'draft')], context=context):
+            for period in self.read(cr, uid, ids, ['date_stop', 'company_id'], context):
+                if self.search(cr, uid, [
+                    ('date_stop', '<', period['date_stop']),
+                    ('state', '=', 'draft'),
+                    ('company_id', 'in', [period['company_id'] and period['company_id'][0], False]),
+                ], context=context):
                     raise osv.except_osv(_('Warning!'), _('You cannot close a period if all previous periods are not closed!'))
         if vals.get('state') == 'draft':
             if isinstance(ids, (int, long)):
                 ids = [ids]
-            for period in self.read(cr, uid, ids, ['state', 'date_stop'], context):
-                if period['state'] == 'done' and self.search(cr, uid, [('date_stop', '>', period['date_stop']), ('state', '=', 'done')], context=context):
+            for period in self.read(cr, uid, ids, ['state', 'date_stop', 'company_id'], context):
+                if period['state'] == 'done' and self.search(cr, uid, [
+                    ('date_stop', '>', period['date_stop']),
+                    ('state', '=', 'done'),
+                    ('company_id', 'in', [period['company_id'] and period['company_id'][0], False]),
+                ], context=context):
                     raise osv.except_osv(_('Warning!'), _('You cannot reopen a period if some next periods are closed!'))
         return super(AnalyticPeriod, self).write(cr, uid, ids, vals, context)
 
@@ -142,8 +160,8 @@ class AnalyticLine(osv.osv):
             ids = [ids]
         res = {}.fromkeys(ids, False)
         period_obj = self.pool.get('account.analytic.period')
-        for line in self.read(cr, uid, ids, ['date'], context):
-            res[line['id']] = period_obj.get_period_id_from_date(cr, uid, line['date'], context)
+        for line in self.read(cr, uid, ids, ['date', 'company_id'], context):
+            res[line['id']] = period_obj.get_period_id_from_date(cr, uid, line['date'], line['company_id'] and line['company_id'][0], context)
         return res
 
     _columns = {

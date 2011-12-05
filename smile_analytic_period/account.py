@@ -29,6 +29,8 @@ class AccountFiscalyear(osv.osv):
     _inherit = 'account.fiscalyear'
 
     def create_analytic_periods(self, cr, uid, ids, context=None, interval=1):
+        context = context or {}
+        global_analytic_period = context.get('analytic_period') == 'global'
         if isinstance(ids, (int, long)):
             ids = [ids]
         for fiscalyear in self.browse(cr, uid, ids, context):
@@ -38,19 +40,21 @@ class AccountFiscalyear(osv.osv):
             fiscalyear_date_stop = datetime.strptime(fiscalyear.date_stop, '%Y-%m-%d')
             while date_start < fiscalyear_date_stop:
                 date_stop = min(date_start + relativedelta(months=interval, days= -1), fiscalyear_date_stop)
-                general_period_id = self.pool.get('account.period').search(cr, uid, [
-                    ('date_start', '<=', date_start.strftime('%Y-%m-%d')),
-                    ('date_stop', '>=', date_stop.strftime('%Y-%m-%d')),
-                ], limit=1, context=context)
-                if not general_period_id:
-                    raise osv.except_osv(_('Error'), _('Analytic periods must be shorter than general ones!'))
-                self.pool.get('account.analytic.period').create(cr, uid, {
+                vals = {
                     'name': date_start.strftime('%m/%Y'),
                     'code': date_start.strftime('%m/%Y'),
                     'date_start': date_start.strftime('%Y-%m-%d'),
                     'date_stop': date_stop.strftime('%Y-%m-%d'),
-                    'general_period_id': general_period_id[0],
-                })
+                }
+                if not global_analytic_period:
+                    general_period_id = self.pool.get('account.period').search(cr, uid, [
+                        ('date_start', '<=', date_start.strftime('%Y-%m-%d')),
+                        ('date_stop', '>=', date_stop.strftime('%Y-%m-%d')),
+                    ], limit=1, context=context)
+                    if not general_period_id:
+                        raise osv.except_osv(_('Error'), _('Analytic periods must be shorter than general ones!'))
+                    vals['general_period_id'] = general_period_id[0]
+                self.pool.get('account.analytic.period').create(cr, uid, vals, context)
                 date_start = date_start + relativedelta(months=interval)
         return {
             'type': 'ir.actions.act_window',
