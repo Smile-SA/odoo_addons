@@ -217,10 +217,10 @@ msgstr "Aucune"
 
 #. module: smile_analytic_period
 #: selection:account.installer,analytic_period:0
-msgid "For this company"
+msgid "Specific to this company"
 msgstr "spécifiques à la société sélectionnée"
 
 #. module: smile_analytic_period
 #: selection:account.installer,analytic_period:0
-msgid "For all companies"
+msgid "Common for all companies"
 msgstr "communes à l'ensemble des sociétés"
