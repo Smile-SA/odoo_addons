@@ -3,20 +3,6 @@
 %>
 
 
-<%
-    if 'value' not in vars():
-        value = {}
-
-    # Initialize our global new row UID
-    value['row_uid'] = 1
-
-    # Merge readonly with editable property
-    editable_mode = editable
-    if value.get('readonly', None):
-        editable_mode = False
-%>
-
-
 <%def name="render_float(f)">
 <%
     if type(f) != type(0.0):
@@ -264,6 +250,14 @@
     %if type(value) == type({}) and 'date_range' in value:
 
         <%
+            # Initialize our global new row UID
+            value['row_uid'] = 1
+
+            # Merge readonly with editable property
+            editable_mode = editable
+            if value.get('readonly', None):
+                editable_mode = False
+
             # Extract some basic information
             lines = value.get('matrix_data', [])
             top_lines    = [l for l in lines if l.get('position', 'body') == 'top']
@@ -512,7 +506,7 @@
 
     %else:
 
-        Can't render the matrix widget, unless a period is selected.
+        Can't render the matrix widget, not enough data provided.
 
     %endif
 
