@@ -252,7 +252,7 @@
 		<record id="sartre_category_search_view" model="ir.ui.view">
 			<field name="name">sartre.category.search</field>
 			<field name="model">sartre.category</field>
-			<field name="type">tree</field>
+			<field name="type">search</field>
 			<field name="arch" type="xml">
 				<search string="Trigger Categories">
 					<field name="name" />
