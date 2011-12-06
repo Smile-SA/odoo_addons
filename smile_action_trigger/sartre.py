@@ -296,7 +296,7 @@ class SartreTrigger(osv.osv):
         'log_ids': fields.function(_get_logs, method=True, type='one2many', relation='smile.log', string="Logs"),
         'test_mode': fields.boolean('Test Mode'),
         'exception_handling': fields.selection([('continue', 'Ignore actions in exception'), ('rollback', 'Rollback transaction')], 'Exception Handling', required=True),
-        'exception_warning': fields.selection([('custom', 'Custom'), ('none', 'None')], 'Exception Warning', required=True),
+        'exception_warning': fields.selection([('custom', 'Custom'), ('native', 'Native'), ('none', 'None')], 'Exception Warning', required=True),
         'exception_message': fields.char('Exception Message', size=256, translate=True, required=True),
         'python_domain': fields.function(_is_python_domain, method=True, type='boolean', string='Python domain', store={
             'sartre.trigger': (lambda self, cr, uid, ids, context=None: ids, ['domain_force', 'filter_ids'], 10),
@@ -551,11 +551,11 @@ class SartreTrigger(osv.osv):
             logger.info('[%s] Trigger on %s for objects %s,%s' % (pid, context.get('trigger', 'manual'), trigger.model_id.model, filtered_object_ids))
             context.setdefault('triggers', {}).setdefault(trigger.id, []).extend(filtered_object_ids)
             if context.get('test_mode', False):
-                cr.execute("SAVEPOINT smile_action_trigger_test_mode_%s" % trigger.id)
+                cr.execute("SAVEPOINT smile_action_trigger_test_mode_%s", (trigger.id,))
             for action in trigger.action_ids:
                 if action.active:
                     if trigger.exception_handling == 'continue':
-                        cr.execute("SAVEPOINT smile_action_trigger_%s" % trigger.id)
+                        cr.execute("SAVEPOINT smile_action_trigger_%s", (trigger.id,))
                     try:
                         logger.debug('[%s] Launch Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
                         self._run_action_for_object_ids(cr, uid, action, filtered_object_ids, context)
@@ -563,16 +563,18 @@ class SartreTrigger(osv.osv):
                     except Exception, e:
                         logger.exception('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
                         if trigger.exception_handling == 'continue' and not action.force_rollback:
-                            cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_%s" % trigger.id)
+                            cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_%s", (trigger.id,))
                         else:
                             cr.rollback()
                             logger.time_info("[%s] Transaction rolled back" % (pid,))
                             if trigger.exception_warning == 'custom':
                                 raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (trigger.exception_message, pid))
+                            elif trigger.exception_warning == 'native':
+                                raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (_get_exception_message(e), pid))
                             else:# elif trigger.exception_warning == 'none':
                                 return True
             if context.get('test_mode', False):
-                cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_test_mode_%s" % trigger.id)
+                cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_test_mode_%s", (trigger.id,))
                 logger.time_info("[%s] Actions execution rolled back" % (pid,))
             if trigger.executions_max_number:
                 for object_id in filtered_object_ids:
