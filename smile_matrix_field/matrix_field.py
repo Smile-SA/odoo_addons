@@ -229,11 +229,11 @@ class matrix(fields.dummy):
             # Get the list of all objects new rows of the matrix can be linked to
             # Keep the original order defined in matrix properties
             resource_value_list = []
-            for (res_id, res_type) in conf['line_tree_property_list']:
+            for (res_id, res_type, res_domain) in conf['line_tree_property_list']:
                 p = base_object.pool.get(res_type)
                 resource_value_list.append({
                     'id': res_id,
-                    'values': [(o.id, self._get_title_or_id(o)) for o in p.browse(cr, uid, p.search(cr, uid, [], context=context), context)],
+                    'values': [(o.id, self._get_title_or_id(o)) for o in p.browse(cr, uid, p.search(cr, uid, res_domain, context=context), context)],
                     })
 
             # Browse all lines that will compose our the main part of the matrix
@@ -273,7 +273,7 @@ class matrix(fields.dummy):
                 # Get all resources of the line
                 # Keep the order defined by matrix field's properties
                 res_list = []
-                for (res_id, res_type) in conf['line_tree_property_list']:
+                for (res_id, res_type, res_domain) in conf['line_tree_property_list']:
                     res = _get_prop(line, res_id)
                     res_list.append({
                         'id': res_id,
@@ -340,7 +340,7 @@ class matrix(fields.dummy):
                     'id': res_id,
                     'label': res_id.replace('_', ' ').title(),
                     'value': 0,
-                    } for (res_id, res_type) in conf['line_tree_property_list']]
+                    } for (res_id, res_type, res_domain) in conf['line_tree_property_list']]
             # Add a row template at the end
             template_line_data = {
                 'id': "template",
@@ -517,9 +517,9 @@ def matrix_write_patch(func):
                     line_resources = dict([(parse_virtual_field_id(f_id)[3], int(v)) for (f_id, v) in line_data.items() if f_id.startswith('%s_res_' % matrix_id)])
                     # Check all required resources are provided by the matrix
                     res_ids = set(line_resources.keys())
-                    required_res_ids = set([prop_id for (prop_id, prop_type) in conf['line_tree_property_list']])
+                    required_res_ids = set([prop_id for (prop_id, prop_type, prop_domain) in conf['line_tree_property_list']])
                     if res_ids != required_res_ids:
-                        raise osv.except_osv('Error !', "Line %s resource mismatch: %r provided while we're expecting require %r." % (line_id, res_ids, required_res_ids))
+                        raise osv.except_osv('Error !', "Line %s resource mismatch: %r provided while we're expecting %r." % (line_id, res_ids, required_res_ids))
                     # Get line cells
                     line_cells = dict([(datetime.datetime.strptime(parse_virtual_field_id(f_id)[3], '%Y%m%d').date(), v) for (f_id, v) in line_data.items() if f_id.startswith('%s_cell_' % matrix_id)])
                     # Are we updating an existing line or creating a new one ?
