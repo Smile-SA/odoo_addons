@@ -64,9 +64,9 @@ class smile_activity_workload(osv.osv):
             cell_date_property='date',
             date_range_property='date_range',
             date_format='%m/%y',
-            #line_tree_property_list=[('profile_id', 'smile.activity.profile'), ('employee_id', 'smile.activity.employee')],
+            line_tree_property_list=[('profile_id', 'smile.activity.profile'), ('employee_id', 'smile.activity.employee')],
             # XXX 3-level resource test
-            line_tree_property_list=[('profile_id', 'smile.activity.profile'), ('employee_id', 'smile.activity.employee'), ('workload_id', 'smile.activity.workload')],
+            #line_tree_property_list=[('profile_id', 'smile.activity.profile'), ('employee_id', 'smile.activity.employee'), ('workload_id', 'smile.activity.workload')],
             additional_sum_columns=[
                 {'label': "Productivity", 'line_property': "productivity_index"},
                 {'label': "Performance", 'line_property': "performance_index"},

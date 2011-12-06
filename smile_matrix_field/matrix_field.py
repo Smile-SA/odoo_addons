@@ -28,7 +28,7 @@ from osv import osv, fields
 def _get_prop(obj, prop_name, default_value=None):
     """ Get a property value
     """
-    if not prop_name:
+    if not prop_name or obj is None:
         return default_value
     prop_value = getattr(obj, prop_name, default_value)
     if prop_value is None:
@@ -115,6 +115,8 @@ def _get_conf(o, matrix_id=None):
         'cell_inverse_property': matrix_field.__dict__.get('cell_inverse_property', None),
         'cell_value_property': matrix_field.__dict__.get('cell_value_property', None),
         'cell_date_property': matrix_field.__dict__.get('cell_date_property', None),
+        'cell_active_property': matrix_field.__dict__.get('cell_active_property', 'active'),
+        'cell_readonly_property': matrix_field.__dict__.get('cell_readonly_property', None),
         'default_cell_value': matrix_field.__dict__.get('default_cell_value', 0.0),
 
         # Property name of the relation field on which we'll call the date_range property
@@ -286,16 +288,21 @@ class matrix(fields.dummy):
                 cells_data = {}
                 for d in active_date_range:
                     # Find a cell corresponding to the date in the date_range
-                    cell_value = conf['default_cell_value']
+                    cell = None
                     for (cell_id, cell) in cells.items():
                         cell_date = datetime.datetime.strptime(_get_prop(cell, conf['cell_date_property']), '%Y-%m-%d').date()
                         if cell_date == d:
                             cells.pop(cell_id)
-                            cell_value = _get_prop(cell, conf['cell_value_property'], conf['default_cell_value'])
                             break
+                    cell_value = _get_prop(cell, conf['cell_value_property'], conf['default_cell_value'])
+                    # Skip the cell to hide it if its active property is True
+                    active_cell = _get_prop(cell, conf['cell_active_property'], True)
+                    if not active_cell:
+                        continue
                     # Set the editability of the cell
-                    read_only_cell = False
+                    read_only_cell = _get_prop(cell, conf['cell_readonly_property'], False)
                     if d not in editable_date_range:
+                        # Column-level options override cells-level visibility properties
                         read_only_cell = True
                     # Pack all properties of the cell
                     cells_data[d.strftime('%Y%m%d')] = {
@@ -304,7 +311,7 @@ class matrix(fields.dummy):
                         }
 
                 line_data.update({'cells_data': cells_data})
-                # Remove all out of date and duplicate cells
+                # Remove all out of date, duplicate cells and inactive cells
                 obj.pool.get(conf['cell_type']).unlink(cr, uid, cells.keys(), context)
 
                 # Get data of additional columns

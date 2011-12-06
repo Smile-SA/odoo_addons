@@ -14,7 +14,7 @@
                     <field name="period_id"/>
                     <field name="end_date"/>
                     <separator string="Activity report lines" colspan="4"/>
-                    <field name="matrix_line_ids" colspan="4" widget="matrix" nolabel="1"/>
+<!--                     <field name="matrix_line_ids" colspan="4" widget="matrix" nolabel="1"/> -->
                     <field name="matrix_line_ids_2" colspan="4" widget="matrix" nolabel="1"/>
                     <field name="line_ids" colspan="4" nolabel="1">
                         <tree string="Lines">
@@ -29,11 +29,13 @@
                             <field name="line_type"/>
                             <field name="performance_index"/>
                             <field name="productivity_index"/>
-                            <field name="cell_ids" colspan="4" nolabel="1" readonly="1">
+                            <field name="cell_ids" colspan="4" nolabel="1">
                                 <tree string="Cells">
                                     <field name="date"/>
                                     <field name="quantity"/>
                                     <field name="cell_value"/>
+                                    <field name="active"/>
+                                    <field name="read_only"/>
                                 </tree>
                             </field>
                         </form>
