@@ -234,7 +234,7 @@
 			<field name="model">sartre.category</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<tree string="Trigger Categories">
+				<tree string="Trigger Categories" editable="top">
 					<field name="name" />
 				</tree>
 			</field>
