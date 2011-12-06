@@ -4,12 +4,15 @@
 
 
 <%
+    if 'value' not in vars():
+        value = {}
+
     # Initialize our global new row UID
     value['row_uid'] = 1
 
     # Merge readonly with editable property
     editable_mode = editable
-    if value['readonly']:
+    if value.get('readonly', None):
         editable_mode = False
 %>
 
