@@ -55,6 +55,10 @@ class smile_activity_report(osv.osv):
             date_range_property          = 'date_range',
             editable_date_range_property = 'active_date_range',
             date_format                  = '%d',
+            additional_columns=[
+                {'label': "Productivity", 'line_property': "productivity_index"},
+                {'label': "Performance", 'line_property': "performance_index"},
+                ],
             column_totals_warning_threshold = 1.0,
             title = "Activity report lines",
             readonly = False,

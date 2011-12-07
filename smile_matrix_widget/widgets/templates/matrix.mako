@@ -136,7 +136,7 @@
             %>
             ${render_float_cell(row_total, cell_id=row_total_cell_id, css_classes=['total'])}
         %endif
-        %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_sum_columns'] if 'line_property' in c]:
+        %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_columns'] if 'line_property' in c]:
             ${render_float_cell(line_property_value)}
         %endfor
     </tr>
@@ -192,7 +192,7 @@
             %>
             ${render_float_cell(row_total, cell_id="%s_row_total_%s" % (name, virtual_line['id']), css_classes=['total'])}
         %endif
-        %for line_property in [c['line_property'] for c in value['additional_sum_columns'] if 'line_property' in c]:
+        %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
             <%
                 additional_sum = sum([line.get(line_property, 0.0) for line in sub_lines])
             %>
@@ -424,7 +424,7 @@
                     %if not hide_line_totals:
                         <th class="total">Total</th>
                     %endif
-                    %for (i, c) in enumerate(value['additional_sum_columns']):
+                    %for (i, c) in enumerate(value['additional_columns']):
                         <th>${c.get('label', "Additional column %s" % i)}</th>
                     %endfor
                 </tr>
@@ -456,7 +456,7 @@
                             %>
                             ${render_float_cell(grand_total, cell_id="%s_grand_total" % name)}
                         %endif
-                        %for line_property in [c['line_property'] for c in value['additional_sum_columns'] if 'line_property' in c]:
+                        %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
                             <%
                                 additional_sum = sum([line.get(line_property, 0.0) for line in body_lines])
                             %>

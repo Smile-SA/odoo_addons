@@ -129,7 +129,7 @@ def _get_conf(o, matrix_id=None):
         'date_format': matrix_field.__dict__.get('date_format', "%Y-%m-%d"),
 
         # We can add read-only columns at the end of the matrix
-        'additional_sum_columns': matrix_field.__dict__.get('additional_sum_columns', []),
+        'additional_columns': matrix_field.__dict__.get('additional_columns', []),
 
         # Same as above, but for lines
         'additional_line_property':  matrix_field.__dict__.get('additional_line_property', None),
@@ -316,7 +316,7 @@ class matrix(fields.dummy):
                 obj.pool.get(conf['cell_type']).unlink(cr, uid, cells.keys(), context)
 
                 # Get data of additional columns
-                for line_property in [c['line_property'] for c in conf['additional_sum_columns'] if 'line_property' in c]:
+                for line_property in [c['line_property'] for c in conf['additional_columns'] if 'line_property' in c]:
                     if line_property in line_data:
                         raise osv.except_osv('Error !', "line property %s conflicts with matrix line definition." % line_property)
                     v = _get_prop(line, line_property)

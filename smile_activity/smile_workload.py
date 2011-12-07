@@ -67,7 +67,7 @@ class smile_activity_workload(osv.osv):
             line_tree_property_list=[('profile_id', 'smile.activity.profile', [('name', 'in', ['Consultant', 'Expert'])]), ('employee_id', 'smile.activity.employee', [])],
             # XXX 3-level resource test
             #line_tree_property_list=[('profile_id', 'smile.activity.profile', []), ('employee_id', 'smile.activity.employee', []), ('workload_id', 'smile.activity.workload', [])],
-            additional_sum_columns=[
+            additional_columns=[
                 {'label': "Productivity", 'line_property': "productivity_index"},
                 {'label': "Performance", 'line_property': "performance_index"},
                 ],
