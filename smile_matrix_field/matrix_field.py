@@ -22,6 +22,7 @@
 import datetime
 
 from osv import osv, fields
+from tools.func import wraps
 
 
 
@@ -439,6 +440,8 @@ def matrix_read_patch(func):
     """
     Let the matrix read the temporary fields that are not persistent in database.
     """
+
+    @wraps(func)
     def read_matrix_virtual_fields(*arg, **kw):
         result = func(*arg, **kw)
         (obj, cr, uid, ids, fields) = arg[:5]
@@ -481,6 +484,8 @@ def matrix_read_patch(func):
 def matrix_write_patch(func):
     """
     """
+
+    @wraps(func)
     def write_matrix_virtual_fields(*arg, **kw):
         result = func(*arg, **kw)
         (obj, cr, uid, ids, vals) = arg[:5]
