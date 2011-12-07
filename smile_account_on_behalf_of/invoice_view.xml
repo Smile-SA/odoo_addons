@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_invoice_behalf_of_tree" model="ir.ui.view">
+            <field name="name">account.invoice.behalf_of.tree</field>
+            <field name="model">account.invoice.behalf_of</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+	            <tree>
+	                <field name="company_dest_id"/>
+	                <field name="company_src_id"/>
+	            </tree>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_behalf_of_form" model="ir.ui.view">
+            <field name="name">account.invoice.behalf_of.form</field>
+            <field name="model">account.invoice.behalf_of</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+	            <form string="Billing on behalf on">
+	            	<group colspan="2" col="2">
+		                <field name="company_dest_id"/>
+		                <field name="journal_dest_id" domain="[('company_id', '=', company_dest_id), ('type', '=', 'general')]"/>
+		                <field name="account_dest_ids" mode="tree,form" context="{'default_company_dest_id': company_dest_id, 'default_company_src_id': company_src_id}">
+							<tree editable="top">
+				                <field name="account_src_id" domain="[('company_id', '=', company_src_id), ('type', '=', 'receivable')]"/>
+				                <field name="account_dest_id" domain="[('company_id', '=', company_dest_id), ('type', '=', 'receivable')]"/>
+				                <field name="company_src_id" invisible="1"/>
+				                <field name="company_dest_id" invisible="1"/>
+				            </tree>
+		                </field>
+		                <field name="partner_dest_id" invisible="1"/>
+		                <field name="bank_account_id" domain="[('partner_id', '=', partner_dest_id)]"/>
+	            	</group>
+	            	<group colspan="2" col="2">
+		                <field name="company_src_id" domain="[('id', '!=', company_dest_id)]"/>
+		                <field name="journal_src_id" domain="[('company_id', '=', company_src_id), ('type', '=', 'sale')]"/>
+		                <field name="account_src_ids" mode="tree,form" context="{'default_company_src_id': company_src_id}">
+							<tree editable="top">
+				                <field name="account_src_id" domain="[('company_id', '=', company_src_id), ('type', '=', 'receivable')]"/>
+				                <field name="account_dest_id" domain="[('company_id', '=', company_src_id), ('type', '=', 'receivable')]"/>
+				                <field name="company_src_id" invisible="1"/>
+				            </tree>
+		                </field>
+	            	</group>
+	            </form>
+            </field>
+        </record>
+
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+	            <field name="company_id" position="after">
+	                <field name="behalf_of_id"/>
+	            </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
