@@ -551,7 +551,7 @@ def matrix_write_patch(func):
                         cell_pool = obj.pool.get(conf['cell_type'])
                         cell_ids = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date), (conf['cell_inverse_property'], '=', line_id)], context=context, limit=1)
                         # Cell doesn't exists, create it
-                        if not cell_id:
+                        if not cell_ids:
                             cell_vals.update({
                                 conf['cell_date_property']: cell_date,
                                 conf['cell_inverse_property']: line_id,
