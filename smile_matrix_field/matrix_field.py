@@ -128,10 +128,10 @@ def _get_conf(o, matrix_id=None):
         # The format we use to display date labels
         'date_format': matrix_field.__dict__.get('date_format', "%Y-%m-%d"),
 
-        # We can add read-only columns at the end of the matrix
+        # Add read-only columns at the end of the matrix
         'additional_columns': matrix_field.__dict__.get('additional_columns', []),
 
-        # Same as above, but for lines
+        # Add read-only lines below the matrix
         'additional_line_property':  matrix_field.__dict__.get('additional_line_property', None),
 
         # If set to true, hide the first column of the table.
@@ -500,9 +500,6 @@ def matrix_write_patch(func):
             # Write one matrix at a time
             for (matrix_id, conf) in _get_matrix_fields_conf(obj).items():
 
-                # Get our date ranges
-                (date_range, active_date_range, editable_date_range) = _get_date_range(report, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
-
                 # Regroup fields by lines
                 lines = {}
                 for (f_id, f_value) in vals.items():
@@ -516,6 +513,13 @@ def matrix_write_patch(func):
                         line_data = lines.get(line_id, {})
                         line_data.update({f_id: f_value})
                         lines[line_id] = line_data
+
+                # No matrix data was edited on that matrix, so skip updating it
+                if not lines:
+                    continue
+
+                # Get our date ranges
+                (date_range, active_date_range, editable_date_range) = _get_date_range(report, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
 
                 # Write data of each line
                 for (line_id, line_data) in lines.items():
@@ -571,10 +575,9 @@ def matrix_write_patch(func):
                             else:
                                 cell_pool.write(cr, uid, cell_id, cell_vals, context)
 
-        # If there was no references to one of our line it means it was deleted
-        for report in obj.browse(cr, uid, ids, context):
-            removed_lines = list(set([l.id for l in _get_prop(report, conf['line_property'])]).difference(set(written_lines)))
-            obj.pool.get(conf['line_type']).unlink(cr, uid, removed_lines, context)
+                # If there was no references to one of our line it means it was deleted
+                removed_lines = list(set([l.id for l in _get_prop(report, conf['line_property'])]).difference(set(written_lines)))
+                report.pool.get(conf['line_type']).unlink(cr, uid, removed_lines, context)
 
         return result
 
