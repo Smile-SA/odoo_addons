@@ -41,9 +41,22 @@ class AnalyticAxis(osv.osv):
         for axis in self.browse(cr, 1, ids, context):
             if (not axis.active or context.get('unlink_axis') or not axis.is_budget_axis) and axis.column_label in line_obj._columns:
                 del line_obj._columns[axis.column_label]
+                if axis.field_ids:
+                    for field in axis.field_ids:
+                        column = '%s_%s' % (axis.column_label, field.id)
+                        if column in line_obj._columns:
+                            del line_obj._columns[column]
             elif axis.active and axis.is_budget_axis:
                 line_obj._columns[axis.column_label] = fields.many2one(axis.model, axis.name, \
                     domain=axis.domain and eval(axis.domain) or [], required=axis.required)
+                if axis.field_ids:
+                    for field in axis.field_ids:
+                        column = '%s_%s' % (axis.column_label, field.id)
+                        line_obj._columns[column] = fields.related(axis.column_label, field.name, \
+                            type=field.ttype, relation=field.relation, store={
+                                # To store and to avoid the field re-computation
+                                'crossovered.budget.lines': (lambda self, cr, uid, ids, context=None: [], None, 10),
+                            })
         line_obj._auto_init(cr, context)
         return True
 AnalyticAxis()
