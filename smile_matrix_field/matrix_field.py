@@ -285,6 +285,7 @@ class matrix(fields.dummy):
 
                 # Get all cells of the line, indexed by their IDs
                 cells = dict([(cell.id, cell) for cell in _get_prop(line, conf['cell_property'], [])])
+
                 # Provide to the matrix a cell for each active date in the range
                 cells_data = {}
                 for d in active_date_range:
@@ -300,7 +301,8 @@ class matrix(fields.dummy):
                     if not active_cell:
                         continue
                     # Pop the cell ID to mark it as consumed (this will prevent it to be automatticaly removed later)
-                    cells.pop(cell_id)
+                    if cell is not None:
+                        cells.pop(cell_id)
                     # Set the editability of the cell
                     read_only_cell = _get_prop(cell, conf['cell_readonly_property'], False)
                     if d not in editable_date_range:
