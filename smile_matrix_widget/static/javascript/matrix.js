@@ -51,7 +51,8 @@ $(document).ready(function(){
 
 
     // Label of buttons
-    var cycling_values = ['0', '0.5', '1'];
+    // TODO: produce this list from a matrix field parameter
+    var cycling_values = ['0', '1', '0.5'];
     var buttons = $(global_increment_button_selector);
 
 
