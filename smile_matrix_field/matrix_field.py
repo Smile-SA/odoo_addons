@@ -293,13 +293,14 @@ class matrix(fields.dummy):
                     for (cell_id, cell) in cells.items():
                         cell_date = datetime.datetime.strptime(_get_prop(cell, conf['cell_date_property']), '%Y-%m-%d').date()
                         if cell_date == d:
-                            cells.pop(cell_id)
                             break
                     cell_value = _get_prop(cell, conf['cell_value_property'], conf['default_cell_value'])
                     # Skip the cell to hide it if its active property is True
                     active_cell = _get_prop(cell, conf['cell_active_property'], True)
                     if not active_cell:
                         continue
+                    # Pop the cell ID to mark it as consumed (this will prevent it to be automatticaly removed later)
+                    cells.pop(cell_id)
                     # Set the editability of the cell
                     read_only_cell = _get_prop(cell, conf['cell_readonly_property'], False)
                     if d not in editable_date_range:
@@ -547,20 +548,28 @@ def matrix_write_patch(func):
                             conf['cell_value_property']: cell_value,
                             }
                         # Search for an existing cell at the given date
-                        cell = obj.pool.get(conf['cell_type']).search(cr, uid, [(conf['cell_date_property'], '=', cell_date), (conf['cell_inverse_property'], '=', line_id)], context=context, limit=1)
+                        cell_pool = obj.pool.get(conf['cell_type'])
+                        cell_ids = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date), (conf['cell_inverse_property'], '=', line_id)], context=context, limit=1)
                         # Cell doesn't exists, create it
-                        if not cell:
+                        if not cell_id:
                             cell_vals.update({
                                 conf['cell_date_property']: cell_date,
                                 conf['cell_inverse_property']: line_id,
                                 })
-                            obj.pool.get(conf['cell_type']).create(cr, uid, cell_vals, context)
-                        # Update cell with our data or delete it if it's out of range
+                            cell_pool.create(cr, uid, cell_vals, context)
+                        # Update or delete the cell
                         else:
+                            cell_id = cell_ids[0]
+                            # Compute the active state of the cell
+                            cell = cell_pool.browse(cr, uid, cell_id, context)
+                            active_cell = _get_prop(cell, conf['cell_active_property'], True)
                             if cell_date not in active_date_range:
-                                obj.pool.get(conf['cell_type']).unlink(cr, uid, cell, context)
+                                active_cell = False
+                            # Update cell with our data or delete it if it's not active
+                            if not active_cell:
+                                cell_pool.unlink(cr, uid, cell_id, context)
                             else:
-                                obj.pool.get(conf['cell_type']).write(cr, uid, cell, cell_vals, context)
+                                cell_pool.write(cr, uid, cell_id, cell_vals, context)
 
         # If there was no references to one of our line it means it was deleted
         for report in obj.browse(cr, uid, ids, context):
