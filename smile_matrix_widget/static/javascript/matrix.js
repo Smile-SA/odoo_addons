@@ -5,6 +5,12 @@ $(document).ready(function(){
         return $(elmnt).parents(".matrix").first();
     };
 
+    // Utility method to get increment values
+    function get_increment_values(elmnt){
+        var matrix = get_parent_matrix("#" + elmnt.attr("id"));
+        var matrix_id = matrix.attr("id");
+        return jQuery.parseJSON($("#" + matrix_id + "_increment_values").val());
+    };
 
     // Utility method to parse the ID of field following our naming conventions
     function parse_id(field_id){
@@ -51,8 +57,6 @@ $(document).ready(function(){
 
 
     // Label of buttons
-    // TODO: produce this list from a matrix field parameter
-    var cycling_values = ['0', '1', '0.5'];
     var buttons = $(global_increment_button_selector);
 
 
@@ -60,6 +64,7 @@ $(document).ready(function(){
     // TODO: make this an original method and call it everytime we render a float. Apply this to totals too.
     buttons.each(function(i, button){
         var $button = $(button);
+        var cycling_values = get_increment_values($button);
         for(i = 0; i < cycling_values.length; i++){
             if(parseFloat($button.text()) == parseFloat(cycling_values[i])){
                 $button.text(cycling_values[i]);
@@ -74,7 +79,8 @@ $(document).ready(function(){
     buttons.click(function(){
         var button_value_tag = $(this).parent().find("input");
         var button_label_tag = $(this);
-        var current_index = $.inArray(button_value_tag.val(), cycling_values);
+        var cycling_values = get_increment_values($(button_value_tag));
+        var current_index = $.inArray(parseFloat(button_value_tag.val()), cycling_values);
         var new_index = 0;
         if(!isNaN(current_index)) {
             new_index = (current_index + 1) % cycling_values.length;
@@ -191,6 +197,8 @@ $(document).ready(function(){
         // Get the current and highest level
         var level = get_level($(this));
         var highest_level = line_template_resources.length - 1;
+
+        var cycling_values = get_increment_values($(this));
 
         // Compute a new unique row index based on the other new rows in the matrix
         var new_row_index = 0;

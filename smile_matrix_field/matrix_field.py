@@ -113,6 +113,7 @@ def _get_conf(o, matrix_id=None):
         # Widget configuration
         'default_widget_type': matrix_field.__dict__.get('default_widget_type', 'float'),
         'dynamic_widget_type_property': matrix_field.__dict__.get('dynamic_widget_type_property', None),
+        'increment_values': matrix_field.__dict__.get('increment_values', [0, 0.5, 1.0]),
 
         # Property name from which we get the cells composing the matrix.
         # Cells are fetched from the lines as defined above.

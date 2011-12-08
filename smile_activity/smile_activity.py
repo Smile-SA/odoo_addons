@@ -51,14 +51,15 @@ class smile_activity_report(osv.osv):
                 ],
             default_widget_type          = 'increment',
             dynamic_widget_type_property = 'line_type',
+            increment_values             = [-1, 0.0, 2.71, 3.14],
             cell_property         = 'cell_ids',
             cell_type             = 'smile.activity.report.cell',
             cell_inverse_property = 'line_id',
             cell_value_property   = 'cell_value',
             cell_date_property    = 'date',
-            date_range_property          = 'date_range',
+            date_range_property        = 'date_range',
             active_date_range_property = 'active_date_range',
-            date_format                  = '%d',
+            date_format                = '%d',
             additional_columns=[
                 {'label': "Productivity", 'line_property': "productivity_index"},
                 {'label': "Performance", 'line_property': "performance_index"},
@@ -270,7 +271,7 @@ class smile_activity_report_cell(osv.osv):
         return True
 
     _constraints = [
-        (_check_quantity, "Quantity can't be negative.", ['quantity']),
+        #(_check_quantity, "Quantity can't be negative.", ['quantity']),
         (_check_duplicate, "Two cells can't share the same date.", ['date']),
         # Constraint below is not required as the matrix code will remove out of range cells
         #(_check_date, "Cell date is out of the activity report date range.", ['date']),

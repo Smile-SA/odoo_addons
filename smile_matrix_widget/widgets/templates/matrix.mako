@@ -1,5 +1,6 @@
 <%!
     import datetime
+    import json
 %>
 
 
@@ -276,6 +277,7 @@
             body_lines   = [l for l in lines if l.get('position', 'body') not in ['top', 'bottom']]
 
             resource_value_list = value['resource_value_list']
+            increment_values = value['increment_values']
             date_range = value['date_range']
             date_format = value['date_format']
             hide_line_title = value['hide_line_title']
@@ -418,6 +420,7 @@
                 <span id="matrix_button_template" class="button increment template">
                     Button template
                 </span>
+                <input type="hidden" id="${"%s_increment_values" % name}" value="${json.dumps(increment_values)}" title="Increment button values"/>
                 %if column_totals_warning_threshold is not None:
                     <input type="hidden" id="${"%s_column_warning_threshold" % name}" value="${column_totals_warning_threshold}" title="Column warning threshold"/>
                 %endif
