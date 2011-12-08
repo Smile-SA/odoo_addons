@@ -14,26 +14,6 @@
 </%def>
 
 
-<%def name="render_float_cell(float_value, cell_id=None, css_classes=[])">
-    <td
-        %if cell_id:
-            id="${cell_id}"
-        %endif
-        class="${' '.join(css_classes)}
-        %if not editable_mode:
-            %if float_value == 0.0:
-                zero
-            %elif float_value < 0.0:
-                negative
-            %endif
-        %endif
-        "
-    >
-        ${render_float(float_value)}
-    </td>
-</%def>
-
-
 <%def name="render_resources(line)">
     <%
         read_only = line.get('read_only', False)
@@ -58,13 +38,31 @@
 </%def>
 
 
-<%def name="render_cell(cell_id, cell_def, readonly=False, widget='float')">
-    <td>
-        %if cell_def is not None:
-            <%
-                cell_value = cell_def['value']
-            %>
-            %if editable_mode and not readonly and not cell_def['read_only']:
+<%def name="render_cell(cell_def, cell_id=None, force_readonly=None, widget='float', css_classes=[])">
+    <%
+        if cell_def is None:
+            cell_def = {}
+        cell_value = cell_def.get('value', None)
+        cell_editable = editable_mode
+        if cell_def.get('read_only', False) or force_readonly:
+            cell_editable = False
+    %>
+    <td
+        %if not cell_editable and cell_id:
+            id="${cell_id}"
+        %endif
+        class="${' '.join(css_classes)}
+        % if not editable_mode:
+            %if not cell_value:
+                zero
+            %elif cell_value < 0.0:
+                negative
+            %endif
+        %endif
+        "
+        >
+        %if cell_value is not None:
+            %if cell_editable:
                 %if widget == 'boolean':
                     <input type="hidden" kind="boolean" name="${cell_id}" id="${cell_id}" value="${cell_value and '1' or '0'}"/>
                     <input type="checkbox" enabled="enabled" kind="boolean" class="checkbox" id="${cell_id}_checkbox_"
@@ -83,20 +81,7 @@
                         %endif
                     />
                 %else:
-                    <span kind="float" value="${render_float(cell_value)}"
-                        %if not editable_mode:
-                            %if cell_value == 0.0:
-                                class="zero"
-                            %elif cell_value < 0.0:
-                                class="negative"
-                            %endif
-                        %endif
-                        %if not readonly:
-                            id="${cell_id}"
-                        %endif
-                        >
-                            ${render_float(cell_value)}
-                    </span>
+                    ${render_float(cell_value)}
                 %endif
             %endif
         %endif
@@ -135,19 +120,29 @@
                 cell_id = '%s_cell_%s_%s' % (name, line['id'], date)
                 cell_def = line.get('cells_data', {}).get(date, None)
             %>
-            ${render_cell(cell_id, cell_def, line_readonly, line_widget)}
+            ${render_cell(cell_def, cell_id, line_readonly, line_widget)}
         %endfor
 
         %if not hide_line_totals:
             <%
                 row_total = sum([v['value'] for (k, v) in line.get('cells_data', dict()).items()])
                 row_total_cell_id = not read_only and "%s_row_total_%s" % (name, line['id']) or None
+                row_total_cell = {
+                    'value': row_total,
+                    'read_only': True,
+                    }
             %>
-            ${render_float_cell(row_total, cell_id=row_total_cell_id, css_classes=['total'])}
+            ${render_cell(row_total_cell, cell_id=row_total_cell_id, css_classes=['total'])}
         %endif
 
         %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_columns'] if 'line_property' in c]:
-            ${render_float_cell(line_property_value)}
+            <%
+                line_property_cell = {
+                    'value': line_property_value,
+                    'read_only': True,
+                    }
+            %>
+            ${render_cell(line_property_cell)}
         %endfor
     </tr>
 </%def>
@@ -198,15 +193,22 @@
                 row_total = []
                 for line in sub_lines:
                     row_total += [v['value'] for (k, v) in line.get('cells_data', dict()).items()]
-                row_total = sum(row_total)
+                row_total_cell = {
+                    'value': sum(row_total),
+                    'read_only': True,
+                    }
+                row_total_cell_id = "%s_row_total_%s" % (name, virtual_line['id'])
             %>
-            ${render_float_cell(row_total, cell_id="%s_row_total_%s" % (name, virtual_line['id']), css_classes=['total'])}
+            ${render_cell(row_total_cell, cell_id=row_total_cell_id, css_classes=['total'])}
         %endif
         %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
             <%
-                additional_sum = sum([line.get(line_property, 0.0) for line in sub_lines])
+                additional_sum_cell = {
+                    'value': sum([line.get(line_property, 0.0) for line in sub_lines]),
+                    'read_only': True,
+                }
             %>
-            ${render_float_cell(additional_sum)}
+            ${render_cell(additional_sum_cell)}
         %endfor
     </tr>
 </%def>
@@ -454,23 +456,35 @@
                                     column_total_css_classes = []
                                     if column_totals_warning_threshold is not None and column_total > column_totals_warning_threshold:
                                         column_total_css_classes.append('warning')
+                                    column_total_cell = {
+                                        'value': column_total,
+                                        'read_only': True,
+                                        }
+                                    column_total_cell_id = "%s_column_total_%s" % (name, date)
                                 %>
-                                ${render_float_cell(column_total, cell_id="%s_column_total_%s" % (name, date), css_classes=column_total_css_classes)}
+                                ${render_cell(column_total_cell, cell_id=column_total_cell_id, css_classes=column_total_css_classes)}
                             %else:
                                 <td></td>
                             %endif
                         %endfor
                         %if not hide_line_totals:
                             <%
-                                grand_total = sum([sum([v['value'] for (k, v) in line['cells_data'].items()]) for line in body_lines])
+                                grand_total_cell = {
+                                    'value': sum([sum([v['value'] for (k, v) in line['cells_data'].items()]) for line in body_lines]),
+                                    'read_only': True,
+                                    }
+                                grand_total_cell_id = "%s_grand_total" % name
                             %>
-                            ${render_float_cell(grand_total, cell_id="%s_grand_total" % name)}
+                            ${render_cell(grand_total_cell, cell_id=grand_total_cell_id)}
                         %endif
                         %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
                             <%
-                                additional_sum = sum([line.get(line_property, 0.0) for line in body_lines])
+                                additional_sum_cell = {
+                                    'value': sum([line.get(line_property, 0.0) for line in body_lines]),
+                                    'read_only': True,
+                                    }
                             %>
-                            ${render_float_cell(additional_sum, css_classes=['total'])}
+                            ${render_cell(additional_sum_cell, css_classes=['total'])}
                         %endfor
                     </tr>
                 %endif
