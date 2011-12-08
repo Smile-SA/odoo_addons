@@ -38,13 +38,13 @@
 </%def>
 
 
-<%def name="render_cell(cell_def, cell_id=None, force_readonly=None, widget='float', css_classes=[])">
+<%def name="render_cell(cell_def, cell_id=None, widget='float', css_classes=[])">
     <%
         if cell_def is None:
             cell_def = {}
         cell_value = cell_def.get('value', None)
         cell_editable = editable_mode
-        if cell_def.get('read_only', False) or force_readonly:
+        if cell_def.get('read_only', False):
             cell_editable = False
     %>
     <td
@@ -120,7 +120,7 @@
                 cell_id = '%s_cell_%s_%s' % (name, line['id'], date)
                 cell_def = line.get('cells_data', {}).get(date, None)
             %>
-            ${render_cell(cell_def, cell_id, line_readonly, line_widget)}
+            ${render_cell(cell_def, cell_id, line_widget)}
         %endfor
 
         %if not hide_line_totals:

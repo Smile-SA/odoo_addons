@@ -303,9 +303,12 @@ class matrix(fields.dummy):
                     # Pop the cell ID to mark it as consumed (this will prevent it to be automatticaly removed later)
                     if cell is not None:
                         cells.pop(cell_id)
-                    # Set the editability of the cell
+                    # Set cell editability according its dynamic property.
                     read_only_cell = _get_prop(cell, conf['cell_readonly_property'], False)
-                    if d not in editable_date_range:
+                    if line_data.get('read_only', False):
+                        # If the line is readonly then the cell is force to readonly.
+                        read_only_cell = True
+                    elif d not in editable_date_range:
                         # Column-level options override cells-level visibility properties
                         read_only_cell = True
                     # Pack all properties of the cell
