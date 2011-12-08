@@ -150,9 +150,10 @@
     <%
         res_id = res_def.get('id', None)
         res_values = res_def.get('values', [])
+        res_editable = res_def.get('editable', True)
         selector_id = "%s_res_list_%s" % (name, res_id)
     %>
-    %if len(res_values) and editable_mode:
+    %if len(res_values) and editable_mode and res_editable:
         <span class="resource_values">
             <select id="${selector_id}" kind="char" name="${selector_id}" type2="" operator="=" class="selection_search selection">
                 <option value="default" selected="selected">&mdash; Select here new line's resource &mdash;</option>

@@ -239,15 +239,17 @@ class matrix(fields.dummy):
             # Get the list of all objects new rows of the matrix can be linked to
             # Keep the original order defined in matrix properties
             resource_value_list = []
-            for res in conf['tree_definition']:
-                res_id = res['line_property']
-                res_type = res['resource_type']
-                res_domain = res.get('domain', [])
+            for level_def in conf['tree_definition']:
+                res_def = level_def.copy()
+                res_id = res_def.pop('line_property')
+                res_type = res_def.pop('resource_type')
+                res_domain = res_def.pop('domain', [])
                 p = base_object.pool.get(res_type)
-                resource_value_list.append({
+                res_def.update({
                     'id': res_id,
                     'values': [(o.id, self._get_title_or_id(o)) for o in p.browse(cr, uid, p.search(cr, uid, res_domain, context=context), context)],
                     })
+                resource_value_list.append(res_def)
 
             # Browse all lines that will compose our the main part of the matrix
             lines = [(line, 'body') for line in _get_prop(base_object, conf['line_property'], [])]

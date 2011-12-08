@@ -68,11 +68,9 @@ class smile_activity_workload(osv.osv):
                 { 'line_property': 'profile_id',
                   'resource_type': 'smile.activity.profile',
                   'domain': [('name', 'in', ['Consultant', 'Expert'])],
-                  'editable': False,
                 },
                 { 'line_property': 'employee_id',
                   'resource_type': 'smile.activity.employee',
-                  'editable': False,
                 },
                 ],
             # XXX 3-level resource test
