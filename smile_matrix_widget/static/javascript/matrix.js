@@ -110,7 +110,7 @@ $(document).ready(function(){
             // Select all fields of the columns we clicked in and sum them up
             var column_total = 0;
             // Only cells in the tbody of the table are sums up by columns
-            $("#" + matrix_id + " tbody [id*='_cell_'][id$='_" + column_index + "'])").each(function(){
+            $("#" + matrix_id + " tbody [id*='_cell_'][id$='_" + column_index + "']").each(function(){
                 cell_value = parseFloat($(this).val());
                 if (!isNaN(cell_value)) {
                     column_total += cell_value;
