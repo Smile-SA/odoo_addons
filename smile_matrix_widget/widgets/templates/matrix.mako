@@ -135,7 +135,11 @@
             ${render_cell(row_total_cell, cell_id=row_total_cell_id, css_classes=['total'])}
         %endif
 
-        %for line_property_cell in [line.get('cells_data', dict()).get(c['line_property'], {}) for c in value['additional_columns'] if 'line_property' in c]:
+        %for (line_property_cell, col_def) in [(line.get('cells_data', dict()).get(c['line_property'], {}), c) for c in value['additional_columns'] if 'line_property' in c]:
+            <%
+                if col_def.get('hide_value', False):
+                    line_property_cell.update({'value': None})
+            %>
             ${render_cell(line_property_cell)}
         %endfor
     </tr>
@@ -195,10 +199,10 @@
             %>
             ${render_cell(row_total_cell, cell_id=row_total_cell_id, css_classes=['total'])}
         %endif
-        %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
+        %for col_def in [c for c in value['additional_columns'] if 'line_property' in c]:
             <%
                 additional_sum_cell = {
-                    'value': sum([line.get('cells_data', dict()).get(line_property, {}).get('value', 0.0) for line in sub_lines]),
+                    'value': not col_def.get('hide_tree_totals', False) and sum([line.get('cells_data', dict()).get(col_def['line_property'], {}).get('value', 0.0) for line in sub_lines]) or None,
                     'read_only': True,
                 }
             %>

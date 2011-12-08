@@ -68,8 +68,8 @@ class smile_activity_workload(osv.osv):
             # XXX 3-level resource test
             #line_tree_property_list=[('profile_id', 'smile.activity.profile', []), ('employee_id', 'smile.activity.employee', []), ('workload_id', 'smile.activity.workload', [])],
             additional_columns=[
-                {'label': "Productivity", 'line_property': "productivity_index"},
-                {'label': "Performance", 'line_property': "performance_index"},
+                {'label': "Productivity", 'line_property': 'productivity_index', 'hide_value': True},
+                {'label': "Performance" , 'line_property': 'performance_index' , 'hide_tree_totals': True},
                 ],
             additional_line_property='additional_line_ids',
             column_totals_warning_threshold=None,
