@@ -135,13 +135,7 @@
             ${render_cell(row_total_cell, cell_id=row_total_cell_id, css_classes=['total'])}
         %endif
 
-        %for line_property_value in [line.get(c['line_property'], 0.0) for c in value['additional_columns'] if 'line_property' in c]:
-            <%
-                line_property_cell = {
-                    'value': line_property_value,
-                    'read_only': True,
-                    }
-            %>
+        %for line_property_cell in [line.get('cells_data', dict()).get(c['line_property'], {}) for c in value['additional_columns'] if 'line_property' in c]:
             ${render_cell(line_property_cell)}
         %endfor
     </tr>
@@ -204,7 +198,7 @@
         %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
             <%
                 additional_sum_cell = {
-                    'value': sum([line.get(line_property, 0.0) for line in sub_lines]),
+                    'value': sum([line.get('cells_data', dict()).get(line_property, {}).get('value', 0.0) for line in sub_lines]),
                     'read_only': True,
                 }
             %>
@@ -480,7 +474,7 @@
                         %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
                             <%
                                 additional_sum_cell = {
-                                    'value': sum([line.get(line_property, 0.0) for line in body_lines]),
+                                    'value': sum([line.get('cells_data', dict()).get(line_property, {}).get('value', 0.0) for line in body_lines]),
                                     'read_only': True,
                                     }
                             %>

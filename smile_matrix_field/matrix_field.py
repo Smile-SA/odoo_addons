@@ -97,6 +97,9 @@ def _get_conf(o, matrix_id=None):
         matrix_field = matrix_fields[matrix_id]
 
     conf = {
+        # TODO:
+        # Add a visibility option that accept 'hidden', 'readonly', 'editable' (default) or 'inactive'
+
         # TODO: guess line_type, cell_type and resource_type based on their xxx_property parameter counterparts
         # XXX Haven't found a cleaner way to get my matrix parameters... Any help is welcome ! :)
         # Property name from which we get the lines composing the matrix
@@ -128,7 +131,11 @@ def _get_conf(o, matrix_id=None):
         # The format we use to display date labels
         'date_format': matrix_field.__dict__.get('date_format', "%Y-%m-%d"),
 
-        # Add read-only columns at the end of the matrix
+        # Add read-only columns at the end of the matrix.
+        # It needs a list of dictionnary like this:
+        #    [{'label': "Productivity", 'line_property': 'productivity_index', 'hide_value': True},
+        #     {'label': "Performance" , 'line_property': 'performance_index' , 'hide_tree_totals': True},
+        #    ],
         'additional_columns': matrix_field.__dict__.get('additional_columns', []),
 
         # Add read-only lines below the matrix
@@ -323,12 +330,15 @@ class matrix(fields.dummy):
 
                 # Get data of additional columns
                 for line_property in [c['line_property'] for c in conf['additional_columns'] if 'line_property' in c]:
-                    if line_property in line_data:
-                        raise osv.except_osv('Error !', "line property %s conflicts with matrix line definition." % line_property)
+                    if line_property in line_data['cells_data']:
+                        raise osv.except_osv('Error !', "Additional line property %s conflicts with matrix column ID." % line_property)
                     v = _get_prop(line, line_property)
                     if type(v) != type(0.0):
                         v = float(v)
-                    line_data.update({line_property: v})
+                    line_data['cells_data'].update({line_property: {
+                        'value': v,
+                        'read_only': True,
+                        }})
 
                 matrix_data.append(line_data)
 
