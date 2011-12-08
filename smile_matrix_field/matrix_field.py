@@ -107,8 +107,10 @@ def _get_conf(o, matrix_id=None):
         'line_type': matrix_field.__dict__.get('line_type', None),
         'line_inverse_property': matrix_field.__dict__.get('line_inverse_property', None),
 
-        # Get line properties from which we derive the matrix resources
-        'line_tree_property_list': matrix_field.__dict__.get('line_tree_property_list', None),
+        # Get line tree definition
+        'tree_definition': matrix_field.__dict__.get('tree_definition', None),
+
+        # Widget configuration
         'default_widget_type': matrix_field.__dict__.get('default_widget_type', 'float'),
         'dynamic_widget_type_property': matrix_field.__dict__.get('dynamic_widget_type_property', None),
 
@@ -174,13 +176,13 @@ def _get_conf(o, matrix_id=None):
         }
 
     # Check that all required parameters are there
-    for p_name in ['line_property', 'line_type', 'line_inverse_property', 'line_tree_property_list', 'cell_property', 'cell_type', 'cell_inverse_property', 'cell_value_property', 'cell_date_property']:
+    for p_name in ['line_property', 'line_type', 'line_inverse_property', 'tree_definition', 'cell_property', 'cell_type', 'cell_inverse_property', 'cell_value_property', 'cell_date_property']:
         if not conf.get(p_name, None):
             raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
 
-    # line_tree_property_list required at least one parameter
-    if type(conf['line_tree_property_list']) != type([]) or len(conf['line_tree_property_list']) < 1:
-        raise osv.except_osv('Error !', "line_tree_property_list parameter must be a list with at least one element.")
+    # tree_definition list required at least one parameter
+    if type(conf['tree_definition']) != type([]) or len(conf['tree_definition']) < 1:
+        raise osv.except_osv('Error !', "tree_definition parameter must be a list with at least one element.")
 
     # Normalize parameters
     if conf['hide_tree']:
@@ -237,7 +239,10 @@ class matrix(fields.dummy):
             # Get the list of all objects new rows of the matrix can be linked to
             # Keep the original order defined in matrix properties
             resource_value_list = []
-            for (res_id, res_type, res_domain) in conf['line_tree_property_list']:
+            for res in conf['tree_definition']:
+                res_id = res['line_property']
+                res_type = res['resource_type']
+                res_domain = res.get('domain', [])
                 p = base_object.pool.get(res_type)
                 resource_value_list.append({
                     'id': res_id,
@@ -281,12 +286,13 @@ class matrix(fields.dummy):
                 # Get all resources of the line
                 # Keep the order defined by matrix field's properties
                 res_list = []
-                for (res_id, res_type, res_domain) in conf['line_tree_property_list']:
-                    res = _get_prop(line, res_id)
+                for res in conf['tree_definition']:
+                    res_id = res['line_property']
+                    resource = _get_prop(line, res_id)
                     res_list.append({
                         'id': res_id,
-                        'label': self._get_title_or_id(res),
-                        'value': res.id,
+                        'label': self._get_title_or_id(resource),
+                        'value': resource.id,
                         })
                 line_data.update({'resources': res_list})
 
@@ -354,10 +360,10 @@ class matrix(fields.dummy):
                     'read_only': read_only_cell,
                     }
             template_resources = [{
-                    'id': res_id,
-                    'label': res_id.replace('_', ' ').title(),
+                    'id': res['line_property'],
+                    'label': res['line_property'].replace('_', ' ').title(),
                     'value': 0,
-                    } for (res_id, res_type, res_domain) in conf['line_tree_property_list']]
+                    } for res in conf['tree_definition']]
             # Add a row template at the end
             template_line_data = {
                 'id': "template",
@@ -542,7 +548,7 @@ def matrix_write_patch(func):
                     line_resources = dict([(parse_virtual_field_id(f_id)[3], int(v)) for (f_id, v) in line_data.items() if f_id.startswith('%s_res_' % matrix_id)])
                     # Check all required resources are provided by the matrix
                     res_ids = set(line_resources.keys())
-                    required_res_ids = set([prop_id for (prop_id, prop_type, prop_domain) in conf['line_tree_property_list']])
+                    required_res_ids = set([prop['line_property'] for prop in conf['tree_definition']])
                     if res_ids != required_res_ids:
                         raise osv.except_osv('Error !', "Line %s resource mismatch: %r provided while we're expecting %r." % (line_id, res_ids, required_res_ids))
                     # Get line cells
