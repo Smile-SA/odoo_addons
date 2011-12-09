@@ -320,9 +320,13 @@
                 border-bottom: 0;
             }
 
-            .item .matrix input,
+            .item .matrix input {
+                min-width: inherit;
+            }
+
             .item .matrix select {
                 min-width: inherit;
+                width: inherit;
             }
 
             div.non-editable .matrix table td {
@@ -334,11 +338,6 @@
 
             .matrix .toolbar {
                 margin-bottom: 1em;
-            }
-
-            .item .matrix select {
-                min-width: 15em;
-                max-width: 30em;
             }
 
             .matrix .zero {
@@ -379,6 +378,10 @@
             .matrix table .resource,
             .matrix table .resource_selector {
                 text-align: left;
+            }
+
+            .matrix table .resource_selector {
+                white-space: nowrap;
             }
 
             %if hide_line_title:
