@@ -204,9 +204,11 @@
         %for col_def in [c for c in value['additional_columns'] if 'line_property' in c]:
             <%
                 additional_sum_cell = {
-                    'value': not col_def.get('hide_tree_totals', False) and sum([line.get('cells_data', dict()).get(col_def['line_property'], {}).get('value', 0.0) for line in sub_lines]) or None,
+                    'value': None,
                     'read_only': True,
                 }
+                if not col_def.get('hide_tree_totals', False):
+                    additional_sum_cell.update({'value': sum([line.get('cells_data', dict()).get(col_def['line_property'], {}).get('value', 0.0) for line in sub_lines])})
             %>
             ${render_cell(additional_sum_cell)}
         %endfor
