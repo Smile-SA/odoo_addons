@@ -37,7 +37,6 @@ class Matrix(TinyInputWidget):
     params = ['widget']
 
     def __init__(self, **attrs):
-        name = 'matrix_%s' % (random.randint(0, 10000))
         super(Matrix, self).__init__(**attrs)
 
     def set_value(self, value):
