@@ -7,9 +7,7 @@ $(document).ready(function(){
 
     // Utility method to get increment values
     function get_increment_values(elmnt){
-        var matrix = get_parent_matrix("#" + elmnt.attr("id"));
-        var matrix_id = matrix.attr("id");
-        return jQuery.parseJSON($("#" + matrix_id + "_increment_values").val());
+        return jQuery.parseJSON($("#" + get_parent_matrix(elmnt).attr("id") + "_increment_values").val());
     };
 
     // Utility method to parse the ID of field following our naming conventions
