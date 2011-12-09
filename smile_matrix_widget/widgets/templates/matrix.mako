@@ -268,7 +268,7 @@
             value['row_uid'] = 1
 
             # Merge readonly with editable property
-            editable_mode = editable
+            editable_mode = editable and not readonly
             if value.get('readonly', None):
                 editable_mode = False
 
