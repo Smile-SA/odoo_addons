@@ -42,6 +42,18 @@ class smile_activity_workload(osv.osv):
             result[workload.id] = [l.id for l in workload.line_ids][::2]
         return result
 
+    def _get_employee_filter_domain(self, cr, uid, ids, name, arg, context=None):
+        """ Return a domain to filter employees.
+            The implemented rule is absolutely arbitrary and is just there to demonstrate usage of matrix's dynamic_domain_property parameter.
+        """
+        result = {}
+        for workload in self.browse(cr, uid, ids, context):
+            # Only allow employees with IDs of the same parity of workload's start date
+            odd_month = datetime.datetime.strptime(workload.start_date, '%Y-%m-%d').date().month % 2
+            employee_ids = [i for i in self.pool.get('smile.activity.employee').search(cr, uid, [], context=context) if odd_month ^ (not i % 2)]
+            result[workload.id] = [('id', 'in',  employee_ids)]
+        return result
+
 
     ## Fields definition
 
@@ -53,6 +65,7 @@ class smile_activity_workload(osv.osv):
         'date_range': fields.related('project_id', 'date_range', type='selection', string="Period date range", readonly=True),
         'line_ids': fields.one2many('smile.activity.workload.line', 'workload_id', "Workload lines"),
         'additional_line_ids': fields.function(_get_additional_line_ids, string="Additional lines", type='one2many', relation='smile.activity.workload.line', readonly=True, method=True),
+        'employee_filter': fields.function(_get_employee_filter_domain, string="Employee filter domain", type='string', readonly=True, method=True),
         'matrix_line_ids': matrix(
             line_property='line_ids',
             line_type='smile.activity.workload.line',
@@ -71,6 +84,7 @@ class smile_activity_workload(osv.osv):
                 },
                 { 'line_property': 'employee_id',
                   'resource_type': 'smile.activity.employee',
+                  'dynamic_domain_property': 'employee_filter',
                 },
                 ],
             # XXX 3-level resource test

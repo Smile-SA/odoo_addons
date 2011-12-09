@@ -244,8 +244,10 @@ class matrix(fields.dummy):
                 res_def = level_def.copy()
                 res_id = res_def.pop('line_property')
                 res_type = res_def.pop('resource_type')
-                res_domain = res_def.pop('domain', [])
                 p = base_object.pool.get(res_type)
+                # Compute domain by merging its static and dynamic definition
+                res_domain = res_def.pop('domain', []) + _get_prop(base_object, res_def.pop('dynamic_domain_property', None), [])
+                # Build up the resource definition
                 res_def.update({
                     'id': res_id,
                     'values': [(o.id, self._get_title_or_id(o)) for o in p.browse(cr, uid, p.search(cr, uid, res_domain, context=context), context)],
