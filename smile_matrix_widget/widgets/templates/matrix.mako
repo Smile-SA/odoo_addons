@@ -336,8 +336,9 @@
                 margin-bottom: 1em;
             }
 
-            .matrix select {
-                width: 30em;
+            .item .matrix select {
+                min-width: 15em;
+                max-width: 30em;
             }
 
             .matrix .zero {
@@ -370,7 +371,8 @@
                 margin-bottom: 1em;
             }
 
-            .matrix input {
+            .matrix input,
+            .matrix table .button {
                 text-align: center;
             }
 
@@ -385,10 +387,10 @@
                 }
             %endif
 
-            .matrix table .button.delete_row,
-            .matrix table .button.increment {
-                display: block;
+            .matrix table .button {
+                display: inline-block;
                 padding: .3em;
+                min-width: 2.2em;
             }
 
             .matrix td, div.non-editable .matrix table td,
