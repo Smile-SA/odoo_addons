@@ -126,7 +126,7 @@
 
         %if not hide_line_totals:
             <%
-                row_total = sum([v['value'] for (k, v) in line.get('cells_data', dict()).items()])
+                row_total = sum([v['value'] for (k, v) in line.get('cells_data', dict()).items() if k in date_range])
                 row_total_cell_id = not read_only and "%s_row_total_%s" % (name, line['id']) or None
                 row_total_cell = {
                     'value': row_total,
@@ -182,17 +182,31 @@
             ${css_class}
         %endif
         ">
+
         ${render_resources(virtual_line)}
-        <td colspan="${len(date_range) + 1}" class="resource_selector">
-            %if show_selector:
+
+        %if show_selector and len(res_values.get('values', [])) and editable_mode and res_values.get('editable', True):
+            <td colspan="${len(date_range) + 1}" class="resource_selector">
                 ${render_resource_selector(res_values)}
-            %endif
-        </td>
+            </td>
+        %else:
+            <td class="delete_line"></td>
+            %for date in date_range:
+                <%
+                    date_column_sum_cell = {
+                        'value': sum([line.get('cells_data', dict()).get(date, None).get('value', 0.0) for line in sub_lines]),
+                        'read_only': True,
+                        }
+                %>
+                ${render_cell(date_column_sum_cell)}
+            %endfor
+        %endif
+
         %if not hide_line_totals:
             <%
                 row_total = []
                 for line in sub_lines:
-                    row_total += [v['value'] for (k, v) in line.get('cells_data', dict()).items()]
+                    row_total += [v['value'] for (k, v) in line.get('cells_data', dict()).items() if k in date_range]
                 row_total_cell = {
                     'value': sum(row_total),
                     'read_only': True,
@@ -201,6 +215,7 @@
             %>
             ${render_cell(row_total_cell, cell_id=row_total_cell_id, css_classes=['total'])}
         %endif
+
         %for col_def in [c for c in value['additional_columns'] if 'line_property' in c]:
             <%
                 additional_sum_cell = {
@@ -474,7 +489,7 @@
                         %if not hide_line_totals:
                             <%
                                 grand_total_cell = {
-                                    'value': sum([sum([v['value'] for (k, v) in line['cells_data'].items()]) for line in body_lines]),
+                                    'value': sum([sum([v['value'] for (k, v) in line['cells_data'].items() if k in date_range]) for line in body_lines ]),
                                     'read_only': True,
                                     }
                                 grand_total_cell_id = "%s_grand_total" % name
