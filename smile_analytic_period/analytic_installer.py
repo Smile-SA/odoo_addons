@@ -19,35 +19,52 @@
 #
 ##############################################################################
 
+import time
+
 from osv import osv, fields
 from tools.translate import _
 
 class AnalyticInstaller(osv.osv_memory):
-    _inherit = 'account.installer'
+    _name = 'analytic.installer'
+    _inherit = 'res.config.installer'
 
     _columns = {
-        'analytic_period': fields.selection([('none', 'None'), ('global', 'Common for all companies'), ('specific', 'Specific to this company')], 'Analytic Periods', required=True),
+        'period': fields.selection([('none', 'None'), ('global', 'Common for all companies'), ('specific', 'Specific to this company')], 'Periods', required=True),
+        'company_id': fields.many2one('res.company', 'Company'),
+        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year'),
+        'date_start': fields.date('Start Date'),
+        'date_stop': fields.date('End Date'),
     }
 
+    def _default_company(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.company_id and user.company_id.id or False
+
     _defaults = {
-        'analytic_period': 'none',
+        'period': 'none',
+        'date_start': time.strftime('%Y-01-01'),
+        'date_stop': time.strftime('%Y-12-31'),
+        'company_id': _default_company,
     }
+
+    def onchange_fiscalyear_id(self, cr, uid, ids, fiscalyear_id):
+        res = {'value': {'date_start': '', 'date_stop': ''}}
+        if fiscalyear_id:
+            fiscalyear = self.pool.get('account.fiscalyear').read(cr, uid, fiscalyear_id, ['date_start', 'date_stop'])
+            res['value'].update({'date_start': fiscalyear['date_start'], 'date_stop': fiscalyear['date_stop']}) 
+        return res
 
     def execute(self, cr, uid, ids, context=None):
         super(AnalyticInstaller, self).execute(cr, uid, ids, context)
-        context = context or {}
-        fiscalyear_obj = self.pool.get('account.fiscalyear')
-        for wizard in self.read(cr, uid, ids, ['analytic_period', 'date_start', 'date_stop', 'company_id'], context, load='_classic_write'):
-            if wizard['analytic_period'] != 'none':
-                if wizard['analytic_period'] == 'specific' and not wizard['company_id']:
-                    raise osv.except_osv(_('Warning!'), _('You cannot create specific analytic periods if you don\'t specify a company!'))
-                domain = [
-                    ('date_start', '=', wizard['date_start']),
-                    ('date_stop', '=', wizard['date_stop']),
-                    ('company_id', '=', wizard['company_id']),
-                    ('period_ids', '!=', False),
-                ]
-                fiscalyear_ids = fiscalyear_obj.search(cr, uid, domain, context=context)
-                context['analytic_period'] = wizard['analytic_period']
-                fiscalyear_obj.create_analytic_periods(cr, uid, fiscalyear_ids, context)
+        for wizard in self.read(cr, uid, ids, context=context, load='_classic_write'):
+            if wizard['period'] != 'none':
+                date_start = wizard.get('date_start')
+                date_stop = wizard.get('date_stop')
+                fiscalyear_id = False
+                if wizard.get('fiscalyear_id'):
+                    fiscalyear_id = wizard['fiscalyear_id']
+                    fiscalyear = self.pool.get('account.fiscalyear').read(cr, uid, fiscalyear_id, ['date_start', 'date_stop'], context)
+                    date_start = fiscalyear['date_start']
+                    date_stop = fiscalyear['date_stop']
+                self.pool.get('account.analytic.period').create_periods(cr, uid, date_start, date_stop, {'fiscalyear_id': fiscalyear_id})
 AnalyticInstaller()

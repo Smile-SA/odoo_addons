@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import time
 
 from osv import osv, fields
@@ -150,6 +152,31 @@ class AnalyticPeriod(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         self.clear_caches(cr)
         return super(AnalyticPeriod, self).unlink(cr, uid, ids, context)
+
+    def create_periods(self, cr, uid, global_date_start, global_date_stop, context=None, interval=1):
+        context = context or {}
+        date_start = datetime.strptime(global_date_start, '%Y-%m-%d')
+        date_stop = datetime.strptime(global_date_stop, '%Y-%m-%d')
+        while date_start < date_stop:
+            date_stop = min(date_start + relativedelta(months=interval, days= -1), date_stop)
+            vals = {
+                'name': date_start.strftime('%m/%Y'),
+                'code': date_start.strftime('%m/%Y'),
+                'date_start': date_start.strftime('%Y-%m-%d'),
+                'date_stop': date_stop.strftime('%Y-%m-%d'),
+            }
+            if context.get('fiscalyear_id'):
+                general_period_id = self.pool.get('account.period').search(cr, uid, [
+                    ('date_start', '<=', date_start.strftime('%Y-%m-%d')),
+                    ('date_stop', '>=', date_stop.strftime('%Y-%m-%d')),
+                    ('fiscalyear_id', '=', context['fiscalyear_id']),
+                ], limit=1, context=context)
+                if not general_period_id:
+                    raise osv.except_osv(_('Error'), _('Analytic periods must be shorter than general ones!'))
+                vals['general_period_id'] = general_period_id[0]
+            self.pool.get('account.analytic.period').create(cr, uid, vals, context)
+            date_start = date_start + relativedelta(months=interval)
+        return True
 AnalyticPeriod()
 
 class AnalyticLine(osv.osv):
@@ -165,7 +192,7 @@ class AnalyticLine(osv.osv):
         return res
 
     _columns = {
-        'period_id': fields.function(_get_period_id, method=True, type='many2one', relation='account.analytic.period', string='Period', required=True, store={
+        'period_id': fields.function(_get_period_id, method=True, type='many2one', relation='account.analytic.period', string='Period', required=False, store={
             'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['date'], 10),
         }),
         'create_period_id': fields.many2one('account.analytic.period', 'Create Period', domain=[('state', '!=', 'done')]),
