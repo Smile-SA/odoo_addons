@@ -156,9 +156,9 @@ class AnalyticPeriod(osv.osv):
     def create_periods(self, cr, uid, global_date_start, global_date_stop, context=None, interval=1):
         context = context or {}
         date_start = datetime.strptime(global_date_start, '%Y-%m-%d')
-        date_stop = datetime.strptime(global_date_stop, '%Y-%m-%d')
-        while date_start < date_stop:
-            date_stop = min(date_start + relativedelta(months=interval, days= -1), date_stop)
+        global_date_stop = datetime.strptime(global_date_stop, '%Y-%m-%d')
+        while date_start < global_date_stop:
+            date_stop = min(date_start + relativedelta(months=interval, days= -1), global_date_stop)
             vals = {
                 'name': date_start.strftime('%m/%Y'),
                 'code': date_start.strftime('%m/%Y'),
