@@ -35,7 +35,7 @@ class AccountFiscalyear(osv.osv):
         for fiscalyear in self.browse(cr, uid, ids, context):
             if not fiscalyear.period_ids:
                 raise osv.except_osv(_('Error'), _('Please, create general periods before analytic ones!'))
-            self.pool.get('account.analytic.period').create_periods(cr, uid, fiscalyear.date_start, fiscalyear.date_stop, context={'fiscalyear_id': not global_analytic_period and fiscalyear.id})
+            self.pool.get('account.analytic.period').create_periods(cr, uid, fiscalyear.date_start, fiscalyear.date_stop, context={'fiscalyear_id': fiscalyear.id})
         return {
             'type': 'ir.actions.act_window',
             'view_type': 'form',
