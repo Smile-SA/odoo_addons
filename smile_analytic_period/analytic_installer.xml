@@ -32,7 +32,8 @@
                             <field name="company_id" attrs="{'invisible': [('period', '!=', 'specific')], 'required': [('period', '=', 'specific')]}"/>
                             <field name="fiscalyear_id" attrs="{'invisible': [('period', '!=', 'specific')], 'required': [('period', '=', 'specific')]}" domain="[('company_id', '=', company_id)]"
                                 on_change="onchange_fiscalyear_id(fiscalyear_id)"/>
-                            <field name="date_start" attrs="{'invisible': [('period', '=', 'none')], 'readonly': [('period', '=', 'specific')], 'required': [('period', '=', 'global')]}"/>
+                            <field name="date_start" attrs="{'invisible': [('period', '=', 'none')], 'readonly': [('period', '=', 'specific')], 'required': [('period', '=', 'global')]}"
+                                on_change="onchange_date_start(date_start)"/>
                             <field name="date_stop" attrs="{'invisible': [('period', '=', 'none')], 'readonly': [('period', '=', 'specific')], 'required': [('period', '=', 'global')]}"/>
                         </group>
                     </group>

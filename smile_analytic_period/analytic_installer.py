@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import time
 
 from osv import osv, fields
@@ -54,6 +56,13 @@ class AnalyticInstaller(osv.osv_memory):
             res['value'].update({'date_start': fiscalyear['date_start'], 'date_stop': fiscalyear['date_stop']}) 
         return res
 
+    def onchange_date_start(self, cr, uid, ids, date_start=False):
+        if date_start:
+            date_start = datetime.strptime(date_start, "%Y-%m-%d")
+            date_stop = (date_start + relativedelta(months=12)) - relativedelta(days=1)
+            return {'value': {'date_stop': date_stop.strftime('%Y-%m-%d')}}
+        return {}
+
     def execute(self, cr, uid, ids, context=None):
         super(AnalyticInstaller, self).execute(cr, uid, ids, context)
         for wizard in self.read(cr, uid, ids, context=context, load='_classic_write'):
@@ -66,5 +75,7 @@ class AnalyticInstaller(osv.osv_memory):
                     fiscalyear = self.pool.get('account.fiscalyear').read(cr, uid, fiscalyear_id, ['date_start', 'date_stop'], context)
                     date_start = fiscalyear['date_start']
                     date_stop = fiscalyear['date_stop']
+                if date_start > date_stop:
+                    raise osv.except_osv(_('Warning!'), _('Start date must be prior than end date!'))
                 self.pool.get('account.analytic.period').create_periods(cr, uid, date_start, date_stop, {'fiscalyear_id': fiscalyear_id})
 AnalyticInstaller()
