@@ -385,7 +385,7 @@ class matrix(fields.dummy):
             matrix_def = conf
             matrix_def.update({
                 'matrix_data': matrix_data,
-                'date_range': [self._date_to_str(d) for d in date_range],  # Format our date range for our matrix # XXX Keep them as date objects ?
+                'date_range': [self._date_to_str(d) for d in date_range], # Format our date range for our matrix # XXX Keep them as date objects ?
                 'resource_value_list': resource_value_list,
                 })
 
@@ -424,7 +424,7 @@ def parse_virtual_field_id(id_string):
         matrix_id = splits[0]
     if not matrix_id:
         raise osv.except_osv('Error !', "Field %r has no matrix ID as a prefix." % id_string)
-    f_id = id_string[len(matrix_id)+1:]
+    f_id = id_string[len(matrix_id) + 1:]
     f_id_elements = f_id.split('_')
 
     # Check fields element lenght depending on their type
