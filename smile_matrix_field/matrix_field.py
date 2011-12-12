@@ -603,8 +603,7 @@ def matrix_write_patch(func):
 
                 # If there was no references to one of our line it means it was deleted
                 removed_lines = list(set([l.id for l in _get_prop(report, conf['line_property'])]).difference(set(written_lines)))
-                if removed_lines:
-                    report.pool.get(conf['line_type']).unlink(cr, uid, removed_lines, context)
+                report.pool.get(conf['line_type']).unlink(cr, uid, removed_lines, context)
 
         return result
 
