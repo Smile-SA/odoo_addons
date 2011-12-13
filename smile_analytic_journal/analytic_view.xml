@@ -29,6 +29,7 @@
 							<field name='required'/>
 							<field name='readonly'/>
 							<field name='searchable'/>
+							<field name='extended_filter'/>
 							<field name='groupable'/>
 							<field name='sequence'/>
 						</tree>
@@ -42,6 +43,7 @@
 								<field name='required'/>
 								<field name='readonly'/>
 								<field name='searchable'/>
+								<field name='extended_filter'/>
 								<field name='groupable'/>
 							</group>
 						</form>

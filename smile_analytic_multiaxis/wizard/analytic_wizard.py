@@ -32,7 +32,7 @@ class AnalyticDistributionKeyWizard(osv.osv):
         total_rate = sum([vals[k] for k in vals if k.startswith('axis_dest_item_id_')])
         if total_rate != 100.00:
             raise osv.except_osv(_('Error'), _('A distribution key is complete only if total rate is equal to 100% !'))
-        cr.execute("SELECT id, axis_dest_item_id, rate FROM account_analytic_distribution_key WHERE axis_src_item_id = %s AND active = TRUE" % vals['axis_src_item_id'])
+        cr.execute("SELECT id, axis_dest_item_id, rate FROM account_analytic_distribution_key WHERE axis_src_item_id = %s AND active = TRUE", (vals['axis_src_item_id'],))
         old_keys = dict([(item[1], {'rate': item[2], 'key_id': item[0]}) for item in cr.fetchall()])
         key_obj = self.pool.get(self._inherit)
         for item_id in (int(k.replace('axis_dest_item_id_', '')) for k in vals if k.startswith('axis_dest_item_id_')):
@@ -59,7 +59,7 @@ class AnalyticDistributionKeyWizard(osv.osv):
             args.append(('period_id.distribution_id', '=', context['default_distribution_id']))
         key_ids = self.pool.get(self._inherit).search(cr, uid, args, offset, limit, order, context)
         if key_ids:
-            cr.execute('SELECT axis_src_item_id FROM %s WHERE id IN (%s) GROUP BY axis_src_item_id' % (self._table, ','.join(map(str, key_ids))))
+            cr.execute('SELECT axis_src_item_id FROM %s WHERE id IN %s GROUP BY axis_src_item_id', (self._table, tuple(key_ids)))
             res = cr.fetchall()
             res = [item[0] for item in res]
         return count and len(res) or res 

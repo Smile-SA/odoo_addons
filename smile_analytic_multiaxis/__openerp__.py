@@ -25,8 +25,8 @@
     "author" : "Smile",
     "website" : "http://www.smile.fr",
     "category" : "Generic Modules/Accounting",
-    "depends" : ["smile_analytic_period"],
-    "description": """Multi-Axis Analytic Account
+    "depends" : ["account_accountant"],
+    "description": """Multi-Axis Analytic Accounting
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,

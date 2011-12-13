@@ -85,3 +85,4 @@ class ResGroup(osv.osv):
                 }, context)
         return True
 ResGroup()
+    

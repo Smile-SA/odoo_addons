@@ -94,6 +94,11 @@ msgid "Required"
 msgstr "Obligatoire"
 
 #. module: smile_analytic_journal
+#: field:account.analytic.journal.view.column,extended_filter:0
+msgid "Searchable via extended filters"
+msgstr "Recherchable via les filtres étendus"
+
+#. module: smile_analytic_journal
 #: field:account.analytic.journal.view.column,groupable:0
 msgid "Groupable"
 msgstr "Groupable"

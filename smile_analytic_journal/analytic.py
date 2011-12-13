@@ -47,6 +47,7 @@ class AnalyticJournalColumn(osv.osv):
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
         'searchable': fields.boolean('Searchable'),
+        'extended_filter': fields.boolean('Searchable via extended filters'),
         'groupable': fields.boolean('Groupable'),
     }
 
@@ -115,15 +116,16 @@ class AnalyticJournal(osv.osv):
             'domain': "[('journal_id', 'child_of', %s)]" % journal_id,
             'context': "{'journal_view_id': %s}" % (journal['view_id'] and journal['view_id'][0],),
         }
+        context = context or {}
         if context.get('target'):
             res['target'] = 'new'
         return res
 
     def create_menu(self, cr, uid, ids, context=None):
         try:
-            dummy, parent_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'menu_finance_entries')
+            dummy, parent_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'account_analytic_journal_entries')
         except:
-            raise osv.except_osv(_('Error'), _('The menu [xml_id=account.menu_finance_entries] is not found!'))
+            raise osv.except_osv(_('Error'), _('The menu [xml_id=account.account_analytic_journal_entries] is not found!'))
         if isinstance(ids, (int, long)):
             ids = [ids]
         for journal in self.browse(cr, uid, ids, context):
@@ -192,6 +194,13 @@ class AnalyticLine(osv.osv):
                 searchable_columns = [column for column in columns if column.searchable]
                 for column in searchable_columns:
                     res['arch'] += '    <field name="%s" string="%s"/>\n' % (column.field_id.name, column.name)
+                extended_filter_columns = [column for column in columns if column.extended_filter]
+                if extended_filter_columns:
+                    res['arch'] += '    <newline/>\n' \
+                                   '    <group expand="0" string="Extended..." groups="base.group_extended" colspan="%s" col="%s">\n' % (len(searchable_columns), len(extended_filter_columns))
+                    for column in extended_filter_columns:
+                        res['arch'] += '''        <field name="%s" string="%s"/>\n''' % (column.field_id.name, column.name)
+                    res['arch'] += '    </group>\n'
                 groupable_columns = [column for column in columns if column.groupable]
                 if groupable_columns:
                     res['arch'] += '    <newline/>\n' \

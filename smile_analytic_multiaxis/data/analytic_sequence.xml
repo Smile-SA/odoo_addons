@@ -2,15 +2,14 @@
 <openerp>
 	<data>
 		
-		<record forcecreate="1" id="framework_agreement_seq_type" model="ir.sequence.type">
-			<field name="name">Framework Agreement Number</field>
-			<field name="code">framework.agreement.ident_number</field>
+		<record forcecreate="1" id="account_analytic_line_audit_seq_type" model="ir.sequence.type">
+			<field name="name">Analytic Line Audit Ref</field>
+			<field name="code">account.analytic.line.audit_ref</field>
 		</record>
 		
-		<record forcecreate="1" id="framework_agreement_seq" model="ir.sequence">
-			<field name="name">Framework Agreement Number</field>
-			<field name="code">framework.agreement.ident_number</field>
-			<field name="padding" eval="8"/>
+		<record forcecreate="1" id="account_analytic_line_audit_seq" model="ir.sequence">
+			<field name="name">Analytic Line Audit Ref</field>
+			<field name="code">account.analytic.line.audit_ref</field>
 		</record>
 		
 	</data>
