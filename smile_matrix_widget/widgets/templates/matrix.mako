@@ -1,6 +1,6 @@
 <%!
     import datetime
-    import json
+    import simplejson as json
 %>
 
 
@@ -446,6 +446,7 @@
                 %if column_totals_warning_threshold is not None:
                     <input type="hidden" id="${"%s_column_warning_threshold" % name}" value="${column_totals_warning_threshold}" title="Column warning threshold"/>
                 %endif
+                <input type="hidden" id="${"%s_line_removed" % name}" value="" title="ID list of removed lines"/>
             </div>
         %endif
 
