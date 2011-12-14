@@ -66,7 +66,6 @@ class smile_activity_report(osv.osv):
                 ],
             column_totals_warning_threshold = 1.0,
             title = "Activity report lines",
-            readonly = False,
             ),
         # Test multiple matrix widget
         'matrix_line_ids_2': matrix(
@@ -93,7 +92,6 @@ class smile_activity_report(osv.osv):
             hide_column_totals       = True,
             hide_line_totals         = True,
             title = "Activity report lines 2",
-            readonly = False,
             ),
         }
 
