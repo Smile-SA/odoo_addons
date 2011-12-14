@@ -73,136 +73,113 @@ def _get_date_range(base_object, date_range_property, active_date_range_property
 
 
 
-def _get_matrix_fields(osv_instance):
-    """ Utility method to get all matrix fields defined on the class the provided object is an instance of.
-    """
-    field_defs = osv_instance.__dict__['_columns']
-    matrix_fields = dict([(f_id, f) for (f_id, f) in field_defs.items() if f.__dict__.get('_fnct', None) and getattr(f.__dict__['_fnct'], 'im_class', None) and f.__dict__['_fnct'].im_class.__module__ == globals()['__name__']])
-    if not len(matrix_fields):
-        return None
-    return matrix_fields
-
-
-
-def _get_conf(o, matrix_id=None):
-    """ Utility method to get the matrix configuration from itself or from any other place.
-        The returned configuration is normalized and parsed.
-    """
-    # Get the matrix field
-    matrix_field = o
-    if not isinstance(o, matrix):
-        matrix_fields = _get_matrix_field(o)
-        if matrix_id not in matrix_fields:
-            raise osv.except_osv('Error !', "%r matrix field not found on %r." % (matrix_id, o))
-        matrix_field = matrix_fields[matrix_id]
-
-    conf = {
-        # TODO:
-        # Add a visibility option that accept 'hidden', 'readonly', 'editable' (default) or 'inactive'
-
-        # TODO: guess line_type, cell_type and resource_type based on their xxx_property parameter counterparts
-        # XXX Haven't found a cleaner way to get my matrix parameters... Any help is welcome ! :)
-        # Property name from which we get the lines composing the matrix
-        'line_property': matrix_field.__dict__.get('line_property', None),
-        'line_type': matrix_field.__dict__.get('line_type', None),
-        'line_inverse_property': matrix_field.__dict__.get('line_inverse_property', None),
-
-        # Get line tree definition
-        'tree_definition': matrix_field.__dict__.get('tree_definition', None),
-
-        # Widget configuration
-        'default_widget_type': matrix_field.__dict__.get('default_widget_type', 'float'),
-        'dynamic_widget_type_property': matrix_field.__dict__.get('dynamic_widget_type_property', None),
-        'increment_values': matrix_field.__dict__.get('increment_values', [0, 0.5, 1.0]),
-
-        # Property name from which we get the cells composing the matrix.
-        # Cells are fetched from the lines as defined above.
-        'cell_property': matrix_field.__dict__.get('cell_property', None),
-        'cell_type': matrix_field.__dict__.get('cell_type', None),
-        'cell_inverse_property': matrix_field.__dict__.get('cell_inverse_property', None),
-        'cell_value_property': matrix_field.__dict__.get('cell_value_property', None),
-        'cell_date_property': matrix_field.__dict__.get('cell_date_property', None),
-        'cell_active_property': matrix_field.__dict__.get('cell_active_property', 'active'),
-        'cell_readonly_property': matrix_field.__dict__.get('cell_readonly_property', None),
-        'default_cell_value': matrix_field.__dict__.get('default_cell_value', 0.0),
-
-        # Property name of the relation field on which we'll call the date_range property
-        'date_range_property': matrix_field.__dict__.get('date_range_property', None),
-        'active_date_range_property': matrix_field.__dict__.get('active_date_range_property', None),
-        'editable_date_range_property': matrix_field.__dict__.get('editable_date_range_property', None),
-
-        # The format we use to display date labels
-        'date_format': matrix_field.__dict__.get('date_format', "%Y-%m-%d"),
-
-        # Add read-only columns at the end of the matrix.
-        # It needs a list of dictionnary like this:
-        #    [{'label': "Productivity", 'line_property': 'productivity_index', 'hide_value': True},
-        #     {'label': "Performance" , 'line_property': 'performance_index' , 'hide_tree_totals': True},
-        #    ],
-        'additional_columns': matrix_field.__dict__.get('additional_columns', []),
-
-        # Add read-only lines below the matrix
-        'additional_line_property':  matrix_field.__dict__.get('additional_line_property', None),
-
-        # If set to true, hide the first column of the table.
-        'hide_line_title': matrix_field.__dict__.get('hide_line_title', False),
-
-        # Do not allow the removal of lines
-        'hide_remove_line_buttons': matrix_field.__dict__.get('hide_remove_line_buttons', False),
-
-        # Columns and row totals are optionnal
-        'hide_column_totals': matrix_field.__dict__.get('hide_column_totals', False),
-        'hide_line_totals': matrix_field.__dict__.get('hide_line_totals', False),
-
-        # Set the threshold above which we set a column total in red. Set to None to desactivate the warning threshold.
-        'column_totals_warning_threshold': matrix_field.__dict__.get('column_totals_warning_threshold', None),
-
-        # If set to True this option will hide all tree-level add-line selectors.
-        'editable_tree': not matrix_field.__dict__.get('non_editable_tree', False),
-
-        # If set to True this option will hide all tree-level add-line selectors.
-        'hide_tree': matrix_field.__dict__.get('hide_tree', False),
-
-        # Additional classes can be manually added
-        'css_classes': matrix_field.__dict__.get('css_classes', []),
-
-        # TODO
-        'experimental_slider': matrix_field.__dict__.get('experimental_slider', False),
-
-        # Force the matrix in read only mode, even in editable mode
-        'readonly': matrix_field.__dict__.get('readonly', False),
-
-        # Get the matrix title
-        'title': matrix_field.__dict__.get('title', "Lines"),
-        }
-
-    # Check that all required parameters are there
-    for p_name in ['line_property', 'line_type', 'line_inverse_property', 'tree_definition', 'cell_property', 'cell_type', 'cell_inverse_property', 'cell_value_property', 'cell_date_property']:
-        if not conf.get(p_name, None):
-            raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
-
-    # tree_definition list required at least one parameter
-    if type(conf['tree_definition']) != type([]) or len(conf['tree_definition']) < 1:
-        raise osv.except_osv('Error !', "tree_definition parameter must be a list with at least one element.")
-
-    # Normalize parameters
-    if conf['hide_tree']:
-        conf['editable_tree'] = False
-    if conf['experimental_slider']:
-        conf['css_classes'] += ['slider']
-
-    return conf
-
-
-
-def _get_matrix_fields_conf(obj):
-    return dict([(matrix_id, _get_conf(matrix)) for (matrix_id, matrix) in _get_matrix_fields(obj).items()])
-
-
 
 class matrix(fields.dummy):
     """ A custom field to prepare data for, and mangle data from, the matrix widget.
+        If you need help, read the _parse_conf() method below to get the list of parameters and their purpose.
     """
+
+    def _parse_conf(self, conf_dict):
+        """ Utility method to get the matrix configuration from itself or from any other place.
+            The returned configuration is normalized and parsed.
+        """
+        conf = {
+            # TODO:
+            # Add a visibility option that accept 'hidden', 'readonly', 'editable' (default) or 'inactive'
+
+            # TODO: guess line_type, cell_type and resource_type based on their xxx_property parameter counterparts
+            # XXX Haven't found a cleaner way to get my matrix parameters... Any help is welcome ! :)
+            # Property name from which we get the lines composing the matrix
+            'line_property': conf_dict.get('line_property', None),
+            'line_type': conf_dict.get('line_type', None),
+            'line_inverse_property': conf_dict.get('line_inverse_property', None),
+
+            # Get line tree definition
+            'tree_definition': conf_dict.get('tree_definition', None),
+
+            # Widget configuration
+            'default_widget_type': conf_dict.get('default_widget_type', 'float'),
+            'dynamic_widget_type_property': conf_dict.get('dynamic_widget_type_property', None),
+            'increment_values': conf_dict.get('increment_values', [0, 0.5, 1.0]),
+
+            # Property name from which we get the cells composing the matrix.
+            # Cells are fetched from the lines as defined above.
+            'cell_property': conf_dict.get('cell_property', None),
+            'cell_type': conf_dict.get('cell_type', None),
+            'cell_inverse_property': conf_dict.get('cell_inverse_property', None),
+            'cell_value_property': conf_dict.get('cell_value_property', None),
+            'cell_date_property': conf_dict.get('cell_date_property', None),
+            'cell_active_property': conf_dict.get('cell_active_property', 'active'),
+            'cell_readonly_property': conf_dict.get('cell_readonly_property', None),
+            'default_cell_value': conf_dict.get('default_cell_value', 0.0),
+
+            # Property name of the relation field on which we'll call the date_range property
+            'date_range_property': conf_dict.get('date_range_property', None),
+            'active_date_range_property': conf_dict.get('active_date_range_property', None),
+            'editable_date_range_property': conf_dict.get('editable_date_range_property', None),
+
+            # The format we use to display date labels
+            'date_format': conf_dict.get('date_format', "%Y-%m-%d"),
+
+            # Add read-only columns at the end of the matrix.
+            # It needs a list of dictionnary like this:
+            #    [{'label': "Productivity", 'line_property': 'productivity_index', 'hide_value': True},
+            #     {'label': "Performance" , 'line_property': 'performance_index' , 'hide_tree_totals': True},
+            #    ],
+            'additional_columns': conf_dict.get('additional_columns', []),
+
+            # Add read-only lines below the matrix
+            'additional_line_property':  conf_dict.get('additional_line_property', None),
+
+            # If set to true, hide the first column of the table.
+            'hide_line_title': conf_dict.get('hide_line_title', False),
+
+            # Do not allow the removal of lines
+            'hide_remove_line_buttons': conf_dict.get('hide_remove_line_buttons', False),
+
+            # Columns and row totals are optionnal
+            'hide_column_totals': conf_dict.get('hide_column_totals', False),
+            'hide_line_totals': conf_dict.get('hide_line_totals', False),
+
+            # Set the threshold above which we set a column total in red. Set to None to desactivate the warning threshold.
+            'column_totals_warning_threshold': conf_dict.get('column_totals_warning_threshold', None),
+
+            # If set to True this option will hide all tree-level add-line selectors.
+            'editable_tree': not conf_dict.get('non_editable_tree', False),
+
+            # If set to True this option will hide all tree-level add-line selectors.
+            'hide_tree': conf_dict.get('hide_tree', False),
+
+            # Additional classes can be manually added
+            'css_classes': conf_dict.get('css_classes', []),
+
+            # TODO
+            'experimental_slider': conf_dict.get('experimental_slider', False),
+
+            # Force the matrix in read only mode, even in editable mode
+            'readonly': conf_dict.get('readonly', False),
+
+            # Get the matrix title
+            'title': conf_dict.get('title', "Lines"),
+            }
+
+        # Check that all required parameters are there
+        for p_name in ['line_property', 'line_type', 'line_inverse_property', 'tree_definition', 'cell_property', 'cell_type', 'cell_inverse_property', 'cell_value_property', 'cell_date_property']:
+            if not conf.get(p_name, None):
+                raise osv.except_osv('Error !', "%s parameter is missing." % p_name)
+
+        # tree_definition list required at least one parameter
+        if type(conf['tree_definition']) != type([]) or len(conf['tree_definition']) < 1:
+            raise osv.except_osv('Error !', "tree_definition parameter must be a list with at least one element.")
+
+        # Normalize parameters
+        if conf['hide_tree']:
+            conf['editable_tree'] = False
+        if conf['experimental_slider']:
+            conf['css_classes'] += ['slider']
+
+        return conf
+
 
     ## Utility methods
 
@@ -224,11 +201,18 @@ class matrix(fields.dummy):
 
     ## Native methods
 
+    def __init__(self, *arg, **args):
+        #arg = (args['line_type'], args['line_inverse_property'], "Matrix lines")
+        #args.update({'type': 'one2many'})
+        super(matrix, self).__init__(*arg, **args)
+        # Parse and store matrix config
+        self.matrix_conf = self._parse_conf(args)
+
+
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
         """
-        conf = _get_conf(self)
-
+        conf = self.matrix_conf
         # Browse through all objects on which our matrix field is defined
         matrix_list = {}
         for base_object in obj.browse(cr, uid, ids, context):
@@ -404,6 +388,7 @@ def parse_virtual_field_id(id_string):
             * MATRIX_ID_res_template_PROPERTY_ID  (ignored)
             * MATRIX_ID_res_dummyXX_PROPERTY_ID   (ignored)
             * MATRIX_ID_res_list_PROPERTY_ID      (ignored)
+            * MATRIX_ID_line_removed
             * MATRIX_ID_cell_XX_YYYYMMDD
             * MATRIX_ID_cell_newXX_YYYYMMDD
             * MATRIX_ID_cell_template_YYYYMMDD    (ignored)
@@ -411,6 +396,7 @@ def parse_virtual_field_id(id_string):
     """
     # Separate the matrix ID and the field ID
     matrix_id = None
+    #RESERVED_IDS = ['cell', 'line', 'res']
     RESERVED_IDS = ['cell', 'res']
     for reserved_id in RESERVED_IDS:
         splits = id_string.split('_%s_' % reserved_id)
@@ -420,7 +406,7 @@ def parse_virtual_field_id(id_string):
         # or we already found a matrix ID but we can still split with another reserved ID.
         # In either case, that's bad !
         if len(splits) > 2 or matrix_id is not None:
-            raise osv.except_osv('Error !', "Field %r is composed of two reserved IDs %r." % (id_string, RESERVED_IDS))
+            raise osv.except_osv('Error !', "Field %r is composed of more than one of the reserved words %r." % (id_string, RESERVED_IDS))
         matrix_id = splits[0]
     if not matrix_id:
         raise osv.except_osv('Error !', "Field %r has no matrix ID as a prefix." % id_string)
@@ -460,6 +446,23 @@ def parse_virtual_field_id(id_string):
 
     # Requested field doesn't follow matrix convention
     raise osv.except_osv('Error !', "Field %r doesn't respect matrix widget conventions." % id_string)
+
+
+
+def _get_matrix_fields(osv_instance):
+    """ Utility method to get all matrix fields defined on the class the provided object is an instance of.
+    """
+    field_defs = osv_instance.__dict__['_columns']
+    # The existence of a matrix_conf property indicate that the field is a matrix
+    matrix_fields = dict([(f_id, f) for (f_id, f) in field_defs.items() if f.__dict__.get('matrix_conf', False)])
+    if not len(matrix_fields):
+        return None
+    return matrix_fields
+
+
+
+def _get_matrix_fields_conf(obj):
+    return dict([(matrix_id, matrix.matrix_conf) for (matrix_id, matrix) in _get_matrix_fields(obj).items()])
 
 
 
