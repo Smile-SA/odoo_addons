@@ -26,7 +26,10 @@
     "website": 'http://www.smile.fr',
     "category" : "Custom",
     "description": "An example module demonstrating the use of the matrix widget.",
-    "depends" : ['base'],
+    "depends" : [
+        'base',
+        'smile_matrix_field',
+        ],
     "init_xml" : [],
     "update_xml": [
         'smile_activity_view.xml',
