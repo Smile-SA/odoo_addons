@@ -7,8 +7,6 @@ This is a prototype of a matrix widget for OpenERP 6.0.x web client.
 
 This project is sponsored by [Smile](http://www.smile.fr).
 
-This code base was extracted from an internal Subversion repository and moved to Git following [this method](http://kevin.deldycke.com/2011/08/how-open-source-an-internal-corporate-project-webping/).
-
 
 Features
 --------
@@ -39,6 +37,21 @@ Here are some example use of the matrix:
 ![](http://github.com/kdeldycke/smile_matrix_widget/raw/master/screenshots/2-level-readonly-additional-lines-matrix.png)
 
 ![](http://github.com/kdeldycke/smile_matrix_widget/raw/master/screenshots/2-level-editable-additional-lines-matrix.png)
+
+
+FAQ
+---
+
+<dl>
+
+  <dt>
+    Why is this module not in [http://code.launchpad.net/smile-openerp](Smile's canonical repository for OpenERP contibutions) ?
+  </dt>
+  <dd>
+    This code started its life in Smile's internal Subversion repository and was [migrated to Git](http://kevin.deldycke.com/2011/08/how-open-source-an-internal-corporate-project-webping/) to not loose its commit history, which would have been the case if the project was to be pushed to Bazaar.
+  </dd>
+
+</dl>
 
 
 TODO
