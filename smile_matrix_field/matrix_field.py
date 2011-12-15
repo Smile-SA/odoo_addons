@@ -218,6 +218,14 @@ class matrix(fields.dummy):
         for base_object in obj.browse(cr, uid, ids, context):
             matrix_data = []
 
+            # Evaluate dynamic matrix properties
+            # Dynamic properties are those which value is a string instead of their native type
+            # Of course this only works with properties which native type is not strings
+            for flag_id in ['tree_definition', 'increment_values', 'default_cell_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'experimental_slider', 'readonly']:
+                flag_value = conf[flag_id]
+                if isinstance(flag_value, (str, unicode)):
+                    conf[flag_id] = _get_prop(base_object, flag_id, flag_value)
+
             # Get our date ranges
             (date_range, active_date_range, editable_date_range) = _get_date_range(base_object, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
 

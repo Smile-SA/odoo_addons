@@ -32,14 +32,29 @@ class smile_activity_report(osv.osv):
 
     #_order = "start_date"
 
+
+    ## Function fields
+
+    def _is_matrix_readonly(self, cr, uid, ids, name, arg, context=None):
+        """ Dynamiccaly set the readonly property of the matrix
+        """
+        result = {}
+        for line in self.browse(cr, uid, ids, context):
+            result[line.id] = True
+        return result
+
+
+    ## Fields definition
+
     _columns = {
         'name': fields.char('Name', size=32),
         'period_id': fields.many2one('smile.activity.period', "Period", required=True),
         'start_date': fields.related('period_id', 'start_date', type='date', string="Start date", readonly=True),
         'end_date': fields.related('period_id', 'end_date', type='date', string="End date", readonly=True),
+        'line_ids': fields.one2many('smile.activity.report.line', 'report_id', "Activity lines"),
         'date_range': fields.related('period_id', 'date_range', type='selection', string="Period date range", readonly=True),
         'active_date_range': fields.related('period_id', 'active_date_range', type='selection', string="Period active date range", readonly=True),
-        'line_ids': fields.one2many('smile.activity.report.line', 'report_id', "Activity lines"),
+        'is_matrix_readonly': fields.function(_is_matrix_readonly, string="Matrix dynamic readonly property", type='boolean', readonly=True, method=True),
         'matrix_line_ids': matrix(
             line_property           = 'line_ids',
             line_type               = 'smile.activity.report.line',
@@ -91,6 +106,7 @@ class smile_activity_report(osv.osv):
             hide_remove_line_buttons = True,
             hide_column_totals       = True,
             hide_line_totals         = True,
+            readonly = 'is_matrix_readonly',
             title = "Activity report lines 2",
             ),
         }
