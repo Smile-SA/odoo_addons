@@ -21,7 +21,7 @@
 
 {
     "name" : "Smile matrix widget examples",
-    "version" : "0.2",
+    "version" : "0.3.dev",
     "author" : "Smile",
     "website": 'http://www.smile.fr',
     "category" : "Custom",
