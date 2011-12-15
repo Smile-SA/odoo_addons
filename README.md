@@ -74,7 +74,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Changelog
 ---------
 
-* **0.2.dev** (unreleased yet)
+* **0.2** (2011-12-15)
   * First open-source public release
 
 * **0.1** (2011-11-21)

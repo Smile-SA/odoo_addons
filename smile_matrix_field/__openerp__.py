@@ -21,7 +21,7 @@
 
 {
     "name" : "Smile Matrix Field",
-    "version" : "0.2.dev",
+    "version" : "0.2",
     "author" : "Smile",
     "website": 'http://www.smile.fr',
     "category" : "Custom",
