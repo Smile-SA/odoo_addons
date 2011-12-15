@@ -1,5 +1,5 @@
-openerp.buildout
-================
+Smile Matrix Widget
+===================
 
 This is a prototype of a matrix widget for OpenERP 6.0.x web client.
 
