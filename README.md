@@ -5,6 +5,8 @@ This is a prototype of a matrix widget for OpenERP 6.0.x web client.
 
 This project is sponsored by Smile.
 
+![Screenshot of the Smile matrix widget in action](http://github.com/kdeldycke/smile_matrix_widget/raw/master/screenshots/ascii-art-matrix.png)
+
 
 Requirements
 ------------
