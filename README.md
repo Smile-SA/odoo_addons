@@ -7,11 +7,18 @@ This is a prototype of a matrix widget for OpenERP 6.0.x web client.
 
 This project is sponsored by [Smile](http://www.smile.fr).
 
+This code base was extracted from an internal Subversion repository and moved to Git following [this method](http://kevin.deldycke.com/2011/08/how-open-source-an-internal-corporate-project-webping/).
+
 
 Features
 --------
 
-  * TODO: list features here
+  * Per-column and per-cell editability and visibility
+  * Two types of cell widgets: float input fields and float increment buttons
+  * Hierarchical grouping of lines within the matrix body
+  * Lines can be added and deleted in edit mode
+  * Dynamic per-column and per-line sums in edit mode
+  * Date-based columns
 
 
 Requirements
