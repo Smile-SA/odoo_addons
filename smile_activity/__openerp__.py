@@ -20,12 +20,12 @@
 ##############################################################################
 
 {
-    "name" : "Smile - Activity",
-    "version" : "0.1",
+    "name" : "Smile matrix widget examples",
+    "version" : "0.2.dev",
     "author" : "Smile",
     "website": 'http://www.smile.fr',
     "category" : "Custom",
-    "description": "Smile - Activity",
+    "description": "An example module demonstrating the use of the matrix widget.",
     "depends" : ['base'],
     "init_xml" : [],
     "update_xml": [

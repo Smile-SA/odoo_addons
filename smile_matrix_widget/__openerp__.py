@@ -21,7 +21,7 @@
 
 {
     "name" : "Smile matrix widget",
-    "version" : "1.0",
+    "version" : "0.2.dev",
     "depends" : ["openerp"],
     "author" : "Smile.fr",
     "description": """Widget to display and edit a matrix of cell objects grouped by lines.""",
