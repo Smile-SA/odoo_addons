@@ -34,7 +34,6 @@ class Matrix(TinyInputWidget):
         JSLink("smile_matrix_widget", "javascript/matrix.js"),
         ]
 
-
     def __init__(self, name, model, view=None, domain=[], context={}, **kwargs):
         #attrs = kwargs.get('attrs', {})
         #xml_attrs   = isinstance(attrs,   (str, unicode)) and eval(attrs)   or attrs
