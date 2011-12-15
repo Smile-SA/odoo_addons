@@ -1,0 +1,10 @@
+# Python
+*.py[co]
+
+# VIM
+*.swp
+
+# Emacs
+*~
+\#*
+.\#*
