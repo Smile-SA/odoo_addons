@@ -60,13 +60,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Changelog
 ---------
 
-0.2 - 2011-05-09
+* **0.2.dev** (unreleased)
+  * First open-source public release
 
- * First public release
+* **0.1** (2011-11-21)
+  * First use in a customer project
 
-0.1 - 2011-05-09
-
-
-0.0 - 2011-05-09
-
- * First commit
+* **0.0** (2011-08-05)
+  * First commit
