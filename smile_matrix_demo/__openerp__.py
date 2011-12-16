@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Smile matrix widget examples",
+    "name" : "Smile matrix demo module",
     "version" : "0.3.dev",
     "author" : "Smile",
     "website": 'http://www.smile.fr',
