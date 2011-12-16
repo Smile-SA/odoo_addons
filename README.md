@@ -42,16 +42,9 @@ Here are some example use of the matrix:
 FAQ
 ---
 
-<dl>
+**Why is this module not in [http://code.launchpad.net/smile-openerp](Smile's canonical repository for OpenERP contibutions) ?**
 
-  <dt>
-    Why is this module not in [http://code.launchpad.net/smile-openerp](Smile's canonical repository for OpenERP contibutions) ?
-  </dt>
-  <dd>
-    This code started its life in Smile's internal Subversion repository and was [migrated to Git](http://kevin.deldycke.com/2011/08/how-open-source-an-internal-corporate-project-webping/) to not loose its commit history, which would have been the case if the project was to be pushed to Bazaar.
-  </dd>
-
-</dl>
+This code started its life in Smile's internal Subversion repository and was [migrated to Git](http://kevin.deldycke.com/2011/08/how-open-source-an-internal-corporate-project-webping/) to not loose its commit history, which would have been the case if the project was to be pushed to Bazaar.
 
 
 TODO
