@@ -3,7 +3,7 @@ Smile Matrix Widget
 
 This is a prototype of a matrix widget for OpenERP 6.0.x web client.
 
-![Screenshot of the Smile matrix widget in action](http://github.com/kdeldycke/smile_matrix_widget/raw/master/screenshots/ascii-art-matrix.png)
+![Screenshot of the Smile matrix widget in action](http://github.com/Smile-SA/smile_matrix_widget/raw/master/screenshots/ascii-art-matrix.png)
 
 This project is sponsored by [Smile](http://www.smile.fr).
 
@@ -30,13 +30,13 @@ Screenshots
 
 Here are some example use of the matrix:
 
-![](http://github.com/kdeldycke/smile_matrix_widget/raw/master/screenshots/1-level-readonly-matrix.png)
+![](http://github.com/Smile-SA/smile_matrix_widget/raw/master/screenshots/1-level-readonly-matrix.png)
 
-![](http://github.com/kdeldycke/smile_matrix_widget/raw/master/screenshots/1-level-editable-increment-matrix.png)
+![](http://github.com/Smile-SA/smile_matrix_widget/raw/master/screenshots/1-level-editable-increment-matrix.png)
 
-![](http://github.com/kdeldycke/smile_matrix_widget/raw/master/screenshots/2-level-readonly-additional-lines-matrix.png)
+![](http://github.com/Smile-SA/smile_matrix_widget/raw/master/screenshots/2-level-readonly-additional-lines-matrix.png)
 
-![](http://github.com/kdeldycke/smile_matrix_widget/raw/master/screenshots/2-level-editable-additional-lines-matrix.png)
+![](http://github.com/Smile-SA/smile_matrix_widget/raw/master/screenshots/2-level-editable-additional-lines-matrix.png)
 
 
 FAQ
