@@ -21,7 +21,7 @@
 
 import datetime
 
-from osv import osv, fields
+from osv import osv, fields, orm
 from tools.func import wraps
 
 
@@ -194,10 +194,8 @@ class matrix(fields.dummy):
         return date
 
     def _get_title_or_id(self, obj):
-        """ Return the title of the object or a descriptive string
-        """
-        return getattr(obj, 'name', None) or getattr(obj, 'title', None) or 'Untitled (ID: %s)' % obj.id
-
+        """ Return the title of the object or a descriptive string"""
+        return isinstance(obj, orm.browse_record) and getattr(obj, 'name_get')()[0][1] or obj or "Untitled"
 
     ## Native methods
 
