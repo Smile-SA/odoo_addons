@@ -23,7 +23,7 @@ import datetime
 
 from osv import osv, fields, orm
 from tools.func import wraps
-
+from tools.translate import _
 
 
 def _get_prop(obj, prop_name, default_value=None):
@@ -195,7 +195,7 @@ class matrix(fields.dummy):
 
     def _get_title_or_id(self, obj):
         """ Return the title of the object or a descriptive string"""
-        return isinstance(obj, orm.browse_record) and getattr(obj, 'name_get')()[0][1] or obj or "Untitled"
+        return isinstance(obj, orm.browse_record) and getattr(obj, 'name_get')()[0][1] or obj or _("Untitled")
 
     ## Native methods
 
