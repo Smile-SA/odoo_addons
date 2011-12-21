@@ -29,7 +29,7 @@ from tools.func import wraps
 def _get_prop(obj, prop_name, default_value=None):
     """ Get a property value
     """
-    if not prop_name or obj is None:
+    if not prop_name or obj is None or prop_name not in obj._columns:
         return default_value
     prop_value = getattr(obj, prop_name, default_value)
     if prop_value is None:
