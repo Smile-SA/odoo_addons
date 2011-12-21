@@ -459,7 +459,7 @@
                         <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
                     %if not hide_line_totals:
-                        <th class="total">Total</th>
+                        <th class="total">${value['total_label']}</th>
                     %endif
                     %for (i, c) in enumerate(value['additional_columns']):
                         <th>${c.get('label', "Additional column %s" % i)}</th>
@@ -469,7 +469,7 @@
             <tfoot>
                 %if not hide_column_totals:
                     <tr class="total">
-                        <td class="resource">Total</td>
+                        <td class="resource">${value['total_label']}</td>
                         <td></td>
                         %for date in date_range:
                             <%
