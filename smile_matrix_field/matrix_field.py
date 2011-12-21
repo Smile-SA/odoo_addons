@@ -161,7 +161,10 @@ class matrix(fields.dummy):
 
             # Get the matrix title
             'title': conf_dict.get('title', "Lines"),
-            }
+
+            # Get the matrix total label
+            'total_label': conf_dict.get('total_label', "Total"),
+        }
 
         # Check that all required parameters are there
         for p_name in ['line_property', 'line_type', 'line_inverse_property', 'tree_definition', 'cell_property', 'cell_type', 'cell_inverse_property', 'cell_value_property', 'cell_date_property']:
@@ -207,10 +210,21 @@ class matrix(fields.dummy):
         self.matrix_conf = self._parse_conf(args)
 
 
+    def _get_translations(self, cr, conf, context):
+        if conf.get('title'):
+            conf['title'] = _(conf['title'])
+        if conf.get('additional_columns'):
+            for index, column in enumerate(conf['additional_columns']):
+                conf['additional_columns'][index]['label'] = _(column['label'])
+        if conf.get('total_label'):
+            conf['total_label'] = _(conf['total_label'])
+        return conf
+
+
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
         """
-        conf = self.matrix_conf
+        conf = self._get_translations(cr, self.matrix_conf, context)
         # Browse through all objects on which our matrix field is defined
         matrix_list = {}
         for base_object in obj.browse(cr, uid, ids, context):
