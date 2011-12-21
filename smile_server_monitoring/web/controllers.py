@@ -21,10 +21,21 @@
 
 import time
 
+from openobject.errors import TinyError, TinyException
 from openobject.tools import expose, redirect
 from openerp.controllers import SecuredController, unsecured
 from openerp.controllers.root import Root
 from openerp.utils import rpc
+
+def _get_exception_message(e):
+    msg = e
+    if isinstance(e, (TinyError, TinyException)):
+        msg = e.message
+    if msg == 'Connection refused':
+        msg = 'Connection to the OpenERP server failed'
+    elif 'psycopg2.connect' in msg:
+        msg = 'Connection to the PostgreSQL server failed<br/>%s' % msg
+    return msg
 
 @expose()
 @unsecured
@@ -34,10 +45,10 @@ def db_list(self):
         db_list = rpc.session.execute_noauth('db', 'list', True)
         msg += "OK<br/>"
         msg += "Databases: %s" % ', '.join(map(str, db_list))
-    except:
-        msg += "KO"
+    except Exception, e:
+        msg += "KO<br/>Exception: %s" % _get_exception_message(e)
     finally:
-        msg += '<br/>%s' % time.strftime('%Y-%m-%d %H:%M:%S')
+        msg += '<br/>%s' % time.strftime('%Y-%m-%d %H:%M:%S %Z')
         return msg
 
 Root.db_list = db_list

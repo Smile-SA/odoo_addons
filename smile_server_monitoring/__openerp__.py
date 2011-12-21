@@ -23,7 +23,22 @@
     'name': 'Smile Server Monitoring',
     'version': '0.1',
     'category': 'Tools',
-    'description': "",
+    'description': """Smile Server Monitoring
+
+TO USE
+
+This module adds the following web page "/openerp/db_list" that displays:
+    * OpenERP Server: OK + Databases list
+or
+    * OpenERP Server: KO + Exception (indicates if is an OpenERP or Postgresql server connection issue)
+
+TO INSTALL
+
+After installing it via the web client as a server addon,
+add "active: True" in the file __openerp__.py of the new web addon
+
+Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr, kevin.deldycke@smile.fr
+""",
     'author': 'Smile',
     'website': 'http://www.smile.fr',
     'depends': ['base'],
