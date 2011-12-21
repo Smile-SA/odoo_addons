@@ -286,7 +286,7 @@ class matrix(fields.dummy):
                     resource = _get_prop(line, res_id)
                     res_list.append({
                         'id': res_id,
-                        'label': self._get_title_or_id(resource),
+                        'label': resource.id and self._get_title_or_id(resource) or line_data['name'],
                         'value': resource.id,
                         })
                 line_data.update({'resources': res_list})
