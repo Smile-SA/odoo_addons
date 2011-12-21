@@ -30,6 +30,6 @@
     'init_xml' : [],
     'update_xml': [],
     'installable': True,
-    'active': True,
+    'active': False,
     'web': True,
 }
