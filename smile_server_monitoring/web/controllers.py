@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import time
+
 from openobject.tools import expose, redirect
 from openerp.controllers import SecuredController, unsecured
 from openerp.controllers.root import Root
@@ -35,6 +37,7 @@ def db_list(self):
     except:
         msg += "KO"
     finally:
+        msg += '<br/>%s' % time.strftime('%Y-%m-%d %H:%M:%S')
         return msg
 
 Root.db_list = db_list
