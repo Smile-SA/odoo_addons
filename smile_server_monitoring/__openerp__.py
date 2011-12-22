@@ -27,7 +27,7 @@
 
 TO USE
 
-This module adds the following web page "/openerp/db_list" that displays:
+This module adds the following web page "/openerp/status" that displays:
     * OpenERP Server: OK + Databases list
 or
     * OpenERP Server: KO + Exception (indicates if is an OpenERP or Postgresql server connection issue)

@@ -39,7 +39,7 @@ def _get_exception_message(e):
 
 @expose()
 @unsecured
-def db_list(self):
+def status(self):
     msg = "OpenERP Server: "
     try:
         db_list = rpc.session.execute_noauth('db', 'list', True)
@@ -51,4 +51,4 @@ def db_list(self):
         msg += '<br/>%s' % time.strftime('%Y-%m-%d %H:%M:%S %Z')
         return msg
 
-Root.db_list = db_list
+Root.status = status
