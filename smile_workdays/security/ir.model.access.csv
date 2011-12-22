@@ -1,0 +1,3 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_res_country_holiday_erp_manager","res.country.holiday erp_manager","model_res_country_holiday","base.group_erp_manager",1,1,1,1
+"access_res_company_dayoff_erp_manager","res.company.dayoff erp_manager","model_res_company_dayoff","base.group_erp_manager",1,1,1,1
