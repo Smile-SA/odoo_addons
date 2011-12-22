@@ -16,7 +16,7 @@
 							<field name="sequence"/>
 							<field name="model" invisible="1"/>
 							<field name="window_action_ids" nolabel="1" colspan="2" domain="[('res_model', '=', model)]"/>
-							<label string="Select an object to filter the previous list. Let it empty if you want it to be displayed for all window actions" colspan="2"/>
+							<label string="Let it empty if you want it to be displayed for all window actions" colspan="2"/>
 						</group>
 					</xpath>
             	</data>
