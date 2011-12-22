@@ -2,7 +2,7 @@
 <openerp>
 	<data noupdate="0"> 
 		<record id="view_partner_form" model="ir.ui.view">
-            <field name="name">res.partner.webformance.form</field>
+            <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
