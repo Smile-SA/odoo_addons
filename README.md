@@ -23,6 +23,10 @@ Requirements
 ------------
 
   * OpenERP 6.0.x
+  * Chromium >= 1.5
+  * Firefox >= 8.0
+
+If you've successfully tested this widget with other or older browsers, please notify us.
 
 
 Screenshots
@@ -50,6 +54,8 @@ This code started its life in Smile's internal Subversion repository and was [mi
 TODO
 ----
 
+  * Fix boolean widget
+  * Fix matrix style when in tab (notebook).
   * Add example data in the smile_matrix_demo module.
   * Clean up code and architecture ! ;)
 
@@ -88,7 +94,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Changelog
 ---------
 
-* **0.3.dev** (unreleased yet)
+* **0.3** (2011-12-23)
   * Only remove lines when they are explicitely deleted by the user.
   * Fix JavaScript grand total and column total on line deletion.
 
@@ -96,7 +102,7 @@ Changelog
   * First open-source public release
 
 * **0.1** (2011-11-21)
-  * First use in a customer project
+  * First internal use in a customer project
 
 * **0.0** (2011-08-05)
   * First commit

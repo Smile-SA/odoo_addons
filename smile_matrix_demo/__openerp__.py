@@ -21,9 +21,9 @@
 
 {
     "name" : "Smile matrix demo module",
-    "version" : "0.3.dev",
+    "version" : "0.3",
     "author" : "Smile",
-    "website": 'http://www.smile.fr',
+    "website": 'http://github.com/Smile-SA/smile_matrix_widget',
     "category" : "Custom",
     "description": "An example module demonstrating the use of the matrix widget.",
     "depends" : [

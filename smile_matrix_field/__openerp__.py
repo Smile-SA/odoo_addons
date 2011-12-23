@@ -21,9 +21,9 @@
 
 {
     "name" : "Smile Matrix Field",
-    "version" : "0.3.dev",
+    "version" : "0.3",
     "author" : "Smile",
-    "website": 'http://www.smile.fr',
+    "website": 'http://github.com/Smile-SA/smile_matrix_widget',
     "category" : "Custom",
     "description": "Smile Matrix Field",
     "depends" : ['base'],
