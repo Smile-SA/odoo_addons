@@ -133,7 +133,7 @@ $(document).ready(function(){
     function update_grand_total(matrix_id){
         // Only compute grand totals from cells in the tbody
         var grand_total = 0;
-        $("#" + matrix_id + " tbody [id^='" + matrix_id + "_row_total_']").each(function(){
+        $("#" + matrix_id + " tbody [id^='" + matrix_id + "_row_total_']:not([id^='" + matrix_id + "_row_total_dummy'])").each(function(){
             grand_total += parseFloat($(this).text());
         });
         $("#" + matrix_id + "_grand_total").text(grand_total).effect("highlight");
