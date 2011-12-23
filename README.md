@@ -50,6 +50,7 @@ This code started its life in Smile's internal Subversion repository and was [mi
 TODO
 ----
 
+  * Add example data in the smile_matrix_demo module.
   * Clean up code and architecture ! ;)
 
 
