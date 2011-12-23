@@ -385,7 +385,7 @@
             }
 
             %if hide_line_title:
-                .matrix table .resource {
+                #${name}.matrix table .resource {
                     display: none;
                 }
             %endif
@@ -422,12 +422,12 @@
 
             %if not hide_tree:
                 %for i in range(1, len(resource_value_list)):
-                    .matrix tbody tr.level_${i} td, div.non-editable .matrix table tbody tr.level_${i} td {
+                    #${name}.matrix tbody tr.level_${i} td, div.non-editable .matrix table tbody tr.level_${i} td {
                         border-top-width: ${len(resource_value_list) - i + 1}px;
                     }
-                    .matrix .level_${i+1} td.resource,
-                    .matrix .level_${i+1} td.resource_selector,
-                    .matrix .level_${i+1} td.delete_line {
+                    #${name}.matrix .level_${i+1} td.resource,
+                    #${name}.matrix .level_${i+1} td.resource_selector,
+                    #${name}.matrix .level_${i+1} td.delete_line {
                         padding-left: ${i}em;
                     }
                 %endfor
