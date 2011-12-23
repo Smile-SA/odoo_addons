@@ -94,9 +94,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Changelog
 ---------
 
+* **0.4.dev** (unreleased)
+  * No changes yet
+
 * **0.3** (2011-12-23)
-  * Only remove lines when they are explicitely deleted by the user.
-  * Fix JavaScript grand total and column total on line deletion.
+  * Only remove lines when they are explicitely deleted by the user
+  * Fix JavaScript grand total and column total on line deletion
 
 * **0.2** (2011-12-15)
   * First open-source public release
