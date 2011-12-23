@@ -24,8 +24,8 @@ $(document).ready(function(){
         id_parts.push(matrix_id);
         // Extract other field elements
         var parts = field_id.slice(matrix_prefix.length).split("_");
-        if($.inArray(parts[0], ["res", "cell", "line"]) == -1){
-            alert("Matrix ERROR: field ID " + field_id + " is not a ressource, a cell or a line !");
+        if($.inArray(parts[0], ["res", "cell", "line", "column"]) == -1){
+            alert("Matrix ERROR: field ID " + field_id + " is not a ressource, a cell, a line or a column !");
             return;
         };
         // If we're parsing a resource field id, then its ID elements past its 2 firsts compose a property ID.
@@ -90,15 +90,34 @@ $(document).ready(function(){
     });
 
 
-    // Compute columns and row totals
-    $(".matrix input[id*='_cell_']").change(function(){
-        // Get current cell coordinates
-        var name_fragments = parse_id($(this).attr("id"));
-        var matrix_id = name_fragments[0];
-        var column_index = name_fragments[name_fragments.length - 1];
-        var row_index = name_fragments[name_fragments.length - 2];
+    // Update a column total
+    function update_column_total(matrix_id, column_index){
+        // Select all fields of the columns and sum them up
+        var column_total = 0;
+        // Only cells in the tbody of the table are sums up by columns
+        $("#" + matrix_id + " tbody [id*='_cell_'][id$='_" + column_index + "']").each(function(){
+            cell_value = parseFloat($(this).val());
+            if (!isNaN(cell_value)) {
+                column_total += cell_value;
+            };
+        });
+        $("#" + matrix_id + "_column_total_" + column_index).text(column_total).effect("highlight", function(){
+            // Get warning threshold
+            var column_threshold = parseFloat($("#" + matrix_id + "_column_warning_threshold").first().val());
+            if (!isNaN(column_threshold)) {
+                if(column_total > column_threshold){
+                    $(this).addClass("warning");
+                } else {
+                    $(this).removeClass("warning");
+                };
+            };
+        });
+    };
 
-        // Select all fields of the row we clicked in and sum them up
+
+    // Update a row total
+    function update_row_total(matrix_id, row_index){
+        // Select all fields of the row and sum them up
         var row_total = 0;
         $("#" + matrix_id + " tbody [id*='_cell_" + row_index + "_']").each(function(){
             cell_value = parseFloat($(this).attr('value'));
@@ -107,38 +126,31 @@ $(document).ready(function(){
             };
         });
         $("#" + matrix_id + "_row_total_" + row_index).text(row_total).effect("highlight");
+    };
 
-        // Only update column totals and grand totals for cell in the tbody
-        if($(this).parentsUntil("#" + matrix_id, "tbody").length > 0) {
 
-            // Select all fields of the columns we clicked in and sum them up
-            var column_total = 0;
-            // Only cells in the tbody of the table are sums up by columns
-            $("#" + matrix_id + " tbody [id*='_cell_'][id$='_" + column_index + "']").each(function(){
-                cell_value = parseFloat($(this).val());
-                if (!isNaN(cell_value)) {
-                    column_total += cell_value;
-                };
-            });
-            $("#" + matrix_id + "_column_total_" + column_index).text(column_total).effect("highlight", function(){
-                // Get warning threshold
-                var column_threshold = parseFloat($("#" + matrix_id + "_column_warning_threshold").first().val());
-                if (!isNaN(column_threshold)) {
-                    if(column_total > column_threshold){
-                        $(this).addClass("warning");
-                    } else {
-                        $(this).removeClass("warning");
-                    };
-                };
-            });
+    // Update grand total
+    function update_grand_total(matrix_id){
+        // Only compute grand totals from cells in the tbody
+        var grand_total = 0;
+        $("#" + matrix_id + " tbody [id^='" + matrix_id + "_row_total_']").each(function(){
+            grand_total += parseFloat($(this).text());
+        });
+        $("#" + matrix_id + "_grand_total").text(grand_total).effect("highlight");
+    };
 
-            // Compute the grand-total
-            var grand_total = 0;
-            $("#" + matrix_id + " tbody [id^='" + matrix_id + "_row_total_']").each(function(){
-                grand_total += parseFloat($(this).text());
-            });
-            $("#" + matrix_id + "_grand_total").text(grand_total).effect("highlight");
-        };
+
+    // Compute columns and row totals
+    $(".matrix input[id*='_cell_']").change(function(){
+        // Get current cell coordinates
+        var name_fragments = parse_id($(this).attr("id"));
+        var matrix_id = name_fragments[0];
+        var column_index = name_fragments[name_fragments.length - 1];
+        var row_index = name_fragments[name_fragments.length - 2];
+        // Update all totals depending of that cell
+        update_column_total(matrix_id, column_index);
+        update_row_total(matrix_id, row_index);
+        update_grand_total(matrix_id);
     });
 
 
@@ -372,8 +384,14 @@ $(document).ready(function(){
             line_removed_field.val(line_removed_field.val() + $(this).attr("id") + ',');
             // Really remove the row
             $(this).remove();
-            // Force update of column totals
-            matrix.find("tbody tr:first [id*='_cell_']").trigger("change");
+            // Force update of all column totals
+            matrix.find("tfoot tr.total [id^='" + matrix_id + "_column_total_']").each(function(){
+                var name_fragments = parse_id($(this).attr("id"));
+                var column_index = name_fragments[name_fragments.length - 1];
+                update_column_total(matrix_id, column_index);
+            });
+            // Update grand total
+            update_grand_total(matrix_id);
         });
     });
 

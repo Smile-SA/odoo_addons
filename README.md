@@ -90,6 +90,7 @@ Changelog
 
 * **0.3.dev** (unreleased yet)
   * Only remove lines when they are explicitely deleted by the user.
+  * Fix JavaScript grand total and column total on line deletion.
 
 * **0.2** (2011-12-15)
   * First open-source public release
