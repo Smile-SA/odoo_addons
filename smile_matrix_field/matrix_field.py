@@ -409,24 +409,26 @@ def parse_virtual_field_id(id_string):
             * MATRIX_ID_res_dummyXX_PROPERTY_ID   (ignored)
             * MATRIX_ID_res_list_PROPERTY_ID      (ignored)
             * MATRIX_ID_line_removed
+            * MATRIX_ID_line_XX
+            * MATRIX_ID_line_newXX
             * MATRIX_ID_cell_XX_YYYYMMDD
             * MATRIX_ID_cell_newXX_YYYYMMDD
             * MATRIX_ID_cell_template_YYYYMMDD    (ignored)
         XXX Can we increase the readability of the validation rules embedded in this method by using reg exps ?
     """
-    # Separate the matrix ID and the field ID
     matrix_id = None
-    #RESERVED_IDS = ['cell', 'line', 'res']
-    RESERVED_IDS = ['cell', 'res']
-    for reserved_id in RESERVED_IDS:
-        splits = id_string.split('_%s_' % reserved_id)
+    # List reserved IDS that are used to separate the matrix ID prefix with the rest of the field ID
+    RESERVED_SPLITBY_IDS = ['_cell_', '_res_', '_line_']
+    # Separate the matrix ID and the field ID
+    for reserved_id in RESERVED_SPLITBY_IDS:
+        splits = id_string.split(reserved_id)
         if len(splits) < 2:
             continue
         # Two instances of a reserved ID was found,
         # or we already found a matrix ID but we can still split with another reserved ID.
         # In either case, that's bad !
         if len(splits) > 2 or matrix_id is not None:
-            raise osv.except_osv('Error !', "Field %r is composed of more than one of the reserved words %r." % (id_string, RESERVED_IDS))
+            raise osv.except_osv('Error !', "Field %r is composed of more than one of the reserved strings %r." % (id_string, RESERVED_SPLITBY_IDS))
         matrix_id = splits[0]
     if not matrix_id:
         raise osv.except_osv('Error !', "Field %r has no matrix ID as a prefix." % id_string)
@@ -435,9 +437,10 @@ def parse_virtual_field_id(id_string):
 
     # Check fields element lenght depending on their type
     if (f_id_elements[0] == 'cell' and len(f_id_elements) == 3) or \
-       (f_id_elements[0] == 'res'  and len(f_id_elements) > 2):
+       (f_id_elements[0] == 'res'  and len(f_id_elements) >= 3) or \
+       (f_id_elements[0] == 'line' and len(f_id_elements) == 2):
 
-        # Silently ignore some fields that are used for interactivity only by the matrix javascript
+        # Silently ignore some fields that are only used for interactivity by the matrix javascript
         if f_id.startswith('cell_template_') or \
            f_id.startswith('res_template_')  or \
            f_id.startswith('res_dummy')      or \
@@ -457,11 +460,12 @@ def parse_virtual_field_id(id_string):
             except ValueError:
                 raise osv.except_osv('Error !', "Field %r don't have a valid %r date element." % (id_string, date_element))
 
-        # Check that that the second element is an integer. It is allowed to starts with the 'new' prefix.
+        # Check that the second element is an integer. It is allowed to starts with the 'new' prefix.
         id_element = f_id_elements[1]
         if id_element.startswith('new'):
             id_element = id_element[3:]
-        if str(int(id_element)) == id_element:
+        if (f_id_elements[0] == 'line' and id_element == 'removed') or \
+           str(int(id_element)) == id_element:
             return [matrix_id] + f_id_elements
 
     # Requested field doesn't follow matrix convention
@@ -509,7 +513,9 @@ def matrix_read_patch(func):
                     if parsed_elements and parsed_elements[0] == matrix_id:
                         f_id_elements = parsed_elements[1:]
                         field_value = None
-                        if not f_id_elements[1].startswith('new'):
+                        # Don't try to fetch current value of newly created cells and other write-only matrix-wide fields
+                        WRITE_ONLY_FIELDS = [['line', 'removed']]
+                        if f_id_elements not in WRITE_ONLY_FIELDS and not f_id_elements[1].startswith('new'):
                             line_id = int(f_id_elements[1])
                             if f_id_elements[0] == 'cell':
                                 cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d').date()
@@ -549,22 +555,34 @@ def matrix_write_patch(func):
             # Write one matrix at a time
             for (matrix_id, conf) in _get_matrix_fields_conf(obj).items():
 
-                # Regroup fields by lines
                 lines = {}
+                removed_lines = []
                 for (f_id, f_value) in vals.items():
-                    # Ignore non editable matrix cells
-                    if not(f_id.startswith('%s_res_' % matrix_id) or f_id.startswith('%s_cell_' % matrix_id)):
+
+                    # Ignore non-matrix fields
+                    if not f_id.startswith('%s_' % matrix_id):
                         continue
+
+                    # Parsing field ID will discard non-editable ones
                     parsed_elements = parse_virtual_field_id(f_id)
                     if parsed_elements and parsed_elements[0] == matrix_id:
                         f_id_elements = parsed_elements[1:]
-                        line_id = f_id_elements[1]
-                        line_data = lines.get(line_id, {})
-                        line_data.update({f_id: f_value})
-                        lines[line_id] = line_data
+
+                        # Catch removed lines field
+                        if f_id_elements == ['line', 'removed']:
+                            for line_id_elements in [parse_virtual_field_id(l_id.strip()) for l_id in f_value.split(',') if l_id.strip()]:
+                                if line_id_elements[0] == matrix_id and line_id_elements[1] == 'line' and not line_id_elements[2].startswith('new'):
+                                    removed_lines.append(int(line_id_elements[2]))
+
+                        # We're reading a _cell_ or a _res_ type of field: regroup them to the line they bbelongs to
+                        elif f_id_elements[0] in ['res', 'cell']:
+                            line_id = f_id_elements[1]
+                            line_data = lines.get(line_id, {})
+                            line_data.update({f_id: f_value})
+                            lines[line_id] = line_data
 
                 # No matrix data was edited on that matrix, so skip updating it
-                if not lines:
+                if not lines and not removed_lines:
                     continue
 
                 # Get our date ranges
@@ -624,8 +642,6 @@ def matrix_write_patch(func):
                             else:
                                 cell_pool.write(cr, uid, cell_id, cell_vals, context)
 
-                # If there was no references to one of our line it means it was deleted
-                removed_lines = list(set([l.id for l in _get_prop(report, conf['line_property'])]).difference(set(written_lines)))
                 if removed_lines:
                     report.pool.get(conf['line_type']).unlink(cr, uid, removed_lines, context)
 

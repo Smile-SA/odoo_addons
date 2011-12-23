@@ -55,7 +55,7 @@ class smile_activity_report(osv.osv):
         'date_range': fields.related('period_id', 'date_range', type='selection', string="Period date range", readonly=True),
         'active_date_range': fields.related('period_id', 'active_date_range', type='selection', string="Period active date range", readonly=True),
         'is_matrix_readonly': fields.function(_is_matrix_readonly, string="Matrix dynamic readonly property", type='boolean', readonly=True, method=True),
-        'matrix_line_ids': matrix(
+        'matrix_1': matrix(
             line_property           = 'line_ids',
             line_type               = 'smile.activity.report.line',
             line_inverse_property   = 'report_id',
@@ -83,7 +83,7 @@ class smile_activity_report(osv.osv):
             title = "Activity report lines",
             ),
         # Test multiple matrix widget
-        'matrix_line_ids_2': matrix(
+        'matrix_2': matrix(
             line_property           = 'line_ids',
             line_type               = 'smile.activity.report.line',
             line_inverse_property   = 'report_id',

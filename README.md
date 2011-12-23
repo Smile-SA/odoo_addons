@@ -88,7 +88,7 @@ Changelog
 ---------
 
 * **0.3.dev** (unreleased yet)
-  * No changes yet
+  * Only remove lines when they are explicitely deleted by the user.
 
 * **0.2** (2011-12-15)
   * First open-source public release

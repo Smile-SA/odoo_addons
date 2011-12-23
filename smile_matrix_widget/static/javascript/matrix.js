@@ -364,8 +364,12 @@ $(document).ready(function(){
         $(this).parentsUntil(".matrix", "tr").first().fadeOut('fast', function(){
             // Save the table body for late column totals update
             var matrix = get_parent_matrix($(this));
+            var matrix_id = matrix.attr("id");
             // Un-hide the entry from its selector
             $(update_parent_selector($(this), "show"));
+            // Add row ID to the list of lines to remove
+            var line_removed_field = $("#" + matrix_id + "_line_removed");
+            line_removed_field.val(line_removed_field.val() + $(this).attr("id") + ',');
             // Really remove the row
             $(this).remove();
             // Force update of column totals

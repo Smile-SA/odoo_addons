@@ -66,7 +66,7 @@ class smile_activity_workload(osv.osv):
         'line_ids': fields.one2many('smile.activity.workload.line', 'workload_id', "Workload lines"),
         'additional_line_ids': fields.function(_get_additional_line_ids, string="Additional lines", type='one2many', relation='smile.activity.workload.line', readonly=True, method=True),
         'employee_filter': fields.function(_get_employee_filter_domain, string="Employee filter domain", type='string', readonly=True, method=True),
-        'matrix_line_ids': matrix(
+        'matrix': matrix(
             line_property='line_ids',
             line_type='smile.activity.workload.line',
             line_inverse_property='workload_id',
@@ -80,7 +80,7 @@ class smile_activity_workload(osv.osv):
             tree_definition = [
                 { 'line_property': 'profile_id',
                   'resource_type': 'smile.activity.profile',
-                  'domain': [('name', 'in', ['Consultant', 'Expert'])],
+                  'domain': [('name', 'not in', ['Consultant', 'Expert'])],
                 },
                 { 'line_property': 'employee_id',
                   'resource_type': 'smile.activity.employee',
