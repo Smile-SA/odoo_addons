@@ -117,7 +117,7 @@ class AnalyticLine(osv.osv):
             ids = [ids]
         operator_ = entry_type == 'actual' and '__gt__' or '__lt__'
         for line in self.browse(cr, uid, ids, context):
-            if line.active and line.period_id and getattr(line.period_id.date_start, operator_)(time.strftime('%Y-%m-%d')) and line.type == entry_type:
+            if line.active and line.period_id and getattr(line.period_id.date_start, operator_)(line.create_period_id.date_start) and line.type == entry_type:
                 return False
         return True
 
