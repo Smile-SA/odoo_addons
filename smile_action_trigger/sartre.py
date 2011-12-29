@@ -467,10 +467,10 @@ class SartreTrigger(osv.osv):
                             'time':time,
                         }))
                     current_field_value = current_values.get(object_.id, {}).get(field)
-                    if field not in old_values.get(object_.id, {}):
+                    if 'OLD_' in condition[0] and field not in old_values.get(object_.id, {}):
                         active_object_ids = []
                         break
-                    old_field_value = old_values.get(object_.id, {})[field]
+                    old_field_value = old_values.get(object_.id, {}).get(field)
                     if remote_field:
                         current_field_value = _get_id_from_browse_record(getattr(current_field_value, remote_field))
                         old_field_value = _get_id_from_browse_record(old_field_value and getattr(old_field_value, remote_field))
