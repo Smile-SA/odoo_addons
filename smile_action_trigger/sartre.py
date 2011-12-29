@@ -520,8 +520,9 @@ class SartreTrigger(osv.osv):
         # Search objects which validate trigger filters
         res_ids = self.pool.get(trigger.model_id.model).search(cr, uid, domain, context=context)
         # To avoid infinite recursion
-        if trigger.id in context.get('triggers', []) and context['triggers'][trigger.id]:
-            res_ids = list(set(res_ids) - set(context['triggers'][trigger.id]))
+        context.setdefault('triggers', {}).setdefault(trigger.id, [])
+        res_ids = list(set(res_ids) - set(context['triggers'][trigger.id]))
+        context['triggers'][trigger.id].extend(res_ids)
         return res_ids
 
     def _run_now(self, cr, uid, trigger_id, context):
@@ -552,7 +553,6 @@ class SartreTrigger(osv.osv):
         # Execute server actions for filtered objects
         if filtered_object_ids or trigger.force_actions_execution:
             logger.info('[%s] Trigger on %s for objects %s,%s' % (pid, context.get('trigger', 'manual'), trigger.model_id.model, filtered_object_ids))
-            context.setdefault('triggers', {}).setdefault(trigger.id, []).extend(filtered_object_ids)
             if context.get('test_mode', False):
                 cr.execute("SAVEPOINT smile_action_trigger_test_mode_%s", (trigger.id,))
             for action in trigger.action_ids:
