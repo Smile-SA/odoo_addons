@@ -22,6 +22,7 @@
 import inspect
 import re
 import time
+import threading
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -446,6 +447,7 @@ class SartreTrigger(osv.osv):
         domain = domain or []
         operator_obj = self.pool.get('sartre.operator')
         old_values = context.get('old_values', {})
+        arg_values = context.get('arg_values', {})
         model_obj = self.pool.get(trigger.model_id.model)
         all_active_object_ids = context.get('active_object_ids', model_obj.search(cr, uid, [], context=context))
         current_values = _get_browse_record_dict(model_obj, cr, uid, all_active_object_ids, context=context)
@@ -467,17 +469,16 @@ class SartreTrigger(osv.osv):
                             'time':time,
                         }))
                     current_field_value = current_values.get(object_.id, {}).get(field)
-                    if 'OLD_' in condition[0] and field not in old_values.get(object_.id, {}):
-                        active_object_ids = []
-                        break
                     old_field_value = old_values.get(object_.id, {}).get(field)
+                    arg_value = arg_values.get(field)
                     if remote_field:
                         current_field_value = _get_id_from_browse_record(getattr(current_field_value, remote_field))
                         old_field_value = _get_id_from_browse_record(old_field_value and getattr(old_field_value, remote_field))
                     localdict = {'selected_field_value': 'OLD_' in condition[0] and old_field_value or current_field_value,
                                  'current_field_value': current_field_value,
                                  'old_field_value': old_field_value,
-                                 'other_value': other_value}
+                                 'other_value': other_value,
+                                 'arg_value': arg_value}
                     if operator_inst:
                         exec operator_inst.expression in localdict
                     if opposite_operator == localdict.get('result', opposite_operator):
@@ -561,8 +562,11 @@ class SartreTrigger(osv.osv):
                         cr.execute("SAVEPOINT smile_action_trigger_%s", (trigger.id,))
                     try:
                         logger.debug('[%s] Launch Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
-                        self._run_action_for_object_ids(cr, uid, action, filtered_object_ids, context)
-                        logger.time_info('[%s] Successful Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
+                        self._run_action(cr, uid, action, filtered_object_ids, context, logger, pid)
+                        if not action.specific_thread:
+                            logger.time_info('[%s] Successful Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
+                        else:
+                            logger.info('[%s] Action launched in a new thread: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
                     except Exception, e:
                         logger.exception('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
                         if trigger.exception_handling == 'continue' and not action.force_rollback:
@@ -585,14 +589,38 @@ class SartreTrigger(osv.osv):
         logger.time_debug('[%s] End' % (pid,))
         return True
 
+    def _run_action(self, cr, uid, action, object_ids, context, logger, pid):
+        if action.specific_thread:
+            new_thread = threading.Thread(target=self._run_action_in_new_thread, args=(cr.dbname, uid, action, object_ids, context, logger, pid))
+            new_thread.start()
+        else:
+            self._run_action_for_object_ids(cr, uid, action, object_ids, context)
+        return True
+
+    def _run_action_in_new_thread(self, dbname, uid, action, object_ids, context, logger, pid):
+        try:
+            db = pooler.get_db(dbname)
+        except:
+            return
+        cr = db.cursor()
+        try:
+            self._run_action_for_object_ids(cr, uid, action, object_ids, context)
+            cr.commit()
+            logger.time_info('[%s] Successful Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, object_ids))
+        except Exception, e:
+            logger.exception('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
+        finally:
+            cr.close()
+        return
+
     def _run_action_for_object_ids(self, cr, uid, action, object_ids, context):
-        context['active_ids'] = self._build_id_groups(cr, uid, action, object_ids, context)
+        context['active_ids'] = self._get_ids_by_group(cr, uid, action, object_ids, context)
         for active_id in context['active_ids']:
             context['active_id'] = active_id
             self.pool.get('ir.actions.server').run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context)
         return True
 
-    def _build_id_groups(self, cr, uid, action, object_ids, context):
+    def _get_ids_by_group(self, cr, uid, action, object_ids, context):
         if not action.run_once:
             # object_ids passed one by one
             return object_ids
@@ -771,21 +799,22 @@ def _get_args(method, args, kwargs):
     for index, arg in enumerate(args_names):
         if index < len(args):
             args_dict[arg] = args[index]
-    obj = args_dict.get('obj', False) or args_dict.get('self', False)
-    cr = args_dict.get('cursor', False) or args_dict.get('cr', False)
-    uid = args_dict.get('uid', False) or args_dict.get('user', False)
-    ids = args_dict.get('ids', []) or args_dict.get('id', [])
+    obj = args_dict.get('obj') or args_dict.get('self', False)
+    cr = args_dict.get('cursor') or args_dict.get('cr', False)
+    uid = args_dict.get('uid') or args_dict.get('user', False)
+    ids = args_dict.get('ids') or args_dict.get('id', [])
+    vals = args_dict.get('values') or args_dict.get('vals', {})
     if isinstance(ids, (int, long)):
         ids = [ids]
     field_name = args_dict.get('name', '')
     context = isinstance(args_dict.get('context'), dict) and dict(args_dict['context']) or {}
-    return obj, cr, uid, ids, field_name, context
+    return obj, cr, uid, ids, field_name, vals, context
 
 def sartre_decorator(original_method):
     @wraps(original_method)
     def wrapper(*args, **kwargs):
         # Get arguments
-        obj, cr, uid, ids, field_name, context = _get_args(original_method, args, kwargs)
+        obj, cr, uid, ids, field_name, vals, context = _get_args(original_method, args, kwargs)
         method_name = original_method.__name__
         context['trigger'] = method_name
         trigger_obj = obj.pool.get('sartre.trigger')
@@ -801,7 +830,11 @@ def sartre_decorator(original_method):
             # Save old values if triggers exist
             if trigger_ids and ids:
                 fields_list = trigger_obj.get_fields_to_save_old_values(cr, 1, trigger_ids)
-                context.update({'active_object_ids': ids, 'old_values': _get_browse_record_dict(obj, cr, uid, ids, fields_list, context)})
+                context.update({
+                    'active_object_ids': ids,
+                    'old_values': _get_browse_record_dict(obj, cr, uid, ids, fields_list, context),
+                    'arg_values': vals,
+                })
                 # Case: trigger on unlink
                 if method_name == 'unlink':
                     trigger_obj.run_now(cr, uid, trigger_ids, context=context)

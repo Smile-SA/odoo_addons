@@ -30,10 +30,22 @@ class IrActionsServer(osv.osv):
         'group_by': fields.char('Group by', size=128, help="If run_once is set to True: instances are passed to the actions grouped with other instances having the same group_by evaluation"),
         'user_id': fields.many2one('res.users', "User", help="If empty, the action is executed by the current user"),
         'force_rollback': fields.boolean('Force transaction rollback'),
+        'specific_thread': fields.boolean('Specific Thread'),
     }
 
     _defaults = {
         'active': True,
-        'run_once': False,
     }
+
+    def onchange_options(self, cr, uid, ids, field_to_update, force_rollback, specific_thread):
+        if (field_to_update == 'force_rollback' and specific_thread) \
+        or (field_to_update == 'specific_thread' and force_rollback):
+            return {'value': {field_to_update: False}}
+        return {}
+
+    def onchange_force_rollback(self, cr, uid, ids, specific_thread, force_rollback):
+        return self.onchange_options(cr, uid, ids, 'specific_thread', force_rollback, specific_thread)
+
+    def onchange_specific_thread(self, cr, uid, ids, force_rollback, specific_thread):
+        return self.onchange_options(cr, uid, ids, 'force_rollback', force_rollback, specific_thread)
 IrActionsServer()
