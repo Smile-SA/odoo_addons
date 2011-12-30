@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import time
-
 from osv import osv, fields
 
 class AnalyticLine(osv.osv):
@@ -126,7 +124,7 @@ class AnalyticLine(osv.osv):
 
     def _check_forecast_from_analysis_period(self, cr, uid, ids, context=None):
         return self._check_type_from_analysis_period(cr, uid, ids, 'forecast', context)
-    
+
     _constraints = [
         (_check_actual_from_analysis_period, 'You cannot pass an actual entry in a future period!', ['type', 'period_id']),
         (_check_forecast_from_analysis_period, 'You cannot pass a forecast entry in a past/current period!', ['type', 'period_id']),
@@ -147,7 +145,7 @@ class AnalyticLine(osv.osv):
             ids = [ids]
         for line in self.read(cr, uid, ids, self._unicity_fields, {}):
             domain = self._build_unicity_domain(line, initial_domain)
-            key_line_ids = self.search(cr, uid, domain, order='create_period_id desc, type asc', context=context)
+            key_line_ids = self.search(cr, uid, domain, order='create_period_id desc, type asc, id desc', context=context)
             no_actual_lines = 1
             key_line_id_to_type = dict([(line['id'], line['type']) for line in self.read(cr, uid, key_line_ids, ['type'], context)])
             for index, key_line_id in enumerate(key_line_ids):
