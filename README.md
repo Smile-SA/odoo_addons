@@ -95,7 +95,7 @@ Changelog
 ---------
 
 * **0.4.dev** (unreleased)
-  * No changes yet
+  * Per-line dynamic removable property
 
 * **0.3** (2011-12-23)
   * Only remove lines when they are explicitely deleted by the user

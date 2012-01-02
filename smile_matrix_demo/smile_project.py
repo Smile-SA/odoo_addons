@@ -73,7 +73,7 @@ class smile_activity_project(osv.osv):
             ('increment', 'Increment button'),
             ('boolean', 'Check box'),
             ], 'Matrix widget type', select=True, required=True),
-        'required': fields.boolean('Required in report'),
+        'add_by_default': fields.boolean('Added in report by default'),
         'start_date': fields.date('Start', required=True),
         'end_date': fields.date('End', required=True),
         # date_range is a requirement for the matrix widget
@@ -82,7 +82,7 @@ class smile_activity_project(osv.osv):
 
     _defaults = {
         'value_type': 'increment',
-        'required': False,
+        'add_by_default': True,
         }
 
 

@@ -59,6 +59,7 @@ class smile_activity_report(osv.osv):
             line_property           = 'line_ids',
             line_type               = 'smile.activity.report.line',
             line_inverse_property   = 'report_id',
+            line_removable_property = 'removable',
             tree_definition = [
                 { 'line_property': 'project_id',
                   'resource_type': 'smile.activity.project',
@@ -117,7 +118,7 @@ class smile_activity_report(osv.osv):
     def create(self, cr, uid, vals, context=None):
         report_id = super(smile_activity_report, self).create(cr, uid, vals, context)
         # Create default report lines
-        for project_id in self.pool.get('smile.activity.project').search(cr, uid, [('required', '=', True)], context=context):
+        for project_id in self.pool.get('smile.activity.project').search(cr, uid, [('add_by_default', '=', True)], context=context):
             vals = {
                 'report_id': report_id,
                 'project_id': project_id,
@@ -143,16 +144,16 @@ class smile_activity_report_line(osv.osv):
 
     ## Function fields
 
-    def _get_line_type(self, cr, uid, ids, name, arg, context=None):
-        """ The line type is derived from the project it's attached to
+    def _get_random_boolean(self, cr, uid, ids, name, arg, context=None):
+        """ Get a random boolean
         """
         result = {}
         for line in self.browse(cr, uid, ids, context):
-            result[line.id] = line.project_id.value_type
+            result[line.id] = random.randrange(0, 2)
         return result
 
-    def _get_random_int(self, cr, uid, ids, name, arg, context=None):
-        """ Get a random number between 0 and 100
+    def _get_random_integer(self, cr, uid, ids, name, arg, context=None):
+        """ Get a random number between 0 and 99
         """
         result = {}
         for line in self.browse(cr, uid, ids, context):
@@ -163,13 +164,17 @@ class smile_activity_report_line(osv.osv):
     ## Fields definition
 
     _columns = {
-        'name': fields.related('project_id', 'name', type='char', string='Project name', size=32, readonly=True),
         'report_id': fields.many2one('smile.activity.report', "Activity report", required=True, ondelete='cascade'),
         'project_id': fields.many2one('smile.activity.project', "Project", required=True),
         'cell_ids': fields.one2many('smile.activity.report.cell', 'line_id', "Cells"),
-        'line_type': fields.function(_get_line_type, string="Line type", type='string', readonly=True, method=True),
-        'performance_index': fields.function(_get_random_int, string="Performance index", type='float', readonly=True, method=True),
-        'productivity_index': fields.function(_get_random_int, string="Productivity index", type='float', readonly=True, method=True),
+
+        # Line name and widget type are derived from the project it's attached to
+        'name': fields.related('project_id', 'name', type='char', string='Project name', size=32, readonly=True),
+        'line_type': fields.related('project_id', 'value_type', type='char', string='Line widget', size=32, readonly=True),
+
+        'removable': fields.function(_get_random_boolean, string="Removable line", type='boolean', readonly=True, method=True),
+        'performance_index': fields.function(_get_random_integer, string="Performance index", type='float', readonly=True, method=True),
+        'productivity_index': fields.function(_get_random_integer, string="Productivity index", type='float', readonly=True, method=True),
         }
 
 

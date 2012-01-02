@@ -93,6 +93,7 @@ class matrix(fields.dummy):
             'line_property': conf_dict.get('line_property', None),
             'line_type': conf_dict.get('line_type', None),
             'line_inverse_property': conf_dict.get('line_inverse_property', None),
+            'line_removable_property': conf_dict.get('line_removable_property', None),
 
             # Get line tree definition
             'tree_definition': conf_dict.get('tree_definition', None),
@@ -270,15 +271,9 @@ class matrix(fields.dummy):
                     'name': self._get_title_or_id(line),
                     }
 
-                # Is this resource required ?
-                # FIX: 'required': getattr(getattr(line, conf['line_resource_property']), 'required', False),
-
-                # By marking lines as required, we implicitely hide its remove button
-                if conf['hide_remove_line_buttons']:
-                    line_data.update({'required': True})
-
                 # Get the type of the widget we'll use to display cell values
                 line_widget = _get_prop(line, conf['dynamic_widget_type_property'], conf['default_widget_type'])
+
                 # In case if boolean widget, force the position to bottom
                 if line_widget == 'boolean':
                     line_position = 'bottom'
@@ -286,10 +281,19 @@ class matrix(fields.dummy):
                 line_read_only = False
                 if line_position == 'bottom':
                     line_read_only = True
+
+                # Should we let the line be removable ?
+                line_removable = True
+                if line_read_only or conf['hide_remove_line_buttons']:
+                    line_removable = False
+                else:
+                    line_removable = _get_prop(line, conf['line_removable_property'], True)
+
                 line_data.update({
                     'widget': line_widget,
                     'position': line_position,
                     'read_only': line_read_only,
+                    'removable': line_removable,
                     })
 
                 # Get all resources of the line
@@ -382,7 +386,7 @@ class matrix(fields.dummy):
                 'resources':template_resources,
                 }
             if conf['hide_remove_line_buttons']:
-                template_line_data.update({'required': True})
+                template_line_data.update({'removable': False})
             matrix_data.append(template_line_data)
 
             # Pack all data required to render the matrix

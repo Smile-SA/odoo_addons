@@ -13,7 +13,7 @@
                     <field name="start_date"/>
                     <field name="value_type"/>
                     <field name="end_date"/>
-                    <field name="required"/>
+                    <field name="add_by_default"/>
                 </form>
             </field>
         </record>
@@ -29,7 +29,7 @@
                     <field name="start_date"/>
                     <field name="end_date"/>
                     <field name="value_type"/>
-                    <field name="required"/>
+                    <field name="add_by_default"/>
                 </tree>
             </field>
         </record>

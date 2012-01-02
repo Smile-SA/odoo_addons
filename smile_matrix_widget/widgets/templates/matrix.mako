@@ -93,6 +93,7 @@
 <%def name="render_line(line, date_range, level=1)">
     <%
         line_readonly = line.get('read_only', False)
+        line_removable = line.get('removable', True)
         line_widget = line.get('widget', 'float')
     %>
     <tr class="level level_${level} widget_${line_widget}
@@ -111,7 +112,7 @@
         ${render_resources(line)}
 
         <td class="delete_line">
-            %if editable_mode and not line_readonly and not line.get('required', False):
+            %if editable_mode and line_removable:
                 <span class="button delete_row">X</span>
             %endif
         </td>
