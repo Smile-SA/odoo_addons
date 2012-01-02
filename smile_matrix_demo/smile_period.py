@@ -139,7 +139,7 @@ class smile_activity_period(osv.osv):
     def create(self, cr, uid, vals, context=None):
         period_id = super(smile_activity_period, self).create(cr, uid, vals, context)
         # Create default lines
-        self.update_lines(cr, uid, period_id, context)
+        self.update_date_range(cr, uid, period_id, context)
         return period_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -149,7 +149,7 @@ class smile_activity_period(osv.osv):
                 raise osv.except_osv(_('Error !'), _("Past periods are archived and can't be updated."))
         ret = super(smile_activity_period, self).write(cr, uid, ids, vals, context)
         # Always update lines
-        self.update_lines(cr, uid, ids, context)
+        self.update_date_range(cr, uid, ids, context)
         return ret
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -213,8 +213,8 @@ class smile_activity_period(osv.osv):
 
     ## Custom methods
 
-    def update_lines(self, cr, uid, ids, context):
-        """ This method create and remove lines to fill the period
+    def update_date_range(self, cr, uid, ids, context):
+        """ Create and remove period lines to keep the date range in sync start date and stop date
         """
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -232,7 +232,8 @@ class smile_activity_period(osv.osv):
             # Create missing lines to cover the whole period
             exiting_line_dates = [self._str_to_date(l.date) for l in period.line_ids]
             for date in [self._str_to_date(d) for d in period.date_range]:
-                if date not in exiting_line_dates:
+                # Skip saturdays and sundays
+                if date not in exiting_line_dates and date.weekday() not in [5, 6]:
                     vals = {
                         'date': date,
                         'period_id': period.id,

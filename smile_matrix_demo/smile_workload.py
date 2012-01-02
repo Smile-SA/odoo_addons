@@ -103,7 +103,7 @@ class smile_activity_workload(osv.osv):
                 {'label': "Productivity", 'line_property': 'productivity_index', 'hide_value': True},
                 {'label': "Performance" , 'line_property': 'performance_index' , 'hide_tree_totals': True},
                 ],
-            #additional_line_property='additional_line_ids',
+            additional_line_property='additional_line_ids',
             column_totals_warning_threshold=None,
             css_classes=['workload'],
             title="Workload lines",
