@@ -522,7 +522,7 @@ def matrix_read_patch(func):
                             line_id = int(f_id_elements[1])
                             if f_id_elements[0] == 'cell':
                                 cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d').date()
-                                cell_id = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date), (conf['cell_inverse_property'], '=', line_id)], limit=1, context=context)
+                                cell_id = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date.strftime('%Y-%m-%d')), (conf['cell_inverse_property'], '=', line_id)], limit=1, context=context)
                                 if cell_id:
                                     cell = cell_pool.browse(cr, uid, cell_id, context)[0]
                                     field_value = getattr(cell, conf['cell_value_property'])
@@ -623,7 +623,7 @@ def matrix_write_patch(func):
                             }
                         # Search for an existing cell at the given date
                         cell_pool = obj.pool.get(conf['cell_type'])
-                        cell_ids = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date), (conf['cell_inverse_property'], '=', line_id)], context=context, limit=1)
+                        cell_ids = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date.strftime('%Y-%m-%d')), (conf['cell_inverse_property'], '=', line_id)], context=context, limit=1)
                         # Cell doesn't exists, create it
                         if not cell_ids:
                             cell_vals.update({
