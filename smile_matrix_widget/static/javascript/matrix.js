@@ -119,7 +119,7 @@ $(document).ready(function(){
     function update_row_total(matrix_id, row_index){
         // Select all fields of the row and sum them up
         var row_total = 0;
-        $("#" + matrix_id + " tbody [id*='__cell_" + row_index + "_']").each(function(){
+        $("#" + matrix_id + " table [id*='__cell_" + row_index + "_']").each(function(){
             cell_value = parseFloat($(this).attr('value'));
             if (!isNaN(cell_value)) {
                 row_total += cell_value;
@@ -145,13 +145,13 @@ $(document).ready(function(){
         // Get current cell coordinates
         var name_fragments = parse_id($(this).attr("id"));
         var matrix_id = name_fragments[0];
-        var row_index = name_fragments[name_fragments.length - 2];
+        var row_index = name_fragments[2];
         // Are we in the footer of the matrix ?
         var bottom_line = $(this).parents("tfoot").length != 0;
         // Update all totals depending of that cell
         update_row_total(matrix_id, row_index);
         if(!bottom_line){
-            var column_index = name_fragments[name_fragments.length - 1];
+            var column_index = name_fragments[3];
             update_column_total(matrix_id, column_index);
             update_grand_total(matrix_id);
         };
