@@ -259,7 +259,7 @@ class matrix(fields.dummy):
                     })
                 resource_value_list.append(res_def)
 
-            # Browse all lines that will compose our the main part of the matrix
+            # Browse all lines that will compose the main part of the matrix
             lines = [(line, 'body') for line in _get_prop(base_object, conf['line_property'], [])]
             # Add bottom lines if provided
             if conf['additional_line_property']:
@@ -382,11 +382,12 @@ class matrix(fields.dummy):
                 'id': "template",
                 'name': "Row template",
                 'widget': conf['default_widget_type'],
+                'position': 'body',
+                'read_only': False,
+                'removable': not conf['hide_remove_line_buttons'],
                 'cells_data': template_cells_data,
                 'resources':template_resources,
                 }
-            if conf['hide_remove_line_buttons']:
-                template_line_data.update({'removable': False})
             matrix_data.append(template_line_data)
 
             # Pack all data required to render the matrix
