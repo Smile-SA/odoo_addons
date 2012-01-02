@@ -54,10 +54,10 @@ This code started its life in Smile's internal Subversion repository and was [mi
 TODO
 ----
 
-  * Fix boolean widget
+  * Do not restrict boolean widget lines to the bottom part of the widget: treat them as normal lines and allow them to be added/removed and changed in the body of the matrix.
   * Fix matrix style when in tab (notebook).
-  * Add example data in the smile_matrix_demo module.
-  * Clean up code and architecture ! ;)
+  * Add example data in the smile_matrix_demo module to let users reproduce the screenshots easily.
+  * Clean-up all this messy code and architecture.
 
 
 Author
@@ -97,6 +97,7 @@ Changelog
 * **0.4.dev** (unreleased)
   * Per-line dynamic removable property
   * Update internal field naming convention to lower the risk of collision in usual usage
+  * Restrict boolean widget lines to the bottom of the matrix for now
 
 * **0.3** (2011-12-23)
   * Only remove lines when they are explicitely deleted by the user

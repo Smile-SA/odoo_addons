@@ -260,27 +260,26 @@ class matrix(fields.dummy):
                 resource_value_list.append(res_def)
 
             # Browse all lines that will compose the main part of the matrix
-            lines = [(line, 'body') for line in _get_prop(base_object, conf['line_property'], [])]
+            lines = [(line, {'position': 'body'}) for line in _get_prop(base_object, conf['line_property'], [])]
             # Add bottom lines if provided
             if conf['additional_line_property']:
-                lines += [(line, 'bottom') for line in _get_prop(base_object, conf['additional_line_property'], [])]
-            for (line, line_position) in lines:
+                lines += [(line, {'position': 'bottom', 'read_only': True}) for line in _get_prop(base_object, conf['additional_line_property'], [])]
+            for (line, line_data) in lines:
                 # Transfer some line data to the matrix widget
-                line_data = {
+                line_data.update({
                     'id': line.id,
                     'name': self._get_title_or_id(line),
-                    }
+                    })
 
                 # Get the type of the widget we'll use to display cell values
                 line_widget = _get_prop(line, conf['dynamic_widget_type_property'], conf['default_widget_type'])
 
-                # In case if boolean widget, force the position to bottom
+                # Force position of boolean widget to bottom
                 if line_widget == 'boolean':
-                    line_position = 'bottom'
-                # Force bottom line to be non-editable
-                line_read_only = False
-                if line_position == 'bottom':
-                    line_read_only = True
+                    line_data.update({'position': 'bottom'})
+
+                # If the line read_only flag is not already set, the default is False
+                line_read_only = line_data.get('read_only', False)
 
                 # Should we let the line be removable ?
                 line_removable = True
@@ -291,7 +290,6 @@ class matrix(fields.dummy):
 
                 line_data.update({
                     'widget': line_widget,
-                    'position': line_position,
                     'read_only': line_read_only,
                     'removable': line_removable,
                     })
@@ -524,7 +522,7 @@ def matrix_read_patch(func):
                             line_id = int(f_id_elements[1])
                             if f_id_elements[0] == 'cell':
                                 cell_date = datetime.datetime.strptime(f_id_elements[2], '%Y%m%d').date()
-                                cell_id = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date.strftime('%Y-%m-%d')), (conf['cell_inverse_property'], '=', line_id)], limit=1, context=context)
+                                cell_id = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date), (conf['cell_inverse_property'], '=', line_id)], limit=1, context=context)
                                 if cell_id:
                                     cell = cell_pool.browse(cr, uid, cell_id, context)[0]
                                     field_value = getattr(cell, conf['cell_value_property'])
@@ -625,7 +623,7 @@ def matrix_write_patch(func):
                             }
                         # Search for an existing cell at the given date
                         cell_pool = obj.pool.get(conf['cell_type'])
-                        cell_ids = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date.strftime('%Y-%m-%d')), (conf['cell_inverse_property'], '=', line_id)], context=context, limit=1)
+                        cell_ids = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date), (conf['cell_inverse_property'], '=', line_id)], context=context, limit=1)
                         # Cell doesn't exists, create it
                         if not cell_ids:
                             cell_vals.update({
