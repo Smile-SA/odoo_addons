@@ -187,20 +187,20 @@ class SartreTrigger(osv.osv):
         return res
 
     def _is_dynamic_field(self, filter_field, model_obj):
-        # Old values
-        if filter_field.startswith('OLD_'):
-            return True
-        # Function field without fnct_search and not stored
-        obj = model_obj
-        for field in filter_field.split('.'):
-            if field in obj._columns:
-                item_field = obj._columns[field]
-                if isinstance(item_field, fields.function):
-                    if not item_field._fnct_search and not item_field.store:
-                        return True
-                obj = self.pool.get(item_field._obj)
+        if filter_field:
+            # Old values
+            if filter_field.startswith('OLD_'):
+                return True
+            # Function field without fnct_search and not stored
+            obj = model_obj
+            for field in filter_field.split('.'):
+                if field in obj._columns:
+                    item_field = obj._columns[field]
+                    if isinstance(item_field, fields.function):
+                        if not item_field._fnct_search and not item_field.store:
+                            return True
+                    obj = self.pool.get(item_field._obj)
         return False
-
 
     def _is_dynamic_filter(self, cr, uid, item, model_obj, context=None):
         if isinstance(item, tuple) and model_obj:
