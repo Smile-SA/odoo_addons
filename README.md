@@ -98,6 +98,7 @@ Changelog
   * Per-line dynamic removable property
   * Update internal field naming convention to lower the risk of collision in usual usage
   * Restrict boolean widget lines to the bottom of the matrix for now
+  * First experimental version of the column navigation slider
 
 * **0.3** (2011-12-23)
   * Only remove lines when they are explicitely deleted by the user

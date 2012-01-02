@@ -82,6 +82,7 @@ class smile_activity_report(osv.osv):
                 ],
             column_totals_warning_threshold = 1.0,
             title = "Activity report lines",
+            experimental_slider = True,
             ),
         # Test multiple matrix widget
         'matrix_2': matrix(

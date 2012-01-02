@@ -117,6 +117,10 @@
             %endif
         </td>
 
+        %if slider:
+            <td></td>
+        %endif
+
         %for date in date_range:
             <%
                 cell_id = '%s__cell_%s_%s' % (name, line['id'], date)
@@ -124,6 +128,10 @@
             %>
             ${render_cell(cell_def, cell_id, line_widget)}
         %endfor
+
+        %if slider:
+            <td></td>
+        %endif
 
         %if not hide_line_totals:
             <%
@@ -192,6 +200,11 @@
             </td>
         %else:
             <td class="delete_line"></td>
+
+            %if slider:
+                <td></td>
+            %endif
+
             %for date in date_range:
                 <%
                     date_column_sum_cell = {
@@ -201,6 +214,11 @@
                 %>
                 ${render_cell(date_column_sum_cell)}
             %endfor
+
+            %if slider:
+                <td></td>
+            %endif
+
         %endif
 
         %if not hide_line_totals:
@@ -304,6 +322,7 @@
             column_totals_warning_threshold = value['column_totals_warning_threshold']
             editable_tree = value['editable_tree']
             hide_tree = value['hide_tree']
+            slider = value['experimental_slider']
         %>
 
         <style type="text/css">
@@ -353,6 +372,10 @@
                 display: none;
             }
 
+            .matrix .navigation {
+                cursor: pointer;
+            }
+
             .matrix .total,
             .matrix .total td,
             .matrix th {
@@ -369,6 +392,9 @@
                 text-align: center;
                 margin-top: 1em;
                 margin-bottom: 1em;
+                %if slider:
+                    width: 100%;
+                %endif
             }
 
             .matrix input,
@@ -456,9 +482,15 @@
                 <tr>
                     <th class="resource">${value['title']}</th>
                     <th></th>
+                    %if slider:
+                        <th id="${"%s__previous" % name}" class="navigation">Previous</th>
+                    %endif
                     %for date in date_range:
-                        <th>${datetime.datetime.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
+                        <th id="${"%s__column_label_%s" % (name, date)}">${datetime.datetime.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
+                    %if slider:
+                        <th id="${"%s__next" % name}" class="navigation">Next</th>
+                    %endif
                     %if not hide_line_totals:
                         <th class="total">${value['total_label']}</th>
                     %endif
@@ -472,9 +504,13 @@
                     <tr class="total">
                         <td class="resource">${value['total_label']}</td>
                         <td></td>
+                        %if slider:
+                            <td></td>
+                        %endif
                         %for date in date_range:
                             <%
                                 column_values = [line['cells_data'][date]['value'] for line in body_lines if date in line['cells_data']]
+                                column_total_cell_id = "%s__column_total_%s" % (name, date)
                             %>
                             %if len(column_values):
                                 <%
@@ -486,13 +522,15 @@
                                         'value': column_total,
                                         'read_only': True,
                                         }
-                                    column_total_cell_id = "%s__column_total_%s" % (name, date)
                                 %>
                                 ${render_cell(column_total_cell, cell_id=column_total_cell_id, css_classes=column_total_css_classes)}
                             %else:
-                                <td></td>
+                                <td id="${column_total_cell_id}"></td>
                             %endif
                         %endfor
+                        %if slider:
+                            <td></td>
+                        %endif
                         %if not hide_line_totals:
                             <%
                                 grand_total_cell = {

@@ -400,9 +400,57 @@ $(document).ready(function(){
     });
 
 
-    // Activate the experimental timeline slider
+    function get_column_cells(matrix_id, column_index) {
+        // Return a list of all table cells of a given column
+        return $("#" + matrix_id + " (td,th)[id$='_" + column_index + "']");
+    };
+
+
+    // Init the navigation slider
     $(".matrix.slider").each(function(){
-        // TODO
+        var matrix = get_parent_matrix($(this).find(":first-child"));
+        var matrix_id = matrix.attr("id");
+        $("#" + matrix_id + " th[id*='__column_label_']").each(function(i){
+            if(i > 9){
+                var name_fragments = parse_id($(this).attr("id"));
+                var column_index = name_fragments[3];
+                $(get_column_cells(matrix_id, column_index)).hide();
+            };
+        });
+    });
+
+
+    // Activate the experimental timeline slider
+    $(".matrix.slider .navigation").click(function(event){
+        event.preventDefault();
+
+        $(this).effect("highlight");
+        var matrix = get_parent_matrix($(this));
+        var matrix_id = matrix.attr("id");
+
+        var previous_button_id = matrix_id + "__previous";
+        var next_button_id = matrix_id + "__next";
+        var previous_button = $("#" + previous_button_id);
+        var next_button = $("#" + next_button_id);
+
+        // Get all currently visible columns
+        var visible_columns = $(previous_button).nextUntil("#" + next_button_id, "th:visible");
+
+        var direction = $(this).attr("id") == next_button_id ? 'next' : 'previous';
+
+        if (direction == 'next') {
+            var column_id_to_show = parse_id(visible_columns.last().next(":hidden").attr("id"))[3];
+            $(get_column_cells(matrix_id, column_id_to_show)).effect('slide', {direction: 'right', mode: 'show'}, 'slow');
+
+            var column_id_to_hide = parse_id(visible_columns.first().attr("id"))[3];
+            $(get_column_cells(matrix_id, column_id_to_hide)).effect('slide', {direction: 'left', mode: 'hide'}, 'slow');
+        } else {
+            var column_id_to_show = parse_id(visible_columns.first().prev(":hidden").attr("id"))[3];
+            $(get_column_cells(matrix_id, column_id_to_show)).effect('slide', {direction: 'left', mode: 'show'}, 'slow');
+
+            var column_id_to_hide = parse_id(visible_columns.last().attr("id"))[3];
+            $(get_column_cells(matrix_id, column_id_to_hide)).effect('slide', {direction: 'right', mode: 'hide'}, 'slow');
+        };
     });
 
 
