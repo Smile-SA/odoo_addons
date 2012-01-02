@@ -145,12 +145,16 @@ $(document).ready(function(){
         // Get current cell coordinates
         var name_fragments = parse_id($(this).attr("id"));
         var matrix_id = name_fragments[0];
-        var column_index = name_fragments[name_fragments.length - 1];
         var row_index = name_fragments[name_fragments.length - 2];
+        // Are we in the footer of the matrix ?
+        var bottom_line = $(this).parents("tfoot").length != 0;
         // Update all totals depending of that cell
-        update_column_total(matrix_id, column_index);
         update_row_total(matrix_id, row_index);
-        update_grand_total(matrix_id);
+        if(!bottom_line){
+            var column_index = name_fragments[name_fragments.length - 1];
+            update_column_total(matrix_id, column_index);
+            update_grand_total(matrix_id);
+        };
     });
 
 
