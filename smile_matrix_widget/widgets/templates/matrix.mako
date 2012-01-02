@@ -30,7 +30,7 @@
                     res_id = res['id']
                     res_label = res['label']
                     res_value = res['value']
-                    res_field_id = "%s_res_%s_%s" % (name, line['id'], res_id)
+                    res_field_id = "%s__res_%s_%s" % (name, line['id'], res_id)
                 %>
                 <input type="hidden" id="${res_field_id}" name="${res_field_id}" value="${res_value}" title="${res_label}"/>
             %endfor
@@ -105,7 +105,7 @@
         %endif
         "
         %if not line_readonly:
-            id="${'%s_line_%s' % (name, line['id'])}"
+            id="${'%s__line_%s' % (name, line['id'])}"
         %endif
         >
 
@@ -119,7 +119,7 @@
 
         %for date in date_range:
             <%
-                cell_id = '%s_cell_%s_%s' % (name, line['id'], date)
+                cell_id = '%s__cell_%s_%s' % (name, line['id'], date)
                 cell_def = line.get('cells_data', {}).get(date, None)
             %>
             ${render_cell(cell_def, cell_id, line_widget)}
@@ -128,7 +128,7 @@
         %if not hide_line_totals:
             <%
                 row_total = sum([v['value'] for (k, v) in line.get('cells_data', dict()).items() if k in date_range])
-                row_total_cell_id = not read_only and "%s_row_total_%s" % (name, line['id']) or None
+                row_total_cell_id = not read_only and "%s__row_total_%s" % (name, line['id']) or None
                 row_total_cell = {
                     'value': row_total,
                     'read_only': True,
@@ -153,7 +153,7 @@
         res_id = res_def.get('id', None)
         res_values = res_def.get('values', [])
         res_editable = res_def.get('editable', True)
-        selector_id = "%s_res_list_%s" % (name, res_id)
+        selector_id = "%s__res_list_%s" % (name, res_id)
     %>
     %if len(res_values) and editable_mode and res_editable:
         <span class="resource_values">
@@ -178,7 +178,7 @@
             }
         value['row_uid'] += 1
     %>
-    <tr id="${'%s_line_%s' % (name, virtual_line['id'])}" class="resource_line level level_${level}
+    <tr id="${'%s__line_%s' % (name, virtual_line['id'])}" class="resource_line level level_${level}
         %if css_class:
             ${css_class}
         %endif
@@ -212,7 +212,7 @@
                     'value': sum(row_total),
                     'read_only': True,
                     }
-                row_total_cell_id = "%s_row_total_%s" % (name, virtual_line['id'])
+                row_total_cell_id = "%s__row_total_%s" % (name, virtual_line['id'])
             %>
             ${render_cell(row_total_cell, cell_id=row_total_cell_id, css_classes=['total'])}
         %endif
@@ -443,11 +443,11 @@
                 <span id="matrix_button_template" class="button increment template">
                     Button template
                 </span>
-                <input type="hidden" id="${"%s_increment_values" % name}" value="${json.dumps(increment_values)}" title="Increment button values"/>
+                <input type="hidden" id="${"%s__increment_values" % name}" value="${json.dumps(increment_values)}" title="Increment button values"/>
                 %if column_totals_warning_threshold is not None:
-                    <input type="hidden" id="${"%s_column_warning_threshold" % name}" value="${column_totals_warning_threshold}" title="Column warning threshold"/>
+                    <input type="hidden" id="${"%s__column_warning_threshold" % name}" value="${column_totals_warning_threshold}" title="Column warning threshold"/>
                 %endif
-                <input type="text" kind="char" name="${"%s_line_removed" % name}" id="${"%s_line_removed" % name}" value="" title="ID list of removed lines" style="display: none;"/>
+                <input type="text" kind="char" name="${"%s__line_removed" % name}" id="${"%s__line_removed" % name}" value="" title="ID list of removed lines" style="display: none;"/>
             </div>
         %endif
 
@@ -486,7 +486,7 @@
                                         'value': column_total,
                                         'read_only': True,
                                         }
-                                    column_total_cell_id = "%s_column_total_%s" % (name, date)
+                                    column_total_cell_id = "%s__column_total_%s" % (name, date)
                                 %>
                                 ${render_cell(column_total_cell, cell_id=column_total_cell_id, css_classes=column_total_css_classes)}
                             %else:
@@ -499,7 +499,7 @@
                                     'value': sum([sum([v['value'] for (k, v) in line['cells_data'].items() if k in date_range]) for line in body_lines ]),
                                     'read_only': True,
                                     }
-                                grand_total_cell_id = "%s_grand_total" % name
+                                grand_total_cell_id = "%s__grand_total" % name
                             %>
                             ${render_cell(grand_total_cell, cell_id=grand_total_cell_id)}
                         %endif

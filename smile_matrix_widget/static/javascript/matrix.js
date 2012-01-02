@@ -7,7 +7,7 @@ $(document).ready(function(){
 
     // Utility method to get increment values
     function get_increment_values(elmnt){
-        return jQuery.parseJSON($("#" + get_parent_matrix(elmnt).attr("id") + "_increment_values").val());
+        return jQuery.parseJSON($("#" + get_parent_matrix(elmnt).attr("id") + "__increment_values").val());
     };
 
     // Utility method to parse the ID of field following our naming conventions
@@ -16,7 +16,7 @@ $(document).ready(function(){
         // Extract the matrix ID
         var matrix = get_parent_matrix("#" + field_id);
         var matrix_id = matrix.attr("id");
-        var matrix_prefix = matrix_id + "_";
+        var matrix_prefix = matrix_id + "__";
         if(field_id.substring(matrix_prefix.length, 0) != matrix_prefix){
             alert("Matrix ERROR: field ID " + field_id + " should start with its matrix prefix " + matrix_prefix + " !");
             return;
@@ -95,15 +95,15 @@ $(document).ready(function(){
         // Select all fields of the columns and sum them up
         var column_total = 0;
         // Only cells in the tbody of the table are sums up by columns
-        $("#" + matrix_id + " tbody [id*='_cell_'][id$='_" + column_index + "']").each(function(){
+        $("#" + matrix_id + " tbody [id*='__cell_'][id$='_" + column_index + "']").each(function(){
             cell_value = parseFloat($(this).val());
             if (!isNaN(cell_value)) {
                 column_total += cell_value;
             };
         });
-        $("#" + matrix_id + "_column_total_" + column_index).text(column_total).effect("highlight", function(){
+        $("#" + matrix_id + "__column_total_" + column_index).text(column_total).effect("highlight", function(){
             // Get warning threshold
-            var column_threshold = parseFloat($("#" + matrix_id + "_column_warning_threshold").first().val());
+            var column_threshold = parseFloat($("#" + matrix_id + "__column_warning_threshold").first().val());
             if (!isNaN(column_threshold)) {
                 if(column_total > column_threshold){
                     $(this).addClass("warning");
@@ -119,13 +119,13 @@ $(document).ready(function(){
     function update_row_total(matrix_id, row_index){
         // Select all fields of the row and sum them up
         var row_total = 0;
-        $("#" + matrix_id + " tbody [id*='_cell_" + row_index + "_']").each(function(){
+        $("#" + matrix_id + " tbody [id*='__cell_" + row_index + "_']").each(function(){
             cell_value = parseFloat($(this).attr('value'));
             if (!isNaN(cell_value)) {
                 row_total += cell_value;
             };
         });
-        $("#" + matrix_id + "_row_total_" + row_index).text(row_total).effect("highlight");
+        $("#" + matrix_id + "__row_total_" + row_index).text(row_total).effect("highlight");
     };
 
 
@@ -133,15 +133,15 @@ $(document).ready(function(){
     function update_grand_total(matrix_id){
         // Only compute grand totals from cells in the tbody
         var grand_total = 0;
-        $("#" + matrix_id + " tbody [id^='" + matrix_id + "_row_total_']:not([id^='" + matrix_id + "_row_total_dummy'])").each(function(){
+        $("#" + matrix_id + " tbody [id^='" + matrix_id + "__row_total_']:not([id^='" + matrix_id + "__row_total_dummy'])").each(function(){
             grand_total += parseFloat($(this).text());
         });
-        $("#" + matrix_id + "_grand_total").text(grand_total).effect("highlight");
+        $("#" + matrix_id + "__grand_total").text(grand_total).effect("highlight");
     };
 
 
     // Compute columns and row totals
-    $(".matrix input[id*='_cell_']").change(function(){
+    $(".matrix input[id*='__cell_']").change(function(){
         // Get current cell coordinates
         var name_fragments = parse_id($(this).attr("id"));
         var matrix_id = name_fragments[0];
@@ -201,8 +201,8 @@ $(document).ready(function(){
         // Get the template of an editable line, i.e. the kind of matrix row we had at the leaf of the level tree
         var matrix = get_parent_matrix($(this));
         var matrix_id = matrix.attr("id");
-        var line_template = matrix.find("tbody tr#" + matrix_id + "_line_template");
-        var line_template_resources = $(line_template).find("td.resource").first().find("input[id^='" + matrix_id + "_res_template_']");
+        var line_template = matrix.find("tbody tr#" + matrix_id + "__line_template");
+        var line_template_resources = $(line_template).find("td.resource").first().find("input[id^='" + matrix_id + "__res_template_']");
 
         // Get the current and highest level
         var level = get_level($(this));
@@ -212,7 +212,7 @@ $(document).ready(function(){
 
         // Compute a new unique row index based on the other new rows in the matrix
         var new_row_index = 0;
-        $("tr[id^='" + matrix_id + "_line_new'],tr[id^='" + matrix_id + "_line_dummy']").each(function(){
+        $("tr[id^='" + matrix_id + "__line_new'],tr[id^='" + matrix_id + "__line_dummy']").each(function(){
             var id_parts = parse_id($(this).attr("id"));
             var line_id = id_parts[2];
             var split_by = "new";
@@ -238,13 +238,13 @@ $(document).ready(function(){
         if(level == highest_level){
 
             // We are at the leaf: create a new editable line
-            var new_row = line_template.clone(true).attr('id', matrix_id + "_line_" + new_row_index).removeClass('template');
+            var new_row = line_template.clone(true).attr('id', matrix_id + "__line_" + new_row_index).removeClass('template');
 
             // Update the cells
-            new_row.find("input[id*='_cell_']").each(function(){
+            new_row.find("input[id*='__cell_']").each(function(){
                 var name_fragments = $(this).attr("id").split("_");
                 var column_index = name_fragments.slice(-1)[0];
-                var new_cell_id = matrix_id + "_cell_" + new_row_index + "_" + column_index;
+                var new_cell_id = matrix_id + "__cell_" + new_row_index + "_" + column_index;
                 $(this).attr('id', new_cell_id).attr('name', new_cell_id).val(cycling_values[0]);
                 // If there is a sibling button increment, update it too
                 var new_button_id = "button_" + new_cell_id;
@@ -256,14 +256,14 @@ $(document).ready(function(){
             // Get the template for that level
             var level_template = $("#" + matrix_id + " tbody tr.template.level_" + (level + 1));
             // Create a new row
-            var new_row = level_template.clone(true).attr('id', matrix_id + "_line_" + new_row_index).removeClass('template');
+            var new_row = level_template.clone(true).attr('id', matrix_id + "__line_" + new_row_index).removeClass('template');
         };
 
         // Set row's label
         new_row.find(".resource .name").text(res_name);
 
         // Update the total column
-        new_row.find("td[id*='_row_total_']").attr('id', matrix_id + "_row_total_" + new_row_index).text(cycling_values[0]);
+        new_row.find("td[id*='__row_total_']").attr('id', matrix_id + "__row_total_" + new_row_index).text(cycling_values[0]);
 
         // If we're deeper than the first level, get the parent's resource value to populate our template later
         if(level > 0){
@@ -271,7 +271,7 @@ $(document).ready(function(){
             var current_table_row = $(this).parentsUntil("tbody").last();
             // Use parent's resource value to populate our template
             var parent_resources = new Array();
-            $(current_table_row).find(".resource input[id*='_res_']").each(function(){
+            $(current_table_row).find(".resource input[id*='__res_']").each(function(){
                 res_id = get_res_id(this);
                 parent_resources[res_id] = {
                     "label": $(this).attr("title"),
@@ -281,10 +281,10 @@ $(document).ready(function(){
         };
 
         // Update the local copy of resources
-        new_row.find(".resource input[id*='_res_']").each(function(){
+        new_row.find(".resource input[id*='__res_']").each(function(){
             res_id = get_res_id(this);
             // Only update the local resources ID on leafs: all others stays declared as template
-            var new_res_index = matrix_id + "_res_" + new_row_index + "_" + res_id;
+            var new_res_index = matrix_id + "__res_" + new_row_index + "_" + res_id;
             $(this).attr('id', new_res_index).attr('name', new_res_index);
             // Let local resources inherit values from its parent
             if(parent_resources && parent_resources[res_id]){
@@ -293,7 +293,7 @@ $(document).ready(function(){
         });
 
         // Set value of the new resource field
-        new_row.find(".resource input#" + matrix_id + "_res_" + new_row_index + "_" + resource_id).val(res_value).attr('title', res_name);
+        new_row.find(".resource input#" + matrix_id + "__res_" + new_row_index + "_" + resource_id).val(res_value).attr('title', res_name);
 
         // Search the row in the table after which we'll add our new content
         // By default the place we add our new stuff is at the start of the table
@@ -335,7 +335,7 @@ $(document).ready(function(){
         } else {
             var parent_line = matrix.find(".toolbar").first();
         };
-        var parent_selector = parent_line.find("select[id^='" + matrix_id + "_res_list_']").first();
+        var parent_selector = parent_line.find("select[id^='" + matrix_id + "__res_list_']").first();
         if (!parent_selector.length){
             return;
         };
@@ -380,12 +380,12 @@ $(document).ready(function(){
             // Un-hide the entry from its selector
             $(update_parent_selector($(this), "show"));
             // Add row ID to the list of lines to remove
-            var line_removed_field = $("#" + matrix_id + "_line_removed");
+            var line_removed_field = $("#" + matrix_id + "__line_removed");
             line_removed_field.val(line_removed_field.val() + $(this).attr("id") + ',');
             // Really remove the row
             $(this).remove();
             // Force update of all column totals
-            matrix.find("tfoot tr.total [id^='" + matrix_id + "_column_total_']").each(function(){
+            matrix.find("tfoot tr.total [id^='" + matrix_id + "__column_total_']").each(function(){
                 var name_fragments = parse_id($(this).attr("id"));
                 var column_index = name_fragments[name_fragments.length - 1];
                 update_column_total(matrix_id, column_index);
