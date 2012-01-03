@@ -101,9 +101,10 @@ $(document).ready(function(){
                 column_total += cell_value;
             };
         });
-        $("#" + matrix_id + "__column_total_" + column_index).text(column_total).effect("highlight", function(){
-            // Get warning threshold
-            var column_threshold = parseFloat($("#" + matrix_id + "__column_warning_threshold").first().val());
+        // Get warning threshold
+        var column_threshold = parseFloat($("#" + matrix_id + "__column_warning_threshold").first().val());
+        // Update total content and style
+        $("#" + matrix_id + "__column_total_" + column_index).text(column_total).each(function(){
             if (!isNaN(column_threshold)) {
                 if(column_total > column_threshold){
                     $(this).addClass("warning");
@@ -111,6 +112,7 @@ $(document).ready(function(){
                     $(this).removeClass("warning");
                 };
             };
+            $(this).effect("highlight");
         });
     };
 
