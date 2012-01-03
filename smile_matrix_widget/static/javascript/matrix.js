@@ -411,6 +411,7 @@ $(document).ready(function(){
         var matrix = get_parent_matrix($(this).find(":first-child"));
         var matrix_id = matrix.attr("id");
         $("#" + matrix_id + " th[id*='__column_label_']").each(function(i){
+            // TODO: add a parameter or autodetect how many cells we display in the range
             if(i > 9){
                 var name_fragments = parse_id($(this).attr("id"));
                 var column_index = name_fragments[3];
