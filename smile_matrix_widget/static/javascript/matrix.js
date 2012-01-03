@@ -112,7 +112,9 @@ $(document).ready(function(){
                     $(this).removeClass("warning");
                 };
             };
-            $(this).effect("highlight");
+            if ($(this).is(":visible")) {
+                $(this).effect("highlight");
+            }
         });
     };
 
