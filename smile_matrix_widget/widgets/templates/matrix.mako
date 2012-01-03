@@ -117,10 +117,6 @@
             %endif
         </td>
 
-        %if navigation:
-            <td></td>
-        %endif
-
         %for date in date_range:
             <%
                 cell_id = '%s__cell_%s_%s' % (name, line['id'], date)
@@ -200,10 +196,6 @@
             </td>
         %else:
             <td class="delete_line"></td>
-
-            %if navigation:
-                <td></td>
-            %endif
 
             %for date in date_range:
                 <%
@@ -481,10 +473,11 @@
             <thead>
                 <tr>
                     <th class="resource">${value['title']}</th>
-                    <th></th>
-                    %if navigation:
-                        <th id="${"%s__previous" % name}" class="navigation disabled"><span class="button" title="Previous">&lsaquo;&lsaquo;</span></th>
-                    %endif
+                    <th id="${"%s__previous" % name}" class="navigation disabled">
+                        %if navigation:
+                            <span class="button" title="Previous">&lsaquo;&lsaquo;</span>
+                        %endif
+                    </th>
                     %for date in date_range:
                         <th id="${"%s__column_label_%s" % (name, date)}">${datetime.datetime.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
@@ -504,9 +497,6 @@
                     <tr class="total">
                         <td class="resource">${value['total_label']}</td>
                         <td></td>
-                        %if navigation:
-                            <td></td>
-                        %endif
                         %for date in date_range:
                             <%
                                 column_values = [line['cells_data'][date]['value'] for line in body_lines if date in line['cells_data']]

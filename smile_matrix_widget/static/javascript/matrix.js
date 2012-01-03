@@ -413,7 +413,7 @@ $(document).ready(function(){
     // Initialize the navigation slider
     $(".matrix").each(function(){
         // Don't try to initialize matrix without navigation
-        if ($(this).find(".navigation").length == 0) {
+        if ($(this).find(".navigation .button").length == 0) {
             return;
         };
         var matrix_id = $(this).attr("id");
