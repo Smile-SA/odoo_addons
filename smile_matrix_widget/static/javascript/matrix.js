@@ -406,7 +406,7 @@ $(document).ready(function(){
     };
 
 
-    // Init the navigation slider
+    // Initialize the navigation slider
     $(".matrix.slider").each(function(){
         var matrix = get_parent_matrix($(this).find(":first-child"));
         var matrix_id = matrix.attr("id");
@@ -421,36 +421,51 @@ $(document).ready(function(){
 
 
     // Activate the experimental timeline slider
-    $(".matrix.slider .navigation").click(function(event){
-        event.preventDefault();
-
-        $(this).effect("highlight");
+    $(".matrix.slider .navigation .button").click(function(){
         var matrix = get_parent_matrix($(this));
         var matrix_id = matrix.attr("id");
-
-        var previous_button_id = matrix_id + "__previous";
-        var next_button_id = matrix_id + "__next";
-        var previous_button = $("#" + previous_button_id);
-        var next_button = $("#" + next_button_id);
-
+        var previous_nav_cell_id = matrix_id + "__previous";
+        var next_nav_cell_id = matrix_id + "__next";
+        var previous_nav_cell = $("#" + previous_nav_cell_id);
+        var next_nav_cell = $("#" + next_nav_cell_id);
         // Get all currently visible columns
-        var visible_columns = $(previous_button).nextUntil("#" + next_button_id, "th:visible");
-
-        var direction = $(this).attr("id") == next_button_id ? 'next' : 'previous';
-
+        var visible_columns = $(previous_nav_cell).nextUntil("#" + next_nav_cell_id, "th:visible");
+        // Detect direction
+        var direction = $(this).parent().attr("id") == next_nav_cell_id ? 'next' : 'previous';
+        // Search bounding columns
         if (direction == 'next') {
-            var column_id_to_show = parse_id(visible_columns.last().next(":hidden").attr("id"))[3];
-            $(get_column_cells(matrix_id, column_id_to_show)).effect('slide', {direction: 'right', mode: 'show'}, 'slow');
-
-            var column_id_to_hide = parse_id(visible_columns.first().attr("id"))[3];
-            $(get_column_cells(matrix_id, column_id_to_hide)).effect('slide', {direction: 'left', mode: 'hide'}, 'slow');
+            var column_label_to_show = visible_columns.last().next(":hidden");
+            var column_label_to_hide = visible_columns.first();
+            // Disable the button if we are at the end of the range
+            if (next_nav_cell.prev().attr("id") == column_label_to_show.attr("id")) {
+                next_nav_cell.addClass("disabled");
+            };
         } else {
-            var column_id_to_show = parse_id(visible_columns.first().prev(":hidden").attr("id"))[3];
-            $(get_column_cells(matrix_id, column_id_to_show)).effect('slide', {direction: 'left', mode: 'show'}, 'slow');
-
-            var column_id_to_hide = parse_id(visible_columns.last().attr("id"))[3];
-            $(get_column_cells(matrix_id, column_id_to_hide)).effect('slide', {direction: 'right', mode: 'hide'}, 'slow');
+            var column_label_to_show = visible_columns.first().prev(":hidden");
+            var column_label_to_hide = visible_columns.last();
+            // Disable the button if we are at the end of the range
+            if (previous_nav_cell.next().attr("id") == column_label_to_show.attr("id")) {
+                previous_nav_cell.addClass("disabled");
+            };
         };
+        // Skip clicking event if we're at a boundary of the range
+        if (column_label_to_show.length == 0) {
+            return;
+        };
+        // If we are here then we were able to slide, so re-activate the oposite direction's button
+        if (direction == 'next') {
+            previous_nav_cell.removeClass("disabled");
+        } else {
+            next_nav_cell.removeClass("disabled");
+        };
+        // Show and hide whole columns
+        var column_id_to_show = parse_id(column_label_to_show.attr("id"))[3];
+        var column_id_to_hide = parse_id(column_label_to_hide.attr("id"))[3];
+        // XXX Sliding animation attemps
+        // $(get_column_cells(matrix_id, column_id_to_show)).effect('slide', {direction: direction == 'next' ? 'right' : 'left', mode: 'show'}, 'slow');
+        // $(get_column_cells(matrix_id, column_id_to_hide)).effect('slide', {direction: direction == 'next' ? 'left' : 'right', mode: 'hide'}, 'slow');
+        $(get_column_cells(matrix_id, column_id_to_show)).show().effect("highlight");
+        $(get_column_cells(matrix_id, column_id_to_hide)).hide();
     });
 
 

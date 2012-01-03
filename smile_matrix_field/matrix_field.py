@@ -118,6 +118,8 @@ class matrix(fields.dummy):
             'date_range_property': conf_dict.get('date_range_property', None),
             'active_date_range_property': conf_dict.get('active_date_range_property', None),
             'editable_date_range_property': conf_dict.get('editable_date_range_property', None),
+            # Activate date range navigation
+            'navigation': conf_dict.get('date_range_navigation', False),
 
             # The format we use to display date labels
             'date_format': conf_dict.get('date_format', "%Y-%m-%d"),
@@ -154,9 +156,6 @@ class matrix(fields.dummy):
             # Additional classes can be manually added
             'css_classes': conf_dict.get('css_classes', []),
 
-            # TODO
-            'experimental_slider': conf_dict.get('experimental_slider', False),
-
             # Force the matrix in read only mode, even in editable mode
             'readonly': conf_dict.get('readonly', False),
 
@@ -179,7 +178,7 @@ class matrix(fields.dummy):
         # Normalize parameters
         if conf['hide_tree']:
             conf['editable_tree'] = False
-        if conf['experimental_slider']:
+        if conf['navigation']:
             conf['css_classes'] += ['slider']
 
         return conf
@@ -234,7 +233,7 @@ class matrix(fields.dummy):
             # Evaluate dynamic matrix properties
             # Dynamic properties are those which value is a string instead of their native type
             # Of course this only works with properties which native type is not strings
-            for flag_id in ['tree_definition', 'increment_values', 'default_cell_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'experimental_slider', 'readonly']:
+            for flag_id in ['tree_definition', 'increment_values', 'default_cell_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'navigation', 'readonly']:
                 flag_value = conf[flag_id]
                 if isinstance(flag_value, (str, unicode)):
                     conf[flag_id] = _get_prop(base_object, flag_id, flag_value)

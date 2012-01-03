@@ -54,6 +54,7 @@ This code started its life in Smile's internal Subversion repository and was [mi
 TODO
 ----
 
+  * Fix transparent jQuery highlight to let it end to the right color value (and not the defualt white).
   * Do not restrict boolean widget lines to the bottom part of the widget: treat them as normal lines and allow them to be added/removed and changed in the body of the matrix.
   * Fix matrix style when in tab (notebook).
   * Add example data in the smile_matrix_demo module to let users reproduce the screenshots easily.
@@ -98,7 +99,7 @@ Changelog
   * Per-line dynamic removable property
   * Update internal field naming convention to lower the risk of collision in usual usage
   * Restrict boolean widget lines to the bottom of the matrix for now
-  * First experimental version of the column navigation slider
+  * Add date range column navigation
 
 * **0.3** (2011-12-23)
   * Only remove lines when they are explicitely deleted by the user

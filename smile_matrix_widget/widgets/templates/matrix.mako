@@ -117,7 +117,7 @@
             %endif
         </td>
 
-        %if slider:
+        %if navigation:
             <td></td>
         %endif
 
@@ -129,7 +129,7 @@
             ${render_cell(cell_def, cell_id, line_widget)}
         %endfor
 
-        %if slider:
+        %if navigation:
             <td></td>
         %endif
 
@@ -201,7 +201,7 @@
         %else:
             <td class="delete_line"></td>
 
-            %if slider:
+            %if navigation:
                 <td></td>
             %endif
 
@@ -215,7 +215,7 @@
                 ${render_cell(date_column_sum_cell)}
             %endfor
 
-            %if slider:
+            %if navigation:
                 <td></td>
             %endif
 
@@ -322,7 +322,7 @@
             column_totals_warning_threshold = value['column_totals_warning_threshold']
             editable_tree = value['editable_tree']
             hide_tree = value['hide_tree']
-            slider = value['experimental_slider']
+            navigation = value['navigation']
         %>
 
         <style type="text/css">
@@ -372,8 +372,8 @@
                 display: none;
             }
 
-            .matrix .navigation {
-                cursor: pointer;
+            .matrix .navigation.disabled .button {
+                display: none;
             }
 
             .matrix .total,
@@ -392,7 +392,7 @@
                 text-align: center;
                 margin-top: 1em;
                 margin-bottom: 1em;
-                %if slider:
+                %if navigation:
                     width: 100%;
                 %endif
             }
@@ -482,14 +482,14 @@
                 <tr>
                     <th class="resource">${value['title']}</th>
                     <th></th>
-                    %if slider:
-                        <th id="${"%s__previous" % name}" class="navigation">Previous</th>
+                    %if navigation:
+                        <th id="${"%s__previous" % name}" class="navigation disabled"><span class="button" title="Previous">&lArr;</span></th>
                     %endif
                     %for date in date_range:
                         <th id="${"%s__column_label_%s" % (name, date)}">${datetime.datetime.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
-                    %if slider:
-                        <th id="${"%s__next" % name}" class="navigation">Next</th>
+                    %if navigation:
+                        <th id="${"%s__next" % name}" class="navigation"><span class="button" title="Next">&rArr;</span></th>
                     %endif
                     %if not hide_line_totals:
                         <th class="total">${value['total_label']}</th>
@@ -504,7 +504,7 @@
                     <tr class="total">
                         <td class="resource">${value['total_label']}</td>
                         <td></td>
-                        %if slider:
+                        %if navigation:
                             <td></td>
                         %endif
                         %for date in date_range:
@@ -528,7 +528,7 @@
                                 <td id="${column_total_cell_id}"></td>
                             %endif
                         %endfor
-                        %if slider:
+                        %if navigation:
                             <td></td>
                         %endif
                         %if not hide_line_totals:
