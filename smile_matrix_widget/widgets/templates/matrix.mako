@@ -49,7 +49,7 @@
             cell_editable = False
     %>
     <td
-        %if not cell_editable and cell_id:
+        %if cell_id and (not cell_editable or cell_value is None):
             id="${cell_id}"
         %endif
         class="${' '.join(css_classes)}
@@ -323,10 +323,6 @@
             editable_tree = value['editable_tree']
             hide_tree = value['hide_tree']
             navigation = value['navigation']
-
-            # TODO: navigation is not working in editable mode yet
-            if editable_mode:
-                navigation = False
         %>
 
         <style type="text/css">
@@ -487,13 +483,13 @@
                     <th class="resource">${value['title']}</th>
                     <th></th>
                     %if navigation:
-                        <th id="${"%s__previous" % name}" class="navigation disabled"><span class="button" title="Previous">&lArr;</span></th>
+                        <th id="${"%s__previous" % name}" class="navigation disabled"><span class="button" title="Previous">&lsaquo;&lsaquo;</span></th>
                     %endif
                     %for date in date_range:
                         <th id="${"%s__column_label_%s" % (name, date)}">${datetime.datetime.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
                     %if navigation:
-                        <th id="${"%s__next" % name}" class="navigation"><span class="button" title="Next">&rArr;</span></th>
+                        <th id="${"%s__next" % name}" class="navigation"><span class="button" title="Next">&rsaquo;&rsaquo;</span></th>
                     %endif
                     %if not hide_line_totals:
                         <th class="total">${value['total_label']}</th>

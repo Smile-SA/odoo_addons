@@ -400,9 +400,9 @@ $(document).ready(function(){
     });
 
 
+    // Return a list of all table cells of a given column
     function get_column_cells(matrix_id, column_index) {
-        // Return a list of all table cells of a given column
-        return $("#" + matrix_id + " (td,th)[id$='_" + column_index + "']");
+        return $("#" + matrix_id + " (td,th)[id$='_" + column_index + "'], #" + matrix_id + " td:has([id$='_" + column_index + "']), #" + matrix_id + " th:has([id$='_" + column_index + "'])").filter("td, th");
     };
 
 
