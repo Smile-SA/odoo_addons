@@ -20,6 +20,19 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.func import wraps
+
+def indexer(original_method):
+    @wraps(original_method)
+    def wrapper(self, cr, mode):
+        res = original_method(self, cr, mode)
+        if isinstance(self, osv.osv_pool):
+            analytic_line_obj = self.get('account.analytic.line')
+            if analytic_line_obj and hasattr(analytic_line_obj, '_update_index'):
+                analytic_line_obj._unicity_fields = analytic_line_obj._get_unicity_fields()
+                analytic_line_obj._update_index(cr, analytic_line_obj._unicity_fields)
+        return res
+    return wrapper
 
 class AnalyticLine(osv.osv):
     _inherit = 'account.analytic.line'
@@ -44,14 +57,16 @@ class AnalyticLine(osv.osv):
     def _get_unicity_fields(self):
         return [field for field in self._columns \
             if self._columns[field]._type not in ('one2many', 'many2many') \
-            and field not in ('name', 'code', 'ref', 'date', 'create_period_id', \
-                              'amount', 'unit_amount', 'amount_currency', 'product_uom_id', \
-                              'currency_id', 'move_id', 'user_id', 'active', 'type')]
+            and field not in self._non_unicity_fields]
 
     def __init__(self, pool, cr):
         super(AnalyticLine, self).__init__(pool, cr)
-        self._unicity_fields = self._get_unicity_fields()
-        self._update_index(cr, self._unicity_fields)
+        if not hasattr(self, '_non_unicity_fields'):
+            self._non_unicity_fields = []
+        self._non_unicity_fields.extend(['name', 'code', 'ref', 'date', 'create_period_id',
+          'amount', 'unit_amount', 'amount_currency', 'product_uom_id',
+          'currency_id', 'move_id', 'user_id', 'active', 'type'])
+        setattr(osv.osv_pool, 'init_set', indexer(getattr(osv.osv_pool, 'init_set')))
 
     def _get_amount_currency(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -127,7 +142,7 @@ class AnalyticLine(osv.osv):
 
     _constraints = [
         (_check_actual_from_analysis_period, 'You cannot pass an actual entry in a future period!', ['type', 'period_id']),
-        (_check_forecast_from_analysis_period, 'You cannot pass a forecast entry in a past/current period!', ['type', 'period_id']),
+        (_check_forecast_from_analysis_period, 'You cannot pass a forecast entry in a past period!', ['type', 'period_id']),
     ]
 
     def _build_unicity_domain(self, line, domain=None):
@@ -182,7 +197,7 @@ class AnalyticLine(osv.osv):
             context_copy = dict(context or {})
             context_copy['active_test'] = False
             for field in vals:
-                if field in self._unicity_fields + ['type']:
+                if field in self._unicity_fields or field == 'type':
                     self._deactivate_old_forecast_lines(cr, uid, ids, context=context_copy)
                     break
         return res

@@ -31,9 +31,10 @@ def analytic_decorator(original_method):
     @wraps(original_method)
     def wrapper(self, cr, *args, **kwargs):
         res = original_method(self, cr, *args, **kwargs)        
-        if isinstance(self, osv.osv_pool) and self.get('account.analytic.axis') \
-        and hasattr(self.get('account.analytic.axis'), '_update_analytic_line_columns'):
-            self.get('account.analytic.axis')._update_analytic_line_columns(cr)
+        if isinstance(self, osv.osv_pool):
+            axis_obj = self.get('account.analytic.axis')
+            if axis_obj and hasattr(axis_obj, '_update_analytic_line_columns'):
+                axis_obj._update_analytic_line_columns(cr)
         return res
     return wrapper
 
@@ -450,6 +451,9 @@ class AnalyticLine(osv.osv):
         super(AnalyticLine, self).__init__(pool, cr)
         if self._columns.has_key('account_id'):
             self._columns['account_id'].required = False
+        if not hasattr(self, '_non_unicity_fields'):
+            self._non_unicity_fields = []
+        self._non_unicity_fields.extend(['audit', 'audit_ref'])
 
     def _get_amount_currency(self, cr, uid, ids, name, arg, context=None):
         res = {}

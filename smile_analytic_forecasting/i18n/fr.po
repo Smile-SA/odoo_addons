@@ -72,9 +72,13 @@ msgstr "Produit"
 
 #. module: smile_analytic_forecasting
 #: constraint:account.analytic.forecasting.report:0
-#: constraint:account.analytic.line:0
 msgid "You cannot pass a forecast entry in a past/current period!"
 msgstr "Vous ne pouvez pas passer d'écritures du type prévu sur une période passée ou courante !"
+
+#. module: smile_analytic_forecasting
+#: constraint:account.analytic.line:0
+msgid "You cannot pass a forecast entry in a past period!"
+msgstr "Vous ne pouvez pas passer d'écritures du type prévu sur une période passée !"
 
 #. module: smile_analytic_forecasting
 #: model:ir.model,name:smile_analytic_forecasting.model_account_analytic_line

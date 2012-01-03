@@ -57,7 +57,7 @@ class AnalyticPeriod(osv.osv):
         if period.general_period_id \
         and (period.date_start < period.general_period_id.date_start \
         or period.date_stop > period.general_period_id.date_stop):
-            return False            
+            return False
         return True
 
     def _check_periods_overlap(self, cr, uid, ids, context=None):
