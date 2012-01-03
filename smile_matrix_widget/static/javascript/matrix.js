@@ -407,9 +407,12 @@ $(document).ready(function(){
 
 
     // Initialize the navigation slider
-    $(".matrix.slider").each(function(){
-        var matrix = get_parent_matrix($(this).find(":first-child"));
-        var matrix_id = matrix.attr("id");
+    $(".matrix").each(function(){
+        // Don't try to initialize matrix without navigation
+        if ($(this).find(".navigation").length == 0) {
+            return;
+        };
+        var matrix_id = $(this).attr("id");
         $("#" + matrix_id + " th[id*='__column_label_']").each(function(i){
             // TODO: add a parameter or autodetect how many cells we display in the range
             if(i > 9){
@@ -422,7 +425,7 @@ $(document).ready(function(){
 
 
     // Activate the experimental timeline slider
-    $(".matrix.slider .navigation .button").click(function(){
+    $(".matrix .navigation .button").click(function(){
         var matrix = get_parent_matrix($(this));
         var matrix_id = matrix.attr("id");
         var previous_nav_cell_id = matrix_id + "__previous";

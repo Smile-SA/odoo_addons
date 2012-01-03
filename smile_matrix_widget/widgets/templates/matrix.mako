@@ -323,6 +323,10 @@
             editable_tree = value['editable_tree']
             hide_tree = value['hide_tree']
             navigation = value['navigation']
+
+            # TODO: navigation is not working in editable mode yet
+            if editable_mode:
+                navigation = False
         %>
 
         <style type="text/css">

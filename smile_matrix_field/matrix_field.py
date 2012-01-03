@@ -178,8 +178,10 @@ class matrix(fields.dummy):
         # Normalize parameters
         if conf['hide_tree']:
             conf['editable_tree'] = False
-        if conf['navigation']:
-            conf['css_classes'] += ['slider']
+
+        # TODO: Navigation is not working yet in multi-level mode
+        if len(conf['tree_definition']) > 1:
+            conf['navigation'] = False
 
         return conf
 
