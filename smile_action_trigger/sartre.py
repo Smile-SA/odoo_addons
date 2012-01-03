@@ -57,6 +57,22 @@ def _get_id_from_browse_record(value):
         value = [v.id for v in value]
     return value
 
+def cache_restarter(original_method):
+    @wraps(original_method)
+    def wrapper(self, cr, mode):
+        res = original_method(self, cr, mode)
+        if isinstance(self, osv.osv_pool):
+            trigger_obj = self.get('sartre.trigger')
+            if trigger_obj and hasattr(trigger_obj, 'cache_restart'):
+                trigger_obj.cache_restart(cr)
+        return res
+    return wrapper
+
+def get_original_method(method):
+    while method.__closure__:
+        method = method.__closure__[0].cell_contents
+    return method
+
 class IrModelMethods(osv.osv):
     _name = 'ir.model.methods'
     _description = 'Model Method'
@@ -125,16 +141,6 @@ class SartreOperator(osv.osv):
         self._get_operator.clear_cache(cr.dbname)
         return res
 SartreOperator()
-
-def cache_restarter(method):
-    def restart(self, cr, mode):
-        res = method(self, cr, mode)
-        if isinstance(self, osv.osv_pool) and \
-        self.get('sartre.trigger') and \
-        hasattr(self.get('sartre.trigger'), 'cache_restart'):
-            self.get('sartre.trigger').cache_restart(cr)
-        return res
-    return restart
 
 class SartreCategory(osv.osv):
     _name = 'sartre.category'
@@ -382,17 +388,33 @@ class SartreTrigger(osv.osv):
                                     res.append(condition[0].replace('OLD_', ''))
         return list(set(res))
 
+    def decorate_trigger_methods(self, cr):
+        trigger_methods = []
+        trigger_ids = self.search(cr, 1, [], context={'active_test': True})
+        for trigger in self.browse(cr, 1, trigger_ids):
+            for orm_method in ('create', 'write', 'unlink'):
+                if getattr(trigger, 'on_%s' % orm_method):
+                    trigger_methods.append(get_original_method(getattr(orm.orm, orm_method)))
+            if trigger.on_function:
+                for field_method in ('get', 'set'):
+                    if trigger.on_function_type in (field_method, 'both'):
+                        trigger_methods.append(get_original_method(getattr(fields, 'function.%s' % field_method)))
+            if trigger.on_other:
+                m_class = self.pool.get(trigger.model_id.model).__class__
+                m_name = trigger.on_other_method
+                if m_name and hasattr(m_class, m_name):
+                    other_method = getattr(m_class, m_name)
+                    if not hasattr(other_method, '_original'):
+                        trigger_methods.append(other_method)
+        for unbound_method in list(set(trigger_methods)):
+            if not hasattr(unbound_method, '_original'):
+                setattr(unbound_method.im_class, unbound_method.__name__, sartre_decorator(unbound_method))
+        return True
+
     def cache_restart(self, cr):
         self.get_trigger_ids.clear_cache(cr.dbname)
         self.get_fields_to_save_old_values.clear_cache(cr.dbname)
-        # Decorate other methods intercepted by triggers
-        trigger_ids = self.search(cr, 1, [('on_other', '=', True)], context={'active_test': True})
-        triggers = self.browse(cr, 1, trigger_ids)
-        for trigger in triggers:
-            m_class = self.pool.get(trigger.model_id.model)
-            m_name = trigger.on_other_method
-            if m_name and hasattr(m_class, m_name):
-                setattr(m_class.__class__, m_name, sartre_decorator(getattr(m_class.__class__, m_name)))
+        self.decorate_trigger_methods(cr)
         return True
 
     def __init__(self, pool, cr):
@@ -458,8 +480,10 @@ class SartreTrigger(osv.osv):
                 field, operator_symbol, other_value = condition
                 fields_list = field.replace('OLD_', '').split('.')
                 field, remote_field = fields_list[0], len(fields_list) > 1 and '.'.join(fields_list[1:]) or ''
-                operator_inst, opposite_operator = operator_obj._get_operator(cr, uid, operator_symbol, context=context)
-
+                try:
+                    operator_inst, opposite_operator = operator_obj._get_operator(cr, uid, operator_symbol, context=context)
+                except:
+                    raise osv.except_osv(_('Warning!'), _("The operator %s doesn't exist!") % operator_symbol)
                 dynamic_other_value = other_value and re.match('(\[\[.+?\]\])', str(other_value))
                 for object_ in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
                     if dynamic_other_value:
@@ -550,7 +574,15 @@ class SartreTrigger(osv.osv):
             logger.debug('[%s] Successful Objects Filtering: %s' % (pid, filtered_object_ids))
         except Exception, e:
             logger.exception('[%s] Objects Filtering failed: %s' % (pid, _get_exception_message(e)))
-            raise e
+            if trigger.exception_handling == 'continue' or trigger.exception_warning == 'none':
+                return True
+            else:
+                cr.rollback()
+                logger.time_info("[%s] Transaction rolled back" % (pid,))
+                if trigger.exception_warning == 'custom':
+                    raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (trigger.exception_message, pid))
+                elif trigger.exception_warning == 'native':
+                    raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (_get_exception_message(e), pid))
         # Execute server actions for filtered objects
         if filtered_object_ids or trigger.force_actions_execution:
             logger.info('[%s] Trigger on %s for objects %s,%s' % (pid, context.get('trigger', 'manual'), trigger.model_id.model, filtered_object_ids))
@@ -810,6 +842,15 @@ def _get_args(method, args, kwargs):
     context = isinstance(args_dict.get('context'), dict) and dict(args_dict['context']) or {}
     return obj, cr, uid, ids, field_name, vals, context
 
+def include_original(decorator):
+    @wraps(decorator)
+    def wrapper(original_method):
+        new_method = decorator(original_method)
+        new_method._original = original_method
+        return new_method
+    return wrapper
+
+@include_original
 def sartre_decorator(original_method):
     @wraps(original_method)
     def wrapper(*args, **kwargs):
@@ -848,7 +889,3 @@ def sartre_decorator(original_method):
             trigger_obj.run_now(cr, uid, trigger_ids, context=context)
         return result
     return wrapper
-
-for orm_method in [orm.orm.create, orm.orm.write, orm.orm.unlink, fields.function.get, fields.function.set]:
-    if hasattr(orm_method.im_class, orm_method.__name__):
-        setattr(orm_method.im_class, orm_method.__name__, sartre_decorator(getattr(orm_method.im_class, orm_method.__name__)))
