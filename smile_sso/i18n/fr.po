@@ -21,35 +21,6 @@ msgid "Expiry Date"
 msgstr "Date d'expiration"
 
 #. module: smile_sso
-#: model:ir.module.module,description:smile_sso.module_meta_information
-msgid "\n"
-"This module delegate users authentification (global login and logout) to \n"
-"Apache HTTP Server via some modules like mod_auth_cas, mod_auth_kerb or mod_auth_openid.\n"
-"\n"
-"It just provides:\n"
-"    * 2 new URLs: /openerp/sso_login and /openerp/sso_logout\n"
-"    * 2 new methods in the \"common\" web service: sso_login and sso_logout\n"
-"\n"
-"For this moment, the web service \"sso_login\" is protected by a simple password shared between web client and openerp server.\n"
-"We plan to strengthen this call by validating the SSL certificate of web client into openerp server.\n"
-"\n"
-"Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr\n"
-""
-msgstr "\n"
-"Ce module délègue l'authentification (connexion et déconnexion) au \n"
-"serveur HTTP Apache via certains modules comme mod_auth_cas, mod_auth_kerb ou mod_auth_openid.\n"
-"\n"
-"It just provides:\n"
-"    * 2 new URLs: /openerp/sso_login and /openerp/sso_logout\n"
-"    * 2 new methods in the \"common\" web service: sso_login and sso_logout\n"
-"\n"
-"For this moment, the web service \"sso_login\" is protected by a simple password shared between web client and openerp server.\n"
-"We plan to strengthen this call by validating the SSL certificate of web client into openerp server.\n"
-"\n"
-"Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr\n"
-""
-
-#. module: smile_sso
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
 msgstr "VOus ne pouvez pas avoir deux utilsiateurs avec le même login !"
@@ -58,12 +29,12 @@ msgstr "VOus ne pouvez pas avoir deux utilsiateurs avec le même login !"
 #: code:addons/smile_sso/web/controllers.py:46
 #, python-format
 msgid "Unknown user!"
-msgstr "Unknown user!"
+msgstr "Utilisateur inconnu !"
 
 #. module: smile_sso
 #: sql_constraint:res.users:0
 msgid "The user with id = 1 must be always active!"
-msgstr "The user with id = 1 must be always active!"
+msgstr "L'utilisateur dont id = 1 doit toujours être actif !"
 
 #. module: smile_sso
 #: constraint:res.users:0
@@ -74,18 +45,13 @@ msgstr "La société choisie n'est pas autorisée pour cet utilisateur."
 #: code:addons/smile_sso/res_user.py:107
 #, python-format
 msgid "Operation Canceled"
-msgstr "Operation Canceled"
-
-#. module: smile_sso
-#: model:ir.model,name:smile_sso.model_res_users
-msgid "res.users"
-msgstr "res.users"
+msgstr "Opération annulée"
 
 #. module: smile_sso
 #: code:addons/smile_sso/res_user.py:107
 #, python-format
 msgid "You cannot modify user password when the module smile_sso is installed!"
-msgstr "You cannot modify user password when the module smile_sso is installed!"
+msgstr "Vous ne pouvez pas modifier le mot de passe d'un utilisateur lorsque le module smile_sso est installé !"
 
 #. module: smile_sso
 #: model:ir.module.module,shortdesc:smile_sso.module_meta_information
