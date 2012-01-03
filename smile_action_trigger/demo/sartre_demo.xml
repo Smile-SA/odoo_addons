@@ -28,10 +28,19 @@
 			<field name="trigger_id" ref="sartre_trigger_partneremailchanges0"/>
 			<field name="field_name">email</field>
 			<field name="field_id" ref="base.field_res_partner_address_email"/>
+			<field name="operator_id" ref="sartre_operator_isequalto0"/>
+			<field eval="1" name="opposite"/>
+			<field name="value_age">old</field>
+			<field name="domain">[('OLD_email', u'!=', '')]</field>
+		</record>
+		<record id="sartre_filter_1" model="sartre.filter">
+			<field name="trigger_id" ref="sartre_trigger_partneremailchanges0"/>
+			<field name="field_name">email</field>
+			<field name="field_id" ref="base.field_res_partner_address_email"/>
 			<field name="operator_id" ref="sartre_operator_ischanging0"/>
 			<field eval="0" name="opposite"/>
-			<field name="value_age">current</field>
-			<field name="domain">[('OLD_email', '~', '')]</field>
+			<field name="value_age">old</field>
+			<field name="domain">[('OLD_email', u'~', '')]</field>
 		</record>
 
 	</data>
