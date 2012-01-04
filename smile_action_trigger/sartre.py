@@ -69,7 +69,10 @@ def cache_restarter(original_method):
     return wrapper
 
 def get_original_method(method):
+    """Get original method if not already decorated by Sartre"""
     while method.__closure__:
+        if method.__name__ == 'trigger_method':
+            return
         method = method.__closure__[0].cell_contents
     return method
 
@@ -389,26 +392,31 @@ class SartreTrigger(osv.osv):
         return list(set(res))
 
     def decorate_trigger_methods(self, cr):
-        trigger_methods = []
+        methods_to_decorate = []
         trigger_ids = self.search(cr, 1, [], context={'active_test': True})
         for trigger in self.browse(cr, 1, trigger_ids):
             for orm_method in ('create', 'write', 'unlink'):
                 if getattr(trigger, 'on_%s' % orm_method):
-                    trigger_methods.append(get_original_method(getattr(orm.orm, orm_method)))
+                    original_method = get_original_method(getattr(orm.orm, orm_method))
+                    if original_method:
+                        methods_to_decorate.append(original_method)
             if trigger.on_function:
                 for field_method in ('get', 'set'):
                     if trigger.on_function_type in (field_method, 'both'):
-                        trigger_methods.append(get_original_method(getattr(fields, 'function.%s' % field_method)))
+                        original_method = get_original_method(getattr(fields, 'function.%s' % field_method))
+                        if original_method:
+                            methods_to_decorate.append(original_method)
             if trigger.on_other:
                 m_class = self.pool.get(trigger.model_id.model).__class__
                 m_name = trigger.on_other_method
                 if m_name and hasattr(m_class, m_name):
                     other_method = getattr(m_class, m_name)
-                    if not hasattr(other_method, '_original'):
-                        trigger_methods.append(other_method)
-        for unbound_method in list(set(trigger_methods)):
-            if not hasattr(unbound_method, '_original'):
-                setattr(unbound_method.im_class, unbound_method.__name__, sartre_decorator(unbound_method))
+                    original_method = get_original_method(other_method)
+                    if original_method:
+                        methods_to_decorate.append(original_method)
+        methods_to_decorate = list(set(methods_to_decorate))
+        for unbound_method in methods_to_decorate:
+            setattr(unbound_method.im_class, unbound_method.__name__, sartre_decorator(unbound_method))
         return True
 
     def cache_restart(self, cr):
@@ -842,18 +850,8 @@ def _get_args(method, args, kwargs):
     context = isinstance(args_dict.get('context'), dict) and dict(args_dict['context']) or {}
     return obj, cr, uid, ids, field_name, vals, context
 
-def include_original(decorator):
-    @wraps(decorator)
-    def wrapper(original_method):
-        new_method = decorator(original_method)
-        new_method._original = original_method
-        return new_method
-    return wrapper
-
-@include_original
 def sartre_decorator(original_method):
-    @wraps(original_method)
-    def wrapper(*args, **kwargs):
+    def trigger_method(*args, **kwargs):
         # Get arguments
         obj, cr, uid, ids, field_name, vals, context = _get_args(original_method, args, kwargs)
         method_name = original_method.__name__
@@ -888,4 +886,4 @@ def sartre_decorator(original_method):
                 context['active_object_ids'] = [result]
             trigger_obj.run_now(cr, uid, trigger_ids, context=context)
         return result
-    return wrapper
+    return trigger_method
