@@ -887,3 +887,35 @@ def sartre_decorator(original_method):
             trigger_obj.run_now(cr, uid, trigger_ids, context=context)
         return result
     return trigger_method
+
+def sartre_validate(self, cr, uid, ids, context=None):
+    context = context or {}
+    lng = context.get('lang', False) or 'en_US'
+    trans = self.pool.get('ir.translation')
+    error_msgs = []
+    for constraint in self._constraints:
+        fun, msg, fields = constraint
+        if not fun(self, cr, uid, ids):
+            if hasattr(msg, '__call__'):
+                tmp_msg = msg(self, cr, uid, ids, context=context)
+                if isinstance(tmp_msg, tuple):
+                    tmp_msg, params = tmp_msg
+                    translated_msg = tmp_msg % params
+                else:
+                    translated_msg = tmp_msg
+            else:
+                translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
+            error_msgs.append(
+                    _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
+            )
+            self._invalids.update(fields)
+    if error_msgs:
+        # Added by smile #
+        if not context.get('pid_list'):
+            cr.rollback()
+        ##################
+        raise orm.except_orm('ValidateError', '\n'.join(error_msgs))
+    else:
+        self._invalids.clear()
+
+orm.orm_template._validate = sartre_validate
