@@ -543,15 +543,33 @@ def matrix_read_patch(func):
 
 
 
-def matrix_write_patch(func):
-    """
-    """
+def matrix_write_patch(parse_only=False):
+  """
+    Method intended to use as a decorator on the default write() defined on
+    objects having a matrix field.
+
+    This decorator will parse and intercept virtual fields produced by a matrix
+    widget, then write all values to their respective destination.
+
+    The parse_only option let you skip all the automatic data saving performed
+    there. This will provide the decorated write() method a structured
+    dictionnary containing all editable matrix values and their new values, thus
+    giving you the oportunity to write matrix content with your own strategy.
+    This is generally useful to enhance performance.
+  """
+
+  def write_decorator(func):
 
     @wraps(func)
     def write_matrix_virtual_fields(*arg, **kw):
-        result = func(*arg, **kw)
+        # Extract parameters provided to the original method
         (obj, cr, uid, ids, vals) = arg[:5]
         context = kw.get('context', None)
+
+        # We plan to update the original vals variable
+        cleaned_vals = deepcopy(vals)
+
+        # Fix common OpenERP inconsistency
         if isinstance(ids, (int, long)):
             ids = [ids]
 
@@ -560,13 +578,20 @@ def matrix_write_patch(func):
             # Write one matrix at a time
             for (matrix_id, conf) in _get_matrix_fields_conf(obj).items():
 
+                removed_line_property_id = '_deleted_%s' % conf['line_property']
+                matrix_data = {
+                    removed_line_property_id: [],
+                    }
+
                 lines = {}
-                removed_lines = []
                 for (f_id, f_value) in vals.items():
 
                     # Ignore non-matrix fields
                     if not f_id.startswith('%s__' % matrix_id):
                         continue
+                    # Remove consumed virtual matrix field
+                    elif f_id in cleaned_vals:
+                        del cleaned_vals[f_id]
 
                     # Parsing field ID will discard non-editable ones
                     parsed_elements = parse_virtual_field_id(f_id)
@@ -577,7 +602,7 @@ def matrix_write_patch(func):
                         if f_id_elements == ['line', 'removed']:
                             for line_id_elements in [parse_virtual_field_id(l_id.strip()) for l_id in f_value.split(',') if l_id.strip()]:
                                 if line_id_elements[0] == matrix_id and line_id_elements[1] == 'line' and not line_id_elements[2].startswith('new'):
-                                    removed_lines.append(int(line_id_elements[2]))
+                                    matrix_data[removed_line_property_id].append(int(line_id_elements[2]))
 
                         # We're reading a __cell_ or a __res_ type of field: regroup them to the line they belongs to
                         elif f_id_elements[0] in ['res', 'cell']:
@@ -587,13 +612,13 @@ def matrix_write_patch(func):
                             lines[line_id] = line_data
 
                 # No matrix data was edited on that matrix, so skip updating it
-                if not lines and not removed_lines:
+                if not lines and not matrix_data[removed_line_property_id]:
                     continue
 
                 # Get our date ranges
                 (date_range, active_date_range, editable_date_range) = _get_date_range(report, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
 
-                # Write data of each line
+                # Parse data of each line
                 for (line_id, line_data) in lines.items():
                     # Get line resources
                     line_resources = dict([(parse_virtual_field_id(f_id)[3], int(v)) for (f_id, v) in line_data.items() if f_id.startswith('%s__res_' % matrix_id)])
@@ -604,14 +629,14 @@ def matrix_write_patch(func):
                         raise osv.except_osv('Error !', "Line %s resource mismatch: %r provided while we're expecting %r." % (line_id, res_ids, required_res_ids))
                     # Get line cells
                     line_cells = dict([(datetime.datetime.strptime(parse_virtual_field_id(f_id)[3], '%Y%m%d').date(), v) for (f_id, v) in line_data.items() if f_id.startswith('%s__cell_' % matrix_id)])
-                    # Are we updating an existing line or creating a new one ?
+                    #
                     if line_id.startswith('new'):
-                        line_vals = line_resources
-                        line_vals.update({conf['line_inverse_property']: report.id})
-                        line_id = obj.pool.get(conf['line_type']).create(cr, uid, line_vals, context)
-                    line_id = int(line_id)
+                        line_id = None
+                    else:
+                        line_id = int(line_id)
 
-                    # Save cells data
+                    # Parse and clean-up cells data
+                    clean_cells = []
                     for (cell_date, cell_value) in line_cells.items():
                         # Transform the value to a float, if the user has entered nothing just use the default value
                         cell_value = ''.join([c for c in cell_value if c.isdigit() or c in ['-', '.', ',']]).replace(',', '.')
@@ -619,19 +644,46 @@ def matrix_write_patch(func):
                             cell_value = float(cell_value)
                         except ValueError:
                             cell_value = conf['default_cell_value']
-                        cell_vals = {
+                        clean_cells.append({
                             conf['cell_value_property']: cell_value,
-                            }
+                            conf['cell_date_property']: cell_date,
+                            conf['cell_inverse_property']: line_id,
+                            })
+
+                    # Pack all cleaned matrix data in a comprehensive structure
+                    line_properties = deepcopy(line_resources)
+                    line_properties.update({
+                        'id': line_id,
+                        conf['cell_property']: clean_cells,
+                        conf['line_inverse_property']: report.id,
+                        })
+                    matrix_data[conf['line_property']] = matrix_data.get(conf['line_property'], []) + [line_properties]
+
+                if parse_only:
+                    # Inject a clean version of matrix data in the vals
+                    matrix_widget_values = cleaned_vals.get(matrix_id, {})
+                    matrix_widget_values.update({report.id: matrix_data})
+                    cleaned_vals[matrix_id] = matrix_widget_values
+                    # Skip the automatic content writing
+                    continue
+
+                # Write all our aggregated matrix data
+                for line_data in matrix_data[conf['line_property']]:
+                    cells = line_data.pop(conf['cell_property'])
+                    # Line has no idea so was created in the matrix
+                    line_id = line_data.get('id', None)
+                    if not line_id:
+                        line_id = obj.pool.get(conf['line_type']).create(cr, uid, line_data, context)
+
+                    # Save cells data
+                    for cell_data in cells:
+                        cell_date = cell_data[conf['cell_date_property']]
                         # Search for an existing cell at the given date
                         cell_pool = obj.pool.get(conf['cell_type'])
                         cell_ids = cell_pool.search(cr, uid, [(conf['cell_date_property'], '=', cell_date.strftime('%Y-%m-%d')), (conf['cell_inverse_property'], '=', line_id)], context=context, limit=1)
                         # Cell doesn't exists, create it
                         if not cell_ids:
-                            cell_vals.update({
-                                conf['cell_date_property']: cell_date,
-                                conf['cell_inverse_property']: line_id,
-                                })
-                            cell_pool.create(cr, uid, cell_vals, context)
+                            cell_pool.create(cr, uid, cell_data, context)
                         # Update or delete the cell
                         else:
                             cell_id = cell_ids[0]
@@ -644,11 +696,19 @@ def matrix_write_patch(func):
                             if not active_cell:
                                 cell_pool.unlink(cr, uid, cell_id, context)
                             else:
-                                cell_pool.write(cr, uid, cell_id, cell_vals, context)
+                                cell_pool.write(cr, uid, cell_id, cell_data, context)
 
-                if removed_lines:
-                    report.pool.get(conf['line_type']).unlink(cr, uid, removed_lines, context)
+                if matrix_data[removed_line_property_id]:
+                    report.pool.get(conf['line_type']).unlink(cr, uid, matrix_data[removed_line_property_id], context)
 
-        return result
+        # Replace the original vals variable by our cleaned version before passing it to the decorated write() method
+        arg2 = list(arg)
+        arg2[4] = cleaned_vals
+        arg = tuple(arg2)
+
+        # Call the method we decorate
+        return func(*arg, **kw)
 
     return write_matrix_virtual_fields
+
+  return write_decorator

@@ -131,7 +131,7 @@ class smile_activity_report(osv.osv):
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         return super(smile_activity_report, self).read(cr, uid, ids, fields, context, load)
 
-    @matrix_write_patch
+    @matrix_write_patch()
     def write(self, cr, uid, ids, vals, context=None):
         return super(smile_activity_report, self).write(cr, uid, ids, vals, context)
 
