@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from copy import deepcopy
 import datetime
 
 from osv import osv, fields, orm
@@ -226,7 +227,8 @@ class matrix(fields.dummy):
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
         """
-        conf = self._get_translations(cr, self.matrix_conf, context)
+        matrix_conf = deepcopy(self.matrix_conf)
+        conf = self._get_translations(cr, matrix_conf, context)
         # Browse through all objects on which our matrix field is defined
         matrix_list = {}
         for base_object in obj.browse(cr, uid, ids, context):
