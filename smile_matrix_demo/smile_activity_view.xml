@@ -13,9 +13,10 @@
                     <field name="start_date"/>
                     <field name="period_id"/>
                     <field name="end_date"/>
+                    <field name="is_matrix_readonly"/>
                     <separator string="Activity report lines" colspan="4"/>
                     <field name="matrix_1" colspan="4" widget="matrix" nolabel="1"/>
-<!--                     <field name="matrix_2" colspan="4" widget="matrix" nolabel="1"/> -->
+                    <field name="matrix_2" colspan="4" widget="matrix" nolabel="1"/>
                     <field name="line_ids" colspan="4" nolabel="1">
                         <tree string="Lines">
                             <field name="name"/>

@@ -39,8 +39,8 @@ class smile_activity_report(osv.osv):
         """ Dynamiccaly set the readonly property of the matrix
         """
         result = {}
-        for line in self.browse(cr, uid, ids, context):
-            result[line.id] = True
+        for report in self.browse(cr, uid, ids, context):
+            result[report.id] = random.randrange(0, 2)
         return result
 
 

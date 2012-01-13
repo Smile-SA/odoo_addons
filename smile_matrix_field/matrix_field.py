@@ -240,7 +240,7 @@ class matrix(fields.dummy):
             for flag_id in ['tree_definition', 'increment_values', 'default_cell_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'navigation', 'readonly']:
                 flag_value = conf[flag_id]
                 if isinstance(flag_value, (str, unicode)):
-                    conf[flag_id] = _get_prop(base_object, flag_value)
+                    conf[flag_id] = bool(_get_prop(base_object, flag_value))
 
             # Get our date ranges
             (date_range, active_date_range, editable_date_range) = _get_date_range(base_object, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
