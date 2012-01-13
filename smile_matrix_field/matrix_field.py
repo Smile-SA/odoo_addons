@@ -555,7 +555,6 @@ def matrix_write_patch(func):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        written_lines = []
         for report in obj.browse(cr, uid, ids, context):
 
             # Write one matrix at a time
@@ -611,7 +610,6 @@ def matrix_write_patch(func):
                         line_vals.update({conf['line_inverse_property']: report.id})
                         line_id = obj.pool.get(conf['line_type']).create(cr, uid, line_vals, context)
                     line_id = int(line_id)
-                    written_lines.append(line_id)
 
                     # Save cells data
                     for (cell_date, cell_value) in line_cells.items():
