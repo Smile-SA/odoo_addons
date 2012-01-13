@@ -200,7 +200,7 @@
             %for date in date_range:
                 <%
                     date_column_sum_cell = {
-                        'value': sum([line.get('cells_data', dict()).get(date, None).get('value', 0.0) for line in sub_lines]),
+                        'value': sum([line.get('cells_data', dict()).get(date, {}).get('value', 0.0) for line in sub_lines]),
                         'read_only': True,
                         }
                 %>
