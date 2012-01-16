@@ -447,12 +447,16 @@ class SartreTrigger(osv.osv):
     def _add_trigger_date_filter(self, cr, uid, trigger, context):
         """Build trigger date filter"""
         if trigger.on_date:
+            datetime_format = '%Y-%m-%d %H:%M:%S'
             now = datetime.now()
             interval_number = trigger.on_date_range
             interval_type = str(trigger.on_date_range_type)
             interval_operand = trigger.on_date_range_operand
             # Update trigger next call
-            self.write(cr, 1, trigger.id, {'nextcall': now + relativedelta(**{str(trigger.interval_type): trigger.interval_number})}, context)
+            nextcall = datetime.strptime(trigger.nextcall, datetime_format)
+            while nextcall <= now:
+                nextcall += relativedelta(**{str(trigger.interval_type): trigger.interval_number})
+            self.write(cr, 1, trigger.id, {'nextcall': nextcall.strftime(datetime_format)}, context)
             # Add datetime filter
             field = trigger.on_date_type
             limit_date = now
@@ -460,7 +464,7 @@ class SartreTrigger(osv.osv):
                 limit_date -= relativedelta(**{interval_type: interval_number})
             if interval_operand == 'before':
                 limit_date += relativedelta(**{interval_type: interval_number})
-            return (field, '<=', limit_date.strftime("%Y-%m-%d %H:%M:%S"))
+            return (field, '<=', limit_date.strftime(datetime_format))
         return
 
     def _add_max_executions_filter(self, cr, uid, trigger, context):
