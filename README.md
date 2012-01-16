@@ -73,6 +73,7 @@ Contributors
  * [Xavier Fernandez](http://twitter.com/#!/xavierfernandez)
  * Nicolas Petit
  * Corentin Pouhet-Brunerie
+ * Sylvain Bannier
 
 
 License
