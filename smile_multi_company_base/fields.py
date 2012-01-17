@@ -24,15 +24,17 @@ from osv.fields import property as property_column
 def new_fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
     """Overriding by Smile to manage multi-company application"""
 
-    properties = obj.pool.get('ir.property')
-    domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
-    domain += [('res_id', 'in', [obj._name + ',' + str(oid) for oid in  ids])]
     default_val, replaces = self._get_defaults(obj, cr, uid, prop_name, context)
-
     res = {}
+    for resource_id in ids:
+        res[resource_id] = default_val.copy()
+
+    properties = obj.pool.get('ir.property')
+    global_domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
     for resource in obj.read(cr, uid, ids, ['company_id'], context, '_classic_write'):
-        res[resource['id']] = default_val.copy()
-        if obj._columns.has_key('company_id'):
+        domain = global_domain[:]
+        domain.append(('res_id', '=', '%s,%s' % (obj._name, resource['id'])))
+        if 'company_id' in obj._columns:
             domain += ['|', ('company_id', '=', resource['company_id']), ('company_id', '=', False)]
         nids = properties.search(cr, uid, domain, context=context)
         for prop in properties.browse(cr, uid, nids, context):
