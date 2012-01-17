@@ -19,7 +19,15 @@
 #
 ##############################################################################
 
+import logging
+
+try:
+    from mako.template import Template as MakoTemplate
+except ImportError:
+    logging.getLogger("import").exception("Mako package is not installed!")
+
 from osv import osv, fields
+from tools.func import wraps
 from tools.translate import _
 
 class AnalyticJournalView(osv.osv):
@@ -30,10 +38,89 @@ class AnalyticJournalView(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'column_ids': fields.one2many('account.analytic.journal.view.column', 'view_id', 'Columns'),
         'group_ids': fields.many2many('res.groups', 'account_analytic_journal_view_groups_rel', 'view_id', 'group_id', 'Groups'),
+        'tree_view_id': fields.many2one('ir.ui.view', 'Tree View', domain=[('type', '=', 'tree')], readonly=True),
+        'search_view_id': fields.many2one('ir.ui.view', 'Search View', domain=[('type', '=', 'search')], readonly=True),
     }
 
     _order = "name"
+
+    _tree_view_template = """
+<tree string="Analytic Lines" editable="top">
+    % for column in columns:
+        <field name="${column.field_id.name}" string="${column.name}" required="${int(column.required)}" readonly="${int(column.readonly)}"/>
+    % endfor
+</tree>
+"""
+
+    _search_view_template = """
+<%
+    searchable_columns = [column for column in columns if column.searchable]
+    extended_filter_columns = [column for column in columns if column.extended_filter]
+    groupable_columns = [column for column in columns if column.groupable]
+%>
+<search string="Analytic Lines">
+    % for column in searchable_columns:
+        <field name="${column.field_id.name}" string="${column.name}"/>
+    % endfor
+    % if extended_filter_columns:
+        <newline/>
+        <group expand="0" string="Extended..." groups="base.group_extended" colspan="${len(searchable_columns)}" col="${len(extended_filter_columns)}">
+            % for column in extended_filter_columns:
+                <field name="${column.field_id.name}" string="${column.name}"/>
+            % endfor
+        </group>
+    % endif
+    % if groupable_columns:
+        <newline/>
+        <group expand="0" string="Group By..." groups="base.group_extended">
+            % for column in groupable_columns:
+                <filter string="${column.name}" domain="[]" context="{'group_by':'${column.field_id.name}'}"/>
+            % endfor
+        </group>
+    % endif
+</search>
+"""
+    
+    def update_or_create_views(self, cr, uid, ids, context=None):
+        view_obj = self.pool.get('ir.ui.view')
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for journal_view in self.browse(cr, uid, ids, context):
+            for view_type in ('tree', 'search'):
+                arch = MakoTemplate(getattr(self, '_%s_view_template' % view_type)).render_unicode(columns=journal_view.column_ids)
+                field_name = '%s_view_id' % view_type
+                field_value = getattr(journal_view, field_name)
+                if field_value:
+                    field_value.write({'arch': arch}, context)
+                else:
+                    journal_view.write({field_name: view_obj.create(cr, uid, {
+                        'name': 'account.analytic.line.journal_%s_view' % view_type,
+                        'model': 'account.analytic.line',
+                        'type': view_type,
+                        'arch': arch,
+                    }, context)}, context)
+        return True
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(AnalyticJournalView, self).write(cr, uid, ids, vals, context)
+        if 'column_ids' in vals:
+            self.update_or_create_views(cr, uid, ids, context)
+        return res
 AnalyticJournalView()
+
+def journal_view_updater(original_method):
+    @wraps(original_method)
+    def wrapper(self, cr, uid, ids, *args, **kwargs):
+        journal_ids = []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for column in self.read(cr, uid, ids, ['view_id'], load='_classic_write'):
+            journal_ids.append(column['view_id'])
+        res = original_method(self, cr, uid, ids, *args, **kwargs)
+        if journal_ids:
+            self.pool.get('account.analytic.journal.view').update_or_create_views(cr, uid, list(set(journal_ids)))
+        return res
+    return wrapper
 
 class AnalyticJournalColumn(osv.osv):
     _name = "account.analytic.journal.view.column"
@@ -67,6 +154,14 @@ class AnalyticJournalColumn(osv.osv):
                 'readonly': field['readonly'],
             }
         return res
+
+    @journal_view_updater
+    def write(self, cr, uid, ids, vals, context=None):
+        return super(AnalyticJournalColumn, self).write(cr, uid, ids, vals, context)
+
+    @journal_view_updater
+    def unlink(self, cr, uid, ids, context=None):
+        return super(AnalyticJournalColumn, self).unlink(cr, uid, ids, context)
 AnalyticJournalColumn()
 
 class AnalyticJournal(osv.osv):
@@ -106,15 +201,16 @@ class AnalyticJournal(osv.osv):
     def open_window(self, cr, uid, journal_id, context=None):
         if isinstance(journal_id, (list, tuple)):
             journal_id = journal_id[0]
-        journal = self.read(cr, uid, journal_id, ['name', 'view_id'], context)
+        journal = self.browse(cr, uid, journal_id, context)
         res = {
             'type': 'ir.actions.act_window',
-            'name': journal['name'],
+            'name': journal.name,
             'res_model': 'account.analytic.line',
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'domain': "[('journal_id', 'child_of', %s)]" % journal_id,
-            'context': "{'journal_view_id': %s}" % (journal['view_id'] and journal['view_id'][0],),
+            'view_id': journal.view_id and journal.view_id.tree_view_id and (journal.view_id.tree_view_id.id, 'default') or False,
+            'search_view_id': journal.view_id and journal.view_id.search_view_id and (journal.view_id.search_view_id.id, 'default') or False,
+            'domain': "[('journal_id', 'child_of', %s)]" % journal.id,
         }
         context = context or {}
         if context.get('target'):
@@ -130,6 +226,9 @@ class AnalyticJournal(osv.osv):
             ids = [ids]
         for journal in self.browse(cr, uid, ids, context):
             action_window_vals = self.open_window(cr, uid, journal.id, context)
+            for field in ('view_id', 'search_view_id'):
+                if isinstance(action_window_vals[field], tuple):
+                    action_window_vals[field] = action_window_vals[field][0]
             action_window_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_window_vals, context)
             menu_id = self.pool.get('ir.ui.menu').create(cr, uid, {
                 'name': action_window_vals['name'],
@@ -173,41 +272,4 @@ class AnalyticLine(osv.osv):
     def create(self, cr, uid, vals, context=None):
         vals['amount'] *= int(self.pool.get('account.analytic.journal').read(cr, uid, vals['journal_id'], ['sign'], context)['sign'])
         return super(AnalyticLine, self).create(cr, uid, vals, context)
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(AnalyticLine, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
-        context = context or {}
-        if context.get('journal_view_id') and view_type in ('tree', 'search'):
-            columns = self.pool.get('account.analytic.journal.view').browse(cr, uid, context['journal_view_id'], context).column_ids
-            res['fields'] = self.fields_get(cr, uid, context=context)
-            if view_type == 'tree':
-                res['arch'] = '<tree string="Analytic Lines" editable="top">\n'
-                for column in columns:
-                    attrs = ''
-                    if column.required:
-                        attrs += ' required="1"'
-                    if column.readonly:
-                        attrs += ' readonly="1"'
-                    res['arch'] += '    <field name="%s" string="%s"%s/>\n' % (column.field_id.name, column.name, attrs)
-            elif view_type == 'search':
-                res['arch'] = '<search string="Analytic Lines">\n'
-                searchable_columns = [column for column in columns if column.searchable]
-                for column in searchable_columns:
-                    res['arch'] += '    <field name="%s" string="%s"/>\n' % (column.field_id.name, column.name)
-                extended_filter_columns = [column for column in columns if column.extended_filter]
-                if extended_filter_columns:
-                    res['arch'] += '    <newline/>\n' \
-                                   '    <group expand="0" string="Extended..." groups="base.group_extended" colspan="%s" col="%s">\n' % (len(searchable_columns), len(extended_filter_columns))
-                    for column in extended_filter_columns:
-                        res['arch'] += '''        <field name="%s" string="%s"/>\n''' % (column.field_id.name, column.name)
-                    res['arch'] += '    </group>\n'
-                groupable_columns = [column for column in columns if column.groupable]
-                if groupable_columns:
-                    res['arch'] += '    <newline/>\n' \
-                                   '    <group expand="0" string="Group By..." groups="base.group_extended">\n'
-                    for column in groupable_columns:
-                        res['arch'] += '''        <filter string="%s" domain="[]" context="{'group_by':'%s'}"/>\n''' % (column.name, column.field_id.name)
-                    res['arch'] += '    </group>\n'
-            res['arch'] += '</%s>' % view_type
-        return res
 AnalyticLine()
