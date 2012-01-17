@@ -168,10 +168,10 @@ def new_action_move_create(self, cr, uid, ids, *args):
             for i in line:
                 i[2]['period_id'] = period_id
 
-        # Added by Smile
+        # Added by Smile #
         if inv.company_id:
             move['company_id'] = inv.company_id.id
-        #####
+        ##################
 
         move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
         new_move_name = self.pool.get('account.move').browse(cr, uid, move_id).name
