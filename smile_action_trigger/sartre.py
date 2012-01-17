@@ -70,10 +70,10 @@ def cache_restarter(original_method):
 
 def get_original_method(method):
     """Get original method if not already decorated by Sartre"""
-    while method.__closure__:
+    while method.func_closure:
         if method.__name__ == 'trigger_method':
             return
-        method = method.__closure__[0].cell_contents
+        method = method.func_closure[0].cell_contents
     return method
 
 class IrModelMethods(osv.osv):
