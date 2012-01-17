@@ -108,7 +108,7 @@ class smile_activity_report(osv.osv):
             hide_remove_line_buttons = True,
             hide_column_totals       = True,
             hide_line_totals         = True,
-            readonly = 'is_matrix_readonly',
+            read_only = 'is_matrix_readonly',
             title = "Activity report lines 2",
             ),
         }

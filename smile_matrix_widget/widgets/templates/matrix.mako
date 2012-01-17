@@ -295,7 +295,7 @@
 
             # Merge readonly with editable property
             editable_mode = editable and not readonly
-            if value.get('readonly', None):
+            if value.get('read_only', None):
                 editable_mode = False
 
             # Extract some basic information

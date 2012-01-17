@@ -158,7 +158,7 @@ class matrix(fields.dummy):
             'css_classes': conf_dict.get('css_classes', []),
 
             # Force the matrix in read only mode, even in editable mode
-            'readonly': conf_dict.get('readonly', False),
+            'read_only': conf_dict.get('read_only', False),
 
             # Get the matrix title
             'title': conf_dict.get('title', "Lines"),
@@ -237,7 +237,7 @@ class matrix(fields.dummy):
             # Evaluate dynamic matrix properties
             # Dynamic properties are those which value is a string instead of their native type
             # Of course this only works with properties which native type is not strings
-            for flag_id in ['tree_definition', 'increment_values', 'default_cell_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'navigation', 'readonly']:
+            for flag_id in ['tree_definition', 'increment_values', 'default_cell_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'navigation', 'read_only']:
                 flag_value = conf[flag_id]
                 if isinstance(flag_value, (str, unicode)):
                     conf[flag_id] = bool(_get_prop(base_object, flag_value))
