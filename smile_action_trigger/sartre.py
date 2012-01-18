@@ -453,7 +453,10 @@ class SartreTrigger(osv.osv):
             interval_type = str(trigger.on_date_range_type)
             interval_operand = trigger.on_date_range_operand
             # Update trigger next call
-            nextcall = datetime.strptime(trigger.nextcall, datetime_format)
+            try:
+                nextcall = datetime.strptime(trigger.nextcall, datetime_format)
+            except ValueError: # To be compatible with the old version of this module
+                nextcall = datetime.strptime(trigger.nextcall, datetime_format + '.%f')
             while nextcall <= now:
                 nextcall += relativedelta(**{str(trigger.interval_type): trigger.interval_number})
             self.write(cr, 1, trigger.id, {'nextcall': nextcall.strftime(datetime_format)}, context)
