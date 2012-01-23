@@ -182,19 +182,8 @@ AnalyticPeriod()
 class AnalyticLine(osv.osv):
     _inherit = 'account.analytic.line'
 
-    def _get_period_id(self, cr, uid, ids, name, arg, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        res = {}.fromkeys(ids, False)
-        period_obj = self.pool.get('account.analytic.period')
-        for line in self.read(cr, uid, ids, ['date', 'company_id'], context):
-            res[line['id']] = period_obj.get_period_id_from_date(cr, uid, line['date'], line['company_id'] and line['company_id'][0], context)
-        return res
-
     _columns = {
-        'period_id': fields.function(_get_period_id, method=True, type='many2one', relation='account.analytic.period', string='Period', required=False, store={
-            'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['date'], 10),
-        }),
+        'period_id': fields.many2one('account.analytic.period', 'Period', readonly=True),
         'create_period_id': fields.many2one('account.analytic.period', 'Create Period', domain=[('state', '!=', 'done')]),
     }
 
@@ -212,6 +201,27 @@ class AnalyticLine(osv.osv):
             if line.create_period_id.state == 'done':
                 return False
         return True
+
+    def create(self, cr, uid, vals, context=None):
+        vals = vals or {}
+        vals['period_id'] = self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, vals['date'], vals.get('company_id', False), context)
+        return super(AnalyticLine, self).create(cr, uid, vals, context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        vals = vals or {}
+        if vals.get('date'):
+            if isinstance(ids, (int, long)):
+                ids = [ids]
+            lines = self.read(cr, uid, ids, ['company_id'], context, '_classic_write')
+            lines_by_company = {}
+            for line in lines:
+                lines_by_company.setdefault(line['company_id'], [])
+                lines_by_company[line['company_id']].append(line['id'])
+            for company_id in lines_by_company:
+                vals['period_id'] = self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, vals['date'], company_id, context)
+                super(AnalyticLine, self).write(cr, uid, lines_by_company[company_id], vals, context)
+            return True
+        return super(AnalyticLine, self).write(cr, uid, ids, vals, context)
 
     _constraints = [
         (_check_create_period, 'You cannot pass/update a journal entry in a closed period!', ['create_period_id']),
