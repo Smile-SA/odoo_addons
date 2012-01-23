@@ -156,6 +156,7 @@ class AnalyticLine(osv.osv):
         line_ids_to_deactivate = []
         context = context or {}
         context['bypass_forecast_lines_deactivation'] = True
+        context['force_analytic_line_update'] = True
         if isinstance(ids, (int, long)):
             ids = [ids]
         for line in self.read(cr, uid, ids, self._unicity_fields, {}):
@@ -209,4 +210,10 @@ class AnalyticLine(osv.osv):
             ids = [ids]
         self._deactivate_old_forecast_lines(cr, uid, ids, [('id', 'not in', ids)], context_copy)
         return super(AnalyticLine, self).unlink(cr, uid, ids, context)
+
+    def _check_create_period(self, cr, uid, ids, context=None):
+        context = context or {}
+        if not context.get('force_analytic_line_update'):
+            return super(AnalyticLine, self)._check_create_period(cr, uid, ids, context)
+        return True
 AnalyticLine()
