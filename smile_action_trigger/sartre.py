@@ -902,7 +902,10 @@ def sartre_validate(self, cr, uid, ids, context=None):
     error_msgs = []
     for constraint in self._constraints:
         fun, msg, fields = constraint
-        if not fun(self, cr, uid, ids):
+        args = (self, cr, uid, ids)
+        if 'context' in inspect.getargspec(fun)[0]:
+            args = (self, cr, uid, ids, context)
+        if not fun(*args):
             if hasattr(msg, '__call__'):
                 tmp_msg = msg(self, cr, uid, ids, context=context)
                 if isinstance(tmp_msg, tuple):
