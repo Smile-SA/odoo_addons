@@ -417,7 +417,6 @@
 
             .matrix table .button.delete_row {
                 font-weight: bold;
-                background: #d92b1e;
                 min-width: 1em;
                 height: 1em;
             }
