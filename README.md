@@ -96,6 +96,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Changelog
 ---------
 
+* **0.5.dev** (unreleased)
+  No changes yet
+
 * **0.4** (2012-01-27)
   * Per-line dynamic removable property
   * Update internal field naming convention to lower the risk of collision in usual usage
