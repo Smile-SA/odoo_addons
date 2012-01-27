@@ -466,6 +466,14 @@
 
         </style>
 
+        %if value.get('custom_js', None):
+            <script type="text/javascript">
+            <!--
+                ${value['custom_js']|n}
+            -->
+            </script>
+        %endif
+
         %if editable_mode:
             <div class="toolbar level level_0">
                 %if editable_tree:

@@ -91,6 +91,14 @@ class smile_activity_report(osv.osv):
                     background-color: #abd4ff;
                 }
                 """,
+            custom_js = """
+                $(document).ready(function(){
+                    /* Highlight in blue grand total of all matrix every 2 seconds */
+                    setInterval(function(){
+                        $("td[id$='__grand_total']").effect("highlight", {'color': '#00f'}, 1000);
+                    }, 2 * 1000);
+                });
+                """,
             ),
         # Test multiple matrix widget
         'matrix_2': matrix(
