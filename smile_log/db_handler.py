@@ -21,11 +21,9 @@
 
 import datetime
 import logging
-import threading
 import traceback
 
 import pooler
-import tools
 
 class SmileDBHandler(logging.Handler):
 
