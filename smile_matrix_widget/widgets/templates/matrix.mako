@@ -113,7 +113,7 @@
 
         <td class="delete_line">
             %if editable_mode and line_removable:
-                <span class="button delete_row">X</span>
+                <span class="button delete_row">&#10006;</span>
             %endif
         </td>
 
@@ -167,7 +167,7 @@
                     <option value="${res_value}">${res_label}</option>
                 %endfor
             </select>
-            <span class="button add_row">+</span>
+            <span class="button add_row">&#10010;</span>
         </span>
     %endif
 </%def>
@@ -346,7 +346,7 @@
             }
 
 
-            /* Set our style */
+            /* Set our matrix style */
 
             .matrix .toolbar {
                 margin-bottom: 1em;
@@ -413,6 +413,17 @@
                 display: inline-block;
                 padding: .3em;
                 min-width: 2.2em;
+            }
+
+            .matrix table .button.delete_row {
+                font-weight: bold;
+                background: #d92b1e;
+                min-width: 1em;
+                height: 1em;
+            }
+
+            .matrix table .button.delete_row:hover {
+                background: #fc3223;
             }
 
             .matrix td, div.non-editable .matrix table td,
