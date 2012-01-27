@@ -101,6 +101,7 @@ Changelog
   * Update internal field naming convention to lower the risk of collision in usual usage
   * Restrict boolean widget lines to the bottom of the matrix for now
   * Add date range column navigation
+  * Allow custom CSS to be injected in the matrix
 
 * **0.3** (2011-12-23)
   * Only remove lines when they are explicitely deleted by the user

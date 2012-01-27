@@ -451,6 +451,9 @@
                     }
                 %endfor
             %endif
+
+            ${value.get('custom_css', None)}
+
         </style>
 
         %if editable_mode:

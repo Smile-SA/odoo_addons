@@ -83,6 +83,14 @@ class smile_activity_report(osv.osv):
                 ],
             column_totals_warning_threshold = 1.0,
             title = "Activity report lines",
+            css_classes = ['my_custom_css', ],
+            custom_css = """
+                /* Use a nice shade of blue for the total line of that matrix */
+                .matrix.my_custom_css .total td,
+                .matrix.my_custom_css .total th {
+                    background-color: #abd4ff;
+                }
+                """,
             ),
         # Test multiple matrix widget
         'matrix_2': matrix(

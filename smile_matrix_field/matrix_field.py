@@ -157,6 +157,9 @@ class matrix(fields.dummy):
             # Additional classes can be manually added
             'css_classes': conf_dict.get('css_classes', []),
 
+            # Allow
+            'custom_css': conf_dict.get('custom_css', None),
+
             # Force the matrix in read only mode, even in editable mode
             'read_only': conf_dict.get('read_only', False),
 
