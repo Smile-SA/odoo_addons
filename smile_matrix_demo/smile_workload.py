@@ -77,6 +77,11 @@ class smile_activity_workload(osv.osv):
             cell_date_property='date',
             date_range_property='date_range',
             date_format='%m/%y',
+
+            default_widget_type          = 'selection',
+            #dynamic_widget_type_property = 'line_type',
+            #increment_values             = [-1, 0.0, 2.71, 3.14],
+
             tree_definition = [
                 { 'line_property': 'profile_id',
                   'resource_type': 'smile.activity.profile',
