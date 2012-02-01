@@ -74,6 +74,7 @@ Contributors
  * Nicolas Petit
  * Corentin Pouhet-Brunerie
  * Sylvain Bannier
+ * Nicolas Clément
 
 
 License
@@ -97,7 +98,7 @@ Changelog
 ---------
 
 * **0.5.dev** (unreleased)
-  No changes yet
+  * Add a new selection widget type
 
 * **0.4** (2012-01-27)
   * Per-line dynamic removable property

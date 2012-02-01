@@ -99,9 +99,10 @@ class matrix(fields.dummy):
             # Get line tree definition
             'tree_definition': conf_dict.get('tree_definition', None),
 
-            # Widget configuration
+            # Widget type (can be 'float', 'boolean', 'increment' or 'selection')
             'default_widget_type': conf_dict.get('default_widget_type', 'float'),
             'dynamic_widget_type_property': conf_dict.get('dynamic_widget_type_property', None),
+            # Widget values
             'increment_values': conf_dict.get('increment_values', [0, 0.5, 1.0]),
 
             # Property name from which we get the cells composing the matrix.

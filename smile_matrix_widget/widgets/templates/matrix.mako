@@ -71,6 +71,12 @@
                             checked="checked"
                         %endif
                     />
+                %elif widget == 'selection':
+                    <select kind="float" name="${cell_id}" id="${cell_id}" class="${widget}">
+                        %for v in increment_values:
+                            <option value="${v}" ${py.selector(v == (cell_value or False))}>${v}</option>
+                        %endfor
+                    </select>
                 %else:
                     <input type="text" kind="float" name="${cell_id}" id="${cell_id}" value="${render_float(cell_value)}" size="1" class="${widget}"/>
                 %endif

@@ -145,7 +145,7 @@ $(document).ready(function(){
 
 
     // Compute columns and row totals
-    $(".matrix input[id*='__cell_']").change(function(){
+    $(".matrix input[id*='__cell_'], .matrix select[id*='__cell_']").change(function(){
         // Get current cell coordinates
         var name_fragments = parse_id($(this).attr("id"));
         var matrix_id = name_fragments[0];
@@ -249,7 +249,7 @@ $(document).ready(function(){
             var new_row = line_template.clone(true).attr('id', matrix_id + "__line_" + new_row_index).removeClass('template');
 
             // Update the cells
-            new_row.find("input[id*='__cell_']").each(function(){
+            new_row.find("input[id*='__cell_'], select[id*='__cell_']").each(function(){
                 var name_fragments = $(this).attr("id").split("_");
                 var column_index = name_fragments.slice(-1)[0];
                 var new_cell_id = matrix_id + "__cell_" + new_row_index + "_" + column_index;
