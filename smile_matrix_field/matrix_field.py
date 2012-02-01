@@ -681,6 +681,7 @@ def matrix_write_patch(parse_only=False):
 
                         # Save cells data
                         for cell_data in cells:
+                            cell_data.update({'line_id': line_id})
                             cell_date = cell_data[conf['cell_date_property']]
                             # Search for an existing cell at the given date
                             cell_pool = obj.pool.get(conf['cell_type'])
