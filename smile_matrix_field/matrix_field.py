@@ -208,16 +208,6 @@ class matrix(fields.dummy):
         """ Return the title of the object or a descriptive string"""
         return isinstance(obj, orm.browse_record) and getattr(obj, 'name_get')()[0][1] or obj or _("Untitled")
 
-    ## Native methods
-
-    def __init__(self, *arg, **args):
-        #arg = (args['line_type'], args['line_inverse_property'], "Matrix lines")
-        #args.update({'type': 'one2many'})
-        super(matrix, self).__init__(*arg, **args)
-        # Parse and store matrix config
-        self.matrix_conf = self._parse_conf(args)
-
-
     def _get_translations(self, cr, conf, context):
         if conf.get('title'):
             conf['title'] = _(conf['title'])
@@ -228,6 +218,15 @@ class matrix(fields.dummy):
             conf['total_label'] = _(conf['total_label'])
         return conf
 
+
+    ## Native methods
+
+    def __init__(self, *arg, **args):
+        #arg = (args['line_type'], args['line_inverse_property'], "Matrix lines")
+        #args.update({'type': 'one2many'})
+        super(matrix, self).__init__(*arg, **args)
+        # Parse and store matrix config
+        self.matrix_conf = self._parse_conf(args)
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         """ Dive into object lines and cells, and organize their info to let the matrix widget understand them
