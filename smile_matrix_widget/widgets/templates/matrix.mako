@@ -74,7 +74,7 @@
                 %elif widget == 'selection':
                     <select kind="float" name="${cell_id}" id="${cell_id}" class="${widget}">
                         %for v in increment_values:
-                            <option value="${v}" ${py.selector(v == (cell_value or False))}>${v}</option>
+                            <option value="${v}" ${py.selector(float(cell_value) == float(v))}>${v}</option>
                         %endfor
                     </select>
                 %else:
