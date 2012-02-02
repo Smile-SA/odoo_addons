@@ -21,6 +21,7 @@
 
 import datetime
 import random
+import os
 
 from osv import osv, fields
 from smile_matrix_field.matrix_field import matrix, matrix_read_patch, matrix_write_patch
@@ -92,14 +93,7 @@ class smile_activity_report(osv.osv):
                     background-color: #abd4ff;
                 }
                 """,
-            custom_js = """
-                $(document).ready(function(){
-                    /* Highlight in blue grand total of all matrix every 2 seconds */
-                    setInterval(function(){
-                        $(".matrix td[id$='__grand_total']").effect("highlight", {'color': '#00f'}, 1000);
-                    }, 2 * 1000);
-                });
-                """,
+            custom_js = open(os.path.join(os.path.dirname(__file__), 'custom.js'), 'r').read(),
             ),
         # Test multiple matrix widget
         'matrix_2': matrix(
