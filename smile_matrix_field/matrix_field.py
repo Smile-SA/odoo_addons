@@ -103,7 +103,7 @@ class matrix(fields.dummy):
             'default_widget_type': conf_dict.get('default_widget_type', 'float'),
             'dynamic_widget_type_property': conf_dict.get('dynamic_widget_type_property', None),
             # Widget values
-            'increment_values': conf_dict.get('increment_values', [0, 0.5, 1.0]),
+            'increment_values': conf_dict.get('increment_values', None),
 
             # Property name from which we get the cells composing the matrix.
             # Cells are fetched from the lines as defined above.
@@ -115,6 +115,10 @@ class matrix(fields.dummy):
             'cell_active_property': conf_dict.get('cell_active_property', 'active'),
             'cell_readonly_property': conf_dict.get('cell_readonly_property', None),
             'default_cell_value': conf_dict.get('default_cell_value', 0.0),
+            # Value range can be set per-cell
+            # TODO: this parameter only works for selection field, make it work with all widgets
+            'cell_value_range': conf_dict.get('cell_value_range', None),
+            'cell_value_default_range': conf_dict.get('cell_value_default_range', None),
 
             # Property name of the relation field on which we'll call the date_range property
             'date_range_property': conf_dict.get('date_range_property', None),
@@ -184,6 +188,19 @@ class matrix(fields.dummy):
         # Normalize parameters
         if conf['hide_tree']:
             conf['editable_tree'] = False
+
+        # Set consistent value ranges with sensible defaults
+        default_range = [0, 0.5, 1.0]
+        if not conf['increment_values']:
+            conf['increment_values'] = default_range
+        if not conf['cell_value_range']:
+            conf['cell_value_range'] = default_range
+        if not conf['cell_value_default_range']:
+            # If the cell_value_range is not dynamic, its default couterpart should be the same
+            if isinstance(conf['cell_value_range'], (str, unicode)):
+                conf['cell_value_default_range'] = default_range
+            else:
+                conf['cell_value_default_range'] = conf['cell_value_range']
 
         # TODO: Navigation is not working yet in multi-level mode
         if len(conf['tree_definition']) > 1:
@@ -326,6 +343,10 @@ class matrix(fields.dummy):
                         cell_date = datetime.datetime.strptime(_get_prop(cell, conf['cell_date_property']), '%Y-%m-%d').date()
                         if cell_date == d:
                             break
+                    # Get the current value and its allowed range
+                    cell_value_range = conf['cell_value_range']
+                    if isinstance(cell_value_range, (str, unicode)):
+                        cell_value_range = _get_prop(cell, conf['cell_value_range'], conf['cell_value_default_range'])
                     cell_value = _get_prop(cell, conf['cell_value_property'], conf['default_cell_value'])
                     # Skip the cell to hide it if its active property is True
                     active_cell = _get_prop(cell, conf['cell_active_property'], True)
@@ -345,6 +366,7 @@ class matrix(fields.dummy):
                     # Pack all properties of the cell
                     cells_data[d.strftime('%Y%m%d')] = {
                         'value': cell_value,
+                        'value_range': cell_value_range,
                         'read_only': read_only_cell,
                         }
 
@@ -375,6 +397,7 @@ class matrix(fields.dummy):
                     read_only_cell = True
                 template_cells_data[self._date_to_str(d)] = {
                     'value': conf['default_cell_value'],
+                    'value_range': conf['cell_value_default_range'],
                     'read_only': read_only_cell,
                     }
             template_resources = [{

@@ -54,6 +54,7 @@ This code started its life in Smile's internal Subversion repository and was [mi
 TODO
 ----
 
+  * Merge the `cell_value_range` and `increment_values` parameters.
   * Fix transparent jQuery highlight to let it end to the right color value (and not the defualt white).
   * Do not restrict boolean widget lines to the bottom part of the widget: treat them as normal lines and allow them to be added/removed and changed in the body of the matrix.
   * Fix matrix style when in tab (notebook).
@@ -99,6 +100,7 @@ Changelog
 
 * **0.5.dev** (unreleased)
   * Add a new selection widget type
+  * Add a new dynamic cell_value_range parameter for the selection widget
 
 * **0.4** (2012-01-27)
   * Per-line dynamic removable property

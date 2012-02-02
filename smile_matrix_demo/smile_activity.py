@@ -73,6 +73,7 @@ class smile_activity_report(osv.osv):
             cell_inverse_property = 'line_id',
             cell_value_property   = 'cell_value',
             cell_date_property    = 'date',
+            cell_value_range      = 'cell_value_range',
             date_range_property        = 'date_range',
             active_date_range_property = 'active_date_range',
             date_format                = '%d',
@@ -254,6 +255,19 @@ class smile_activity_report_cell(osv.osv):
             self.write(cr, uid, cell.id, {'quantity': value}, context)
         return True
 
+    def _get_cell_value_range(self, cr, uid, ids, name, value, arg, context=None):
+        """ Return a random range a cell value is allowed to take
+        """
+        result = {}
+        for cell in self.browse(cr, uid, ids, context):
+            # Pick a random range to demonstrate the dynamic capability
+            if random.randrange(0, 2):
+                value_range = [0, 1, 2, 3]
+            else:
+                value_range = [-4, -3, -2, -1]
+            result[cell.id] = value_range
+        return result
+
 
     ## Fields definition
 
@@ -265,6 +279,7 @@ class smile_activity_report_cell(osv.osv):
         'read_only': fields.boolean("Read-only"),
         # cell_value is a proxy of quantity that is transforming the value according the line_type
         'cell_value': fields.function(_get_cell_value, fnct_inv=_set_cell_value, string="Cell value", type='string', readonly=True, method=True),
+        'cell_value_range': fields.function(_get_cell_value_range, string="Cell value range", type='selection', readonly=True, method=True),
         }
 
     _defaults = {
