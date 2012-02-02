@@ -114,7 +114,7 @@ class matrix(fields.dummy):
             'cell_date_property': conf_dict.get('cell_date_property', None),
             'cell_active_property': conf_dict.get('cell_active_property', 'active'),
             'cell_readonly_property': conf_dict.get('cell_readonly_property', None),
-            'default_cell_value': conf_dict.get('default_cell_value', 0.0),
+            'cell_default_value': conf_dict.get('cell_default_value', 0.0),
             # Value range can be set per-cell
             # TODO: this parameter only works for selection field, make it work with all widgets
             'cell_value_range': conf_dict.get('cell_value_range', None),
@@ -258,7 +258,7 @@ class matrix(fields.dummy):
             # Evaluate dynamic matrix properties
             # Dynamic properties are those which value is a string instead of their native type
             # Of course this only works with properties which native type is not strings
-            for flag_id in ['tree_definition', 'increment_values', 'default_cell_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'navigation', 'read_only']:
+            for flag_id in ['tree_definition', 'increment_values', 'cell_default_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'navigation', 'read_only']:
                 flag_value = conf[flag_id]
                 if isinstance(flag_value, (str, unicode)):
                     conf[flag_id] = bool(_get_prop(base_object, flag_value))
@@ -347,7 +347,7 @@ class matrix(fields.dummy):
                     cell_value_range = conf['cell_value_range']
                     if isinstance(cell_value_range, (str, unicode)):
                         cell_value_range = _get_prop(cell, conf['cell_value_range'], conf['cell_value_default_range'])
-                    cell_value = _get_prop(cell, conf['cell_value_property'], conf['default_cell_value'])
+                    cell_value = _get_prop(cell, conf['cell_value_property'], conf['cell_default_value'])
                     # Skip the cell to hide it if its active property is True
                     active_cell = _get_prop(cell, conf['cell_active_property'], True)
                     if not active_cell:
@@ -396,7 +396,7 @@ class matrix(fields.dummy):
                 if d not in editable_date_range:
                     read_only_cell = True
                 template_cells_data[self._date_to_str(d)] = {
-                    'value': conf['default_cell_value'],
+                    'value': conf['cell_default_value'],
                     'value_range': conf['cell_value_default_range'],
                     'read_only': read_only_cell,
                     }
@@ -670,7 +670,7 @@ def matrix_write_patch(parse_only=False):
                             try:
                                 cell_value = float(cell_value)
                             except ValueError:
-                                cell_value = conf['default_cell_value']
+                                cell_value = conf['cell_default_value']
                             clean_cells.append({
                                 conf['cell_value_property']: cell_value,
                                 conf['cell_date_property']: cell_date,
