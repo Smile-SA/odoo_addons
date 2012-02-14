@@ -531,7 +531,11 @@ def matrix_read_patch(func):
     @wraps(func)
     def read_matrix_virtual_fields(*arg, **kw):
         result = func(*arg, **kw)
-        (obj, cr, uid, ids, fields) = arg[:5]
+        if len(arg) >= 5:
+            (obj, cr, uid, ids, fields) = arg[:5]
+        else:
+            (obj, cr, uid, ids) = arg
+            fields = obj._columns.keys()
         context = kw.get('context', None)
         if isinstance(ids, (int, long)):
             result = [result]
