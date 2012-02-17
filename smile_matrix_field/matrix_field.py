@@ -646,9 +646,6 @@ def matrix_write_patch(parse_only=False):
                     if not lines and not matrix_data[removed_line_property_id]:
                         continue
 
-                    # Get our date ranges
-                    (date_range, active_date_range, editable_date_range) = _get_date_range(report, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
-
                     # Parse data of each line
                     for (line_id, line_data) in lines.items():
                         # Get line resources
@@ -697,6 +694,9 @@ def matrix_write_patch(parse_only=False):
                         cleaned_vals[matrix_id] = matrix_widget_values
                         # Skip the automatic content writing
                         continue
+
+                    # Get our date ranges
+                    (date_range, active_date_range, editable_date_range) = _get_date_range(report, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
 
                     # Write all our aggregated matrix data
                     for line_data in matrix_data[conf['line_property']]:
