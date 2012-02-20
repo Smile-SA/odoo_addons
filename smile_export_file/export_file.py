@@ -131,6 +131,7 @@ class ir_model_export_file_template(osv.osv):
         'encoding': fields.selection([
             ('UTF-8', 'UTF-8'),
             ('ISO-8859-15', 'ISO-8859-15'),
+            ('cp1252','Windows-CP1252'),
         ], 'Encoding', required=True),
         'exception_handling': fields.selection([
             ('cancel', 'Cancel export'),
