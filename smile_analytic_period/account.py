@@ -19,9 +19,6 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-
 from osv import osv
 from tools.translate import _
 
