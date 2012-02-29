@@ -75,7 +75,7 @@ class Invoice(osv.osv):
         return invoice_lines
 
     def create_inter_company_invoices(self, cr, uid, ids, context=None):
-        uid = 1 #To bypass access rules
+        uid = 1 #To bypass access and record rules
         context_copy = dict(context or {})
         if isinstance(ids, (int, long)):
             ids = [ids]

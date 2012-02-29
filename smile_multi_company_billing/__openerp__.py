@@ -28,6 +28,14 @@
     "depends" : ["smile_multi_company_account"],
     "description": """Inter-company Billing
 
+At the validation of an invoice / credit note,
+if the billed partner is a company referenced in the current database,
+the system create automatically a document for this second company from the original one :
+* customer invoice -> supplier invoice
+* supplier invoice -> customer invoice
+* customer credit note -> supplier credit note
+* supplier credit note -> customer credit note
+
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "init_xml" : [],

@@ -26,7 +26,7 @@
     "website" : "http://www.smile.fr",
     "category" : 'Tools',
     "depends" : ["base"],
-    "description": """Override fields.property._fnct_read to manage multi-company application
+    "description": """Override ir.property and fields.property methods to manage multi-company application
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
