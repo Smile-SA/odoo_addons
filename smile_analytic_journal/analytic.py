@@ -184,7 +184,7 @@ class AnalyticJournal(osv.osv):
         return res
 
     _columns = {
-        'sign': fields.selection([('1', 'Identical'), ('-1', 'Opposite')], 'Sign compared to original records', required=True),
+        'sign': fields.selection([('1', 'Identical'), ('-1', 'Opposite')], 'Coefficent for parent', required=True, help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set Identical/Opposite if you want to add/substract it.'),
         'view_id': fields.many2one('account.analytic.journal.view', 'Display Mode', help="Gives the view used when writing or browsing entries in this journal. The view tells OpenERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
         'menu_id': fields.many2one('ir.ui.menu', 'Menu', help="To access to display mode view"),
         'parent_id': fields.many2one('account.analytic.journal', 'Parent', ondelete='cascade'),
