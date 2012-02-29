@@ -57,17 +57,22 @@ class ir_model_export_template(osv.osv):
     }
 
     def _get_res_ids(self, cr, uid, template, context):
+        context = context or {}
+        res_ids = context.get('resource_ids_to_export', [])
         model_obj = self.pool.get(template.model)
         if not model_obj:
             raise osv.except_osv(_('Error'), _("Unknown object: %s") % (template.model,))
         if template.filter_type == 'domain':
             domain = eval(template.domain)
-            return model_obj.search(cr, uid, domain, context=context)
+            if res_ids:
+                domain.append(('id', 'in', res_ids))
+            res_ids = model_obj.search(cr, uid, domain, context=context)
         elif template.filter_type == 'method':
             if not (template.filter_method and hasattr(model_obj, template.filter_method)):
                 raise osv.except_osv(_('Error'), _("Can't find method: %s on object: %s") % (template.filter_method, template.model))
-            return getattr(model_obj, template.filter_method)(cr, uid, context)
-        return []
+            res_ids2 = getattr(model_obj, template.filter_method)(cr, uid, context)
+            return res_ids and list(set(res_ids) & set(res_ids2)) or res_ids2
+        return res_ids
 
     def get_exported_res_ids(self, cr, uid, export_template_id, context):
         export_line_ids = self.pool.get('ir.model.export.line').search(cr, uid, [('export_id.export_tmpl_id', '=', export_template_id)], context=context)
@@ -105,7 +110,6 @@ class ir_model_export_template(osv.osv):
         export_ids = []
 
         for export_template in self.browse(cr, uid, ids, context):
-            total_offset = 1
             res_ids = self._get_res_ids(cr, uid, export_template, context)
             if export_template.unique:
                 old_res_ids = self.get_exported_res_ids(cr, uid, export_template.id, context)
@@ -131,7 +135,7 @@ class ir_model_export_template(osv.osv):
                 }, context))
 
         export_pool.generate(cr, uid, export_ids, context)
-        return True
+        return export_ids
 
     def create_cron(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -160,6 +164,7 @@ class ir_model_export_template(osv.osv):
                     'model_id': template.model_id.id,
                     'state': 'code',
                     'code': """context['bypass_domain'] = True
+context['resource_ids_to_export'] = context.get('active_ids', [])
 self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)""" % (template.id,),
                 }
                 server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals, context)
@@ -195,7 +200,7 @@ def state_cleaner(method):
 class ir_model_export(osv.osv):
     _name = 'ir.model.export'
     _description = 'Export'
-    _rec_name = 'export_tmpl_id'
+    _rec_name = 'create_date'
 
     def __init__(self, pool, cr):
         super(ir_model_export, self).__init__(pool, cr)
@@ -362,7 +367,15 @@ class ir_model_export_line(osv.osv):
 
     _columns = {
         'export_id': fields.many2one('ir.model.export', 'Export', required=True, ondelete='cascade'),
+        'model': fields.related('export_id', 'model', type='char', size=128, string='Model', readonly=True, store=True),
+        'sum': fields.integer('Sum'),
         'res_id': fields.integer('Resource ID', required=True),
         'res_label': fields.function(_get_resource_label, method=True, type='char', size=256, string="Resource label"),
+    }
+    
+    _order = 'export_id desc'
+    
+    _defaults = {
+        'sum':1,
     }
 ir_model_export_line()
