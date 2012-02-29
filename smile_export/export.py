@@ -70,6 +70,7 @@ class ir_model_export_template(osv.osv):
         elif template.filter_type == 'method':
             if not (template.filter_method and hasattr(model_obj, template.filter_method)):
                 raise osv.except_osv(_('Error'), _("Can't find method: %s on object: %s") % (template.filter_method, template.model))
+            context['ir_model_export_template_id'] = template.id
             res_ids2 = getattr(model_obj, template.filter_method)(cr, uid, context)
             return res_ids and list(set(res_ids) & set(res_ids2)) or res_ids2
         return res_ids
