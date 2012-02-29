@@ -901,7 +901,7 @@ def sartre_validate(self, cr, uid, ids, context=None):
     trans = self.pool.get('ir.translation')
     error_msgs = []
     for constraint in self._constraints:
-        fun, msg, fields = constraint
+        fun, msg, fields_list = constraint
         args = (self, cr, uid, ids)
         if 'context' in inspect.getargspec(fun)[0]:
             args = (self, cr, uid, ids, context)
@@ -915,10 +915,11 @@ def sartre_validate(self, cr, uid, ids, context=None):
                     translated_msg = tmp_msg
             else:
                 translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
+            fields_list = fields_list or []
             error_msgs.append(
-                    _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
+                    _("Error occurred while validating the field(s) %s: %s") % (','.join(fields_list), translated_msg)
             )
-            self._invalids.update(fields)
+            self._invalids.update(fields_list)
     if error_msgs:
         # Added by smile #
         if not context.get('pid_list'):
