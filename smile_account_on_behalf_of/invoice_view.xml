@@ -56,7 +56,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
 	            <field name="company_id" position="after">
-	                <field name="behalf_of_id"/>
+	                <field name="behalf_of_id" groups="base.group_multi_company"/>
 	            </field>
             </field>
         </record>
