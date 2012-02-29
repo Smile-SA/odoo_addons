@@ -40,7 +40,7 @@ class IrValues(osv.osv):
 
     _columns = {
         'sequence': fields.integer('Sequence'),
-        'window_action_ids': fields.many2many('ir.actions.act_window', 'ir_values_window_actions_rel', 'window_action_id', 'ir_value_id', 'Menus'),
+        'window_action_ids': fields.many2many('ir.actions.act_window', 'ir_values_window_actions_rel', 'ir_value_id', 'window_action_id', 'Menus'),
         'window_actions': fields.function(_get_visibility_options, method=True, type='char', size=128, string='Window Actions', store={
             'ir.values': (lambda self, cr, uid, ids, context=None: ids, None, 10),
         }),
