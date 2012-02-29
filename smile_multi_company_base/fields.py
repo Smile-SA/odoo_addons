@@ -53,8 +53,7 @@ def new_fnct_write(self, obj, cr, uid, id_, prop_name, id_val, obj_dest, context
         property_create = True
 
     if property_create:
-        propdef = obj.pool.get('ir.model.fields').browse(cr, uid, def_id,
-                                                         context=context)
+        propdef = obj.pool.get('ir.model.fields').browse(cr, uid, def_id, context=context)
         prop = obj.pool.get('ir.property')
         return prop.create(cr, uid, {
             'name': propdef.name,

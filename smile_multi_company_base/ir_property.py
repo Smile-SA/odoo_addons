@@ -28,6 +28,7 @@ class IrProperty(osv.osv):
         context = context or {}
         if not isinstance(prop_name, (list, tuple)):
             prop_name = [prop_name]
+        # Accept a list of properties
         cr.execute('select id from ir_model_fields where name in %s and model=%s', (tuple(prop_name), model))
         res = cr.fetchone()
         if not res:
