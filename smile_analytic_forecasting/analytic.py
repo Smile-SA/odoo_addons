@@ -140,9 +140,16 @@ class AnalyticLine(osv.osv):
     def _check_forecast_from_analysis_period(self, cr, uid, ids, context=None):
         return self._check_type_from_analysis_period(cr, uid, ids, 'forecast', context)
 
+    def _check_create_period(self, cr, uid, ids, context=None):
+        context = context or {}
+        if not context.get('force_analytic_line_update'):
+            return super(AnalyticLine, self)._check_create_period(cr, uid, ids, context)
+        return True
+
     _constraints = [
         (_check_actual_from_analysis_period, 'You cannot pass an actual entry in a future period!', ['type', 'period_id']),
         (_check_forecast_from_analysis_period, 'You cannot pass a forecast entry in a past period!', ['type', 'period_id']),
+        (_check_create_period, 'You cannot pass/update a journal entry in a closed period!', ['create_period_id']),
     ]
 
     def _build_unicity_domain(self, line, domain=None):
@@ -178,10 +185,12 @@ class AnalyticLine(osv.osv):
         res_id = super(AnalyticLine, self).create(cr, uid, vals, context)
         context_copy = dict(context or {})
         context_copy['active_test'] = True
-        self._deactivate_old_forecast_lines(cr, uid, res_id, context=context_copy)
+        if not context_copy.get('bypass_forecast_lines_deactivation'):
+            self._deactivate_old_forecast_lines(cr, uid, res_id, context=context_copy)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        context = context or {}
         if isinstance(ids, (int, long)):
             ids = [ids]
         if context and not context.get('bypass_forecast_lines_deactivation'):
@@ -210,10 +219,4 @@ class AnalyticLine(osv.osv):
             ids = [ids]
         self._deactivate_old_forecast_lines(cr, uid, ids, [('id', 'not in', ids)], context_copy)
         return super(AnalyticLine, self).unlink(cr, uid, ids, context)
-
-    def _check_create_period(self, cr, uid, ids, context=None):
-        context = context or {}
-        if not context.get('force_analytic_line_update'):
-            return super(AnalyticLine, self)._check_create_period(cr, uid, ids, context)
-        return True
 AnalyticLine()
