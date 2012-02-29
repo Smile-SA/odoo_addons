@@ -194,22 +194,15 @@ class AnalyticLine(osv.osv):
         'create_period_id': _get_default_period_id,
     }
 
-    def _check_create_period(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for line in self.browse(cr, uid, ids, context):
-            if line.create_period_id.state == 'done':
-                return False
-        return True
-
     def create(self, cr, uid, vals, context=None):
         vals = vals or {}
-        vals['period_id'] = self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, vals['date'], vals.get('company_id', False), context)
+        if not vals.get('period_id'):
+            vals['period_id'] = self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, vals['date'], vals.get('company_id', False), context)
         return super(AnalyticLine, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         vals = vals or {}
-        if vals.get('date'):
+        if vals.get('date') and not vals.get('period_id'):
             if isinstance(ids, (int, long)):
                 ids = [ids]
             lines = self.read(cr, uid, ids, ['company_id'], context, '_classic_write')
@@ -222,6 +215,16 @@ class AnalyticLine(osv.osv):
                 super(AnalyticLine, self).write(cr, uid, lines_by_company[company_id], vals, context)
             return True
         return super(AnalyticLine, self).write(cr, uid, ids, vals, context)
+
+    def _check_create_period(self, cr, uid, ids, context=None):
+        context = context or {}
+        if context.get('force_analytic_lines_creation'):
+            if isinstance(ids, (int, long)):
+                ids = [ids]
+            for line in self.browse(cr, uid, ids, context):
+                if line.create_period_id.state == 'done':
+                    return False
+        return True
 
     _constraints = [
         (_check_create_period, 'You cannot pass/update a journal entry in a closed period!', ['create_period_id']),
