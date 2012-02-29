@@ -49,7 +49,7 @@
 	                    <field name="commitment_end_date" attrs="{'invisible':[('is_subscription', '=', False)]}" />
 	                    <field name="invoicing_next_date" readonly="1" groups="base.group_extended" attrs="{'invisible': [('is_subscription', '=', False)]}" />
 	                    <field name="state" groups="base.group_extended"/>
-	                    <button name="button_confirm" string="Confrim" groups="base.group_extended" attrs="{'invisible': [('is_subscription', '=', False)]}" states="draft" icon="STOCK_OK" type="object"/>
+	                    <button name="button_confirm" string="Confirm" groups="base.group_extended" attrs="{'invisible': [('is_subscription', '=', False)]}" states="draft" icon="STOCK_OK" type="object"/>
 	                    <button name="button_cancel" string="Cancel" groups="base.group_extended" attrs="{'invisible': [('is_subscription', '=', False)]}" states="confirmed" icon="STOCK_CANCEL" type="object"/>
 	                    
 					</xpath>
