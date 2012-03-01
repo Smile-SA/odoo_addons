@@ -321,16 +321,16 @@ class ir_model_export(osv.osv):
                 self._run_actions(cr, uid, export, res_ids, context)
                 logger.time_info('Export done')
         except Exception, e:
-            logger.critical("Export failed: %s" % (tools.ustr(repr(e))))
+            logger.critical("Export failed: %s" % (repr(e),))
             self.write_new_cr(cr.dbname, uid, export_id, {'state': 'exception',
                                                           'to_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                                                          'exception': isinstance(e, osv.except_osv) and e.value or e, }, context)
+                                                          'exception': isinstance(e, osv.except_osv) and e.value or repr(e), }, context)
             raise e
 
         try:
             self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
-            logger.error("Could not mark export %s as done: %s" % (export_id, tools.ustr(repr(e))))
+            logger.error("Could not mark export %s as done: %s" % (export_id, repr(e)))
             raise e
         return True
 ir_model_export()
