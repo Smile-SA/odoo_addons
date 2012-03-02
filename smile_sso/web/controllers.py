@@ -56,7 +56,7 @@ def sso_logout(self, db=None, *args, **kwargs):
     db, user, security_key = _get_connection_info(db)
     if db and user and security_key:
        rpc.session.execute_noauth('common', 'sso_logout', db, user, security_key)
-    # Same as standard Root.logout()
+    # Same behaviour as the original Root.logout() method
     rpc.session.logout()
     raise redirect(sso_portal)
 
