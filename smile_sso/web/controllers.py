@@ -68,9 +68,10 @@ Root.logout = sso_logout
 url_method_orig = openobject.tools.url
 def url_method_wrapper(self_class, *args, **kwargs):
     normalized_url = url_method_orig(self_class, *args, **kwargs)
-    if normalized_url.startswith('/openerp/login'):
-        normalized_url = '/sso_login'
-    elif normalized_url.startswith('/openerp/logout'):
+    # We can't enforce standard login screen redirection unless we solve ticket #2 (see: https://github.com/Smile-SA/smile_openerp_addons_6.0/issues/2 )
+    #if normalized_url.startswith('/openerp/login'):
+    #    normalized_url = '/sso_login'
+    if normalized_url.startswith('/openerp/logout'):
         normalized_url = '/sso_logout'
     return normalized_url
 openobject.tools.url = url_method_wrapper
