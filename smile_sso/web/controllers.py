@@ -39,7 +39,7 @@ def _get_connection_info(db):
 
 @expose()
 @unsecured
-def sso_login(self, db=None):
+def sso_login(self, db=None, *args, **kwargs):
     db, user, security_key = _get_connection_info(db)
     if db and user and security_key:
         user_info = rpc.session.execute_noauth('common', 'sso_login', db, user, security_key)
@@ -52,7 +52,7 @@ def sso_login(self, db=None):
 
 @expose()
 @unsecured
-def sso_logout(self, db=None):
+def sso_logout(self, db=None, *args, **kwargs):
     db, user, security_key = _get_connection_info(db)
     if db and user and security_key:
        rpc.session.execute_noauth('common', 'sso_logout', db, user, security_key)
