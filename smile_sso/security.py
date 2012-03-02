@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ from tools import config
 
 def _check_security_key(security_key):
     # TODO: improve it and provides a ssl certification check
-    return int(security_key) == int(config.get('web_server_authentification_key'))
+    return int(security_key) == int(config.get('smile_sso.shared_secret_pin'))
 
 def sso_login(db, login, security_key):
     if _check_security_key(security_key):

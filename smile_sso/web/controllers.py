@@ -34,7 +34,7 @@ def _get_connection_info(db):
     return [
         db or cherrypy.config.get('openerp.server.database'),
         cherrypy.request.headers.get('REMOTE-USER') or 'demo', #or 'demo' is just here for tests
-        cherrypy.config.get('server.authentification_key'),
+        cherrypy.config.get('smile_sso.shared_secret_pin'),
     ]
 
 @expose()

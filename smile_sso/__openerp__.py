@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,7 +24,7 @@
     'version': '0.1',
     'category': 'Tools',
     'description': """
-This module delegate users authentification (global login and logout) to 
+This module delegate users authentification (global login and logout) to
 Apache HTTP Server via some modules like mod_auth_cas, mod_auth_kerb or mod_auth_openid.
 
 It just provides:
