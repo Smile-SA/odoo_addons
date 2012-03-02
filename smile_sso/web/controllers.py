@@ -37,10 +37,19 @@ def _get_connection_info(db):
         cherrypy.config.get('smile_sso.shared_secret_pin'),
     ]
 
+def _check_connection_info(db, user, security_key):
+    if not db:
+        cherrypy.log("Missing database parameter.", 'SMILE_SSO')
+    if not user:
+        cherrypy.log("No user provided.", 'SMILE_SSO')
+    if not security_key:
+        cherrypy.log("Missing shared secret PIN.", 'SMILE_SSO')  
+
 @expose()
 @unsecured
 def sso_login(self, db=None, *args, **kwargs):
     db, user, security_key = _get_connection_info(db)
+    _check_connection_info(db, user, security_key)
     if db and user and security_key:
         user_info = rpc.session.execute_noauth('common', 'sso_login', db, user, security_key)
         if user_info and user_info['id'] > 0:
@@ -54,8 +63,9 @@ def sso_login(self, db=None, *args, **kwargs):
 @unsecured
 def sso_logout(self, db=None, *args, **kwargs):
     db, user, security_key = _get_connection_info(db)
+    _check_connection_info(db, user, security_key)
     if db and user and security_key:
-       rpc.session.execute_noauth('common', 'sso_logout', db, user, security_key)
+        rpc.session.execute_noauth('common', 'sso_logout', db, user, security_key)
     # Same behaviour as the original Root.logout() method
     rpc.session.logout()
     raise redirect(sso_portal)
