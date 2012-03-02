@@ -72,7 +72,6 @@ def sso_logout(self, db=None, *args, **kwargs):
 
 Root.sso_login = sso_login
 Root.sso_logout = sso_logout
-Root.logout = sso_logout
 
 # Map requests to standard login/login URLs to their SSO counterparts
 url_method_orig = openobject.tools.url
@@ -84,4 +83,7 @@ def url_method_wrapper(self_class, *args, **kwargs):
     if normalized_url.startswith('/openerp/logout'):
         normalized_url = '/sso_logout'
     return normalized_url
-openobject.tools.url = url_method_wrapper
+# Do not enforce login/logout via SSO methods if no third-party SSO portal is defined: keep standard OpenERP login/logout screen and redirec behaviour
+if sso_portal != '/':
+    Root.logout = sso_logout
+    openobject.tools.url = url_method_wrapper
