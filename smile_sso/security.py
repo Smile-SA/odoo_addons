@@ -24,7 +24,7 @@ from tools import config
 
 def _check_security_key(security_key):
     # TODO: improve it and provides a ssl certification check
-    return security_key == config.get('web_server_authentification_key')
+    return int(security_key) == int(config.get('web_server_authentification_key'))
 
 def sso_login(db, login, security_key):
     if _check_security_key(security_key):
