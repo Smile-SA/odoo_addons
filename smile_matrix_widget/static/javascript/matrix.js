@@ -388,8 +388,11 @@ $(document).ready(function(){
             // Un-hide the entry from its selector
             $(update_parent_selector($(this), "show"));
             // Add row ID to the list of lines to remove
-            var line_removed_field = $("#" + matrix_id + "__line_removed");
-            line_removed_field.val(line_removed_field.val() + $(this).attr("id") + ',');
+    		var removed_lines_field_name = matrix_id + "__line_removed";
+            var removed_lines = $("#" + removed_lines_field_name).val() + $(this).attr("id") + ',';
+			$("#" + removed_lines_field_name).val(removed_lines);
+			// Force default value update as jQuery < 1.6 seems to mess with DOM attributes and properties
+			document.getElementById(removed_lines_field_name).setAttribute('value', removed_lines);
             // Really remove the row
             $(this).remove();
             // Force update of all column totals
