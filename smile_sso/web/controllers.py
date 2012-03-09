@@ -31,19 +31,17 @@ from openerp.utils import rpc
 sso_portal = cherrypy.config.get('smile_sso.portal_redirect') or '/'
 
 def _get_connection_info(db):
-    return [
-        db or cherrypy.config.get('openerp.server.database'),
-        cherrypy.request.headers.get('REMOTE-USER') or 'demo', #or 'demo' is just here for tests
-        cherrypy.config.get('smile_sso.shared_secret_pin'),
-    ]
+    return (db or cherrypy.config.get('openerp.server.database'),
+            cherrypy.request.headers.get('REMOTE-USER'),
+            cherrypy.config.get('smile_sso.shared_secret_pin'))
 
 def _check_connection_info(db, user, security_key):
     if not db:
-        cherrypy.log("Missing database parameter.", 'SMILE_SSO')
+        cherrypy.log("Missing database parameter", 'SMILE_SSO')
     if not user:
-        cherrypy.log("No user provided.", 'SMILE_SSO')
+        cherrypy.log("No user provided", 'SMILE_SSO')
     if not security_key:
-        cherrypy.log("Missing shared secret PIN.", 'SMILE_SSO')  
+        cherrypy.log("Missing shared secret PIN", 'SMILE_SSO')
 
 @expose()
 @unsecured
@@ -66,8 +64,7 @@ def sso_logout(self, db=None, *args, **kwargs):
     _check_connection_info(db, user, security_key)
     if db and user and security_key:
         rpc.session.execute_noauth('common', 'sso_logout', db, user, security_key)
-    # Same behaviour as the original Root.logout() method
-    rpc.session.logout()
+    rpc.session.logout() # Same behaviour as the original Root.logout() method
     raise redirect(sso_portal)
 
 Root.sso_login = sso_login

@@ -30,7 +30,7 @@ def new_dispatch(self, method, auth, params):
     logger = netsvc.Logger()
     if method in ('sso_login', 'sso_logout'):
         res = getattr(security, method)(params[0], params[1], params[2])
-        msg = res and 'successful %s' % method.replace('sso_', '') or 'bad login or password'
+        msg = res and 'Successful %s' % method.replace('sso_', '') or 'Bad login or password'
         #TODO: log the client IP address..
         logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, params[1], params[0]))
         return res

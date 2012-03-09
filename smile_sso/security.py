@@ -28,7 +28,7 @@ def _check_security_key(security_key):
     secret_match = int(security_key) == int(config.get('smile_sso.shared_secret_pin'))
     if not secret_match:
         logger = netsvc.Logger()
-        logger.notifyChannel('smile_sso', netsvc.LOG_ERROR, "Server and web client doesn't share the same secret PIN number.")
+        logger.notifyChannel('smile_sso', netsvc.LOG_ERROR, "Server and web client don't share the same secret PIN number")
     return secret_match
 
 def sso_login(db, login, security_key):
