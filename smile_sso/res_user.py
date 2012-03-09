@@ -23,6 +23,7 @@ from datetime import datetime, timedelta
 from random import choice
 import string
 
+import netsvc
 from osv import osv, fields
 import pooler
 from service import security
@@ -36,12 +37,6 @@ def generate_random_password(length):
         new_password = ''.join(choice(chars) for _ in xrange(length))
     return new_password
 
-def compute_expiry_date(duration):
-    expiry_date = ''
-    if duration:
-        expiry_date = (datetime.now() + timedelta(seconds=duration)).strftime('%Y-%m-%d %H:%M:%S')
-    return expiry_date
-
 class User(osv.osv):
     _inherit = 'res.users'
 
@@ -49,9 +44,16 @@ class User(osv.osv):
         'expiry_date': fields.datetime("Expiry Date", readonly=True),
     }
 
-    def sso_login(self, db, login, length=64, duration=3600, context=None):
+    def __init__(self, pool, cr):
+        super(User, self).__init__(pool, cr)
+        self._duration = 3600 # equals to cookie['max-age'] = 3600 [WebHome]/addons/openerp/controllers/utils.py line 172 secured.wrapper
+
+    def get_expiry_date(self):
+        return (datetime.now() + timedelta(seconds=self._duration)).strftime('%Y-%m-%d %H:%M:%S')
+
+    def sso_login(self, db, login, length=64, context=None):
         password = generate_random_password(length)
-        expiry_date = compute_expiry_date(duration)
+        expiry_date = self.get_expiry_date()
         set_clause = 'date=now(), password=%s'
         params = [password]
         if expiry_date:
@@ -66,6 +68,7 @@ class User(osv.osv):
             res = cr.dictfetchone()
             cr.commit()
             if res:
+                netsvc.Logger().notifyChannel('smile_sso', netsvc.LOG_DEBUG, "Login of the user [login=%s]" % login)
                 return res
         finally:
             cr.close()
@@ -77,14 +80,16 @@ class User(osv.osv):
             res = cr.fetchone()
             cr.commit()
             if res:
+                netsvc.Logger().notifyChannel('smile_sso', netsvc.LOG_DEBUG, "Logout of the user [login=%s]" % login)
                 return True
         finally:
             cr.close()
 
     def check(self, db, uid, passwd):
+        logger = netsvc.Logger()
         if not passwd:
-            # empty passwords disallowed for obvious security reasons
-            raise security.ExceptionNoTb('AccessDenied')
+            logger.notifyChannel('smile_sso', netsvc.LOG_ERROR, "No password authentication not supported!")
+            raise security.ExceptionNoTb(error_msg)
         if self._uid_cache.get(db, {}).get(uid) == passwd:
             return
         cr = pooler.get_db(db).cursor()
@@ -93,12 +98,12 @@ class User(osv.osv):
                         (int(uid), passwd, True))
             res = cr.fetchone()[0]
             if not res:
-                raise security.ExceptionNoTb('AccessDenied')
-            if self._uid_cache.has_key(db):
-                ulist = self._uid_cache[db]
-                ulist[uid] = passwd
-            else:
-                self._uid_cache[db] = {uid:passwd}
+                error_msg = "Server session expired for the user [uid=%s]" % uid
+                logger.notifyChannel('smile_sso', netsvc.LOG_ERROR, error_msg)
+                raise security.ExceptionNoTb(error_msg)
+            cr.execute("UPDATE res_users SET expiry_date=%s WHERE id=%s", (self.get_expiry_date(), int(uid)))
+            self._uid_cache.setdefault(db, {}).update({uid: passwd})
+            logger.notifyChannel('smile_sso', netsvc.LOG_DEBUG, "Server session extended for the user [uid=%s]" % uid)
         finally:
             cr.close()
 
