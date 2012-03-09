@@ -31,8 +31,15 @@ It just provides:
     * 2 new URLs: /openerp/sso_login and /openerp/sso_logout
     * 2 new methods in the "common" web service: sso_login and sso_logout
 
-For this moment, the web service "sso_login" is protected by a simple password shared between web client and openerp server.
-We plan to strengthen this call by validating the SSL certificate of web client into openerp server.
+For this moment, the web service "sso_login" is protected by a simple password shared between web client and OpenERP server.
+We plan to strengthen this call by validating the SSL certificate of web client into OpenERP server.
+
+Configuration steps:
+    1. configure OpenERP server and web client
+        * database name: db_name into server, openerp.server.database into web client
+        * secret pin number: smile_sso.shared_secret_pin into server and web client
+    2. after the server addon installation
+        * activate the web addon: update in __openerp__.py by adding active=True
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
 """,
