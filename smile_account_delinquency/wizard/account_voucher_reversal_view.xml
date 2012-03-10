@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="view_account_voucher_reversal_form" model="ir.ui.view">
+            <field name="name">account.voucher.reversal.form</field>
+            <field name="model">account.voucher.reversal</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<form string="Unreconcile">
+            		<field name="reversal_date"/>
+					<button name="button_cancel_voucher" type='object' string="Unreconcile" colspan="2"/>            		
+            	</form>
+            </field>
+        </record>
+
+	</data>
+</openerp>
