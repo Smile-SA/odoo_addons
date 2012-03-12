@@ -102,6 +102,7 @@ class User(osv.osv):
                 logger.notifyChannel('smile_sso', netsvc.LOG_ERROR, error_msg)
                 raise security.ExceptionNoTb(error_msg)
             cr.execute("UPDATE res_users SET expiry_date=%s WHERE id=%s", (self.get_expiry_date(), int(uid)))
+            cr.commit()
             self._uid_cache.setdefault(db, {}).update({uid: passwd})
             logger.notifyChannel('smile_sso', netsvc.LOG_DEBUG, "Server session extended for the user [uid=%s]" % uid)
         finally:
