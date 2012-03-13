@@ -63,10 +63,13 @@ class User(osv.osv):
         params.append(login)
         cr = pooler.get_db(db).cursor()
         try:
-            query = 'UPDATE res_users SET %s WHERE %s RETURNING id, password' % (set_clause, where_clause)
-            cr.execute(query, params)
-            res = cr.dictfetchone()
-            cr.commit()
+            cr.execute('SELECT id, password FROM res_users WHERE login=%s AND password IS NOT NULL AND active=TRUE AND (expiry_date IS NULL OR expiry_date>=now()) LIMIT 1', (login,))
+            res = cr.fetchone()
+            if not res:
+                query = 'UPDATE res_users SET %s WHERE %s RETURNING id, password' % (set_clause, where_clause)
+                cr.execute(query, params)
+                res = cr.dictfetchone()
+                cr.commit()
             if res:
                 netsvc.Logger().notifyChannel('smile_sso', netsvc.LOG_DEBUG, "Login of the user [login=%s]" % login)
                 return res
@@ -93,8 +96,7 @@ class User(osv.osv):
         cr = pooler.get_db(db).cursor()
         try:
             if self._uid_cache.get(db, {}).get(uid) != passwd:
-                cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s AND (expiry_date IS NULL OR expiry_date>=now())',
-                            (int(uid), passwd, True))
+                cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=TRUE AND (expiry_date IS NULL OR expiry_date>=now()) LIMIT 1', (int(uid), passwd))
                 res = cr.fetchone()[0]
                 if not res:
                     error_msg = "Server session expired for the user [uid=%s]" % uid
