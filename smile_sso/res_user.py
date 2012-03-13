@@ -64,7 +64,7 @@ class User(osv.osv):
         cr = pooler.get_db(db).cursor()
         try:
             cr.execute('SELECT id, password FROM res_users WHERE login=%s AND password IS NOT NULL AND active=TRUE AND (expiry_date IS NULL OR expiry_date>=now()) LIMIT 1', (login,))
-            res = cr.fetchone()
+            res = cr.dictfetchone()
             if not res:
                 query = 'UPDATE res_users SET %s WHERE %s RETURNING id, password' % (set_clause, where_clause)
                 cr.execute(query, params)
