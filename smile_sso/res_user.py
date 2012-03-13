@@ -90,20 +90,19 @@ class User(osv.osv):
         if not passwd:
             logger.notifyChannel('smile_sso', netsvc.LOG_ERROR, "No password authentication not supported!")
             raise security.ExceptionNoTb(error_msg)
-        if self._uid_cache.get(db, {}).get(uid) == passwd:
-            return
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s AND (expiry_date IS NULL OR expiry_date>=now())',
-                        (int(uid), passwd, True))
-            res = cr.fetchone()[0]
-            if not res:
-                error_msg = "Server session expired for the user [uid=%s]" % uid
-                logger.notifyChannel('smile_sso', netsvc.LOG_ERROR, error_msg)
-                raise security.ExceptionNoTb(error_msg)
+            if self._uid_cache.get(db, {}).get(uid) != passwd:
+                cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s AND (expiry_date IS NULL OR expiry_date>=now())',
+                            (int(uid), passwd, True))
+                res = cr.fetchone()[0]
+                if not res:
+                    error_msg = "Server session expired for the user [uid=%s]" % uid
+                    logger.notifyChannel('smile_sso', netsvc.LOG_ERROR, error_msg)
+                    raise security.ExceptionNoTb(error_msg)
+                self._uid_cache.setdefault(db, {}).update({uid: passwd})
             cr.execute("UPDATE res_users SET expiry_date=%s WHERE id=%s", (self.get_expiry_date(), int(uid)))
             cr.commit()
-            self._uid_cache.setdefault(db, {}).update({uid: passwd})
             logger.notifyChannel('smile_sso', netsvc.LOG_DEBUG, "Server session extended for the user [uid=%s]" % uid)
         finally:
             cr.close()
