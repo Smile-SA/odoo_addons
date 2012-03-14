@@ -91,7 +91,8 @@ class User(osv.osv):
     def check(self, db, uid, passwd):
         logger = netsvc.Logger()
         if not passwd:
-            logger.notifyChannel('smile_sso', netsvc.LOG_ERROR, "No password authentication not supported!")
+            error_msg = "No password authentication not supported!"
+            logger.notifyChannel('smile_sso', netsvc.LOG_ERROR, error_msg)
             raise security.ExceptionNoTb(error_msg)
         cr = pooler.get_db(db).cursor()
         try:
