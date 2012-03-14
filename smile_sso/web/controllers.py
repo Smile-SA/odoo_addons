@@ -75,9 +75,9 @@ url_method_orig = openobject.tools.url
 def url_method_wrapper(self_class, *args, **kwargs):
     normalized_url = url_method_orig(self_class, *args, **kwargs)
     # We can't enforce standard login screen redirection unless we solve ticket #2 (see: https://github.com/Smile-SA/smile_openerp_addons_6.0/issues/2 )
-    #if normalized_url.startswith('/openerp/login'):
+    #if normalized_url.startswith('/login'):
     #    normalized_url = '/sso_login'
-    if normalized_url.startswith('/openerp/logout'):
+    if normalized_url.startswith('/logout'):
         normalized_url = '/sso_logout'
     return normalized_url
 # Do not enforce login/logout via SSO methods if no third-party SSO portal is defined: keep standard OpenERP login/logout screen and redirec behaviour
