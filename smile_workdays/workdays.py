@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2011 EFFIA (<http://www.effia.fr>). All Rights Reserved
+#    Copyright (C) 2012 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,17 +19,12 @@
 #
 ##############################################################################
 
-import datetime, time
+from datetime import datetime
 
 from osv import osv, fields
+import tools
 from tools.translate import _
 
-day_mapping = {0:'mon', 1:'tue', 2:'wed', 3:'thu', 4:'fri', 5:'sat', 6:'sun'}
-
-date_format = '%Y-%m-%d'
-
-def date_from_openerp_str(date_str):
-    return datetime.datetime.fromtimestamp(time.mktime(time.strptime(date_str, date_format))).date()
 
 class ResCountryHoliday(osv.osv):
     _name = 'res.country.holiday'
@@ -37,35 +32,32 @@ class ResCountryHoliday(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'day': fields.integer('Day', required=True),
-        'month': fields.integer('Month', required=True),
-        'country_id': fields.many2one('res.country', 'Country', required=True),
+        'date': fields.date('Date', required=True),
+        'country_id': fields.many2one('res.country', 'Country', required=True, ondelete='restrict'),
     }
 
-    def _check_valid_date(self, cr, uid, ids, context=None):
-        for country in self.read(cr, uid, ids, ['day', 'month'], context):
-            if not country['day'] or not country['month']:
-                return False
-            if country['month'] == 2 and country['day'] <= 29:
-                continue
-            try:
-                datetime.date(2000, country['month'], country['day'])
-            except Exception:
-                return False
-        return True
+    def is_holiday(self, cr, uid, date_str, country_id, context=None):
+        assert country_id, "country_id is mandatory"
+        try:
+            date = date_str and datetime.strptime(date_str, '%Y-%m-%d') or datetime.today()
+        except ValueError, e:
+            raise osv.except_osv(_('Format error !'), e)
+        return bool(self.search(cr, uid, [('country_id', '=', country_id),
+                                          ('date', '=', date.strftime('%Y-%m-%d'))] , limit=1, context=context))
 
-    _constraints = [(_check_valid_date, 'You cannot define a date which will never exist in any calendar !', ['day', 'month'])]
+    #Clear caches
+    def create(self, cr, uid, vals, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCountryHoliday, self).create(cr, uid, vals, context)
 
-    def is_holiday(self, cr, uid, date='', country_id=False, context=None):
-        date = date or time.strftime(date_format)
-        day = int(date[8:])
-        month = int(date[5:7])
-        if not isinstance(date, (str, unicode)):
-            raise osv.except_osv(_('Error'), _('Date must be a string!'))
-        domain = [('month', '=', month), ('day', '=', day)]
-        if country_id:
-            domain.append(('country_id', '=', country_id))
-        return bool(self.search(cr, uid, domain, limit=1, context=context))
+    def unlink(self, cr, uid, ids, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCountryHoliday, self).unlink(cr, uid, ids, context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCountryHoliday, self).write(cr, uid, ids, vals, context)
+
 ResCountryHoliday()
 
 class ResCountry(osv.osv):
@@ -74,6 +66,20 @@ class ResCountry(osv.osv):
     _columns = {
         'holiday_ids': fields.one2many('res.country.holiday', 'country_id', 'Holidays'),
     }
+
+    #Clear caches
+    def create(self, cr, uid, vals, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCountry, self).create(cr, uid, vals, context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCountry, self).unlink(cr, uid, ids, context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCountry, self).write(cr, uid, ids, vals, context)
+
 ResCountry()
 
 class ResCompanyDayOff(osv.osv):
@@ -83,21 +89,35 @@ class ResCompanyDayOff(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'date': fields.date('Date', required=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True, ondelete='restrict'),
     }
 
-    def is_day_off(self, cr, uid, date=False, company_id=False, context=None):
-        date = date or time.strftime(date_format)
-        if not isinstance(date, (str, unicode)):
-            raise osv.except_osv(_('Error'), _('Date must be a string!'))
-        domain = [('date', '=', date)]
-        if company_id:
-            company = self.pool.get('res.company').read(cr, uid, [company_id], ['parent_id', 'inherit_dayoff'], context, load='_classic_write')[0]
-            if company['inherit_dayoff']:
-                return self.is_day_off(cr, uid, date, company['parent_id'], context)
-            else:
-                domain.append(('company_id', '=', company_id))
-        return bool(self.search(cr, uid, domain, limit=1, context=context))
+    def is_day_off(self, cr, uid, date_str, company_id, context=None):
+        assert company_id, "company_id is mandatory"
+        try:
+            date = date_str and datetime.strptime(date_str, '%Y-%m-%d') or datetime.today()
+        except ValueError, e:
+            raise osv.except_osv(_('Format error !'), e)
+
+        company = self.pool.get('res.company').read(cr, uid, company_id, ['parent_id', 'inherit_dayoff'], context, load='_classic_write')
+        if company['inherit_dayoff']:
+            return self.is_day_off(cr, uid, date, company['parent_id'], context)
+        return bool(self.search(cr, uid, [('company_id', '=', company_id),
+                                          ('date', '=', date.strftime('%Y-%m-%d'))], limit=1, context=context))
+
+    #Clear caches
+    def create(self, cr, uid, vals, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCompanyDayOff, self).create(cr, uid, vals, context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCompanyDayOff, self).unlink(cr, uid, ids, context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCompanyDayOff, self).write(cr, uid, ids, vals, context)
+
 ResCompanyDayOff()
 
 class ResCompany(osv.osv):
@@ -129,20 +149,20 @@ class ResCompany(osv.osv):
 
     _constraints = [(_check_inherit, _('You cannot inherit off days if you have no parent company!'), ['inherit_dayoff', 'parent_id'])]
 
-    def is_working_day(self, cr, uid, company_id, date, context=None):
+    def is_working_day(self, cr, uid, company_id, date_str, context=None):
         """Returns True if the day is off, False otherwise.
         A working day is :
             A weekday that is not off,
             A date that is not closed for the company
             A date that is not off for the country of the company"""
-        if isinstance(company_id, (int, long)):
-            company_id = [company_id]
-        company = self.read(cr, uid, company_id, ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'country_id', 'inherit_dayoff', 'parent_id'], context, load='_classic_write')[0]
+        company = self.read(cr, uid, company_id, ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'country_id', 'inherit_dayoff', 'parent_id'], context, load='_classic_write')
         if company['inherit_dayoff']:
-            return self.is_working_day(cr, uid, company['parent_id'], date, context)
-        return bool(not company[day_mapping[date_from_openerp_str(date).weekday()]] \
-            and not self.pool.get('res.company.dayoff').is_day_off(cr, uid, date, company['id']) \
-            and not self.pool.get('res.country.holiday').is_holiday(cr, uid, date, company['country_id']))
+            return self.is_working_day(cr, uid, company['parent_id'], date_str, context)
+
+        day_mapping = {0:'mon', 1:'tue', 2:'wed', 3:'thu', 4:'fri', 5:'sat', 6:'sun'}
+        return bool(not company[day_mapping[datetime.strptime(date_str, '%Y-%m-%d').weekday()]]
+            and not self.pool.get('res.company.dayoff').is_day_off(cr, uid, date_str, company['id'])
+            and not self.pool.get('res.country.holiday').is_holiday(cr, uid, date_str, company['country_id']))
 
 
     def get_num_working_days(self, cr, uid, company_id, start_date, end_date, context=None):
@@ -151,15 +171,11 @@ class ResCompany(osv.osv):
             A weekday that is not off,
             A date that is not closed for the company
             A date that is not off for the country of the company"""
-        if isinstance(company_id, (int, long)):
-            company_id = [company_id]
-        start_date = date_from_openerp_str(start_date)
-        end_date = date_from_openerp_str(end_date)
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
 
         if start_date > end_date:
-            tmp = start_date
-            start_date = end_date
-            end_date = tmp
+            start_date, end_date = end_date, start_date
 
         count = 0
         curr_date = start_date
@@ -167,6 +183,36 @@ class ResCompany(osv.osv):
             if self.is_working_day(cr, uid, company_id, curr_date.strftime(date_format), context):
                 count = count + 1
             curr_date = curr_date + datetime.timedelta(days=1)
-
         return count
+
+    @tools.cache(skiparg=3)
+    def cached_is_working_day(self, cr, uid, company_id, date_str):
+        return self.is_working_day(cr, uid, company_id, date_str)
+
+    def clear_working_day_cache(self, cr):
+        self.cached_is_working_day.clear_cache(cr.dbname)
+
+    #Clear caches
+    def create(self, cr, uid, vals, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCompany, self).create(cr, uid, vals, context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCompany, self).unlink(cr, uid, ids, context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResCompany, self).write(cr, uid, ids, vals, context)
+
 ResCompany()
+
+class ResPartner(osv.osv):
+    _inherit = 'res.partner'
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'country_id' in vals:
+            self.pool.get('res.company').clear_working_day_cache(cr)
+        return super(ResPartner, self).write(cr, uid, ids, vals, context)
+
+ResPartner()

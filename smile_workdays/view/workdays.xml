@@ -14,8 +14,7 @@
 		           	<field name="holiday_ids" colspan="4" mode="tree">
 			            <tree editable="top">
 				            <field name="name"/>
-				            <field name="month"/>
-				            <field name="day"/>
+				            <field name="date"/>
 			            </tree>
 		           	</field>
 	            </field>
