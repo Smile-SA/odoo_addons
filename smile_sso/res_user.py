@@ -65,7 +65,7 @@ class User(osv.osv):
         try:
             cr.execute('SELECT id, password FROM res_users WHERE login=%s AND password IS NOT NULL AND active=TRUE AND (expiry_date IS NULL OR expiry_date>=now()) LIMIT 1', (login,))
             res = cr.dictfetchone()
-            if not res:
+            if not res or not res['password']:
                 query = 'UPDATE res_users SET %s WHERE %s RETURNING id, password' % (set_clause, where_clause)
                 cr.execute(query, params)
                 res = cr.dictfetchone()
