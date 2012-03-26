@@ -25,7 +25,7 @@
     'category': 'Tools',
     'description': """Smile Cache Exceptions
 
-Don't cache fields_view_get and fields_get for models indicated via cache.exceptions in web client config file
+Don't cache fields_view_get and fields_get methods for models indicated via cache.exceptions in web client config file
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
 """,
