@@ -19,24 +19,32 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.utils import cache, rpc
 
-class IrModelAccess(osv.osv):
-    _inherit = 'ir.model.access'
+@cache.memoize(1000)
+def __can_create(model, uid):
+    proxy = rpc.RPCProxy('ir.model.access')
+    try:
+        return proxy.check(model, 'create')
+    except:
+        pass
+    return False
 
-    def get_perms(self, cr, uid, model, context=None):
-        perms = {'create': True, 'write': True, 'unlink': True}
-        if uid == 1:
-            # User root have all accesses
-            return perms
-        cr.execute("""SELECT
-MAX(CASE WHEN perm_create THEN 1 ELSE 0 END) as create,
-MAX(CASE WHEN perm_write THEN 1 ELSE 0 END) as write,
-MAX(CASE WHEN perm_unlink THEN 1 ELSE 0 END) as unlink
-FROM ir_model_access a
-JOIN ir_model m ON (m.id = a.model_id)
-JOIN res_groups_users_rel gu ON (gu.gid = a.group_id)
-WHERE m.model = %s AND gu.uid = %s""", (model, uid))
-        perms = cr.dictfetchone()
-        return perms
-IrModelAccess()
+def can_create(model):
+    return __can_create(model, uid=rpc.session.uid)
+
+cache.can_create = can_create
+
+@cache.memoize(1000)
+def __can_unlink(model, uid):
+    proxy = rpc.RPCProxy('ir.model.access')
+    try:
+        return proxy.check(model, 'unlink')
+    except:
+        pass
+    return False
+
+def can_unlink(model):
+    return __can_create(model, uid=rpc.session.uid)
+
+cache.can_unlink = can_unlink
