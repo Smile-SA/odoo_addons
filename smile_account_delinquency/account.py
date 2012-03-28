@@ -21,6 +21,7 @@
 
 import time
 
+import netsvc
 from osv import osv, fields
 
 class AccountMove(osv.osv):
@@ -44,6 +45,10 @@ class AccountMove(osv.osv):
             else:
                 move_ids_not_to_reverse.append(move.id)
         if move_ids_to_reverse:
+            invoice_ids_to_reopen = self.pool.get('account.invoice').search(cr, uid, [('mode_id', 'in', move_ids_to_reverse)], context=context)
+            wf_service = netsvc.LocalService("workflow")
+            for invoice_id in invoice_ids_to_reopen:
+                wf_service.trg_validate(uid, 'account.invoice', invoice_id, 'open_test', cr)
             context = context or {}
             reversal_date = context.get('reversal_date') or time.strftime('%Y-%m-%d')
             reversed_move_ids = self.create_reversal(cr, uid, move_ids_to_reverse, reversal_date)
