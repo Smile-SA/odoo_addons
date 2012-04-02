@@ -133,7 +133,7 @@
             %>
             <td colspan="${colspan_lenght}">
                 %if line_widget == 'header':
-                    ${line.get(name, 'Header')}
+                    ${line.get('name', 'Header')}
                 %endif
             </td>
 
