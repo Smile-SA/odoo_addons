@@ -66,8 +66,8 @@ class smile_activity_report(osv.osv):
                   'resource_type': 'smile.activity.project',
                 },
                 ],
-            default_widget_type          = 'selection',
-            #dynamic_widget_type_property = 'line_type',
+            default_line_rendering          = 'selection',
+            #line_rendering_dynamic_property = 'line_rendering',
             increment_values             = [-1, 0.0, 2.71, 3.14],
             cell_property         = 'cell_ids',
             cell_type             = 'smile.activity.report.cell',
@@ -105,7 +105,7 @@ class smile_activity_report(osv.osv):
                   'resource_type': 'smile.activity.project',
                 },
                 ],
-            default_widget_type = 'increment',
+            default_line_rendering = 'increment',
             cell_property          = 'cell_ids',
             cell_type              = 'smile.activity.report.cell',
             cell_inverse_property  = 'line_id',
@@ -182,7 +182,7 @@ class smile_activity_report_line(osv.osv):
 
         # Line name and widget type are derived from the project it's attached to
         'name': fields.related('project_id', 'name', type='char', string='Project name', size=32, readonly=True),
-        'line_type': fields.related('project_id', 'value_type', type='char', string='Line widget', size=32, readonly=True),
+        'line_rendering': fields.related('project_id', 'value_type', type='char', string='Line rendering mode', size=32, readonly=True),
 
         'removable': fields.function(_get_random_boolean, string="Removable line", type='boolean', readonly=True, method=True),
         'performance_index': fields.function(_get_random_integer, string="Performance index", type='float', readonly=True, method=True),
@@ -227,12 +227,12 @@ class smile_activity_report_cell(osv.osv):
     ## Function fields
 
     def _get_cell_value(self, cr, uid, ids, name, arg, context=None):
-        """ Transform the quantity according the line type
+        """ Transform the quantity according the line rendering mode
         """
         result = {}
         for cell in self.browse(cr, uid, ids, context):
             val = cell.quantity
-            if cell.line_id.line_type == 'boolean':
+            if cell.line_id.line_rendering == 'boolean':
                 val = (cell.quantity != 0) and True or False
             result[cell.id] = val
         return result
@@ -271,7 +271,7 @@ class smile_activity_report_cell(osv.osv):
         'line_id': fields.many2one('smile.activity.report.line', "Activity report line", required=True, ondelete='cascade'),
         'active': fields.boolean("Active"),
         'read_only': fields.boolean("Read-only"),
-        # cell_value is a proxy of quantity that is transforming the value according the line_type
+        # cell_value is a proxy of quantity that is transforming the value according the line_rendering mode
         'cell_value': fields.function(_get_cell_value, fnct_inv=_set_cell_value, string="Cell value", type='string', readonly=True, method=True),
         'cell_value_range': fields.function(_get_cell_value_range, string="Cell value range", type='selection', readonly=True, method=True),
         }

@@ -99,10 +99,10 @@ class matrix(fields.dummy):
             # Get line tree definition
             'tree_definition': conf_dict.get('tree_definition', None),
 
-            # Widget type (can be 'float', 'boolean', 'increment' or 'selection')
-            'default_widget_type': conf_dict.get('default_widget_type', 'float'),
-            'dynamic_widget_type_property': conf_dict.get('dynamic_widget_type_property', None),
-            # Widget values
+            # Line rendering mode (can be 'float', 'boolean', 'increment' or 'selection')
+            'default_line_rendering': conf_dict.get('default_line_rendering', 'float'),
+            'line_rendering_dynamic_property': conf_dict.get('line_rendering_dynamic_property', None),
+            # Widget customizations
             'increment_values': conf_dict.get('increment_values', None),
 
             # Property name from which we get the cells composing the matrix.
@@ -296,7 +296,7 @@ class matrix(fields.dummy):
                     })
 
                 # Get the type of the widget we'll use to display cell values
-                line_widget = _get_prop(line, conf['dynamic_widget_type_property'], conf['default_widget_type'])
+                line_widget = _get_prop(line, conf['line_rendering_dynamic_property'], conf['default_line_rendering'])
 
                 # Force position of boolean widget to bottom
                 if line_widget == 'boolean':
@@ -409,7 +409,7 @@ class matrix(fields.dummy):
             template_line_data = {
                 'id': "template",
                 'name': "Row template",
-                'widget': conf['default_widget_type'],
+                'widget': conf['default_line_rendering'],
                 'position': 'body',
                 'read_only': False,
                 'removable': not conf['hide_remove_line_buttons'],
