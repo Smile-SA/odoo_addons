@@ -35,6 +35,7 @@ LINE_RENDERING_MODES = [
     ('float', 'Float field'),
     ('selection', 'Selection drop-down menu'),
     ('spacer', 'Blank matrix-wide line'),
+    ('header', 'Matrix-wide header line'),
     ]
 
 

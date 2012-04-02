@@ -126,12 +126,16 @@
         %endif
         >
 
-        %if line_widget == 'spacer':
+        %if line_widget in ['spacer', 'header']:
 
             <%
                 colspan_lenght = 2 + len(date_range) + len(value['additional_columns']) + navigation + (not hide_line_totals)
             %>
-            <td colspan="${colspan_lenght}"></td>
+            <td colspan="${colspan_lenght}">
+                %if line_widget == 'header':
+                    ${line.get(name, 'Header')}
+                %endif
+            </td>
 
         %else:
 
@@ -420,9 +424,10 @@
                 display: none;
             }
 
+            .matrix th,
             .matrix .total,
             .matrix .total td,
-            .matrix th {
+            .matrix .widget_header {
                 font-weight: bold;
                 background-color: #ddd;
             }

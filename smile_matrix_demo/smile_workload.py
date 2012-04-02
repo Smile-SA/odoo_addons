@@ -77,6 +77,7 @@ class smile_activity_workload(osv.osv):
             cell_date_property='date',
             date_range_property='date_range',
             date_format='%m/%y',
+            date_range_navigation = True,
 
             line_rendering_dynamic_property = 'line_rendering',
             increment_values = [-1, 0.0, 2.71, 3.14],
@@ -111,7 +112,6 @@ class smile_activity_workload(osv.osv):
             column_totals_warning_threshold=None,
             css_classes=['workload'],
             title="Workload lines",
-            experimental_slider=True,
             ),
         }
 
