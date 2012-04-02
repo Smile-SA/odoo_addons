@@ -712,7 +712,7 @@ def matrix_write_patch(parse_only=False):
                     (date_range, active_date_range, editable_date_range) = _get_date_range(report, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
 
                     # Write all our aggregated matrix data
-                    for line_data in matrix_data[conf['line_property']]:
+                    for line_data in matrix_data.get(conf['line_property'], {}):
                         cells = line_data.pop(conf['cell_property'])
                         # Line has no idea so was created in the matrix
                         line_id = line_data.get('id', None)
