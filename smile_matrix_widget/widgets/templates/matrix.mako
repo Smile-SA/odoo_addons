@@ -221,7 +221,16 @@
         ${render_additional_column_subtotals(value['additional_columns'], sub_lines, position='left')}
 
         %if show_selector and len(res_values.get('values', [])) and editable_mode and res_values.get('editable', True):
-            <td colspan="${len(date_range) + 1}" class="resource_selector">
+            <%
+                colspan_lenght = 1
+                if navigation:
+                    colspan_lenght += 1
+                if navigation and len(date_range) > 10:
+                    colspan_lenght += 10
+                else:
+                    colspan_lenght += len(date_range)
+            %>
+            <td colspan="${colspan_lenght}" class="resource_selector">
                 ${render_resource_selector(res_values)}
             </td>
         %else:

@@ -215,10 +215,6 @@ class matrix(fields.dummy):
             else:
                 conf['cell_value_default_range'] = conf['cell_value_range']
 
-        # TODO: Navigation is not working yet in multi-level mode
-        if len(conf['tree_definition']) > 1:
-            conf['navigation'] = False
-
         return conf
 
 
