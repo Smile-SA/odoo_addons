@@ -431,7 +431,7 @@ $(document).ready(function(){
     });
 
 
-    // Activate the experimental timeline slider
+    // Activate the timeline navigation slider
     $(".matrix .navigation .button").click(function(){
         var matrix = get_parent_matrix($(this));
         var matrix_id = matrix.attr("id");
