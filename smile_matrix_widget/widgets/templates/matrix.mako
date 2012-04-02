@@ -279,7 +279,7 @@
                     }]
                 sub_lines = []
                 for line in lines:
-                    matching_resources = [r for r in line.get('resources') if r['id'] == res_id and r['value'] == res_value]
+                    matching_resources = [r for r in line.get('resources', dict()) if r['id'] == res_id and r['value'] == res_value]
                     if len(matching_resources):
                         sub_lines.append(line)
             %>
@@ -602,7 +602,7 @@
                         %if not hide_line_totals:
                             <%
                                 grand_total_cell = {
-                                    'value': sum([sum([v['value'] for (k, v) in line['cells_data'].items() if k in date_range]) for line in body_lines ]),
+                                    'value': sum([sum([v['value'] for (k, v) in line['cells_data'].items() if k in date_range]) for line in body_lines if line['widget'] not in ['header', 'spacer'] ]),
                                     'read_only': True,
                                     }
                                 grand_total_cell_id = "%s__grand_total" % name
