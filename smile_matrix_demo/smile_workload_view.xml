@@ -64,8 +64,9 @@
             <field name="arch" type="xml">
                 <form string="Workload line">
                     <field name="name"/>
-                    <field name="profile_id"/>
+                    <field name="line_rendering"/>
                     <field name="employee_id"/>
+                    <field name="profile_id"/>
                     <field name="productivity_index"/>
                     <field name="performance_index"/>
                     <field name="cell_ids" colspan="4" nolabel="1" readonly="1">

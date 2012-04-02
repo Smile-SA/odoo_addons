@@ -34,6 +34,7 @@ LINE_RENDERING_MODES = [
     ('boolean', 'Check box'),
     ('float', 'Float field'),
     ('selection', 'Selection drop-down menu'),
+    ('spacer', 'Blank matrix-wide line'),
     ]
 
 

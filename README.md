@@ -102,6 +102,8 @@ Changelog
   * Add a new selection widget type
   * Add a new dynamic cell_value_range parameter for the selection widget
   * Allow additional columns to be positionned to the right or the left side of the matrix body
+  * Rename widget type to line rendering mode
+  * Add blank-line / spacer line rendering mode
 
 * **0.4** (2012-01-27)
   * Per-line dynamic removable property

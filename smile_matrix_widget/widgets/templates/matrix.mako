@@ -126,42 +126,52 @@
         %endif
         >
 
-        ${render_resources(line)}
+        %if line_widget == 'spacer':
 
-        ${render_additional_column_cell(value['additional_columns'], line, position='left')}
+            <%
+                colspan_lenght = 2 + len(date_range) + len(value['additional_columns']) + navigation + (not hide_line_totals)
+            %>
+            <td colspan="${colspan_lenght}"></td>
 
-        <td class="delete_line">
-            %if editable_mode and line_removable:
-                <span class="button delete_row">&#10006;</span>
+        %else:
+
+            ${render_resources(line)}
+
+            ${render_additional_column_cell(value['additional_columns'], line, position='left')}
+
+            <td class="delete_line">
+                %if editable_mode and line_removable:
+                    <span class="button delete_row">&#10006;</span>
+                %endif
+            </td>
+
+            %for date in date_range:
+                <%
+                    cell_id = '%s__cell_%s_%s' % (name, line['id'], date)
+                    cell_def = line.get('cells_data', {}).get(date, None)
+                %>
+                ${render_cell(cell_def, cell_id, line_widget)}
+            %endfor
+
+            %if navigation:
+                <td></td>
             %endif
-        </td>
 
-        %for date in date_range:
-            <%
-                cell_id = '%s__cell_%s_%s' % (name, line['id'], date)
-                cell_def = line.get('cells_data', {}).get(date, None)
-            %>
-            ${render_cell(cell_def, cell_id, line_widget)}
-        %endfor
+            %if not hide_line_totals:
+                <%
+                    row_total = sum([v['value'] for (k, v) in line.get('cells_data', dict()).items() if k in date_range])
+                    row_total_cell_id = not read_only and "%s__row_total_%s" % (name, line['id']) or None
+                    row_total_cell = {
+                        'value': row_total,
+                        'read_only': True,
+                        }
+                %>
+                ${render_cell(row_total_cell, cell_id=row_total_cell_id, css_classes=['total'])}
+            %endif
 
-        %if navigation:
-            <td></td>
+            ${render_additional_column_cell(value['additional_columns'], line, position='right')}
+
         %endif
-
-        %if not hide_line_totals:
-            <%
-                row_total = sum([v['value'] for (k, v) in line.get('cells_data', dict()).items() if k in date_range])
-                row_total_cell_id = not read_only and "%s__row_total_%s" % (name, line['id']) or None
-                row_total_cell = {
-                    'value': row_total,
-                    'read_only': True,
-                    }
-            %>
-            ${render_cell(row_total_cell, cell_id=row_total_cell_id, css_classes=['total'])}
-        %endif
-
-        ${render_additional_column_cell(value['additional_columns'], line, position='right')}
-
     </tr>
 </%def>
 
