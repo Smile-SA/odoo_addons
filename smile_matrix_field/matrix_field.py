@@ -27,6 +27,17 @@ from tools.func import wraps
 from tools.translate import _
 
 
+
+# List of values supported by the default_line_rendering parameter
+LINE_RENDERING_MODES = [
+    ('increment', 'Increment button'),
+    ('boolean', 'Check box'),
+    ('float', 'Float field'),
+    ('selection', 'Selection drop-down menu'),
+    ]
+
+
+
 def _get_prop(obj, prop_name, default_value=None):
     """ Get a property value
     """

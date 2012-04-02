@@ -24,7 +24,7 @@ import random
 import os
 
 from osv import osv, fields
-from smile_matrix_field.matrix_field import matrix, matrix_read_patch, matrix_write_patch
+from smile_matrix_field.matrix_field import matrix, matrix_read_patch, matrix_write_patch, LINE_RENDERING_MODES
 
 
 
@@ -179,14 +179,12 @@ class smile_activity_report_line(osv.osv):
         'report_id': fields.many2one('smile.activity.report', "Activity report", required=True, ondelete='cascade'),
         'project_id': fields.many2one('smile.activity.project', "Project", required=True),
         'cell_ids': fields.one2many('smile.activity.report.cell', 'line_id', "Cells"),
-
-        # Line name and widget type are derived from the project it's attached to
-        'name': fields.related('project_id', 'name', type='char', string='Project name', size=32, readonly=True),
-        'line_rendering': fields.related('project_id', 'value_type', type='char', string='Line rendering mode', size=32, readonly=True),
-
         'removable': fields.function(_get_random_boolean, string="Removable line", type='boolean', readonly=True, method=True),
         'performance_index': fields.function(_get_random_integer, string="Performance index", type='float', readonly=True, method=True),
         'productivity_index': fields.function(_get_random_integer, string="Productivity index", type='float', readonly=True, method=True),
+        # Line name and rendering mode are derived from the project it's attached to
+        'name': fields.related('project_id', 'name', type='char', string='Project name', size=32, readonly=True),
+        'line_rendering': fields.related('project_id', 'value_type', type='selection', selection=LINE_RENDERING_MODES, string='Line rendering mode', readonly=True),
         }
 
 

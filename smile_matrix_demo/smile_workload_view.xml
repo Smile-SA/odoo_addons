@@ -26,8 +26,9 @@
                         </tree>
                     </field>
                     <field name="additional_line_ids" colspan="4" nolabel="1" context="{'form_view_ref': 'smile_activity.view_smile_activity_workload_line_form'}">
-                        <tree string="Lines">
+                        <tree string="Additional lines">
                             <field name="name"/>
+                            <field name="line_rendering"/>
                             <field name="profile_id"/>
                             <field name="employee_id"/>
                             <field name="productivity_index"/>

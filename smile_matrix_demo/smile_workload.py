@@ -23,7 +23,7 @@ import datetime
 import random
 
 from osv import osv, fields
-from smile_matrix_field.matrix_field import matrix, matrix_read_patch, matrix_write_patch
+from smile_matrix_field.matrix_field import matrix, matrix_read_patch, matrix_write_patch, LINE_RENDERING_MODES
 
 
 
@@ -78,9 +78,8 @@ class smile_activity_workload(osv.osv):
             date_range_property='date_range',
             date_format='%m/%y',
 
-            default_line_rendering          = 'selection',
-            #line_rendering_dynamic_property = 'line_rendering',
-            #increment_values             = [-1, 0.0, 2.71, 3.14],
+            line_rendering_dynamic_property = 'line_rendering',
+            increment_values = [-1, 0.0, 2.71, 3.14],
 
             tree_definition = [
                 { 'line_property': 'profile_id',
@@ -150,12 +149,17 @@ class smile_activity_workload_line(osv.osv):
 
     _columns = {
         'name': fields.related('employee_id', 'name', type='char', string='Name', size=32, readonly=True),
+        'line_rendering': fields.selection(LINE_RENDERING_MODES, 'Line rendering mode', select=True, required=True),
         'workload_id': fields.many2one('smile.activity.workload', "Workload", required=True, ondelete='cascade'),
         'profile_id': fields.many2one('smile.activity.profile', "Profile", required=False),
         'employee_id': fields.many2one('smile.activity.employee', "Employee", required=False),
         'cell_ids': fields.one2many('smile.activity.workload.cell', 'line_id', "Cells"),
         'performance_index': fields.function(_get_random_int, string="Performance index", type='float', readonly=True, method=True),
         'productivity_index': fields.function(_get_random_int, string="Productivity index", type='float', readonly=True, method=True),
+        }
+
+    _defaults = {
+        'line_rendering': 'selection',
         }
 
 

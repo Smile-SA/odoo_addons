@@ -23,6 +23,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from osv import osv, fields
+from smile_matrix_field.matrix_field import LINE_RENDERING_MODES
 
 
 
@@ -69,13 +70,7 @@ class smile_activity_project(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=32),
-        'value_type': fields.selection([
-            # List of values supported by the default_line_rendering parameter (as found in smile_matrix_field/matrix_field.py)
-            ('increment', 'Increment button'),
-            ('boolean', 'Check box'),
-            ('float', 'Float field'),
-            ('selection', 'Selection drop-down menu'),
-            ], 'Matrix line rendering mode', select=True, required=True),
+        'value_type': fields.selection(LINE_RENDERING_MODES, 'Matrix line rendering mode', select=True, required=True),
         'add_by_default': fields.boolean('Added in report by default'),
         'start_date': fields.date('Start', required=True),
         'end_date': fields.date('End', required=True),
