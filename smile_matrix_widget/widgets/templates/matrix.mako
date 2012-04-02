@@ -577,7 +577,7 @@
                         <td></td>
                         %for date in date_range:
                             <%
-                                column_values = [line['cells_data'][date]['value'] for line in body_lines if date in line['cells_data']]
+                                column_values = [line['cells_data'][date]['value'] for line in body_lines if (date in line.get('cells_data', dict())) and (line['widget'] not in ['header', 'spacer'])]
                                 column_total_cell_id = "%s__column_total_%s" % (name, date)
                             %>
                             %if len(column_values):
