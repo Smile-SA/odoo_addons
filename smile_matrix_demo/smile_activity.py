@@ -79,8 +79,8 @@ class smile_activity_report(osv.osv):
             active_date_range_property = 'active_date_range',
             date_format                = '%d',
             date_range_navigation = True,
-            additional_columns=[
-                {'label': "Productivity", 'line_property': "productivity_index"},
+            additional_columns = [
+                {'label': "Productivity", 'line_property': "productivity_index", 'position': 'left'},
                 {'label': "Performance", 'line_property': "performance_index"},
                 ],
             column_totals_warning_threshold = 1.0,

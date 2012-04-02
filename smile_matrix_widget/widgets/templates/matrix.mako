@@ -96,6 +96,17 @@
 </%def>
 
 
+<%def name="render_additional_column_cell(columns, line, position='right')">
+    %for (line_property_cell, col_def) in [(line.get('cells_data', dict()).get(c['line_property'], {}), c) for c in [col for col in columns if col.get('position', 'right') == position] if 'line_property' in c]:
+        <%
+            if col_def.get('hide_value', False):
+                line_property_cell.update({'value': None})
+        %>
+        ${render_cell(line_property_cell)}
+    %endfor
+</%def>
+
+
 <%def name="render_line(line, date_range, level=1)">
     <%
         line_readonly = line.get('read_only', False)
@@ -116,6 +127,8 @@
         >
 
         ${render_resources(line)}
+
+        ${render_additional_column_cell(value['additional_columns'], line, position='left')}
 
         <td class="delete_line">
             %if editable_mode and line_removable:
@@ -147,13 +160,8 @@
             ${render_cell(row_total_cell, cell_id=row_total_cell_id, css_classes=['total'])}
         %endif
 
-        %for (line_property_cell, col_def) in [(line.get('cells_data', dict()).get(c['line_property'], {}), c) for c in value['additional_columns'] if 'line_property' in c]:
-            <%
-                if col_def.get('hide_value', False):
-                    line_property_cell.update({'value': None})
-            %>
-            ${render_cell(line_property_cell)}
-        %endfor
+        ${render_additional_column_cell(value['additional_columns'], line, position='right')}
+
     </tr>
 </%def>
 
@@ -196,6 +204,8 @@
 
         ${render_resources(virtual_line)}
 
+        ${render_additional_column_subtotals(value['additional_columns'], sub_lines, position='left')}
+
         %if show_selector and len(res_values.get('values', [])) and editable_mode and res_values.get('editable', True):
             <td colspan="${len(date_range) + 1}" class="resource_selector">
                 ${render_resource_selector(res_values)}
@@ -233,17 +243,8 @@
             ${render_cell(row_total_cell, cell_id=row_total_cell_id, css_classes=['total'])}
         %endif
 
-        %for col_def in [c for c in value['additional_columns'] if 'line_property' in c]:
-            <%
-                additional_sum_cell = {
-                    'value': None,
-                    'read_only': True,
-                }
-                if not col_def.get('hide_tree_totals', False):
-                    additional_sum_cell.update({'value': sum([line.get('cells_data', dict()).get(col_def['line_property'], {}).get('value', 0.0) for line in sub_lines])})
-            %>
-            ${render_cell(additional_sum_cell)}
-        %endfor
+        ${render_additional_column_subtotals(value['additional_columns'], sub_lines, position='right')}
+
     </tr>
 </%def>
 
@@ -281,6 +282,41 @@
             ${render_line(line, date_range, level)}
         %endfor
     %endif
+</%def>
+
+
+<%def name="render_additional_column_titles(columns, position='right')">
+    %for (i, c) in enumerate([col for col in columns if col.get('position', 'right') == position]):
+        <th>${c.get('label', "Additional %s column #%s" % (position, i))}</th>
+    %endfor
+</%def>
+
+
+<%def name="render_additional_column_subtotals(columns, sub_lines, position='right')">
+    %for col_def in [c for c in [col for col in columns if col.get('position', 'right') == position] if 'line_property' in c]:
+        <%
+            additional_sum_cell = {
+                'value': None,
+                'read_only': True,
+            }
+            if not col_def.get('hide_tree_totals', False):
+                additional_sum_cell.update({'value': sum([line.get('cells_data', dict()).get(col_def['line_property'], {}).get('value', 0.0) for line in sub_lines])})
+        %>
+        ${render_cell(additional_sum_cell)}
+    %endfor
+</%def>
+
+
+<%def name="render_additional_column_totals(columns, body_lines, position='right')">
+    %for line_property in [c['line_property'] for c in [col for col in columns if col.get('position', 'right') == position] if 'line_property' in c]:
+        <%
+            additional_sum_cell = {
+                'value': sum([line.get('cells_data', dict()).get(line_property, {}).get('value', 0.0) for line in body_lines]),
+                'read_only': True,
+                }
+        %>
+        ${render_cell(additional_sum_cell, css_classes=['total'])}
+    %endfor
 </%def>
 
 
@@ -500,6 +536,7 @@
             <thead>
                 <tr>
                     <th class="resource">${value['title']}</th>
+                    ${render_additional_column_titles(value['additional_columns'], position='left')}
                     <th id="${"%s__previous" % name}" class="navigation disabled">
                         %if navigation:
                             <span class="button" title="Previous">&lsaquo;&lsaquo;</span>
@@ -514,15 +551,14 @@
                     %if not hide_line_totals:
                         <th class="total">${value['total_label']}</th>
                     %endif
-                    %for (i, c) in enumerate(value['additional_columns']):
-                        <th>${c.get('label', "Additional column %s" % i)}</th>
-                    %endfor
+                    ${render_additional_column_titles(value['additional_columns'], position='right')}
                 </tr>
             </thead>
             <tfoot>
                 %if not hide_column_totals:
                     <tr class="total">
                         <td class="resource">${value['total_label']}</td>
+                        ${render_additional_column_totals(value['additional_columns'], body_lines, position='left')}
                         <td></td>
                         %for date in date_range:
                             <%
@@ -558,15 +594,7 @@
                             %>
                             ${render_cell(grand_total_cell, cell_id=grand_total_cell_id)}
                         %endif
-                        %for line_property in [c['line_property'] for c in value['additional_columns'] if 'line_property' in c]:
-                            <%
-                                additional_sum_cell = {
-                                    'value': sum([line.get('cells_data', dict()).get(line_property, {}).get('value', 0.0) for line in body_lines]),
-                                    'read_only': True,
-                                    }
-                            %>
-                            ${render_cell(additional_sum_cell, css_classes=['total'])}
-                        %endfor
+                        ${render_additional_column_totals(value['additional_columns'], body_lines, position='right')}
                     </tr>
                 %endif
                 %for line in bottom_lines:

@@ -132,7 +132,7 @@ class matrix(fields.dummy):
 
             # Add read-only columns at the end of the matrix.
             # It needs a list of dictionnary like this:
-            #    [{'label': "Productivity", 'line_property': 'productivity_index', 'hide_value': True},
+            #    [{'label': "Productivity", 'line_property': 'productivity_index', 'position': 'left', 'hide_value': True},
             #     {'label': "Performance" , 'line_property': 'performance_index' , 'hide_tree_totals': True},
             #    ],
             'additional_columns': conf_dict.get('additional_columns', []),

@@ -55,7 +55,7 @@ TODO
 ----
 
   * Merge the `cell_value_range` and `increment_values` parameters.
-  * Fix transparent jQuery highlight to let it end to the right color value (and not the defualt white).
+  * Fix transparent jQuery highlight to let it end to the good color value (and not the default white).
   * Do not restrict boolean widget lines to the bottom part of the widget: treat them as normal lines and allow them to be added/removed and changed in the body of the matrix.
   * Fix matrix style when in tab (notebook).
   * Add example data in the smile_matrix_demo module to let users reproduce the screenshots easily.
@@ -101,6 +101,7 @@ Changelog
 * **0.5.dev** (unreleased)
   * Add a new selection widget type
   * Add a new dynamic cell_value_range parameter for the selection widget
+  * Allow additional columns to be positionned to the right or the left side of the matrix body
 
 * **0.4** (2012-01-27)
   * Per-line dynamic removable property
