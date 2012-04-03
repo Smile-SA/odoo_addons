@@ -472,7 +472,7 @@ $(document).ready(function(){
         // Show and hide whole columns
         var column_id_to_show = parse_id(column_label_to_show.attr("id"))[3];
         var column_id_to_hide = parse_id(column_label_to_hide.attr("id"))[3];
-        // XXX Sliding animation attemps
+        // XXX Sliding animation attempts
         // $(get_column_cells(matrix_id, column_id_to_show)).effect('slide', {direction: direction == 'next' ? 'right' : 'left', mode: 'show'}, 'slow');
         // $(get_column_cells(matrix_id, column_id_to_hide)).effect('slide', {direction: direction == 'next' ? 'left' : 'right', mode: 'hide'}, 'slow');
         $(get_column_cells(matrix_id, column_id_to_show)).show().effect("highlight");
