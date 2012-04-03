@@ -98,6 +98,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Changelog
 ---------
 
+* **0.6.dev** (unreleased)
+  * No changes yet
+
 * **0.5** (2012-04-03)
   * Add a new selection widget type
   * Add a new dynamic cell_value_range parameter for the selection widget
