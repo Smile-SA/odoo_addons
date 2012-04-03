@@ -35,6 +35,7 @@ class Matrix(TinyInputWidget):
         ]
 
     def __init__(self, **kwargs):
+        # Explanation of attrs and context hacks belows can be found at: https://github.com/Smile-SA/smile_matrix_widget/issues/3
         #attrs = kwargs.get('attrs', {})
         #xml_attrs   = isinstance(attrs,   (str, unicode)) and eval(attrs)   or attrs
         #xml_context = isinstance(context, (str, unicode)) and eval(context) or context
