@@ -18,6 +18,8 @@ Features
   * Dynamic per-column and per-line sums in edit mode
   * Date-based columns
 
+You should also [browse the bug tracker](https://github.com/Smile-SA/smile_matrix_widget/issues): it's the best place to get an idea of which features are missing or are not implemented yet.
+
 
 Requirements
 ------------
