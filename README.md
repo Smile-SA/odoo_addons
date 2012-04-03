@@ -90,6 +90,7 @@ Changelog
 ---------
 
 * **0.6.dev** (unreleased)
+  * Allow styling of the current date
   * Fix read-only rendering of date range navigation in multi-level matrix.
 
 * **0.5** (2012-04-03)
