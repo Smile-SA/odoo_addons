@@ -53,17 +53,6 @@ FAQ
 This code started its life in Smile's internal Subversion repository and was [migrated to Git](http://kevin.deldycke.com/2011/08/how-open-source-an-internal-corporate-project-webping/) to not loose its commit history, which would have been the case if the project was to be pushed to Bazaar.
 
 
-TODO
-----
-
-  * Merge the `cell_value_range` and `increment_values` parameters.
-  * Fix transparent jQuery highlight to let it end to the good color value (and not the default white).
-  * Do not restrict boolean widget lines to the bottom part of the widget: treat them as normal lines and allow them to be added/removed and changed in the body of the matrix.
-  * Fix matrix style when in tab (notebook).
-  * Add example data in the smile_matrix_demo module to let users reproduce the screenshots easily.
-  * Clean-up all this messy code and architecture.
-
-
 Author
 ------
 
