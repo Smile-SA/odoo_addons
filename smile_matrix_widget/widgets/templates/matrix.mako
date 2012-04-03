@@ -446,6 +446,15 @@
                 display: none;
             }
 
+            .matrix .navigation .button {
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
             .matrix th,
             .matrix .total,
             .matrix .total td,
