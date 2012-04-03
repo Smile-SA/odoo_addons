@@ -449,7 +449,8 @@
             .matrix th,
             .matrix .total,
             .matrix .total td,
-            .matrix .widget_header {
+            .matrix .widget_header,
+            .matrix .widget_header td {
                 font-weight: bold;
                 background-color: #ddd;
             }
