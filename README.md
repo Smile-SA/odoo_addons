@@ -99,7 +99,7 @@ Changelog
 ---------
 
 * **0.6.dev** (unreleased)
-  * No changes yet
+  * Fix read-only rendering of date range navigation in multi-level matrix.
 
 * **0.5** (2012-04-03)
   * Add a new selection widget type

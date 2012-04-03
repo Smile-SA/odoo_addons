@@ -242,8 +242,9 @@
                         'value': sum([line.get('cells_data', dict()).get(date, {}).get('value', 0.0) for line in sub_lines]),
                         'read_only': True,
                         }
+                    cell_id = '%s__cell_%s_%s' % (name, virtual_line['id'], date)
                 %>
-                ${render_cell(date_column_sum_cell)}
+                ${render_cell(date_column_sum_cell, cell_id)}
             %endfor
 
             %if navigation:
