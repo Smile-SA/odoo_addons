@@ -1,5 +1,5 @@
 <%!
-    import datetime
+    from datetime import datetime as dt
     import simplejson as json
 %>
 
@@ -11,6 +11,15 @@
     if int(f) == f:
         f = int(f)
     return f
+%>
+</%def>
+
+
+<%def name="print_now(date, date_format)">
+<%
+    # Print the 'now' class
+    if dt.strptime(date, '%Y%m%d').strftime(str(date_format)) == dt.today().strftime(str(date_format)):
+        return 'now'
 %>
 </%def>
 
@@ -153,8 +162,9 @@
                 <%
                     cell_id = '%s__cell_%s_%s' % (name, line['id'], date)
                     cell_def = line.get('cells_data', {}).get(date, None)
+                    cell_css = [print_now(date, date_format)]
                 %>
-                ${render_cell(cell_def, cell_id, line_widget)}
+                ${render_cell(cell_def, cell_id, line_widget, css_classes=cell_css)}
             %endfor
 
             %if navigation:
@@ -243,8 +253,9 @@
                         'read_only': True,
                         }
                     cell_id = '%s__cell_%s_%s' % (name, virtual_line['id'], date)
+                    cell_css = [print_now(date, date_format)]
                 %>
-                ${render_cell(date_column_sum_cell, cell_id)}
+                ${render_cell(date_column_sum_cell, cell_id, css_classes=cell_css)}
             %endfor
 
             %if navigation:
@@ -568,7 +579,7 @@
                         %endif
                     </th>
                     %for date in date_range:
-                        <th id="${"%s__column_label_%s" % (name, date)}">${datetime.datetime.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
+                        <th id="${"%s__column_label_%s" % (name, date)}" class="${print_now(date, date_format)}">${dt.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
                     %if navigation:
                         <th id="${"%s__next" % name}" class="navigation"><span class="button" title="Next">&rsaquo;&rsaquo;</span></th>
@@ -600,10 +611,11 @@
                                         'value': column_total,
                                         'read_only': True,
                                         }
+                                    column_total_css_classes.append(print_now(date, date_format))
                                 %>
                                 ${render_cell(column_total_cell, cell_id=column_total_cell_id, css_classes=column_total_css_classes)}
                             %else:
-                                <td id="${column_total_cell_id}"></td>
+                                <td id="${column_total_cell_id}" class="${print_now(date, date_format)}"></td>
                             %endif
                         %endfor
                         %if navigation:
