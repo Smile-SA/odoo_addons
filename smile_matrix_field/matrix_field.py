@@ -137,8 +137,9 @@ class matrix(fields.dummy):
             'date_range_property': conf_dict.get('date_range_property', None),
             'active_date_range_property': conf_dict.get('active_date_range_property', None),
             'editable_date_range_property': conf_dict.get('editable_date_range_property', None),
-            # Activate date range navigation
+            # Date range navigation parameters
             'navigation': conf_dict.get('date_range_navigation', False),
+            'navigation_width': conf_dict.get('date_range_navigation_width', 10),
 
             # The format we use to display date labels
             'date_format': conf_dict.get('date_format', "%Y-%m-%d"),
@@ -267,7 +268,7 @@ class matrix(fields.dummy):
             # Evaluate dynamic matrix properties
             # Dynamic properties are those which value is a string instead of their native type
             # Of course this only works with properties which native type is not strings
-            for flag_id in ['tree_definition', 'increment_values', 'cell_default_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'navigation', 'read_only']:
+            for flag_id in ['tree_definition', 'increment_values', 'cell_default_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'navigation', 'navigation_width', 'read_only']:
                 flag_value = conf[flag_id]
                 if isinstance(flag_value, (str, unicode)):
                     conf[flag_id] = bool(_get_prop(base_object, flag_value))

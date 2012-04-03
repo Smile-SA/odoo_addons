@@ -392,6 +392,7 @@
             editable_tree = value['editable_tree']
             hide_tree = value['hide_tree']
             navigation = value['navigation']
+            navigation_width = value['navigation_width']
         %>
 
         <style type="text/css">
@@ -566,6 +567,9 @@
                 %endif
                 <input type="text" kind="char" name="${"%s__line_removed" % name}" id="${"%s__line_removed" % name}" value="" title="ID list of removed lines" style="display: none;"/>
             </div>
+        %endif
+        %if navigation:
+            <input type="hidden" id="${"%s__navigation_width" % name}" value="${navigation_width}" title="Date range navigation width"/>
         %endif
 
         <table>

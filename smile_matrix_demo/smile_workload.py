@@ -78,6 +78,7 @@ class smile_activity_workload(osv.osv):
             date_range_property='date_range',
             date_format='%m/%y',
             date_range_navigation = True,
+            date_range_navigation_width = 12,
 
             line_rendering_dynamic_property = 'line_rendering',
             increment_values = [-1, 0.0, 2.71, 3.14],
