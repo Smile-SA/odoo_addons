@@ -235,8 +235,8 @@
                 colspan_lenght = 1
                 if navigation:
                     colspan_lenght += 1
-                if navigation and len(date_range) > 10:
-                    colspan_lenght += 10
+                if navigation and len(date_range) > navigation_width:
+                    colspan_lenght += navigation_width
                 else:
                     colspan_lenght += len(date_range)
             %>
