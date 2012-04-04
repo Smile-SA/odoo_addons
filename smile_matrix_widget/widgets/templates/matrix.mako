@@ -462,10 +462,6 @@
                 display: none;
             }
 
-            .matrix .navigation.disabled .button {
-                display: none;
-            }
-
             .matrix .navigation .button {
                 -webkit-touch-callout: none;
                 -webkit-user-select: none;
@@ -473,6 +469,13 @@
                 -moz-user-select: none;
                 -ms-user-select: none;
                 user-select: none;
+            }
+
+            .matrix .navigation.disabled .button {
+                background: #ccc;
+                border-color: #999;
+                cursor: default;
+                text-shadow: none;
             }
 
             .matrix th,
