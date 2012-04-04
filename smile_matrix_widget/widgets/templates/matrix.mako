@@ -438,6 +438,13 @@
                 color: #f00;
             }
 
+            .matrix .now,
+            .matrix .now .button,
+            .matrix .now input,
+            .matrix .now select {
+                color: #090;
+            }
+
             .matrix .template {
                 display: none;
             }
