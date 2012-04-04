@@ -139,6 +139,8 @@
 
             <%
                 colspan_lenght = 2 + len(date_range) + len(value['additional_columns']) + navigation + (not hide_line_totals)
+                if editable_mode:
+                    colspan_lenght += 1
             %>
             <td colspan="${colspan_lenght}">
                 %if line_widget == 'header':
@@ -148,15 +150,19 @@
 
         %else:
 
+            %if editable_mode:
+                <td class="delete_line">
+                    %if line_removable:
+                        <span class="button delete_row">&#10006;</span>
+                    %endif
+                </td>
+            %endif
+
             ${render_resources(line)}
 
             ${render_additional_column_cell(value['additional_columns'], line, position='left')}
 
-            <td class="delete_line">
-                %if editable_mode and line_removable:
-                    <span class="button delete_row">&#10006;</span>
-                %endif
-            </td>
+            <td></td>
 
             %for date in date_range:
                 <%
@@ -226,6 +232,10 @@
         %endif
         ">
 
+        %if editable_mode:
+            <td class="delete_line"></td>
+        %endif
+
         ${render_resources(virtual_line)}
 
         ${render_additional_column_subtotals(value['additional_columns'], sub_lines, position='left')}
@@ -244,7 +254,7 @@
                 ${render_resource_selector(res_values)}
             </td>
         %else:
-            <td class="delete_line"></td>
+            <td></td>
 
             %for date in date_range:
                 <%
@@ -598,6 +608,9 @@
         <table>
             <thead>
                 <tr>
+                    %if editable_mode:
+                        <th></th>
+                    %endif
                     <th class="resource">${value['title']}</th>
                     ${render_additional_column_titles(value['additional_columns'], position='left')}
                     <th id="${"%s__previous" % name}" class="navigation disabled">
@@ -620,6 +633,9 @@
             <tfoot>
                 %if not hide_column_totals:
                     <tr class="total">
+                        %if editable_mode:
+                            <td></td>
+                        %endif
                         <td class="resource">${value['total_label']}</td>
                         ${render_additional_column_totals(value['additional_columns'], body_lines, position='left')}
                         <td></td>
