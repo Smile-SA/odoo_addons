@@ -420,15 +420,21 @@ $(document).ready(function(){
             return;
         };
         var matrix_id = $(this).attr("id");
+        var date_range_cells = $("#" + matrix_id + " th[id*='__column_label_']");
         // Get navigation width dynamically
         var navigation_width = parseInt($("#" + matrix_id + "__navigation_width").first().val());
-        $("#" + matrix_id + " th[id*='__column_label_']").each(function(i){
+        // Hide colomns out of the navigation width
+        date_range_cells.each(function(i){
             if(i > (navigation_width - 1)){
                 var name_fragments = parse_id($(this).attr("id"));
                 var column_index = name_fragments[3];
                 $(get_column_cells(matrix_id, column_index)).hide();
             };
         });
+        // Initialize navigation button state
+        if(date_range_cells.length <= navigation_width){
+            $("#" + matrix_id + "__next").addClass("disabled");
+        };
     });
 
 
