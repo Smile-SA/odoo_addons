@@ -90,9 +90,9 @@ Changelog
 ---------
 
 * **0.6.dev** (unreleased)
-  * Add a date_range_navigation_width parameter
+  * Add a date_range_navigation_width and date_range_navigation_start parameter
   * Allow styling of the current date
-  * Fix read-only rendering of date range navigation in multi-level matrix.
+  * Fix read-only rendering of date range navigation in multi-level matrix
 
 * **0.5** (2012-04-03)
   * Add a new selection widget type

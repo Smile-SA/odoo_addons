@@ -413,31 +413,6 @@ $(document).ready(function(){
     };
 
 
-    // Initialize the navigation slider
-    $(".matrix").each(function(){
-        // Don't try to initialize matrix without navigation
-        if ($(this).find(".navigation .button").length == 0) {
-            return;
-        };
-        var matrix_id = $(this).attr("id");
-        var date_range_cells = $("#" + matrix_id + " th[id*='__column_label_']");
-        // Get navigation width dynamically
-        var navigation_width = parseInt($("#" + matrix_id + "__navigation_width").first().val());
-        // Hide colomns out of the navigation width
-        date_range_cells.each(function(i){
-            if(i > (navigation_width - 1)){
-                var name_fragments = parse_id($(this).attr("id"));
-                var column_index = name_fragments[3];
-                $(get_column_cells(matrix_id, column_index)).hide();
-            };
-        });
-        // Initialize navigation button state
-        if(date_range_cells.length <= navigation_width){
-            $("#" + matrix_id + "__next").addClass("disabled");
-        };
-    });
-
-
     // Activate the timeline navigation slider
     $(".matrix .navigation .button").click(function(){
         var matrix = get_parent_matrix($(this));
@@ -484,6 +459,37 @@ $(document).ready(function(){
         // $(get_column_cells(matrix_id, column_id_to_hide)).effect('slide', {direction: direction == 'next' ? 'left' : 'right', mode: 'hide'}, 'slow');
         $(get_column_cells(matrix_id, column_id_to_show)).show().effect("highlight");
         $(get_column_cells(matrix_id, column_id_to_hide)).hide();
+    });
+
+
+    // Initialize the navigation slider
+    $(".matrix").each(function(){
+        // Don't try to initialize matrix without navigation
+        if ($(this).find(".navigation .button").length == 0) {
+            return;
+        };
+        var matrix_id = $(this).attr("id");
+        var date_range_cells = $("#" + matrix_id + " th[id*='__column_label_']");
+        // Get navigation width dynamically
+        var navigation_width = parseInt($("#" + matrix_id + "__navigation_width").first().val());
+        // Hide colomns out of the navigation width
+        date_range_cells.each(function(i){
+            if(i > (navigation_width - 1)){
+                var name_fragments = parse_id($(this).attr("id"));
+                var column_index = name_fragments[3];
+                $(get_column_cells(matrix_id, column_index)).hide();
+            };
+        });
+        // Initialize navigation button state
+        var next_buttons = $("#" + matrix_id + "__next");
+        if(date_range_cells.length <= navigation_width){
+            next_buttons.addClass("disabled");
+        };
+        // Move to the start position
+        var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());
+        for(i = 0; i < (navigation_start - 1); i++){
+            next_buttons.first().find('.button').trigger('click');
+        };
     });
 
 

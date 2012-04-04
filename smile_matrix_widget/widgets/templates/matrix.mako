@@ -393,6 +393,7 @@
             hide_tree = value['hide_tree']
             navigation = value['navigation']
             navigation_width = value['navigation_width']
+            navigation_start = value['navigation_start']
         %>
 
         <style type="text/css">
@@ -591,6 +592,7 @@
         %endif
         %if navigation:
             <input type="hidden" id="${"%s__navigation_width" % name}" value="${navigation_width}" title="Date range navigation width"/>
+            <input type="hidden" id="${"%s__navigation_start" % name}" value="${navigation_start}" title="Position from which we start the date range navigation"/>
         %endif
 
         <table>
