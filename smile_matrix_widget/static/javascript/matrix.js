@@ -423,7 +423,6 @@ $(document).ready(function(){
         // Get navigation width dynamically
         var navigation_width = parseInt($("#" + matrix_id + "__navigation_width").first().val());
         $("#" + matrix_id + " th[id*='__column_label_']").each(function(i){
-            // TODO: add a parameter or autodetect how many cells we display in the range
             if(i > (navigation_width - 1)){
                 var name_fragments = parse_id($(this).attr("id"));
                 var column_index = name_fragments[3];
