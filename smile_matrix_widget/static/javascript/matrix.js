@@ -90,6 +90,31 @@ $(document).ready(function(){
     });
 
 
+    // Set cell style dynamicaly
+    function set_cell_style(cell, cell_value, threshold){
+        if (!isNaN(threshold)) {
+            if(cell_value > threshold){
+                $(cell).addClass("warning");
+            } else {
+                $(cell).removeClass("warning");
+            };
+        };
+        if(cell_value < 0){
+            $(cell).addClass("negative");
+        } else {
+            $(cell).removeClass("negative");
+        };
+        if(!cell_value){
+            $(cell).addClass("zero");
+        } else {
+            $(cell).removeClass("zero");
+        };
+        if ($(cell).is(":visible")) {
+            $(cell).effect("highlight");
+        };
+    };
+
+
     // Update a column total
     function update_column_total(matrix_id, column_index){
         // Select all fields of the columns and sum them up
@@ -105,16 +130,7 @@ $(document).ready(function(){
         var column_threshold = parseFloat($("#" + matrix_id + "__column_warning_threshold").first().val());
         // Update total content and style
         $("#" + matrix_id + "__column_total_" + column_index).text(column_total).each(function(){
-            if (!isNaN(column_threshold)) {
-                if(column_total > column_threshold){
-                    $(this).addClass("warning");
-                } else {
-                    $(this).removeClass("warning");
-                };
-            };
-            if ($(this).is(":visible")) {
-                $(this).effect("highlight");
-            }
+            set_cell_style($(this), column_total, column_threshold);
         });
     };
 
@@ -129,7 +145,9 @@ $(document).ready(function(){
                 row_total += cell_value;
             };
         });
-        $("#" + matrix_id + "__row_total_" + row_index).text(row_total).effect("highlight");
+        $("#" + matrix_id + "__row_total_" + row_index).text(row_total).each(function(){
+            set_cell_style($(this), row_total);
+        });
     };
 
 
@@ -140,7 +158,9 @@ $(document).ready(function(){
         $("#" + matrix_id + " tbody [id^='" + matrix_id + "__row_total_']:not([id^='" + matrix_id + "__row_total_dummy'])").each(function(){
             grand_total += parseFloat($(this).text());
         });
-        $("#" + matrix_id + "__grand_total").text(grand_total).effect("highlight");
+        $("#" + matrix_id + "__grand_total").text(grand_total).each(function(){
+            set_cell_style($(this), grand_total);
+        });
     };
 
 
