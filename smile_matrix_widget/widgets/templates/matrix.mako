@@ -530,6 +530,10 @@
                 border-top: 1px solid #ccc;
             }
 
+            .matrix .widget_spacer td, div.non-editable .matrix table .widget_spacer td {
+                height: 1em;
+            }
+
             .matrix th, div.non-editable .matrix table th {
                 padding-right: .3em;
                 padding-left: .3em;
