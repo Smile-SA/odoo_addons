@@ -261,7 +261,7 @@
             %for date in date_range:
                 <%
                     date_column_sum_cell = {
-                        'value': sum([line.get('cells_data', dict()).get(date, {}).get('value', 0.0) for line in sub_lines]),
+                        'value': sum([line.get('cells_data', dict()).get(date, {}).get('value') or 0.0 for line in sub_lines]),
                         'read_only': True,
                         }
                     cell_id = '%s__cell_%s_%s' % (name, virtual_line['id'], date)
@@ -347,7 +347,7 @@
                 'read_only': True,
             }
             if not col_def.get('hide_tree_totals', False):
-                additional_sum_cell.update({'value': sum([line.get('cells_data', dict()).get(col_def['line_property'], {}).get('value', 0.0) for line in sub_lines])})
+                additional_sum_cell.update({'value': sum([line.get('cells_data', dict()).get(col_def['line_property'], {}).get('value') or 0.0 for line in sub_lines])})
         %>
         ${render_cell(additional_sum_cell)}
     %endfor
@@ -358,7 +358,7 @@
     %for line_property in [c['line_property'] for c in [col for col in columns if col.get('position', 'right') == position] if 'line_property' in c]:
         <%
             additional_sum_cell = {
-                'value': sum([line.get('cells_data', dict()).get(line_property, {}).get('value', 0.0) for line in body_lines]),
+                'value': sum([line.get('cells_data', dict()).get(line_property, {}).get('value') or 0.0 for line in body_lines]),
                 'read_only': True,
                 }
         %>
