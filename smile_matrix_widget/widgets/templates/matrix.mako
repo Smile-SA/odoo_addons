@@ -148,9 +148,13 @@
         %else:
 
             %if editable_mode:
-                <td class="delete_line">
+                <td class="delete_column
                     %if line_removable:
-                        <span class="button delete_row">&#10006;</span>
+                        delete_button
+                    %endif
+                ">
+                    %if line_removable:
+                        &#10006;
                     %endif
                 </td>
             %endif
@@ -232,7 +236,7 @@
         ">
 
         %if editable_mode:
-            <td class="delete_line"></td>
+            <td class="delete_column"></td>
         %endif
 
         ${render_resources(virtual_line)}
@@ -527,16 +531,6 @@
                 min-width: 2.2em;
             }
 
-            .matrix table .button.delete_row {
-                font-weight: bold;
-                min-width: 1em;
-                height: 1em;
-            }
-
-            .matrix table .button.delete_row:hover {
-                background: #fc3223;
-            }
-
             .matrix td, div.non-editable .matrix table td,
             .matrix th, div.non-editable .matrix table th {
                 height: 2em;
@@ -544,6 +538,19 @@
                 margin: 0;
                 padding: 0 .1em;
                 border-top: 1px solid #ccc;
+            }
+
+            .matrix .delete_column {
+                min-width: inherit;
+            }
+
+            .matrix .delete_button {
+                cursor: pointer;
+            }
+
+            .matrix .delete_button:hover {
+                background: #fc3223;
+                color: white;
             }
 
             .matrix .widget_spacer td, div.non-editable .matrix table .widget_spacer td {
@@ -571,8 +578,7 @@
                         border-top-width: ${len(resource_value_list) - i + 1}px;
                     }
                     #${name}.matrix .level_${i+1} td.resource,
-                    #${name}.matrix .level_${i+1} td.resource_selector,
-                    #${name}.matrix .level_${i+1} td.delete_line {
+                    #${name}.matrix .level_${i+1} td.resource_selector {
                         padding-left: ${i}em;
                     }
                 %endfor
@@ -614,7 +620,7 @@
             <thead>
                 <tr>
                     %if editable_mode:
-                        <th></th>
+                        <th class="delete_column"></th>
                     %endif
                     <th class="resource">${value['title']}</th>
                     ${render_additional_column_titles(value['additional_columns'], position='left')}
@@ -637,7 +643,7 @@
                 %if not hide_column_totals:
                     <tr class="total">
                         %if editable_mode:
-                            <td></td>
+                            <td class="delete_column"></td>
                         %endif
                         <td class="resource">${value['total_label']}</td>
                         ${render_additional_column_totals(value['additional_columns'], body_lines, position='left')}

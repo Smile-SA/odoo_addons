@@ -400,7 +400,7 @@ $(document).ready(function(){
 
 
     // Activate delete row button
-    $(".matrix .delete_row").click(function(){
+    $(".matrix .delete_button").click(function(){
         $(this).parentsUntil(".matrix", "tr").first().fadeOut('fast', function(){
             // Save the table body for late column totals update
             var matrix = get_parent_matrix($(this));
