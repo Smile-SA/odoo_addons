@@ -138,7 +138,7 @@
         %if line_widget in ['spacer', 'header']:
 
             <%
-                colspan_lenght = 2 + len(date_range) + len(value['additional_columns']) + navigation + (not hide_line_totals)
+                colspan_lenght = 2 + len(date_range) + len(value['additional_columns']) + (int(navigation) * 2) + (not hide_line_totals)
                 if editable_mode:
                     colspan_lenght += 1
             %>
@@ -162,7 +162,9 @@
 
             ${render_additional_column_cell(value['additional_columns'], line, position='left')}
 
-            <td></td>
+            %if navigation:
+                <td></td>
+            %endif
 
             %for date in date_range:
                 <%
@@ -242,9 +244,9 @@
 
         %if show_selector and len(res_values.get('values', [])) and editable_mode and res_values.get('editable', True):
             <%
-                colspan_lenght = 1
+                colspan_lenght = 0
                 if navigation:
-                    colspan_lenght += 1
+                    colspan_lenght += 2
                 if navigation and len(date_range) > navigation_width:
                     colspan_lenght += navigation_width
                 else:
@@ -254,7 +256,10 @@
                 ${render_resource_selector(res_values)}
             </td>
         %else:
-            <td></td>
+
+            %if navigation:
+                <td></td>
+            %endif
 
             %for date in date_range:
                 <%
@@ -613,11 +618,9 @@
                     %endif
                     <th class="resource">${value['title']}</th>
                     ${render_additional_column_titles(value['additional_columns'], position='left')}
-                    <th id="${"%s__previous" % name}" class="navigation disabled">
-                        %if navigation:
-                            <span class="button" title="Previous">&lsaquo;&lsaquo;</span>
-                        %endif
-                    </th>
+                    %if navigation:
+                        <th id="${"%s__previous" % name}" class="navigation disabled"><span class="button" title="Previous">&lsaquo;&lsaquo;</span></th>
+                    %endif
                     %for date in date_range:
                         <th id="${"%s__column_label_%s" % (name, date)}" class="${print_now(date, date_format)}">${dt.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
@@ -638,7 +641,9 @@
                         %endif
                         <td class="resource">${value['total_label']}</td>
                         ${render_additional_column_totals(value['additional_columns'], body_lines, position='left')}
-                        <td></td>
+                        %if navigation:
+                            <td></td>
+                        %endif
                         %for date in date_range:
                             <%
                                 column_values = [line['cells_data'][date]['value'] for line in body_lines if (date in line.get('cells_data', dict())) and (line['widget'] not in ['header', 'spacer'])]
