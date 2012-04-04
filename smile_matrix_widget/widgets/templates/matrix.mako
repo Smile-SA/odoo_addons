@@ -62,15 +62,12 @@
             id="${cell_id}"
         %endif
         class="${' '.join(css_classes)}
-        % if not editable_mode:
-            %if not cell_value:
-                zero
-            %elif cell_value < 0.0:
-                negative
-            %endif
+        %if not cell_value:
+            zero
+        %elif cell_value < 0.0:
+            negative
         %endif
-        "
-        >
+        ">
         %if cell_value is not None:
             %if cell_editable:
                 %if widget == 'boolean':
