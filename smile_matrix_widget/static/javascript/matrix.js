@@ -440,13 +440,16 @@ $(document).ready(function(){
     $(".matrix .button.navigation:not(.disabled)").click(function(){
         var matrix = get_parent_matrix($(this));
         var matrix_id = matrix.attr("id");
-        var previous_buttons = $("#" + matrix_id + " .button.navigation.previous");
-        var next_buttons     = $("#" + matrix_id + " .button.navigation.next");
-        var center_buttons   = $("#" + matrix_id + " .button.navigation.center");
         var previous_nav_cell_id = matrix_id + "__previous_cell";
         var next_nav_cell_id     = matrix_id + "__next_cell";
         var previous_nav_cell = $("#" + previous_nav_cell_id);
         var next_nav_cell     = $("#" + next_nav_cell_id);
+        // Navigation buttons
+        var start_buttons    = $("#" + matrix_id + " .button.navigation.start");
+        var previous_buttons = $("#" + matrix_id + " .button.navigation.previous");
+        var center_buttons   = $("#" + matrix_id + " .button.navigation.center");
+        var next_buttons     = $("#" + matrix_id + " .button.navigation.next");
+        var end_buttons      = $("#" + matrix_id + " .button.navigation.end");
         // Get all currently visible columns
         var visible_columns = $(previous_nav_cell).nextUntil("#" + next_nav_cell_id, "th:visible");
         // Detect direction
@@ -462,6 +465,7 @@ $(document).ready(function(){
             // Disable the button if we are at the end of the range
             if (next_nav_cell.prev().attr("id") == column_label_to_show.attr("id")) {
                 next_buttons.addClass("disabled");
+                end_buttons.addClass("disabled");
             };
         } else if(direction == 'previous') {
             var column_label_to_show = visible_columns.first().prev(":hidden");
@@ -469,6 +473,7 @@ $(document).ready(function(){
             // Disable the button if we are at the end of the range
             if (previous_nav_cell.next().attr("id") == column_label_to_show.attr("id")) {
                 previous_buttons.addClass("disabled");
+                start_buttons.addClass("disabled");
             };
         } else if(direction == 'center') {
             var move_button = next_buttons.first();
@@ -487,11 +492,13 @@ $(document).ready(function(){
         // If we are here then we were able to slide, so re-activate the oposite direction's button
         if (direction == 'next') {
             previous_buttons.removeClass("disabled");
+            start_buttons.removeClass("disabled");
             if (position_delta == 1) {
                 center_buttons.addClass("disabled");
             };
         } else {
             next_buttons.removeClass("disabled");
+            end_buttons.removeClass("disabled");
             if (position_delta == -1) {
                 center_buttons.addClass("disabled");
             };
@@ -518,6 +525,12 @@ $(document).ready(function(){
         };
         var matrix_id = $(this).attr("id");
         var date_range_cells = $("#" + matrix_id + " th[id*='__column_label_']");
+        // Navigation buttons
+        var start_buttons    = $("#" + matrix_id + " .button.navigation.start");
+        var previous_buttons = $("#" + matrix_id + " .button.navigation.previous");
+        var center_buttons   = $("#" + matrix_id + " .button.navigation.center");
+        var next_buttons     = $("#" + matrix_id + " .button.navigation.next");
+        var end_buttons      = $("#" + matrix_id + " .button.navigation.end");
         // Get navigation width dynamically
         var navigation_width = parseInt($("#" + matrix_id + "__navigation_width").first().val());
         // Hide colomns out of the navigation width
@@ -529,12 +542,11 @@ $(document).ready(function(){
             };
         });
         // Initialize navigation button state
-        var previous_buttons = $("#" + matrix_id + " .button.navigation.previous");
-        var center_buttons   = $("#" + matrix_id + " .button.navigation.center");
-        var next_buttons     = $("#" + matrix_id + " .button.navigation.next");
         previous_buttons.addClass("disabled");
+        start_buttons.addClass("disabled");
         if(date_range_cells.length <= navigation_width){
             next_buttons.addClass("disabled");
+            end_buttons.addClass("disabled");
         };
         // Move to the start position
         var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());

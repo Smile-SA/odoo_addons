@@ -623,9 +623,11 @@
 
         %if navigation:
             <div class="toolbar right">
-                <span class="button navigation previous" title="Previous">&lsaquo;&lsaquo;</span>
+                <span class="button navigation start" title="Start">&lsaquo;&lsaquo;</span>
+                <span class="button navigation previous" title="Previous">&lsaquo;</span>
                 <span class="button navigation center" title="Center">&#x7c9;</span>
-                <span class="button navigation next" title="Next">&rsaquo;&rsaquo;</span>
+                <span class="button navigation next" title="Next">&rsaquo;</span>
+                <span class="button navigation end" title="End">&rsaquo;&rsaquo;</span>
                 <input type="hidden" id="${"%s__navigation_width" % name}" value="${navigation_width}" title="Date range navigation width"/>
                 <input type="hidden" id="${"%s__navigation_start" % name}" value="${navigation_start}" title="Position from which we start the date range navigation"/>
             </div>
@@ -640,13 +642,13 @@
                     <th class="resource">${value['title']}</th>
                     ${render_additional_column_titles(value['additional_columns'], position='left')}
                     %if navigation:
-                        <th id="${"%s__previous_cell" % name}" class="navigation"><span class="button navigation previous" title="Previous">&lsaquo;&lsaquo;</span></th>
+                        <th id="${"%s__previous_cell" % name}" class="navigation"><span class="button navigation previous" title="Previous">&lsaquo;</span></th>
                     %endif
                     %for date in date_range:
                         <th id="${"%s__column_label_%s" % (name, date)}" class="${print_now(date)}">${dt.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
                     %if navigation:
-                        <th id="${"%s__next_cell" % name}" class="navigation"><span class="button navigation next" title="Next">&rsaquo;&rsaquo;</span></th>
+                        <th id="${"%s__next_cell" % name}" class="navigation"><span class="button navigation next" title="Next">&rsaquo;</span></th>
                     %endif
                     %if not hide_line_totals:
                         <th class="total">${value['total_label']}</th>
