@@ -434,31 +434,33 @@ $(document).ready(function(){
 
 
     // Activate the timeline navigation slider
-    $(".matrix .navigation .button").click(function(){
+    $(".matrix .button.navigation:not(.disabled)").click(function(){
         var matrix = get_parent_matrix($(this));
         var matrix_id = matrix.attr("id");
-        var previous_nav_cell_id = matrix_id + "__previous";
-        var next_nav_cell_id = matrix_id + "__next";
+        var previous_buttons = $("#" + matrix_id + " .button.navigation.previous");
+        var next_buttons     = $("#" + matrix_id + " .button.navigation.next");
+        var previous_nav_cell_id = matrix_id + "__previous_cell";
+        var next_nav_cell_id     = matrix_id + "__next_cell";
         var previous_nav_cell = $("#" + previous_nav_cell_id);
-        var next_nav_cell = $("#" + next_nav_cell_id);
+        var next_nav_cell     = $("#" + next_nav_cell_id);
         // Get all currently visible columns
         var visible_columns = $(previous_nav_cell).nextUntil("#" + next_nav_cell_id, "th:visible");
         // Detect direction
-        var direction = $(this).parent().attr("id") == next_nav_cell_id ? 'next' : 'previous';
+        var direction = $(this).hasClass('next') ? 'next' : 'previous';
         // Search bounding columns
         if (direction == 'next') {
             var column_label_to_show = visible_columns.last().next(":hidden");
             var column_label_to_hide = visible_columns.first();
             // Disable the button if we are at the end of the range
             if (next_nav_cell.prev().attr("id") == column_label_to_show.attr("id")) {
-                next_nav_cell.addClass("disabled");
+                next_buttons.addClass("disabled");
             };
         } else {
             var column_label_to_show = visible_columns.first().prev(":hidden");
             var column_label_to_hide = visible_columns.last();
             // Disable the button if we are at the end of the range
             if (previous_nav_cell.next().attr("id") == column_label_to_show.attr("id")) {
-                previous_nav_cell.addClass("disabled");
+                previous_buttons.addClass("disabled");
             };
         };
         // Skip clicking event if we're at a boundary of the range
@@ -467,9 +469,9 @@ $(document).ready(function(){
         };
         // If we are here then we were able to slide, so re-activate the oposite direction's button
         if (direction == 'next') {
-            previous_nav_cell.removeClass("disabled");
+            previous_buttons.removeClass("disabled");
         } else {
-            next_nav_cell.removeClass("disabled");
+            next_buttons.removeClass("disabled");
         };
         // Show and hide whole columns
         var column_id_to_show = parse_id(column_label_to_show.attr("id"))[3];
@@ -485,7 +487,7 @@ $(document).ready(function(){
     // Initialize the navigation slider
     $(".matrix").each(function(){
         // Don't try to initialize matrix without navigation
-        if ($(this).find(".navigation .button").length == 0) {
+        if ($(this).find(".button.navigation ").length == 0) {
             return;
         };
         var matrix_id = $(this).attr("id");
@@ -501,14 +503,16 @@ $(document).ready(function(){
             };
         });
         // Initialize navigation button state
-        var next_buttons = $("#" + matrix_id + "__next");
+        var previous_buttons = $("#" + matrix_id + " .button.navigation.previous");
+        var next_buttons     = $("#" + matrix_id + " .button.navigation.next");
+        previous_buttons.addClass("disabled");
         if(date_range_cells.length <= navigation_width){
             next_buttons.addClass("disabled");
         };
         // Move to the start position
         var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());
         for(i = 0; i < (navigation_start - 1); i++){
-            next_buttons.first().find('.button').trigger('click');
+            next_buttons.first().trigger('click');
         };
     });
 

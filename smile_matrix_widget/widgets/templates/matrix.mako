@@ -469,7 +469,7 @@
                 display: none;
             }
 
-            .matrix .navigation .button {
+            .matrix .button.navigation {
                 -webkit-touch-callout: none;
                 -webkit-user-select: none;
                 -khtml-user-select: none;
@@ -478,7 +478,7 @@
                 user-select: none;
             }
 
-            .matrix .navigation.disabled .button {
+            .matrix .button.navigation.disabled {
                 background: #ccc;
                 border-color: #999;
                 cursor: default;
@@ -628,13 +628,13 @@
                     <th class="resource">${value['title']}</th>
                     ${render_additional_column_titles(value['additional_columns'], position='left')}
                     %if navigation:
-                        <th id="${"%s__previous" % name}" class="navigation disabled"><span class="button" title="Previous">&lsaquo;&lsaquo;</span></th>
+                        <th id="${"%s__previous_cell" % name}" class="navigation"><span class="button navigation previous" title="Previous">&lsaquo;&lsaquo;</span></th>
                     %endif
                     %for date in date_range:
                         <th id="${"%s__column_label_%s" % (name, date)}" class="${print_now(date)}">${dt.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
                     %if navigation:
-                        <th id="${"%s__next" % name}" class="navigation"><span class="button" title="Next">&rsaquo;&rsaquo;</span></th>
+                        <th id="${"%s__next_cell" % name}" class="navigation"><span class="button navigation next" title="Next">&rsaquo;&rsaquo;</span></th>
                     %endif
                     %if not hide_line_totals:
                         <th class="total">${value['total_label']}</th>
