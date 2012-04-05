@@ -442,6 +442,7 @@ $(document).ready(function(){
         var matrix_id = matrix.attr("id");
         var previous_buttons = $("#" + matrix_id + " .button.navigation.previous");
         var next_buttons     = $("#" + matrix_id + " .button.navigation.next");
+        var center_buttons   = $("#" + matrix_id + " .button.navigation.center");
         var previous_nav_cell_id = matrix_id + "__previous_cell";
         var next_nav_cell_id     = matrix_id + "__next_cell";
         var previous_nav_cell = $("#" + previous_nav_cell_id);
@@ -450,6 +451,10 @@ $(document).ready(function(){
         var visible_columns = $(previous_nav_cell).nextUntil("#" + next_nav_cell_id, "th:visible");
         // Detect direction
         var direction = $(this).hasClass('next') ? 'next' : $(this).hasClass('previous') ? 'previous' : 'center';
+        // Compute positions
+        var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());
+        var current_position = $(previous_nav_cell).nextUntil("th:visible", "th:hidden").length + 1;
+        var position_delta = navigation_start - current_position;
         // Search bounding columns
         if (direction == 'next') {
             var column_label_to_show = visible_columns.last().next(":hidden");
@@ -466,9 +471,6 @@ $(document).ready(function(){
                 previous_buttons.addClass("disabled");
             };
         } else if(direction == 'center') {
-            var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());
-            var current_position = $(previous_nav_cell).nextUntil("th:visible", "th:hidden").length + 1;
-            var position_delta = navigation_start - current_position;
             var move_button = next_buttons.first();
             if (position_delta < 0) {
                 move_button = previous_buttons.first();
@@ -476,6 +478,7 @@ $(document).ready(function(){
             for(i = 0; i < Math.abs(position_delta); i++){
                 move_button.trigger('click');
             };
+            center_buttons.addClass("disabled");
         };
         // Skip clicking event if we're at a boundary of the range
         if (column_label_to_show.length == 0) {
@@ -484,8 +487,17 @@ $(document).ready(function(){
         // If we are here then we were able to slide, so re-activate the oposite direction's button
         if (direction == 'next') {
             previous_buttons.removeClass("disabled");
+            if (position_delta == 1) {
+                center_buttons.addClass("disabled");
+            };
         } else {
             next_buttons.removeClass("disabled");
+            if (position_delta == -1) {
+                center_buttons.addClass("disabled");
+            };
+        };
+        if (direction != 'center' && Math.abs(position_delta) != 1) {
+            center_buttons.removeClass("disabled");
         };
         // Show and hide whole columns
         var column_id_to_show = parse_id(column_label_to_show.attr("id"))[3];
@@ -523,13 +535,13 @@ $(document).ready(function(){
         previous_buttons.addClass("disabled");
         if(date_range_cells.length <= navigation_width){
             next_buttons.addClass("disabled");
-            center_buttons.addClass("disabled");
         };
         // Move to the start position
         var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());
         for(i = 0; i < (navigation_start - 1); i++){
             next_buttons.first().trigger('click');
         };
+        center_buttons.addClass("disabled");
     });
 
 
