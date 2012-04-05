@@ -453,10 +453,12 @@ $(document).ready(function(){
         // Get all currently visible columns
         var visible_columns = $(previous_nav_cell).nextUntil("#" + next_nav_cell_id, "th:visible");
         // Detect direction
-        var direction = $(this).hasClass('next') ? 'next' : $(this).hasClass('previous') ? 'previous' : 'center';
+        var direction = $(this).hasClass('next') ? 'next' : $(this).hasClass('previous') ? 'previous' : $(this).hasClass('start') ? 'start' : $(this).hasClass('end') ? 'end' : 'center';
         // Compute positions
         var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());
         var current_position = $(previous_nav_cell).nextUntil("th:visible", "th:hidden").length + 1;
+        var navigation_width = parseInt($("#" + matrix_id + "__navigation_width").first().val());
+        var date_range_cells = $("#" + matrix_id + " th[id*='__column_label_']");
         var position_delta = navigation_start - current_position;
         // Search bounding columns
         if (direction == 'next') {
@@ -475,6 +477,15 @@ $(document).ready(function(){
                 previous_buttons.addClass("disabled");
                 start_buttons.addClass("disabled");
             };
+        } else if(direction == 'start') {
+            for(i = 0; i < current_position - 1; i++){
+                previous_buttons.first().trigger('click');
+            };
+        } else if(direction == 'end') {
+            for(i = 0; i < date_range_cells.length - navigation_width - current_position + 1; i++){
+                next_buttons.first().trigger('click');
+            };
+
         } else if(direction == 'center') {
             var move_button = next_buttons.first();
             if (position_delta < 0) {

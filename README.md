@@ -91,7 +91,7 @@ Changelog
 
 * **0.6.dev** (unreleased)
   * Add a date_range_navigation_width and date_range_navigation_start parameter
-  * Add a center navigation button
+  * Add a start, center and end navigation buttons
   * Move the line deletion button to the far left of each line
   * Allow styling of the current date
   * Fix read-only rendering of date range navigation in multi-level matrix
