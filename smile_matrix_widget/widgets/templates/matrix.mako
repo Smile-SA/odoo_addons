@@ -413,8 +413,6 @@
             highlight_date = value['highlight_date']
         %>
 
-        ${highlight_date}
-
         <style type="text/css">
             /* Reset OpenERP default styles */
             .matrix table thead th {
@@ -599,8 +597,9 @@
             </script>
         %endif
 
-        %if editable_mode:
-            <div class="toolbar level level_0">
+
+        <div class="toolbar level level_0">
+            %if editable_mode:
                 %if editable_tree:
                     ${render_resource_selector(resource_value_list[0])}
                 %endif
@@ -612,12 +611,12 @@
                     <input type="hidden" id="${"%s__column_warning_threshold" % name}" value="${column_totals_warning_threshold}" title="Column warning threshold"/>
                 %endif
                 <input type="text" kind="char" name="${"%s__line_removed" % name}" id="${"%s__line_removed" % name}" value="" title="ID list of removed lines" style="display: none;"/>
-            </div>
-        %endif
-        %if navigation:
-            <input type="hidden" id="${"%s__navigation_width" % name}" value="${navigation_width}" title="Date range navigation width"/>
-            <input type="hidden" id="${"%s__navigation_start" % name}" value="${navigation_start}" title="Position from which we start the date range navigation"/>
-        %endif
+            %endif
+            %if navigation:
+                <input type="hidden" id="${"%s__navigation_width" % name}" value="${navigation_width}" title="Date range navigation width"/>
+                <input type="hidden" id="${"%s__navigation_start" % name}" value="${navigation_start}" title="Position from which we start the date range navigation"/>
+            %endif
+        </div>
 
         <table>
             <thead>
