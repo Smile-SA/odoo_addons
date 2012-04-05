@@ -15,10 +15,10 @@
 </%def>
 
 
-<%def name="print_now(date, date_format)">
+<%def name="print_now(date)">
 <%
     # Print the 'now' class
-    if dt.strptime(date, '%Y%m%d').strftime(str(date_format)) == dt.today().strftime(str(date_format)):
+    if highlight_date and dt.strptime(date, '%Y%m%d') == dt.strptime(highlight_date, '%Y%m%d'):
         return 'now'
 %>
 </%def>
@@ -171,7 +171,7 @@
                 <%
                     cell_id = '%s__cell_%s_%s' % (name, line['id'], date)
                     cell_def = line.get('cells_data', {}).get(date, None)
-                    cell_css = [print_now(date, date_format)]
+                    cell_css = [print_now(date)]
                 %>
                 ${render_cell(cell_def, cell_id, line_widget, css_classes=cell_css)}
             %endfor
@@ -269,7 +269,7 @@
                         'read_only': True,
                         }
                     cell_id = '%s__cell_%s_%s' % (name, virtual_line['id'], date)
-                    cell_css = [print_now(date, date_format)]
+                    cell_css = [print_now(date)]
                 %>
                 ${render_cell(date_column_sum_cell, cell_id, css_classes=cell_css)}
             %endfor
@@ -410,7 +410,10 @@
             navigation = value['navigation']
             navigation_width = value['navigation_width']
             navigation_start = value['navigation_start']
+            highlight_date = value['highlight_date']
         %>
+
+        ${highlight_date}
 
         <style type="text/css">
             /* Reset OpenERP default styles */
@@ -628,7 +631,7 @@
                         <th id="${"%s__previous" % name}" class="navigation disabled"><span class="button" title="Previous">&lsaquo;&lsaquo;</span></th>
                     %endif
                     %for date in date_range:
-                        <th id="${"%s__column_label_%s" % (name, date)}" class="${print_now(date, date_format)}">${dt.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
+                        <th id="${"%s__column_label_%s" % (name, date)}" class="${print_now(date)}">${dt.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
                     %if navigation:
                         <th id="${"%s__next" % name}" class="navigation"><span class="button" title="Next">&rsaquo;&rsaquo;</span></th>
@@ -665,11 +668,11 @@
                                         'value': column_total,
                                         'read_only': True,
                                         }
-                                    column_total_css_classes.append(print_now(date, date_format))
+                                    column_total_css_classes.append(print_now(date))
                                 %>
                                 ${render_cell(column_total_cell, cell_id=column_total_cell_id, css_classes=column_total_css_classes)}
                             %else:
-                                <td id="${column_total_cell_id}" class="${print_now(date, date_format)}"></td>
+                                <td id="${column_total_cell_id}" class="${print_now(date)}"></td>
                             %endif
                         %endfor
                         %if navigation:

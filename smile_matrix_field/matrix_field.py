@@ -145,6 +145,9 @@ class matrix(fields.dummy):
             # The format we use to display date labels
             'date_format': conf_dict.get('date_format', "%Y-%m-%d"),
 
+            # The date of the column to highlight
+            'highlight_date': conf_dict.get('highlight_date', datetime.datetime.today()),
+
             # Add read-only columns at the end of the matrix.
             # It needs a list of dictionnary like this:
             #    [{'label': "Productivity", 'line_property': 'productivity_index', 'position': 'left', 'hide_value': True},
@@ -203,6 +206,11 @@ class matrix(fields.dummy):
         # Normalize parameters
         if conf['hide_tree']:
             conf['editable_tree'] = False
+
+        # Dates should be rendered using our internal format
+        if isinstance(conf['highlight_date'], datetime.date):
+            conf['highlight_date'] = self._date_to_str(conf['highlight_date'])
+        # TODO: convert other dates here too
 
         # Set consistent value ranges with sensible defaults
         default_range = [0, 0.5, 1.0]

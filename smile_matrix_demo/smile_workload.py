@@ -79,6 +79,7 @@ class smile_activity_workload(osv.osv):
             date_format='%m/%y',
             date_range_navigation = True,
             date_range_navigation_width = 12,
+            highlight_date = datetime.date(datetime.date.today().year, datetime.date.today().month, 1),
 
             line_rendering_dynamic_property = 'line_rendering',
             increment_values = [-1, 0.0, 2.71, 3.14],
