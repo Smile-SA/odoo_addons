@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
-//     console.profile("Matrix profiling");
+// console.profile("Matrix profiling");
+
 
     // Utility method to get the matrix element in which the provided object sit in
     function get_parent_matrix(elmnt){
@@ -464,6 +465,17 @@ $(document).ready(function(){
             if (previous_nav_cell.next().attr("id") == column_label_to_show.attr("id")) {
                 previous_buttons.addClass("disabled");
             };
+        } else if(direction == 'center') {
+            var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());
+            var current_position = $(previous_nav_cell).nextUntil("th:visible", "th:hidden").length + 1;
+            var position_delta = navigation_start - current_position;
+            var move_button = next_buttons.first();
+            if (position_delta < 0) {
+                move_button = previous_buttons.first();
+            };
+            for(i = 0; i < Math.abs(position_delta); i++){
+                move_button.trigger('click');
+            };
         };
         // Skip clicking event if we're at a boundary of the range
         if (column_label_to_show.length == 0) {
@@ -509,9 +521,9 @@ $(document).ready(function(){
         var center_buttons   = $("#" + matrix_id + " .button.navigation.center");
         var next_buttons     = $("#" + matrix_id + " .button.navigation.next");
         previous_buttons.addClass("disabled");
-        center_buttons.addClass("disabled");
         if(date_range_cells.length <= navigation_width){
             next_buttons.addClass("disabled");
+            center_buttons.addClass("disabled");
         };
         // Move to the start position
         var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());
@@ -519,6 +531,7 @@ $(document).ready(function(){
             next_buttons.first().trigger('click');
         };
     });
+
 
 // console.profileEnd();
 
