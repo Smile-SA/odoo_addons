@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+//     console.profile("Matrix profiling");
+
     // Utility method to get the matrix element in which the provided object sit in
     function get_parent_matrix(elmnt){
         return $(elmnt).parents(".matrix").first();
@@ -446,7 +448,7 @@ $(document).ready(function(){
         // Get all currently visible columns
         var visible_columns = $(previous_nav_cell).nextUntil("#" + next_nav_cell_id, "th:visible");
         // Detect direction
-        var direction = $(this).hasClass('next') ? 'next' : 'previous';
+        var direction = $(this).hasClass('next') ? 'next' : $(this).hasClass('previous') ? 'previous' : 'center';
         // Search bounding columns
         if (direction == 'next') {
             var column_label_to_show = visible_columns.last().next(":hidden");
@@ -455,7 +457,7 @@ $(document).ready(function(){
             if (next_nav_cell.prev().attr("id") == column_label_to_show.attr("id")) {
                 next_buttons.addClass("disabled");
             };
-        } else {
+        } else if(direction == 'previous') {
             var column_label_to_show = visible_columns.first().prev(":hidden");
             var column_label_to_hide = visible_columns.last();
             // Disable the button if we are at the end of the range
@@ -504,8 +506,10 @@ $(document).ready(function(){
         });
         // Initialize navigation button state
         var previous_buttons = $("#" + matrix_id + " .button.navigation.previous");
+        var center_buttons   = $("#" + matrix_id + " .button.navigation.center");
         var next_buttons     = $("#" + matrix_id + " .button.navigation.next");
         previous_buttons.addClass("disabled");
+        center_buttons.addClass("disabled");
         if(date_range_cells.length <= navigation_width){
             next_buttons.addClass("disabled");
         };
@@ -516,5 +520,6 @@ $(document).ready(function(){
         };
     });
 
+// console.profileEnd();
 
 });

@@ -448,6 +448,14 @@
                 margin-bottom: 1em;
             }
 
+            .matrix .toolbar.left {
+                float: left;
+            }
+
+            .matrix .toolbar.right {
+                float: right;
+            }
+
             .matrix .zero {
                 color: #ccc;
             }
@@ -467,7 +475,7 @@
                 display: none;
             }
 
-            .matrix .button.navigation {
+            .matrix .button {
                 -webkit-touch-callout: none;
                 -webkit-user-select: none;
                 -khtml-user-select: none;
@@ -476,7 +484,7 @@
                 user-select: none;
             }
 
-            .matrix .button.navigation.disabled {
+            .matrix .button.disabled {
                 background: #ccc;
                 border-color: #999;
                 cursor: default;
@@ -597,9 +605,8 @@
             </script>
         %endif
 
-
-        <div class="toolbar level level_0">
-            %if editable_mode:
+        %if editable_mode:
+            <div class="toolbar left level level_0">
                 %if editable_tree:
                     ${render_resource_selector(resource_value_list[0])}
                 %endif
@@ -611,12 +618,18 @@
                     <input type="hidden" id="${"%s__column_warning_threshold" % name}" value="${column_totals_warning_threshold}" title="Column warning threshold"/>
                 %endif
                 <input type="text" kind="char" name="${"%s__line_removed" % name}" id="${"%s__line_removed" % name}" value="" title="ID list of removed lines" style="display: none;"/>
-            %endif
-            %if navigation:
+            </div>
+        %endif
+
+        %if navigation:
+            <div class="toolbar right">
+                <span class="button navigation previous" title="Previous">&lsaquo;&lsaquo;</span>
+                <span class="button navigation center" title="Center">&#x7c9;</span>
+                <span class="button navigation next" title="Next">&rsaquo;&rsaquo;</span>
                 <input type="hidden" id="${"%s__navigation_width" % name}" value="${navigation_width}" title="Date range navigation width"/>
                 <input type="hidden" id="${"%s__navigation_start" % name}" value="${navigation_start}" title="Position from which we start the date range navigation"/>
-            %endif
-        </div>
+            </div>
+        %endif
 
         <table>
             <thead>
