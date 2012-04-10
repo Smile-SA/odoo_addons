@@ -49,12 +49,6 @@ $(document).ready(function(){
     var global_increment_button_selector = ".matrix " + increment_button_selector;
 
 
-    // Return a list of all table cells of a given column
-    function query_column_cells(matrix_id, column_index) {
-        return "#" + matrix_id + " .column_" + column_index;
-    };
-
-
     // Replace all integer fields of all matrix by a button template, then hide the original field
     var button_template = $(".matrix .button.increment.template").first();
     $(global_increment_cells_selector).each(function(i, cell){
@@ -438,134 +432,98 @@ $(document).ready(function(){
 
     // Activate the timeline navigation slider
     $(".matrix .button.navigation:not(.disabled)").click(function(){
-
         var matrix = get_parent_matrix($(this));
         var matrix_id = matrix.attr("id");
-        var previous_nav_cell_id = matrix_id + "__previous_cell";
-        var next_nav_cell_id     = matrix_id + "__next_cell";
-        var previous_nav_cell = $("#" + previous_nav_cell_id);
-        var next_nav_cell     = $("#" + next_nav_cell_id);
+
+        // Compute positions
+        var current_position = $("#" + matrix_id + "__previous_cell").nextUntil("th:visible", "th:hidden").length + 1;
+        var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());
+        var navigation_width = parseInt($("#" + matrix_id + "__navigation_width").first().val());
+        var date_range_cells = $("#" + matrix_id + " th[id*='__column_label_']");
+        var farest_position  = date_range_cells.length - navigation_width + 1;
+
+        // Detect direction
+        var direction = $(this).hasClass('next') ? 'next' : $(this).hasClass('previous') ? 'previous' : $(this).hasClass('start') ? 'start' : $(this).hasClass('end') ? 'end' : 'center';
+
+        // Compute new position
+        var new_position = 0;
+        if (direction == 'next') {
+            new_position = current_position + 1;
+        } else if(direction == 'previous') {
+            new_position = current_position - 1;
+        } else if(direction == 'start') {
+            new_position = 1;
+        } else if(direction == 'end') {
+            new_position = farest_position;
+        } else if(direction == 'center') {
+            new_position = navigation_start;
+        };
+
+        // Check position constraints
+        if (new_position < 1) {
+            new_position = 1;
+        };
+        if (new_position > farest_position) {
+            new_position = farest_position;
+        };
+
+        // Compute the desired visibility of each cell
+        var columns_to_show = new Array();
+        var columns_to_hide = new Array();
+        date_range_cells.each(function(i, cell){
+            var $cell = $(cell);
+            var cell_position = i + 1;
+            var column_index = parse_id($cell.attr("id"))[3];
+            var column_cells_query = "#" + matrix_id + " .column_" + column_index;
+            if (cell_position >= new_position && cell_position < new_position + navigation_width) {
+                columns_to_show.push(column_cells_query);
+            } else {
+                columns_to_hide.push(column_cells_query);
+            };
+        });
+
+        // Show and hide appropriate columns
+        $(columns_to_show.join(", ")).filter(":hidden").show().effect("highlight");
+        $(columns_to_hide.join(", ")).filter(":visible").hide();
+
+        // XXX Sliding animation attempts
+        // $(query_column_cells(matrix_id, column_id_to_show)).effect('slide', {direction: direction == 'next' ? 'right' : 'left', mode: 'show'}, 'slow');
+        // $(query_column_cells(matrix_id, column_id_to_hide)).effect('slide', {direction: direction == 'next' ? 'left' : 'right', mode: 'hide'}, 'slow');
+
         // Navigation buttons
         var start_buttons    = $("#" + matrix_id + " .button.navigation.start");
         var previous_buttons = $("#" + matrix_id + " .button.navigation.previous");
         var center_buttons   = $("#" + matrix_id + " .button.navigation.center");
         var next_buttons     = $("#" + matrix_id + " .button.navigation.next");
         var end_buttons      = $("#" + matrix_id + " .button.navigation.end");
-        // Get all currently visible columns
-        var visible_columns = $(previous_nav_cell).nextUntil("#" + next_nav_cell_id, "th:visible");
-        // Detect direction
-        var direction = $(this).hasClass('next') ? 'next' : $(this).hasClass('previous') ? 'previous' : $(this).hasClass('start') ? 'start' : $(this).hasClass('end') ? 'end' : 'center';
-        // Compute positions
-        var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());
-        var current_position = $(previous_nav_cell).nextUntil("th:visible", "th:hidden").length + 1;
-        var navigation_width = parseInt($("#" + matrix_id + "__navigation_width").first().val());
-        var date_range_cells = $("#" + matrix_id + " th[id*='__column_label_']");
-        var position_delta = navigation_start - current_position;
-        // Search bounding columns
-        if (direction == 'next') {
-            var column_label_to_show = visible_columns.last().next(":hidden");
-            var column_label_to_hide = visible_columns.first();
-            // Disable the button if we are at the end of the range
-            if (next_nav_cell.prev().attr("id") == column_label_to_show.attr("id")) {
-                next_buttons.addClass("disabled");
-                end_buttons.addClass("disabled");
-            };
-        } else if(direction == 'previous') {
-            var column_label_to_show = visible_columns.first().prev(":hidden");
-            var column_label_to_hide = visible_columns.last();
-            // Disable the button if we are at the end of the range
-            if (previous_nav_cell.next().attr("id") == column_label_to_show.attr("id")) {
-                previous_buttons.addClass("disabled");
-                start_buttons.addClass("disabled");
-            };
-        } else if(direction == 'start') {
-            for(i = 0; i < current_position - 1; i++){
-                previous_buttons.first().trigger('click');
-            };
-        } else if(direction == 'end') {
-            for(i = 0; i < date_range_cells.length - navigation_width - current_position + 1; i++){
-                next_buttons.first().trigger('click');
-            };
 
-        } else if(direction == 'center') {
-            var move_button = next_buttons.first();
-            if (position_delta < 0) {
-                move_button = previous_buttons.first();
-            };
-            for(i = 0; i < Math.abs(position_delta); i++){
-                move_button.trigger('click');
-            };
-            center_buttons.addClass("disabled");
-        };
-        // Skip clicking event if we're at a boundary of the range
-        if (column_label_to_show.length == 0) {
-            return;
-        };
-        // If we are here then we were able to slide, so re-activate the oposite direction's button
-        if (direction == 'next') {
-            previous_buttons.removeClass("disabled");
+        // Set navigation buttons style
+        if (new_position <= 1) {
+            start_buttons.addClass("disabled");
+            previous_buttons.addClass("disabled");
+        } else {
             start_buttons.removeClass("disabled");
-            if (position_delta == 1) {
-                center_buttons.addClass("disabled");
-            };
+            previous_buttons.removeClass("disabled");
+        };
+        if (new_position == navigation_start || navigation_width >= date_range_cells.length) {
+            center_buttons.addClass("disabled");
+        } else {
+            center_buttons.removeClass("disabled");
+        };
+        if (new_position >= farest_position) {
+            next_buttons.addClass("disabled");
+            end_buttons.addClass("disabled");
         } else {
             next_buttons.removeClass("disabled");
             end_buttons.removeClass("disabled");
-            if (position_delta == -1) {
-                center_buttons.addClass("disabled");
-            };
         };
-        if (direction != 'center' && Math.abs(position_delta) != 1) {
-            center_buttons.removeClass("disabled");
-        };
-        // Show and hide whole columns
-        var column_id_to_show = parse_id(column_label_to_show.attr("id"))[3];
-        var column_id_to_hide = parse_id(column_label_to_hide.attr("id"))[3];
-        // XXX Sliding animation attempts
-        // $(query_column_cells(matrix_id, column_id_to_show)).effect('slide', {direction: direction == 'next' ? 'right' : 'left', mode: 'show'}, 'slow');
-        // $(query_column_cells(matrix_id, column_id_to_hide)).effect('slide', {direction: direction == 'next' ? 'left' : 'right', mode: 'hide'}, 'slow');
-        $(query_column_cells(matrix_id, column_id_to_show)).show().effect("highlight");
-        $(query_column_cells(matrix_id, column_id_to_hide)).hide();
+
     });
 
 
     // Initialize the navigation slider
     $(".matrix").each(function(){
-        // Don't try to initialize matrix without navigation
-        if ($(this).find(".button.navigation ").length == 0) {
-            return;
-        };
-        var matrix_id = $(this).attr("id");
-        var date_range_cells = $("#" + matrix_id + " th[id*='__column_label_']");
-        // Navigation buttons
-        var start_buttons    = $("#" + matrix_id + " .button.navigation.start");
-        var previous_buttons = $("#" + matrix_id + " .button.navigation.previous");
-        var center_buttons   = $("#" + matrix_id + " .button.navigation.center");
-        var next_buttons     = $("#" + matrix_id + " .button.navigation.next");
-        var end_buttons      = $("#" + matrix_id + " .button.navigation.end");
-        // Get navigation width dynamically
-        var navigation_width = parseInt($("#" + matrix_id + "__navigation_width").first().val());
-        // Hide colomns out of the navigation width
-        date_range_cells.each(function(i){
-            if(i > (navigation_width - 1)){
-                var name_fragments = parse_id($(this).attr("id"));
-                var column_index = name_fragments[3];
-                $(query_column_cells(matrix_id, column_index)).hide();
-            };
-        });
-        // Initialize navigation button state
-        previous_buttons.addClass("disabled");
-        start_buttons.addClass("disabled");
-        if(date_range_cells.length <= navigation_width){
-            next_buttons.addClass("disabled");
-            end_buttons.addClass("disabled");
-        };
-        // Move to the start position
-        var navigation_start = parseInt($("#" + matrix_id + "__navigation_start").first().val());
-        for(i = 0; i < (navigation_start - 1); i++){
-            next_buttons.first().trigger('click');
-        };
-        center_buttons.addClass("disabled");
+        $(this).find(".button.navigation.center").first().trigger('click');
     });
 
 
