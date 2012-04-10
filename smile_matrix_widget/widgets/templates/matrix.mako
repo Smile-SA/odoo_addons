@@ -48,7 +48,7 @@
 </%def>
 
 
-<%def name="render_cell(cell_def, cell_id=None, widget='float', css_classes=[])">
+<%def name="render_cell(cell_def, cell_id=None, col_id=None, widget='float', css_classes=[])">
     <%
         if cell_def is None:
             cell_def = {}
@@ -62,6 +62,9 @@
             id="${cell_id}"
         %endif
         class="${' '.join(css_classes)}
+        %if col_id:
+            column_${col_id}
+        %endif
         %if not cell_value:
             zero
         %elif cell_value < 0.0:
@@ -173,7 +176,7 @@
                     cell_def = line.get('cells_data', {}).get(date, None)
                     cell_css = [print_now(date)]
                 %>
-                ${render_cell(cell_def, cell_id, line_widget, css_classes=cell_css)}
+                ${render_cell(cell_def, cell_id, date, line_widget, css_classes=cell_css)}
             %endfor
 
             %if navigation:
@@ -271,7 +274,7 @@
                     cell_id = '%s__cell_%s_%s' % (name, virtual_line['id'], date)
                     cell_css = [print_now(date)]
                 %>
-                ${render_cell(date_column_sum_cell, cell_id, css_classes=cell_css)}
+                ${render_cell(date_column_sum_cell, cell_id, col_id=date, css_classes=cell_css)}
             %endfor
 
             %if navigation:
@@ -645,7 +648,7 @@
                         <th id="${"%s__previous_cell" % name}" class="navigation"><span class="button navigation previous" title="Previous">&lsaquo;</span></th>
                     %endif
                     %for date in date_range:
-                        <th id="${"%s__column_label_%s" % (name, date)}" class="${print_now(date)}">${dt.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
+                        <th id="${"%s__column_label_%s" % (name, date)}" class="column_${date} ${print_now(date)}">${dt.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
                     %if navigation:
                         <th id="${"%s__next_cell" % name}" class="navigation"><span class="button navigation next" title="Next">&rsaquo;</span></th>
@@ -669,25 +672,20 @@
                         %endif
                         %for date in date_range:
                             <%
-                                column_values = [line['cells_data'][date]['value'] for line in body_lines if (date in line.get('cells_data', dict())) and (line['widget'] not in ['header', 'spacer'])]
+                                column_total_css_classes = []
+                                column_total_cell = {
+                                    'read_only': True,
+                                    }
                                 column_total_cell_id = "%s__column_total_%s" % (name, date)
-                            %>
-                            %if len(column_values):
-                                <%
+                                column_total_css_classes.append(print_now(date))
+                                column_values = [line['cells_data'][date]['value'] for line in body_lines if (date in line.get('cells_data', dict())) and (line['widget'] not in ['header', 'spacer'])]
+                                if len(column_values):
                                     column_total = sum(column_values)
-                                    column_total_css_classes = []
                                     if column_totals_warning_threshold is not None and column_total > column_totals_warning_threshold:
                                         column_total_css_classes.append('warning')
-                                    column_total_cell = {
-                                        'value': column_total,
-                                        'read_only': True,
-                                        }
-                                    column_total_css_classes.append(print_now(date))
-                                %>
-                                ${render_cell(column_total_cell, cell_id=column_total_cell_id, css_classes=column_total_css_classes)}
-                            %else:
-                                <td id="${column_total_cell_id}" class="${print_now(date)}"></td>
-                            %endif
+                                    column_total_cell.update({'value': column_total})
+                            %>
+                            ${render_cell(column_total_cell, cell_id=column_total_cell_id, col_id=date, css_classes=column_total_css_classes)}
                         %endfor
                         %if navigation:
                             <td></td>

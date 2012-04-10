@@ -49,6 +49,12 @@ $(document).ready(function(){
     var global_increment_button_selector = ".matrix " + increment_button_selector;
 
 
+    // Return a list of all table cells of a given column
+    function query_column_cells(matrix_id, column_index) {
+        return "#" + matrix_id + " .column_" + column_index;
+    };
+
+
     // Replace all integer fields of all matrix by a button template, then hide the original field
     var button_template = $(".matrix .button.increment.template").first();
     $(global_increment_cells_selector).each(function(i, cell){
@@ -430,14 +436,9 @@ $(document).ready(function(){
     });
 
 
-    // Return a list of all table cells of a given column
-    function get_column_cells(matrix_id, column_index) {
-        return $("#" + matrix_id + " (td,th)[id$='_" + column_index + "'], #" + matrix_id + " td:has([id$='_" + column_index + "']), #" + matrix_id + " th:has([id$='_" + column_index + "'])").filter("td, th");
-    };
-
-
     // Activate the timeline navigation slider
     $(".matrix .button.navigation:not(.disabled)").click(function(){
+
         var matrix = get_parent_matrix($(this));
         var matrix_id = matrix.attr("id");
         var previous_nav_cell_id = matrix_id + "__previous_cell";
@@ -521,10 +522,10 @@ $(document).ready(function(){
         var column_id_to_show = parse_id(column_label_to_show.attr("id"))[3];
         var column_id_to_hide = parse_id(column_label_to_hide.attr("id"))[3];
         // XXX Sliding animation attempts
-        // $(get_column_cells(matrix_id, column_id_to_show)).effect('slide', {direction: direction == 'next' ? 'right' : 'left', mode: 'show'}, 'slow');
-        // $(get_column_cells(matrix_id, column_id_to_hide)).effect('slide', {direction: direction == 'next' ? 'left' : 'right', mode: 'hide'}, 'slow');
-        $(get_column_cells(matrix_id, column_id_to_show)).show().effect("highlight");
-        $(get_column_cells(matrix_id, column_id_to_hide)).hide();
+        // $(query_column_cells(matrix_id, column_id_to_show)).effect('slide', {direction: direction == 'next' ? 'right' : 'left', mode: 'show'}, 'slow');
+        // $(query_column_cells(matrix_id, column_id_to_hide)).effect('slide', {direction: direction == 'next' ? 'left' : 'right', mode: 'hide'}, 'slow');
+        $(query_column_cells(matrix_id, column_id_to_show)).show().effect("highlight");
+        $(query_column_cells(matrix_id, column_id_to_hide)).hide();
     });
 
 
@@ -549,7 +550,7 @@ $(document).ready(function(){
             if(i > (navigation_width - 1)){
                 var name_fragments = parse_id($(this).attr("id"));
                 var column_index = name_fragments[3];
-                $(get_column_cells(matrix_id, column_index)).hide();
+                $(query_column_cells(matrix_id, column_index)).hide();
             };
         });
         // Initialize navigation button state
