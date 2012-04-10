@@ -570,14 +570,6 @@
                 color: white;
             }
 
-            .matrix .navigation.left {
-                border-left: 1px dotted #ccc;
-            }
-
-            .matrix .navigation.right {
-                border-right: 1px dotted #ccc;
-            }
-
             .matrix .widget_spacer td, div.non-editable .matrix table .widget_spacer td {
                 height: 1em;
             }
@@ -595,6 +587,18 @@
             .matrix table,
             .matrix table tfoot .total td {
                 border-bottom: 1px solid #ccc;
+            }
+
+            .matrix .navigation.left {
+                border-left: 1px dotted #ccc;
+            }
+
+            .matrix .navigation.right {
+                border-right: 1px dotted #ccc;
+            }
+
+            .matrix .resource, div.non-editable .matrix table td.resource {
+                border-right: 1px dotted #ccc;
             }
 
             %if not hide_tree:
