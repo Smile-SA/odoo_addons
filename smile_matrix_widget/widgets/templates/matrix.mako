@@ -589,11 +589,13 @@
                 border-bottom: 1px solid #ccc;
             }
 
-            .matrix .navigation.left {
+            .matrix .navigation.left,
+            .matrix .resource_selector {
                 border-left: 1px dotted #ccc;
             }
 
-            .matrix .navigation.right {
+            .matrix .navigation.right,
+            .matrix .resource_selector {
                 border-right: 1px dotted #ccc;
             }
 
