@@ -167,7 +167,7 @@
             ${render_additional_column_cell(value['additional_columns'], line, position='left')}
 
             %if navigation:
-                <td></td>
+                <td class="left navigation"></td>
             %endif
 
             %for date in date_range:
@@ -180,7 +180,7 @@
             %endfor
 
             %if navigation:
-                <td></td>
+                <td class="right navigation"></td>
             %endif
 
             %if not hide_line_totals:
@@ -262,7 +262,7 @@
         %else:
 
             %if navigation:
-                <td></td>
+                <td class="left navigation"></td>
             %endif
 
             %for date in date_range:
@@ -278,7 +278,7 @@
             %endfor
 
             %if navigation:
-                <td></td>
+                <td class="right navigation"></td>
             %endif
 
         %endif
@@ -444,6 +444,11 @@
                 border: 0;
             }
 
+            .matrix .navigation.left,
+            .matrix .navigation.right {
+                float: none;
+            }
+
 
             /* Set our matrix style */
 
@@ -565,6 +570,14 @@
                 color: white;
             }
 
+            .matrix .navigation.left {
+                border-left: 1px dotted #ccc;
+            }
+
+            .matrix .navigation.right {
+                border-right: 1px dotted #ccc;
+            }
+
             .matrix .widget_spacer td, div.non-editable .matrix table .widget_spacer td {
                 height: 1em;
             }
@@ -645,13 +658,13 @@
                     <th class="resource">${value['title']}</th>
                     ${render_additional_column_titles(value['additional_columns'], position='left')}
                     %if navigation:
-                        <th id="${"%s__previous_cell" % name}" class="navigation"><span class="button navigation previous" title="Previous">&lsaquo;</span></th>
+                        <th id="${"%s__previous_cell" % name}" class="left navigation"><span class="button navigation previous" title="Previous">&lsaquo;</span></th>
                     %endif
                     %for date in date_range:
                         <th id="${"%s__column_label_%s" % (name, date)}" class="column_${date} ${print_now(date)}">${dt.strptime(date, '%Y%m%d').strftime(str(date_format))}</th>
                     %endfor
                     %if navigation:
-                        <th id="${"%s__next_cell" % name}" class="navigation"><span class="button navigation next" title="Next">&rsaquo;</span></th>
+                        <th id="${"%s__next_cell" % name}" class="right navigation"><span class="button navigation next" title="Next">&rsaquo;</span></th>
                     %endif
                     %if not hide_line_totals:
                         <th class="total">${value['total_label']}</th>
@@ -668,7 +681,7 @@
                         <td class="resource">${value['total_label']}</td>
                         ${render_additional_column_totals(value['additional_columns'], body_lines, position='left')}
                         %if navigation:
-                            <td></td>
+                            <td class="left navigation"></td>
                         %endif
                         %for date in date_range:
                             <%
@@ -688,7 +701,7 @@
                             ${render_cell(column_total_cell, cell_id=column_total_cell_id, col_id=date, css_classes=column_total_css_classes)}
                         %endfor
                         %if navigation:
-                            <td></td>
+                            <td class="right navigation"></td>
                         %endif
                         %if not hide_line_totals:
                             <%
