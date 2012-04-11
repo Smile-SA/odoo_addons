@@ -156,6 +156,13 @@ msgid "Analytic Axis"
 msgstr "Axe analytique"
 
 #. module: smile_analytic_multiaxis
+#: view:account.analytic.axis:0
+#: model:ir.actions.act_window,name:smile_analytic_multiaxis.action_account_analytic_axis_form
+#: model:ir.ui.menu,name:smile_analytic_multiaxis.menu_action_account_analytic_axis_form
+msgid "Analytic Axis"
+msgstr "Axes analytiques"
+
+#. module: smile_analytic_multiaxis
 #: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:34
 #, python-format
 msgid "A distribution key is complete only if total rate is equal to 100% !"
@@ -249,6 +256,8 @@ msgstr "Dynamique"
 
 #. module: smile_analytic_multiaxis
 #: view:account.analytic.distribution:0
+#: model:ir.actions.act_window,name:smile_analytic_multiaxis.action_account_analytic_distribution_form
+#: model:ir.ui.menu,name:smile_analytic_multiaxis.menu_action_account_analytic_distribution_form
 msgid "Analytic Distributions"
 msgstr "Distributions analytiques"
 
