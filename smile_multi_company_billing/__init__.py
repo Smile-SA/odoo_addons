@@ -19,5 +19,7 @@
 #
 ##############################################################################
 
+import account
 import partner
 import invoice
+import res_company

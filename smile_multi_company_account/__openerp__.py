@@ -30,10 +30,12 @@
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
-    "init_xml" : [
-        'account_invoice_view.xml',
+    "init_xml" : [],
+    "update_xml": [
+        'invoice_view.xml',
+        'account_view.xml',
+        'security/ir.model.access.csv',
     ],
-    "update_xml": [],
     'demo_xml': [],
     'installable': True,
     'active': False,

@@ -47,7 +47,8 @@ class Invoice(osv.osv):
         if not journal_id:
             company_name = self.pool.get('res.company').read(cr, uid, company_id, ['name'], context)['name']
             raise osv.except_osv(_('Configuration Error !'), (_('Can\'t find any account journal of %s type for the company %s.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.') % (journal_type, company_name)))
-        return journal_id
+        context = context or {}
+        return self.get_journal_from_fiscal_position(cr, uid, context.get('invoice_fiscal_position'), journal_id)
 
     def _get_invoice_lines(self, cr, uid, invoice, context=None):
         invoice_lines = []
@@ -75,7 +76,6 @@ class Invoice(osv.osv):
         return invoice_lines
 
     def create_inter_company_invoices(self, cr, uid, ids, context=None):
-        uid = 1 #To bypass access and record rules
         context_copy = dict(context or {})
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -88,7 +88,8 @@ class Invoice(osv.osv):
                 partner_bank_id = invoice.partner_bank_id.id
                 company_id = invoice.partner_id.partner_company_id.id
                 currency_id = invoice.currency_id.id
-                invoice_vals = self.onchange_partner_id(cr, uid, False, invoice_type, partner_id, date_invoice, payment_term, partner_bank_id, company_id)['value']
+                invoice_vals = self.onchange_partner_id(cr, uid, False, invoice_type, partner_id, date_invoice, \
+                                                        payment_term, partner_bank_id, company_id)['value']
                 context_copy.update({
                     'company_id': company_id,
                     'invoice_type': invoice_type,
@@ -106,18 +107,56 @@ class Invoice(osv.osv):
                     'date_due': invoice.date_due,
                     'partner_id': partner_id,
                     'currency_id': currency_id,
-                    'journal_id': self._get_journal_id(cr, uid, company_id, invoice_type, context),
+                    'journal_id': self._get_journal_id(cr, uid, company_id, invoice_type, context_copy),
                     'company_id': company_id,
                     'user_id': False,
                     'invoice_line': map(lambda x: (0, 0, x), self._get_invoice_lines(cr, uid, invoice, context_copy)),
                     'check_total': invoice.amount_total,
                 })
-                self.create(cr, uid, invoice_vals, context)
+                self.create(cr, 1, invoice_vals, context) #To bypass access and record rules
         return True
 
     def action_number(self, cr, uid, ids, context=None):
-        """Override  this original method to create invoice for the supplier/customer company"""
+        """Override this original method to create invoice for the supplier/customer company"""
         res = super(Invoice, self).action_number(cr, uid, ids, context)
         self.create_inter_company_invoices(cr, uid, ids, context)
+        return res
+
+    def get_fiscal_position_domain(self, cr, uid, company_id, company_dest_id, context=None):
+        if company_id and company_dest_id:
+            return [('company_id', '=', company_id), ('company_dest_id', '=', company_dest_id)]
+        return []
+
+    def get_fiscal_position_id(self, cr, uid, company_id, company_dest_id, context=None):
+        if not company_id or not company_dest_id:
+            return
+        domain = self.get_fiscal_position_domain(cr, uid, company_id, company_dest_id, context)
+        fiscal_position_ids = self.pool.get('account.fiscal.position').search(cr, uid, domain, limit=1)
+        if not fiscal_position_ids:
+            company_obj = self.pool.get('res.company')
+            company_name = company_obj.read(cr, uid, company_id, ['name'])['name']
+            company_dest_name = company_obj.read(cr, uid, company_dest_id, ['name'])['name']
+            raise osv.except_osv(_('Error'), _('Cannot find fiscal position for the company %s to the company %s. Please create one') % (company_name, company_dest_name))
+        return fiscal_position_ids[0]
+
+    def _update_onchange_result_with_fiscal_position(self, cr, uid, res, company_id, partner_id):
+        res = res or {}
+        if company_id and partner_id:
+            partner_company_id = self.pool.get('res.partner').read(cr, uid, partner_id, ['partner_company_id'], load='_classic_write')['partner_company_id']
+            if partner_company_id:
+                res.setdefault('value', {}).update({'fiscal_position': self.get_fiscal_position_id(cr, uid, company_id, partner_company_id)})
+                res.setdefault('domain', {}).update({'fiscal_position': self.get_fiscal_position_domain(cr, uid, company_id, partner_company_id)})
+        return res
+
+    def onchange_partner_id(self, cr, uid, ids, type_, partner_id, date_invoice=False, \
+            payment_term=False, partner_bank_id=False, company_id=False):
+        res = self.onchange_partner_id(cr, uid, ids, type_, partner_id, date_invoice, \
+                                       payment_term, partner_bank_id, company_id)
+        self._update_onchange_result_with_fiscal_position(cr, uid, res, company_id, partner_id)
+        return res
+
+    def onchange_company_id(self, cr, uid, ids, company_id, partner_id, type_, invoice_line, currency_id):
+        res = self.onchange_company_id(cr, uid, ids, company_id, partner_id, type_, invoice_line, currency_id)
+        self._update_onchange_result_with_fiscal_position(cr, uid, res, company_id, partner_id)
         return res
 Invoice()

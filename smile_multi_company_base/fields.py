@@ -76,6 +76,7 @@ def new_fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
 
     properties = obj.pool.get('ir.property')
     global_domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
+    user_company_id = obj.pool.get('res.users').read(cr, uid, uid, ['company_id'], context, '_classic_write')['company_id']
 
     resources = map(lambda x: {'id': x}, ids)
     if 'company_id' in obj._columns:
@@ -83,11 +84,12 @@ def new_fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
     for resource in resources:
         domain = global_domain[:]
         domain.append(('res_id', '=', '%s,%s' % (obj._name, resource['id'])))
-        company_id = context.get('company_id')
+        company_id = context.get('company_id', False)
         if not company_id and 'company_id' in obj._columns:
             company_id = resource['company_id']
-        if company_id:
-            domain += ['|', ('company_id', '=', company_id), ('company_id', '=', False)]
+        if not company_id:
+            company_id = user_company_id
+        domain.extend(['|', ('company_id', '=', company_id), ('company_id', '=', False)])
         nids = properties.search(cr, uid, domain, context=context)
         for prop in properties.browse(cr, uid, nids, context):
             value = properties.get_by_record(cr, uid, prop, context=context)
