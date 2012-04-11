@@ -28,14 +28,12 @@ class AcccountInvoiceBehalfOf(osv.osv):
 
     _columns = {
         'company_src_id': fields.many2one('res.company', 'On behalf of', required=True),
-        'journal_src_id': fields.many2one('account.journal', 'Sale Journal',
-            domain=[('type', '=', 'sale')], required=True),
-        'account_src_ids': fields.one2many('account.invoice.behalf_of.account_src', 'behalf_of_id', 'Accounts Mapping'),
+        'fiscal_position_src_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True,
+                                                  domain=[('type', '=', 'behalf')], help="Only accounts and journals mapping"),
 
         'company_dest_id': fields.many2one('res.company', 'Billing Company', required=True),
-        'journal_dest_id': fields.many2one('account.journal', 'Miscellaneous Operation Journal',
-            domain=[('type', '=', 'general')], required=True),
-        'account_dest_ids': fields.one2many('account.invoice.behalf_of.account_dest', 'behalf_of_id', 'Accounts Mapping'),
+        'account_model_dest_id': fields.many2one('account.model', 'Account Move Model', required=True,
+                                                 help="Indicate debit / credit line by adding an amount different from zero in the right column."),
 
         'partner_dest_id': fields.related('company_dest_id', 'partner_id', type='many2one', relation='res.partner',
             string='Billing Partner', readonly=True, store=True),
@@ -51,37 +49,16 @@ class AcccountInvoiceBehalfOf(osv.osv):
         return res
 AcccountInvoiceBehalfOf()
 
-class AcccountInvoiceBehalfOfAccountSource(osv.osv):
-    _name = 'account.invoice.behalf_of.account_src'
-    _description = 'Accounts Mapping'
-    _rec_name = 'behalf_of_id'
-
-    _columns = {
-        'behalf_of_id': fields.many2one('account.invoice.behalf_of', 'Billing on behalf of', required=True, ondelete='cascade'),
-        'company_src_id': fields.related('behalf_of_id', 'company_src_id', type='many2one', relation='res.company', string='Company', readonly=True),
-        'account_src_id': fields.many2one('account.account', 'Source Account', required=True),
-        'account_dest_id': fields.many2one('account.account', 'Destination Account', required=True),
-    }
-AcccountInvoiceBehalfOfAccountSource()
-
-class AcccountInvoiceBehalfOfAccountDestination(osv.osv):
-    _name = 'account.invoice.behalf_of.account_dest'
-    _description = 'Accounts Mapping'
-    _rec_name = 'behalf_of_id'
-
-    _columns = {
-        'behalf_of_id': fields.many2one('account.invoice.behalf_of', 'Billing on behalf of', required=True, ondelete='cascade'),
-        'company_src_id': fields.related('behalf_of_id', 'company_src_id', type='many2one', relation='res.company', string='On behalf of', readonly=True),
-        'company_dest_id': fields.related('behalf_of_id', 'company_dest_id', type='many2one', relation='res.company', string='Billing Company', readonly=True),
-        'account_src_id': fields.many2one('account.account', 'Source Account', required=True),
-        'account_dest_id': fields.many2one('account.account', 'Destination Account', required=True),
-    }
-AcccountInvoiceBehalfOfAccountDestination()
-
 class AccountInvoice(osv.osv):
     _inherit = 'account.invoice'
 
     _columns = {
         'behalf_of_id': fields.many2one('account.invoice.behalf_of', 'Billing Company'),
     }
+
+    def onchange_behalf_of_id(self, cr, uid, ids, behalf_of_id=False, company_id=False):
+        if not behalf_of_id:
+            return {}
+        company_dest_id = self.pool.get('account.invoice.behalf_of').read(cr, uid, behalf_of_id, ['company_dest_id'], load='_classic_write')['company_dest_id']
+        return {'domain': {'fiscal_position': [('company_id', '=', company_id), ('company_dest_id', '=', company_dest_id)]}}
 AccountInvoice()

@@ -38,9 +38,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         'res_company_view.xml',
     ],
     'demo_xml': [],
-    'test': [
-        'test/account_test.yml',
-    ],
+    'test': [],
     'installable': True,
     'active': False,
     'certificate' : "",

@@ -1,7 +1,0 @@
-"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_account_invoice_behalf_of_all","access_account_invoice_behalf_of all","model_account_invoice_behalf_of",,1,0,0,0
-"access_account_invoice_behalf_of_manager","access_account_invoice_behalf_of manager","model_account_invoice_behalf_of","account.group_account_manager",1,1,1,1
-"access_account_invoice_behalf_of_account_src_all","access_account_invoice_behalf_of_account_src all","model_account_invoice_behalf_of_account_src",,1,0,0,0
-"access_account_invoice_behalf_of_account_src_manager","access_account_invoice_behalf_of_account_src manager","model_account_invoice_behalf_of_account_src","account.group_account_manager",1,1,1,1
-"access_account_invoice_behalf_of_account_dest_all","access_account_invoice_behalf_of_account_dest all","model_account_invoice_behalf_of_account_dest",,1,0,0,0
-"access_account_invoice_behalf_of_account_dest_manager","access_account_invoice_behalf_of_account_dest manager","model_account_invoice_behalf_of_account_dest","account.group_account_manager",1,1,1,1

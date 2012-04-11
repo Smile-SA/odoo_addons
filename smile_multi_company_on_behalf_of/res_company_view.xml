@@ -11,7 +11,8 @@
 	            <page string="Configuration" position="inside">
 	            	<group colspan="4" col="4" groups="base.group_multi_company">
 		            	<separator colspan="4" string="Billing on behalf of"/>
-		                <field name="behalf_of_ids" nolabel="1" colspan="4" mode ='tree, form' context="{'default_company_dest_id': active_id, 'default_partner_dest_id': partner_id}">
+		                <field name="behalf_of_ids" nolabel="1" colspan="4" mode ='tree,form'
+		                	 context="{'default_company_dest_id': active_id, 'default_partner_dest_id': partner_id}">
 		                	<tree>
 		                		<field name="company_src_id"/>
 		                	</tree>

@@ -22,28 +22,15 @@
 	            <form string="Billing on behalf on">
 	            	<group colspan="2" col="2">
 		                <field name="company_dest_id"/>
-		                <field name="journal_dest_id" domain="[('company_id', '=', company_dest_id), ('type', '=', 'general')]"/>
-		                <field name="account_dest_ids" mode="tree,form" context="{'default_company_dest_id': company_dest_id, 'default_company_src_id': company_src_id}">
-							<tree editable="top">
-				                <field name="account_src_id" domain="[('company_id', '=', company_src_id), ('type', '=', 'receivable')]"/>
-				                <field name="account_dest_id" domain="[('company_id', '=', company_dest_id), ('type', '=', 'receivable')]"/>
-				                <field name="company_src_id" invisible="1"/>
-				                <field name="company_dest_id" invisible="1"/>
-				            </tree>
-		                </field>
-		                <field name="partner_dest_id" invisible="1"/>
+		                <field name="account_model_dest_id" context="{'default_company_id': company_dest_id}"
+		                	 domain="[('company_id', '=', company_dest_id)]"/>
 		                <field name="bank_account_id" domain="[('partner_id', '=', partner_dest_id)]"/>
+		                <field name="partner_dest_id" invisible="1"/>
 	            	</group>
 	            	<group colspan="2" col="2">
 		                <field name="company_src_id" domain="[('id', '!=', company_dest_id)]"/>
-		                <field name="journal_src_id" domain="[('company_id', '=', company_src_id), ('type', '=', 'sale')]"/>
-		                <field name="account_src_ids" mode="tree,form" context="{'default_company_src_id': company_src_id}">
-							<tree editable="top">
-				                <field name="account_src_id" domain="[('company_id', '=', company_src_id), ('type', '=', 'receivable')]"/>
-				                <field name="account_dest_id" domain="[('company_id', '=', company_src_id), ('type', '=', 'receivable')]"/>
-				                <field name="company_src_id" invisible="1"/>
-				            </tree>
-		                </field>
+		                <field name="fiscal_position_src_id" context="{'default_type': 'behalf', 'default_company_id': company_src_id}"
+		                	 domain="[('company_id', '=', company_src_id), ('company_dest_id', '=', company_dest_id)]"/>
 	            	</group>
 	            </form>
             </field>
@@ -56,7 +43,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
 	            <field name="company_id" position="after">
-	                <field name="behalf_of_id" groups="base.group_multi_company"/>
+	                <field name="behalf_of_id" groups="base.group_multi_company" on_change="onchange_behalf_of_id(behalf_of_id, company_id)"/>
 	            </field>
             </field>
         </record>

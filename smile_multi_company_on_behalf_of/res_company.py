@@ -25,6 +25,6 @@ class ResCompany(osv.osv):
     _inherit = 'res.company'
 
     _columns = {
-        'behalf_of_ids': fields.one2many('account.invoice.behalf_of', 'company_dest_id', 'Billing on behalf of', required=True),
+        'behalf_of_ids': fields.one2many('account.invoice.behalf_of', 'company_dest_id', 'Billing on behalf of'),
     }
 ResCompany()
