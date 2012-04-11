@@ -92,10 +92,10 @@ class AnalyticPeriod(osv.osv):
             raise osv.except_osv(_('Error'), _('You cannot pass a journal entry in a closed period!'))
         return period_ids[0]
 
-    def _get_period_id(self, cr, uid, period_id, operator='>', state=None, context=None):
+    def _get_period_id(self, cr, uid, period_id, operator='>', state=None):
         if not isinstance(period_id, (int, long)):
             raise osv.except_osv(_('Error'), _('Please indicate a period id!'))
-        period = self.read(cr, uid, period_id, ['date_start', 'company_id'], context)
+        period = self.read(cr, uid, period_id, ['date_start', 'company_id'])
         domain = [
             ('date_start', operator, period['date_start']),
             ('company_id', 'in', [period['company_id'] and period['company_id'][0], False]),
@@ -103,16 +103,16 @@ class AnalyticPeriod(osv.osv):
         if state:
             domain.append(('state', '=', state))
         order = 'date_start ' + (operator == '>' and 'asc' or 'desc')
-        period_ids = self.search(cr, uid, domain, limit=1, order=order, context=context)
+        period_ids = self.search(cr, uid, domain, limit=1, order=order)
         return period_ids and period_ids[0] or 0
 
     @tools.cache()
-    def get_previous_period_id(self, cr, uid, period_id, state=None, context=None):
-        return self._get_period_id(cr, uid, period_id, '<', state, context)
+    def get_previous_period_id(self, cr, uid, period_id, state=None):
+        return self._get_period_id(cr, uid, period_id, '<', state)
 
     @tools.cache()
-    def get_next_period_id(self, cr, uid, period_id, state=None, context=None):
-        return self._get_period_id(cr, uid, period_id, '>', state, context)
+    def get_next_period_id(self, cr, uid, period_id, state=None):
+        return self._get_period_id(cr, uid, period_id, '>', state)
 
     def button_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context)
