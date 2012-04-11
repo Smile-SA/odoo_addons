@@ -30,7 +30,7 @@ from tools.translate import _
 def analytic_decorator(original_method):
     @wraps(original_method)
     def wrapper(self, cr, *args, **kwargs):
-        res = original_method(self, cr, *args, **kwargs)        
+        res = original_method(self, cr, *args, **kwargs)
         if isinstance(self, osv.osv_pool):
             axis_obj = self.get('account.analytic.axis')
             if axis_obj and hasattr(axis_obj, '_update_analytic_line_columns'):
@@ -51,11 +51,15 @@ class AnalyticAxis(osv.osv):
         'domain': fields.char("Domain", size=256, required=True),
         'required': fields.boolean('Required'),
         'field_ids': fields.many2many('ir.model.fields', 'account_analytic_axis_field_rel', 'axis_id', 'field_id', 'Fields to historicize'),
+        'is_unicity_field': fields.boolean('Unicity field', help="Useful only if the module smile_analytic_forecasting is installed"),
+        'ondelete': fields.selection([('cascade', 'CASCADE'), ('set null', 'SET NULL'), ('restrict', 'RESTRICT')], 'On delete', required=True),
     }
-    
+
     _defaults = {
         'active': True,
         'domain': '[]',
+        'is_unicity_field': True,
+        'ondelete': 'restrict',
     }
 
     def _check_column_label(self, cr, uid, ids, context=None):
@@ -89,8 +93,15 @@ class AnalyticAxis(osv.osv):
                         if column in line_obj._columns:
                             del line_obj._columns[column]
             elif axis.active:
+                # To be compatible with smile_analytic_forecasting
+                if hasattr(line_obj, '_non_unicity_fields'):
+                    if axis.is_unicity_field and axis.column_label in line_obj._non_unicity_fields:
+                        line_obj._non_unicity_fields.remove(axis.column_label)
+                    elif not axis.is_unicity_field and axis.column_label not in line_obj._non_unicity_fields:
+                        line_obj._non_unicity_fields.append(axis.column_label)
+                ###
                 line_obj._columns[axis.column_label] = fields.many2one(axis.model, axis.name, \
-                    domain=axis.domain and eval(axis.domain) or [], required=axis.required)
+                    domain=axis.domain and eval(axis.domain) or [], required=axis.required, ondelete=axis.ondelete)
                 if axis.field_ids:
                     for field in axis.field_ids:
                         column = '%s_%s' % (axis.column_label, field.id)
@@ -111,7 +122,7 @@ class AnalyticAxis(osv.osv):
                     cr.execute('DROP INDEX account_analytic_line_multi_columns_index')
                 cr.execute('CREATE INDEX account_analytic_line_multi_columns_index '\
                            'ON account_analytic_line (%s)' % ','.join(unicity_fields))
-        
+        ###
         return True
 
     def __init__(self, pool, cr):

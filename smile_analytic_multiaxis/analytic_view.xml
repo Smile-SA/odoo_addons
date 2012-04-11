@@ -139,7 +139,7 @@
         </record>
 
         <record id="action_account_analytic_distribution_form" model="ir.actions.act_window">
-            <field name="name">Analytic Distribution</field>
+            <field name="name">Analytic Distributions</field>
             <field name="res_model">account.analytic.distribution</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
