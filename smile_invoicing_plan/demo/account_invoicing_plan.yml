@@ -1,0 +1,181 @@
+- |
+  Créer un échéancier de facturation :
+  Engagement 12 mois avec reconduction tacite
+  Mode de facturation : Post-facturation
+  périodicité de facturation : 1 mois
+- 
+
+  !record {model: account.invoicing_plan, id: account_invoicing_plan_0}:
+    commitment: 12
+    mode: post
+    name: ENgagement 12 mois en post paiement
+    periodicity: 1
+    term: unlimited
+    trigger: manual
+    uop: months
+    
+-
+  Create modalities
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_00}:
+    invoicing_plan_id : 'account_invoicing_plan_0'
+    application_periods: '0'
+    name: 12 mois
+    sequence: 0.0
+-
+  Create Sub modalities
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_000}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_00'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 1.0
+ 
+ 
+ 
+ 
+ 
+     
+- |
+  Créer un échéancier de facturation :
+  Engagement 12 mois avec reconduction tacite
+  Mode de facturation : Pré-facturation
+  périodicité de facturation : 1 mois
+-  
+  !record {model: account.invoicing_plan, id: account_invoicing_plan_1}:
+    commitment: 12
+    mode: pre
+    name: ENgagement 12 mois en pré paiement
+    periodicity: 1
+    term: unlimited
+    trigger: manual
+    uop: months
+    
+-
+  Create modalities
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_10}:
+    invoicing_plan_id : 'account_invoicing_plan_1'
+    application_periods: '0'
+    name: 12 mois
+    sequence: 0.0
+-
+  Create Sub modalities
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_100}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_10'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 1.0
+    
+    
+    
+    
+    
+    
+- |
+  Créer un échéancier de facturation :
+  Engagement 12 mois avec reconduction tacite+ 2 mois gratuits
+  Mode de facturation : Pré-facturation
+  périodicité de facturation : 3 mois
+- 
+  !record {model: account.invoicing_plan, id: account_invoicing_plan_2}:
+    commitment: 12
+    mode: pre
+    name: Engagement 12 mois, Pré-paiement + 2 mois gratuit + Period = 3
+    periodicity: 3
+    term: unlimited
+    trigger: manual
+    uop: months
+    
+-
+  Create modality 2-0 
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_20}:
+    invoicing_plan_id : 'account_invoicing_plan_2'
+    application_periods: 1,2
+    name: 2 premiers mois gratuit
+    sequence: 0.0
+-
+  Create Sub modalities 2-0-0
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_200}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_20'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 0.0
+    
+-
+  Create modality 2-1 
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_21}:
+    invoicing_plan_id : 'account_invoicing_plan_2'
+    application_periods: '0'
+    name: Reste des mois entiers
+    sequence: 1
+-
+  Create Sub modalities 2-1-0
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_210}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_21'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 1.0
+    
+    
+    
+    
+    
+ 
+- |
+  Créer un échéancier de facturation :
+  Engagement 12 mois avec reconduction tacite
+  Mode de facturation : post-facturation
+  périodicité de facturation : 2 mois
+- 
+  !record {model: account.invoicing_plan, id: account_invoicing_plan_3}:
+    commitment: 12
+    mode: post
+    name: Engagement 12 mois, P = 2, post, mois 3 gratuit
+    periodicity: 2
+    term: unlimited
+    trigger: manual
+    uop: months
+
+
+-
+  Create modality 3-0 
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_30}:
+    invoicing_plan_id : 'account_invoicing_plan_3'
+    application_periods: 1,2,3
+    name: 3 premiers mois gratuit
+    sequence: 0.0
+-
+  Create Sub modalities 3-0-0
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_300}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_30'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 0.0
+    
+-
+  Create modality 3-1 
+-
+  !record {model: account.invoicing_plan.line, id: account_invoicing_plan_line_31}:
+    invoicing_plan_id : 'account_invoicing_plan_3'
+    application_periods: '0'
+    name: Reste des mois entiers
+    sequence: 1
+-
+  Create Sub modalities 3-1-0
+-
+  !record {model: account.invoicing_plan.sub.line, id: account_invoicing_plan_sub_line_310}:
+    invoicing_plan_line_id: 'account_invoicing_plan_line_31'
+    partner: object.partner_id.id
+    value: percent
+    value_amount: 1.0
+    
+    
+ 
