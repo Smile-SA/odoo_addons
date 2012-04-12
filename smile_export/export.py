@@ -22,10 +22,15 @@
 import threading, time
 
 from osv import osv, fields
-import tools, pooler
+import pooler
+import tools
 from tools.translate import _
 
 from smile_log.db_handler import SmileDBLogger
+
+def _get_exception_message(exception):
+    msg = isinstance(exception, osv.except_osv) and exception.value or exception
+    return tools.ustr(msg)
 
 class ir_model_export_template(osv.osv):
     _name = 'ir.model.export.template'
@@ -321,16 +326,16 @@ class ir_model_export(osv.osv):
                 self._run_actions(cr, uid, export, res_ids, context)
                 logger.time_info('Export done')
         except Exception, e:
-            logger.critical("Export failed: %s" % (tools.ustr(e),))
+            logger.critical("Export failed: %s" % (_get_exception_message(e),))
             self.write_new_cr(cr.dbname, uid, export_id, {'state': 'exception',
                                                           'to_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                                                          'exception': isinstance(e, osv.except_osv) and e.value or tools.ustr(e), }, context)
+                                                          'exception': _get_exception_message(e), }, context)
             raise e
 
         try:
             self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
-            logger.error("Could not mark export %s as done: %s" % (export_id, tools.ustr(e)))
+            logger.error("Could not mark export %s as done: %s" % (export_id, _get_exception_message(e)))
             raise e
         return True
 ir_model_export()
