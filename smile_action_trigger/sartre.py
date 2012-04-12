@@ -36,7 +36,8 @@ from tools.translate import _
 from smile_log.db_handler import SmileDBLogger
 
 def _get_exception_message(exception):
-    return isinstance(exception, osv.except_osv) and exception.value or exception
+    msg = isinstance(exception, osv.except_osv) and exception.value or exception
+    return tools.ustr(msg)
 
 def _get_browse_record_dict(obj, cr, uid, ids, fields_list=None, context=None):
     """Get a dictionary of dictionary from browse records list"""
