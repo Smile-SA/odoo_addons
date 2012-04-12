@@ -23,7 +23,7 @@
                         <page string="Logs">
                             <field name="log_ids" colspan="4" nolabel="1"/>
                         </page>
-                    </notebook>          
+                    </notebook>
 				</form>
 			</field>
 		</record>

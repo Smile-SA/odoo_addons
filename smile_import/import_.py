@@ -22,7 +22,9 @@
 import threading, time
 
 from osv import osv, fields
-import tools, pooler
+import pooler
+import tools
+from tools.translate import _
 
 from smile_log.db_handler import SmileDBLogger
 
@@ -84,7 +86,6 @@ class IrModelImportTemplate(osv.osv):
                     else: #same_thread_raise_error
                         raise e
         return True
-
 
     def create_server_action(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -180,6 +181,7 @@ class IrModelImport(osv.osv):
         import_ = self.browse(cr, uid, import_id, context)
         context['test_mode'] = import_.test_mode
         context['logger'] = logger
+        context['import_id'] = import_id
 
         cr.execute("SAVEPOINT smile_import_test_mode")
         try:
