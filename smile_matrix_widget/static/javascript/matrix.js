@@ -351,6 +351,9 @@ jQuery(".matrix").ready(function(){
             new_row.insertBefore(level_last_row).hide().fadeIn('fast');
         };
 
+        // Force movement to current position to update new line cells visibility
+        move_to_position(null, matrix_id);
+
         // Remove the entry from the selector
         jQuery(update_parent_selector(level_last_row.parent().find("[id='" + new_row.attr("id") + "']"), "hide"));
     });
@@ -430,7 +433,39 @@ jQuery(".matrix").ready(function(){
     });
 
 
-    // Activate the timeline navigation slider
+    // Move the timeline by updating column visibility
+    function move_to_position(new_position, matrix_id){
+        // If not provided, get date range cells and navigation width dynamiccaly
+        if (new_position == null) {
+            var current_position = jQuery("#" + matrix_id + "__previous_cell").nextUntil("th:visible", "th:hidden").length + 1;
+            new_position = current_position;
+        };
+
+        var date_range_cells = jQuery("#" + matrix_id + " th[id*='__column_label_']");
+        var navigation_width = parseInt(jQuery("#" + matrix_id + "__navigation_width").first().val());
+
+        // Compute the desired visibility of each cell
+        var columns_to_show = new Array();
+        var columns_to_hide = new Array();
+        date_range_cells.each(function(i, cell){
+            var $cell = jQuery(cell);
+            var cell_position = i + 1;
+            var column_index = parse_id($cell.attr("id"))[3];
+            var column_cells_query = "#" + matrix_id + " .column_" + column_index;
+            if (cell_position >= new_position && cell_position < new_position + navigation_width) {
+                columns_to_show.push(column_cells_query);
+            } else {
+                columns_to_hide.push(column_cells_query);
+            };
+        });
+
+        // Show and hide appropriate columns
+        jQuery(columns_to_show.join(", ")).filter(":hidden").fadeIn('fast');
+        jQuery(columns_to_hide.join(", ")).filter(":visible").hide();
+    };
+
+
+    // Catch action on navigation buttons and move the timeline accordingly
     jQuery(".matrix .button.navigation:not(.disabled)").click(function(){
         var matrix = get_parent_matrix(jQuery(this));
         var matrix_id = matrix.attr("id");
@@ -467,24 +502,7 @@ jQuery(".matrix").ready(function(){
             new_position = farest_position;
         };
 
-        // Compute the desired visibility of each cell
-        var columns_to_show = new Array();
-        var columns_to_hide = new Array();
-        date_range_cells.each(function(i, cell){
-            var $cell = jQuery(cell);
-            var cell_position = i + 1;
-            var column_index = parse_id($cell.attr("id"))[3];
-            var column_cells_query = "#" + matrix_id + " .column_" + column_index;
-            if (cell_position >= new_position && cell_position < new_position + navigation_width) {
-                columns_to_show.push(column_cells_query);
-            } else {
-                columns_to_hide.push(column_cells_query);
-            };
-        });
-
-        // Show and hide appropriate columns
-        jQuery(columns_to_show.join(", ")).filter(":hidden").show().effect("highlight");
-        jQuery(columns_to_hide.join(", ")).filter(":visible").hide();
+        move_to_position(new_position, matrix_id);
 
         // XXX Sliding animation attempts
         // jQuery(query_column_cells(matrix_id, column_id_to_show)).effect('slide', {direction: direction == 'next' ? 'right' : 'left', mode: 'show'}, 'slow');
