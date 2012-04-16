@@ -52,8 +52,8 @@ jQuery(".matrix").ready(function(){
     // Replace all integer fields of all matrix by a button template, then hide the original field
     var button_template = jQuery(".matrix .button.increment.template").first();
     jQuery(global_increment_cells_selector).each(function(i, cell){
-        var jQuerycell = jQuery(cell);
-        jQuerycell.after(jQuery(button_template).clone().removeClass('template').attr('id', 'button_' + jQuerycell.attr("id")).text(jQuerycell.val())).hide();
+        var $cell = jQuery(cell);
+        $cell.after(jQuery(button_template).clone().removeClass('template').attr('id', 'button_' + $cell.attr("id")).text($cell.val())).hide();
     });
 
 
@@ -64,12 +64,12 @@ jQuery(".matrix").ready(function(){
     // Align the button and cell value to an available label
     // TODO: make this an original method and call it everytime we render a float. Apply this to totals too.
     buttons.each(function(i, button){
-        var jQuerybutton = jQuery(button);
-        var cycling_values = get_increment_values(jQuerybutton);
+        var $button = jQuery(button);
+        var cycling_values = get_increment_values($button);
         for(i = 0; i < cycling_values.length; i++){
-            if(parseFloat(jQuerybutton.text()) == parseFloat(cycling_values[i])){
-                jQuerybutton.text(cycling_values[i]);
-                jQuerybutton.parent().find("input").val(cycling_values[i]);
+            if(parseFloat($button.text()) == parseFloat(cycling_values[i])){
+                $button.text(cycling_values[i]);
+                $button.parent().find("input").val(cycling_values[i]);
                 break;
             };
         };
@@ -123,7 +123,7 @@ jQuery(".matrix").ready(function(){
         // Select all fields of the columns and sum them up
         var column_total = 0;
         // Only cells in the tbody of the table are sums up by columns
-        jQuery("#" + matrix_id + " tbody [id*='__cell_'][idjQuery='_" + column_index + "']").each(function(){
+        jQuery("#" + matrix_id + " tbody [id*='__cell_'][id$='_" + column_index + "']").each(function(){
             cell_value = parseFloat(jQuery(this).val());
             if (!isNaN(cell_value)) {
                 column_total += cell_value;
@@ -371,7 +371,7 @@ jQuery(".matrix").ready(function(){
             return;
         };
         var selector_property = get_res_id(parent_selector);
-        var res_value = jQuery(table_row).find("input[idjQuery='_" + selector_property + "']").first().val();
+        var res_value = jQuery(table_row).find("input[id$='_" + selector_property + "']").first().val();
         var option = parent_selector.find("option[value='" + res_value + "']");
         if(action == "hide") {
             option.hide();
@@ -471,9 +471,9 @@ jQuery(".matrix").ready(function(){
         var columns_to_show = new Array();
         var columns_to_hide = new Array();
         date_range_cells.each(function(i, cell){
-            var jQuerycell = jQuery(cell);
+            var $cell = jQuery(cell);
             var cell_position = i + 1;
-            var column_index = parse_id(jQuerycell.attr("id"))[3];
+            var column_index = parse_id($cell.attr("id"))[3];
             var column_cells_query = "#" + matrix_id + " .column_" + column_index;
             if (cell_position >= new_position && cell_position < new_position + navigation_width) {
                 columns_to_show.push(column_cells_query);
