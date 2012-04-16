@@ -13,6 +13,7 @@
                     <field name="start_date"/>
                     <field name="project_id"/>
                     <field name="end_date"/>
+                    <button type="object" name="modal_window_view" string="Open current form in modal window"/>
                     <separator string="Workload lines" colspan="4"/>
                     <field name="matrix" colspan="4" widget="matrix" nolabel="1"/>
                     <field name="line_ids" colspan="4" nolabel="1" context="{'form_view_ref': 'smile_activity.view_smile_activity_workload_line_form'}">

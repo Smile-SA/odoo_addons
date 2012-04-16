@@ -128,6 +128,25 @@ class smile_activity_workload(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         return super(smile_activity_workload, self).write(cr, uid, ids, vals, context)
 
+
+    ## Custom methods
+
+    def modal_window_view(self, cr, uid, ids, context=None):
+        return {
+            'name':"View current form in modal window",
+            'type': 'ir.actions.act_window',
+            'res_model': 'smile.activity.workload',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'smile_matrix_demo', 'view_smile_activity_workload_form')[::-1],
+            'res_id': ids[0],
+            'nodestroy': False,
+            'target': 'new',
+            'context': context,
+            'toolbar': False,
+        }
+
+
 smile_activity_workload()
 
 
