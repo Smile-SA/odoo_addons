@@ -90,8 +90,7 @@ Changelog
 ---------
 
 * **0.7.dev** (unreleased)
-
-No changes yet.
+  * Add partial totals of hidden columns below navigation buttons.
 
 * **0.6** (2012-04-17)
   * Add a date_range_navigation_width and date_range_navigation_start parameter

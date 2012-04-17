@@ -93,6 +93,12 @@ jQuery(".matrix").ready(function(){
     });
 
 
+    // Get cell value whatever the widget used to render it
+    function get_cell_value(cell){
+        return parseFloat(jQuery(cell).text());
+    };
+
+
     // Set cell style dynamicaly
     function set_cell_style(cell, cell_value, threshold){
         if (!isNaN(threshold)) {
@@ -113,7 +119,7 @@ jQuery(".matrix").ready(function(){
             jQuery(cell).removeClass("zero");
         };
         if (jQuery(cell).is(":visible")) {
-            jQuery(cell).effect("highlight");
+            jQuery(cell).effect("highlight", {}, 100);
         };
     };
 
@@ -535,6 +541,38 @@ jQuery(".matrix").ready(function(){
             next_buttons.removeClass("disabled");
             end_buttons.removeClass("disabled");
         };
+
+        // Update total of cells hidden on the right or left side of the navigation slider
+        var column_ids = [];
+        jQuery("#" + matrix_id + " td[id^='" + matrix_id + "__navigation_righttotal_']").each(function() {
+            column_ids.push(jQuery(this).attr("id").split('_').pop());
+        });
+        jQuery.each(column_ids, function(i, line_id) {
+            jQuery.each(['right', 'left'], function(j, position) {
+                // Get cells
+                var partial_total_cell = jQuery("#" + matrix_id + "__navigation_" + position + "total_" + line_id);
+                if (position == 'right'){
+                    var hidden_columns = partial_total_cell.prevUntil("td:visible", "td:hidden");
+                } else {
+                    var hidden_columns = partial_total_cell.nextUntil("td:visible", "td:hidden");
+                }
+                // Compute the partial total
+                var partial_total = 0;
+                if (!hidden_columns.length) {
+                    partial_total = '';
+                } else {
+                    hidden_columns.each(function(i, cell){
+                        cell_value = get_cell_value(cell);
+                        if (!isNaN(cell_value)) {
+                            partial_total += cell_value;
+                        };
+                    });
+                };
+                // Update partial total content and style
+                partial_total_cell.text(partial_total);
+                set_cell_style(partial_total_cell, partial_total);
+            });
+        });
 
     });
 

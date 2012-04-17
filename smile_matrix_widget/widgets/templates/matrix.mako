@@ -167,7 +167,7 @@
             ${render_additional_column_cell(value['additional_columns'], line, position='left')}
 
             %if navigation:
-                <td class="left navigation"></td>
+                <td id="${"%s__navigation_lefttotal_%s" % (name, line['id'])}" class="left navigation"></td>
             %endif
 
             %for date in date_range:
@@ -180,7 +180,7 @@
             %endfor
 
             %if navigation:
-                <td class="right navigation"></td>
+                <td id="${"%s__navigation_righttotal_%s" % (name, line['id'])}" class="right navigation"></td>
             %endif
 
             %if not hide_line_totals:
