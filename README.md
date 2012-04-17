@@ -89,7 +89,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Changelog
 ---------
 
-* **0.6.dev** (unreleased)
+* **0.6** (2012-04-17)
   * Add a date_range_navigation_width and date_range_navigation_start parameter
   * Add a start, center and end navigation buttons
   * Move the line deletion button to the far left of each line
