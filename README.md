@@ -93,7 +93,7 @@ Changelog
   * Add partial totals of hidden columns below navigation buttons.
 
 * **0.6** (2012-04-17)
-  * Add a navigation_width and navigation_start parameter
+  * Add a navigation_size and navigation_start parameter
   * Add a start, center and end navigation buttons
   * Move the line deletion button to the far left of each line
   * Allow styling of the current date

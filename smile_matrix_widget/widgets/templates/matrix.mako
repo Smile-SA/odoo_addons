@@ -251,8 +251,8 @@
                 colspan_lenght = 0
                 if navigation:
                     colspan_lenght += 2
-                if navigation and len(date_range) > navigation_width:
-                    colspan_lenght += navigation_width
+                if navigation and len(date_range) > navigation_size:
+                    colspan_lenght += navigation_size
                 else:
                     colspan_lenght += len(date_range)
             %>
@@ -411,7 +411,7 @@
             editable_tree = value['editable_tree']
             hide_tree = value['hide_tree']
             navigation = value['navigation']
-            navigation_width = value['navigation_width']
+            navigation_size = value['navigation_size']
             navigation_start = value['navigation_start']
             highlight_date = value['highlight_date']
         %>
@@ -650,7 +650,7 @@
                 <span class="button navigation center" title="Center">&#x7c9;</span>
                 <span class="button navigation next" title="Next">&rsaquo;</span>
                 <span class="button navigation end" title="End">&rsaquo;&rsaquo;</span>
-                <input type="hidden" id="${"%s__navigation_width" % name}" value="${navigation_width}" title="Date range navigation width"/>
+                <input type="hidden" id="${"%s__navigation_size" % name}" value="${navigation_size}" title="Date range navigation width"/>
                 <input type="hidden" id="${"%s__navigation_start" % name}" value="${navigation_start}" title="Position from which we start the date range navigation"/>
             </div>
         %endif

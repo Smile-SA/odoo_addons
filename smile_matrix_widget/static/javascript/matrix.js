@@ -448,7 +448,7 @@ jQuery(".matrix").ready(function(){
         };
 
         var date_range_cells = jQuery("#" + matrix_id + " th[id*='__column_label_']");
-        var navigation_width = parseInt(jQuery("#" + matrix_id + "__navigation_width").first().val());
+        var navigation_size = parseInt(jQuery("#" + matrix_id + "__navigation_size").first().val());
 
         // Compute the desired visibility of each cell
         var columns_to_show = new Array();
@@ -458,7 +458,7 @@ jQuery(".matrix").ready(function(){
             var cell_position = i + 1;
             var column_index = parse_id($cell.attr("id"))[3];
             var column_cells_query = "#" + matrix_id + " .column_" + column_index;
-            if (cell_position >= new_position && cell_position < new_position + navigation_width) {
+            if (cell_position >= new_position && cell_position < new_position + navigation_size) {
                 columns_to_show.push(column_cells_query);
             } else {
                 columns_to_hide.push(column_cells_query);
@@ -479,9 +479,9 @@ jQuery(".matrix").ready(function(){
         // Compute positions
         var current_position = jQuery("#" + matrix_id + "__previous_cell").nextUntil("th:visible", "th:hidden").length + 1;
         var navigation_start = parseInt(jQuery("#" + matrix_id + "__navigation_start").first().val());
-        var navigation_width = parseInt(jQuery("#" + matrix_id + "__navigation_width").first().val());
+        var navigation_size = parseInt(jQuery("#" + matrix_id + "__navigation_size").first().val());
         var date_range_cells = jQuery("#" + matrix_id + " th[id*='__column_label_']");
-        var farest_position  = date_range_cells.length - navigation_width + 1;
+        var farest_position  = date_range_cells.length - navigation_size + 1;
 
         // Detect direction
         var direction = jQuery(this).hasClass('next') ? 'next' : jQuery(this).hasClass('previous') ? 'previous' : jQuery(this).hasClass('start') ? 'start' : jQuery(this).hasClass('end') ? 'end' : 'center';
@@ -529,7 +529,7 @@ jQuery(".matrix").ready(function(){
             start_buttons.removeClass("disabled");
             previous_buttons.removeClass("disabled");
         };
-        if (new_position == navigation_start || navigation_width >= date_range_cells.length) {
+        if (new_position == navigation_start || navigation_size >= date_range_cells.length) {
             center_buttons.addClass("disabled");
         } else {
             center_buttons.removeClass("disabled");
