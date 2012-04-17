@@ -139,8 +139,8 @@ class matrix(fields.dummy):
             'editable_date_range_property': conf_dict.get('editable_date_range_property', None),
             # Date range navigation parameters
             'navigation': conf_dict.get('date_range_navigation', False),          # Enable navigation slider
-            'navigation_width': conf_dict.get('date_range_navigation_width', 10), # Navigation slider size
-            'navigation_start': conf_dict.get('date_range_navigation_start', 1),  # Start position
+            'navigation_width': conf_dict.get('navigation_width', 10), # Navigation slider size
+            'navigation_start': conf_dict.get('navigation_start', 1),  # Start position
 
             # The format we use to display date labels
             'date_format': conf_dict.get('date_format', "%Y-%m-%d"),
