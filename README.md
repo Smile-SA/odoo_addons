@@ -90,10 +90,12 @@ Changelog
 ---------
 
 * **0.7.dev** (unreleased)
-  * Add partial totals of hidden columns below navigation buttons.
+  * Add partial totals of hidden columns below navigation buttons
+  * Update naming conventions from `*_active_*` to `*_visible_*`
+  * Rename `navigation_width` parameter to `navigation_size`
 
 * **0.6** (2012-04-17)
-  * Add a navigation_size and navigation_start parameter
+  * Add a `navigation_width` and `navigation_start` parameter
   * Add a start, center and end navigation buttons
   * Move the line deletion button to the far left of each line
   * Allow styling of the current date
@@ -101,7 +103,7 @@ Changelog
 
 * **0.5** (2012-04-03)
   * Add a new selection widget type
-  * Add a new dynamic cell_value_range parameter for the selection widget
+  * Add a new dynamic `cell_value_range` parameter for the selection widget
   * Allow additional columns to be positionned to the right or the left side of the matrix body
   * Rename widget type to line rendering mode
   * Add blank-line / spacer and a header line rendering mode

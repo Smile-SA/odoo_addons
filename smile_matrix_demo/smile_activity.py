@@ -54,7 +54,7 @@ class smile_activity_report(osv.osv):
         'end_date': fields.related('period_id', 'end_date', type='date', string="End date", readonly=True),
         'line_ids': fields.one2many('smile.activity.report.line', 'report_id', "Activity lines"),
         'date_range': fields.related('period_id', 'date_range', type='selection', string="Period date range", readonly=True),
-        'active_date_range': fields.related('period_id', 'active_date_range', type='selection', string="Period active date range", readonly=True),
+        'visible_date_range': fields.related('period_id', 'visible_date_range', type='selection', string="Period visible date range", readonly=True),
         'is_matrix_readonly': fields.function(_is_matrix_readonly, string="Matrix dynamic readonly property", type='boolean', readonly=True, method=True),
         'matrix_1': matrix(
             line_property           = 'line_ids',
@@ -76,7 +76,7 @@ class smile_activity_report(osv.osv):
             cell_date_property    = 'date',
             cell_value_range      = 'cell_value_range',
             date_range_property        = 'date_range',
-            active_date_range_property = 'active_date_range',
+            visible_date_range_property = 'visible_date_range',
             date_format                = '%d',
             date_range_navigation = True,
             navigation_start = 10,
@@ -112,7 +112,7 @@ class smile_activity_report(osv.osv):
             cell_inverse_property  = 'line_id',
             cell_value_property    = 'cell_value',
             cell_date_property     = 'date',
-            cell_active_property   = 'cell_value',
+            cell_visible_property   = 'cell_value',
             cell_readonly_property = 'read_only',
             date_range_property = 'date_range',
             date_format         = '%d',
@@ -204,7 +204,7 @@ class smile_activity_report_line(osv.osv):
     def generate_cells(self, cr, uid, line, context=None):
         """ This method generate all cells between the date range.
         """
-        period_lines = line.report_id.period_id.active_line_ids
+        period_lines = line.report_id.period_id.visible_line_ids
         vals = {
             'line_id': line.id
             }

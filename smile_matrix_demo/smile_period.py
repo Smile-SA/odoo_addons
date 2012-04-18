@@ -82,10 +82,10 @@ class smile_activity_period(osv.osv):
                 res[period.id] = self._str_to_date(period.start_date).strftime("%B")
         return res
 
-    def _get_active_line_ids(self, cr, uid, ids, name, arg, context=None):
+    def _get_visible_line_ids(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for period in self.browse(cr, uid, ids, context):
-            res[period.id] = self.pool.get('smile.activity.period.line').search(cr, uid, [('period_id', '=', period.id), ('active_day', '=', True)], context=context)
+            res[period.id] = self.pool.get('smile.activity.period.line').search(cr, uid, [('period_id', '=', period.id), ('visible_day', '=', True)], context=context)
         return res
 
     def _get_day_range(self, cr, uid, ids, name, arg, context=None):
@@ -103,12 +103,12 @@ class smile_activity_period(osv.osv):
             result[period.id] = day_range
         return result
 
-    def _get_active_day_range(self, cr, uid, ids, name, arg, context=None):
-        """ Get a list of active date objects covering the given date range
+    def _get_visible_day_range(self, cr, uid, ids, name, arg, context=None):
+        """ Get a list of visible date objects covering the given date range
         """
         res = {}
         for period in self.browse(cr, uid, ids, context):
-            res[period.id] = [self._str_to_date(l.date) for l in period.active_line_ids]
+            res[period.id] = [self._str_to_date(l.date) for l in period.visible_line_ids]
         return res
 
 
@@ -120,12 +120,12 @@ class smile_activity_period(osv.osv):
         'end_date': fields.date('End', required=True),
         'month_name': fields.function(_get_month, method=True, type='char', size=16, string='Month', readonly=True),
         'line_ids': fields.one2many('smile.activity.period.line', 'period_id', "Period lines"),
-        'active_line_ids': fields.function(_get_active_line_ids, string="Active lines", type='one2many', relation='smile.activity.period.line', method=True),
+        'visible_line_ids': fields.function(_get_visible_line_ids, string="Visible lines", type='one2many', relation='smile.activity.period.line', method=True),
         'report_ids': fields.one2many('smile.activity.report', 'period_id', "Activity reports", readonly=True),
         # date_range is a requirement for the matrix widget
         'date_range': fields.function(_get_day_range, string="Day range", type='selection', readonly=True, method=True),
-        # The active_date_range is a matrix widget convention
-        'active_date_range': fields.function(_get_active_day_range, string="Active day range", type='selection', readonly=True, method=True),
+        # The visible_date_range is a matrix widget convention
+        'visible_date_range': fields.function(_get_visible_day_range, string="Visible day range", type='selection', readonly=True, method=True),
         }
 
     _defaults = {
@@ -256,11 +256,11 @@ class smile_activity_period_line(osv.osv):
     _columns = {
         'date': fields.date('Date', required=True, readonly=True),
         'period_id': fields.many2one('smile.activity.period', "Period", required=True, readonly=True, ondelete='cascade'),
-        'active_day': fields.boolean('Active day'),
+        'visible_day': fields.boolean('Visible day'),
         }
 
     _defaults = {
-        'active_day': True,
+        'visible_day': True,
         }
 
 

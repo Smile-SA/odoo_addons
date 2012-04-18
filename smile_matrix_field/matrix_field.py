@@ -52,38 +52,38 @@ def _get_prop(obj, prop_name, default_value=None):
 
 
 
-def _get_date_range(base_object, date_range_property, active_date_range_property, editable_date_range_property):
-    """ Utility method to get the displayed date range and the active date range.
+def _get_date_range(base_object, date_range_property, visible_date_range_property, editable_date_range_property):
+    """ Utility method to get the displayed date range and the visible date range.
         This piece of code was moved in its own method as date range extraction requires some special handling.
     """
     # Get on the current object the date range bounding the timeline
     date_range = _get_prop(base_object, date_range_property)
-    # Get the active date range. Default is to let all dates of the displayed range.
-    active_date_range = _get_prop(base_object, active_date_range_property, date_range)
-    # Get the editable date range. Default is to align this range on the active date range.
-    editable_date_range = _get_prop(base_object, editable_date_range_property, active_date_range)
+    # Get the visible date range. Default is to let all dates of the displayed range.
+    visible_date_range = _get_prop(base_object, visible_date_range_property, date_range)
+    # Get the editable date range. Default is to align this range on the visible date range.
+    editable_date_range = _get_prop(base_object, editable_date_range_property, visible_date_range)
 
-    # date_range and active_date_range values may be stored as text (or selection, which is the same). In this case, we need to evaluate them. It's bad, but it works.
+    # date_range and visible_date_range values may be stored as text (or selection, which is the same). In this case, we need to evaluate them. It's bad, but it works.
     if isinstance(date_range, (str, unicode)):
         date_range = eval(date_range)
-    if isinstance(active_date_range, (str, unicode)):
-        active_date_range = eval(active_date_range)
-        if not active_date_range:
-            active_date_range = date_range
+    if isinstance(visible_date_range, (str, unicode)):
+        visible_date_range = eval(visible_date_range)
+        if not visible_date_range:
+            visible_date_range = date_range
     if isinstance(editable_date_range, (str, unicode)):
         editable_date_range = eval(editable_date_range)
         if not editable_date_range:
-            editable_date_range = active_date_range
+            editable_date_range = visible_date_range
 
     # Check the data structure returned by date ranges
-    for (range_name, range_data) in [(date_range_property, date_range), (active_date_range_property, active_date_range), (editable_date_range_property, editable_date_range)]:
+    for (range_name, range_data) in [(date_range_property, date_range), (visible_date_range_property, visible_date_range), (editable_date_range_property, editable_date_range)]:
         if type(range_data) is not type([]):
             raise osv.except_osv('Error !', "%s must return a list of datetime.date objects." % range_name)
         for d in range_data:
             if not isinstance(d, datetime.date):
                 raise osv.except_osv('Error !', "%s must return a list of datetime.date objects." % range_name)
 
-    return (date_range, active_date_range, editable_date_range)
+    return (date_range, visible_date_range, editable_date_range)
 
 
 
@@ -125,7 +125,7 @@ class matrix(fields.dummy):
             'cell_inverse_property': conf_dict.get('cell_inverse_property', None),
             'cell_value_property': conf_dict.get('cell_value_property', None),
             'cell_date_property': conf_dict.get('cell_date_property', None),
-            'cell_active_property': conf_dict.get('cell_active_property', 'active'),
+            'cell_visible_property': conf_dict.get('cell_visible_property', 'active'),
             'cell_readonly_property': conf_dict.get('cell_readonly_property', None),
             'cell_default_value': conf_dict.get('cell_default_value', 0.0),
             # Value range can be set per-cell
@@ -135,7 +135,7 @@ class matrix(fields.dummy):
 
             # Property name of the relation field on which we'll call the date_range property
             'date_range_property': conf_dict.get('date_range_property', None),
-            'active_date_range_property': conf_dict.get('active_date_range_property', None),
+            'visible_date_range_property': conf_dict.get('visible_date_range_property', None),
             'editable_date_range_property': conf_dict.get('editable_date_range_property', None),
             # Date range navigation parameters
             'navigation': conf_dict.get('date_range_navigation', False),          # Enable navigation slider
@@ -283,7 +283,7 @@ class matrix(fields.dummy):
                     conf[flag_id] = bool(_get_prop(base_object, flag_value))
 
             # Get our date ranges
-            (date_range, active_date_range, editable_date_range) = _get_date_range(base_object, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
+            (date_range, visible_date_range, editable_date_range) = _get_date_range(base_object, conf['date_range_property'], conf['visible_date_range_property'], conf['editable_date_range_property'])
 
             # Get the list of all objects new rows of the matrix can be linked to
             # Keep the original order defined in matrix properties
@@ -353,9 +353,9 @@ class matrix(fields.dummy):
                 # Get all cells of the line, indexed by their IDs
                 cells = dict([(cell.id, cell) for cell in _get_prop(line, conf['cell_property'], [])])
 
-                # Provide to the matrix a cell for each active date in the range
+                # Provide to the matrix a cell for each visible date in the range
                 cells_data = {}
-                for d in active_date_range:
+                for d in visible_date_range:
                     # Find a cell corresponding to the date in the date_range
                     cell = None
                     for (cell_id, cell) in cells.items():
@@ -367,9 +367,9 @@ class matrix(fields.dummy):
                     if isinstance(cell_value_range, (str, unicode)):
                         cell_value_range = _get_prop(cell, conf['cell_value_range'], conf['cell_value_default_range'])
                     cell_value = _get_prop(cell, conf['cell_value_property'], conf['cell_default_value'])
-                    # Skip the cell to hide it if its active property is True
-                    active_cell = _get_prop(cell, conf['cell_active_property'], True)
-                    if not active_cell:
+                    # Skip the cell to hide it if its visible property is True
+                    visible_cell = _get_prop(cell, conf['cell_visible_property'], True)
+                    if not visible_cell:
                         continue
                     # Pop the cell ID to mark it as consumed (this will prevent it to be automatticaly removed later)
                     if cell is not None:
@@ -409,7 +409,7 @@ class matrix(fields.dummy):
 
             # Get default cells and their values for the template row.
             template_cells_data = {}
-            for d in active_date_range:
+            for d in visible_date_range:
                 # Set the editability of the cell
                 read_only_cell = False
                 if d not in editable_date_range:
@@ -715,7 +715,7 @@ def matrix_write_patch(parse_only=False):
                         continue
 
                     # Get our date ranges
-                    (date_range, active_date_range, editable_date_range) = _get_date_range(report, conf['date_range_property'], conf['active_date_range_property'], conf['editable_date_range_property'])
+                    (date_range, visible_date_range, editable_date_range) = _get_date_range(report, conf['date_range_property'], conf['visible_date_range_property'], conf['editable_date_range_property'])
 
                     # Write all our aggregated matrix data
                     for line_data in matrix_data.get(conf['line_property'], {}):
@@ -738,13 +738,13 @@ def matrix_write_patch(parse_only=False):
                             # Update or delete the cell
                             else:
                                 cell_id = cell_ids[0]
-                                # Compute the active state of the cell
+                                # Compute the visibility state of the cell
                                 cell = cell_pool.browse(cr, uid, cell_id, context)
-                                active_cell = _get_prop(cell, conf['cell_active_property'], True)
-                                if cell_date not in active_date_range:
-                                    active_cell = False
-                                # Update cell with our data or delete it if it's not active
-                                if not active_cell:
+                                visible_cell = _get_prop(cell, conf['cell_visible_property'], True)
+                                if cell_date not in visible_date_range:
+                                    visible_cell = False
+                                # Update cell with our data or delete it if it's not visible
+                                if not visible_cell:
                                     cell_pool.unlink(cr, uid, cell_id, context)
                                 else:
                                     cell_pool.write(cr, uid, cell_id, cell_data, context)

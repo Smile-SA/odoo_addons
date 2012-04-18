@@ -18,7 +18,7 @@
                         <field name="line_ids" colspan="4" nolabel="1">
                             <tree string="Period lines" editable="top">
                                 <field name="date"/>
-                                <field name="active_day"/>
+                                <field name="visible_day"/>
                             </tree>
                         </field>
                         <field name="report_ids" colspan="4" nolabel="1">
@@ -47,7 +47,7 @@
                     <field name="start_date"/>
                     <field name="end_date"/>
                     <field name="line_ids" string="Days"/>
-                    <field name="active_line_ids" string="Active days"/>
+                    <field name="visible_line_ids" string="Visible days"/>
                     <field name="report_ids"/>
                 </tree>
             </field>
