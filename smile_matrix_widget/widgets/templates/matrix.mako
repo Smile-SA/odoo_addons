@@ -455,7 +455,8 @@
             /* Set our matrix style */
 
             .matrix .toolbar {
-                margin-bottom: 1em;
+                overflow: visible;
+                padding: 0;
             }
 
             .matrix .zero,
@@ -632,7 +633,7 @@
             </script>
         %endif
 
-        <div class="toolbar wrapper">
+        <div class="toolbar wrapper ui-helper-clearfix">
             %if editable_mode:
                 <div class="left level level_0">
                     %if editable_tree:
