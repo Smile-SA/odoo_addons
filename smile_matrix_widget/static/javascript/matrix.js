@@ -70,7 +70,7 @@ jQuery(".matrix").ready(function(){
     var button_template = jQuery(".matrix .button.increment.template").first();
     jQuery(global_increment_cells_selector).each(function(i, cell){
         var $cell = jQuery(cell);
-        $cell.after(jQuery(button_template).clone().removeClass('template').attr('id', 'button_' + $cell.attr("id")).text($cell.val())).hide();
+        $cell.after(jQuery(button_template).clone().removeClass('template').removeAttr('id').text($cell.val())).hide();
     });
 
 
@@ -179,7 +179,7 @@ jQuery(".matrix").ready(function(){
 
 
     // Compute columns and row totals
-    jQuery(".matrix input[id*='__cell_'], .matrix select[id*='__cell_']").change(function(){
+    jQuery(".matrix [id*='__cell_']").change(function(){
         // Get current cell coordinates
         var name_fragments = parse_id(jQuery(this).attr("id"));
         var matrix_id = name_fragments[0];
@@ -283,14 +283,13 @@ jQuery(".matrix").ready(function(){
             var new_row = line_template.clone(true).attr('id', matrix_id + "__line_" + new_row_index).removeClass('template');
 
             // Update the cells
-            new_row.find("input[id*='__cell_'], select[id*='__cell_']").each(function(){
+            new_row.find("[id*='__cell_']").each(function(){
                 var name_fragments = jQuery(this).attr("id").split("_");
                 var column_index = name_fragments.slice(-1)[0];
                 var new_cell_id = matrix_id + "__cell_" + new_row_index + "_" + column_index;
                 jQuery(this).attr('id', new_cell_id).attr('name', new_cell_id).val(cycling_values[0]);
                 // If there is a sibling button increment, update it too
-                var new_button_id = "button_" + new_cell_id;
-                jQuery(this).parent().find(increment_button_selector).attr('id', new_button_id).text(cycling_values[0]);
+                jQuery(this).parent().find(increment_button_selector).removeAttr('id').text(cycling_values[0]);
             });
 
         // We're in the middle of the matrix: display a new sub resource selector
