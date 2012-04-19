@@ -464,11 +464,17 @@
                 float: right;
             }
 
-            .matrix .zero {
+            .matrix .zero,
+            .matrix .zero .button,
+            .matrix .zero input,
+            .matrix .zero select {
                 color: #ccc;
             }
 
-            .matrix .negative {
+            .matrix .negative,
+            .matrix .negative .button,
+            .matrix .negative input,
+            .matrix .negative select {
                 color: #f00;
             }
 
