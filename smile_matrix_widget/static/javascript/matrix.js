@@ -41,6 +41,23 @@ jQuery(".matrix").ready(function(){
         return id_parts;
     };
 
+    // Get cell value whatever the widget used to render it
+    function get_cell_value(cell, default_value){
+        default_value = parseFloat(default_value);
+        default_value = isNaN(default_value) ? 0.0 : default_value;
+        var raw_value;
+        var cell = jQuery(cell);
+        // Editable cell featuring a widget
+        if (cell.is("input")) {
+            raw_value = cell.attr('value');
+        // Non-editable cell with plain-text value
+        } else {
+            raw_value = cell.text();
+        };
+        raw_value = parseFloat(raw_value);
+        return isNaN(raw_value) ? default_value : raw_value;
+    };
+
 
     // Selector expressions
     var increment_cells_selector = "input.increment[kind='float']";
@@ -93,12 +110,6 @@ jQuery(".matrix").ready(function(){
     });
 
 
-    // Get cell value whatever the widget used to render it
-    function get_cell_value(cell){
-        return parseFloat(jQuery(cell).text());
-    };
-
-
     // Set cell style dynamicaly
     function set_cell_style(cell, cell_value, threshold){
         if (!isNaN(threshold)) {
@@ -129,11 +140,8 @@ jQuery(".matrix").ready(function(){
         // Select all fields of the columns and sum them up
         var column_total = 0;
         // Only cells in the tbody of the table are sums up by columns
-        jQuery("#" + matrix_id + " tbody [id*='__cell_'][id$='_" + column_index + "']").each(function(){
-            cell_value = parseFloat(jQuery(this).val());
-            if (!isNaN(cell_value)) {
-                column_total += cell_value;
-            };
+        jQuery("#" + matrix_id + " tbody [id^='" + matrix_id + "__cell_'][id$='_" + column_index + "']").each(function(){
+            column_total += get_cell_value(jQuery(this));
         });
         // Get warning threshold
         var column_threshold = parseFloat(jQuery("#" + matrix_id + "__column_warning_threshold").first().val());
@@ -148,14 +156,11 @@ jQuery(".matrix").ready(function(){
     function update_row_total(matrix_id, row_index){
         // Select all fields of the row and sum them up
         var row_total = 0;
-        jQuery("#" + matrix_id + " table [id*='__cell_" + row_index + "_']").each(function(){
-            cell_value = parseFloat(jQuery(this).attr('value'));
-            if (!isNaN(cell_value)) {
-                row_total += cell_value;
-            };
+        jQuery("#" + matrix_id + " table [id^='" + matrix_id + "__cell_" + row_index + "_']").each(function(i, cell){
+            row_total += get_cell_value(cell);
         });
-        jQuery("#" + matrix_id + "__row_total_" + row_index).text(row_total).each(function(){
-            set_cell_style(jQuery(this), row_total);
+        jQuery("#" + matrix_id + "__row_total_" + row_index).text(row_total).each(function(i, cell){
+            set_cell_style(cell, row_total);
         });
     };
 
@@ -165,7 +170,7 @@ jQuery(".matrix").ready(function(){
         // Only compute grand totals from cells in the tbody
         var grand_total = 0;
         jQuery("#" + matrix_id + " tbody [id^='" + matrix_id + "__row_total_']:not([id^='" + matrix_id + "__row_total_dummy'])").each(function(){
-            grand_total += parseFloat(jQuery(this).text());
+            grand_total += get_cell_value(jQuery(this));
         });
         jQuery("#" + matrix_id + "__grand_total").text(grand_total).each(function(){
             set_cell_style(jQuery(this), grand_total);
