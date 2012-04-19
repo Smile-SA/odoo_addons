@@ -492,7 +492,10 @@ jQuery(".matrix").ready(function(){
 
 
     // Catch action on navigation buttons and move the timeline accordingly
-    jQuery(".matrix .button.navigation:not(.disabled)").click(function(){
+    jQuery(".matrix .button.navigation").click(function(){
+        if (jQuery(this).hasClass("disabled")) {
+            return;
+        }
         var matrix = get_parent_matrix(jQuery(this));
         var matrix_id = matrix.attr("id");
 
