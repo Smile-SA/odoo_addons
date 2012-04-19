@@ -47,12 +47,15 @@ jQuery(".matrix").ready(function(){
         default_value = isNaN(default_value) ? 0.0 : default_value;
         var raw_value;
         var cell = jQuery(cell);
-        // Non-editable cell with plain-text value
-        if (cell.is("td")) {
-            raw_value = cell.text();
-        // Editable cell featuring a widget
-        } else {
+        // Editable widget containing the cell value was directly provided
+        if (cell.is("input, select")) {
             raw_value = cell.attr('value');
+        // We got an editable cell containing a widget with the value
+        } else if (cell.find("input, select").length > 0) {
+            raw_value = cell.find("input, select").first().attr('value');
+        // Non-editable cell with plain-text value
+        } else {
+            raw_value = cell.text();
         };
         raw_value = parseFloat(raw_value);
         return isNaN(raw_value) ? default_value : raw_value;
@@ -566,10 +569,7 @@ jQuery(".matrix").ready(function(){
                     partial_total = '';
                 } else {
                     hidden_columns.each(function(i, cell){
-                        cell_value = get_cell_value(cell);
-                        if (!isNaN(cell_value)) {
-                            partial_total += cell_value;
-                        };
+                        partial_total += get_cell_value(cell);
                     });
                 };
                 // Update partial total content and style
