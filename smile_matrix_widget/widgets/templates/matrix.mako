@@ -65,10 +65,12 @@
         %if col_id:
             column_${col_id}
         %endif
-        %if not cell_value:
-            zero
-        %elif cell_value < 0.0:
-            negative
+        %if not cell_editable:
+            %if not cell_value:
+                zero
+            %elif cell_value < 0.0:
+                negative
+            %endif
         %endif
         ">
         %if cell_value is not None:
