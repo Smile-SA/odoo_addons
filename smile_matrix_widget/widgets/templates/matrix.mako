@@ -531,6 +531,7 @@
             }
 
             .matrix input,
+            .matrix select,
             .matrix table .button {
                 text-align: center;
             }
