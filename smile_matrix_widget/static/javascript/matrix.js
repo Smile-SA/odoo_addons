@@ -364,6 +364,9 @@ jQuery(".matrix").ready(function(){
             new_row.insertBefore(level_last_row).hide().fadeIn('fast');
         };
 
+        // Update cells depending on the line
+        update_totals_depending_on_row(matrix_id);
+
         // Force movement to current position to update new line cells visibility
         move_to_position(null, matrix_id);
 
@@ -434,16 +437,24 @@ jQuery(".matrix").ready(function(){
             document.getElementById(removed_lines_field_name).setAttribute('value', removed_lines);
             // Really remove the row
             jQuery(this).remove();
-            // Force update of all column totals
-            matrix.find("tfoot tr.total [id^='" + matrix_id + "__column_total_']").each(function(){
-                var name_fragments = parse_id(jQuery(this).attr("id"));
-                var column_index = name_fragments[name_fragments.length - 1];
-                update_column_total(matrix_id, column_index);
-            });
-            // Update grand total
-            update_grand_total(matrix_id);
+            // Update all totals depending on the row
+            update_totals_depending_on_row(matrix_id);
         });
     });
+
+
+    // Utility method which update all cells depending on the line given
+    function update_totals_depending_on_row(matrix_id){
+        // Force update of all column totals
+        jQuery("#" + matrix_id).find("tfoot tr.total [id^='" + matrix_id + "__column_total_']").each(function(){
+            var name_fragments = parse_id(jQuery(this).attr("id"));
+            var column_index = name_fragments[name_fragments.length - 1];
+            update_column_total(matrix_id, column_index);
+        });
+        // Update grand total
+        update_grand_total(matrix_id);
+        // TODO: Update here subtotals on upper levels
+    };
 
 
     // Move the timeline by updating column visibility
