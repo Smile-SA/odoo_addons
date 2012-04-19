@@ -47,12 +47,12 @@ jQuery(".matrix").ready(function(){
         default_value = isNaN(default_value) ? 0.0 : default_value;
         var raw_value;
         var cell = jQuery(cell);
-        // Editable cell featuring a widget
-        if (cell.is("input")) {
-            raw_value = cell.attr('value');
         // Non-editable cell with plain-text value
-        } else {
+        if (cell.is("td")) {
             raw_value = cell.text();
+        // Editable cell featuring a widget
+        } else {
+            raw_value = cell.attr('value');
         };
         raw_value = parseFloat(raw_value);
         return isNaN(raw_value) ? default_value : raw_value;
