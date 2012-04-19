@@ -528,6 +528,10 @@
                 text-align: center;
             }
 
+            .matrix .resource_values select {
+                text-align: left;
+            }
+
             .matrix table .resource,
             .matrix table .resource_selector {
                 text-align: left;
