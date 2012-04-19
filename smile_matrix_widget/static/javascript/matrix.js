@@ -359,13 +359,15 @@ jQuery(".matrix").ready(function(){
         // Insert our new row at the start of the sub-level: it enhance usability as it make the new row as close as the button we just clicked.
         // Beware of Firefox strange behaviour. See: http://api.jquery.com/fadeIn/#comment-47240324
         if(level > 0){
-            new_row.insertAfter(level_last_row).hide().fadeIn('fast');
+            new_row.insertAfter(level_last_row);
         } else {
-            new_row.insertBefore(level_last_row).hide().fadeIn('fast');
+            new_row.insertBefore(level_last_row);
         };
+        new_row.hide().fadeIn('fast');
 
         // Update cells depending on the line
-        update_totals_depending_on_row(matrix_id);
+        update_row_total(matrix_id, new_row_index);
+        update_row_sub_totals(matrix_id);
 
         // Force movement to current position to update new line cells visibility
         move_to_position(null, matrix_id);
@@ -438,14 +440,14 @@ jQuery(".matrix").ready(function(){
             // Really remove the row
             jQuery(this).remove();
             // Update all totals depending on the row
-            update_totals_depending_on_row(matrix_id);
+            update_row_sub_totals(matrix_id);
         });
     });
 
 
-    // Utility method which update all cells depending on the line given
-    function update_totals_depending_on_row(matrix_id){
-        // Force update of all column totals
+    // Utility method to update all column's totals and sub-totals of a row
+    function update_row_sub_totals(matrix_id){
+        // Force update of all column full totals
         jQuery("#" + matrix_id).find("tfoot tr.total [id^='" + matrix_id + "__column_total_']").each(function(){
             var name_fragments = parse_id(jQuery(this).attr("id"));
             var column_index = name_fragments[name_fragments.length - 1];
@@ -453,7 +455,7 @@ jQuery(".matrix").ready(function(){
         });
         // Update grand total
         update_grand_total(matrix_id);
-        // TODO: Update here subtotals on upper levels
+        // TODO: Update here sub-totals and sub-grandtotals of upper levels
     };
 
 
