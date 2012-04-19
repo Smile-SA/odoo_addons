@@ -365,12 +365,13 @@ jQuery(".matrix").ready(function(){
         };
         new_row.hide().fadeIn('fast');
 
-        // Update cells depending on the line
-        update_row_total(matrix_id, new_row_index);
-        update_row_sub_totals(matrix_id);
-
         // Force movement to current position to update new line cells visibility
         move_to_position(null, matrix_id);
+
+        // Update cells depending on the line
+        update_row_total(matrix_id, new_row_index);
+        update_partial_totals(matrix_id);
+        update_row_sub_totals(matrix_id);
 
         // Remove the entry from the selector
         jQuery(update_parent_selector(level_last_row.parent().find("[id='" + new_row.attr("id") + "']"), "hide"));
@@ -491,6 +492,38 @@ jQuery(".matrix").ready(function(){
     };
 
 
+    // Update partial totals of cells hidden on the right or left side of the navigation slider
+    function update_partial_totals(matrix_id){
+        var row_index_list = [];
+        jQuery("#" + matrix_id + " tr:not(.template) td[id^='" + matrix_id + "__navigation_righttotal_']").each(function() {
+            row_index_list.push(jQuery(this).attr("id").split('_').pop());
+        });
+        jQuery.each(row_index_list, function(i, row_index) {
+            jQuery.each(['right', 'left'], function(j, position) {
+                // Get cells
+                var partial_total_cell = jQuery("#" + matrix_id + "__navigation_" + position + "total_" + row_index);
+                if (position == 'right'){
+                    var hidden_columns = partial_total_cell.prevUntil("td:visible", "td:hidden");
+                } else {
+                    var hidden_columns = partial_total_cell.nextUntil("td:visible", "td:hidden");
+                }
+                // Compute the partial total
+                var partial_total = 0;
+                if (!hidden_columns.length) {
+                    partial_total = '';
+                } else {
+                    hidden_columns.each(function(i, cell){
+                        partial_total += get_cell_value(cell);
+                    });
+                };
+                // Update partial total content and style
+                partial_total_cell.text(partial_total);
+                set_cell_style(partial_total_cell, partial_total);
+            });
+        });
+    };
+
+
     // Catch action on navigation buttons and move the timeline accordingly
     jQuery(".matrix .button.navigation").click(function(){
         if (jQuery(this).hasClass("disabled")) {
@@ -565,35 +598,8 @@ jQuery(".matrix").ready(function(){
             end_buttons.removeClass("disabled");
         };
 
-        // Update total of cells hidden on the right or left side of the navigation slider
-        var column_ids = [];
-        jQuery("#" + matrix_id + " td[id^='" + matrix_id + "__navigation_righttotal_']").each(function() {
-            column_ids.push(jQuery(this).attr("id").split('_').pop());
-        });
-        jQuery.each(column_ids, function(i, line_id) {
-            jQuery.each(['right', 'left'], function(j, position) {
-                // Get cells
-                var partial_total_cell = jQuery("#" + matrix_id + "__navigation_" + position + "total_" + line_id);
-                if (position == 'right'){
-                    var hidden_columns = partial_total_cell.prevUntil("td:visible", "td:hidden");
-                } else {
-                    var hidden_columns = partial_total_cell.nextUntil("td:visible", "td:hidden");
-                }
-                // Compute the partial total
-                var partial_total = 0;
-                if (!hidden_columns.length) {
-                    partial_total = '';
-                } else {
-                    hidden_columns.each(function(i, cell){
-                        partial_total += get_cell_value(cell);
-                    });
-                };
-                // Update partial total content and style
-                partial_total_cell.text(partial_total);
-                set_cell_style(partial_total_cell, partial_total);
-            });
-        });
-
+        // Update partial totals
+        update_partial_totals(matrix_id);
     });
 
 
