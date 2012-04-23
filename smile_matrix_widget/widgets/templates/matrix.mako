@@ -264,7 +264,7 @@
         %else:
 
             %if navigation:
-                <td class="left navigation"></td>
+                <td id="${"%s__navigation_lefttotal_%s" % (name, virtual_line['id'])}" class="left navigation"></td>
             %endif
 
             %for date in date_range:
@@ -280,7 +280,7 @@
             %endfor
 
             %if navigation:
-                <td class="right navigation"></td>
+                <td id="${"%s__navigation_righttotal_%s" % (name, virtual_line['id'])}" class="right navigation"></td>
             %endif
 
         %endif
