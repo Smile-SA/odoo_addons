@@ -495,7 +495,7 @@ jQuery(".matrix").ready(function(){
     // Update partial totals of cells hidden on the right or left side of the navigation slider
     function update_partial_totals(matrix_id){
         var row_index_list = [];
-        jQuery("#" + matrix_id + " tr:not(.template) td[id^='" + matrix_id + "__navigation_righttotal_']").each(function() {
+        jQuery("#" + matrix_id + " tr:not(.template) td.navigation.right").each(function() {
             row_index_list.push(jQuery(this).attr("id").split('_').pop());
         });
         jQuery.each(row_index_list, function(i, row_index) {

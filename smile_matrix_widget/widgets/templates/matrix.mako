@@ -694,7 +694,7 @@
                         <td class="resource">${value['total_label']}</td>
                         ${render_additional_column_totals(value['additional_columns'], body_lines, position='left')}
                         %if navigation:
-                            <td class="left navigation"></td>
+                            <td id="${"%s__navigation_lefttotal_total" % (name)}" class="left navigation"></td>
                         %endif
                         %for date in date_range:
                             <%
@@ -714,7 +714,7 @@
                             ${render_cell(column_total_cell, cell_id=column_total_cell_id, col_id=date, css_classes=column_total_css_classes)}
                         %endfor
                         %if navigation:
-                            <td class="right navigation"></td>
+                            <td id="${"%s__navigation_righttotal_total" % (name)}" class="right navigation"></td>
                         %endif
                         %if not hide_line_totals:
                             <%
