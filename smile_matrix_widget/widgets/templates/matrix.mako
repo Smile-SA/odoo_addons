@@ -442,7 +442,8 @@
                 width: inherit;
             }
 
-            div.non-editable .matrix table td {
+            div.non-editable .matrix table td,
+            div.non-editable div.notebook table.fields .matrix td {
                 border: 0;
             }
 
@@ -554,8 +555,8 @@
                 min-width: 2.2em;
             }
 
-            .matrix td, div.non-editable .matrix table td,
-            .matrix th, div.non-editable .matrix table th {
+            .matrix td, div.non-editable .matrix table td, div.non-editable div.notebook table.fields .matrix td,
+            .matrix th, div.non-editable .matrix table th, div.non-editable div.notebook table.fields .matrix th {
                 height: 2em;
                 min-width: 2.2em;
                 margin: 0;
@@ -576,16 +577,16 @@
                 color: white;
             }
 
-            .matrix .widget_spacer td, div.non-editable .matrix table .widget_spacer td {
+            .matrix .widget_spacer td, div.non-editable .matrix table .widget_spacer td, div.non-editable div.notebook table.fields .matrix .widget_spacer td {
                 height: 1em;
             }
 
-            .matrix th, div.non-editable .matrix table th {
+            .matrix th, div.non-editable .matrix table th, div.non-editable div.notebook table.fields .matrix th {
                 padding-right: .3em;
                 padding-left: .3em;
             }
 
-            .matrix th.resource, div.non-editable .matrix table th.resource {
+            .matrix th.resource, div.non-editable .matrix table th.resource, div.non-editable div.notebook table.fields .matrix th.resource {
                 padding-right: .1em;
                 padding-left: .1em;
             }
@@ -605,13 +606,13 @@
                 border-right: 1px dotted #ccc;
             }
 
-            .matrix .resource, div.non-editable .matrix table td.resource {
+            .matrix .resource, div.non-editable .matrix table td.resource, div.non-editable div.notebook table.fields .matrix td.resource {
                 border-right: 1px dotted #ccc;
             }
 
             %if not hide_tree:
                 %for i in range(1, len(resource_value_list)):
-                    #${name}.matrix tbody tr.level_${i} td, div.non-editable .matrix table tbody tr.level_${i} td {
+                    #${name}.matrix tbody tr.level_${i} td, div.non-editable .matrix table tbody tr.level_${i} td, div.non-editable div.notebook table.fields .matrix tbody tr.level_${i} td {
                         border-top-width: ${len(resource_value_list) - i + 1}px;
                     }
                     #${name}.matrix .level_${i+1} td.resource,
