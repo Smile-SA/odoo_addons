@@ -112,6 +112,7 @@ class smile_activity_workload(osv.osv):
                 ],
             #additional_line_property='additional_line_ids',
             column_totals_warning_threshold=None,
+            non_editable_tree = True,
             css_classes=['workload'],
             title="Workload lines",
             ),
