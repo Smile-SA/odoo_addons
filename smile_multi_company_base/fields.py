@@ -26,7 +26,9 @@ def new_get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
     prop = obj.pool.get('ir.property')
     vids = [obj._name + ',' + str(oid) for oid in  ids]
 
+    # Change by Smile #
     domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
+    ###################
     if vids:
         domain = [('res_id', 'in', vids)] + domain
     return prop.search(cr, uid, domain, context=context)
@@ -66,6 +68,8 @@ def new_fnct_write(self, obj, cr, uid, id_, prop_name, id_val, obj_dest, context
     return False
 
 def new_fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
+    context = context or {}
+
     if isinstance(ids, (int, long)):
         ids = [ids]
 
@@ -83,7 +87,7 @@ def new_fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
         resources = obj.read(cr, uid, ids, ['company_id'], context, '_classic_write')
     for resource in resources:
         domain = global_domain[:]
-        domain.append(('res_id', '=', '%s,%s' % (obj._name, resource['id'])))
+        domain.extend(['|', ('res_id', '=', '%s,%s' % (obj._name, resource['id'])), ('res_id', '=', False)])
         company_id = context.get('company_id', False)
         if not company_id and 'company_id' in obj._columns:
             company_id = resource['company_id']
@@ -93,14 +97,14 @@ def new_fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
         nids = properties.search(cr, uid, domain, context=context)
         for prop in properties.browse(cr, uid, nids, context):
             value = properties.get_by_record(cr, uid, prop, context=context)
-            res[prop.res_id.id][prop.fields_id.name] = value or False
+            res[resource['id']][prop.fields_id.name] = value or False
             if value and (prop.type == 'many2one'):
                 record_exists = obj.pool.get(value._name).exists(cr, uid, value.id)
                 if record_exists:
                     replaces.setdefault(value._name, {})
                     replaces[value._name][value.id] = True
                 else:
-                    res[prop.res_id.id][prop.fields_id.name] = False
+                    res[resource['id']][prop.fields_id.name] = False
 
     for rep in replaces:
         nids = obj.pool.get(rep).search(cr, uid, [('id', 'in', replaces[rep].keys())], context=context)

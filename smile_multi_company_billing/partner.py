@@ -25,17 +25,20 @@ class ResPartner(osv.osv):
     _inherit = "res.partner"
 
     def _get_partner_company(self, cr, uid, ids, name, arg, context=None):
+        res = {}
         if isinstance(ids, (int, long)):
-            ids= [ids]
-        res = {}.fromkeys(ids, False)
+            ids = [ids]
+        for partner_id in ids:
+            res[partner_id] = {'is_intragroup_company': False, 'partner_company_id': False}
         company_obj = self.pool.get('res.company')
         company_ids = company_obj.search(cr, uid, [], context=context)
         for company in company_obj.read(cr, uid, company_ids, ['partner_id'], context, '_classic_write'):
             if company['partner_id'] in ids:
-                res[company['partner_id']] = company['id']
+                res[company['partner_id']] = {'is_intragroup_company': True, 'partner_company_id': company['id']}
         return res
 
     _columns = {
-        'partner_company_id': fields.function(_get_partner_company, method=True, type='many2one', relation="res.company", string='Company', store=True),
+        'is_intragroup_company': fields.function(_get_partner_company, method=True, type='boolean', string='Is an intra-group company', store=True, multi='intragroup'),
+        'partner_company_id': fields.function(_get_partner_company, method=True, type='many2one', relation="res.company", string='Company', store=True, multi='intragroup'),
     }
 ResPartner()

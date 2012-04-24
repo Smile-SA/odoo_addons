@@ -36,13 +36,13 @@ class AccountMove(osv.osv):
         if invoice and invoice.behalf_of_id and self.validate(cr, uid, ids, context):
             move_ids_to_post = ids[:]
             fiscal_position_obj = self.pool.get('account.fiscal.position')
-            fiscal_position_id = invoice.behalf_of_id.fiscal_position_src_id.id
+            fiscal_position = invoice.behalf_of_id.fiscal_position_src_id
             for move in self.browse(cr, uid, ids, context):
                 # Update move for the source company
-                journal_id = fiscal_position_obj.map_journal(cr, uid, fiscal_position_id, move.journal_id.id, context)
+                journal_id = fiscal_position_obj.map_journal(cr, uid, fiscal_position, move.journal_id.id, context)
                 lines = []
                 for line in move.line_id:
-                    account_id = fiscal_position_obj.map_account(cr, uid, fiscal_position_id, line.account_id.id, context)
+                    account_id = fiscal_position_obj.map_account(cr, uid, fiscal_position, line.account_id.id, context)
                     lines.append((1, line.id, {'account_id': account_id, 'journal_id': journal_id}))
                 move.write({'journal_id': journal_id, 'line_id': lines}, context) # TODO: test it in order to check if pass constraints
                 # Create move for the destination company

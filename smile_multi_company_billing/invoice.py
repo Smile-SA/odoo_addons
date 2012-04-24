@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.translate import _
 
 class Invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -150,13 +151,13 @@ class Invoice(osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, type_, partner_id, date_invoice=False, \
             payment_term=False, partner_bank_id=False, company_id=False):
-        res = self.onchange_partner_id(cr, uid, ids, type_, partner_id, date_invoice, \
+        res = super(Invoice, self).onchange_partner_id(cr, uid, ids, type_, partner_id, date_invoice, \
                                        payment_term, partner_bank_id, company_id)
         self._update_onchange_result_with_fiscal_position(cr, uid, res, company_id, partner_id)
         return res
 
     def onchange_company_id(self, cr, uid, ids, company_id, partner_id, type_, invoice_line, currency_id):
-        res = self.onchange_company_id(cr, uid, ids, company_id, partner_id, type_, invoice_line, currency_id)
+        res = super(Invoice, self).onchange_company_id(cr, uid, ids, company_id, partner_id, type_, invoice_line, currency_id)
         self._update_onchange_result_with_fiscal_position(cr, uid, res, company_id, partner_id)
         return res
 Invoice()
