@@ -404,7 +404,7 @@ class SartreTrigger(osv.osv):
             if trigger.on_function:
                 for field_method in ('get', 'set'):
                     if trigger.on_function_type in (field_method, 'both'):
-                        original_method = get_original_method(getattr(fields, 'function.%s' % field_method))
+                        original_method = get_original_method(getattr(fields.function, field_method))
                         if original_method:
                             methods_to_decorate.append(original_method)
             if trigger.on_other:
@@ -506,7 +506,8 @@ class SartreTrigger(osv.osv):
                         other_value = _get_id_from_browse_record(eval(str(dynamic_other_value.group()[2:-2]).strip(), {
                             'object': object_,
                             'context': context,
-                            'time':time,
+                            'time': time,
+                            'relativedelta': relativedelta,
                         }))
                     current_field_value = current_values.get(object_.id, {}).get(field)
                     old_field_value = old_values.get(object_.id, {}).get(field)
