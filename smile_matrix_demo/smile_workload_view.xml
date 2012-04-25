@@ -13,9 +13,31 @@
                     <field name="start_date"/>
                     <field name="project_id"/>
                     <field name="end_date"/>
+                    <html>
+                        <script type="text/javascript">
+                            // Monkey-patch original openobject/static/javascript/openobject/openobject.dom.js:frame_dialog() to force modal window's dimensions
+                            $(document).ready(function(){
+                                (function(){
+                                    var frame_dialog_orig = $.frame_dialog;
+                                    $.frame_dialog = function(frame_attrs, data, options) {
+                                        console.log("Monkey-patching frame_dialog() to force modal window's dimensions.");
+                                        $.extend(options, {
+                                            width: "95%%",
+                                            height: "90%%",
+                                        });
+                                        return frame_dialog_orig(frame_attrs, data, options);
+                                    };
+                                })();
+                            });
+                        </script>
+                    </html>
                     <button type="object" name="modal_window_view" string="Open current form in modal window"/>
                     <separator string="Workload lines" colspan="4"/>
                     <notebook colspan="4">
+                        <page string="Tab1">
+                            <group colspan="4" col="1">
+                            </group>
+                        </page>
                         <page string="Matrix tab test">
                             <group colspan="4" col="1">
                                 <field name="matrix" widget="matrix" nolabel="1"/>
