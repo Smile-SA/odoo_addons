@@ -89,6 +89,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Changelog
 ---------
 
+* **0.8.dev** (unreleased)
+
+No changes yet.
+
 * **0.7** (2012-04-25)
   * Add partial totals of hidden columns below navigation buttons
   * Update naming conventions from `*_active_*` to `*_visible_*`
