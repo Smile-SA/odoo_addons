@@ -1,0 +1,121 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data noupdate="0">
+
+		<!-- Sartre Operators -->
+
+		<record id="sartre_operator_isequalto0" model="sartre.operator">
+			<field name="name">is equal to</field>
+			<field name="symbol">=</field>
+			<field name="opposite_symbol">&lt;&gt;</field>
+			<field name="native_operator">=</field>
+			<field name="value_age_filter">both</field>
+			<field name="other_value_necessary" eval="1"/>
+			<field name="expression">result = selected_field_value == other_value</field>
+		</record>
+		<record id="sartre_operator_lessthan0" model="sartre.operator">
+			<field name="name">less than</field>
+			<field name="symbol">&lt;=</field>
+			<field name="opposite_symbol">&gt;</field>
+			<field name="native_operator">&lt;=</field>
+			<field name="value_age_filter">both</field>
+			<field name="other_value_necessary" eval="1"/>
+			<field name="expression">result = selected_field_value &lt;= other_value</field>
+		</record>
+		<record id="sartre_operator_greaterthan0" model="sartre.operator">
+			<field name="name">greater than</field>
+			<field name="symbol">&gt;=</field>
+			<field name="opposite_symbol">&lt;</field>
+			<field name="native_operator">&gt;=</field>
+			<field name="value_age_filter">both</field>
+			<field name="other_value_necessary" eval="1"/>
+			<field name="expression">result = selected_field_value &gt;= other_value</field>
+		</record>
+		<record id="sartre_operator_containsexactly0" model="sartre.operator">
+			<field name="name">contains exactly</field>
+			<field name="symbol">like</field>
+			<field name="opposite_symbol">not like</field>
+			<field name="native_operator">like</field>
+			<field name="value_age_filter">both</field>
+			<field name="other_value_necessary" eval="1"/>
+			<field name="other_value_transformation">'%'+value+'%'</field>
+			<field name="expression">result = other_value in selected_field_value</field>
+		</record>
+		<record id="sartre_operator_contains0" model="sartre.operator">
+			<field name="name">contains</field>
+			<field name="symbol">ilike</field>
+			<field name="opposite_symbol">not ilike</field>
+			<field name="native_operator">ilike</field>
+			<field name="value_age_filter">both</field>
+			<field name="other_value_necessary" eval="1"/>
+			<field name="other_value_transformation">'%'+value+'%'</field>
+			<field name="expression">result = other_value.upper() in selected_field_value.upper()</field>
+		</record>
+		<record id="sartre_operator_in0" model="sartre.operator">
+			<field name="name">in</field>
+			<field name="symbol">in</field>
+			<field name="opposite_symbol">not in</field>
+			<field name="native_operator">in</field>
+			<field name="value_age_filter">both</field>
+			<field name="other_value_necessary" eval="1"/>
+			<field name="other_value_transformation">value.split(',')</field>
+			<field name="expression">result = selected_field_value in str(other_value).split(',')</field>
+		</record>
+		<record id="sartre_operator_childof0" model="sartre.operator">
+			<field name="name">child of</field>
+			<field name="symbol">child_of</field>
+			<field name="opposite_symbol">not child_of</field>
+			<field name="native_operator">child_of</field>
+			<field name="value_age_filter">current</field>
+			<field name="other_value_necessary" eval="1"/>
+			<field name="other_value_transformation">value.split(',')</field>
+			<field name="expression"></field>
+		</record>
+		<record id="sartre_operator_ischanging0" model="sartre.operator">
+			<field name="name">is changing</field>
+			<field name="symbol">~</field>
+			<field name="opposite_symbol">!~</field>
+			<field name="native_operator">none</field>
+			<field name="value_age_filter">old</field>
+			<field name="other_value_necessary" eval="0"/>
+			<field name="expression">result = current_field_value != old_field_value and (not other_value or current_field_value == other_value)</field>
+		</record>
+		<record id="sartre_operator_isupdating0" model="sartre.operator">
+			<field name="name">is updating</field>
+			<field name="symbol">U</field>
+			<field name="opposite_symbol">!U</field>
+			<field name="native_operator">none</field>
+			<field name="value_age_filter">old</field>
+			<field name="other_value_necessary" eval="0"/>
+			<field name="expression">result = arg_value != None and arg_value == current_field_value and arg_value != old_field_value and (not other_value or arg_value == other_value)</field>
+		</record>
+		<record id="sartre_operator_exists0" model="sartre.operator">
+			<field name="name">exists</field>
+			<field name="symbol">E</field>
+			<field name="opposite_symbol">!E</field>
+			<field name="native_operator">none</field>
+			<field name="value_age_filter">current</field>
+			<field name="other_value_necessary" eval="0"/>
+			<field name="expression">result = bool(current_field_value)</field>
+		</record>
+		<record id="sartre_operator_increasesover0" model="sartre.operator">
+			<field name="name">increases over 20%</field>
+			<field name="symbol">&gt;=+20%</field>
+			<field name="opposite_symbol">&lt;+20%</field>
+			<field name="native_operator">none</field>
+			<field name="value_age_filter">old</field>
+			<field name="other_value_necessary" eval="0"/>
+			<field name="expression">if old_field_value:
+    result = (current_field_value - old_field_value) / old_field_value >= 0.20
+else:
+    result = current_field_value > old_field_value</field>
+		</record>
+
+		<!-- Sartre Categories -->
+
+		<record id="sartre_category_default0" model="sartre.category">
+			<field name="name">Default</field>
+		</record>
+
+	</data>
+</openerp>

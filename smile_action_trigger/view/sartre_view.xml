@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<!-- Sartre Trigger -->
+
+		<record id="sartre_trigger_form_view" model="ir.ui.view">
+			<field name="name">Action Trigger - Form</field>
+			<field name="model">sartre.trigger</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Action Trigger">
+					<group colspan="4">
+						<label colspan="2" />
+						<field name="category_id" widget="selection" />
+						<field name="name" select="1" />
+						<field name="active" select="1" />
+						<field name="model_id" select="1" on_change="onchange_model_id(model_id, on_function, on_other)"/>
+						<field name="test_mode" />
+					</group>
+					<notebook colspan="4">
+						<page string="Triggers">
+							<button type="object" name="run_now" string="Run Now" colspan="4" />
+							<field name="on_create" />
+							<field name="on_date" />
+							<field name="on_write" />
+							<field name="on_function" on_change="onchange_model_id(model_id, on_function, on_other)" />
+							<field name="on_unlink" />
+							<field name="on_client_action" />
+							<newline/>
+							<field name="on_other" on_change="onchange_model_id(model_id, on_function, on_other)" />
+							<group string="Trigger on date" col="12" colspan="4" attrs="{'invisible':[('on_date','!=',True)]}">
+								<field name="on_date_type_display1" nolabel="1" attrs="{'required':[('on_date','=',True)]}" />
+								<group attrs="{'invisible':[('on_date_type_display1','!=','other_date')]}">
+									<field name="on_date_type_display2_id" nolabel="1" attrs="{'required':[('on_date_type_display1','=','other_date')]}" />
+								</group>
+								<field name="on_date_range" attrs="{'required':[('on_date','=',True)]}" />
+								<field name="on_date_range_type" nolabel="1" attrs="{'required':[('on_date','=',True)]}" />
+								<group attrs="{'invisible':[('on_date_type_display1','!=','other_date')]}">
+									<field name="on_date_range_operand" nolabel="1" attrs="{'required':[('on_date','=',True)]}" />
+								</group>
+							</group>
+							<group string="Cron Execution Periodicity" colspan="4" attrs="{'invisible':[('on_date','!=',True)]}">
+								<field name="interval_number" nolabel="1" attrs="{'required':[('on_date','=',True)]}" />
+								<field name="interval_type" nolabel="1" attrs="{'required':[('on_date','=',True)]}" />
+                                <field name="nextcall" attrs="{'required':[('on_date','=',True)]}" />
+							</group>
+							<group string="Trigger on function field" colspan="4" attrs="{'invisible':[('on_function','!=',True)]}">
+								<field name="on_function_field_id" attrs="{'required':[('on_function','=',True)]}" />
+								<field name="on_function_type" attrs="{'required':[('on_function','=',True)]}" />
+							</group>
+							<group string="Trigger on other method" colspan="4" attrs="{'invisible':[('on_other','!=',True)]}">
+								<field name="on_other_method_id" attrs="{'required':[('on_other','=',True)]}" />
+							</group>
+							<group string="Trigger on client action" colspan="4" attrs="{'invisible':[('on_client_action','!=',True)]}">
+								<field name="on_client_action_id"/>
+								<field name="on_client_action_type" nolabel="1" attrs="{'required':[('on_client_action','=',True)], 'readonly': [('on_client_action_id', '!=', False)]}" />
+								<button type="object" name="create_client_action" string="Create Client Action" attrs="{'readonly': [('on_client_action_id', '!=', False)]}" />
+							</group>
+						</page>
+						<page string="Filters">
+							<field name="executions_max_number"/>
+							<field name="filter_ids" colspan="4" nolabel="1" mode="tree,form">
+								<form string="Filter">
+									<group colspan="2">
+										<separator string="Domain" colspan="4" />
+										<field name="field_name" colspan="3" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" />
+										<field name="value_age" nolabel="1" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" attrs="{'readonly': [('value_age_readonly', '=', True)]}" />
+										<field name="value_age_readonly" invisible="1" />
+										<field name="operator_id" on_change="onchange_get_value_age_domain(field_name, operator_id, opposite, value, value_age, value_type)" widget="selection" />
+										<field name="opposite" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" />
+										<field name="value" colspan="3" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" />
+										<field name="value_type" nolabel="1" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" />
+										<separator string="Force domain" colspan="4" />
+										<field name="domain" nolabel="1" colspan="4" />
+									</group>
+									<group colspan="2" col="2">
+										<separator string="Expression builder for field or dynamic value" colspan="2" />
+										<field name="field_id"  on_change="onchange_get_field_expression(parent.model_id, field_expression, field_id)" domain="[('model_id','=',parent.model_id)]" />
+										<field name="field_expression" on_change="onchange_get_field_domain(parent.model_id, field_expression)" />
+										<separator string="Legends for static value" colspan="2" />
+										<label align="0.0" string="Today - %%today" />
+										<label align="0.0" string="Date Format - YYYY-MM-DD" />
+										<label align="0.0" string="Time Format - HH:MM:SS" />
+										<label align="0.0" string="Datetime Format - YYYY-MM-DD HH:MM:SS" />
+									</group>
+								</form>
+								<tree string="Filters">
+									<field name="domain" />
+								</tree>
+							</field>
+							<label align="0.5" string="The rule is satisfied if all test are True (AND). Multiple triggers on same objects are joined using operator OR or force the domain by using the polish notation" colspan="4"/>
+							<field name="domain_force" colspan="4"/>
+						</page>
+						<page string="Actions">
+							<field name="force_actions_execution"/>
+							<field name="action_ids" colspan="4" nolabel="1" domain="[('model_id','=',model_id)]" />
+							<group name="exception_management" attrs="{'invisible': [('test_mode', '=', True)]}" colspan="4">
+								<field name="exception_handling"/>
+								<field name="exception_warning" attrs="{'invisible': [('exception_handling', '!=', 'rollback')]}"/>
+								<field name="exception_message" colspan="4" attrs="{'invisible': ['|', ('exception_handling', '!=', 'rollback'), ('exception_warning', '!=', 'custom')]}"/>
+							</group>
+						</page>
+						<page string="Logs">
+							<field name="log_ids" colspan="4" nolabel="1" mode="tree">
+								<tree string="Logs">
+									<field name="log_date"/>
+									<field name="level"/>
+									<field name="message"/>
+									<field name="log_user_name"/>
+								</tree>
+							</field>
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+		<record id="sartre_trigger_tree_view" model="ir.ui.view">
+			<field name="name">Action Triggers - Tree</field>
+			<field name="model">sartre.trigger</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Action Triggers">
+					<field name="name" />
+					<field name="model_id" />
+					<field name="active" />
+					<field name="category_id" />
+				</tree>
+			</field>
+		</record>
+        <record id="sartre_trigger_search_view" model="ir.ui.view">
+            <field name="name">Action Triggers - Search</field>
+            <field name="model">sartre.trigger</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Action Triggers">
+	                <group>
+	                    <filter string="Trigger on create" icon="terp-tools" domain="[('on_create','=',True)]"/>
+	                    <filter string="write" icon="terp-tools" domain="[('on_write','=',True)]"/>
+	                    <filter string="unlink" icon="terp-tools" domain="[('on_unlink','=',True)]"/>
+	                    <filter string="other method" icon="terp-tools" domain="[('on_other','=',True)]"/>
+	                    <filter string="function field" icon="terp-tools" domain="[('on_function','=',True)]"/>
+	                    <filter string="on date" icon="terp-tools" domain="[('on_date','=',True)]"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="name"/>
+                        <field name="model_id"/>
+	                </group>
+	                <newline/>
+	                <group expand="0" string="Extended..." groups="base.group_extended">
+	                    <field name="category_id"/>
+	                    <field name="active"/>
+	                    <field name="pid_search"/>
+	                </group>
+	                <newline/>
+	                <group expand="0" string="Group By..." groups="base.group_extended">
+	                    <filter string="Object" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'model_id'}"/>
+	                    <separator orientation="vertical"/>
+	                    <filter string="Category" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'category_id'}"/>
+	                </group>
+                </search>
+            </field>
+        </record>
+		<record id="sartre_trigger_action" model="ir.actions.act_window">
+			<field name="name">Triggers</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sartre.trigger</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{'active_test': False}</field>
+		</record>
+		<menuitem name="Action Triggers" id="sartre_trigger_menu" parent="base.next_id_6" sequence="10" />
+		<menuitem action="sartre_trigger_action" id="sartre_trigger_submenu" parent="sartre_trigger_menu" sequence="10" />
+
+		<!-- Sartre Operator -->
+
+		<record id="sartre_operator_tree_view" model="ir.ui.view">
+			<field name="name">Filter Operators</field>
+			<field name="model">sartre.operator</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Operators">
+					<field name="name" select="1" />
+					<field name="symbol" select="1" />
+					<field name="opposite_symbol" select="1" />
+					<field name="native_operator" select="1" />
+					<field name="value_age_filter" select="2" />
+				</tree>
+			</field>
+		</record>
+		<record id="sartre_operator_form_view" model="ir.ui.view">
+			<field name="name">Filter Operator</field>
+			<field name="model">sartre.operator</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Filter Operator">
+					<field name="name" colspan="4" />
+					<field name="symbol" />
+					<field name="opposite_symbol" />
+					<field name="native_operator" />
+					<field name="value_age_filter" />
+					<field name="other_value_necessary" />
+					<field name="other_value_transformation" attrs="{'readonly': [('native_operator', '=', 'none'),('other_value_necessary', '=', False)]}" />
+					<field name="expression" colspan="4" />
+					<label string=""/>
+					<group colspan="2">
+						<html>
+							<div>
+								<p>You can use the following variables</p>
+								<ul>
+									<li>selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')</li>
+									<li>current_field_value (useful if value age filter != 'Both')</li>
+									<li>old_field_value (useful if value age filter != 'Both')</li>
+									<li>other_value (static or dynamic)</li>
+								</ul>
+								<p>You must assign a boolean value to the variable 'result'</p>
+							</div>
+						</html>
+					</group>
+				</form>
+			</field>
+		</record>
+        <record id="sartre_operator_search_view" model="ir.ui.view">
+            <field name="name">Filter Operators - Search</field>
+            <field name="model">sartre.operator</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Filter Operators">
+	                <group>
+	                    <field name="name"/>
+	               		<field name="symbol"/>
+	                	<field name="opposite_symbol"/>
+						<field name="native_operator"/>
+	                </group>
+                </search>
+            </field>
+        </record>
+		<record id="sartre_operator_action" model="ir.actions.act_window">
+			<field name="name">Filter Operators</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sartre.operator</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem action="sartre_operator_action" id="sartre_operator_menu" parent="sartre_trigger_menu" sequence="30" />
+
+		<!-- Sartre Category -->
+
+		<record id="sartre_category_tree_view" model="ir.ui.view">
+			<field name="name">sartre.category.tree</field>
+			<field name="model">sartre.category</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Trigger Categories" editable="top">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		<record id="sartre_category_form_view" model="ir.ui.view">
+			<field name="name">sartre.category.form</field>
+			<field name="model">sartre.category</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Trigger Category">
+					<field name="name" />
+				</form>
+			</field>
+		</record>
+		<record id="sartre_category_search_view" model="ir.ui.view">
+			<field name="name">sartre.category.search</field>
+			<field name="model">sartre.category</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Trigger Categories">
+					<field name="name" />
+				</search>
+			</field>
+		</record>
+		<record id="sartre_category_action" model="ir.actions.act_window">
+			<field name="name">Trigger Categories</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sartre.category</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem action="sartre_category_action" id="sartre_category_menu" parent="sartre_trigger_menu" sequence="50" />
+
+	</data>
+</openerp>
