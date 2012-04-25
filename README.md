@@ -89,7 +89,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Changelog
 ---------
 
-* **0.7.dev** (unreleased)
+* **0.7** (2012-04-25)
   * Add partial totals of hidden columns below navigation buttons
   * Update naming conventions from `*_active_*` to `*_visible_*`
   * Rename `navigation_width` parameter to `navigation_size`
