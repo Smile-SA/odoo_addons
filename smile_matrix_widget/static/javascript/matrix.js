@@ -1,4 +1,4 @@
-jQuery(".matrix").ready(function($){
+jQuery(document).ready(function($){
 
 // console.profile("Matrix profiling");
 
@@ -603,9 +603,31 @@ jQuery(".matrix").ready(function($){
     });
 
 
-    // Initialize the navigation slider
-    $(".matrix").each(function(){
-        $(this).find(".button.navigation.center").first().trigger('click');
+    // Generic method to initialize a matrix
+    function initialize_matrix(matrix) {
+        matrix = $(matrix);
+        // Only apply this method once per matrix widget
+        if(matrix.hasClass("initialized")){
+            return;
+        };
+        matrix.addClass("initialized").find(".button.navigation.center").first().trigger('click');
+    };
+
+
+    // Initialize non-notebook matrix
+    $(".matrix:visible").each(function(i, matrix){
+        matrix = $(matrix);
+        if(matrix.parentsUntil("body", ".notebook").length == 0) {
+            initialize_matrix(matrix);
+        };
+    });
+
+
+    // Intercept MochiKit signal to trigger initialization of matrix located in notebook
+    $(".notebook").live("altered", function(){
+        $(this).find(".matrix:visible").each(function(i, matrix){
+            initialize_matrix(matrix);
+        });
     });
 
 

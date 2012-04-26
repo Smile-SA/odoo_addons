@@ -90,8 +90,7 @@ Changelog
 ---------
 
 * **0.8.dev** (unreleased)
-
-No changes yet.
+  * Fix initialization of matrix in tabs
 
 * **0.7** (2012-04-25)
   * Add partial totals of hidden columns below navigation buttons
