@@ -35,6 +35,7 @@ def new_form_create(self, params, tg_errors=None):
             res['buttons'].new = res['buttons'].new and cache.can_create(params['_terp_model']) and not params.get('_terp_context', {}).get('hide_create_button')
             res['buttons'].edit = res['buttons'].edit and cache.can_write(params['_terp_model']) and not params.get('_terp_context', {}).get('hide_write_button')
             res['buttons'].delete = res['buttons'].delete and cache.can_unlink(params['_terp_model']) and not params.get('_terp_context', {}).get('hide_unlink_button')
+            res['buttons'].cancel = res['buttons'].cancel and not params.get('_terp_context', {}).get('hide_cancel_button')
             return res
     return native_form_create(self, params, tg_errors)
 

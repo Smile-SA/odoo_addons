@@ -26,6 +26,7 @@
     'description': """Smile Buttons Display
 
 Define buttons display from model access rules
+You can hide buttons by adding in context 'hide_*_button' (with * = create / write / unlink / cancel)
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
 """,
