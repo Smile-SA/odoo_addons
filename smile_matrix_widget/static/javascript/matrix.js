@@ -610,7 +610,13 @@ jQuery(document).ready(function($){
         if(matrix.hasClass("initialized")){
             return;
         };
-        matrix.addClass("initialized").find(".button.navigation.center").first().trigger('click');
+        matrix.find(".button.navigation.center").first().trigger('click');
+        // Call custom JS code
+        var custom_js_func = matrix.attr("id") + "_custom_js";
+        window[custom_js_func]();
+        //eval(custom_js_func + '();');
+        // Mark matrix as initialized
+        matrix.addClass("initialized");
     };
 
 

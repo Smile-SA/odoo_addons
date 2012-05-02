@@ -627,13 +627,11 @@
 
         </style>
 
-        %if value.get('custom_js', None):
-            <script type="text/javascript">
-            <!--
-                ${value['custom_js']|n}
-            -->
-            </script>
-        %endif
+        <script type="text/javascript">
+            function ${name}_custom_js() {
+                ${value.get('custom_js', '')|n}
+            };
+        </script>
 
         <div class="toolbar wrapper ui-helper-clearfix">
             %if editable_mode:

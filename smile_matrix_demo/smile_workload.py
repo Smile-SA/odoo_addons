@@ -21,6 +21,7 @@
 
 import datetime
 import random
+import os
 
 from osv import osv, fields
 from smile_matrix_field.matrix_field import matrix, matrix_read_patch, matrix_write_patch, LINE_RENDERING_MODES
@@ -115,6 +116,7 @@ class smile_activity_workload(osv.osv):
             non_editable_tree = True,
             css_classes=['workload'],
             title="Workload lines",
+            custom_js = open(os.path.join(os.path.dirname(__file__), 'custom.js'), 'r').read(),
             ),
         }
 
