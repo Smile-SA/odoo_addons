@@ -629,7 +629,9 @@
 
         <script type="text/javascript">
             function ${name}_custom_js() {
-                ${value.get('custom_js', '')|n}
+                %if value.get('custom_js', None):
+                    ${value.get('custom_js', '')|n}
+                %endif
             };
         </script>
 
