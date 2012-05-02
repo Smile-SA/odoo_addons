@@ -113,7 +113,7 @@
             if col_def.get('hide_value', False):
                 line_property_cell.update({'value': None})
         %>
-        ${render_cell(line_property_cell)}
+        ${render_cell(line_property_cell, css_classes=['additional_column'])}
     %endfor
 </%def>
 
@@ -343,7 +343,7 @@
 
 <%def name="render_additional_column_titles(columns, position='right')">
     %for (i, c) in enumerate([col for col in columns if col.get('position', 'right') == position]):
-        <th>${c.get('label', "Additional %s column #%s" % (position, i))}</th>
+        <th class="additional_column">${c.get('label', "Additional %s column #%s" % (position, i))}</th>
     %endfor
 </%def>
 
@@ -371,7 +371,7 @@
                 'read_only': True,
                 }
         %>
-        ${render_cell(additional_sum_cell, css_classes=['total'])}
+        ${render_cell(additional_sum_cell, css_classes=['total', 'additional_column'])}
     %endfor
 </%def>
 
