@@ -358,7 +358,7 @@
             if not col_def.get('hide_tree_totals', False):
                 additional_sum_cell.update({'value': sum([line.get('cells_data', dict()).get(col_def['line_property'], {}).get('value') or 0.0 for line in sub_lines])})
         %>
-        ${render_cell(additional_sum_cell)}
+        ${render_cell(additional_sum_cell, css_classes=['additional_column'])}
     %endfor
 </%def>
 
