@@ -155,6 +155,43 @@ jQuery(document).ready(function($){
     };
 
 
+    // Update the parent-level subtotal of a cell
+    function update_parent_subtotal(matrix_id, cell_id){
+        var cell = $("#" + cell_id);
+        var cell_level = get_level(cell);
+
+        // There is no parent cell to update
+        if(isNaN(cell_level) || cell_level <= 1) {
+            return;
+        };
+
+        // Get the parent cell we're looking to update
+        var column_index = parse_id(cell_id)[3];
+        var row = cell.parents("tr:first");
+        var row_level = get_level(row);
+        var parent_row = row.prevAll(".resource_line.level_" + (row_level - 1) + ":first");
+        var parent_cell = parent_row.find(".column_" + column_index);
+
+        // Compute subtotal here
+        var sublevels_selector = "";
+        for(i = 1; i < row_level; i++) {
+            sublevels_selector += ".level_" + i + ", ";
+        };
+        var sub_cells = parent_row.nextUntil(sublevels_selector, ":not(.resource_line)").find(".column_" + column_index);
+        var subtotal = 0;
+        sub_cells.each(function(i, cell){
+            subtotal += get_cell_value(cell);
+        });
+
+        // Update subtotal content and style
+        parent_cell.text(subtotal);
+        set_cell_style(parent_cell, subtotal);
+
+        // Call the current method recursively
+        update_parent_subtotal(matrix_id, parent_cell.attr("id"));
+    };
+
+
     // Update a row total
     function update_row_total(matrix_id, row_index){
         // Select all fields of the row and sum them up
@@ -184,7 +221,8 @@ jQuery(document).ready(function($){
     // Compute columns and row totals
     $(".matrix [id*='__cell_']").change(function(){
         // Get current cell coordinates
-        var name_fragments = parse_id($(this).attr("id"));
+        var cell_id = $(this).attr("id");
+        var name_fragments = parse_id(cell_id);
         var matrix_id = name_fragments[0];
         var row_index = name_fragments[2];
         // Are we in the footer of the matrix ?
@@ -194,6 +232,7 @@ jQuery(document).ready(function($){
         if(!bottom_line){
             var column_index = name_fragments[3];
             update_column_total(matrix_id, column_index);
+            update_parent_subtotal(matrix_id, cell_id);
             update_grand_total(matrix_id);
         };
     });
@@ -371,7 +410,7 @@ jQuery(document).ready(function($){
         // Update cells depending on the line
         update_row_total(matrix_id, new_row_index);
         update_partial_totals(matrix_id);
-        update_row_sub_totals(matrix_id);
+        update_row_subtotals(matrix_id);
 
         // Remove the entry from the selector
         $(update_parent_selector(level_last_row.parent().find("[id='" + new_row.attr("id") + "']"), "hide"));
@@ -426,7 +465,8 @@ jQuery(document).ready(function($){
 
     // Activate delete row button
     $(".matrix .delete_button").click(function(){
-        $(this).parentsUntil(".matrix", "tr").first().fadeOut('fast', function(){
+        $(this).parents("tr:first").fadeOut('fast', function(){
+            var row_id = $(this).attr("id");
             // Save the table body for late column totals update
             var matrix = get_parent_matrix($(this));
             var matrix_id = matrix.attr("id");
@@ -434,20 +474,26 @@ jQuery(document).ready(function($){
             $(update_parent_selector($(this), "show"));
             // Add row ID to the list of lines to remove
             var removed_lines_field_name = matrix_id + "__line_removed";
-            var removed_lines = $("#" + removed_lines_field_name).val() + $(this).attr("id") + ',';
+            var removed_lines = $("#" + removed_lines_field_name).val() + row_id + ',';
             $("#" + removed_lines_field_name).val(removed_lines);
             // Force default value update as jQuery < 1.6 seems to mess with DOM attributes and properties
             document.getElementById(removed_lines_field_name).setAttribute('value', removed_lines);
+            // Update all totals depending on the row
+            update_row_subtotals(matrix_id);
+            var cell_ids = $("#" + row_id + " [id^='" + matrix_id + "__cell_']").map(function() {
+                return this.id;
+            }).get();
+            cell_ids.map(function(cell_id){
+                update_parent_subtotal(matrix_id, cell_id);
+            });
             // Really remove the row
             $(this).remove();
-            // Update all totals depending on the row
-            update_row_sub_totals(matrix_id);
         });
     });
 
 
     // Utility method to update all column's totals and sub-totals of a row
-    function update_row_sub_totals(matrix_id){
+    function update_row_subtotals(matrix_id){
         // Force update of all column full totals
         $("#" + matrix_id).find("tfoot tr.total [id^='" + matrix_id + "__column_total_']").each(function(){
             var name_fragments = parse_id($(this).attr("id"));
@@ -456,7 +502,6 @@ jQuery(document).ready(function($){
         });
         // Update grand total
         update_grand_total(matrix_id);
-        // TODO: Update here sub-totals and sub-grandtotals of upper levels
     };
 
 

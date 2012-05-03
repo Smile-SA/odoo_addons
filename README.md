@@ -90,6 +90,7 @@ Changelog
 ---------
 
 * **0.8.dev** (unreleased)
+  * Update intermediate-level totals on cell value change
   * Fix initialization of matrix in tabs
 
 * **0.7** (2012-04-25)

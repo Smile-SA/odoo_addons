@@ -85,28 +85,28 @@ class smile_activity_workload(osv.osv):
             line_rendering_dynamic_property = 'line_rendering',
             increment_values = [-1, 0.0, 2.71, 3.14],
 
-            tree_definition = [
-                { 'line_property': 'profile_id',
-                  'resource_type': 'smile.activity.profile',
-                  'domain': [('name', 'not in', ['Consultant', 'Expert'])],
-                },
-                { 'line_property': 'employee_id',
-                  'resource_type': 'smile.activity.employee',
-                  'dynamic_domain_property': 'employee_filter',
-                },
-                ],
-            # XXX 3-level resource test
             #tree_definition = [
                 #{ 'line_property': 'profile_id',
                   #'resource_type': 'smile.activity.profile',
+                  #'domain': [('name', 'not in', ['Consultant', 'Expert'])],
                 #},
                 #{ 'line_property': 'employee_id',
                   #'resource_type': 'smile.activity.employee',
-                #},
-                #{ 'line_property': 'workload_id',
-                  #'resource_type': 'smile.activity.workload',
+                  #'dynamic_domain_property': 'employee_filter',
                 #},
                 #],
+            # XXX 3-level resource test
+            tree_definition = [
+                { 'line_property': 'profile_id',
+                  'resource_type': 'smile.activity.profile',
+                },
+                { 'line_property': 'employee_id',
+                  'resource_type': 'smile.activity.employee',
+                },
+                { 'line_property': 'workload_id',
+                  'resource_type': 'smile.activity.workload',
+                },
+                ],
             additional_columns=[
                 {'label': "Productivity", 'line_property': 'productivity_index', 'hide_value': True},
                 {'label': "Performance" , 'line_property': 'performance_index' , 'hide_tree_totals': True},
