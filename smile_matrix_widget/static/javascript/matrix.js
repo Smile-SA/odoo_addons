@@ -419,7 +419,7 @@ jQuery(document).ready(function($){
 
     // Search the parent selector of the provided row and either show or hide there the entry carried by the row
     function update_parent_selector(table_row, action) {
-        var table_row_level = get_level($(table_row));
+        var level = get_level($(table_row));
         var matrix = get_parent_matrix(table_row);
         var matrix_id = matrix.attr("id");
         if(level > 1) {
