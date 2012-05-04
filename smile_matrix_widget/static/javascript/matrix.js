@@ -187,6 +187,10 @@ jQuery(document).ready(function($){
         parent_cell.text(subtotal);
         set_cell_style(parent_cell, subtotal);
 
+        // Update parent's row total
+        var parent_row_index = parse_id(parent_cell.attr("id"))[2];
+        update_row_total(matrix_id, parent_row_index);
+
         // Call the current method recursively
         update_parent_subtotal(matrix_id, parent_cell.attr("id"));
     };
