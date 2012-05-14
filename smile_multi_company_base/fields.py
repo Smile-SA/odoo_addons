@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from osv import orm
 from osv.fields import property as property_column
 
 def new_get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
@@ -48,7 +48,7 @@ def new_fnct_write(self, obj, cr, uid, id_, prop_name, id_val, obj_dest, context
 
     default_val = self._get_default(obj, cr, uid, prop_name, context)
     property_create = False
-    if isinstance(default_val, osv.orm.browse_record):
+    if isinstance(default_val, orm.browse_record):
         if default_val.id != id_val:
             property_create = True
     elif default_val != id_val:

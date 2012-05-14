@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import ir_property
 import fields
+import ir_property

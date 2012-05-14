@@ -20,7 +20,12 @@
 ##############################################################################
 
 from osv import osv, fields
+import tools
 from tools.translate import _
+
+def _get_exception_message(exception):
+    msg = isinstance(exception, osv.except_osv) and exception.value or exception
+    return tools.ustr(msg)
 
 class Invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -145,8 +150,9 @@ class Invoice(osv.osv):
         if company_id and partner_id:
             partner_company_id = self.pool.get('res.partner').read(cr, uid, partner_id, ['partner_company_id'], load='_classic_write')['partner_company_id']
             if partner_company_id:
-                res.setdefault('value', {}).update({'fiscal_position': self.get_fiscal_position_id(cr, uid, company_id, partner_company_id)})
-                res.setdefault('domain', {}).update({'fiscal_position': self.get_fiscal_position_domain(cr, uid, company_id, partner_company_id)})
+                fiscal_position_id = self.get_fiscal_position_id(cr, uid, company_id, partner_company_id)
+                res.setdefault('value', {}).update({'fiscal_position': fiscal_position_id})
+                res.setdefault('domain', {}).update({'fiscal_position': fiscal_position_id})
         return res
 
     def onchange_partner_id(self, cr, uid, ids, type_, partner_id, date_invoice=False, \
@@ -157,7 +163,10 @@ class Invoice(osv.osv):
         return res
 
     def onchange_company_id(self, cr, uid, ids, company_id, partner_id, type_, invoice_line, currency_id):
-        res = super(Invoice, self).onchange_company_id(cr, uid, ids, company_id, partner_id, type_, invoice_line, currency_id)
-        self._update_onchange_result_with_fiscal_position(cr, uid, res, company_id, partner_id)
-        return res
+        try:
+            res = super(Invoice, self).onchange_company_id(cr, uid, ids, company_id, partner_id, type_, invoice_line, currency_id)
+            self._update_onchange_result_with_fiscal_position(cr, uid, res, company_id, partner_id)
+            return res
+        except Exception, e:
+            return {'warning': {'title': _('Warning'), 'message': _get_exception_message(e)}}
 Invoice()

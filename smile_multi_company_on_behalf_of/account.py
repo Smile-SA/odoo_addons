@@ -49,10 +49,14 @@ class AccountMove(osv.osv):
                 new_move_ids = invoice.behalf_of_id.account_model_dest_id.generate(context=context)
                 for new_move in self.browse(cr, uid, new_move_ids, context):
                     if new_move.amount:
+                        vals = {'partner_id': move.partner_id.id}
                         for new_line in new_move.line_id:
-                            if new_line.amount_currency:
-                                line_amount = move.amount * new_line.amount_currency / new_move.amount
-                                new_line.write({'amount_currency': line_amount, 'partner_id': move.partner_id.id}, context)
+                            if new_line.debit:
+                                vals['debit'] = move.amount * new_line.amount_currency / new_move.amount
+                            elif new_line.credit:
+                                vals['credit'] = move.amount * new_line.amount_currency / new_move.amount
+                            # TODO: fill amount_line if currency different from original move
+                            new_line.write(vals, context)
                         move_ids_to_post.append(new_move.id)
             ids = move_ids_to_post
         return super(AccountMove, self).post(cr, uid, ids, context)

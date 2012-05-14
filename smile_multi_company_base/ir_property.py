@@ -19,28 +19,26 @@
 #
 ##############################################################################
 
-from osv import osv
+from base.res.ir_property import ir_property
 
-class IrProperty(osv.osv):
-    _inherit = 'ir.property'
+def new_get_domain(self, cr, uid, prop_name, model, context=None):
+    context = context or {}
+    if not isinstance(prop_name, (list, tuple)):
+        prop_name = [prop_name]
+    # Accept a list of properties
+    cr.execute('select id from ir_model_fields where name in %s and model=%s', (tuple(prop_name), model))
+    res = cr.fetchone()
+    if not res:
+        return None
 
-    def _get_domain(self, cr, uid, prop_name, model, context=None):
-        context = context or {}
-        if not isinstance(prop_name, (list, tuple)):
-            prop_name = [prop_name]
-        # Accept a list of properties
-        cr.execute('select id from ir_model_fields where name in %s and model=%s', (tuple(prop_name), model))
-        res = cr.fetchone()
-        if not res:
-            return None
+    if 'force_company' in context and context['force_company']:
+        cid = context['force_company']
+    else:
+        company = self.pool.get('res.company')
+        cid = company._company_default_get(cr, uid, model, res[0], context=context)
 
-        if 'force_company' in context and context['force_company']:
-            cid = context['force_company']
-        else:
-            company = self.pool.get('res.company')
-            cid = company._company_default_get(cr, uid, model, res[0], context=context)
+    domain = ['&', ('fields_id', '=', res[0]),
+              '|', ('company_id', '=', cid), ('company_id', '=', False)]
+    return domain
 
-        domain = ['&', ('fields_id', '=', res[0]),
-                  '|', ('company_id', '=', cid), ('company_id', '=', False)]
-        return domain
-IrProperty()
+ir_property._get_domain = new_get_domain
