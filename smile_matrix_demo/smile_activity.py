@@ -78,7 +78,7 @@ class smile_activity_report(osv.osv):
             date_range_property        = 'date_range',
             visible_date_range_property = 'visible_date_range',
             date_format                = '%d',
-            date_range_navigation = True,
+            navigation = True,
             navigation_start = 10,
             additional_columns = [
                 {'label': "Productivity", 'line_property': "productivity_index", 'position': 'left'},
@@ -120,7 +120,7 @@ class smile_activity_report(osv.osv):
             #hide_remove_line_buttons = True,
             #hide_column_totals       = True,
             #hide_line_totals         = True,
-            date_range_navigation = True,
+            navigation = True,
             read_only = 'is_matrix_readonly',
             title = "Activity report lines 2",
             ),

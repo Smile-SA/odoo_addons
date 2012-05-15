@@ -138,7 +138,7 @@ class matrix(fields.dummy):
             'visible_date_range_property': conf_dict.get('visible_date_range_property', None),
             'editable_date_range_property': conf_dict.get('editable_date_range_property', None),
             # Date range navigation parameters
-            'navigation': conf_dict.get('date_range_navigation', False),          # Enable navigation slider
+            'navigation': conf_dict.get('navigation', False),          # Enable navigation slider
             'navigation_size': conf_dict.get('navigation_size', 10), # Navigation slider size
             'navigation_start': conf_dict.get('navigation_start', 1),  # Start position
 

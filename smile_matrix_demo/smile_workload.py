@@ -78,7 +78,7 @@ class smile_activity_workload(osv.osv):
             cell_date_property='date',
             date_range_property='date_range',
             date_format='%m/%y',
-            date_range_navigation = True,
+            navigation = True,
             navigation_size = 12,
             highlight_date = datetime.date(datetime.date.today().year, datetime.date.today().month, 1),
 
