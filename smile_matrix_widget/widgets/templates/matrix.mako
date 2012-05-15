@@ -27,12 +27,11 @@
 <%def name="render_resources(line)">
     <%
         read_only = line.get('read_only', False)
+        resources = line.get('resources', [])
+        line_label = resources[-1]['label']
     %>
-    <td class="resource">
-        <%
-            resources = line.get('resources', [])
-        %>
-        <span class="name">${resources[-1]['label']}</span>
+    <td class="resource" title="${line_label}">
+        <span class="name">${line_label}</span>
         %if editable_mode and not read_only:
             %for res in resources:
                 <%
@@ -542,6 +541,17 @@
 
             .matrix table .resource_selector {
                 white-space: nowrap;
+            }
+
+            .matrix table .resource .name {
+                width: 120px; /* Force line label size and hide their overflowing part */
+                display: inline-block;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                -o-text-overflow: ellipsis;
+                -ms-text-overflow: ellipsis;
+                -moz-binding: url('ellipsis.xml#ellipsis');
             }
 
             %if hide_line_title:
