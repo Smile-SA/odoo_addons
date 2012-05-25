@@ -44,7 +44,9 @@ def status(self):
     try:
         db_list = rpc.session.execute_noauth('db', 'list', True)
         msg += "OK<br/>"
-        msg += "Databases: %s" % ', '.join(map(str, db_list))
+        msg += "Databases: %s<br/>" % ', '.join(map(str, db_list))
+        mem_usage = rpc.session.execute_noauth('common', 'get_memory')
+        msg += "Server mem usage: %s<br/>" % (mem_usage,)
     except Exception, e:
         msg += "KO<br/>Exception: %s" % _get_exception_message(e)
     finally:
