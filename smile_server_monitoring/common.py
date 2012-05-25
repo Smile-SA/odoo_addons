@@ -19,16 +19,19 @@
 #
 ##############################################################################
 
+import sys
+import imp
 
 from service.web_services import common
 
 native_dispatch = common.dispatch
 
 
-def get_native_resource_module():
+def load_native_resource_module():
     """ Useful to bypass server/bin/addons/resource module of OpenERP ... """
-    import sys
-    import imp
+    if 'resource' in sys.modules and hasattr(sys.modules['resource'], 'getrusage'):
+        return
+
     fp = None
     for path in sys.path:
         try:
@@ -36,20 +39,20 @@ def get_native_resource_module():
             resource_module = imp.load_module('resource', fp, pathname, description)
             if hasattr(resource_module, 'getrusage'):
                 #Ok, its the native resource module
-                return resource_module
+                return
         except ImportError:
             pass
         finally:
-            # Since we may exit via an exception, close fp explicitly.
+            # close fp if necessary.
             if fp:
                 fp.close()
-    return None
 
 
 def new_dispatch(self, method, auth, params):
     if method == 'get_memory':
-        resource = get_native_resource_module()
-        if resource:
+        load_native_resource_module()
+        if 'resource' in sys.modules:
+            resource = sys.modules['resource']
             return "%s kb" % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,)
         else:
             return False
