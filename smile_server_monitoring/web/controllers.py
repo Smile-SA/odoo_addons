@@ -45,8 +45,16 @@ def status(self):
         db_list = rpc.session.execute_noauth('db', 'list', True)
         msg += "OK<br/>"
         msg += "Databases: %s<br/>" % ', '.join(map(str, db_list))
+        # Memory
         mem_usage = rpc.session.execute_noauth('common', 'get_memory')
-        msg += "Server mem usage: %s<br/>" % (mem_usage,)
+        msg += "<br/>Server mem usage: %s<br/>" % (mem_usage,)
+        # Garbage collection
+        get_count = rpc.session.execute_noauth('common', 'gc_get_count')
+        garbage = rpc.session.execute_noauth('common', 'gc_garbage')
+        msg += """<br/>Garbage infos:<br/>
+        - get_count: %s<br/>
+        - garbage: %s<br/>""" % (get_count, garbage)
+
     except Exception, e:
         msg += "KO<br/>Exception: %s" % _get_exception_message(e)
     finally:

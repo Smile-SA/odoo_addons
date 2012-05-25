@@ -21,6 +21,7 @@
 
 import sys
 import imp
+import gc
 
 from service.web_services import common
 
@@ -47,15 +48,35 @@ def load_native_resource_module():
             if fp:
                 fp.close()
 
+def get_memory():
+    load_native_resource_module()
+    if 'resource' in sys.modules:
+        resource = sys.modules['resource']
+        return "%s kb" % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,)
+    else:
+        return 'Unknown'
+
+def gc_collect(generation=None):
+    if generation:
+        return gc.collect(generation)
+    else:
+        return gc.collect()
+
+def gc_garbage():
+    return repr(gc.garbage)
+
+def get_count():
+    return gc.get_count()
 
 def new_dispatch(self, method, auth, params):
     if method == 'get_memory':
-        load_native_resource_module()
-        if 'resource' in sys.modules:
-            resource = sys.modules['resource']
-            return "%s kb" % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,)
-        else:
-            return False
+        return get_memory()
+    elif method == 'gc_collect':
+        return gc_collect(*params)
+    elif method == 'gc_garbage':
+        return gc_garbage()
+    elif method == 'gc_get_count':
+        return get_count()
     else:
         return native_dispatch(self, method, auth, params)
 
