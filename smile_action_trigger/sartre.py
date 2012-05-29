@@ -83,7 +83,7 @@ class IrModelMethods(osv.osv):
 
     _columns = {
         'name': fields.char('Method name', size=128, select=True, required=True),
-        'model_id': fields.many2one('ir.model', 'Object', select=True, required=True),
+        'model_id': fields.many2one('ir.model', 'Object', select=True, required=True, ondelete='cascade'),
     }
 IrModelMethods()
 

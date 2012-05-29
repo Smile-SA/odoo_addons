@@ -27,12 +27,12 @@ class AcccountInvoiceBehalfOf(osv.osv):
     _rec_name = 'company_dest_id'
 
     _columns = {
-        'company_src_id': fields.many2one('res.company', 'On behalf of', required=True),
-        'fiscal_position_src_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True,
+        'company_src_id': fields.many2one('res.company', 'On behalf of', required=True, ondelete='cascade'),
+        'fiscal_position_src_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='restrict',
                                                   domain=[('type', '=', 'behalf')], help="Only accounts and journals mapping"),
 
-        'company_dest_id': fields.many2one('res.company', 'Billing Company', required=True),
-        'account_model_dest_id': fields.many2one('account.model', 'Account Move Model', required=True,
+        'company_dest_id': fields.many2one('res.company', 'Billing Company', required=True, ondelete='cascade'),
+        'account_model_dest_id': fields.many2one('account.model', 'Account Move Model', required=True, ondelete='restrict',
                                                  help="Indicate debit / credit line by adding an amount different from zero in the right column."),
 
         'partner_dest_id': fields.related('company_dest_id', 'partner_id', type='many2one', relation='res.partner',

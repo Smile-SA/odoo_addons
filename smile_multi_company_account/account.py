@@ -28,8 +28,8 @@ class FiscalPositionJournal(osv.osv):
 
     _columns = {
         'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
-        'journal_src_id': fields.many2one('account.journal', 'Journal Source', required=True),
-        'journal_dest_id': fields.many2one('account.journal', 'Journal Destination', required=True)
+        'journal_src_id': fields.many2one('account.journal', 'Journal Source', required=True, ondelete='restrict'),
+        'journal_dest_id': fields.many2one('account.journal', 'Journal Destination', required=True, ondelete='restrict')
     }
 FiscalPositionJournal()
 
