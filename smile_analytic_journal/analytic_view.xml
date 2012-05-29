@@ -106,7 +106,7 @@
             <field name="arch" type="xml">
                 <tree string="Analytic Journals" >
                     <field name="name"/>
-                    <field name="code"/>
+                    <field name="code" invisible="1"/>
                     <field name="type"/>
                     <field name="parent_id" invisible="1"/>
                 </tree>

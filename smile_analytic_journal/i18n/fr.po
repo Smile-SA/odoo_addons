@@ -154,3 +154,9 @@ msgstr "Mode d'affichage"
 #: field:account.analytic.journal,child_ids:0
 msgid "Children"
 msgstr "Enfants"
+
+#. module: smile_analytic_journal
+#: model:ir.ui.menu,name:smile_analytic_journal.menu_account_analytic_journal_structure
+#: model:ir.actions.act_window,name:smile_analytic_journal.action_account_analytic_journal_structure
+msgid "Analytic Journals Structure"
+msgstr "Arborescence des journaux analytiques"
