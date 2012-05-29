@@ -46,7 +46,7 @@ from text2pdf import pyText2Pdf
 
 def strip_accents(s):
     u = isinstance(s, unicode) and s or unicode(s, 'utf8')
-    a = ''.join((c for c in unicodedata.normalize('NFD', u) if unicodedata.category(c) != 'Mn'))
+    a = ''.join((c for c in unicodedata.normalize('NFKD', u) if unicodedata.category(c) != 'Mn'))
     return str(a)
 
 def is_a_datetime(str0, type='datetime'):
@@ -449,7 +449,7 @@ class ir_model_export_file_template(osv.osv):
                 filename = self._get_filename(cr, uid, export_file, context)
                 if export_file.extension == 'pdf':
                     file_content = _text2pdf(file_content)
-                file_content = file_content.encode(export_file.encoding)
+                file_content = file_content.encode(export_file.encoding, 'replace')
                 self._save_file(cr, uid, export_file, filename, file_content, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
         localdict = {
