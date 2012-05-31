@@ -22,6 +22,8 @@
 {
     "name" : "Server Actions R* Trigger Rules Engine (aka Sartre)",
     "version" : "5.0",
+    "sequence": 100,
+    'complexity': "expert",
     "category" : "Tools",
     "author" : "Smile",
     "website": 'http://www.smile.fr',
@@ -51,6 +53,7 @@ A rule applies to a single object and is composed of:
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
+    "images": [],
     "depends" : ['smile_log'],
     "init_xml" : [
         'security/sartre_security.xml',
@@ -66,7 +69,8 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "demo_xml" : [
         'demo/sartre_demo.xml'
     ],
-    "installable": True,
-    "active": False,
+    'installable': True,
+    'auto_install': False,
+    'application': True,
     "certificate": '',
 }
