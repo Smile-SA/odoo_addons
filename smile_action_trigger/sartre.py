@@ -910,7 +910,7 @@ def sartre_validate(self, cr, uid, ids, context=None):
                 else:
                     translated_msg = tmp_msg
             else:
-                translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
+                translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg) or msg
             fields_list = fields_list or []
             error_msgs.append(
                     _("Error occurred while validating the field(s) %s: %s") % (','.join(fields_list), translated_msg)
