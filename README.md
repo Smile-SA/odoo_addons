@@ -3,7 +3,7 @@ Smile Matrix Widget
 
 This is a prototype of a matrix widget for OpenERP 6.0.x web client.
 
-![Screenshot of the Smile matrix widget in action](http://github.com/Smile-SA/smile_matrix_widget/raw/master/screenshots/ascii-art-matrix.png)
+![Screenshot of the Smile matrix widget in action](http://github.com/Smile-SA/smile_openerp_matrix_widget/raw/master/screenshots/ascii-art-matrix.png)
 
 This project is sponsored by [Smile](http://www.smile.fr).
 
@@ -18,7 +18,7 @@ Features
   * Dynamic per-column and per-line sums in edit mode
   * Date-based columns
 
-You should also [browse the bug tracker](https://github.com/Smile-SA/smile_matrix_widget/issues): it's the best place to get an idea of which features are missing or are not implemented yet.
+You should also [browse the bug tracker](https://github.com/Smile-SA/smile_openerp_matrix_widget/issues): it's the best place to get an idea of which features are missing or are not implemented yet.
 
 
 Requirements
@@ -36,13 +36,13 @@ Screenshots
 
 Here are some example use of the matrix:
 
-![](http://github.com/Smile-SA/smile_matrix_widget/raw/master/screenshots/1-level-readonly-matrix.png)
+![](http://github.com/Smile-SA/smile_openerp_matrix_widget/raw/master/screenshots/1-level-readonly-matrix.png)
 
-![](http://github.com/Smile-SA/smile_matrix_widget/raw/master/screenshots/1-level-editable-increment-matrix.png)
+![](http://github.com/Smile-SA/smile_openerp_matrix_widget/raw/master/screenshots/1-level-editable-increment-matrix.png)
 
-![](http://github.com/Smile-SA/smile_matrix_widget/raw/master/screenshots/2-level-readonly-additional-lines-matrix.png)
+![](http://github.com/Smile-SA/smile_openerp_matrix_widget/raw/master/screenshots/2-level-readonly-additional-lines-matrix.png)
 
-![](http://github.com/Smile-SA/smile_matrix_widget/raw/master/screenshots/2-level-editable-additional-lines-matrix.png)
+![](http://github.com/Smile-SA/smile_openerp_matrix_widget/raw/master/screenshots/2-level-editable-additional-lines-matrix.png)
 
 
 FAQ

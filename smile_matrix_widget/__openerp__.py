@@ -25,7 +25,7 @@
     "depends" : ["openerp"],
     "author" : "Smile.fr",
     "description": """Widget to display and edit a matrix of cell objects grouped by lines.""",
-    'website': 'http://github.com/Smile-SA/smile_matrix_widget',
+    'website': 'http://github.com/Smile-SA/smile_openerp_matrix_widget',
     'installable': True,
     # Force activation of this client addon. If you don't want it activated, don't symlink to it.
     'active': True,
