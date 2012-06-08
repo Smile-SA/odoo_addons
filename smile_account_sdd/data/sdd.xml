@@ -1,0 +1,119 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="ir_model_export_file_template_sdd" model="ir.model.export.file_template">
+			<field name="name">SDD</field>
+			<field name="encoding">UTF-8</field>
+			<field name="extension_custom">.xml</field>
+			<field name="lineterminator">chr(10)</field>
+			<field eval="0" name="fieldnames_in_header"/>
+			<field name="filename">sdd_${time.strftime('%Y%m%d_%H%M')}</field>
+			<field name="state">other</field>
+			<field name="model_id" ref="account_voucher.model_account_voucher"/>
+			<field name="check_method">check_company_unicity</field>
+			<field name="exception_logging">report</field>
+			<field eval="1" name="create_attachment"/>
+			<field name="extension">other</field>
+			<field name="delimiter">chr(44)</field>
+			<field name="exception_handling">cancel</field>
+			<field name="header">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;Document xmlns=&quot;urn:iso:std:iso:20022:tech:xsd:pain.008.001.02&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;urn:iso:std:iso:20022:tech:xsd:pain.008.001.02 pain.008.001.02.xsd&quot;&gt;
+&lt;CstmrDrctDbtInitn&gt;
+
+&lt;GrpHdr&gt;
+	&lt;MsgId&gt;${str(localcontext.get('export_file_id', 0)).zfill(6)}&lt;/MsgId&gt;
+	&lt;CreDtTm&gt;${datetime.datetime.now().isoformat()}&lt;/CreDtTm&gt;
+	&lt;NbOfTxs&gt;${len(object)}&lt;/NbOfTxs&gt;
+	&lt;CtrlSum&gt;${sum([o.amount for o in object])}&lt;/CtrlSum&gt;
+	&lt;InitgPty&gt;
+		&lt;Nm&gt;Direct Debit&lt;/Nm&gt;
+	&lt;/InitgPty&gt;
+&lt;/GrpHdr&gt;
+
+&lt;PmtInf&gt;
+	&lt;PmtInfId&gt;Remise ${str(localcontext.get('export_file_id', 0)).zfill(6)}&lt;/PmtInfId&gt;
+	&lt;PmtMtd&gt;DD&lt;/PmtMtd&gt;
+	&lt;BtchBookg&gt;false&lt;/BtchBookg&gt;
+	&lt;NbOfTxs&gt;${len(object)}&lt;/NbOfTxs&gt;
+	&lt;CtrlSum&gt;${sum([o.amount for o in object])}&lt;/CtrlSum&gt;
+	&lt;PmtTpInf&gt;
+		&lt;SvcLvl&gt;
+			&lt;Cd&gt;SEPA&lt;/Cd&gt;
+		&lt;/SvcLvl&gt;
+		&lt;LclInstrm&gt;
+			&lt;Cd&gt;CORE&lt;/Cd&gt;
+		&lt;/LclInstrm&gt;
+		&lt;SeqTp&gt;FRST&lt;/SeqTp&gt;
+	&lt;/PmtTpInf&gt;
+	&lt;ReqdColltnDt&gt;${(datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')}&lt;/ReqdColltnDt&gt;
+	&lt;Cdtr&gt;
+		&lt;Nm&gt;${object[0].company_id.name}&lt;/Nm&gt;
+	&lt;/Cdtr&gt;
+	&lt;CdtrAcct&gt;
+		&lt;Id&gt;
+			&lt;IBAN&gt;${object[0].company_id.partner_id.bank_ids[0].iban}&lt;/IBAN&gt;
+		&lt;/Id&gt;
+	&lt;/CdtrAcct&gt;
+	&lt;CdtrAgt&gt;
+		&lt;FinInstnId&gt;
+			&lt;BIC&gt;${object[0].company_id.partner_id.bank_ids[0].bank.bic}&lt;/BIC&gt;
+		&lt;/FinInstnId&gt;
+	&lt;/CdtrAgt&gt;
+	&lt;ChrgBr&gt;SLEV&lt;/ChrgBr&gt;
+	&lt;CdtrSchmeId&gt;
+		&lt;Id&gt;
+			&lt;PrvtId&gt;
+				&lt;Othr&gt;
+					&lt;Id&gt;${object[0].company_id.partner_id.bank_ids[0].iban}&lt;/Id&gt;
+					&lt;SchmeNm&gt;
+						&lt;Prtry&gt;SEPA&lt;/Prtry&gt;
+					&lt;/SchmeNm&gt;
+				&lt;/Othr&gt;
+			&lt;/PrvtId&gt;
+		&lt;/Id&gt;
+	&lt;/CdtrSchmeId&gt;</field>
+			<field name="body">&lt;DrctDbtTxInf&gt;
+	&lt;PmtId&gt;
+		&lt;InstrId&gt;${object.id}&lt;/InstrId&gt;
+		&lt;EndToEndId&gt;${object.id}&lt;/EndToEndId&gt;
+	&lt;/PmtId&gt;
+	&lt;InstdAmt Ccy="${object.company_id.currency_id.symbol or 'EUR'}"&gt;${object.amount}&lt;/InstdAmt&gt;
+	&lt;DrctDbtTx&gt;
+		&lt;MndtRltdInf&gt;
+			&lt;MndtId&gt;${object.id}&lt;/MndtId&gt;
+			&lt;DtOfSgntr&gt;${time.strftime('%Y-%m-%d')}&lt;/DtOfSgntr&gt;
+		&lt;/MndtRltdInf&gt;
+	&lt;/DrctDbtTx&gt;
+	&lt;DbtrAgt&gt;
+		&lt;FinInstnId&gt;
+			&lt;BIC&gt;${object.partner_id.bank_ids[0].bank.bic}&lt;/BIC&gt;
+		&lt;/FinInstnId&gt;
+	&lt;/DbtrAgt&gt;
+	&lt;Dbtr&gt;
+		&lt;Nm&gt;${object.partner_id.bank_ids[0].owner_name}&lt;/Nm&gt;
+	&lt;/Dbtr&gt;
+	&lt;DbtrAcct&gt;
+		&lt;Id&gt;
+			&lt;IBAN&gt;${object.partner_id.bank_ids[0].iban}&lt;/IBAN&gt;
+		&lt;/Id&gt;
+	&lt;/DbtrAcct&gt;
+	&lt;RmtInf&gt;
+		&lt;Ustrd&gt;${object.number}&lt;/Ustrd&gt;
+	&lt;/RmtInf&gt;
+&lt;/DrctDbtTxInf&gt;</field>
+			<field name="footer">&lt;/PmtInf&gt;
+&lt;/CstmrDrctDbtInitn&gt;
+&lt;/Document&gt;</field>
+		</record>
+
+		<record id="ir_model_export_template_sdd" model="ir.model.export.template">
+			<field name="model_id" ref="account_voucher.model_account_voucher"/>
+			<field name="domain">[('type', '=', 'receipt'), ('state', '=', 'posted')]</field>
+			<field name="name">SEPA Direct Debit</field>
+			<field name="unique" eval="1"/>
+			<field name="export_file_template_id" ref="ir_model_export_file_template_sdd"/>
+		</record>
+
+	</data>
+</openerp>
