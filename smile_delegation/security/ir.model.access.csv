@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_delegation_template_manager","delegation_template manager","model_delegation_template","smile_delegation.group_smile_delegation_manager",1,1,1,1
+"access_delegation_template_all","delegation_template all","model_delegation_template",,1,0,0,0
+"access_delegation_all","delegation all","model_delegation_delegation",,1,1,1,1
+"access_delegation_history_all","delegation_history all","model_delegation_history",,1,0,0,0
