@@ -80,11 +80,18 @@ def get_original_method(method):
 class IrModelMethods(osv.osv):
     _name = 'ir.model.methods'
     _description = 'Model Method'
+    _order = 'name'
 
     _columns = {
         'name': fields.char('Method name', size=128, select=True, required=True),
         'model_id': fields.many2one('ir.model', 'Object', select=True, required=True, ondelete='cascade'),
     }
+
+    def __init__(self, pool, cr):
+        if not pool.get(self._name):
+            # To be compatible with smile_delegation
+            self._inherit = self._name
+        super(IrModelMethods, self).__init__(pool, cr)
 IrModelMethods()
 
 class SartreOperator(osv.osv):

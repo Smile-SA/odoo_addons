@@ -40,11 +40,11 @@ class IrModelMethods(osv.osv):
         'model_id': fields.many2one('ir.model', 'Object', select=True, required=True, ondelete='cascade'),
     }
 
-    def __init__(self, cr, pool):
+    def __init__(self, pool, cr):
         if not pool.get(self._name):
             # To be compatible with smile_action_trigger
             self._inherit = self._name
-        super(IrModelMethods, self).__init__(cr, pool)
+        super(IrModelMethods, self).__init__(pool, cr)
 
     def get_method_args(self, cr, uid, method_id, context=None):
         assert isinstance(method_id, (int, long)), 'method_id must be an integer'
