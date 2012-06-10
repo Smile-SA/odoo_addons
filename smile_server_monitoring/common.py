@@ -68,6 +68,24 @@ def gc_garbage():
 def get_count():
     return gc.get_count()
 
+def count_objects(limit=None, floor=5):
+    """
+    limit: max number of types count returned
+    floor: minimal object count to be returned
+    #TODO: use collections.Counter when 2.5 will be deprecated
+    """
+    d = {}
+    for obj in gc.get_objects():
+        objtype = repr(type(obj))
+        d[objtype] = d.get(objtype, 0) + 1
+    d = d.items()
+    d.sort(key=lambda i:i[1], reverse=True)
+    if limit:
+        d = d[:limit]
+    if floor:
+        d = [(objtype, number) for objtype, number in d if number >= floor]
+    return d
+
 def new_dispatch(self, method, auth, params):
     if method == 'get_memory':
         return get_memory()
@@ -77,6 +95,8 @@ def new_dispatch(self, method, auth, params):
         return gc_garbage()
     elif method == 'gc_get_count':
         return get_count()
+    elif method == 'gc_types_count':
+        return count_objects(*params)
     else:
         return native_dispatch(self, method, auth, params)
 
