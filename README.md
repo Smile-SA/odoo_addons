@@ -91,7 +91,7 @@ Changelog
 
 * **0.8.dev** (unreleased)
   * Update intermediate-level totals on cell value change
-  * Add a `precision` parameter to force float rounding of JS computation
+  * Add a `precision` parameter to force float rounding
   * Fix initialization of matrix in tabs
   * Rename `date_range_navigation` parameter to `navigation`
 
