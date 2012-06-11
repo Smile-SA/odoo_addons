@@ -139,7 +139,7 @@ class matrix(fields.dummy):
             'editable_date_range_property': conf_dict.get('editable_date_range_property', None),
             # Date range navigation parameters
             'navigation': conf_dict.get('navigation', False),          # Enable navigation slider
-            'navigation_size': conf_dict.get('navigation_size', 10), # Navigation slider size
+            'navigation_size': conf_dict.get('navigation_size', 10),   # Navigation slider size
             'navigation_start': conf_dict.get('navigation_start', 1),  # Start position
 
             # The format we use to display date labels
@@ -192,6 +192,9 @@ class matrix(fields.dummy):
 
             # Get the matrix total label
             'total_label': conf_dict.get('total_label', "Total"),
+
+            # Float rounding precision
+            'precision': conf_dict.get('precision', 2),
         }
 
         # Check that all required parameters are there
@@ -277,7 +280,7 @@ class matrix(fields.dummy):
             # Evaluate dynamic matrix properties
             # Dynamic properties are those which value is a string instead of their native type
             # Of course this only works with properties which native type is not strings
-            for flag_id in ['tree_definition', 'increment_values', 'cell_default_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'navigation', 'navigation_size', 'navigation_start', 'read_only']:
+            for flag_id in ['tree_definition', 'increment_values', 'cell_default_value', 'additional_columns', 'hide_line_title', 'hide_remove_line_buttons', 'hide_column_totals', 'hide_line_totals', 'column_totals_warning_threshold', 'editable_tree', 'hide_tree', 'css_classes', 'navigation', 'navigation_size', 'navigation_start', 'read_only', 'precision']:
                 flag_value = conf[flag_id]
                 if isinstance(flag_value, (str, unicode)):
                     conf[flag_id] = bool(_get_prop(base_object, flag_value))

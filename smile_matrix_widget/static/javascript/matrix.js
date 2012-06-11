@@ -113,6 +113,21 @@ jQuery(document).ready(function($){
     });
 
 
+    // Render a float to a given precision
+    function render_float(matrix_id, float_value){
+        if (!isNaN(float_value)) {
+            var precision = $("#" + matrix_id + "__precision").first().val();
+            if (!isNaN(precision)) {
+                precision = parseInt(precision);
+                if (precision >= 0) {
+                    float_value = float_value.toFixed(precision);
+                };
+            };
+        };
+        return float_value;
+    };
+
+
     // Set cell style dynamicaly
     function set_cell_style(cell, cell_value, threshold){
         if (!isNaN(threshold)) {
@@ -149,7 +164,7 @@ jQuery(document).ready(function($){
         // Get warning threshold
         var column_threshold = parseFloat($("#" + matrix_id + "__column_warning_threshold").first().val());
         // Update total content and style
-        $("#" + matrix_id + "__column_total_" + column_index).text(column_total).each(function(){
+        $("#" + matrix_id + "__column_total_" + column_index).text(render_float(matrix_id, column_total)).each(function(){
             set_cell_style($(this), column_total, column_threshold);
         });
     };
@@ -184,7 +199,7 @@ jQuery(document).ready(function($){
         });
 
         // Update subtotal content and style
-        parent_cell.text(subtotal);
+        parent_cell.text(render_float(matrix_id, subtotal));
         set_cell_style(parent_cell, subtotal);
 
         // Update parent's row total
@@ -203,7 +218,7 @@ jQuery(document).ready(function($){
         $("#" + matrix_id + " table [id^='" + matrix_id + "__cell_" + row_index + "_']").each(function(i, cell){
             row_total += get_cell_value(cell);
         });
-        $("#" + matrix_id + "__row_total_" + row_index).text(row_total).each(function(i, cell){
+        $("#" + matrix_id + "__row_total_" + row_index).text(render_float(matrix_id, row_total)).each(function(i, cell){
             set_cell_style(cell, row_total);
         });
     };
@@ -216,7 +231,7 @@ jQuery(document).ready(function($){
         $("#" + matrix_id + " tbody [id^='" + matrix_id + "__row_total_']:not([id^='" + matrix_id + "__row_total_dummy'])").each(function(){
             grand_total += get_cell_value($(this));
         });
-        $("#" + matrix_id + "__grand_total").text(grand_total).each(function(){
+        $("#" + matrix_id + "__grand_total").text(render_float(matrix_id, grand_total)).each(function(){
             set_cell_style($(this), grand_total);
         });
     };
@@ -566,7 +581,7 @@ jQuery(document).ready(function($){
                     });
                 };
                 // Update partial total content and style
-                partial_total_cell.text(partial_total);
+                partial_total_cell.text(render_float(matrix_id, partial_total));
                 set_cell_style(partial_total_cell, partial_total);
             });
         });

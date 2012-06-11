@@ -415,6 +415,7 @@
             navigation_size = value['navigation_size']
             navigation_start = value['navigation_start']
             highlight_date = value['highlight_date']
+            precision = value['precision']
         %>
 
         <style type="text/css">
@@ -646,6 +647,7 @@
         </script>
 
         <div class="toolbar wrapper ui-helper-clearfix">
+            <input type="hidden" id="${"%s__precision" % name}" value="${precision}" title="Float precision"/>
             %if editable_mode:
                 <div class="left level level_0">
                     %if editable_tree:
