@@ -114,17 +114,15 @@ jQuery(document).ready(function($){
 
 
     // Render a float to a given precision
-    function render_float(matrix_id, float_value){
+    function render_float(matrix_id, raw_value){
+        var float_value = parseFloat(raw_value);
         if (!isNaN(float_value)) {
-            var precision = $("#" + matrix_id + "__precision").first().val();
-            if (!isNaN(precision)) {
-                precision = parseInt(precision);
-                if (precision >= 0) {
-                    float_value = float_value.toFixed(precision);
-                };
+            var precision = parseInt($("#" + matrix_id + "__precision").first().val());
+            if (!isNaN(precision) && precision >= 0) {
+                return float_value.toFixed(precision);
             };
         };
-        return float_value;
+        return raw_value;
     };
 
 
