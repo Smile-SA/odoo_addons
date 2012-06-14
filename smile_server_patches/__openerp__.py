@@ -20,12 +20,12 @@
 ##############################################################################
 
 {
-    'name': 'Smile OpenERP Server Patchs',
+    'name': 'Smile OpenERP Server Patches',
     'version': '1.0',
     'category': 'Tools',
-    'description': """Smile OpenERP Server Patchs
+    'description': """Smile OpenERP Server Patches
 
-This module offers OpenERP Server patchs for bugs reported to OpenERP Maintenance Team but not yet corrected.
+This module offers OpenERP Server patches for bugs reported to OpenERP Maintenance Team but not yet corrected.
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr, xavier.fernandez@smile.fr
 """,
