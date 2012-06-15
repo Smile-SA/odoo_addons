@@ -114,6 +114,14 @@ class AnalyticPeriod(osv.osv):
     def get_next_period_id(self, cr, uid, period_id, state=None):
         return self._get_period_id(cr, uid, period_id, '>', state)
 
+    def get_next_period_ids(self, cr, uid, period_id, number, state=None):
+        assert number > 0, "Number should be > 0"
+        res = []
+        while number:
+            res.append(self.get_next_period_id(cr, uid, period_id, state))
+            number -= 1
+        return res
+
     def button_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context)
 
