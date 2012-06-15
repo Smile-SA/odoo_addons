@@ -51,13 +51,13 @@ class AnalyticPeriod(osv.osv):
     def _check_duration(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        period = self.browse(cr, uid, ids[0], context)
-        if period.date_stop < period.date_start:
-            return False
-        if period.general_period_id \
-        and (period.date_start < period.general_period_id.date_start \
-        or period.date_stop > period.general_period_id.date_stop):
-            return False
+        for period in self.browse(cr, uid, ids, context):
+            if period.date_stop < period.date_start:
+                return False
+            if period.general_period_id \
+            and (period.date_start < period.general_period_id.date_start \
+            or period.date_stop > period.general_period_id.date_stop):
+                return False
         return True
 
     def _check_periods_overlap(self, cr, uid, ids, context=None):
