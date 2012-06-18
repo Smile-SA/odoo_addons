@@ -118,7 +118,10 @@ class AnalyticPeriod(osv.osv):
         assert number > 0, "Number should be > 0"
         res = []
         while number:
-            res.append(self.get_next_period_id(cr, uid, period_id, state))
+            period_id = self.get_next_period_id(cr, uid, period_id, state)
+            if not period_id:
+                raise osv.except_osv(_('Error!'), _('Missing at least one of the next periods'))
+            res.append(period_id)
             number -= 1
         return res
 
