@@ -41,5 +41,4 @@ Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@s
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate' : "",
 }

@@ -21,7 +21,7 @@
 
 {
     "name" : "Smile Analytic Multi-Axis",
-    "version": "0.1",
+    "version": "0.2",
     "author" : "Smile",
     "website" : "http://www.smile.fr",
     "category" : "Generic Modules/Accounting",
@@ -41,5 +41,4 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate' : "",
 }
