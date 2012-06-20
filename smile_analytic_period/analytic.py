@@ -51,13 +51,13 @@ class AnalyticPeriod(osv.osv):
     def _check_duration(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        period = self.browse(cr, uid, ids[0], context)
-        if period.date_stop < period.date_start:
-            return False
-        if period.general_period_id \
-        and (period.date_start < period.general_period_id.date_start \
-        or period.date_stop > period.general_period_id.date_stop):
-            return False
+        for period in self.browse(cr, uid, ids, context):
+            if period.date_stop < period.date_start:
+                return False
+            if period.general_period_id \
+            and (period.date_start < period.general_period_id.date_start \
+            or period.date_stop > period.general_period_id.date_stop):
+                return False
         return True
 
     def _check_periods_overlap(self, cr, uid, ids, context=None):
@@ -113,6 +113,17 @@ class AnalyticPeriod(osv.osv):
     @tools.cache()
     def get_next_period_id(self, cr, uid, period_id, state=None):
         return self._get_period_id(cr, uid, period_id, '>', state)
+
+    def get_next_period_ids(self, cr, uid, period_id, number, state=None):
+        assert number > 0, "Number should be > 0"
+        res = []
+        while number:
+            period_id = self.get_next_period_id(cr, uid, period_id, state)
+            if not period_id:
+                raise osv.except_osv(_('Error!'), _('Missing at least one of the next periods'))
+            res.append(period_id)
+            number -= 1
+        return res
 
     def button_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context)
