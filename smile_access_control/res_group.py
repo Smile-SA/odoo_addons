@@ -84,5 +84,27 @@ class ResGroup(osv.osv):
                     'perm_unlink': False,
                 }, context)
         return True
+
+    def _update_users(self, cr, uid, vals, context=None):
+        if vals.get('users'):
+            user_profile_ids = []
+            user_obj = self.pool.get('res.users')
+            for item in vals['users']:
+                user_ids = []
+                if item[0] == 6:
+                    user_ids = item[2]
+                elif item[0] == 4:
+                    user_ids = [item[1]]
+                for user in user_obj.read(cr, uid, user_ids, ['user_profile', 'user_profile_id'], context, '_classic_write'):
+                    if user['user_profile']:
+                        user_profile_ids.append(user['id'])
+                    else:
+                        user_profile_ids.append(user['user_profile_id'])
+            if user_profile_ids:
+                user_obj.write(cr, uid, list(set(user_profile_ids)), {}, context) # Update users linked to profiles
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self._update_users(cr, uid, vals, context)
+        return super(ResGroup, self).write(cr, uid, ids, vals, context)
 ResGroup()
-    
+
