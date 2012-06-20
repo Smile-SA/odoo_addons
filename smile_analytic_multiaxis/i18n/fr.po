@@ -57,9 +57,14 @@ msgid "You cannot pass a forecast entry in a past/current period!"
 msgstr "Vous ne pouvez pas passer d'écritures de type prévu sur une période passée ou courante !"
 
 #. module: smile_analytic_multiaxis
-#: field:account.analytic.distribution,type:0
-msgid "Type"
-msgstr "Type"
+#: field:account.analytic.distribution,computation_mode:0
+msgid "Computation Mode"
+msgstr "Mode de calcul"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution,distribution_type:0
+msgid "Distribution Type"
+msgstr "Type de distribution"
 
 #. module: smile_analytic_multiaxis
 #: field:account.analytic.axis,model:0
@@ -250,9 +255,19 @@ msgid "Python Code"
 msgstr "Code Python"
 
 #. module: smile_analytic_multiaxis
-#: selection:account.analytic.distribution,type:0
+#: selection:account.analytic.distribution,computation_mode:0
 msgid "Dynamic"
 msgstr "Dynamique"
+
+#. module: smile_analytic_multiaxis
+#: selection:account.analytic.distribution,distribution_type:0
+msgid "Global"
+msgstr "Générique"
+
+#. module: smile_analytic_multiaxis
+#: selection:account.analytic.distribution,distribution_type:0
+msgid "Specific"
+msgstr "Spécifique"
 
 #. module: smile_analytic_multiaxis
 #: view:account.analytic.distribution:0
@@ -276,7 +291,7 @@ msgid "Item of Destination Axis"
 msgstr "Elément de l'axe de destination"
 
 #. module: smile_analytic_multiaxis
-#: selection:account.analytic.distribution,type:0
+#: selection:account.analytic.distribution,computation_mode:0
 msgid "Static"
 msgstr "Statique"
 
@@ -305,5 +320,62 @@ msgstr "Distributions"
 
 #. module: smile_analytic_multiaxis
 #: view:account.analytic.distribution:0
+msgid "Application Period"
+msgstr "Période d'application"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+msgid "Application Periods"
+msgstr "Périodes d'application"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+msgid "Source Items"
+msgstr "Eléments de l'axe source"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution.axis_src_item:0
+msgid "Source Item"
+msgstr "Elément de l'axe source"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:117
+#, python-format
+msgid "Distribution Key"
+msgstr "Clé de réparition"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:117
+#, python-format
 msgid "Distribution Keys"
 msgstr "Clés de réparition"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.axis_src_item,res_id:0
+msgid "Resource Identifier"
+msgstr "Identifiant"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.axis_src_item,res_name:0
+msgid "Resource Name"
+msgstr "Nom"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:117
+#, python-format
+msgid "Source"
+msgstr "Source"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:117
+#, python-format
+msgid "Target"
+msgstr "Cible"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:117
+#, python-format
+msgid "Keys"
+msgstr "Clés"
