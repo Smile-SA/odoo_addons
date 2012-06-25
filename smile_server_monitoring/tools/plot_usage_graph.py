@@ -11,6 +11,7 @@ python your_path/smile_server_monitoring/tools/plot_usage_graph.py --regroup_inf
 
 import xmlrpclib
 import time
+import os.path
 
 def write_infos_to_file(filename, data_type='objects', limit=0, floor=10):
     sock_common = xmlrpclib.ServerProxy('http://localhost:8069/xmlrpc/common')
@@ -28,6 +29,15 @@ def write_infos_to_file(filename, data_type='objects', limit=0, floor=10):
     point = (time.strftime('%Y-%m-%d %H:%M:%S'), objects_count)
     with open(filename, 'a') as log:
         log.write(repr(point) + '\n')
+
+def dump_stack_traces(path):
+    sock_common = xmlrpclib.ServerProxy('http://localhost:8069/xmlrpc/common')
+    stack_traces = sock_common.get_stacks()
+    filename = time.strftime('stack_%Y-%m-%d_%H%M%S.log')
+    file_path = "%s/%s" % (os.path.abspath(path), filename)
+    with open(file_path) as f:
+        f.write(stack_traces)
+
 
 def load_data_from_file(filename):
     """ Builds points=[
