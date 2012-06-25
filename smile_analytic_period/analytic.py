@@ -114,12 +114,14 @@ class AnalyticPeriod(osv.osv):
     def get_next_period_id(self, cr, uid, period_id, state=None):
         return self._get_period_id(cr, uid, period_id, '>', state)
 
-    def get_next_period_ids(self, cr, uid, period_id, number, state=None):
+    def get_next_period_ids(self, cr, uid, period_id, number, state=None, exception='raise'):
         assert number > 0, "Number should be > 0"
         res = []
         while number:
             period_id = self.get_next_period_id(cr, uid, period_id, state)
             if not period_id:
+                if exception == 'ignore':
+                    return res
                 raise osv.except_osv(_('Error!'), _('Missing at least one of the next periods'))
             res.append(period_id)
             number -= 1
@@ -229,7 +231,7 @@ class AnalyticLine(osv.osv):
 
     def _check_create_period(self, cr, uid, ids, context=None):
         context = context or {}
-        if context.get('force_analytic_lines_creation'):
+        if not context.get('force_analytic_lines_creation'):
             if isinstance(ids, (int, long)):
                 ids = [ids]
             for line in self.browse(cr, uid, ids, context):
