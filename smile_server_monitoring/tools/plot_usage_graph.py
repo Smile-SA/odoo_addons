@@ -35,7 +35,7 @@ def dump_stack_traces(path):
     stack_traces = sock_common.get_stacks()
     filename = time.strftime('stack_%Y-%m-%d_%H%M%S.log')
     file_path = "%s/%s" % (os.path.abspath(path), filename)
-    with open(file_path) as f:
+    with open(file_path, 'w') as f:
         f.write(stack_traces)
 
 
