@@ -199,7 +199,7 @@ class AnalyticDistribution(osv.osv):
     @tools.cache(skiparg=3)
     def _get_distribution_destinations(self, cr, uid):
         distribution_ids = self.search(cr, uid, [], context={'active_test': True})
-        return [distrib.axis_dest_id.model for distrib in self.browse(cr, uid, distribution_ids) if distrib.computation_mode == 'static']
+        return dict([(distrib.id, distrib.axis_dest_id.model) for distrib in self.browse(cr, uid, distribution_ids) if distrib.computation_mode == 'static'])
 
     def create(self, cr, uid, vals, context=None):
         distribution_id = super(AnalyticDistribution, self).create(cr, uid, vals, context)
@@ -216,48 +216,54 @@ class AnalyticDistribution(osv.osv):
         self._get_distribution_destinations.clear_cache(cr.dbname)
         return res
 
-    def _get_distribution_period_ids(self, cr, uid, distribution_id, date):
+    def _get_destinations_for_distribution(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        distribution_destinations = self._get_distribution_destinations(cr, uid)
+        return [distribution_destinations[distribution_id] for distribution_id in ids if distribution_id in distribution_destinations] # filter inactive distributions
+
+    def _get_distribution_period_ids(self, cr, uid, distribution_id, date, context=None):
         period_domain = [
             ('distribution_id', '=', distribution_id),
             '|', ('date_start', '=', False), ('date_start', '<=', date),
             '|', ('date_stop', '=', False), ('date_stop', '>=', date),
         ]
-        return self.pool.get('account.analytic.distribution.period').search(cr, uid, period_domain, limit=1)
+        return self.pool.get('account.analytic.distribution.period').search(cr, uid, period_domain, limit=1, context=context)
 
-    def _get_specific_static_distribution(self, cr, uid, distribution_id, date, res_ids):
+    def _get_specific_static_distribution(self, cr, uid, distribution_id, date, res_ids, context=None):
         res = {}
         period_ids = self._get_distribution_period_ids(cr, uid, distribution_id, date)
         key_obj = self.pool.get('account.analytic.distribution.key')
         key_domain = [('period_id', 'in', period_ids)]
         if res_ids:
             key_domain.append(('axis_src_item_id', 'in', res_ids))
-        key_ids = key_obj.search(cr, uid, key_domain)
-        for key in key_obj.read(cr, uid, key_ids, ['axis_src_item_id', 'axis_dest_item_id', 'rate']):
+        key_ids = key_obj.search(cr, uid, key_domain, context=context)
+        for key in key_obj.read(cr, uid, key_ids, ['axis_src_item_id', 'axis_dest_item_id', 'rate'], context):
             res.setdefault(key['axis_src_item_id'], {}).update({key['axis_dest_item_id']: {
                 'rate': key['rate'],
                 'audit': 'dist%s_key%s' % (distribution_id, key['id']),
             }})
         return res
 
-    def _get_global_static_distribution(self, cr, uid, distribution_id, date, res_ids):
+    def _get_global_static_distribution(self, cr, uid, distribution_id, date, res_ids, context=None):
         res = {}
         period_ids = self._get_distribution_period_ids(cr, uid, distribution_id, date)
         key_obj = self.pool.get('account.analytic.distribution.key')
         key_ids = key_obj.search(cr, uid, [('period_id', 'in', period_ids)])
         axis_src_item_obj = self.pool.get('account.analytic.distribution.axis_src_item')
-        axis_src_item_ids = axis_src_item_obj.search(cr, uid, [('distribution_id', '=', distribution_id)])
+        axis_src_item_ids = axis_src_item_obj.search(cr, uid, [('distribution_id', '=', distribution_id)], context=context)
         for axis_src_item_id in axis_src_item_ids:
-            for key in key_obj.read(cr, uid, key_ids, ['axis_dest_item_id', 'rate']):
+            for key in key_obj.read(cr, uid, key_ids, ['axis_dest_item_id', 'rate'], context):
                 res.setdefault(axis_src_item_id, {}).update({key['axis_dest_item_id']: {
                     'rate': key['rate'],
                     'audit': 'dist%s_key%s' % (distribution_id, key['id']),
                 }})
         return res
 
-    def _get_dynamic_distribution(self, cr, uid, distribution_id, date, res_ids):
-        distribution = self.browse(cr, uid, distribution_id)
+    def _get_dynamic_distribution(self, cr, uid, distribution_id, date, res_ids, context=None):
+        distribution = self.browse(cr, uid, distribution_id, context)
         model_obj = self.pool.get(distribution.axis_src_id.model)
-        res_ids = res_ids or model_obj.search(cr, uid, [])
+        res_ids = res_ids or model_obj.search(cr, uid, [], context=context)
         localdict = {
             'objects': model_obj.browse(cr, uid, res_ids),
             'self': model_obj,
@@ -271,15 +277,15 @@ class AnalyticDistribution(osv.osv):
         exec distribution.python_code in localdict
         return localdict.get('result', {})
 
-    def get_distribution(self, cr, uid, distribution_id, date=None, res_ids=None):
+    def get_distribution(self, cr, uid, distribution_id, date=None, res_ids=None, context=None):
         assert distribution_id and isinstance(distribution_id, (int, long)), 'distribution_id must be an integer'
         assert res_ids is None or isinstance(res_ids, (list, tuple)), 'res_ids must be a list or a tuple'
         date = date or time.strftime('%Y-%m-%d')
-        distribution = self.read(cr, uid, distribution_id, ['computation_mode', 'distribution_type'])
+        distribution = self.read(cr, uid, distribution_id, ['computation_mode', 'distribution_type'], context)
         distribution_type = distribution['computation_mode']
         if distribution['computation_mode'] == 'static':
             distribution_type = '%s_%s' % (distribution['distribution_type'], distribution['computation_mode'])
-        return getattr(self, '_get_%s_distribution' % distribution_type)(cr, uid, distribution['id'], date, res_ids)
+        return getattr(self, '_get_%s_distribution' % distribution_type)(cr, uid, distribution['id'], date, res_ids, context)
 
     def apply_distribution_keys(self, cr, uid, distribution_id, line_vals, context=None):
         assert distribution_id and isinstance(distribution_id, (int, long)), 'distribution_id must be an integer'
@@ -573,6 +579,8 @@ class AnalyticLine(osv.osv):
                                 new_res.extend(distribution_obj.apply_distribution_keys(cr, uid, distrib.id, line_vals, context))
                             res = new_res
                         distribution_ids.remove(distrib.id)
+                    elif distrib.axis_dest_id.model not in self._get_destinations_for_distribution(cr, uid, distribution_ids, context):
+                        distribution_ids.remove(distrib.id)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -586,7 +594,7 @@ AnalyticLine()
 
 def _is_distribution_destination(self, cr, uid):
     if self.pool.get('account.analytic.distribution') \
-    and self._name in self.pool.get('account.analytic.distribution')._get_distribution_destinations(cr, 1):
+    and self._name in self.pool.get('account.analytic.distribution')._get_distribution_destinations(cr, 1).keys():
         return True
     return False
 
