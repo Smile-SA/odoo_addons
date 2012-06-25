@@ -20,12 +20,16 @@
 ##############################################################################
 
 {
-    "name" : "Delinquency Management",
+    "name" : "Smile Delinquency Management",
     "version" : "0.1",
     "category" : "Generic Modules/Accounting",
     "author" : "Smile",
     "website": 'http://www.smile.fr',
-    "description": """Delinquency Management""",
+    "description": """Delinquency Management
+    
+    Instead of deleting account move when you cancel a voucher, 
+    this module reserves it if this account move was validated, removes it otherwise.
+    """,
     "depends" : ['account_voucher', 'account_reversal'],
     "init_xml" : [],
     "update_xml": [

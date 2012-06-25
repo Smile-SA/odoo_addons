@@ -38,6 +38,7 @@ class AccountVoucherReversal(osv.osv_memory):
     def button_cancel_voucher(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'len(ids) != 1'
         context = context or {}
+        del context['button_open_voucher_delinquency_wizard']
         context['reversal_date'] = self.read(cr, uid, ids[0], ['reversal_date'], context)['reversal_date']
         self.pool.get('account.voucher').cancel_voucher(cr, uid, context.get('account_voucher_ids', []), context)
         return {'type': 'ir.actions.act_window_close'}

@@ -19,26 +19,30 @@
 #
 ##############################################################################
 
+import time
+
 from osv import osv
 from tools.translate import _
 
 class AccountVoucher(osv.osv):
     _inherit = 'account.voucher'
 
-    def button_open_voucher_delinquency_wizard(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
+    def cancel_voucher(self, cr, uid, ids, context=None):
         context = context or {}
-        context['account_voucher_ids'] = ids
-        return {
-            'name': _('Unreconcile'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': False,
-            'res_model': 'account.voucher.reversal',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': context
-        }
+        if context.get('button_open_voucher_delinquency_wizard'):
+            if isinstance(ids, (int, long)):
+                ids = [ids]
+            context['account_voucher_ids'] = ids
+            return {
+                'name': _('Unreconcile'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': False,
+                'res_model': 'account.voucher.reversal',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context': context
+            }
+        context['reversal_date'] = time.strftime('%Y-%m-%d')
+        return super(AccountVoucher, self).cancel_voucher(cr, uid, ids, context)
 AccountVoucher()
-
