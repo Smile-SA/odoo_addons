@@ -62,7 +62,7 @@ class AnalyticDistributionKeyWizard(osv.osv):
             cr.execute('SELECT axis_src_item_id FROM %s WHERE id IN %s GROUP BY axis_src_item_id', (self._table, tuple(key_ids)))
             res = cr.fetchall()
             res = [item[0] for item in res]
-        return count and len(res) or res 
+        return count and len(res) or res
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         res = {}
@@ -101,7 +101,7 @@ class AnalyticDistributionKeyWizard(osv.osv):
                     'type': 'float',
                 }
             res['keys_count'] = {
-                'string': "Keys",
+                'string': _("Keys"),
                 'type': 'integer',
             }
             return res
@@ -109,30 +109,30 @@ class AnalyticDistributionKeyWizard(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = {}
-        if view_type in ('tree', 'form'):
+        context = context or {}
+        if context.get('distribution_id') and view_type in ('tree', 'form'):
             res['fields'] = self.fields_get(cr, uid, context=context)
             if view_type == 'form':
-                res['arch'] = """<form string="Distribution Key" col="2">
-                                     <field name="period_id" invisible="1"/>\n"""
+                res['arch'] = """<form string="%s">
+                                     <field name="period_id" invisible="1" colspan="4"/>\n""" % _('Distribution Key')
                 axis_dest_model = ''
                 context = context or {}
                 if context.get('distribution_id'):
                     distrib = self.pool.get('account.analytic.distribution').browse(cr, uid, context['distribution_id'], context)
                     axis_dest_model = distrib.axis_dest_id.model_id.name
                 if context.get('show_axis_src_item'):
-                    res['arch'] += """    <separator string="Source"/>
-                                          <field name="axis_src_item_id"/>
-                                          <separator string="Target"/>
-                                          <label string="%s" colspan="2" align="0.5"/>\n""" % axis_dest_model
+                    res['arch'] += """    <separator string="%s" colspan="4"/>
+                                          <field name="axis_src_item_id" colspan="4"/>""" % _('Source')
+                res['arch'] += """    <separator string="%s%s" colspan="4"/>\n""" % (_('Target'), axis_dest_model and ': %s' % axis_dest_model or '')
                 for field in res['fields']:
                     if field.startswith('axis_dest_item_id'):
                         res['arch'] += '    <field name="%s"/>\n' % field
                 res['arch'] += '</form>'
             else:
-                res['arch'] = """<tree string="Distribution Keys">
+                res['arch'] = """<tree string="%s">
                                      <field name="axis_src_item_id"/>
                                      <field name="keys_count"/>
-                                 </tree>"""
+                                 </tree>""" % _("Distribution Keys")
         else:
             res = self.pool.get(self._inherit).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         res.update({'name': 'default', 'model': self._name, 'view_id': 0})

@@ -67,5 +67,4 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     ],
     "installable": True,
     "active": False,
-    "certificate": '',
 }

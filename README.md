@@ -23,6 +23,7 @@ Contributors
  * Corentin Pouhet-Brunerie
  * Xavier Fernandez
  * Kevin Deldycke
+ * Samir Rachedi
 
 
 License

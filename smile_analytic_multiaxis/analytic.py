@@ -146,6 +146,16 @@ class AnalyticAxis(osv.osv):
         return super(AnalyticAxis, self).unlink(cr, uid, ids, context)
 AnalyticAxis()
 
+def concatenate_with_comma(string1, string2):
+    if not string1 or not string2:
+        return string1 or string2 or ''
+    else:
+        return ','.join([unicode(string1), unicode(string2)])
+
+def name_get(obj, cr, uid, res_id, context=None):
+    res_name = obj.name_get(cr, uid, res_id, context)
+    return res_name and res_name[0] or (0, _('Unknown'))
+
 class AnalyticDistribution(osv.osv):
     _name = 'account.analytic.distribution'
     _description = 'Analytic Distribution'
@@ -157,17 +167,24 @@ class AnalyticDistribution(osv.osv):
         'axis_dest_id': fields.many2one('account.analytic.axis', 'Destination Axis', required=True, ondelete='cascade'),
         'period_ids': fields.one2many('account.analytic.distribution.period', 'distribution_id', 'Application Periods'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'type': fields.selection([
+        'computation_mode': fields.selection([
             ('static', 'Static'),
             ('dynamic', 'Dynamic'),
-        ], 'Type', required=True),
+        ], 'Computation Mode', required=True),
         'python_code': fields.text('Python code', help=""),
-        'journal_ids': fields.many2many('account.analytic.journal', 'account_analytic_distribution_journal_rel', 'distribution_id', 'journal_id', 'Journals'),
+        'journal_ids': fields.many2many('account.analytic.journal', 'account_analytic_distribution_journal_rel',
+                                        'distribution_id', 'journal_id', 'Journals'),
+        'distribution_type':fields.selection([
+            ('global', 'Global'),
+            ('specific', 'Specific'),
+        ], 'Distribution Type', required=True),
+        'axis_src_item_ids': fields.one2many('account.analytic.distribution.axis_src_item', 'distribution_id', 'Items of Source Axis'),
     }
 
     _defaults = {
         'active': True,
-        'type': 'static',
+        'computation_mode': 'static',
+        'distribution_type': 'specific',
         'python_code': """# You can use the following variables
 #    - objects
 #    - self
@@ -175,77 +192,94 @@ class AnalyticDistribution(osv.osv):
 #    - uid
 #    - ids
 #    - date
-# You must return a dictionary, assign: result = {axis_src_item_id: {axis_dest_item_id: {'rate': rate, 'audit': 'dist%s' % distribution_id}}
+# You must return a dictionary, assign: result = {axis_src_item_id: {axis_dest_item_id: {'rate': rate, 'audit': 'dist%s' % distribution_id}}}
 """,
     }
 
     @tools.cache(skiparg=3)
-    def get_distribution_destinations(self, cr, uid):
+    def _get_distribution_destinations(self, cr, uid):
         distribution_ids = self.search(cr, uid, [], context={'active_test': True})
-        return [distrib.axis_dest_id.model for distrib in self.browse(cr, uid, distribution_ids) if distrib.type == 'static']
+        return [distrib.axis_dest_id.model for distrib in self.browse(cr, uid, distribution_ids) if distrib.computation_mode == 'static']
 
     def create(self, cr, uid, vals, context=None):
         distribution_id = super(AnalyticDistribution, self).create(cr, uid, vals, context)
-        self.get_distribution_destinations.clear_cache(cr.dbname)
+        self._get_distribution_destinations.clear_cache(cr.dbname)
         return distribution_id
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(AnalyticDistribution, self).write(cr, uid, ids, vals, context)
-        self.get_distribution_destinations.clear_cache(cr.dbname)
+        self._get_distribution_destinations.clear_cache(cr.dbname)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(AnalyticDistribution, self).unlink(cr, uid, ids, context)
-        self.get_distribution_destinations.clear_cache(cr.dbname)
+        self._get_distribution_destinations.clear_cache(cr.dbname)
         return res
 
-    def _get_static_distribution(self, cr, uid, distribution_id, date, res_ids, context):
-        res = {}
-        period_obj = self.pool.get('account.analytic.distribution.period')
+    def _get_distribution_period_ids(self, cr, uid, distribution_id, date):
         period_domain = [
             ('distribution_id', '=', distribution_id),
             '|', ('date_start', '=', False), ('date_start', '<=', date),
             '|', ('date_stop', '=', False), ('date_stop', '>=', date),
         ]
-        period_ids = period_obj.search(cr, uid, period_domain, limit=1, context=context)
+        return self.pool.get('account.analytic.distribution.period').search(cr, uid, period_domain, limit=1)
+
+    def _get_specific_static_distribution(self, cr, uid, distribution_id, date, res_ids):
+        res = {}
+        period_ids = self._get_distribution_period_ids(cr, uid, distribution_id, date)
         key_obj = self.pool.get('account.analytic.distribution.key')
         key_domain = [('period_id', 'in', period_ids)]
         if res_ids:
             key_domain.append(('axis_src_item_id', 'in', res_ids))
-        key_ids = key_obj.search(cr, uid, key_domain, context=context)
-        for key in key_obj.read(cr, uid, key_ids, ['axis_src_item_id', 'axis_dest_item_id', 'rate'], context):
+        key_ids = key_obj.search(cr, uid, key_domain)
+        for key in key_obj.read(cr, uid, key_ids, ['axis_src_item_id', 'axis_dest_item_id', 'rate']):
             res.setdefault(key['axis_src_item_id'], {}).update({key['axis_dest_item_id']: {
                 'rate': key['rate'],
                 'audit': 'dist%s_key%s' % (distribution_id, key['id']),
             }})
         return res
 
-    def _get_dynamic_distribution(self, cr, uid, distribution_id, date, res_ids, context):
-        distribution = self.browse(cr, uid, distribution_id, context)
+    def _get_global_static_distribution(self, cr, uid, distribution_id, date, res_ids):
+        res = {}
+        period_ids = self._get_distribution_period_ids(cr, uid, distribution_id, date)
+        key_obj = self.pool.get('account.analytic.distribution.key')
+        key_ids = key_obj.search(cr, uid, [('period_id', 'in', period_ids)])
+        axis_src_item_obj = self.pool.get('account.analytic.distribution.axis_src_item')
+        axis_src_item_ids = axis_src_item_obj.search(cr, uid, [('distribution_id', '=', distribution_id)])
+        for axis_src_item_id in axis_src_item_ids:
+            for key in key_obj.read(cr, uid, key_ids, ['axis_dest_item_id', 'rate']):
+                res.setdefault(axis_src_item_id, {}).update({key['axis_dest_item_id']: {
+                    'rate': key['rate'],
+                    'audit': 'dist%s_key%s' % (distribution_id, key['id']),
+                }})
+        return res
+
+    def _get_dynamic_distribution(self, cr, uid, distribution_id, date, res_ids):
+        distribution = self.browse(cr, uid, distribution_id)
         model_obj = self.pool.get(distribution.axis_src_id.model)
-        res_ids = res_ids or model_obj.search(cr, uid, [], context=context)
+        res_ids = res_ids or model_obj.search(cr, uid, [])
         localdict = {
-            'objects': model_obj.browse(cr, uid, res_ids, context),
+            'objects': model_obj.browse(cr, uid, res_ids),
             'self': model_obj,
             'cr': cr,
             'uid': uid,
             'ids': res_ids,
             'date': date,
             'datetime': datetime,
+            'distribution_id': distribution.id,
         }
         exec distribution.python_code in localdict
         return localdict.get('result', {})
 
-    def get_distribution(self, cr, uid, distribution_id, date=None, res_ids=None, context=None):
+    def get_distribution(self, cr, uid, distribution_id, date=None, res_ids=None):
         assert distribution_id and isinstance(distribution_id, (int, long)), 'distribution_id must be an integer'
         assert res_ids is None or isinstance(res_ids, (list, tuple)), 'res_ids must be a list or a tuple'
         date = date or time.strftime('%Y-%m-%d')
-        context = dict(context or {})
-        context['active_test'] = True
-        if context.has_key('distribution_id'):
-            del context['distribution_id']
-        distribution = self.read(cr, uid, distribution_id, ['type'], context)
-        return getattr(self, '_get_%s_distribution' % distribution['type'])(cr, uid, distribution['id'], date, res_ids, context)
+        distribution = self.read(cr, uid, distribution_id, ['computation_mode', 'distribution_type'])
+        distribution_type = distribution['computation_mode']
+        if distribution['computation_mode'] == 'static':
+            distribution_type = '%s_%s' % (distribution['distribution_type'], distribution['computation_mode'])
+        return getattr(self, '_get_%s_distribution' % distribution_type)(cr, uid, distribution['id'], date, res_ids)
 
     def apply_distribution_keys(self, cr, uid, distribution_id, line_vals, context=None):
         assert distribution_id and isinstance(distribution_id, (int, long)), 'distribution_id must be an integer'
@@ -255,25 +289,75 @@ class AnalyticDistribution(osv.osv):
         column_src = distribution.axis_src_id.column_label
         column_dest = distribution.axis_dest_id.column_label
         res_ids = line_vals.get(column_src) and [line_vals[column_src]] or []
-        distribution_keys = self.get_distribution(cr, uid, distribution_id, line_vals.get('date'), res_ids, context)
+        distribution_keys = self.get_distribution(cr, uid, distribution_id, line_vals.get('date'), res_ids)
         if not distribution_keys:
             res = [line_vals]
         else:# elif distribution_keys:
             axis_src_item_id = line_vals.get(column_src)
             for axis_dest_item_id in distribution_keys.get(axis_src_item_id, []):
-                rate = distribution_keys[axis_src_item_id][axis_dest_item_id]['rate'] / 100
-                audit = distribution_keys[axis_src_item_id][axis_dest_item_id]['audit']
+                rate = distribution_keys[axis_src_item_id][axis_dest_item_id]['rate'] / 100.0
+                audit = distribution_keys[axis_src_item_id][axis_dest_item_id].get('audit')
                 new_vals = dict(line_vals)
                 new_vals.update({
                     column_dest: axis_dest_item_id,
                     'amount': line_vals.get('amount', 0.0) * rate,
                     'unit_amount': line_vals.get('unit_amount', 0.0) * rate,
                     'amount_currency': line_vals.get('amount_currency', 0.0) * rate,
-                    'audit': (line_vals.get('audit', '') and line_vals['audit'] + ',') + audit,
+                    'audit': concatenate_with_comma(line_vals.get('audit'), audit),
                 })
                 res.append(new_vals)
         return res
 AnalyticDistribution()
+
+class AnalyticDistributionItem(osv.osv):
+    _name = 'account.analytic.distribution.axis_src_item'
+    _description = 'Analytic Distribution Source Axis Item'
+
+    def _get_names(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for item in self.read(cr, uid, ids, ['res_id', 'res_model']):# Do not pass context to avoid to receive a many2one instead of integer
+            item_name = self.pool.get(item['res_model']).name_get(cr, uid, [item['res_id']], context)
+            res[item['id']] = item_name and item_name[0][1] or ''
+        return res
+
+    _columns = {
+        'distribution_id': fields.many2one('account.analytic.distribution', 'Distribution', required=True, ondelete='cascade'),
+        'res_model': fields.related('distribution_id', 'axis_src_id', 'model_id', 'model', type='char', size=64,
+                                    string='Resource Model', store=True, readonly=True),
+        'res_id': fields.integer('Resource Identifier', required=True),
+        'res_name': fields.function(_get_names, method=True, type='char', string='Resource Name'),
+    }
+
+    def read(self, cr, uid, ids, allfields=None, context=None, load='_classic_read'):
+        res = super(AnalyticDistributionItem, self).read(cr, uid, ids, allfields, context, load)
+        context = context or {}
+        if context.get('axis_src_id'):
+            axis = self.pool.get('account.analytic.axis').browse(cr, uid, context['axis_src_id'], context)
+            if not allfields or 'res_id' in allfields:
+                model_obj = self.pool.get(axis.model)
+                if isinstance(res, dict):
+                    res['res_id'] = name_get(model_obj, cr, uid, res['res_id'], context)
+                elif isinstance(res, list):
+                    for index in range(len(res)):
+                        res[index]['res_id'] = name_get(model_obj, cr, uid, res[index]['res_id'], context)
+        return res
+
+    def fields_get(self, cr, uid, allfields=None, context=None):
+        res = super(AnalyticDistributionItem, self).fields_get(cr, uid, allfields, context)
+        context = context or {}
+        if context.get('axis_src_id'):
+            axis = self.pool.get('account.analytic.axis').browse(cr, uid, context['axis_src_id'], context)
+            if not allfields or 'res_id' in allfields:
+                res['res_id'].update({
+                    'string': axis.model_id.name,
+                    'type': 'many2one',
+                    'relation': axis.model,
+                    'domain': axis.domain and eval(axis.domain),
+                })
+        return res
+AnalyticDistributionItem()
 
 class AnalyticDistributionPeriod(osv.osv):
     _name = 'account.analytic.distribution.period'
@@ -312,18 +396,12 @@ class AnalyticDistributionKey(osv.osv):
     _rec_name = 'period_id'
 
     def _get_items(self, cr, uid, ids, name, arg, context=None):
-        context = dict(context or {})
-        if context.get('distribution_id'):
-            del context['distribution_id']
         res = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for key in self.read(cr, uid, ids, ['axis_src_item_id', 'axis_dest_item_id', 'period_id'], context):
-            distribution = self.pool.get('account.analytic.distribution.period').browse(cr, uid, key['period_id'][0], context).distribution_id
-            axis_src_item_id = key['axis_src_item_id']
-            axis_dest_item_id = key['axis_dest_item_id']
-            axis_src_item_name = self.pool.get(distribution.axis_src_id.model).name_get(cr, uid, [axis_src_item_id], context)
-            axis_dest_item_name = self.pool.get(distribution.axis_dest_id.model).name_get(cr, uid, [axis_dest_item_id], context)
+        for key in self.read(cr, uid, ids, ['axis_src_item_id', 'axis_src_model', 'axis_dest_item_id', 'axis_dest_model']):# Do not pass context to avoid to receive many2one instead of integer
+            axis_src_item_name = self.pool.get(key['axis_src_model']).name_get(cr, uid, [key['axis_src_item_id']], context)
+            axis_dest_item_name = self.pool.get(key['axis_dest_model']).name_get(cr, uid, [key['axis_dest_item_id']], context)
             res[key['id']] = {
                 'axis_src_item_name': axis_src_item_name and axis_src_item_name[0][1] or '',
                 'axis_dest_item_name': axis_dest_item_name and axis_dest_item_name[0][1] or '',
@@ -334,14 +412,15 @@ class AnalyticDistributionKey(osv.osv):
         'period_id': fields.many2one('account.analytic.distribution.period', 'Distribution Application Period', required=True, ondelete='cascade'),
         'axis_src_item_id': fields.integer('Item of Source Axis', required=True),
         'axis_src_model': fields.related('period_id', 'distribution_id', 'axis_src_id', 'model', string="Model of Source Axis", readonly=True),
-        'axis_src_item_name': fields.function(_get_items, method=True, type='char', string='Item of Source Axis', readonly=True, multi='distribution_key'),
+        'axis_src_item_name': fields.function(_get_items, method=True, type='char', string='Item of Source Axis', multi='distribution_key'),
         'axis_dest_item_id': fields.integer('Item of Destination Axis', required=True),
-        'axis_dest_item_name': fields.function(_get_items, method=True, type='char', string='Item of Destination Axis', readonly=True, multi='distribution_key'),
+        'axis_dest_model': fields.related('period_id', 'distribution_id', 'axis_dest_id', 'model', string="Model of Destination Axis", readonly=True),
+        'axis_dest_item_name': fields.function(_get_items, method=True, type='char', string='Item of Destination Axis', multi='distribution_key'),
         'rate': fields.float('Rate (%)', digits=(1, 2), required=True),
         'company_id': fields.related('period_id', 'distribution_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
         'active': fields.boolean('Active', readonly=True),
-        'date_start': fields.date('Start Date', readonly=True),
-        'date_stop': fields.date('End Date', readonly=True),
+        'date_start': fields.related('period_id', 'date_start', type='date', string='Start Date', readonly=True, store=True),
+        'date_stop': fields.related('period_id', 'date_stop', type='date', string='End Date', readonly=True, store=True),
     }
 
     _defaults = {
@@ -359,11 +438,10 @@ class AnalyticDistributionKey(osv.osv):
                     model = getattr(distribution, field.replace('_item', '')).model
                     model_obj = self.pool.get(model)
                     if isinstance(res, dict):
-                        res[field] = model_obj.name_get(cr, uid, res[field], context)[0]
+                        res['res_id'] = name_get(model_obj, cr, uid, res['res_id'], context)
                     elif isinstance(res, list):
                         for index in range(len(res)):
-                            obj_name = model_obj.name_get(cr, uid, [res[index][field]], context)
-                            res[index][field] = obj_name and obj_name[0] or ''
+                            res[index]['res_id'] = name_get(model_obj, cr, uid, res[index]['res_id'], context)
         return res
 
     def fields_get(self, cr, uid, allfields=None, context=None):
@@ -375,20 +453,11 @@ class AnalyticDistributionKey(osv.osv):
                 if not allfields or field in allfields:
                     axis = getattr(distribution, field.replace('_item', ''))
                     res[field].update({
+                        'string': axis.model_id.name,
                         'type': 'many2one',
                         'relation': axis.model,
                         'domain': axis.domain and eval(axis.domain),
                     })
-        return res
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(AnalyticDistributionKey, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
-        if view_type == 'form':
-            res['arch'] = """<form string="Distribution Key">
-    <field name="axis_src_item_id"/>
-    <field name="axis_dest_item_id"/>
-    <field name="rate"/>
-</form>"""
         return res
 
     def _deactivate_old_key(self, cr, uid, key_id, context=None):
@@ -508,16 +577,16 @@ class AnalyticLine(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         res_ids = []
-        audit_ref = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.line.audit')
+        if not vals.get('audit_ref'):
+            vals['audit_ref'] = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.line.audit')
         for new_vals in self._distribute(cr, uid, vals, context):
-            new_vals['audit_ref'] = audit_ref
             res_ids.append(super(AnalyticLine, self).create(cr, uid, new_vals, context))
         return res_ids[0]
 AnalyticLine()
 
 def _is_distribution_destination(self, cr, uid):
     if self.pool.get('account.analytic.distribution') \
-    and self._name in self.pool.get('account.analytic.distribution').get_distribution_destinations(cr, 1):
+    and self._name in self.pool.get('account.analytic.distribution')._get_distribution_destinations(cr, 1):
         return True
     return False
 
@@ -534,7 +603,7 @@ def analytic_multiaxis_decorator(original_method):
                 if key_ids:
                     exception = True
             elif method_name == 'write':
-                if args[0].get('active') == False:
+                if 'active' in args[0] and not args[0]['active']:
                     for resource in self.read(cr, uid, ids, ['active']):
                         if resource['active']:
                             exception = True

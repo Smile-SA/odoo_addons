@@ -12,7 +12,8 @@
             <field name="arch" type="xml">
             	<data>
 	                <xpath expr="/form/notebook/page[@string='Distribution']/field[@name='period_ids']/form/field[@name='key_ids']" position="replace">
-				    	<field name="key_wizard_ids" mode="tree" colspan="4" context="{'default_period_id': active_id, 'distribution_id': distribution_id, 'show_axis_src_item': True}"/>
+				    	<field name="key_wizard_ids" mode="tree" nolabel="1" colspan="4" 
+				    		context="{'default_period_id': active_id, 'distribution_id': distribution_id, 'show_axis_src_item': distribution_type == 'specific'}"/>
 	                </xpath>
 	            </data>
 			</field>
