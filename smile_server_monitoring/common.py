@@ -22,6 +22,9 @@
 import sys
 import imp
 import gc
+from threading import enumerate as enum_threads
+from traceback import format_stack
+from sys import _current_frames
 
 from service.web_services import common
 
@@ -86,6 +89,20 @@ def count_objects(limit=None, floor=5):
         d = [(objtype, number) for objtype, number in d if number >= floor]
     return d
 
+def thread_and_stack_generator():
+    frames = _current_frames()
+    for thread_ in enum_threads():
+        try:
+            frame = frames[thread_.ident]
+            stack_list = format_stack(frame)
+            yield (thread_, ''.join(stack_list))
+        except KeyError:
+            pass # race prone, threads might finish..
+
+def stacks_repr():
+    return '\n'.join("{}\n{}".format(thread, stack)
+                     for thread, stack in thread_and_stack_generator())
+
 def new_dispatch(self, method, auth, params):
     if method == 'get_memory':
         return get_memory()
@@ -97,6 +114,8 @@ def new_dispatch(self, method, auth, params):
         return get_count()
     elif method == 'gc_types_count':
         return count_objects(*params)
+    elif method == 'get_stacks':
+        return stacks_repr()
     else:
         return native_dispatch(self, method, auth, params)
 
