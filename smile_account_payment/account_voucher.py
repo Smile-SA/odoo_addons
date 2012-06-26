@@ -27,4 +27,23 @@ class AccountVoucher(osv.osv):
     _columns = {
         'payment_id': fields.many2one('payment.order', 'Payment'),
     }
+
+    def get_voucher_id(self, cr, uid, payment_id, partner_id, context):
+        assert isinstance(payment_id, (int, long)), 'payment_id must be an integer!'
+        assert isinstance(partner_id, (int, long)), 'partner_id must be an integer!'
+        voucher_ids = self.search(cr, uid, [('payment_id', '=', payment_id), ('partner_id', '=', partner_id), ('state', '=', 'draft')], limit=1, context=context)
+        if voucher_ids:
+            voucher_id = voucher_ids[0]
+        else:
+            journal = self.pool.get('payment.order').browse(cr, uid, payment_id, context).journal_id
+            voucher_id = self.create(cr, uid, {
+                'type': 'payment',
+                'partner_id': partner_id,
+                'journal_id': journal.id,
+                'account_id': journal.default_credit_account_id.id,
+                'company_id': journal.company_id.id,
+                'currency_id': journal.company_id.currency.id,
+                'payment_id': payment_id,
+            }, context)
+        return voucher_id
 AccountVoucher()

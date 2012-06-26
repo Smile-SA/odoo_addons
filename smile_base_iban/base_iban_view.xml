@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<!-- Res Partner Bank -->
+
+        <record id="view_partner_bank_form" model="ir.ui.view">
+            <field name="name">res.partner.bank.form</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">form</field>
+            <field name="priority">0</field>
+            <field name="arch" type="xml">
+                <form string="Bank account">
+                    <field name="partner_id"/>
+                    <field name="bank" on_change="onchange_bank(bank, iban, state)"/>
+                    <newline/>
+                    <separator colspan="4" string="Bank Account Number"/>
+	                <field name="state" colspan="4"/>
+                    <label string="BBAN : ." align="1.0"/>
+                    <group colspan="2" col="6">
+	                    <field name="bank_code" nolabel="1" on_change="onchange_bank(bank, bank_code, iban, bic, state)"/>
+	                    <field name="branch_code" nolabel="1"/>
+	                    <field name="acc_number" nolabel="1" colspan="3"/>
+	                    <field name="acc_key" nolabel="1"/>
+                    </group>
+                    <button name="button_get_bban_from_iban" string="Compute BBAN from IBAN" type="object"/>
+                    <newline/>
+                    <label string="IBAN : ." align="1.0"/>
+                    <group colspan="2" col="5">
+	                    <field name="iban" nolabel="1" colspan="3" on_change="onchange_bank(bank, iban, state)"/>
+	                    <field name="bic" colspan="2"/>
+                    </group>
+                    <button name="button_get_iban_from_bban" string="Compute IBAN from BBAN" type="object"/>
+                    <newline/>
+                    <separator colspan="4" string="Domiciliation"/>
+                    <field name="owner_name" colspan="4"/>
+                    <field name="street" colspan="4"/>
+                    <field name="zip"/>
+                    <field name="city"/>
+                    <field name="country_id"/>
+                    <field name="state_id"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_partner_bank_tree" model="ir.ui.view">
+            <field name="name">res.partner.bank.tree</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">tree</field>
+			<field name="inherit_id" ref="base.view_partner_bank_tree"/>
+            <field name="arch" type="xml">
+                <tree string="Bank Accounts">
+                    <field name="partner_id"/>
+                    <field name="iban"/>
+                    <field name="bic"/>
+                </tree>
+            </field>
+        </record>
+
+	</data>
+</openerp>

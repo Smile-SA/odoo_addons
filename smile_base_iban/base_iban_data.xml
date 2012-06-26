@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="bank_normal_field_bank_code" model="res.partner.bank.type.field">
+            <field name="name">bank_code</field>
+            <field name="required" eval="True"/>
+            <field name="readonly" eval="True"/>
+            <field name="bank_type_id" ref="base.bank_normal"/>
+        </record>
+        <record id="bank_normal_field_branch_code" model="res.partner.bank.type.field">
+            <field name="name">branch_code</field>
+            <field name="required" eval="True"/>
+            <field name="readonly" eval="False"/>
+            <field name="bank_type_id" ref="base.bank_normal"/>
+        </record>
+        <record id="bank_normal_field_acc_key" model="res.partner.bank.type.field">
+            <field name="name">acc_key</field>
+            <field name="required" eval="False"/>
+            <field name="readonly" eval="False"/>
+            <field name="bank_type_id" ref="base.bank_normal"/>
+        </record>
+        <record id="bank_normal_field_iban" model="res.partner.bank.type.field">
+            <field name="name">iban</field>
+            <field name="required" eval="False"/>
+            <field name="readonly" eval="True"/>
+            <field name="bank_type_id" ref="base.bank_normal"/>
+        </record>
+        <record id="bank_normal_field_bic" model="res.partner.bank.type.field">
+            <field name="name">bic</field>
+            <field name="required" eval="False"/>
+            <field name="readonly" eval="True"/>
+            <field name="bank_type_id" ref="base.bank_normal"/>
+        </record>
+        <record id="base.bank_normal_field" model="res.partner.bank.type.field">
+            <field name="required" eval="True"/>
+            <field name="readonly" eval="False"/>
+        </record>
+        <record id="base.bank_normal_field_contry" model="res.partner.bank.type.field">
+            <field name="required" eval="True"/>
+            <field name="readonly" eval="False"/>
+        </record>
+
+        <record id="bank_iban_field_bank_code" model="res.partner.bank.type.field">
+            <field name="name">bank_code</field>
+            <field name="required" eval="False"/>
+            <field name="readonly" eval="True"/>
+            <field name="bank_type_id" ref="base_iban.bank_iban"/>
+        </record>
+        <record id="bank_iban_field_branch_code" model="res.partner.bank.type.field">
+            <field name="name">branch_code</field>
+            <field name="required" eval="False"/>
+            <field name="readonly" eval="True"/>
+            <field name="bank_type_id" ref="base_iban.bank_iban"/>
+        </record>
+        <record id="base_iban.bank_acc_number_field" model="res.partner.bank.type.field">
+            <field name="required" eval="False"/>
+            <field name="readonly" eval="True"/>
+        </record>
+        <record id="bank_iban_field_acc_key" model="res.partner.bank.type.field">
+            <field name="name">acc_key</field>
+            <field name="required" eval="False"/>
+            <field name="readonly" eval="True"/>
+            <field name="bank_type_id" ref="base_iban.bank_iban"/>
+        </record>
+        <record id="base_iban.bank_swift_field" model="res.partner.bank.type.field">
+            <field name="required" eval="True"/>
+            <field name="readonly" eval="True"/>
+        </record>
+
+    </data>
+</openerp>

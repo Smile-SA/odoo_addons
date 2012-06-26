@@ -107,7 +107,7 @@ msgstr "Date fixe"
 #. module: smile_account_payment
 #: field:payment.order,user_id:0
 msgid "User"
-msgstr "Utilisateur"
+msgstr "Signataire"
 
 #. module: smile_account_payment
 #: view:res.company:0

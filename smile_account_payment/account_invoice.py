@@ -70,19 +70,12 @@ class AccountInvoice(osv.osv):
         invoices_by_payment_mode_and_partner = self._get_invoices_by_payment_mode_and_partner(cr, uid, ids, context)
         for payment_mode_id in invoices_by_payment_mode_and_partner:
             payment_id = payment_mode_obj.get_payment_id(cr, uid, payment_mode_id, context)
-            journal = payment_mode_obj.browse(cr, uid, payment_mode_id, context).journal_id
             invoices_by_partner = invoices_by_payment_mode_and_partner[payment_mode_id]
             for partner_id in invoices_by_partner:
-                voucher_obj.create(cr, uid, {
-                    'type': 'payment',
-                    'partner_id': partner_id,
-                    'journal_id': journal.id,
-                    'account_id': journal.default_credit_account_id.id,
-                    'company_id': journal.company_id.id,
-                    'currency_id': journal.company_id.currency.id,
-                    'amount': sum([invoice.amount_total for invoice in invoices_by_partner[partner_id]], 0.0),
+                voucher_id = voucher_obj.get_voucher_id(cr, uid, payment_id, partner_id, context)
+                voucher_obj.write(cr, uid, voucher_id, {
                     'line_ids': [(0, 0, vals) for vals in self._get_voucher_lines_from_invoices(cr, uid, invoices_by_partner[partner_id], context)],
-                    'payment_id': payment_id,
+                    'amount': sum([invoice.amount_total for invoice in invoices_by_partner[partner_id]], 0.0),
                 }, context)
         return True
 
