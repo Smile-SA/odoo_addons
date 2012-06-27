@@ -46,6 +46,7 @@ class ResUser(osv.osv):
 
     _sql_constraints = [
         ('active_admin_check', 'CHECK (id = 1 AND active = TRUE OR id <> 1)', 'The user with id = 1 must be always active!'),
+        ('profile_without_profile_id', 'CHECK( (user_profile = TRUE AND user_profile_id IS NULL) OR user_profile = FALSE )', 'Profile users cannot be linked to a profile!'),
     ]
 
     def onchange_user_profile(self, cr, uid, ids, user_profile):
@@ -79,9 +80,11 @@ class ResUser(osv.osv):
                 if user['user_profile']:
                     raise osv.except_osv(_('Warning!'), _('You cannot change the profile of a user which is itself a profile!'))
             vals.update(self._get_user_vals_from_profile(cr, uid, vals['user_profile_id'], context))
+            super(ResUser, self).write(cr, uid, ids, vals, context)
         else:
+            super(ResUser, self).write(cr, uid, ids, vals, context)
             for user_profile in self.read(cr, uid, ids, ['user_profile', 'user_ids'], context):
                 if user_profile['user_profile'] and user_profile['user_ids']:
                     self.write(cr, uid, user_profile['user_ids'], {'user_profile_id': user_profile['id']}, context)
-        return super(ResUser, self).write(cr, uid, ids, vals, context)
+        return True
 ResUser()
