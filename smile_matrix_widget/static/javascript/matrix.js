@@ -484,6 +484,10 @@ jQuery(document).ready(function($){
     $(".matrix .delete_button").click(function(){
         $(this).parents("tr:first").fadeOut('fast', function(){
             var row_id = $(this).attr("id");
+            // Prevent malformed lines to trigger an infinite loop
+            if (!row_id) {
+                return false;
+            };
             // Save the table body for late column totals update
             var matrix = get_parent_matrix($(this));
             var matrix_id = matrix.attr("id");
