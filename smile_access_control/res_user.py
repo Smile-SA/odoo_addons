@@ -46,6 +46,7 @@ class ResUser(osv.osv):
 
     _sql_constraints = [
         ('active_admin_check', 'CHECK (id = 1 AND active = TRUE OR id <> 1)', 'The user with id = 1 must be always active!'),
+        ('profile_without_profile_id', 'CHECK( (user_profile = TRUE AND user_profile_id IS NULL) OR user_profile = FALSE )', 'Profile users cannot be linked to a profile!'),
     ]
 
     def onchange_user_profile(self, cr, uid, ids, user_profile):
