@@ -122,7 +122,7 @@ def thread_and_stack_generator():
             pass # race prone, threads might finish..
 
 def stacks_repr():
-    return '\n'.join("{}\n{}".format(thread, stack)
+    return '\n'.join("{0}\n{1}".format(thread, stack)
                      for thread, stack in thread_and_stack_generator())
 
 def new_dispatch(self, method, auth, params):
