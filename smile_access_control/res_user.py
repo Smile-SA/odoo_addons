@@ -80,9 +80,11 @@ class ResUser(osv.osv):
                 if user['user_profile']:
                     raise osv.except_osv(_('Warning!'), _('You cannot change the profile of a user which is itself a profile!'))
             vals.update(self._get_user_vals_from_profile(cr, uid, vals['user_profile_id'], context))
+            super(ResUser, self).write(cr, uid, ids, vals, context)
         else:
+            super(ResUser, self).write(cr, uid, ids, vals, context)
             for user_profile in self.read(cr, uid, ids, ['user_profile', 'user_ids'], context):
                 if user_profile['user_profile'] and user_profile['user_ids']:
                     self.write(cr, uid, user_profile['user_ids'], {'user_profile_id': user_profile['id']}, context)
-        return super(ResUser, self).write(cr, uid, ids, vals, context)
+        return True
 ResUser()
