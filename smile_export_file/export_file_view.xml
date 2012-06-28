@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="view_export_file_template_form" model="ir.ui.view">
+			<field name="name">ir.model.export.file_template.form</field>
+			<field name="model">ir.model.export.file_template</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="File Template">
+					<group colspan="4" col="8">
+						<field name="name" colspan="3"/>
+						<field name="model_id" colspan="3"/>
+						<field name="state"/>
+						<field name="filename" colspan="3"/>
+						<field name="extension"/>
+						<field name="extension_custom" nolabel="1" attrs="{'readonly': [('extension', '=', 'pdf')]}"/>
+						<field name="encoding"/>
+					</group>
+					<notebook colspan="4">
+						<page string="Template">
+							<label string="Use Mako language." align="0.0" colspan="4"/>
+							<separator string="Body" colspan="4"/>
+							<group colspan="4" attrs="{'invisible': [('state', '!=', 'tab')]}">
+								<field name="refer_to_underlying_object"/>
+								<field name="records" attrs="{'invisible': [('refer_to_underlying_object', '!=', True)], 'required': [('refer_to_underlying_object', '=', True)]}"/>
+								<field name="column_ids" colspan="4" nolabel="1" mode="tree,form">
+									<tree string="Columns">
+										<field name="sequence"/>
+										<field name="name"/>
+										<field name="value" widget="char"/>
+										<field name="default_value"/>
+										<field name="not_string"/>
+										<field name="min_width"/>
+										<field name="max_width"/>
+										<field name="has_validator"/>
+									</tree>
+									<form string="Column">
+										<field name="name"/>
+										<field name="sequence"/>
+										<field name="value" colspan="4"/>
+										<field name="default_value" colspan="4"/>
+										<field name="not_string"/>
+										<field name="column_validator" colspan="4"/>
+										<field name="exception_msg" colspan="4"/>
+										<field name="min_width"/>
+										<field name="max_width"/>
+										<field name="fillchar" attrs="{'invisible': [('min_width', '=', 0)], 'required': [('min_width', '!=', 0)]}"/>
+										<field name="justify" attrs="{'invisible': [('min_width', '=', 0)], 'required': [('min_width', '!=', 0)]}"/>
+									</form>
+								</field>
+								<group colspan="4" col="6">
+									<field name="delimiter"/>
+									<field name="lineterminator"/>
+									<field name="quotechar"/>
+								</group>
+							</group>
+							<group colspan="4" attrs="{'invisible': [('state', '=', 'tab')]}">
+								<field name="body" colspan="4" nolabel="1"/>
+							</group>
+							<group col="2" colspan="2">
+								<separator string="Header" colspan="2"/>
+								<field name="header" colspan="2" nolabel="1"/>
+								<field name="fieldnames_in_header" attrs="{'invisible': [('state', '!=', 'tab')]}"/>
+							</group>
+							<group col="2" colspan="2">
+								<separator string="Footer" colspan="2"/>
+								<field name="footer" colspan="2" nolabel="1"/>
+							</group>
+						</page>
+						<page string="Advanced configuration">
+							<group colspan="4" col="2">
+								<separator string="Content" colspan="2"/>
+								<field name="check_method"/>
+								<separator string="Logs and Exceptions" colspan="2"/>
+								<field name="exception_handling"/>
+								<field name="exception_logging"/>
+								<field name="report_summary_template"/>
+							</group>
+						</page>
+						<page string="Storage">
+							<group col="2" colspan="2">
+								<separator string="Attachment" colspan="2"/>
+								<field name="create_attachment"/>
+								<separator string="FTP" colspan="2"/>
+								<field name="upload_to_ftp_server"/>
+								<group col="2" colspan="2" attrs="{'invisible': [('upload_to_ftp_server', '!=', True)]}">
+									<field name="ftp_host" attrs="{'required': [('upload_to_ftp_server', '=', True)]}"/>
+									<field name="ftp_anonymous"/>
+									<field name="ftp_user" attrs="{'invisible': [('ftp_anonymous', '=', True)], 'required': [('upload_to_ftp_server', '=', True), ('ftp_anonymous', '!=', True)]}"/>
+									<field name="ftp_password" attrs="{'invisible': [('ftp_anonymous', '=', True)]}" password="True"/>
+									<field name="ftp_directory"/>
+								</group>
+								<separator string="Local storage" colspan="2"/>
+								<field name="save_in_local_dir"/>
+								<group col="2" colspan="2" attrs="{'invisible': [('save_in_local_dir', '!=', True)]}">
+									<field name="local_directory" attrs="{'required': [('save_in_local_dir', '=', True)]}"/>
+								</group>
+								<separator string="Email" colspan="2"/>
+								<field name="send_by_email"/>
+								<group col="2" colspan="2" attrs="{'invisible': [('send_by_email', '!=', True)]}">
+									<field name="email_to" attrs="{'required': [('send_by_email', '=', True)]}"/>
+									<field name="email_cc"/>
+									<field name="email_subject" attrs="{'required': [('send_by_email', '=', True)]}"/>
+									<field name="email_body" attrs="{'required': [('send_by_email', '=', True)]}"/>
+									<group colspan="2" col="4" attrs="{'invisible': [('create_attachment', '!=', True)]}">
+										<field name="email_attach_export_file"/>
+										<field name="email_attach_exceptions_file"/>
+									</group>
+								</group>
+							</group>
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_export_file_template_tree" model="ir.ui.view">
+			<field name="name">ir.model.export.file_template.tree</field>
+			<field name="model">ir.model.export.file_template</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="File Templates">
+					<field name="name"/>
+					<field name="model_id"/>
+					<field name="state"/>
+					<field name="filename"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_export_file_template_search" model="ir.ui.view">
+			<field name="name">ir.model.export.file_template.search</field>
+			<field name="model">ir.model.export.file_template</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<group col="8" colspan="4">
+						<field name="name"/>
+						<field name="model_id"/>
+						<field name="state"/>
+						<field name="filename"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_export_file" model="ir.actions.act_window">
+			<field name="name">File Templates</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ir.model.export.file_template</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem action="action_export_file" id="menu_export_file" parent="smile_export.menu_exports" />
+
+	</data>
+</openerp>

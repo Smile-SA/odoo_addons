@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="view_export_template_form" model="ir.ui.view">
+			<field name="name">ir.model.export.template.form.inherit</field>
+			<field name="model">ir.model.export.template</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="smile_export.view_export_template_form" />
+			<field name="arch" type="xml">
+				<data>
+					<field name="action_id" position="after">
+						<field name="export_file_template_id" domain="[('model_id','=',model_id)]"/>
+						<field name="records" />
+					</field>
+					<xpath expr="/form/notebook/page[@string='Exports']/field[@name='export_ids']/form/field[@name='exception']" position="after">
+						<group attrs="{'invisible': [('state', '!=', 'done')]}">
+							<separator string="Last Execution Report" colspan="4"/>
+							<field name="report_summary" colspan="4" nolabel="1" readonly="1"/>
+							<field name="filename" invisible="1"/>
+							<field name="file" filename="filename"/>
+							<field name="exceptions_filename" invisible="1"/>
+							<field name="exceptions_file" filename="exceptions_filename" attrs="{'invisible': [('exceptions_filename', '=', False)]}"/>
+						</group>
+					</xpath>
+					<xpath expr="/form/notebook/page[@string='Exports']/field[@name='export_ids']/tree/field[@name='state']" position="after">
+						<field name="exception_during_last_run"/>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="view_export_template_tree" model="ir.ui.view">
+			<field name="name">ir.model.export.template.tree.inherit</field>
+			<field name="model">ir.model.export.template</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="smile_export.view_export_template_tree" />
+			<field name="arch" type="xml">
+				<field name="action_id" position="after">
+					<field name="export_file_template_id" />
+				</field>
+			</field>
+		</record>
+
+	</data>
+</openerp>
