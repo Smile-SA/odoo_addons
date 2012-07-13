@@ -39,7 +39,9 @@ def new_fnct_write(self, obj, cr, uid, id_, prop_name, id_val, obj_dest, context
 
     def_id = self._field_get(cr, uid, obj._name, prop_name)
     company = obj.pool.get('res.company')
-    cid = company._company_default_get(cr, uid, obj._name, def_id, context=context)
+    cid = context.get('company_id', None)
+    if not cid:
+        cid = company._company_default_get(cr, uid, obj._name, def_id, context=context)
     context['force_company_id'] = cid
 
     nids = self._get_by_id(obj, cr, uid, [prop_name], [id_], context)
