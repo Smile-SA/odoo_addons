@@ -103,14 +103,14 @@ class AnalyticPeriod(osv.osv):
         if state:
             domain.append(('state', '=', state))
         order = 'date_start ' + (operator == '>' and 'asc' or 'desc')
-        period_ids = self.search(cr, uid, domain, limit=1, order=order)
+        period_ids = self.search(cr, 1, domain, limit=1, order=order)
         return period_ids and period_ids[0] or 0
 
-    @tools.cache()
+    @tools.cache(skiparg=3)
     def get_previous_period_id(self, cr, uid, period_id, state=None):
         return self._get_period_id(cr, uid, period_id, '<', state)
 
-    @tools.cache()
+    @tools.cache(skiparg=3)
     def get_next_period_id(self, cr, uid, period_id, state=None):
         return self._get_period_id(cr, uid, period_id, '>', state)
 
