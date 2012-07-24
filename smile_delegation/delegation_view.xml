@@ -77,7 +77,7 @@
 			<field name="model">delegation.delegation</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<tree string="Delegations">
+				<tree string="Delegations" toolbar="0">
 					<field name="delegation_tmpl_id"/>
 					<field name="user_id"/>
 					<field name="delegate_ids"/>
@@ -115,8 +115,8 @@
 			<field name="arch" type="xml">
 				<form string="Delegation">
 					<label string="" colspan="2"/>
-					<field name="active"/>
-					<field name="delegation_tmpl_id"/>
+					<field name="active" groups="smile_delegation.group_smile_delegation_manager"/>
+					<field name="delegation_tmpl_id" widget="selection"/>
 					<field name="user_id" readonly="1"/>
 					<field name="date_start"/>
 					<field name="date_stop"/>

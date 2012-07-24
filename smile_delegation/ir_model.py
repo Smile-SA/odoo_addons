@@ -60,10 +60,10 @@ class IrModel(osv.osv):
             obj = self.pool.get(model)
             method_names = [attr for attr in dir(obj) if inspect.ismethod(getattr(obj, attr)) and not attr.startswith('__')]
             method_obj = self.pool.get('ir.model.methods')
-            method_ids = method_obj.search(cr, uid, [('model_id', '=', model_id), ('name', 'in', method_names)])
+            method_ids = method_obj.search(cr, 1, [('model_id', '=', model_id), ('name', 'in', method_names)])
             existing_method_names = [method['name'] for method in method_obj.read(cr, uid, method_ids, ['name'])]
             for method in method_names:
                 if method not in existing_method_names:
-                    method_obj.create(cr, uid, {'name': method, 'model_id': model_id})
+                    method_obj.create(cr, 1, {'name': method, 'model_id': model_id})
         return True
 IrModel()

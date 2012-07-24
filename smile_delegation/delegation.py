@@ -137,15 +137,17 @@ class DelegationTemplate(osv.osv):
         return res
 
     def create_client_action(self, cr, uid, ids, context=None):
+        context_copy = (context or {}).copy()
         if isinstance(ids, (int, long)):
             ids = [ids]
         for delegation_tmpl in self.browse(cr, uid, ids, context):
             if not delegation_tmpl.client_action_id:
+                context_copy['default_delegation_tmpl_id'] = delegation_tmpl.id
                 act_window_vals = {
                     'name': delegation_tmpl.name,
                     'type': 'ir.actions.act_window',
                     'domain': [('model', '=', delegation_tmpl.model)],
-                    'context': context,
+                    'context': context_copy,
                     'res_model': 'delegation.delegation',
                     'src_model': delegation_tmpl.model,
                     'view_type': 'form',
@@ -202,7 +204,7 @@ class Delegation(osv.osv):
                 ('method', '=', method),
                 ('delegate_ids', 'in', uid),
                 '|', ('date_start', '=', False), ('date_start', '<=', today),
-                '|', ('date_end', '=', False), ('date_end', '>=', today),
+                '|', ('date_stop', '=', False), ('date_stop', '>=', today),
             ], context={'active_test': True})
 
     def cache_restart(self, cr):
