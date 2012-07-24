@@ -47,7 +47,6 @@
             <field name="name">res.partner.bank.tree</field>
             <field name="model">res.partner.bank</field>
             <field name="type">tree</field>
-			<field name="inherit_id" ref="base.view_partner_bank_tree"/>
             <field name="arch" type="xml">
                 <tree string="Bank Accounts">
                     <field name="partner_id"/>

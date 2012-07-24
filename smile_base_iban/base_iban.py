@@ -137,9 +137,9 @@ class ResPartnerBank(osv.osv):
     def create(self, cr, uid, vals, context=None):
         res_id = super(ResPartnerBank, self).create(cr, uid, vals, context)
         if vals['state'] == 'bank':
-            self.button_get_bban_from_iban(cr, uid, res_id, context)
-        elif vals['state'] == 'iban':
             self.button_get_iban_from_bban(cr, uid, res_id, context)
+        elif vals['state'] == 'iban':
+            self.button_get_bban_from_iban(cr, uid, res_id, context)
         return res_id
 
     def onchange_bank(self, cr, uid, ids, bank_id, iban, state, context=None):
