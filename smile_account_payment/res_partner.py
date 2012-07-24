@@ -19,13 +19,18 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from osv import osv
+from tools.translate import _
 
-class ResCompany(osv.osv):
-    _inherit = 'res.company'
+class ResPartner(osv.osv):
+    _inherit = 'res.partner'
 
-    _columns = {
-        'default_payment_mode_id': fields.many2one('payment.mode', 'Default payment mode'),
-        'post_payment_orders': fields.boolean('Post payment orders at validation'),
-    }
-ResCompany()
+    def check_partner_bank_infos(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for partner in self.read(cr, uid, ids, ['bank_ids', 'name'], context):
+            if not partner['bank_ids']:
+                raise osv.except_osv(_('Error'), _('No bank account found for the partner %s') % partner['name'])
+        return True
+
+ResPartner()

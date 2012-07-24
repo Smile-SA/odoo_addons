@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import res_partner
 import account_payment
 import account_voucher
 import account_invoice
+import res_company

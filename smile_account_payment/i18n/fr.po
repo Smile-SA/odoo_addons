@@ -205,3 +205,28 @@ msgstr "Total"
 msgid "Journal"
 msgstr "Journal"
 
+#. module: smile_account_payment
+#: field:res.company,default_payment_mode_id:0
+msgid "Default payment mode"
+msgstr "Mode de paiement par défaut"
+
+#. module: smile_account_payment
+#: field:res.company,post_payment_orders:0
+msgid "Post payment orders at validation"
+msgstr "Comptabiliser les ordres de paiement dès leur validation"
+
+#. module: smile_account_payment
+#: view:account.invoice:0
+msgid "Create a payment order"
+msgstr "Créer un ordre de paiement"
+
+#. module: smile_account_payment
+#: code:addons\smile_account_payment\res_partner.py:33
+#, python-format
+msgid "No bank account found for the partner %s"
+msgstr "Aucun compte bancaire trouvé pour le fournisseur %s"
+
+#. module: smile_account_payment
+#: field:payment.mode,partner_id:0
+msgid "Partner"
+msgstr "Partenaire"

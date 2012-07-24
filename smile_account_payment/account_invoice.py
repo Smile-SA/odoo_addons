@@ -31,10 +31,10 @@ class AccountInvoice(osv.osv):
 
     def _get_partner_move_line_id(self, cr, uid, invoice, context=None):
         assert isinstance(invoice, orm.browse_record), "invoice argument must be a browse record"
-        for move_line in invoice.move_lines:
+        for move_line in invoice.move_id.line_id:
             if move_line.account_id == invoice.account_id:
                 return move_line.id
-        return True
+        return False
 
     def _get_invoices_by_payment_mode_and_partner(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -51,12 +51,12 @@ class AccountInvoice(osv.osv):
         return invoices_by_payment_mode_and_partner
 
     def _get_voucher_lines_from_invoices(self, cr, uid, invoices, context=None):
-        assert isinstance(invoices, orm.browse_record_list), 'invoices argument must be a browse record list'
+        assert isinstance(invoices, (orm.browse_record_list, list)), 'invoices argument must be a browse record list'
         res = []
         for invoice in invoices:
             res.append({
                 'name': invoice.number,
-                'type': 'cr',
+                'type': 'dr',
                 'move_line_id': self._get_partner_move_line_id(cr, uid, invoice, context),
                 'account_id': invoice.account_id.id,
                 'amount': invoice.residual,
@@ -67,10 +67,12 @@ class AccountInvoice(osv.osv):
     def create_payment(self, cr, uid, ids, context=None):
         payment_mode_obj = self.pool.get('payment.mode')
         voucher_obj = self.pool.get('account.voucher')
+        partner_obj = self.pool.get('res.partner')
         invoices_by_payment_mode_and_partner = self._get_invoices_by_payment_mode_and_partner(cr, uid, ids, context)
         for payment_mode_id in invoices_by_payment_mode_and_partner:
             payment_id = payment_mode_obj.get_payment_id(cr, uid, payment_mode_id, context)
             invoices_by_partner = invoices_by_payment_mode_and_partner[payment_mode_id]
+            partner_obj.check_partner_bank_infos(cr, uid, invoices_by_partner.keys(), context)
             for partner_id in invoices_by_partner:
                 voucher_id = voucher_obj.get_voucher_id(cr, uid, payment_id, partner_id, context)
                 voucher_obj.write(cr, uid, voucher_id, {

@@ -42,7 +42,7 @@ class AccountVoucher(osv.osv):
                 'journal_id': journal.id,
                 'account_id': journal.default_credit_account_id.id,
                 'company_id': journal.company_id.id,
-                'currency_id': journal.company_id.currency.id,
+                'currency_id': journal.company_id.currency_id.id,
                 'payment_id': payment_id,
             }, context)
         return voucher_id
