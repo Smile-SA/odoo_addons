@@ -59,7 +59,7 @@ class AnalyticDistributionKeyWizard(osv.osv):
             args.append(('period_id.distribution_id', '=', context['default_distribution_id']))
         key_ids = self.pool.get(self._inherit).search(cr, uid, args, offset, limit, order, context)
         if key_ids:
-            cr.execute('SELECT axis_src_item_id FROM %s WHERE id IN %s GROUP BY axis_src_item_id', (self._table, tuple(key_ids)))
+            cr.execute('SELECT axis_src_item_id FROM ' + self._table + ' WHERE id IN %s GROUP BY axis_src_item_id', (tuple(key_ids),))
             res = cr.fetchall()
             res = [item[0] for item in res]
         return count and len(res) or res
@@ -81,6 +81,8 @@ class AnalyticDistributionKeyWizard(osv.osv):
                 'period_id': self.pool.get(key.period_id._name).name_get(cr, uid, [key.period_id.id], context)[0],
                 'axis_src_item_id': self.pool.get(key.period_id.distribution_id.axis_src_id.model).name_get(cr, uid, [key.axis_src_item_id], context)[0],
                 'axis_dest_item_id_%s' % key.axis_dest_item_id: key.rate,
+                'axis_dest_item_id': key.axis_dest_item_id.id,
+                'rate': key.rate,
             })
             res[key.axis_src_item_id].setdefault('keys_count', 0)
             res[key.axis_src_item_id]['keys_count'] += 1
@@ -89,7 +91,7 @@ class AnalyticDistributionKeyWizard(osv.osv):
     def fields_get(self, cr, uid, fields=None, context=None):
         context = context or {}
         if context.get('distribution_id'):
-            res = self.pool.get(self._inherit).fields_get(cr, uid, ['period_id', 'axis_src_item_id'], context)
+            res = self.pool.get(self._inherit).fields_get(cr, uid, ['period_id', 'axis_src_item_id', 'axis_dest_item_id', 'rate'], context)
             distrib = self.pool.get('account.analytic.distribution').browse(cr, uid, context['distribution_id'], context)
             res['axis_src_item_id']['string'] = distrib.axis_src_id.model_id.name
             model_obj = self.pool.get(distrib.axis_dest_id.model)
@@ -120,19 +122,25 @@ class AnalyticDistributionKeyWizard(osv.osv):
                 if context.get('distribution_id'):
                     distrib = self.pool.get('account.analytic.distribution').browse(cr, uid, context['distribution_id'], context)
                     axis_dest_model = distrib.axis_dest_id.model_id.name
-                if context.get('show_axis_src_item'):
+                if context.get('show_axis_src_item') or context.get('distribution_type') == 'specific':
                     res['arch'] += """    <separator string="%s" colspan="4"/>
-                                          <field name="axis_src_item_id" colspan="4"/>""" % _('Source')
+                                          <field name="axis_src_item_id" colspan="4" required="1"/>""" % _('Source')
                 res['arch'] += """    <separator string="%s%s" colspan="4"/>\n""" % (_('Target'), axis_dest_model and ': %s' % axis_dest_model or '')
                 for field in res['fields']:
                     if field.startswith('axis_dest_item_id'):
                         res['arch'] += '    <field name="%s"/>\n' % field
                 res['arch'] += '</form>'
             else:
-                res['arch'] = """<tree string="%s">
-                                     <field name="axis_src_item_id"/>
-                                     <field name="keys_count"/>
-                                 </tree>""" % _("Distribution Keys")
+                if not context.get('show_axis_src_item') or context.get('distribution_type') == 'global':
+                    res['arch'] = """<tree string="%s">
+                                         <field name="axis_dest_item_id"/>
+                                         <field name="rate"/>
+                                     </tree>""" % _("Distribution Keys")
+                else:
+                    res['arch'] = """<tree string="%s">
+                                         <field name="axis_src_item_id"/>
+                                         <field name="keys_count"/>
+                                     </tree>""" % _("Distribution Keys")
         else:
             res = self.pool.get(self._inherit).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         res.update({'name': 'default', 'model': self._name, 'view_id': 0})

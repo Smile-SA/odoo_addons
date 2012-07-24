@@ -96,7 +96,7 @@
 						                    <field name="rate"/>
 										</tree>
 										<form string="Distribution Key">
-						                    <field name="axis_src_item_id"/>
+						                    <field name="axis_src_item_id" required="1"/>
 						                    <field name="axis_dest_item_id"/>
 						                    <field name="rate"/>
 										</form>

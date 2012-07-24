@@ -250,11 +250,13 @@ class AnalyticDistribution(osv.osv):
         period_ids = self._get_distribution_period_ids(cr, uid, distribution_id, date)
         key_obj = self.pool.get('account.analytic.distribution.key')
         key_ids = key_obj.search(cr, uid, [('period_id', 'in', period_ids)])
+        keys = key_obj.read(cr, uid, key_ids, ['axis_dest_item_id', 'rate'], context)
         axis_src_item_obj = self.pool.get('account.analytic.distribution.axis_src_item')
         axis_src_item_ids = axis_src_item_obj.search(cr, uid, [('distribution_id', '=', distribution_id)], context=context)
-        for axis_src_item_id in axis_src_item_ids:
-            for key in key_obj.read(cr, uid, key_ids, ['axis_dest_item_id', 'rate'], context):
-                res.setdefault(axis_src_item_id, {}).update({key['axis_dest_item_id']: {
+        axis_src_items = axis_src_item_obj.read(cr, uid, axis_src_item_ids, ['res_id'], context)
+        for axis_src_item in axis_src_items:
+            for key in keys:
+                res.setdefault(axis_src_item['res_id'], {}).update({key['axis_dest_item_id']: {
                     'rate': key['rate'],
                     'audit': 'dist%s_key%s' % (distribution_id, key['id']),
                 }})
@@ -273,6 +275,7 @@ class AnalyticDistribution(osv.osv):
             'date': date,
             'datetime': datetime,
             'distribution_id': distribution.id,
+            'audit': 'dist%s' % distribution.id,
         }
         exec distribution.python_code in localdict
         return localdict.get('result', {})
@@ -296,11 +299,11 @@ class AnalyticDistribution(osv.osv):
         column_dest = distribution.axis_dest_id.column_label
         res_ids = line_vals.get(column_src) and [line_vals[column_src]] or []
         distribution_keys = self.get_distribution(cr, uid, distribution_id, line_vals.get('date'), res_ids)
-        if not distribution_keys:
+        axis_src_item_id = line_vals.get(column_src)
+        if not distribution_keys or not distribution_keys.get(axis_src_item_id):
             res = [line_vals]
-        else:# elif distribution_keys:
-            axis_src_item_id = line_vals.get(column_src)
-            for axis_dest_item_id in distribution_keys.get(axis_src_item_id, []):
+        else:
+            for axis_dest_item_id in distribution_keys[axis_src_item_id]:
                 rate = distribution_keys[axis_src_item_id][axis_dest_item_id]['rate'] / 100.0
                 audit = distribution_keys[axis_src_item_id][axis_dest_item_id].get('audit')
                 new_vals = dict(line_vals)
@@ -416,7 +419,7 @@ class AnalyticDistributionKey(osv.osv):
 
     _columns = {
         'period_id': fields.many2one('account.analytic.distribution.period', 'Distribution Application Period', required=True, ondelete='cascade'),
-        'axis_src_item_id': fields.integer('Item of Source Axis', required=True),
+        'axis_src_item_id': fields.integer('Item of Source Axis', required=False),
         'axis_src_model': fields.related('period_id', 'distribution_id', 'axis_src_id', 'model', string="Model of Source Axis", readonly=True),
         'axis_src_item_name': fields.function(_get_items, method=True, type='char', string='Item of Source Axis', multi='distribution_key'),
         'axis_dest_item_id': fields.integer('Item of Destination Axis', required=True),
@@ -526,7 +529,7 @@ class AnalyticJournal(osv.osv):
     _inherit = 'account.analytic.journal'
 
     _columns = {
-        'distribution_ids': fields.many2many('account.analytic.distribution', 'analytic_distribution_journal_rel', 'journal_id', 'distribution_id', 'Distributions'),
+        'distribution_ids': fields.many2many('account.analytic.distribution', 'account_analytic_distribution_journal_rel', 'journal_id', 'distribution_id', 'Distributions'),
     }
 AnalyticJournal()
 
@@ -570,16 +573,25 @@ class AnalyticLine(osv.osv):
         if vals.get('journal_id'):
             distribution_ids = self.pool.get('account.analytic.journal').read(cr, uid, vals['journal_id'], ['distribution_ids'], context)['distribution_ids']
             distribution_obj = self.pool.get('account.analytic.distribution')
-            while distribution_ids:
+            circular_count = 0
+            circular_limit = len(distribution_ids)
+            while distribution_ids and circular_count <= circular_limit:
+                circular_count += 1
                 for distrib in distribution_obj.browse(cr, uid, distribution_ids, context):
-                    if res[0].get(distrib.axis_src_id.column_label):
-                        if not res[0].get(distrib.axis_dest_id.column_label):
-                            new_res = []
-                            for line_vals in res:
-                                new_res.extend(distribution_obj.apply_distribution_keys(cr, uid, distrib.id, line_vals, context))
-                            res = new_res
+                    res_with_src = [line_vals for line_vals in res if line_vals.get(distrib.axis_src_id.column_label)]
+                    res_with_src_and_without_dest = [(index, line_vals) for index, line_vals in enumerate(res)
+                                                     if line_vals.get(distrib.axis_src_id.column_label)
+                                                     and not line_vals.get(distrib.axis_dest_id.column_label)]
+                    if res_with_src and not res_with_src_and_without_dest:
                         distribution_ids.remove(distrib.id)
-                    elif distrib.axis_dest_id.model not in self._get_destinations_for_distribution(cr, uid, distribution_ids, context):
+                    elif res_with_src_and_without_dest:
+                        index_to_remove = []
+                        for index, line_vals in res_with_src_and_without_dest:
+                            index_to_remove.append(index)
+                            res.extend(distribution_obj.apply_distribution_keys(cr, uid, distrib.id, line_vals, context))
+                        for index in sorted(index_to_remove, reverse=True):
+                            del res[index]
+                    elif distrib.axis_dest_id.model not in distribution_obj._get_destinations_for_distribution(cr, uid, distribution_ids, context):
                         distribution_ids.remove(distrib.id)
         return res
 
@@ -587,7 +599,7 @@ class AnalyticLine(osv.osv):
         res_ids = []
         if not vals.get('audit_ref'):
             vals['audit_ref'] = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.line.audit')
-        for new_vals in self._distribute(cr, uid, vals, context):
+        for new_vals in self._distribute(cr, 1, vals, context):
             res_ids.append(super(AnalyticLine, self).create(cr, uid, new_vals, context))
         return res_ids[0]
 AnalyticLine()
