@@ -19,7 +19,10 @@
 #
 ##############################################################################
 
+import time
+
 from osv import fields, osv
+from safe_eval import new_safe_eval as eval
 
 class IrActionsServer(osv.osv):
     _inherit = 'ir.actions.server'
@@ -48,4 +51,42 @@ class IrActionsServer(osv.osv):
 
     def onchange_specific_thread(self, cr, uid, ids, force_rollback, specific_thread):
         return self.onchange_options(cr, uid, ids, 'force_rollback', force_rollback, specific_thread)
+
+    def run(self, cr, uid, ids, context=None):
+        """
+        run fix for 'other' type actions 
+        """
+        act_ids = []
+
+        for action in self.browse(cr, uid, ids, context):
+            obj_pool = self.pool.get(action.model_id.model)
+            obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+            cxt = {
+                'context': context,
+                'object': obj,
+                'time': time,
+                'cr': cr,
+                'pool': self.pool,
+                'uid': uid
+            }
+            expr = eval(str(action.condition), cxt)
+            if not expr:
+                continue
+            if action.state == 'other':
+                res = []
+                for act in action.child_ids:
+                    if not context.get('active_id'):
+                        context['active_id'] = context['active_ids'][0]
+                    result = self.run(cr, uid, [act.id], context)
+                    if result:
+                        res.append(result)
+                return res
+        else:
+            act_ids.append(action.id)
+
+        if act_ids:
+            return super(IrActionsServer, self).run(cr, uid, act_ids, context)
+        else:
+            return False
+
 IrActionsServer()
