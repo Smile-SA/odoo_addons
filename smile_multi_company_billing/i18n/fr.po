@@ -1,0 +1,83 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_multi_company_billing
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.4\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-07-05 17:01+0000\n"
+"PO-Revision-Date: 2012-07-05 17:01+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_multi_company_billing
+#: view:res.company:0
+#: field:res.company,fiscal_position_ids:0
+msgid "Inter-company billing"
+msgstr "Facturation inter-société"
+
+#. module: smile_multi_company_billing
+#: constraint:res.company:0
+msgid "You cannot inherit off days if you have no parent company!"
+msgstr "Vous ne pouvez pas choisir d'hériter des jours chaumés si vous n'avez pas défini de société mère!"
+
+#. module: smile_multi_company_billing
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Erreur! Vous ne pouvez pas créer de sociétés récursives"
+
+#. module: smile_multi_company_billing
+#: model:ir.module.module,shortdesc:smile_multi_company_billing.module_meta_information
+msgid "Smile Multi-company Billing"
+msgstr "Smile Multi-company Billing"
+
+#. module: smile_multi_company_billing
+#: sql_constraint:res.company:0
+msgid "Bonus percentage must be positive!"
+msgstr "Le pourcentage de prime doit être positif!"
+
+#. module: smile_multi_company_billing
+#: view:res.company:0
+#: field:res.partner,partner_company_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_multi_company_billing
+#: model:ir.model,name:smile_multi_company_billing.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: smile_multi_company_billing
+#: sql_constraint:res.company:0
+msgid "Shareholding rate must be between 0 and 1!"
+msgstr "Le taux de détention doit être entre 0 et 1 !"
+
+#. module: smile_multi_company_billing
+#: model:ir.model,name:smile_multi_company_billing.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: smile_multi_company_billing
+#: field:res.partner,is_intragroup_company:0
+msgid "Is an intra-group company"
+msgstr "Société intra-groupe"
+
+#. module: smile_multi_company_billing
+#: field:account.invoice,original_invoice_id:0
+msgid "Original Invoice"
+msgstr "Facture d'origine"
+
+#. module: smile_multi_company_billing
+#: model:ir.model,name:smile_multi_company_billing.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_multi_company_billing
+#: view:res.company:0
+msgid "Configuration"
+msgstr "Configuration"
