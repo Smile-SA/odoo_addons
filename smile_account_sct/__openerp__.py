@@ -26,8 +26,8 @@
     "website" : "http://www.smile.fr",
     "category" : "Generic Modules/Accounting",
     "depends" : [
-        'account_payment',
         'base_iban',
+        'smile_account_payment',
         'smile_export_file'
     ],
     "description": """SEPA Credit Transfer

@@ -10,7 +10,7 @@
 			<field eval="0" name="fieldnames_in_header"/>
 			<field name="filename">sct_${time.strftime('%Y%m%d_%H%M')}</field>
 			<field name="state">other</field>
-			<field name="model_id" ref="account_payment.model_payment_order"/>
+			<field name="model_id" ref="smile_account_payment.model_payment_order"/>
 			<field name="exception_logging">report</field>
 			<field eval="1" name="create_attachment"/>
 			<field name="extension">other</field>
@@ -23,15 +23,15 @@
 &lt;GrpHdr&gt;
 	&lt;MsgId&gt;${str(localcontext.get('export_file_id', 0)).zfill(6)}&lt;/MsgId&gt;
 	&lt;CreDtTm&gt;${datetime.datetime.now().isoformat()}&lt;/CreDtTm&gt;
-	&lt;NbOfTxs&gt;${sum([len(order.line_ids) for order in object])}&lt;/NbOfTxs&gt;
-	&lt;CtrlSum&gt;${sum([line.amount for order in object for line in order.line_ids])}&lt;/CtrlSum&gt;
+	&lt;NbOfTxs&gt;${sum([len(order.voucher_ids) for order in object])}&lt;/NbOfTxs&gt;
+	&lt;CtrlSum&gt;${sum([voucher.amount for order in object for voucher in order.voucher_ids])}&lt;/CtrlSum&gt;
 	&lt;Grpg&gt;MIXD&lt;/Grpg&gt;
 	&lt;InitgPty&gt;
 		&lt;Nm&gt;Credit Transfer&lt;/Nm&gt;
 	&lt;/InitgPty&gt;
 &lt;/GrpHdr&gt;</field>
 			<field name="body">&lt;PmtInf&gt;
-	&lt;PmtInfId&gt;${object.reference}&lt;/PmtInfId&gt;
+	&lt;PmtInfId&gt;${object.name}&lt;/PmtInfId&gt;
 	&lt;PmtMtd&gt;TRF&lt;/PmtMtd&gt;
 	&lt;PmtTpInf&gt;
 		&lt;SvcLvl&gt;
@@ -40,42 +40,42 @@
 	&lt;/PmtTpInf&gt;
 	&lt;ReqdExctnDt&gt;${time.strftime('%Y-%m-%d')}&lt;/ReqdExctnDt&gt;
 	&lt;Dbtr&gt;
-		&lt;Nm&gt;{object.mode.company_id.name}&lt;/Nm&gt;
+		&lt;Nm&gt;{object.payment_mode_id.company_id.name}&lt;/Nm&gt;
 	&lt;/Dbtr&gt;
 	&lt;DbtrAcct&gt;
 		&lt;Id&gt;
-			&lt;IBAN&gt;{object.mode.bank_id.iban}&lt;/IBAN&gt;
+			&lt;IBAN&gt;{object.payment_mode_id.bank_id.iban}&lt;/IBAN&gt;
 		&lt;/Id&gt;
 	&lt;/DbtrAcct&gt;
 	&lt;DbtrAgt&gt;
 		&lt;FinInstnId&gt;
-			&lt;BIC&gt;{object.mode.bank_id.bank.bic}&lt;/BIC&gt;
+			&lt;BIC&gt;{object.payment_mode_id.bank_id.bank.bic}&lt;/BIC&gt;
 		&lt;/FinInstnId&gt;
 	&lt;/DbtrAgt&gt;
-% for line in object.line_ids:
+% for voucher in object.voucher_ids:
 	&lt;CdtTrfTxInf&gt;
 		&lt;PmtId&gt;
-			&lt;InstrId&gt;{line.name}&lt;/InstrId&gt;
-			&lt;EndToEndId&gt;{line.id}&lt;/EndToEndId&gt;
+			&lt;InstrId&gt;{voucher.number}&lt;/InstrId&gt;
+			&lt;EndToEndId&gt;{voucher.number}&lt;/EndToEndId&gt;
 		&lt;/PmtId&gt;
 		&lt;Amt&gt;
-			&lt;InstdAmt Ccy="${object.mode.company_id.currency_id.symbol or 'EUR'}"&gt;${line.amount}&lt;/InstdAmt&gt;
+			&lt;InstdAmt Ccy="${object.payment_mode_id.company_id.currency_id.symbol or 'EUR'}"&gt;${voucher.amount}&lt;/InstdAmt&gt;
 		&lt;/Amt&gt;
 		&lt;CdtrAgt&gt;
 			&lt;FinInstnId&gt;
-				&lt;BIC&gt;${line.bank_id.bank.bic}&lt;/BIC&gt;
+				&lt;BIC&gt;${voucher.partner_id.bank_ids[0].bic}&lt;/BIC&gt;
 			&lt;/FinInstnId&gt;
 		&lt;/CdtrAgt&gt;
 		&lt;Cdtr&gt;
-			&lt;Nm&gt;{line.partner_id.name}&lt;/Nm&gt;
+			&lt;Nm&gt;{voucher.partner_id.name}&lt;/Nm&gt;
 		&lt;/Cdtr&gt;
 		&lt;CdtrAcct&gt;
 			&lt;Id&gt;
-				&lt;IBAN&gt;{line.bank_id.iban}&lt;/IBAN&gt;
+				&lt;IBAN&gt;{voucher.partner_id.bank_ids[0].iban}&lt;/IBAN&gt;
 			&lt;/Id&gt;
 		&lt;/CdtrAcct&gt;
 		&lt;RmtInf&gt;
-			&lt;Ustrd&gt;${lie.ml_inv_ref and 'Invoice %s' % line.ml_inv_ref.reference or 'Payment from %s' % object.mode.company_id.name}&lt;/Ustrd&gt;
+			&lt;Ustrd&gt;${'Factures: ' + ', '.join([line.move_line_id.move_id.name for line in voucher.line_ids])}&lt;/Ustrd&gt;
 		&lt;/RmtInf&gt;
 	&lt;/CdtTrfTxInf&gt;
 % endfor
@@ -85,7 +85,7 @@
 		</record>
 
 		<record id="ir_model_export_template_sct" model="ir.model.export.template">
-			<field name="model_id" ref="account_payment.model_payment_order"/>
+			<field name="model_id" ref="smile_account_payment.model_payment_order"/>
 			<field name="domain">[('state', 'in', ('open', 'done'))]</field>
 			<field name="name">SEPA Credit Transfer</field>
 			<field name="unique" eval="1"/>
