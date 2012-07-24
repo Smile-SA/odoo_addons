@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from osv import osv, fields
 import tools
@@ -197,7 +197,7 @@ class ResCompany(osv.osv):
         while curr_date <= end_date:
             if self.is_working_day(cr, uid, company_id, curr_date.strftime('%Y-%m-%d'), context):
                 count += 1
-            curr_date += datetime.timedelta(days=1)
+            curr_date += timedelta(days=1)
         return count
 
     @tools.cache(skiparg=3)
