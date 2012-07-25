@@ -43,7 +43,7 @@
     Code:
 """
 
-# http: //aspn.activestate.com/ASPN/Cookbook/Python/Recipe/189858
+# http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/189858
 
 import string
 import sys
@@ -110,7 +110,7 @@ the user, otherwise to a file with '.pdf' appended to the input file.
 
 Author: Anand B Pillai.
 
-Copyright (C) 2003-2004 Free Software Foundation, http: //www.fsf.org
+Copyright (C) 2003-2004 Free Software Foundation, http://www.fsf.org
 
 There are various options as follows:
 

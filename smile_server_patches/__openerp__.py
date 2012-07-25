@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 Smile (<http: //www.smile.fr>). All Rights Reserved
+#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -30,7 +30,7 @@ This module offers OpenERP Server patches for bugs reported to OpenERP Maintenan
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr, xavier.fernandez@smile.fr
 """,
     'author': 'Smile',
-    'website': 'http: //www.smile.fr',
+    'website': 'http://www.smile.fr',
     'depends': ['base'],
     'init_xml': [],
     'update_xml': [],

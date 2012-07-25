@@ -24,7 +24,7 @@ if __name__ == '__main__':
         print "mem_limit arg should be an integer"
         exit()
 
-    sock_common = xmlrpclib.ServerProxy('http: //localhost: 8069/xmlrpc/common')
+    sock_common = xmlrpclib.ServerProxy('http://localhost: 8069/xmlrpc/common')
     mem_usage = sock_common.get_memory()
     if mem_usage == 'Unknown':
         mem_usage = 0

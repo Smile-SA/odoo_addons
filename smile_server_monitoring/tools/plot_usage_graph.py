@@ -15,7 +15,7 @@ import os.path
 
 
 def write_infos_to_file(filename, data_type='objects', limit=0, floor=10):
-    sock_common = xmlrpclib.ServerProxy('http: //localhost: 8069/xmlrpc/common')
+    sock_common = xmlrpclib.ServerProxy('http://localhost: 8069/xmlrpc/common')
     objects_count = []
     if data_type == 'objects':
         objects_count = sock_common.gc_types_count(limit, floor)
@@ -33,7 +33,7 @@ def write_infos_to_file(filename, data_type='objects', limit=0, floor=10):
 
 
 def dump_stack_traces(path):
-    sock_common = xmlrpclib.ServerProxy('http: //localhost: 8069/xmlrpc/common')
+    sock_common = xmlrpclib.ServerProxy('http://localhost: 8069/xmlrpc/common')
     stack_traces = sock_common.get_stacks()
     filename = time.strftime('stack_%Y-%m-%d_%H%M%S.log')
     file_path = "%s/%s" % (os.path.abspath(path), filename)
