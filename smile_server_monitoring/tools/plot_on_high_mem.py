@@ -31,7 +31,6 @@ if __name__ == '__main__':
     else:
         mem_usage = int(mem_usage[: -3])
 
-    print mem_limit, mem_usage, sys.argv
     if len(sys.argv) == 3:
         if mem_usage >= mem_limit:
             write_infos_to_file(filename)
