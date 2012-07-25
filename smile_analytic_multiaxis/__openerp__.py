@@ -39,7 +39,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         'wizard/analytic_wizard_view.xml',
     ],
     'demo_xml': [],
-    'test_xml': [
+    'test': [
         'test/analytic_multiaxis_test.yml',
     ],
     'installable': True,
