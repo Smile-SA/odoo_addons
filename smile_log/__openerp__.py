@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Smile Log",
-    "version" : "1.0",
-    "author" : "Smile",
+    "name": "Smile Log",
+    "version": "1.0",
+    "author": "Smile",
     "website": 'http://www.smile.fr',
-    "category" : "Tools",
+    "category": "Tools",
     "description": """Logs handler writing to database
 
 Notice
@@ -36,13 +36,13 @@ logger.info(your_message) will create a log in db with a unique pid per logger
 
 Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
 """,
-    "depends" : ['base'],
-    "init_xml" : [
+    "depends": ['base'],
+    "init_xml": [
         "security/smile_log_security.xml",
         "security/ir.model.access.csv",
     ],
     "update_xml": ["smile_log_view.xml", ],
-    "demo_xml" : [],
+    "demo_xml": [],
     "installable": True,
     "active": False,
 }

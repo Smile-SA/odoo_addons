@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -37,9 +37,11 @@ from tools.translate import _
 
 from smile_log.db_handler import SmileDBLogger
 
+
 def _get_exception_message(exception):
     msg = isinstance(exception, osv.except_osv) and exception.value or exception
     return tools.ustr(msg)
+
 
 def _get_browse_record_dict(obj, cr, uid, ids, fields_list=None, context=None):
     """Get a dictionary of dictionary from browse records list"""
@@ -53,12 +55,14 @@ def _get_browse_record_dict(obj, cr, uid, ids, fields_list=None, context=None):
             browse_record_dict.setdefault(object_inst.id, {})[field] = getattr(object_inst, field)
     return browse_record_dict
 
+
 def _get_id_from_browse_record(value):
     if isinstance(value, orm.browse_record):
         value = value.id
     if isinstance(value, orm.browse_record_list):
         value = [v.id for v in value]
     return value
+
 
 def cache_restarter(original_method):
     @wraps(original_method)
@@ -71,6 +75,7 @@ def cache_restarter(original_method):
         return res
     return wrapper
 
+
 def get_original_method(method):
     """Get original method if not already decorated by Sartre"""
     while method.func_closure:
@@ -78,6 +83,7 @@ def get_original_method(method):
             return
         method = method.func_closure[0].cell_contents
     return method
+
 
 class IrModelMethods(osv.osv):
     _name = 'ir.model.methods'
@@ -89,6 +95,7 @@ class IrModelMethods(osv.osv):
     }
 IrModelMethods()
 
+
 class SartreOperator(osv.osv):
     _name = 'sartre.operator'
     _description = 'Action Trigger Operator'
@@ -98,8 +105,11 @@ class SartreOperator(osv.osv):
         'symbol': fields.char('Symbol', size=8, required=True),
         'opposite_symbol': fields.char('Opposite symbol', size=12, help="Opposite symbol for SQL filter"),
         'value_age_filter': fields.selection([('current', 'Current'), ('old', 'Old'), ('both', 'Both')], 'Value Age Filter', required=True),
-        'native_operator': fields.selection([('=', 'is equal to'), ('<=', 'less than'), ('>=', 'greater than'), ('like', 'contains (case-sensitive matching)'),
-            ('ilike', 'contains (case-insensitive matching)'), ('in', 'in'), ('child_of', 'child of'), ('none', 'none')], 'Native Operator', required=True),
+        'native_operator': fields.selection([
+            ('=', 'is equal to'), ('<=', 'less than'), ('>=', 'greater than'),
+            ('like', 'contains (case-sensitive matching)'), ('ilike', 'contains (case-insensitive matching)'),
+            ('in', 'in'), ('child_of', 'child of'), ('none', 'none'),
+        ], 'Native Operator', required=True),
         'other_value_necessary': fields.boolean('Other Value Necessary'),
         'other_value_transformation': fields.char('Value Transformation', size=64, help="Useful only for native operator"),
         'expression': fields.text('Expression'),
@@ -141,6 +151,7 @@ class SartreOperator(osv.osv):
         return res
 SartreOperator()
 
+
 class SartreCategory(osv.osv):
     _name = 'sartre.category'
     _description = 'Action Trigger Category'
@@ -149,6 +160,7 @@ class SartreCategory(osv.osv):
         'name': fields.char('Name', size=64, required=True),
     }
 SartreCategory()
+
 
 class SartreTrigger(osv.osv):
     _name = 'sartre.trigger'
@@ -172,13 +184,15 @@ class SartreTrigger(osv.osv):
             model = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])['model']
             obj = self.pool.get(model)
             if on_function:
-                function_fields = [field for field in obj._columns if isinstance(obj._columns[field], (fields.function, fields.related, fields.property))]
+                function_fields = [field for field in obj._columns
+                                   if isinstance(obj._columns[field], (fields.function, fields.related, fields.property))]
                 res['domain'] = {'on_function_field_id': "[('model_id', '=', %s),('name', 'in', %s)]" % (model_id, function_fields)}
             if on_other:
                 method_names = [attr for attr in dir(obj) if inspect.ismethod(getattr(obj, attr))]
                 model_methods_obj = self.pool.get('ir.model.methods')
                 model_methods_ids = model_methods_obj.search(cr, uid, [('model_id', '=', model_id), ('name', 'in', method_names)])
-                existing_method_names = ['create', 'write', 'unlink'] + [method['name'] for method in model_methods_obj.read(cr, uid, model_methods_ids, ['name'])]
+                existing_method_names = ['create', 'write', 'unlink']
+                existing_method_names += [method['name'] for method in model_methods_obj.read(cr, uid, model_methods_ids, ['name'])]
                 for method in method_names:
                     method_args = inspect.getargspec(getattr(obj, method))[0]
                     if method not in existing_method_names and not method.startswith('__') and ('ids' in method_args or 'id' in method_args):
@@ -188,7 +202,9 @@ class SartreTrigger(osv.osv):
     def _get_logs(self, cr, uid, ids, name, args, context=None):
         res = {}
         for trigger_id in ids:
-            res[trigger_id] = self.pool.get('smile.log').search(cr, uid, [('model_name', '=', 'sartre.trigger'), ('res_id', '=', trigger_id)], context=context)
+            res[trigger_id] = self.pool.get('smile.log').search(cr, uid, [
+                ('model_name', '=', 'sartre.trigger'), ('res_id', '=', trigger_id),
+            ], context=context)
         return res
 
     def _is_dynamic_field(self, filter_field, model_obj):
@@ -277,31 +293,39 @@ class SartreTrigger(osv.osv):
         'on_unlink': fields.boolean("Deletion"),
         'on_function': fields.boolean("Function Field"),
         'on_function_type': fields.selection([('set', 'Manually'), ('get', 'Automatically'), ('both', 'Both')], "updated", size=16),
-        'on_function_field_id': fields.many2one('ir.model.fields', "Function field", domain="[('model_id', '=', model_id)]", help="Function, related or property field"),
+        'on_function_field_id': fields.many2one('ir.model.fields', "Function field", domain="[('model_id', '=', model_id)]",
+                                                help="Function, related or property field"),
         'on_other': fields.boolean("Other method", help="Only methods with an argument 'id' or 'ids' in their signatures"),
         'on_other_method_id': fields.many2one('ir.model.methods', "Object method", domain="[('model_id', '=', model_id)]"),
         'on_other_method': fields.related('on_other_method_id', 'name', type='char', string='Method'),
         'on_client_action': fields.boolean("Client Action"),
         'on_client_action_id': fields.many2one('ir.values', "Client Action"),
-        'on_client_action_type': fields.selection([('client_print_multi', 'Report'), ('client_action_multi', 'Action'), ('client_action_relate', 'Link')], "Type"),
+        'on_client_action_type': fields.selection([('client_print_multi', 'Report'), ('client_action_multi', 'Action'),
+                                                   ('client_action_relate', 'Link')], "Type"),
         'on_date': fields.boolean("Date"),
         'on_date_type': fields.function(_get_trigger_date_type, method=True, type='char', size=64, string='Trigger Date Type', store=True),
-        'on_date_type_display1': fields.selection([('create_date', 'Creation Date'), ('write_date', 'Update Date'), ('other_date', 'Other Date')], 'Trigger Date Type 1', size=16),
-        'on_date_type_display2_id': fields.many2one('ir.model.fields', 'Trigger Date Type 2', domain="[('ttype','in',['date','datetime']),('model_id','=',model_id)]"),
+        'on_date_type_display1': fields.selection([('create_date', 'Creation Date'), ('write_date', 'Update Date'),
+                                                   ('other_date', 'Other Date')], 'Trigger Date Type 1', size=16),
+        'on_date_type_display2_id': fields.many2one('ir.model.fields', 'Trigger Date Type 2',
+                                                    domain="[('ttype','in',['date','datetime']),('model_id','=',model_id)]"),
         'on_date_range': fields.integer('Delay'),
-        'on_date_range_type': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), ('work_days', 'Work Days'), ('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')], 'Delay Type'),
+        'on_date_range_type': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), ('work_days', 'Work Days'),
+                                                ('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')], 'Delay Type'),
         'on_date_range_operand': fields.selection([('after', 'After'), ('before', 'Before')], 'Delay Operand'),
         'interval_number': fields.integer('Interval Number'),
-        'interval_type': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), ('work_days', 'Work Days'), ('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
+        'interval_type': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), ('work_days', 'Work Days'),
+                                           ('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
         'nextcall': fields.datetime("Next Call"),
         'filter_ids': fields.one2many('sartre.filter', 'trigger_id', "Filters", help="The trigger is satisfied if all filters are True"),
         'domain_force': fields.char('Force Domain', size=256, help="Warning: using a Force domain makes all other filters useless"),
         'action_ids': fields.many2many('ir.actions.server', 'sartre_trigger_server_action_rel', 'trigger_id', 'action_id', "Actions"),
         'force_actions_execution': fields.boolean('Force actions execution when resources list is empty'),
-        'executions_max_number': fields.integer('Max executions', help="Number of time actions are runned, indicates that actions will always be executed"),
+        'executions_max_number': fields.integer('Max executions', help="Number of time actions are runned, "
+                                                "indicates that actions will always be executed"),
         'log_ids': fields.function(_get_logs, method=True, type='one2many', relation='smile.log', string="Logs"),
         'test_mode': fields.boolean('Test Mode'),
-        'exception_handling': fields.selection([('continue', 'Ignore actions in exception'), ('rollback', 'Rollback transaction')], 'Exception Handling', required=True),
+        'exception_handling': fields.selection([('continue', 'Ignore actions in exception'),
+                                                ('rollback', 'Rollback transaction')], 'Exception Handling', required=True),
         'exception_warning': fields.selection([('custom', 'Custom'), ('native', 'Native'), ('none', 'None')], 'Exception Warning', required=True),
         'exception_message': fields.char('Exception Message', size=256, translate=True, required=True),
         'python_domain': fields.function(_is_python_domain, method=True, type='boolean', string='Python domain', store={
@@ -451,7 +475,7 @@ class SartreTrigger(osv.osv):
             # Update trigger next call
             try:
                 nextcall = datetime.strptime(trigger.nextcall, datetime_format)
-            except ValueError: # To be compatible with the old version of this module
+            except ValueError:  # To be compatible with the old version of this module
                 nextcall = datetime.strptime(trigger.nextcall, datetime_format + '.%f')
             while nextcall <= now:
                 nextcall += relativedelta(**{str(trigger.interval_type): trigger.interval_number})
@@ -469,7 +493,8 @@ class SartreTrigger(osv.osv):
     def _add_max_executions_filter(self, cr, uid, trigger, context):
         """Build max executions filter"""
         if trigger.executions_max_number:
-            cr.execute("SELECT res_id FROM sartre_execution WHERE trigger_id=%s AND executions_number>=%s", (trigger.id, trigger.executions_max_number))
+            cr.execute("SELECT res_id FROM sartre_execution WHERE trigger_id=%s AND executions_number>=%s",
+                       (trigger.id, trigger.executions_max_number))
             res_ids_off = cr.fetchall()
             res_ids = list(set(context.get('active_object_ids', [])) - set([item[0] for item in res_ids_off]))
             return ('id', 'in', res_ids)
@@ -501,7 +526,7 @@ class SartreTrigger(osv.osv):
                         other_value = _get_id_from_browse_record(eval(str(dynamic_other_value.group()[2:-2]).strip(), {
                             'object': object_,
                             'context': context,
-                            'time':time,
+                            'time': time,
                         }))
                     current_field_value = current_values.get(object_.id, {}).get(field)
                     old_field_value = old_values.get(object_.id, {}).get(field)
@@ -530,7 +555,8 @@ class SartreTrigger(osv.osv):
             for filter_ in trigger.filter_ids:
                 domain.extend(eval(filter_.domain.replace('%today', time.strftime('%Y-%m-%d %H:%M:%S'))))
         # Add general filters
-        domain.extend(filter(bool, [getattr(self, filter_name)(cr, uid, trigger, context) for filter_name in ('_add_trigger_date_filter', '_add_max_executions_filter')]))
+        domain.extend(filter(bool, [getattr(self, filter_name)(cr, uid, trigger, context)
+                                    for filter_name in ('_add_trigger_date_filter', '_add_max_executions_filter')]))
         # Update filters based on old or dynamic values or Python operators
         if trigger.python_domain:
             domain = self._build_python_domain(cr, uid, trigger, domain, context)
@@ -541,7 +567,7 @@ class SartreTrigger(osv.osv):
     def run_now(self, cr, uid, ids, context=None):
         """Execute now server actions"""
         context = context or {}
-        context = dict(context) # Can't use deepcopy because of browse_record_list
+        context = dict(context)  # Can't use deepcopy because of browse_record_list
         context.setdefault('active_test', False)
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -607,9 +633,11 @@ class SartreTrigger(osv.osv):
                         logger.debug('[%s] Launch Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
                         self._run_action(cr, uid, action, filtered_object_ids, context, logger, pid)
                         if not action.specific_thread:
-                            logger.time_info('[%s] Successful Action: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
+                            logger.time_info('[%s] Successful Action: %s - Objects: %s,%s'
+                                             % (pid, action.name, action.model_id.model, filtered_object_ids))
                         else:
-                            logger.info('[%s] Action launched in a new thread: %s - Objects: %s,%s' % (pid, action.name, action.model_id.model, filtered_object_ids))
+                            logger.info('[%s] Action launched in a new thread: %s - Objects: %s,%s'
+                                        % (pid, action.name, action.model_id.model, filtered_object_ids))
                     except Exception, e:
                         logger.exception('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
                         if trigger.exception_handling == 'continue' and not action.force_rollback:
@@ -621,7 +649,7 @@ class SartreTrigger(osv.osv):
                                 raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (trigger.exception_message, pid))
                             elif trigger.exception_warning == 'native':
                                 raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (_get_exception_message(e), pid))
-                            else:# elif trigger.exception_warning == 'none':
+                            else:  # elif trigger.exception_warning == 'none':
                                 return True
             if context.get('test_mode', False):
                 cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_test_mode_%s", (trigger.id,))
@@ -675,7 +703,7 @@ class SartreTrigger(osv.osv):
             action_objects = self.pool.get(action.model_id.model).browse(cr, uid, object_ids, context)
             eval_to_ids = {}
             for action_object in action_objects:
-                value = eval(action.group_by, {'object': action_object, 'context': context, 'time':time})
+                value = eval(action.group_by, {'object': action_object, 'context': context, 'time': time})
                 eval_to_ids.setdefault(value, []).append(action_object.id)
             return eval_to_ids.values()
 
@@ -710,6 +738,7 @@ class SartreTrigger(osv.osv):
         return trigger_ids
 SartreTrigger()
 
+
 class SartreFilter(osv.osv):
     _name = 'sartre.filter'
     _description = 'Action Trigger Filter'
@@ -735,13 +764,15 @@ class SartreFilter(osv.osv):
         """Build field expression"""
         field_pool = self.pool.get('ir.model.fields')
         field_obj = field_pool.read(cr, uid, field_id, ['name', 'ttype', 'relation', 'model'])
-        field_expr = field_expression and (field_expression.split('.')[:-1] and '.'.join(field_expression.split('.')[:-1]) or field_expression) + '.' or ''
+        field_expr = field_expression and (field_expression.split('.')[:-1]
+                                           and '.'.join(field_expression.split('.')[:-1])
+                                           or field_expression) + '.' or ''
         obj = self.pool.get(field_obj['model'])
         if field_obj['name'] in obj._columns and 'fields.related' in str(obj._columns[field_obj['name']]):
             field_expr += obj._columns[field_obj['name']].arg[0] + '.'
         field_expr += field_obj['name']
         if field_obj['ttype'] in ['many2one', 'one2many', 'many2many']:
-            field_expr += field_obj['ttype'] == 'many2one' and '.'  or ''
+            field_expr += field_obj['ttype'] == 'many2one' and '.' or ''
             field_expr += field_obj['ttype'] in ['one2many', 'many2many'] and '[0].' or ''
             field_expr += self.pool.get(field_obj['relation'])._rec_name
         return field_expr
@@ -779,7 +810,8 @@ class SartreFilter(osv.osv):
         res.setdefault('value', {}).update({'field_expression': field_expression})
         return res
 
-    def onchange_get_value_age_domain(self, cr, uid, ids, field='', operator_id=False, opposite=False, value='', value_age='current', value_type='static', context=None):
+    def onchange_get_value_age_domain(self, cr, uid, ids, field='', operator_id=False,
+                                      opposite=False, value='', value_age='current', value_type='static', context=None):
         """Update the field 'value_age'"""
         value_age_filter = operator_id and self.pool.get('sartre.operator').read(cr, uid, operator_id, ['value_age_filter'])['value_age_filter']
         if value_age_filter != 'both':
@@ -812,6 +844,7 @@ class SartreFilter(osv.osv):
     }
 SartreFilter()
 
+
 class SartreExecution(osv.osv):
     _name = 'sartre.execution'
     _description = 'Action Trigger Execution'
@@ -833,8 +866,10 @@ class SartreExecution(osv.osv):
             executions_number = self.read(cr, uid, log_id[0], ['executions_number'])['executions_number'] + 1
             return self.write(cr, uid, log_id[0], {'executions_number': executions_number})
         else:
-            return self.create(cr, uid, {'trigger_id': trigger.id, 'model_id': trigger.model_id.id, 'res_id': res_id, 'executions_number': 1}) and True
+            return self.create(cr, uid, {'trigger_id': trigger.id, 'model_id': trigger.model_id.id,
+                                         'res_id': res_id, 'executions_number': 1}) and True
 SartreExecution()
+
 
 def _get_args(method, args, kwargs):
     args_names = inspect.getargspec(method)[0]
@@ -852,6 +887,7 @@ def _get_args(method, args, kwargs):
     field_name = args_dict.get('name', '')
     context = isinstance(args_dict.get('context'), dict) and dict(args_dict['context']) or {}
     return obj, cr, uid, ids, field_name, vals, context
+
 
 def sartre_decorator(original_method):
     def trigger_method(*args, **kwargs):
@@ -891,6 +927,7 @@ def sartre_decorator(original_method):
         return result
     return trigger_method
 
+
 def sartre_validate(self, cr, uid, ids, context=None):
     context = context or {}
     lng = context.get('lang', False) or 'en_US'
@@ -913,7 +950,7 @@ def sartre_validate(self, cr, uid, ids, context=None):
                 translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg) or msg
             fields_list = fields_list or []
             error_msgs.append(
-                    _("Error occurred while validating the field(s) %s: %s") % (','.join(fields_list), translated_msg)
+                _("Error occurred while validating the field(s) %s: %s") % (','.join(fields_list), translated_msg)
             )
             self._invalids.update(fields_list)
     if error_msgs:

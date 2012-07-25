@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,12 @@
 ##############################################################################
 
 {
-    "name" : "Server Actions R* Trigger Rules Engine (aka Sartre)",
-    "version" : "5.0",
+    "name": "Server Actions R* Trigger Rules Engine (aka Sartre)",
+    "version": "5.0",
     "sequence": 100,
     'complexity': "expert",
-    "category" : "Tools",
-    "author" : "Smile",
+    "category": "Tools",
+    "author": "Smile",
     "website": 'http://www.smile.fr',
     "description": """
 Concept
@@ -49,13 +49,13 @@ A rule applies to a single object and is composed of:
     * value age: current or old values if the rule trigger is the object update
 3. Actions
     * all server action types: email (native or with poweremail), sms, object creation/update, etc
-	* run each action once per instance or once for all instances
+    * run each action once per instance or once for all instances
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "images": [],
-    "depends" : ['smile_log'],
-    "init_xml" : [
+    "depends": ['smile_log'],
+    "init_xml": [
         'security/sartre_security.xml',
         'security/ir.model.access.csv',
         'data/sartre_sequence.xml',
@@ -66,11 +66,10 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         'view/ir.xml',
         'view/sartre_view.xml',
     ],
-    "demo_xml" : [
+    "demo_xml": [
         'demo/sartre_demo.xml'
     ],
     'installable': True,
     'auto_install': False,
-    'application': True,
-    "certificate": '',
+    'application': False,
 }

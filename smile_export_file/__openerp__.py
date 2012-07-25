@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Export File",
-    "version" : "1.0",
-    "author" : "Smile",
+    "name": "Export File",
+    "version": "1.0",
+    "author": "Smile",
     "website": 'http://www.smile.fr',
-    "category" : "Tools",
+    "category": "Tools",
     "description": """Export data in flat file
 
 Principle
@@ -37,14 +37,14 @@ Principle
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
 """,
-    "depends" : ['smile_export'],
-    "init_xml" : [],
+    "depends": ['smile_export'],
+    "init_xml": [],
     "update_xml": [
         'export_file_view.xml',
         'export_view.xml',
         'security/ir.model.access.csv',
     ],
-    "demo_xml" : [],
+    "demo_xml": [],
     "installable": True,
     "active": False,
 }

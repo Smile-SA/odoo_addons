@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@ import logging
 import traceback
 
 import pooler
+
 
 class SmileDBHandler(logging.Handler):
 
@@ -69,11 +70,13 @@ class SmileDBHandler(logging.Handler):
         logging.Handler.close(self)
         for cr in self._dbname_to_cr.values():
             try:
-                cr.execute("INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message) VALUES (now(), 0, '', 0, 0, 'INFO', 'OpenERP server stopped')")
+                cr.execute("INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message) "
+                           "VALUES (now(), 0, '', 0, 0, 'INFO', 'OpenERP server stopped')")
                 cr.commit()
             finally:
                 cr.close()
         self._dbname_to_cr = {}
+
 
 def add_timing(original_method):
     def new_method(self, msg):
@@ -82,12 +85,14 @@ def add_timing(original_method):
         return original_method(self, msg)
     return new_method
 
+
 def add_trace(original_method):
     def new_method(self, msg):
         stack = traceback.format_exc()
         msg += '\n%s' % stack
         return original_method(self, msg)
     return new_method
+
 
 class SmileDBLogger():
 

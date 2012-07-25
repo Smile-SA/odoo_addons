@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-import threading, time
+import threading
+import time
 
 from osv import fields
 from osv.orm import Model, except_orm
@@ -30,9 +31,11 @@ from tools.translate import _
 
 from smile_log.db_handler import SmileDBLogger
 
+
 def _get_exception_message(exception):
     msg = isinstance(exception, except_orm) and exception.value or exception
     return tools.ustr(msg)
+
 
 class ir_model_export_template(Model):
     _name = 'ir.model.export.template'
@@ -83,14 +86,17 @@ class ir_model_export_template(Model):
         return res_ids
 
     def get_exported_res_ids(self, cr, uid, export_template_id, context):
-        export_line_ids = self.pool.get('ir.model.export.line').search(cr, uid, [('export_id.export_tmpl_id', '=', export_template_id)], context=context)
+        export_line_ids = self.pool.get('ir.model.export.line').search(cr, uid, [
+            ('export_id.export_tmpl_id', '=', export_template_id),
+        ], context=context)
         return [line['res_id'] for line in self.pool.get('ir.model.export.line').read(cr, uid, export_line_ids, ['res_id'], context)]
 
     def unlink_res_ids(self, cr, uid, ids, model, res_ids, context):
         unlink_line_ids = []
         for template in self.browse(cr, uid, ids, context):
             if template.model != model:
-                raise except_orm(_('Error'), _("unlink_res_ids: model(%s) does not match template model (%s, %s)") % (model, template.id, template.model))
+                raise except_orm(_('Error'), _("unlink_res_ids: model(%s) does not match template model (%s, %s)")
+                                 % (model, template.id, template.model))
             export_line_ids = self.pool.get('ir.model.export.line').search(cr, uid, [('export_id.export_tmpl_id', '=', template.id),
                                                                                      ('res_id', 'in', res_ids),
                                                                                      ], context=context)
@@ -155,7 +161,7 @@ class ir_model_export_template(Model):
                     'model': self._name,
                     'function': 'create_export',
                     'args': '(%d,)' % template.id,
-                    'numbercall':-1,
+                    'numbercall': -1,
                 }
                 cron_id = self.pool.get('ir.cron').create(cr, uid, vals)
                 template.write({'cron_id': cron_id})
@@ -194,6 +200,7 @@ STATES = [
     ('exception', 'Exception'),
 ]
 
+
 def state_cleaner(method):
     def state_cleaner(self, cr, module):
         res = method(self, cr, module)
@@ -203,6 +210,7 @@ def state_cleaner(method):
                 self.get('ir.model.export').write(cr, 1, export_ids, {'state': 'exception'})
         return res
     return state_cleaner
+
 
 class ir_model_export(Model):
     _name = 'ir.model.export'
@@ -294,7 +302,7 @@ class ir_model_export(Model):
                     if export_mode == 'same_thread_rollback_and_continue':
                         cr.execute("ROLLBACK TO SAVEPOINT smile_export")
                         logger.info("Export rollbacking")
-                    else: #same_thread_raise_error
+                    else:  # same_thread_raise_error
                         raise e
         return True
 
@@ -341,11 +349,11 @@ class ir_model_export(Model):
         return True
 ir_model_export()
 
+
 class ir_model_export_line(Model):
     _name = 'ir.model.export.line'
     _description = 'Export Line'
     _rec_name = 'export_id'
-
 
     def _get_resource_label(self, cr, uid, ids, name, args, context=None):
         """ get the resource label using the name_get function of the exported model
@@ -383,6 +391,6 @@ class ir_model_export_line(Model):
     _order = 'export_id desc'
 
     _defaults = {
-        'sum':1,
+        'sum': 1,
     }
 ir_model_export_line()

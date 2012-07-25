@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@ import base64
 import calendar
 import datetime
 from ftplib import FTP
-import os
 import os.path
 import logging
 import pytz
@@ -59,10 +58,12 @@ DATE_TIME_STYLEnum_format_str = 'DD-MM-YYYY hh:mm:ss'
 DATE_STYLE = xlwt.XFStyle()
 DATE_STYLE.num_format_str = 'DD-MM-YYYY'
 
+
 def strip_accents(s):
     u = isinstance(s, unicode) and s or unicode(s, 'utf8')
     a = ''.join((c for c in unicodedata.normalize('NFKD', u) if unicodedata.category(c) != 'Mn'))
     return str(a)
+
 
 def is_a_datetime(str0, type='datetime'):
     if isinstance(str0, str):
@@ -79,6 +80,7 @@ def is_a_datetime(str0, type='datetime'):
         except Exception, e:
             pass
     return
+
 
 def format_lang(pool, cr, value, lang='en_US', digits=2, tz='America/New_York'):
     lang_obj = pool.get('res.lang')
@@ -99,12 +101,15 @@ def format_lang(pool, cr, value, lang='en_US', digits=2, tz='America/New_York'):
         return lang_obj.format(cr, 1, lang_id, '%.' + str(digits) + 'f', value)
     return value
 
+
 def _get_exception_message(exception):
     return isinstance(exception, except_orm) and exception.value or exception
+
 
 def _render_unicode(template_src, localdict, encoding='UTF-8'):
     template = MakoTemplate(tools.ustr(template_src), output_encoding=encoding)
     return template.render_unicode(**localdict)
+
 
 def _render_data(template_src, localdict):
     src = MAKO_EXPR.match(template_src).group(1)
@@ -115,6 +120,7 @@ def _render_data(template_src, localdict):
         elif DATE_EXPR.match(src_eval):
             src_eval = datetime.datetime.strptime(src_eval, '%Y-%m-%d').date()
     return src_eval
+
 
 def _text2pdf(string):
     tmpfilename = os.path.join(tempfile.gettempdir(), str(int(random() * 10 ** 9)))
@@ -130,6 +136,7 @@ def _text2pdf(string):
     os.remove(tmpfilename + '.pdf')
     return string
 
+
 def _save_excel_file(content, filename):
     workbook = xlwt.Workbook()
     sheet = workbook.add_sheet('sheet 1')
@@ -143,6 +150,7 @@ def _save_excel_file(content, filename):
             sheet.write(row, col, data, *params)
     workbook.save(filename)
 
+
 class ir_model_export_file_template(Model):
     _name = 'ir.model.export.file_template'
     _description = 'Export File Template'
@@ -152,15 +160,16 @@ class ir_model_export_file_template(Model):
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'model': fields.related('model_id', 'model', type='char', string='Object', readonly=True),
         'refer_to_underlying_object': fields.boolean('Columns correspond to an underlying object'),
-        'records': fields.char('Records', size=256, help="Provide the field name that refers to the records to export. If it is empty it will refer to the current object."),
+        'records': fields.char('Records', size=256, help="Provide the field name that refers to "
+                               "the records to export. If it is empty it will refer to the current object."),
         'state': fields.selection([
             ('tab', 'Tabular'),
             ('other', 'Other'),
         ], 'Type', required=True),
         'check_method': fields.char('Data Check Method', size=64, help="Indicate a method of the "
-            "remote model with a signature equals to (self, cr, uid, ids, context=None)"),
+                                    "remote model with a signature equals to (self, cr, uid, ids, context=None)"),
         'filename': fields.char('Filename', size=256, required=True, help="You can use a mako language "
-            "with the object and time variables"),
+                                "with the object and time variables"),
         'extension': fields.selection([
             ('pdf', '.pdf'),
             ('xls', '.xls'),
@@ -170,7 +179,7 @@ class ir_model_export_file_template(Model):
         'encoding': fields.selection([
             ('UTF-8', 'UTF-8'),
             ('ISO-8859-15', 'ISO-8859-15'),
-            ('cp1252','Windows-CP1252'),
+            ('cp1252', 'Windows-CP1252'),
         ], 'Encoding', required=True),
         'exception_handling': fields.selection([
             ('cancel', 'Cancel export'),
@@ -190,12 +199,13 @@ class ir_model_export_file_template(Model):
         'footer': fields.text('Footer'),
 
         'report_summary_template': fields.text('Report', help="Use mako language with the pool, cr, uid, object, "
-            "context, time, datetime, start_date, end_date, filename, records_number, exceptions_number and exceptions variables"),
+                                               "context, time, datetime, start_date, end_date, filename, records_number, "
+                                               "exceptions_number and exceptions variables"),
 
         'create_attachment': fields.boolean('Create an attachement'),
         'upload_to_ftp_server': fields.boolean('Upload to FTP server'),
         'ftp_host': fields.char('Host', size=128, help="You can use a mako language "
-            "with the object and time variables"),
+                                "with the object and time variables"),
         'ftp_anonymous': fields.boolean('Anonymous'),
         'ftp_user': fields.char('User', size=64),
         'ftp_password': fields.char('Password', size=64),
@@ -352,7 +362,7 @@ class ir_model_export_file_template(Model):
             'res_id': context.get('attach_export_id', 0),
         }
         self.pool.get('ir.attachment').create(cr, uid, vals, context)
-        
+
     def _save_in_local_dir(self, cr, uid, export_file, filename, file_content, context):
         directory = os.path.abspath(export_file.local_directory)
         if not os.path.exists(directory):
@@ -392,7 +402,7 @@ class ir_model_export_file_template(Model):
                     getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, file_content, context)
                 except except_orm, e:
                     exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e) + str(e.value))
-                    raise Exception(exception_infos) 
+                    raise Exception(exception_infos)
                 except Exception, e:
                     exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e))
                     raise Exception(exception_infos)
@@ -450,10 +460,11 @@ class ir_model_export_file_template(Model):
 
     def _get_filename(self, cr, uid, export_file, context):
         filename = _render_unicode(export_file.filename, {
-                        'object': context.get('attach_export_id', False) and self.pool.get('ir.model.export').browse(cr, uid, context['attach_export_id'], context),
-                        'localcontext': context,
-                        'time': time
-                    }, export_file.encoding)
+            'object': context.get('attach_export_id', False)
+            and self.pool.get('ir.model.export').browse(cr, uid, context['attach_export_id'], context),
+            'localcontext': context,
+            'time': time
+        }, export_file.encoding)
         extension = export_file.extension
         if extension == 'other':
             extension = export_file.extension_custom
@@ -516,10 +527,11 @@ class ir_model_export_file_template(Model):
         return self._save_execution_report(cr, uid, export_file, localdict)
 ir_model_export_file_template()
 
+
 class ir_model_export_file_template_column(Model):
     _name = 'ir.model.export.file_template.column'
     _description = 'Export File Template Column'
-    
+
     def _has_validator(self, cr, uid, ids, name, arg, context=None):
         res = {}.fromkeys(ids, False)
         for column in self.read(cr, uid, ids, ['column_validator']):
@@ -532,14 +544,15 @@ class ir_model_export_file_template_column(Model):
         'sequence': fields.integer('Sequence', required=True),
         'export_file_template_id': fields.many2one('ir.model.export.file_template', 'Export', required=True, ondelete='cascade'),
         'value': fields.text('Value',
-            help="Use mako language with the pool, cr, uid, object, line_number, localcontext and time variables"),
+                             help="Use mako language with the pool, cr, uid, object, line_number, localcontext and time variables"),
         'default_value': fields.char('Default value', size=64,
-            help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
+                                     help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'not_string': fields.boolean('Not a string'),
-        'column_validator': fields.text('Column validator', help="Raise an exception if validator evaluates to False: use python language with the pool, cr, uid, object, localcontext and time variables"),
+        'column_validator': fields.text('Column validator', help="Raise an exception if validator evaluates to False: "
+                                        "use python language with the pool, cr, uid, object, localcontext and time variables"),
         'has_validator': fields.function(_has_validator, method=True, type='boolean', string="Validator",),
         'exception_msg': fields.char('Exception Message', size=256, translate=True,
-            help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
+                                     help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'min_width': fields.integer('Min width'),
         'fillchar': fields.char('Fillchar', size=1),
         'justify': fields.selection([
@@ -548,6 +561,6 @@ class ir_model_export_file_template_column(Model):
         ], 'Justify'),
         'max_width': fields.integer('Max width'),
     }
-    
+
     _order = 'sequence asc'
 ir_model_export_file_template_column()

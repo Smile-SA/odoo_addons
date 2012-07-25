@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -21,13 +21,16 @@
 
 from osv import fields, osv
 
+
 class IrActionsServer(osv.osv):
     _inherit = 'ir.actions.server'
 
     _columns = {
         'active': fields.boolean("Active"),
-        'run_once': fields.boolean("Run once for all instances", help="Works only from action triggers. If checked, the variable object is a browse record list"),
-        'group_by': fields.char('Group by', size=128, help="If run_once is set to True: instances are passed to the actions grouped with other instances having the same group_by evaluation"),
+        'run_once': fields.boolean("Run once for all instances", help="Works only from action triggers. "
+                                   "If checked, the variable object is a browse record list"),
+        'group_by': fields.char('Group by', size=128, help="If run_once is set to True: "
+                                "instances are passed to the actions grouped with other instances having the same group_by evaluation"),
         'user_id': fields.many2one('res.users', "User", help="If empty, the action is executed by the current user"),
         'force_rollback': fields.boolean('Force transaction rollback'),
         'specific_thread': fields.boolean('Specific Thread'),
@@ -39,7 +42,7 @@ class IrActionsServer(osv.osv):
 
     def onchange_options(self, cr, uid, ids, field_to_update, force_rollback, specific_thread):
         if (field_to_update == 'force_rollback' and specific_thread) \
-        or (field_to_update == 'specific_thread' and force_rollback):
+                or (field_to_update == 'specific_thread' and force_rollback):
             return {'value': {field_to_update: False}}
         return {}
 
