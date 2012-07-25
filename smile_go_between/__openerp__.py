@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,28 +15,28 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Go Between",
-    "version" : "1.0",
-    "category" : "Generic Modules/Sales & Purchases",
-    "author" : "Smile",
-    "website": 'http://www.smile.fr',
-    "description": """  
+    "name": "Go Between",
+    "version": "1.0",
+    "category": "Generic Modules/Sales & Purchases",
+    "author": "Smile",
+    "website": 'http: //www.smile.fr',
+    "description": """
                 Manage go between commissions.
                     Manage business providers
                     Specify in sale order the business provider partner
                     Specify price list to apply
                     Specify sale order lines affected with commission
                     Generate  purchase order of business provider partner from invoiced sale order line affected with commissions.
-                    
+
     Suggestions & Feedback to: samir.rachedi@smile.fr & corentin.pouhet-brunerie@smile.fr
     """,
-    "depends" : ['sale', 'purchase', 'smile_product_combine_pricelist'],
-    "init_xml" : [],
+    "depends": ['sale', 'purchase', 'smile_product_combine_pricelist'],
+    "init_xml": [],
     "update_xml": [
         'sale_view.xml',
         'partner_view.xml',
@@ -44,7 +44,7 @@
     ],
     "test": [
              ],
-    "demo_xml" : [],
+    "demo_xml": [],
     "installable": True,
     "active": False,
     "certificate": '',

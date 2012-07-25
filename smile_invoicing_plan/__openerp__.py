@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,22 +15,22 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Invoicing Plan for Sales",
-    "version" : "1.0",
-    "category" : "Generic Modules/Sales & Purchases",
-    "author" : "Smile",
-    "website": 'http://www.smile.fr',
+    "name": "Invoicing Plan for Sales",
+    "version": "1.0",
+    "category": "Generic Modules/Sales & Purchases",
+    "author": "Smile",
+    "website": 'http: //www.smile.fr',
     "description": """Invoicing Plan for Sales
 
 Suggestions & Feedback to: samir.rachedi@smile.fr & corentin.pouhet-brunerie@smile.fr
 """,
-    "depends" : ['sale','account'],
-    "init_xml" : ['ir_cron_data.xml'],
+    "depends": ['sale', 'account'],
+    "init_xml": ['ir_cron_data.xml'],
     "update_xml": [
         'sale_view.xml',
         'product_view.xml',
@@ -42,7 +42,7 @@ Suggestions & Feedback to: samir.rachedi@smile.fr & corentin.pouhet-brunerie@smi
     ],
     "test": ['test/account_invoicing_plan.yml',
              ],
-    "demo_xml" : [],
+    "demo_xml": [],
     "installable": True,
     "active": False,
     "certificate": '',

@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -28,6 +28,7 @@ import pooler
 import tools
 
 from base.ir.ir_cron import str2tuple, _intervalTypes
+
 
 class ir_cron(osv.osv, netsvc.Agent):
     _inherit = "ir.cron"
@@ -67,12 +68,12 @@ End Time: %s
                 cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
                 for job in cr.dictfetchall():
                     # Added by Smile
-                    start_time = time.strftime('%Y-%m-%d %H:%M:%S')
+                    start_time = time.strftime('%Y-%m-%d %H: %M: %S')
                     try:
                     ##
-                        nextcall = datetime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
+                        nextcall = datetime.strptime(job['nextcall'], '%Y-%m-%d %H: %M: %S')
                         numbercall = job['numbercall']
-    
+
                         ok = False
                         while nextcall < now and numbercall:
                             if numbercall > 0:
@@ -85,12 +86,13 @@ End Time: %s
                         addsql = ''
                         if not numbercall:
                             addsql = ', active=False'
-                        cr.execute("update ir_cron set nextcall=%s, numbercall=%s" + addsql + " where id=%s", (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
+                        cr.execute("update ir_cron set nextcall=%s, numbercall=%s" + addsql + " where id=%s",
+                                   (nextcall.strftime('%Y-%m-%d %H: %M: %S'), numbercall, job['id']))
                     # Added by Smile
                         report += "No errors"
                     except Exception, e:
-                        report += "Exception:\n" + tools.ustr(e)
-                    end_time = time.strftime('%Y-%m-%d %H:%M:%S')
+                        report += "Exception: \n" + tools.ustr(e)
+                    end_time = time.strftime('%Y-%m-%d %H: %M: %S')
                     self.write(cr, 1, job['id'], {'report': report % (start_time, end_time)})
                     ##
                     cr.commit()
@@ -98,15 +100,15 @@ End Time: %s
             cr.execute('select min(nextcall) as min_next_call from ir_cron where numbercall<>0 and active')
             next_call = cr.dictfetchone()['min_next_call']
             if next_call:
-                next_call = time.mktime(time.strptime(next_call, '%Y-%m-%d %H:%M:%S'))
+                next_call = time.mktime(time.strptime(next_call, '%Y-%m-%d %H: %M: %S'))
             else:
                 next_call = int(time.time()) + 3600   # if do not find active cron job from database, it will run again after 1 day
 
             if not check:
                 self.setAlarm(self._poolJobs, next_call, dbname, dbname)
 
-        except Exception, ex:            
-            self._logger.warning('Exception in cron:', exc_info=True)
+        except Exception, ex:
+            self._logger.warning('Exception in cron: ', exc_info=True)
 
         finally:
             cr.commit()

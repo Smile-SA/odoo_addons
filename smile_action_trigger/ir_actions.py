@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,6 +23,7 @@ import time
 
 from osv import fields, osv
 from safe_eval import new_safe_eval as eval
+
 
 class IrActionsServer(osv.osv):
     _inherit = 'ir.actions.server'
@@ -42,7 +43,7 @@ class IrActionsServer(osv.osv):
 
     def onchange_options(self, cr, uid, ids, field_to_update, force_rollback, specific_thread):
         if (field_to_update == 'force_rollback' and specific_thread) \
-        or (field_to_update == 'specific_thread' and force_rollback):
+                or (field_to_update == 'specific_thread' and force_rollback):
             return {'value': {field_to_update: False}}
         return {}
 
@@ -54,7 +55,7 @@ class IrActionsServer(osv.osv):
 
     def run(self, cr, uid, ids, context=None):
         """
-        run fix for 'other' type actions 
+        run fix for 'other' type actions
         """
         act_ids = []
 

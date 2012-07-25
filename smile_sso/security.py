@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
+#    Copyright (C) 2011 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,7 +27,7 @@ from osv import osv
 
 def _check_security_key(security_key):
     # Database parameter is absolutely required to prevent cold start errors.
-    # For details, see ticket #2: https://github.com/Smile-SA/smile_openerp_addons_6.0/issues/2
+    # For details, see ticket  #2: https: //github.com/Smile-SA/smile_openerp_addons_6.0/issues/2
     if not config.get('db_name'):
         raise osv.except_osv('smile_sso error !', "'db_name' is required in server configuration file")
     # Validate shared secret

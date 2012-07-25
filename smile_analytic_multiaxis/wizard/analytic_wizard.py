@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,12 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import osv, fields
 from tools.translate import _
+
 
 class AnalyticDistributionKeyWizard(osv.osv):
     _name = 'account.analytic.distribution.key.wizard'
@@ -32,7 +33,7 @@ class AnalyticDistributionKeyWizard(osv.osv):
         total_rate = sum([vals[k] for k in vals if k.startswith('axis_dest_item_id_')])
         if total_rate != 100.00:
             raise osv.except_osv(_('Error'), _('A distribution key is complete only if total rate is equal to 100% !'))
-        cr.execute("SELECT id, axis_dest_item_id, rate FROM account_analytic_distribution_key WHERE axis_src_item_id = %s AND active = TRUE", (vals['axis_src_item_id'],))
+        cr.execute("SELECT id, axis_dest_item_id, rate FROM account_analytic_distribution_key WHERE axis_src_item_id = %s AND active = TRUE", (vals['axis_src_item_id'], ))
         old_keys = dict([(item[1], {'rate': item[2], 'key_id': item[0]}) for item in cr.fetchall()])
         key_obj = self.pool.get(self._inherit)
         for item_id in (int(k.replace('axis_dest_item_id_', '')) for k in vals if k.startswith('axis_dest_item_id_')):
@@ -59,7 +60,7 @@ class AnalyticDistributionKeyWizard(osv.osv):
             args.append(('period_id.distribution_id', '=', context['default_distribution_id']))
         key_ids = self.pool.get(self._inherit).search(cr, uid, args, offset, limit, order, context)
         if key_ids:
-            cr.execute('SELECT axis_src_item_id FROM ' + self._table + ' WHERE id IN %s GROUP BY axis_src_item_id', (tuple(key_ids),))
+            cr.execute('SELECT axis_src_item_id FROM ' + self._table + ' WHERE id IN %s GROUP BY axis_src_item_id', (tuple(key_ids), ))
             res = cr.fetchall()
             res = [item[0] for item in res]
         return count and len(res) or res
@@ -75,7 +76,7 @@ class AnalyticDistributionKeyWizard(osv.osv):
             domain.append(('period_id.distribution_id', '=', context['distribution_id']))
         key_obj = self.pool.get(self._inherit)
         key_ids = key_obj.search(cr, uid, domain, context=context)
-        for key in key_obj.browse(cr, uid, key_ids): # Do not pass context in order to obtain integer fields
+        for key in key_obj.browse(cr, uid, key_ids):  # Do not pass context in order to obtain integer fields
             res.setdefault(key.axis_src_item_id, {}).update({
                 'id': key.axis_src_item_id,
                 'period_id': self.pool.get(key.period_id._name).name_get(cr, uid, [key.period_id.id], context)[0],
@@ -147,6 +148,7 @@ class AnalyticDistributionKeyWizard(osv.osv):
         return res
 AnalyticDistributionKeyWizard()
 
+
 class AnalyticDistributionPeriod(osv.osv):
     _inherit = 'account.analytic.distribution.period'
 
@@ -172,11 +174,11 @@ AnalyticDistributionPeriod()
 #    _inherit = 'account.analytic.distribution.key'
 #
 #    _columns = {
-#        'origin': fields.char('Origin', size=128), # Can be useful if you want to define a distribution key from an other object form view
+#        'origin': fields.char('Origin', size=128),  # Can be useful if you want to define a distribution key from an other object form view
 #    }
 #AnalyticDistributionKey()
 
-########## SAMPLE ##########
+########## SAMPLE  ##########
 #    <field colspan="4" name="distribution_key_ids" mode="form" nolabel="1" context="{'distribution_id': 3, 'default_period_id': 11, 'default_axis_src_item_id': active_id}"/>
 #class InvoiceLine(osv.osv):
 #    _inherit = 'account.invoice.line'

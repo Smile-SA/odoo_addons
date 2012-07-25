@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2011 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,16 +15,16 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Smile dir scanner",
-    "version" : "0.1",
-    "category" : "Tools",
-    "author" : "Smile",
-    "website": 'http://www.smile.fr',
+    "name": "Smile dir scanner",
+    "version": "0.1",
+    "category": "Tools",
+    "author": "Smile",
+    "website": 'http: //www.smile.fr',
     "description": """
 DEVELOPMENT IN PROGRESS
 
@@ -33,18 +33,16 @@ DEVELOPMENT IN PROGRESS
 
 + Used in combination with smile_action_trigger, found files can easily be imported:
 define a trigger on the creation of an smile_dir_scanner.file and link it to a server
-action calling the import method that should deal with the file 
+action calling the import method that should deal with the file
 
     """,
-    "depends" : ['base'],
-    "init_xml" : [
-        
-    ],
+    "depends": ['base'],
+    "init_xml": [],
     "update_xml": [
-                   'security/smile_dir_scanner_security.xml',
-                   'smile_dir_scanner_view.xml',
+        'security/smile_dir_scanner_security.xml',
+        'smile_dir_scanner_view.xml',
     ],
-    "demo_xml" : [
+    "demo_xml": [
     ],
     "installable": True,
     "active": False,

@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2011 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,31 +15,31 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Import",
-    "version" : "1.0",
-    "author" : "Smile",
-    "website": 'http://www.smile.fr',
-    "category" : "Tools",
+    "name": "Import",
+    "version": "1.0",
+    "author": "Smile",
+    "website": 'http: //www.smile.fr',
+    "category": "Tools",
     "description": """Import whatever objects
 
 Development in progress
 
 Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
 """,
-    "depends" : ['smile_log'],
-    "init_xml" : [
+    "depends": ['smile_log'],
+    "init_xml": [
         'security/smile_import_security.xml',
         'security/ir.model.access.csv',
     ],
     "update_xml": [
         'import_view.xml',
     ],
-    "demo_xml" : [],
+    "demo_xml": [],
     "installable": True,
     "active": False,
 }

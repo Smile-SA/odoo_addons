@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,16 +15,16 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Server Actions R* Trigger Rules Engine (aka Sartre)",
-    "version" : "5.0",
-    "category" : "Tools",
-    "author" : "Smile",
-    "website": 'http://www.smile.fr',
+    "name": "Server Actions R* Trigger Rules Engine (aka Sartre)",
+    "version": "5.0",
+    "category": "Tools",
+    "author": "Smile",
+    "website": 'http: //www.smile.fr',
     "description": """
 Concept
 
@@ -46,12 +46,12 @@ A rule applies to a single object and is composed of:
     * value age: current or old values if the rule trigger is the object update
 3. Actions
     * all server action types: email (native or with poweremail), sms, object creation/update, etc
-	* run each action once per instance or once for all instances
+    * run each action once per instance or once for all instances
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
-    "depends" : ['smile_log'],
-    "init_xml" : [
+    "depends": ['smile_log'],
+    "init_xml": [
         'security/sartre_security.xml',
         'security/ir.model.access.csv',
         'data/sartre_sequence.xml',
@@ -62,7 +62,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         'ir.xml',
         'sartre_view.xml',
     ],
-    "demo_xml" : [
+    "demo_xml": [
         'demo/sartre_demo.xml'
     ],
     "installable": True,

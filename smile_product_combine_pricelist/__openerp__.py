@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2011 Smile (<http://smile.fr>).
+#    Copyright (C) 2010-2011 Smile (<http: //smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,29 +23,21 @@
     'name': 'Combine multiple pricelists',
     'version': '1.0',
     'category': 'Generic Modules/Sales & Purchases',
-    'description': """  
+    'description': """
                         Combine multiple pricelists. Applying the first one and choose to deduct a price then reapply the follows.
                         Combine products to set a price:
                             The price of a product is based on the amount taken for other products.
                             This module must be inherited from other specific modules to be used
-    """,                        
+    """,
     'author': 'Smile.fr',
-    'website': 'http://www.smile.fr',
+    'website': 'http: //www.smile.fr',
     'depends': [
         'product',
-      
     ],
     'init_xml': [],
-    'update_xml': [
-       
-    ],
-    'demo_xml': [
-       
-     ],
-    'test': [
-       
-     ],
+    'update_xml': [],
+    'demo_xml': [],
+    'test': [],
     'installable': True,
     'active': False,
 }
-

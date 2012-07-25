@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,28 +15,28 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Smile Delinquency Management",
-    "version" : "0.1",
-    "category" : "Generic Modules/Accounting",
-    "author" : "Smile",
-    "website": 'http://www.smile.fr',
+    "name": "Smile Delinquency Management",
+    "version": "0.1",
+    "category": "Generic Modules/Accounting",
+    "author": "Smile",
+    "website": 'http: //www.smile.fr',
     "description": """Delinquency Management
-    
-    Instead of deleting account move when you cancel a voucher, 
+
+    Instead of deleting account move when you cancel a voucher,
     this module reserves it if this account move was validated, removes it otherwise.
     """,
-    "depends" : ['account_voucher', 'account_reversal'],
-    "init_xml" : [],
+    "depends": ['account_voucher', 'account_reversal'],
+    "init_xml": [],
     "update_xml": [
         "account_voucher_view.xml",
         "wizard/account_voucher_reversal_view.xml",
     ],
-    "demo_xml" : [],
+    "demo_xml": [],
     "installable": True,
     "active": False,
 }

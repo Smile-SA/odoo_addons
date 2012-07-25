@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,6 +23,7 @@ import time
 
 from osv import osv
 from tools.translate import _
+
 
 class Invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -42,7 +43,7 @@ class Invoice(osv.osv):
                 continue
 
             if not inv.date_invoice:
-                self.write(cr, uid, [inv.id], {'date_invoice':time.strftime('%Y-%m-%d')})
+                self.write(cr, uid, [inv.id], {'date_invoice': time.strftime('%Y-%m-%d')})
             company_currency = inv.company_id.currency_id.id
             # create the analytical lines
             # one move line per invoice line
@@ -82,7 +83,7 @@ class Invoice(osv.osv):
                 if inv.type == 'out_refund':
                     entry_type = 'cont_voucher'
 
-            diff_currency_p = inv.currency_id.id <> company_currency
+            diff_currency_p = inv.currency_id.id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
             total = 0
             total_currency = 0
@@ -92,15 +93,13 @@ class Invoice(osv.osv):
             name = inv['name'] or '/'
             totlines = False
             if inv.payment_term:
-                totlines = self.pool.get('account.payment.term').compute(cr,
-                        uid, inv.payment_term.id, total, inv.date_invoice or False)
+                totlines = self.pool.get('account.payment.term').compute(cr, uid, inv.payment_term.id, total, inv.date_invoice or False)
             if totlines:
                 res_amount_currency = total_currency
                 i = 0
                 for t in totlines:
                     if inv.currency_id.id != company_currency:
-                        amount_currency = cur_obj.compute(cr, uid,
-                                company_currency, inv.currency_id.id, t[1])
+                        amount_currency = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, t[1])
                     else:
                         amount_currency = False
 
@@ -116,10 +115,8 @@ class Invoice(osv.osv):
                         'price': t[1],
                         'account_id': acc_id,
                         'date_maturity': t[0],
-                        'amount_currency': diff_currency_p \
-                                and  amount_currency or False,
-                        'currency_id': diff_currency_p \
-                                and inv.currency_id.id or False,
+                        'amount_currency': diff_currency_p and amount_currency or False,
+                        'currency_id': diff_currency_p and inv.currency_id.id or False,
                         'ref': ref,
                     })
             else:
@@ -129,25 +126,22 @@ class Invoice(osv.osv):
                     'price': total,
                     'account_id': acc_id,
                     'date_maturity': inv.date_due or False,
-                    'amount_currency': diff_currency_p \
-                            and total_currency or False,
-                    'currency_id': diff_currency_p \
-                            and inv.currency_id.id or False,
+                    'amount_currency': diff_currency_p and total_currency or False,
+                    'currency_id': diff_currency_p and inv.currency_id.id or False,
                     'ref': ref
-            })
+                })
 
             date = inv.date_invoice or time.strftime('%Y-%m-%d')
             part = inv.partner_id.id
 
-            line = map(lambda x:(0, 0, self.line_get_convert(cr, uid, x, part, date, context={})), iml)
+            line = map(lambda x: (0, 0, self.line_get_convert(cr, uid, x, part, date, context={})), iml)
 
             line = self.group_lines(cr, uid, iml, line, inv)
 
             journal_id = inv.journal_id.id
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
             if journal.centralisation:
-                raise osv.except_osv(_('UserError'),
-                        _('Cannot create invoice move on centralised journal'))
+                raise osv.except_osv(_('UserError'), _('Cannot create invoice move on centralised journal'))
 
             line = self.finalize_invoice_move_lines(cr, uid, inv, line)
 
@@ -157,14 +151,14 @@ class Invoice(osv.osv):
                 'journal_id': journal_id,
                 'date': date,
                 'type': entry_type,
-                'narration':inv.comment
+                'narration': inv.comment
             }
             period_id = inv.period_id and inv.period_id.id or False
             if not period_id:
                 period_ids = self.pool.get('account.period').search(cr, uid, [
-                        ('date_start', '<=', inv.date_invoice or time.strftime('%Y-%m-%d')),
-                        ('date_stop', '>=', inv.date_invoice or time.strftime('%Y-%m-%d')),
-                        ('company_id', '=', inv.company_id.id)
+                    ('date_start', '<=', inv.date_invoice or time.strftime('%Y-%m-%d')),
+                    ('date_stop', '>=', inv.date_invoice or time.strftime('%Y-%m-%d')),
+                    ('company_id', '=', inv.company_id.id)
                 ])
                 if period_ids:
                     period_id = period_ids[0]
@@ -173,7 +167,7 @@ class Invoice(osv.osv):
                 for i in line:
                     i[2]['period_id'] = period_id
 
-            # Added by Smile #
+            # Added by Smile  #
             if inv.company_id:
                 move['company_id'] = inv.company_id.id
             ##################
@@ -181,10 +175,10 @@ class Invoice(osv.osv):
             move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
             new_move_name = self.pool.get('account.move').browse(cr, uid, move_id).name
             # make the invoice point to that move
-            self.write(cr, uid, [inv.id], {'move_id': move_id, 'period_id':period_id, 'move_name':new_move_name})
+            self.write(cr, uid, [inv.id], {'move_id': move_id, 'period_id': period_id, 'move_name': new_move_name})
             # Pass invoice in context in method post: used if you want to get the same
             # account move reference when creating the same invoice after a cancelled one:
-            self.pool.get('account.move').post(cr, uid, [move_id], context={'invoice':inv})
+            self.pool.get('account.move').post(cr, uid, [move_id], context={'invoice': inv})
         self._log_event(cr, uid, ids)
         return True
 
@@ -205,6 +199,7 @@ class Invoice(osv.osv):
         res.setdefault('value', {})['journal_id'] = self.get_journal_from_fiscal_position(cr, uid, fiscal_position_id, journal_id)
         return res
 Invoice()
+
 
 class InvoiceLine(osv.osv):
     _inherit = 'account.invoice.line'

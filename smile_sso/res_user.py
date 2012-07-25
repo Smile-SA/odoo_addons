@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2011 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,6 +29,7 @@ import pooler
 from service import security
 from tools.translate import _
 
+
 def generate_random_password(length):
     """Generate password with an entropy per symbol equal to 6.5699 bits, i.e. for a 64-length password, 420 bits"""
     new_password = ''
@@ -36,6 +37,7 @@ def generate_random_password(length):
         chars = string.letters + string.digits + string.punctuation
         new_password = ''.join(choice(chars) for _ in xrange(length))
     return new_password
+
 
 class User(osv.osv):
     _inherit = 'res.users'
@@ -46,10 +48,10 @@ class User(osv.osv):
 
     def __init__(self, pool, cr):
         super(User, self).__init__(pool, cr)
-        self._duration = 3600 # equals to cookie['max-age'] = 3600 [WebHome]/addons/openerp/controllers/utils.py line 172 secured.wrapper
+        self._duration = 3600  # equals to cookie['max-age'] = 3600 [WebHome]/addons/openerp/controllers/utils.py line 172 secured.wrapper
 
     def get_expiry_date(self):
-        return (datetime.now() + timedelta(seconds=self._duration)).strftime('%Y-%m-%d %H:%M:%S')
+        return (datetime.now() + timedelta(seconds=self._duration)).strftime('%Y-%m-%d %H: %M: %S')
 
     def sso_login(self, db, login, length=64, context=None):
         password = generate_random_password(length)
@@ -63,7 +65,8 @@ class User(osv.osv):
         params.append(login)
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute('SELECT id, password FROM res_users WHERE login=%s AND password IS NOT NULL AND active=TRUE AND (expiry_date IS NULL OR expiry_date>=now()) LIMIT 1', (login,))
+            cr.execute('SELECT id, password FROM res_users WHERE login=%s AND password IS NOT NULL '
+                       'AND active=TRUE AND (expiry_date IS NULL OR expiry_date>=now()) LIMIT 1', (login,))
             res = cr.dictfetchone()
             if not res or not res['password']:
                 query = 'UPDATE res_users SET %s WHERE %s RETURNING id, password' % (set_clause, where_clause)
@@ -97,7 +100,8 @@ class User(osv.osv):
         cr = pooler.get_db(db).cursor()
         try:
             if self._uid_cache.get(db, {}).get(uid) != passwd:
-                cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=TRUE AND (expiry_date IS NULL OR expiry_date>=now()) LIMIT 1', (int(uid), passwd))
+                cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND '
+                           'active=TRUE AND (expiry_date IS NULL OR expiry_date>=now()) LIMIT 1', (int(uid), passwd))
                 res = cr.fetchone()[0]
                 if not res:
                     error_msg = "Server session expired for the user [uid=%s]" % uid

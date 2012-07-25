@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2011 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,6 +24,7 @@ import logging
 import traceback
 
 import pooler
+
 
 class SmileDBHandler(logging.Handler):
 
@@ -52,7 +53,7 @@ class SmileDBHandler(logging.Handler):
         model_name = record.args.get('model_name', '')
 
         request = "INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message) VALUES (now(), %s, %s, %s, %s, %s, %s)"
-        params = (uid, model_name, res_id, pid, record.levelname, record.msg,)
+        params = (uid, model_name, res_id, pid, record.levelname, record.msg, )
 
         try:
             cr.execute(request, params)
@@ -75,12 +76,14 @@ class SmileDBHandler(logging.Handler):
                 cr.close()
         self._dbname_to_cr = {}
 
+
 def add_timing(original_method):
     def new_method(self, msg):
         delay = datetime.datetime.now() - self._logger_start
-        msg += " after %sh %smin %ss" % tuple(str(delay).split(':'))
+        msg += " after %sh %smin %ss" % tuple(str(delay).split(': '))
         return original_method(self, msg)
     return new_method
+
 
 def add_trace(original_method):
     def new_method(self, msg):
@@ -88,6 +91,7 @@ def add_trace(original_method):
         msg += '\n%s' % stack
         return original_method(self, msg)
     return new_method
+
 
 class SmileDBLogger():
 

@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,6 +24,7 @@ import time
 import decimal_precision as dp
 import netsvc
 from osv import osv, fields
+
 
 class PaymentMode(osv.osv):
     _name = 'payment.mode'
@@ -55,6 +56,7 @@ class PaymentMode(osv.osv):
             return payment_ids[0]
         return payment_order_obj.create(cr, uid, {'payment_mode_id': payment_mode_id}, context)
 PaymentMode()
+
 
 class PaymentOrder(osv.osv):
     _name = 'payment.order'
@@ -88,7 +90,7 @@ class PaymentOrder(osv.osv):
             ('due', 'Due date'),
             ('fixed', 'Fixed date'),
         ], "Preferred date", change_default=True, required=True, states={'done': [('readonly', True)]}),
-        'date_scheduled': fields.date('Scheduled date if fixed', states={'done':[('readonly', True)]}),
+        'date_scheduled': fields.date('Scheduled date if fixed', states={'done': [('readonly', True)]}),
         'date_done': fields.date('Execution date', readonly=True),
         'create_date': fields.datetime('Creation date', readonly=True),
     }
@@ -102,7 +104,7 @@ class PaymentOrder(osv.osv):
 
     def action_set_done(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
-        vals = {'state':'done', 'date_done': time.strftime('%Y-%m-%d')}
+        vals = {'state': 'done', 'date_done': time.strftime('%Y-%m-%d')}
         for payment in self.browse(cr, uid, ids, context):
             vals['total_done'] = payment.total
             payment.write(vals, context)
@@ -114,7 +116,7 @@ class PaymentOrder(osv.osv):
     def action_cancel(self, cr, uid, ids, context=None):
         voucher_ids = sum([payment['voucher_ids'] for payment in self.read(cr, uid, ids, ['voucher_ids'], context, '_classic_write')], [])
         self.pool.get('account.voucher').cancel_voucher(cr, uid, voucher_ids, context)
-        return self.write(cr, uid, ids, {'state':'cancel'}, context)
+        return self.write(cr, uid, ids, {'state': 'cancel'}, context)
 
     def button_set_to_draft(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")

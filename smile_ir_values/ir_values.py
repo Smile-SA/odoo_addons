@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2011 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,7 +25,8 @@ import pickle
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
-    'report_sxw_content_data', 'report_rml_content_data', 'search_view',))
+    'report_sxw_content_data', 'report_rml_content_data', 'search_view', ))
+
 
 class IrValues(osv.osv):
     _inherit = 'ir.values'
@@ -35,7 +36,7 @@ class IrValues(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for value in self.read(cr, uid, ids, ['window_action_ids'], context):
-            res[value['id']] = ',%s,' % ','.join(map(str, value['window_action_ids']))
+            res[value['id']] = ', %s, ' % ', '.join(map(str, value['window_action_ids']))
         return res
 
     _columns = {
@@ -54,8 +55,8 @@ class IrValues(osv.osv):
         window_action_id = ''
         if context.get('active_model') == 'ir.ui.menu':
             action = self.pool.get('ir.ui.menu').read(cr, uid, context.get('active_id', False), ['action'], context)['action']
-            if action and action.startswith('ir.actions.act_window,'):
-                window_action_id = action.replace('ir.actions.act_window,', '')
+            if action and action.startswith('ir.actions.act_window, '):
+                window_action_id = action.replace('ir.actions.act_window, ', '')
         #####
         result = []
         for m in models:
@@ -68,7 +69,7 @@ class IrValues(osv.osv):
             params = [key, str(m)]
             if key2:
                 where.append('key2=%s')
-                params.append(key2[:200])
+                params.append(key2[: 200])
             elif key2_req and not meta:
                 where.append('key2 is null')
             if res_id_req and (models[-1][0] == m):
@@ -86,13 +87,13 @@ class IrValues(osv.osv):
                     params.append(res_id)
             # Add by Smile to manage visibility in function of window actions
             if window_action_id:
-                where.append("(window_actions=',,' or window_actions like '%%%%,%s,%%%%')" % window_action_id)
+                where.append("(window_actions=', , ' or window_actions like '%%%%, %s, %%%%')" % window_action_id)
             # Add by Smile to manage sequence
             where.append('(user_id=%s or (user_id IS NULL)) order by ' + self._order)
             #####
             params.append(uid)
             clause = ' and '.join(where)
-            cr.execute('select id,name,value,object,meta, key from ir_values where ' + clause, tuple(params))
+            cr.execute('select id, name, value, object, meta, key from ir_values where ' + clause, tuple(params))
             result = cr.fetchall()
             if result:
                 break
@@ -105,7 +106,7 @@ class IrValues(osv.osv):
                 return False
             keys.append(x[1])
             if x[3]:
-                model, id = x[2].split(',')
+                model, id = x[2].split(', ')
                 # FIXME: It might be a good idea to opt-in that kind of stuff
                 # FIXME: instead of arbitrarily removing random fields
                 fields = [

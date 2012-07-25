@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2011 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,11 +15,12 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import osv, fields
+
 
 class AcccountInvoiceBehalfOf(osv.osv):
     _name = 'account.invoice.behalf_of'
@@ -36,7 +37,7 @@ class AcccountInvoiceBehalfOf(osv.osv):
                                                  help="Indicate debit / credit line by adding an amount different from zero in the right column."),
 
         'partner_dest_id': fields.related('company_dest_id', 'partner_id', type='many2one', relation='res.partner',
-            string='Billing Partner', readonly=True, store=True),
+                                          string='Billing Partner', readonly=True, store=True),
         'bank_account_id': fields.many2one('res.partner.bank', 'Bank Account', required=False),
     }
 
@@ -48,6 +49,7 @@ class AcccountInvoiceBehalfOf(osv.osv):
             res.append((item['id'], item['company_dest_id'][1]))
         return res
 AcccountInvoiceBehalfOf()
+
 
 class AccountInvoice(osv.osv):
     _inherit = 'account.invoice'

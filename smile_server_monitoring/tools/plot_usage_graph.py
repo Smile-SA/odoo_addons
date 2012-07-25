@@ -13,8 +13,9 @@ import xmlrpclib
 import time
 import os.path
 
+
 def write_infos_to_file(filename, data_type='objects', limit=0, floor=10):
-    sock_common = xmlrpclib.ServerProxy('http://localhost:8069/xmlrpc/common')
+    sock_common = xmlrpclib.ServerProxy('http: //localhost: 8069/xmlrpc/common')
     objects_count = []
     if data_type == 'objects':
         objects_count = sock_common.gc_types_count(limit, floor)
@@ -24,14 +25,15 @@ def write_infos_to_file(filename, data_type='objects', limit=0, floor=10):
     if mem_usage == 'Unknown':
         mem_usage = 0
     else:
-        mem_usage = int(mem_usage[:-3])
+        mem_usage = int(mem_usage[: -3])
     objects_count.insert(0, ('memory', mem_usage))
-    point = (time.strftime('%Y-%m-%d %H:%M:%S'), objects_count)
+    point = (time.strftime('%Y-%m-%d %H: %M: %S'), objects_count)
     with open(filename, 'a') as log:
         log.write(repr(point) + '\n')
 
+
 def dump_stack_traces(path):
-    sock_common = xmlrpclib.ServerProxy('http://localhost:8069/xmlrpc/common')
+    sock_common = xmlrpclib.ServerProxy('http: //localhost: 8069/xmlrpc/common')
     stack_traces = sock_common.get_stacks()
     filename = time.strftime('stack_%Y-%m-%d_%H%M%S.log')
     file_path = "%s/%s" % (os.path.abspath(path), filename)
@@ -50,6 +52,7 @@ def load_data_from_file(filename):
             points.append(eval(line))
     return points
 
+
 def regroup_data_per_object(data):
     object_infos = {}
     for timestamp, object_count in data:
@@ -57,6 +60,7 @@ def regroup_data_per_object(data):
         for objtype, nb in object_count:
             object_infos.setdefault(objtype, []).append((timestamp, nb))
     return object_infos
+
 
 def has_change(time_counts, min_change=0):
     first_count = 0
@@ -66,6 +70,7 @@ def has_change(time_counts, min_change=0):
         if abs(first_count - count) >= min_change:
             return True
     return False
+
 
 def filter_unchanging_objects(object_infos, min_change=0):
     filtered_infos = {}
@@ -97,6 +102,7 @@ def print_matrix(object_infos):
         result += '\n'
     print result
 
+
 def regroup_per_time(object_infos):
     """ Reformat from object_infos structure to points structure """
     time_infos = {}
@@ -109,15 +115,13 @@ def regroup_per_time(object_infos):
     return points
 
 
-
 if __name__ == '__main__':
     import sys
-    import pprint
 
     usage = """ Usage: python plot_usage_graph.py filename [--browse_records] [--regroup_infos]"""
 
     if len(sys.argv) <= 1:
-    	print usage
+        print usage
         exit()
     filename = sys.argv[1]
     if len(sys.argv) == 2:
@@ -132,6 +136,5 @@ if __name__ == '__main__':
         print_matrix(object_infos)
 
     else:
-    	print usage
+        print usage
         exit()
-

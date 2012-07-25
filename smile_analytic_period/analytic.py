@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,6 +27,7 @@ from osv import osv, fields
 import tools
 from tools.translate import _
 
+
 class AnalyticPeriod(osv.osv):
     _name = 'account.analytic.period'
     _description = 'Analytic Period'
@@ -34,12 +35,15 @@ class AnalyticPeriod(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=12),
-        'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly', True)]}),
-        'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly', True)]}),
+        'date_start': fields.date('Start of Period', required=True, states={'done': [('readonly', True)]}),
+        'date_stop': fields.date('End of Period', required=True, states={'done': [('readonly', True)]}),
         'state': fields.selection([('draft', 'Opened'), ('done', 'Closed')], 'State', required=True, readonly=True),
-        'general_period_id': fields.many2one('account.period', 'General Period', required=False), #not required because we want to allow different companies to use the periods
-        'fiscalyear_id': fields.related('general_period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear', readonly=True, store=True),
-        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True, store=True),
+        'general_period_id': fields.many2one('account.period', 'General Period',
+                                             required=False),  # not required because we want to allow different companies to use the periods
+        'fiscalyear_id': fields.related('general_period_id', 'fiscalyear_id', string='Fiscal Year',
+                                        type='many2one', relation='account.fiscalyear', readonly=True, store=True),
+        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company',
+                                     string='Company', readonly=True, store=True),
     }
 
     _defaults = {
@@ -55,8 +59,8 @@ class AnalyticPeriod(osv.osv):
             if period.date_stop < period.date_start:
                 return False
             if period.general_period_id \
-            and (period.date_start < period.general_period_id.date_start \
-            or period.date_stop > period.general_period_id.date_stop):
+                    and (period.date_start < period.general_period_id.date_start
+                         or period.date_stop > period.general_period_id.date_stop):
                 return False
         return True
 
@@ -75,7 +79,8 @@ class AnalyticPeriod(osv.osv):
         return True
 
     _constraints = [
-        (_check_duration, 'The duration of the period is invalid or the period dates are not in the scope of the account period!', ['date_start', 'date_stop']),
+        (_check_duration, 'The duration of the period is invalid or the period dates are not in the scope of the account period!',
+         ['date_start', 'date_stop']),
         (_check_periods_overlap, 'Some periods overlap!', ['date_start', 'date_stop']),
     ]
 
@@ -171,7 +176,7 @@ class AnalyticPeriod(osv.osv):
         date_start = datetime.strptime(global_date_start, '%Y-%m-%d')
         global_date_stop = datetime.strptime(global_date_stop, '%Y-%m-%d')
         while date_start < global_date_stop:
-            date_stop = min(date_start + relativedelta(months=interval, days= -1), global_date_stop)
+            date_stop = min(date_start + relativedelta(months=interval, days=-1), global_date_stop)
             vals = {
                 'name': date_start.strftime('%m/%Y'),
                 'code': date_start.strftime('%m/%Y'),
@@ -192,6 +197,7 @@ class AnalyticPeriod(osv.osv):
         return True
 AnalyticPeriod()
 
+
 class AnalyticLine(osv.osv):
     _inherit = 'account.analytic.line'
 
@@ -210,7 +216,8 @@ class AnalyticLine(osv.osv):
     def create(self, cr, uid, vals, context=None):
         vals = vals or {}
         if not vals.get('period_id'):
-            vals['period_id'] = self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, vals['date'], vals.get('company_id', False), context)
+            vals['period_id'] = self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, vals['date'],
+                                                                                                 vals.get('company_id', False), context)
         return super(AnalyticLine, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):

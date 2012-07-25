@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2011 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,14 +27,18 @@ from openerp.utils import cache
 # Form View
 native_form_create = Form.create
 
+
 @expose(template="/openerp/controllers/templates/form.mako")
 def new_form_create(self, params, tg_errors=None):
     for cell in native_form_create.im_func.func_closure:
         if isinstance(cell.cell_contents, type(lambda x: x)) and cell.cell_contents.func_name == 'create':
             res = cell.cell_contents(self, params, tg_errors)
-            res['buttons'].new = res['buttons'].new and cache.can_create(params['_terp_model']) and not params.get('_terp_context', {}).get('hide_create_button')
-            res['buttons'].edit = res['buttons'].edit and cache.can_write(params['_terp_model']) and not params.get('_terp_context', {}).get('hide_write_button')
-            res['buttons'].delete = res['buttons'].delete and cache.can_unlink(params['_terp_model']) and not params.get('_terp_context', {}).get('hide_unlink_button')
+            res['buttons'].new = res['buttons'].new and cache.can_create(params['_terp_model']) \
+                and not params.get('_terp_context', {}).get('hide_create_button')
+            res['buttons'].edit = res['buttons'].edit and cache.can_write(params['_terp_model']) \
+                and not params.get('_terp_context', {}).get('hide_write_button')
+            res['buttons'].delete = res['buttons'].delete and cache.can_unlink(params['_terp_model']) \
+                and not params.get('_terp_context', {}).get('hide_unlink_button')
             res['buttons'].cancel = res['buttons'].cancel and not params.get('_terp_context', {}).get('hide_cancel_button')
             return res
     return native_form_create(self, params, tg_errors)
@@ -43,6 +47,7 @@ Form.create = new_form_create
 
 # Tree View
 native_list_init = List.__init__
+
 
 def new_list_init(self, *args, **kwargs):
     native_list_init(self, *args, **kwargs)

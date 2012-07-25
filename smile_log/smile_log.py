@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2011 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,11 +15,12 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import osv, fields
+
 
 class SmileLog(osv.osv):
     _name = 'smile.log'
@@ -50,7 +51,7 @@ class SmileLog(osv.osv):
                     name = user_obj.read(cr, uid, log.log_uid, ['name'], context)['name']
                     user_id_to_name[log.log_uid] = "%s [%s]" % (name, log.log_uid)
                 else:
-                    user_id_to_name[log.log_uid] = "[%s]" % (log.log_uid,)
+                    user_id_to_name[log.log_uid] = "[%s]" % (log.log_uid, )
             result[log.id] = user_id_to_name[log.log_uid]
         return result
 
@@ -59,7 +60,7 @@ class SmileLog(osv.osv):
         res_to_name = {}
         for log in self.browse(cr, uid, ids, context):
             res_key = (log.model_name, log.res_id)
-            result[log.id] = "%s,%s" % res_key
+            result[log.id] = "%s, %s" % res_key
             if log.model_name and log.res_id:
                 if res_key in res_to_name:
                     result[log.id] = res_to_name[res_key]

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,9 +23,11 @@ from osv import osv, fields
 import tools
 from tools.translate import _
 
+
 def _get_exception_message(exception):
     msg = isinstance(exception, osv.except_osv) and exception.value or exception
     return tools.ustr(msg)
+
 
 class Invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -65,9 +67,10 @@ class Invoice(osv.osv):
             quantity = line.quantity
             price_unit = line.price_unit
             invoice_line_vals = self.pool.get('account.invoice.line').product_id_change(cr, uid, False, product_id, uos_id,
-                line.quantity, name, context.get('invoice_type', False), context.get('invoice_partner_id', False),
-                context.get('invoice_fiscal_position', False), price_unit, context.get('partner_address_invoice_id', False),
-                context.get('invoice_currency_id', False), context)['value']
+                                                                                        line.quantity, name, context.get('invoice_type', False), context.get('invoice_partner_id', False),
+                                                                                        context.get('invoice_fiscal_position', False), price_unit, context.get('partner_address_invoice_id', False),
+                                                                                        context.get('invoice_currency_id', False), context
+                                                                                        )['value']
             invoice_line_vals.update({
                 'name': name,
                 'origin': line.origin,
@@ -94,7 +97,7 @@ class Invoice(osv.osv):
                 partner_bank_id = invoice.partner_bank_id.id
                 company_id = invoice.partner_id.partner_company_id.id
                 currency_id = invoice.currency_id.id
-                invoice_vals = self.onchange_partner_id(cr, uid, False, invoice_type, partner_id, date_invoice, \
+                invoice_vals = self.onchange_partner_id(cr, uid, False, invoice_type, partner_id, date_invoice,
                                                         payment_term, partner_bank_id, company_id)['value']
                 context_copy.update({
                     'company_id': company_id,
@@ -119,7 +122,7 @@ class Invoice(osv.osv):
                     'invoice_line': map(lambda x: (0, 0, x), self._get_invoice_lines(cr, uid, invoice, context_copy)),
                     'check_total': invoice.amount_total,
                 })
-                self.create(cr, 1, invoice_vals, context) #To bypass access and record rules
+                self.create(cr, 1, invoice_vals, context)  # To bypass access and record rules
         return True
 
     def action_number(self, cr, uid, ids, context=None):
@@ -155,10 +158,10 @@ class Invoice(osv.osv):
                 res.setdefault('domain', {}).update({'fiscal_position': fiscal_position_id})
         return res
 
-    def onchange_partner_id(self, cr, uid, ids, type_, partner_id, date_invoice=False, \
-            payment_term=False, partner_bank_id=False, company_id=False):
-        res = super(Invoice, self).onchange_partner_id(cr, uid, ids, type_, partner_id, date_invoice, \
-                                       payment_term, partner_bank_id, company_id)
+    def onchange_partner_id(self, cr, uid, ids, type_, partner_id, date_invoice=False,
+                            payment_term=False, partner_bank_id=False, company_id=False):
+        res = super(Invoice, self).onchange_partner_id(cr, uid, ids, type_, partner_id, date_invoice,
+                                                       payment_term, partner_bank_id, company_id)
         self._update_onchange_result_with_fiscal_position(cr, uid, res, company_id, partner_id)
         return res
 

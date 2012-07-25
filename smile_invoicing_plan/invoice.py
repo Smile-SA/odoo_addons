@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,20 +15,21 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import fields, osv
 
+
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
-    
+
     _columns = {
         'parent': fields.boolean('Parent', required=False),
         'sale_order_line_period_info_id': fields.many2one('sale.order.line.period.info', 'Invoiced period', required=False),
     }
-    _defaults = {  
+    _defaults = {
         'parent': lambda * a: False,
-    }    
+    }
 account_invoice_line()

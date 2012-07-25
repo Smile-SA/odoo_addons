@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,13 +27,14 @@ from osv import osv, fields, orm
 import tools
 from tools.translate import _
 
+
 class checklist(osv.osv):
     _name = 'checklist'
     _description = 'Checklist'
 
     _columns = {
-        'name':fields.char('Name', size=128, required=True, translate=True),
-        'model_id':fields.many2one('ir.model', 'Model', required=True),
+        'name': fields.char('Name', size=128, required=True, translate=True),
+        'model_id': fields.many2one('ir.model', 'Model', required=True),
         'model': fields.related('model_id', 'model', type='char', size=64, string='Model Name'),
         'active': fields.boolean('Active'),
         'active_field': fields.boolean("Add or update a boolean field 'Active' in model"),
@@ -46,7 +47,7 @@ class checklist(osv.osv):
         'active': lambda * a: True,
     }
 
-    def _check_unique_checklist_per_object(self, cr, uid, ids): 
+    def _check_unique_checklist_per_object(self, cr, uid, ids):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for checklist_inst in self.browse(cr, uid, ids):
@@ -58,13 +59,14 @@ class checklist(osv.osv):
     _constraints = [(_check_unique_checklist_per_object, "A checklist has already existed for this model !", ['model_id'])]
 checklist()
 
+
 class checklist_task(osv.osv):
     _name = 'checklist.task'
     _description = 'Checklist Task'
 
     _columns = {
-        'name':fields.char('Name', size=128, required=True, translate=True),
-        'checklist_id':fields.many2one('checklist', 'Checklist', required=True, ondelete='cascade'),
+        'name': fields.char('Name', size=128, required=True, translate=True),
+        'checklist_id': fields.many2one('checklist', 'Checklist', required=True, ondelete='cascade'),
         'model_id': fields.related('checklist_id', 'model_id', type='many2one', relation='ir.model', string='Model'),
         'condition': fields.char('Condition', size=256, required=True),
         'active': fields.boolean('Active'),
@@ -82,6 +84,7 @@ class checklist_task(osv.osv):
     }
 checklist_task()
 
+
 class checklist_task_field(osv.osv):
     _name = 'checklist.task.field'
     _description = 'Checklist Task Field'
@@ -97,7 +100,7 @@ class checklist_task_field(osv.osv):
             field_expr += obj._columns[field_obj['name']].arg[0] + '.'
         field_expr += field_obj['name']
         if field_obj['ttype'] in ['many2one', 'one2many', 'many2many']:
-            field_expr += field_obj['ttype'] == 'many2one' and '.'  or ''
+            field_expr += field_obj['ttype'] == 'many2one' and '.' or ''
             field_expr += field_obj['ttype'] in ['one2many', 'many2many'] and '[0].' or ''
             field_expr += self.pool.get(field_obj['relation'])._rec_name
         return 'object.' + field_expr
@@ -110,14 +113,15 @@ class checklist_task_field(osv.osv):
             model = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])['model']
             i = 0
             for f_name in field_list:
-                f_id = field_pool.search(cr, uid, [('model', '=', model), ('name', '=', '[' in f_name and f_name[:f_name.index('[')] or f_name)], limit=1)
+                f_id = field_pool.search(cr, uid, [('model', '=', model),
+                                                   ('name', '=', '[' in f_name and f_name[: f_name.index('[')] or f_name)], limit=1)
                 if not f_id:
                     raise osv.except_osv(_('Error'), _("The field %s is not in the model %s !" % (f_name, model)))
                 f_obj = field_pool.read(cr, uid, f_id[0], ['name', 'ttype', 'relation'])
                 if f_obj['ttype'] in ['many2one', 'one2many', 'many2many']:
                     model = f_obj['relation']
                     model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model)], limit=1)[0]
-                elif len(f_name.split('.')) > 1 and  i < len(field_list):
+                elif len(f_name.split('.')) > 1 and i < len(field_list):
                     raise osv.except_osv(_('Error'), _("The field %s is not a relation field !" % f_obj['name']))
                 i += 1
         return model_id
@@ -125,7 +129,7 @@ class checklist_task_field(osv.osv):
     def onchange_get_field_domain(self, cr, uid, ids, model_id, expression='', field_id=False, context={}):
         """Get field domain"""
         model_id = self._check_field_expression(cr, uid, model_id, expression, context)
-        return {'domain': {'field_id': "[('model_id','='," + str(model_id) + ")]"}}
+        return {'domain': {'field_id': "[('model_id', '=', " + str(model_id) + ")]"}}
 
     def onchange_get_field_expression(self, cr, uid, ids, model_id, expression='', field_id=False, context={}):
         """Update the field expression"""
@@ -133,9 +137,6 @@ class checklist_task_field(osv.osv):
         if field_id:
             field_expr = self._build_field_expression(cr, uid, field_id, expression, context)
         res = self.onchange_get_field_domain(cr, uid, ids, model_id, field_expr, False, context)
-        if field_id:
-            field_description = self.pool.get('ir.model.fields').read(cr, uid, field_id, ['field_description'])['field_description']
-            #res.setdefault('value', {}).update({'name': field_description})
         res.setdefault('value', {}).update({'field_name': field_expr})
         return res
 
@@ -148,7 +149,8 @@ class checklist_task_field(osv.osv):
     }
 checklist_task_field()
 
-class checklist_task(osv.osv):
+
+class checklist_task2(osv.osv):
     _name = 'checklist.task'
     _inherit = 'checklist.task'
 
@@ -161,7 +163,7 @@ class checklist_task(osv.osv):
         checklist_task_obj = self.browse(cr, uid, checklist_task_id)
         model = self.pool.get(checklist_task_obj.checklist_id.model_id.model)
         for object_id in model.search(cr, uid, [], context={'active_test': False}):
-            self.pool.get('checklist.task.instance').create(cr, uid, {'checklist_task_id': checklist_task_id, 'res_id':object_id}, context=context)
+            self.pool.get('checklist.task.instance').create(cr, uid, {'checklist_task_id': checklist_task_id, 'res_id': object_id}, context=context)
         self.pool.get('checklist')._compute_progress_rates(model, cr, uid)
         return checklist_task_id
 
@@ -188,7 +190,8 @@ class checklist_task(osv.osv):
         return result
 checklist_task()
 
-class checklist(osv.osv):
+
+class checklist2(osv.osv):
     _name = 'checklist'
     _inherit = 'checklist'
     logger = netsvc.Logger()
@@ -201,8 +204,11 @@ class checklist(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = {}
-        for id in ids:
-            res[id] = obj.pool.get('checklist.task.instance').search(cr, uid, [('checklist_task_id.checklist_id.model_id.model', '=', obj._name), ('res_id', '=', id)], context={'active_test': True})
+        for id_ in ids:
+            res[id] = obj.pool.get('checklist.task.instance').search(cr, uid, [
+                ('checklist_task_id.checklist_id.model_id.model', '=', obj._name),
+                ('res_id', '=', id_),
+            ], context={'active_test': True})
         return res
 
     @tools.cache()
@@ -211,23 +217,30 @@ class checklist(osv.osv):
         return checklist_id and checklist_id[0] or 0
 
     def _update_models(self, cr, models={}):
-        """:param models: {model_id: {'checklist_id': integer, 'active_field': boolean}}"""
+        """: param models: {model_id: {'checklist_id': integer, 'active_field': boolean}}"""
         if not models:
             checklist_ids = self.search(cr, 1, [])
-            models = dict([(checklist['model_id'][0], {'checklist_id': checklist['id'], 'active_field': checklist['active_field']}) for checklist in self.read(cr, 1, checklist_ids, ['model_id', 'active_field'])])
+            models = dict([(checklist['model_id'][0], {
+                'checklist_id': checklist['id'],
+                'active_field': checklist['active_field'],
+            }) for checklist in self.read(cr, 1, checklist_ids, ['model_id', 'active_field'])])
         for model in self.pool.get('ir.model').read(cr, 1, models.keys(), ['model']):
             if self.pool.get(model['model']):
                 model_columns = self.pool.get(model['model'])._columns
                 checklist_id = models[model['id']] and models[model['id']].get('checklist_id', False)
                 if checklist_id:
                     model_columns.update({
-                        'checklist_task_instance_ids': fields.function(self._get_checklist_task_instances, method=True, type='one2many', relation='checklist.task.instance', string='Checklist Task Instances', store=False),
+                        'checklist_task_instance_ids': fields.function(self._get_checklist_task_instances,
+                                                                       method=True, type='one2many',
+                                                                       relation='checklist.task.instance',
+                                                                       string='Checklist Task Instances', store=False),
                         'total_progress_rate': fields.float('Progress Rate', digits=(16, 2)),
                     })
-                    columns_to_add = {'total_progress_rate': 'NUMERIC(16,2)'}
+                    columns_to_add = {'total_progress_rate': 'NUMERIC(16, 2)'}
                     if models[model['id']].get('active_field', False):
-                        model_columns.update({'active': fields.boolean('Active'), 'total_progress_rate_mandatory': fields.float('Mandatory Progress Rate', digits=(16, 2))})
-                        columns_to_add.update({'active': 'BOOLEAN', 'total_progress_rate_mandatory': 'NUMERIC(16,2)'})
+                        model_columns.update({'active': fields.boolean('Active'),
+                                              'total_progress_rate_mandatory': fields.float('Mandatory Progress Rate', digits=(16, 2))})
+                        columns_to_add.update({'active': 'BOOLEAN', 'total_progress_rate_mandatory': 'NUMERIC(16, 2)'})
                     for column in columns_to_add:
                         cr.execute("""SELECT c.relname FROM pg_class c, pg_attribute a
                                       WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid""", (model['model'].replace('.', '_'), column))
@@ -262,14 +275,16 @@ class checklist(osv.osv):
                 models = {checklist_inst['model_id'][0]: {'checklist_id': False, 'active_field': False}}
                 models.update({vals['model_id']: {'checklist_id': checklist_inst['id'], 'active_field': checklist_inst['active_field']}})
             else:
-                models = dict([(checklist_inst['model_id'][0], {'checklist_id': False, 'active_field': False}) for checklist_inst in self.read(cr, uid, ids, ['model_id'])])
+                models = dict([(checklist_inst['model_id'][0], {'checklist_id': False, 'active_field': False})
+                               for checklist_inst in self.read(cr, uid, ids, ['model_id'])])
         result = super(checklist, self).write(cr, uid, ids, vals, context)
         if 'model_id' in vals:
             self._update_models(cr, models)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
-        models = dict([(checklist_inst['model_id'][0], {'checklist_id': False, 'active_field': False}) for checklist_inst in self.read(cr, uid, ids, ['model_id'])])
+        models = dict([(checklist_inst['model_id'][0], {'checklist_id': False, 'active_field': False})
+                       for checklist_inst in self.read(cr, uid, ids, ['model_id'])])
         result = super(checklist, self).unlink(cr, uid, ids, context)
         self._update_models(cr, models)
         return result
@@ -282,9 +297,11 @@ class checklist(osv.osv):
         context = context or {}
         inst_ids = []
         instance_pool = self.pool.get('checklist.task.instance')
-        for object in obj.browse(cr, uid, ids):
+        for obj in obj.browse(cr, uid, ids):
             context['active_id'] = object.id
-            instance_ids = instance_pool.search(cr, uid, [('checklist_task_id.checklist_id.model_id.model', '=', obj._name), ('res_id', '=', object.id), ('manually_validated', '!=', True)], context={'active_test': True})
+            instance_ids = instance_pool.search(cr, uid, [('checklist_task_id.checklist_id.model_id.model', '=', obj._name),
+                                                          ('res_id', '=', object.id), ('manually_validated', '!=', True)],
+                                                context={'active_test': True})
             for instance in instance_pool.browse(cr, uid, instance_ids):
                 progress_rate = 100
                 if instance.checklist_task_id.field_ids:
@@ -301,15 +318,14 @@ class checklist(osv.osv):
             ids = obj.search(cr, uid, [])
         if isinstance(ids, (int, long)):
             ids = [ids]
-        res = {}
-        for object in obj.browse(cr, uid, ids):
+        for obj in obj.browse(cr, uid, ids):
             context['active_id'] = object.id
             instance_pool = self.pool.get('checklist.task.instance')
-            instance_ids = instance_pool.search(cr, uid, [('checklist_task_id.checklist_id.model_id.model', '=', obj._name), ('res_id', '=', object.id)], context={'active_test': True})
+            instance_ids = instance_pool.search(cr, uid, [('checklist_task_id.checklist_id.model_id.model', '=', obj._name),
+                                                          ('res_id', '=', object.id)], context={'active_test': True})
             instances = instance_pool.browse(cr, uid, instance_ids)
             total_progress_rate = total_progress_rate_mandatory = 100
             total_progress_rates = {}
-            checklist_filling = []
             for instance in instances:
                 total_progress_rates.setdefault('total_progress_rate', 0.0)
                 total_progress_rates.setdefault('instances_count', 0)
@@ -328,7 +344,8 @@ class checklist(osv.osv):
             # Change object state if all mandatory tasks are checked
             if instances and instances[0].checklist_task_id.checklist_id.active_field:
                 if total_progress_rates.get('instances_count_mandatory', False):
-                    total_progress_rate_mandatory = total_progress_rates['total_progress_rate_mandatory'] / total_progress_rates['instances_count_mandatory']
+                    total_progress_rate_mandatory = total_progress_rates['total_progress_rate_mandatory']
+                    total_progress_rate_mandatory /= total_progress_rates['instances_count_mandatory']
                 fields.append('total_progress_rate_mandatory')
                 values.append("%.2f" % total_progress_rate_mandatory)
                 if object.total_progress_rate_mandatory != total_progress_rate_mandatory == 100:
@@ -338,26 +355,40 @@ class checklist(osv.osv):
                     if mandatory_action:
                         try:
                             self.pool.get('ir.actions.server').run(cr, uid, [mandatory_action.id], context)
-                            self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: checklist,%s' % (mandatory_action.id, uid, object.id, checklist.id))
+                            self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG,
+                                                      'Action: %s, User: %s, Resource: %s, Origin: checklist, %s'
+                                                      % (mandatory_action.id, uid, object.id, checklist.id))
                         except Exception, e:
                             stack = traceback.format_exc()
-                            self.pool.get('checklist.exception').create(cr, uid, {'checklist_id': checklist.id, 'exception_type': 'action', 'res_id': object.id, 'action_id': mandatory_action.id, 'exception': e, 'stack': stack})
-                            self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: checklist,%s, Exception: %s' % (mandatory_action.id, uid, object.id, checklist.id, tools.ustr(e)))
+                            self.pool.get('checklist.exception').create(cr, uid, {'checklist_id': checklist.id,
+                                                                                  'exception_type': 'action', 'res_id': object.id,
+                                                                                  'action_id': mandatory_action.id, 'exception': e,
+                                                                                  'stack': stack})
+                            self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR,
+                                                      'Action: %s, User: %s, Resource: %s, Origin: checklist, %s, Exception: %s'
+                                                      % (mandatory_action.id, uid, object.id, checklist.id, tools.ustr(e)))
                             continue
-            cr.execute("UPDATE %s SET (%s) = (%s) WHERE id = %s" % (obj._table, ','.join(fields), ','.join(values), object.id))
+            cr.execute("UPDATE %s SET (%s) = (%s) WHERE id = %s" % (obj._table, ', '.join(fields), ', '.join(values), object.id))
             # Execute action if total_progress_rate becomes equals to 100%
             if instances and instances[0].checklist_task_id.checklist_id.action_id and object.total_progress_rate != total_progress_rate == 100:
                 action = checklist.action_id
                 try:
                     self.pool.get('ir.actions.server').run(cr, uid, [action.id], context)
-                    self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: checklist,%s' % (action.id, uid, object.id, checklist.id))
+                    self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG,
+                                              'Action: %s, User: %s, Resource: %s, Origin: checklist, %s'
+                                              % (action.id, uid, object.id, checklist.id))
                 except Exception, e:
                     stack = traceback.format_exc()
-                    self.pool.get('checklist.exception').create(cr, uid, {'checklist_id': checklist.id, 'exception_type': 'action', 'res_id': object.id, 'action_id': action.id, 'exception': e, 'stack': stack})
-                    self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: checklist,%s, Exception: %s' % (action.id, uid, object.id, checklist.id, tools.ustr(e)))
+                    self.pool.get('checklist.exception').create(cr, uid, {'checklist_id': checklist.id, 'exception_type': 'action',
+                                                                          'res_id': object.id, 'action_id': action.id, 'exception': e,
+                                                                          'stack': stack})
+                    self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR,
+                                              'Action: %s, User: %s, Resource: %s, Origin: checklist, %s, Exception: %s'
+                                              % (action.id, uid, object.id, checklist.id, tools.ustr(e)))
                     continue
         return True
 checklist()
+
 
 class checklist_task_instance(osv.osv):
     _name = 'checklist.task.instance'
@@ -383,7 +414,9 @@ class checklist_task_instance(osv.osv):
                         res[instance.id]['field_ids_filled'].append(field.id)
                 except Exception, e:
                     stack = traceback.format_exc()
-                    self.pool.get('checklist.exception').create(cr, uid, {'checklist_task_id': instance.checklist_task_id.id, 'exception_type': 'field', 'res_id': instance.res_id, 'field_id': field.id, 'exception': e, 'stack': stack})
+                    self.pool.get('checklist.exception').create(cr, uid, {'checklist_task_id': instance.checklist_task_id.id,
+                                                                          'exception_type': 'field', 'res_id': instance.res_id,
+                                                                          'field_id': field.id, 'exception': e, 'stack': stack})
                     continue
         return res
 
@@ -406,8 +439,10 @@ class checklist_task_instance(osv.osv):
         'sequence': fields.function(_get_activity, method=True, type='integer', string='Priority', store={
             'checklist.task': (_get_checklist_task_instance_ids, ['sequence'], 10),
         }, multi='activity'),
-        'field_ids_to_fill': fields.function(_get_activity, method=True, type='one2many', relation='checklist.task.field', string='Fields to fill', store=False, multi='activity'),
-        'field_ids_filled': fields.function(_get_activity, method=True, type='one2many', relation='checklist.task.field', string='Filled fields', store=False, multi='activity'),
+        'field_ids_to_fill': fields.function(_get_activity, method=True, type='one2many', relation='checklist.task.field',
+                                             string='Fields to fill', store=False, multi='activity'),
+        'field_ids_filled': fields.function(_get_activity, method=True, type='one2many', relation='checklist.task.field',
+                                            string='Filled fields', store=False, multi='activity'),
         'progress_rate': fields.float('Progress Rate', digits=(16, 2)),
     }
 
@@ -424,11 +459,17 @@ class checklist_task_instance(osv.osv):
             action = checklist_task.action_id
             try:
                 self.pool.get('ir.actions.server').run(cr, uid, [action.id], context)
-                self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG, 'Action: %s, User: %s, Resource: %s, Origin: checklist.task,%s' % (action.id, uid, instance.res_id, checklist_task.id))
+                self.logger.notifyChannel('ir.actions.server', netsvc.LOG_DEBUG,
+                                          'Action: %s, User: %s, Resource: %s, Origin: checklist.task, %s'
+                                          % (action.id, uid, instance.res_id, checklist_task.id))
             except Exception, e:
                 stack = traceback.format_exc()
-                self.pool.get('checklist.exception').create(cr, uid, {'checklist_task_id': checklist_task.id, 'exception_type': 'action', 'res_id': instance.res_id, 'action_id': action.id, 'exception': e, 'stack': stack})
-                self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR, 'Action: %s, User: %s, Resource: %s, Origin: checklist.task,%s, Exception: %s' % (action.id, uid, instance.res_id, checklist_task.id, tools.ustr(e)))
+                self.pool.get('checklist.exception').create(cr, uid, {'checklist_task_id': checklist_task.id,
+                                                                      'exception_type': 'action', 'res_id': instance.res_id,
+                                                                      'action_id': action.id, 'exception': e, 'stack': stack})
+                self.logger.notifyChannel('ir.actions.server', netsvc.LOG_ERROR,
+                                          'Action: %s, User: %s, Resource: %s, Origin: checklist.task, %s, Exception: %s'
+                                          % (action.id, uid, instance.res_id, checklist_task.id, tools.ustr(e)))
                 continue
         return True
 
@@ -445,18 +486,19 @@ class checklist_task_instance(osv.osv):
         return False
 checklist_task_instance()
 
+
 class checklist_exception(osv.osv):
     _name = 'checklist.exception'
     _description = 'Checklist Exception'
     _rec_name = 'checklist_task_id'
-   
+
     _columns = {
         'checklist_id': fields.many2one('checklist', 'Checklist', select=True),
         'checklist_task_id': fields.many2one('checklist.task', 'Checklist Task', select=True),
         'exception_type': fields.selection([
             ('field', 'Field'),
             ('action', 'Action'),
-             ], 'Type', select=True),
+        ], 'Type', select=True),
         'res_id': fields.integer('Resource'),
         'action_id': fields.many2one('ir.actions.server', 'Action', select=True),
         'field_id': fields.many2one('checklist.task.field', 'Field', select=True),
@@ -472,6 +514,7 @@ native_orm_init = orm.orm.__init__
 native_orm_create = orm.orm.create
 native_orm_write = orm.orm.write
 native_orm_fields_view_get = orm.orm_template.fields_view_get
+
 
 def __init__object_and_checklist(self, cr):
     """Override __init__ method to update checklist cache"""
@@ -490,6 +533,7 @@ def __init__object_and_checklist(self, cr):
                 checklist_pool._update_models(cr, models)
     return result
 
+
 def create_object_and_checklist(self, cr, uid, vals, context=None):
     """Override create method to create checklist task instances if exist"""
     object_id = native_orm_create(self, cr, uid, vals, context)
@@ -498,9 +542,11 @@ def create_object_and_checklist(self, cr, uid, vals, context=None):
         checklist_id = checklist_pool.search_from_model(cr, uid, self._name, context)
         if checklist_id:
             for checklist_task_id in self.pool.get('checklist.task').search(cr, uid, [('checklist_id', '=', checklist_id)]):
-                self.pool.get('checklist.task.instance').create(cr, uid, {'checklist_task_id': checklist_task_id, 'res_id':object_id}, context=context)
+                self.pool.get('checklist.task.instance').create(cr, uid, {'checklist_task_id': checklist_task_id,
+                                                                          'res_id': object_id}, context=context)
             checklist_pool._compute_progress_rates(self, cr, uid, object_id)
     return object_id
+
 
 def write_object_and_checklist(self, cr, uid, ids, vals, context=None):
     """Override create method to create checklist task instances if exist"""
@@ -509,6 +555,7 @@ def write_object_and_checklist(self, cr, uid, ids, vals, context=None):
     if result and checklist_pool and checklist_pool.search_from_model(cr, uid, self._name, context):
         checklist_pool._compute_progress_rates(self, cr, uid, ids)
     return result
+
 
 def object_and_checklist_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
     """Override fields_view_get method to add checklist task instances if exist"""
@@ -528,14 +575,14 @@ def object_and_checklist_fields_view_get(self, cr, uid, view_id=None, view_type=
                 arch_list = []
                 fields_view['fields']['total_progress_rate'] = {'string': 'Progress Rate', 'type': 'float', 'context': {}}
                 if view_type == 'tree':
-                    arch_list.append(arch[:arch.rfind('<')])
+                    arch_list.append(arch[: arch.rfind('<')])
                     arch_list.append("""<field name="total_progress_rate" readonly="1" widget="progressbar"/>""")
                     arch_list.append(arch[arch.rfind('<'):])
                     fields_view['arch'] = ''.join(arch_list)
                 if view_type == 'form':
-                    arch_list.append(arch[:arch.find('>') + 1])
+                    arch_list.append(arch[: arch.find('>') + 1])
                     arch_list.append('<group colspan="3" col="4">')
-                    arch_list.append(arch[arch.find('>') + 1:arch.rfind('<')])
+                    arch_list.append(arch[arch.find('>') + 1: arch.rfind('<')])
                     arch_list.append('</group>')
                     arch_list.append('<group colspan="1">')
                     arch_list.append("""
@@ -548,7 +595,8 @@ def object_and_checklist_fields_view_get(self, cr, uid, view_id=None, view_type=
     """)
                     arch_list.append('</group>')
                     arch_list.append(arch[arch.rfind('<'):])
-                    fields_view['fields']['checklist_task_instance_ids'] = {'string': 'Tasks', 'type': 'one2many', 'relation': 'checklist.task.instance', 'context': {}}
+                    fields_view['fields']['checklist_task_instance_ids'] = {'string': 'Tasks', 'type': 'one2many',
+                                                                            'relation': 'checklist.task.instance', 'context': {}}
                 fields_view['arch'] = ''.join(arch_list or arch)
     return fields_view
 

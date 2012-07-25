@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,16 +15,16 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Smile Account Payment",
-    "version" : "0.1",
-    "category" : "Generic Modules/Accounting",
-    "author" : "Smile",
-    "website": 'http://www.smile.fr',
+    "name": "Smile Account Payment",
+    "version": "0.1",
+    "category": "Generic Modules/Accounting",
+    "author": "Smile",
+    "website": 'http: //www.smile.fr',
     "description": """Smile Account Payment
 
 Changes from editor module:
@@ -32,8 +32,8 @@ Changes from editor module:
 2. The validation of a payment order doesn't generate bank statement lines but validates vouchers
 3. The cancellation of a payment order cancel vouchers
     """,
-    "depends" : ['account_voucher'],
-    "init_xml" : [],
+    "depends": ['account_voucher'],
+    "init_xml": [],
     "update_xml": [
         "security/account_payment_security.xml",
         "security/ir.model.access.csv",
@@ -43,7 +43,7 @@ Changes from editor module:
         "view/account_invoice_view.xml",
         "view/res_company_view.xml",
     ],
-    "demo_xml" : [],
+    "demo_xml": [],
     "installable": True,
     "active": False,
 }

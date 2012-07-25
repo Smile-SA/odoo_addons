@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,12 +23,14 @@ import inspect
 
 from osv import osv, fields
 
+
 def get_original_method(method):
     while method.func_closure:
         if method.__name__ != 'delegate_method':
             break
         method = method.func_closure[0].cell_contents
     return method
+
 
 class IrModelMethods(osv.osv):
     _name = 'ir.model.methods'
@@ -47,6 +49,7 @@ class IrModelMethods(osv.osv):
         original_method = get_original_method(getattr(model_class, method.name))
         return ', '.join(inspect.getargspec(original_method)[0])
 IrModelMethods()
+
 
 class IrModel(osv.osv):
     _inherit = 'ir.model'

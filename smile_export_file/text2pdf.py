@@ -19,20 +19,20 @@
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
-    
+
  You should have received a copy of the GNU General Public License
  along with GNU Emacs; see the file COPYING.  If not, write to
  the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  Boston, MA 02111-1307, USA.
-    
+
  Commentary:
 
  Modification History:
 
- Mon Feb 17 12:20:13 2003 Changed option parsing algorithm to use
+ Mon Feb 17 12: 20: 13 2003 Changed option parsing algorithm to use
                           getopt. Use __main__ calling convention.
                           Bug in FF character fixed.
- Thu Apr 10 11:26:58 2003 Modified to use python style strings
+ Thu Apr 10 11: 26: 58 2003 Modified to use python style strings
                           and function objects.
  July 1 2003              Fixed help string errors. Added the
                           Creator property.
@@ -43,10 +43,10 @@
     Code:
 """
 
-# http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/189858
+# http: //aspn.activestate.com/ASPN/Cookbook/Python/Recipe/189858
 
-import sys, os
 import string
+import sys
 import time
 import getopt
 
@@ -94,7 +94,7 @@ ENCODING_STR = """\
 /edieresis /igrave /iacute /icircumflex /idieresis /eth
 /ntilde /ograve /oacute /ocircumflex /otilde /odieresis
 /divide /oslash /ugrave /uacute /ucircumflex /udieresis
-/yacute /thorn /ydieresis ]
+/yacute /thorn /ydieresis]
 >>
 """
 
@@ -105,12 +105,12 @@ PROG_HELP = """\
 
 %(progname)s  makes a 7-bit clean PDF file from any input file.
 
-It reads from a named file, and writes the PDF file to a file specified by 
+It reads from a named file, and writes the PDF file to a file specified by
 the user, otherwise to a file with '.pdf' appended to the input file.
 
 Author: Anand B Pillai.
 
-Copyright (C) 2003-2004 Free Software Foundation, http://www.fsf.org
+Copyright (C) 2003-2004 Free Software Foundation, http: //www.fsf.org
 
 There are various options as follows:
 
@@ -165,9 +165,9 @@ class pyText2Pdf:
         self._pageHt = 792
         # page wd
         self._pageWd = 612
-        # input file 
+        # input file
         self._ifile = ""
-        # output file 
+        # output file
         self._ofile = ""
         # default tab width
         self._tab = 4
@@ -210,9 +210,9 @@ class pyText2Pdf:
                 self._columns = 2
             elif o == '-L':
                 self._landscape = 1
-                    
+
             if o in ('-f', '-s', '-l', '-x', 'y', '-c', '-v', '-o', '-O'):
-                
+
                 if not listoftuples:
                     x += 1
                     try:
@@ -243,7 +243,7 @@ class pyText2Pdf:
                 elif o == '-v':
                     self._vertSpace = int(a)
                     if self._vertSpace < 1:
-                        self._vertSpace = 1       
+                        self._vertSpace = 1
                 elif o == '-l':
                     self._lines = int(a)
                     if self._lines < 1:
@@ -271,16 +271,14 @@ class pyText2Pdf:
 
             x += 1
 
-        
     def parseArgs(self):
-
         if len(sys.argv) == 1:
             self.ShowHelp()
 
         arguments = sys.argv[1:]
-        
-        optlist, args = getopt.getopt(arguments, 'hIF2Lf:A:s:v:l:c:t:x:y:o:')
-        
+
+        optlist, args = getopt.getopt(arguments, 'hIF2Lf: A: s: v: l: c: t: x: y: o: ')
+
         # input file is the first element in arg list
         # or last element in options list (in case of an error!)
         if len(args):
@@ -304,13 +302,11 @@ class pyText2Pdf:
         if self._IsoEnc:
             print 'Using ISO Latin Encoding...'
         print 'Using font', self._font[1:], ' size =', self._ptSize
-            
 
     def writestr(self, str):
         """ Write string to output file descriptor.
         All output operations go through this function.
         We keep the current file position also here"""
-
         # update current file position
         self._fpos += len(str)
         for x in range(0, len(str)):
@@ -323,10 +319,10 @@ class pyText2Pdf:
             return - 1
 
         return 0
-            
+
     def Convert(self):
         """ Perform the actual conversion """
-    
+
         if self._landscape:
             # swap page width & height
             tmp = self._pageHt
@@ -337,7 +333,7 @@ class pyText2Pdf:
             self._lines = (self._pageHt - 72) / self._vertSpace
         if self._lines < 1:
             self._lines = 1
-        
+
         try:
             self._ifs = open(self._ifile)
         except IOError, (strerror, errno):
@@ -370,7 +366,7 @@ class pyText2Pdf:
         ws = self.writestr
 
         t = time.localtime()
-        timestr = str(time.strftime("D:%Y%m%d%H%M%S", t))
+        timestr = str(time.strftime("D: %Y%m%d%H%M%S", t))
         ws("%PDF-1.4\n")
         self._locations[1] = self._fpos
         ws("1 0 obj\n")
@@ -382,14 +378,14 @@ class pyText2Pdf:
         ws(buf)
         buf = "".join(("/Producer (", self._appname, "(\\251 Free Software Foundation, 2004))\n"))
         ws(buf)
-        
+
         if title:
             buf = "".join(("/Title (", title, ")\n"))
             ws(buf)
 
         ws(">>\n")
         ws("endobj\n")
-    
+
         self._locations[2] = self._fpos
 
         ws("2 0 obj\n")
@@ -398,42 +394,42 @@ class pyText2Pdf:
         ws("/Pages 3 0 R\n")
         ws(">>\n")
         ws("endobj\n")
-        
+
         self._locations[4] = self._fpos
         ws("4 0 obj\n")
         ws("<<\n")
         buf = "".join(("/BaseFont ", str(self._font), " /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font >>\n"))
         ws(buf)
-    
+
         if self._IsoEnc:
             ws(ENCODING_STR)
-            
+
         ws(">>\n")
         ws("endobj\n")
-        
+
         self._locations[5] = self._fpos
-        
+
         ws("5 0 obj\n")
         ws("<<\n")
         ws("  /Font << /F1 4 0 R >>\n")
-        ws("  /ProcSet [ /PDF /Text ]\n")
+        ws("  /ProcSet [ /PDF /Text]\n")
         ws(">>\n")
         ws("endobj\n")
-    
+
     def StartPage(self):
         """ Start a page of data """
 
         ws = self.writestr
-        
+
         self._pageNo += 1
         self._curobj += 1
 
         self._locations.append(self._fpos)
         self._locations[self._curobj] = self._fpos
-    
+
         self._pageObs.append(self._curobj)
         self._pageObs[self._pageNo] = self._curobj
-        
+
         buf = "".join((str(self._curobj), " 0 obj\n"))
 
         ws(buf)
@@ -447,53 +443,53 @@ class pyText2Pdf:
         ws(buf)
         ws(">>\n")
         ws("endobj\n")
-        
+
         self._locations.append(self._fpos)
         self._locations[self._curobj] = self._fpos
 
         buf = "".join((str(self._curobj), " 0 obj\n"))
         ws(buf)
         ws("<<\n")
-        
+
         buf = "".join(("/Length ", str(self._curobj + 1), " 0 R\n"))
         ws(buf)
         ws(">>\n")
         ws("stream\n")
         strmPos = self._fpos
-    
-        ws("BT\n");
+
+        ws("BT\n")
         buf = "".join(("/F1 ", str(self._ptSize), " Tf\n"))
         ws(buf)
         buf = "".join(("1 0 0 1 50 ", str(self._pageHt - 40), " Tm\n"))
         ws(buf)
         buf = "".join((str(self._vertSpace), " TL\n"))
         ws(buf)
-    
+
         return strmPos
 
     def EndPage(self, streamStart):
         """End a page of data """
-        
+
         ws = self.writestr
 
         ws("ET\n")
         streamEnd = self._fpos
         ws("endstream\n")
         ws("endobj\n")
-    
+
         self._curobj += 1
         self._locations.append(self._fpos)
         self._locations[self._curobj] = self._fpos
-    
+
         buf = "".join((str(self._curobj), " 0 obj\n"))
         ws(buf)
         buf = "".join((str(streamEnd - streamStart), '\n'))
         ws(buf)
         ws('endobj\n')
-    
+
     def WritePages(self):
         """Write pages as PDF"""
-        
+
         ws = self.writestr
 
         beginstream = 0
@@ -501,23 +497,23 @@ class pyText2Pdf:
         ch, column = 0, 0
         padding, i = 0, 0
         atEOF = 0
-        
+
         while not atEOF:
             beginstream = self.StartPage()
             column = 1
-            
+
             while column <= self._columns:
                 column += 1
                 atFF = 0
                 atBOP = 0
                 lineNo = 0
-            
+
                 while lineNo < self._lines and not atFF and not atEOF:
-                    
+
                     lineNo += 1
                     ws("(")
                     charNo = 0
-                    
+
                     while charNo < self._cols:
                         charNo += 1
                         ch = self._ifs.read(1)
@@ -549,7 +545,7 @@ class pyText2Pdf:
                         atFF = 1
                     if lineNo == self._lines:
                         atBOP = 1
-                        
+
                     if atBOP:
                         pos = 0
                         ch = self._ifs.read(1)
@@ -587,16 +583,16 @@ class pyText2Pdf:
 
         ws = self.writestr
         self._locations[3] = self._fpos
-    
+
         ws("3 0 obj\n")
         ws("<<\n")
         ws("/Type /Pages\n")
         buf = "".join(("/Count ", str(self._pageNo), "\n"))
         ws(buf)
-        buf = "".join(("/MediaBox [ 0 0 ", str(self._pageWd), " ", str(self._pageHt), " ]\n"))
+        buf = "".join(("/MediaBox [ 0 0 ", str(self._pageWd), " ", str(self._pageHt), "]\n"))
         ws(buf)
         ws("/Kids [ ")
-    
+
         for i in range(1, self._pageNo + 1):
             buf = "".join((str(self._pageObs[i]), " 0 R "))
             ws(buf)
@@ -604,7 +600,7 @@ class pyText2Pdf:
         ws("]\n")
         ws(">>\n")
         ws("endobj\n")
-        
+
         xref = self._fpos
         ws("xref\n")
         buf = "".join(("0 ", str((self._curobj) + 1), "\n"))
@@ -624,19 +620,20 @@ class pyText2Pdf:
         ws("/Root 2 0 R\n")
         ws("/Info 1 0 R\n")
         ws(">>\n")
-        
+
         ws("startxref\n")
         buf = "".join((str(xref), "\n"))
         ws(buf)
         ws("%%EOF\n")
-        
+
     def ShowHelp(self):
         """Show help on this program"""
-        
+
         sys.exit(PROG_HELP % {'progname': self._progname})
 
+
 def main():
-    
+
     pdfclass = pyText2Pdf()
     pdfclass.parseArgs()
     pdfclass.Convert()

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,11 +15,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import osv, fields
+
 
 class AnalyticAxis(osv.osv):
     _inherit = 'account.analytic.axis'
@@ -27,7 +28,7 @@ class AnalyticAxis(osv.osv):
     _columns = {
         'is_budget_axis': fields.boolean('Budget Axis'),
     }
-    
+
     def _update_analytic_line_columns(self, cr, ids=None, context=None):
         super(AnalyticAxis, self)._update_analytic_line_columns(cr, ids, context)
 
@@ -47,16 +48,18 @@ class AnalyticAxis(osv.osv):
                         if column in line_obj._columns:
                             del line_obj._columns[column]
             elif axis.active and axis.is_budget_axis:
-                line_obj._columns[axis.column_label] = fields.many2one(axis.model, axis.name, \
-                    domain=axis.domain and eval(axis.domain) or [], required=axis.required)
+                line_obj._columns[axis.column_label] = fields.many2one(axis.model, axis.name,
+                                                                       domain=axis.domain and eval(axis.domain) or [],
+                                                                       required=axis.required)
                 if axis.field_ids:
                     for field in axis.field_ids:
                         column = '%s_%s' % (axis.column_label, field.id)
-                        line_obj._columns[column] = fields.related(axis.column_label, field.name, \
-                            type=field.ttype, relation=field.relation, store={
-                                # To store and to avoid the field re-computation
-                                'crossovered.budget.lines': (lambda self, cr, uid, ids, context=None: [], None, 10),
-                            })
+                        line_obj._columns[column] = fields.related(axis.column_label, field.name,
+                                                                   type=field.ttype, relation=field.relation,
+                                                                   store={
+                                                                       # To store and to avoid the field re-computation
+                                                                       'crossovered.budget.lines': (lambda self, cr, uid, ids, context=None: [], None, 10),
+                                                                   })
         line_obj._auto_init(cr, context)
         return True
 AnalyticAxis()

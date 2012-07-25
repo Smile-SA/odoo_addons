@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2012 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2012 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -43,7 +43,8 @@ class ResCountryHoliday(osv.osv):
         except ValueError, e:
             raise osv.except_osv(_('Format error !'), e)
         return bool(self.search(cr, uid, [('country_id', '=', country_id),
-                                          ('date', '=', date.strftime('%Y-%m-%d'))] , limit=1, context=context))
+                                          ('date', '=', date.strftime('%Y-%m-%d')),
+                                          ], limit=1, context=context))
 
     #Clear caches
     def create(self, cr, uid, vals, context=None):
@@ -59,6 +60,7 @@ class ResCountryHoliday(osv.osv):
         return super(ResCountryHoliday, self).write(cr, uid, ids, vals, context)
 
 ResCountryHoliday()
+
 
 class ResCountry(osv.osv):
     _inherit = 'res.country'
@@ -81,6 +83,7 @@ class ResCountry(osv.osv):
         return super(ResCountry, self).write(cr, uid, ids, vals, context)
 
 ResCountry()
+
 
 class ResCompanyDayOff(osv.osv):
     _name = 'res.company.dayoff'
@@ -120,6 +123,7 @@ class ResCompanyDayOff(osv.osv):
 
 ResCompanyDayOff()
 
+
 class ResCompany(osv.osv):
     _inherit = 'res.company'
 
@@ -139,7 +143,7 @@ class ResCompany(osv.osv):
     _defaults = {
         'sat': True,
         'sun': True,
-        }
+    }
 
     def _check_inherit(self, cr, uid, ids, context=None):
         for company in self.read(cr, uid, ids, ['inherit_dayoff', 'parent_id'], context):
@@ -151,7 +155,7 @@ class ResCompany(osv.osv):
 
     def is_working_day(self, cr, uid, company_id, date_str, context=None):
         """Returns True if the day is off, False otherwise.
-        A working day is :
+        A working day is:
             A weekday that is not off,
             A date that is not closed for the company
             A date that is not off for the country of the company"""
@@ -159,15 +163,14 @@ class ResCompany(osv.osv):
         if company['inherit_dayoff']:
             return self.is_working_day(cr, uid, company['parent_id'], date_str, context)
 
-        day_mapping = {0:'mon', 1:'tue', 2:'wed', 3:'thu', 4:'fri', 5:'sat', 6:'sun'}
+        day_mapping = {0: 'mon', 1: 'tue', 2: 'wed', 3: 'thu', 4: 'fri', 5: 'sat', 6: 'sun'}
         return bool(not company[day_mapping[datetime.strptime(date_str, '%Y-%m-%d').weekday()]]
-            and not self.pool.get('res.company.dayoff').is_day_off(cr, uid, date_str, company['id'])
-            and not self.pool.get('res.country.holiday').is_holiday(cr, uid, date_str, company['country_id']))
-
+                    and not self.pool.get('res.company.dayoff').is_day_off(cr, uid, date_str, company['id'])
+                    and not self.pool.get('res.country.holiday').is_holiday(cr, uid, date_str, company['country_id']))
 
     def get_num_working_days(self, cr, uid, company_id, start_date, end_date, context=None):
         """Returns the number of working days between two dates for the given company.
-        A working day is :
+        A working day is:
             A weekday that is not off,
             A date that is not closed for the company
             A date that is not off for the country of the company"""
@@ -206,6 +209,7 @@ class ResCompany(osv.osv):
         return super(ResCompany, self).write(cr, uid, ids, vals, context)
 
 ResCompany()
+
 
 class ResPartner(osv.osv):
     _inherit = 'res.partner'

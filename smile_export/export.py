@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,11 +15,12 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import threading, time
+import threading
+import time
 
 from osv import osv, fields
 import pooler
@@ -28,9 +29,11 @@ from tools.translate import _
 
 from smile_log.db_handler import SmileDBLogger
 
+
 def _get_exception_message(exception):
     msg = isinstance(exception, osv.except_osv) and exception.value or exception
     return tools.ustr(msg)
+
 
 class ir_model_export_template(osv.osv):
     _name = 'ir.model.export.template'
@@ -40,7 +43,7 @@ class ir_model_export_template(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
-        'filter_type': fields.selection([('domain', 'Domain'), ('method', 'Method')], string="Filter method", required=True,),
+        'filter_type': fields.selection([('domain', 'Domain'), ('method', 'Method')], string="Filter method", required=True, ),
         'domain': fields.char('Filter domain', size=256),
         'filter_method': fields.char('Filter method', size=64, help="signature: method(cr, uid, context)"),
         'limit': fields.integer('Limit'),
@@ -66,7 +69,7 @@ class ir_model_export_template(osv.osv):
         res_ids = context.get('resource_ids_to_export', [])
         model_obj = self.pool.get(template.model)
         if not model_obj:
-            raise osv.except_osv(_('Error'), _("Unknown object: %s") % (template.model,))
+            raise osv.except_osv(_('Error'), _("Unknown object: %s") % (template.model, ))
         if template.filter_type == 'domain':
             domain = eval(template.domain)
             if res_ids:
@@ -81,21 +84,24 @@ class ir_model_export_template(osv.osv):
         return res_ids
 
     def get_exported_res_ids(self, cr, uid, export_template_id, context):
-        export_line_ids = self.pool.get('ir.model.export.line').search(cr, uid, [('export_id.export_tmpl_id', '=', export_template_id)], context=context)
+        export_line_ids = self.pool.get('ir.model.export.line').search(cr, uid, [
+            ('export_id.export_tmpl_id', '=', export_template_id)
+        ], context=context)
         return [line['res_id'] for line in self.pool.get('ir.model.export.line').read(cr, uid, export_line_ids, ['res_id'], context)]
 
     def unlink_res_ids(self, cr, uid, ids, model, res_ids, context):
         unlink_line_ids = []
         for template in self.browse(cr, uid, ids, context):
             if template.model != model:
-                raise osv.except_osv(_('Error'), _("unlink_res_ids: model(%s) does not match template model (%s, %s)") % (model, template.id, template.model))
+                raise osv.except_osv(_('Error'), _("unlink_res_ids: model(%s) does not match template model (%s, %s)")
+                                     % (model, template.id, template.model))
             export_line_ids = self.pool.get('ir.model.export.line').search(cr, uid, [('export_id.export_tmpl_id', '=', template.id),
                                                                                      ('res_id', 'in', res_ids),
                                                                                      ], context=context)
             if export_line_ids:
                 real_res_ids = [line['res_id'] for line in self.pool.get('ir.model.export.line').read(cr, uid, export_line_ids, ['res_id'], context)]
                 logger = SmileDBLogger(cr.dbname, 'ir.model.export.template', template.id, uid)
-                logger.info('Unlinking model:%s, res_ids: %s - real_res_ids found: %s' % (model, res_ids, real_res_ids))
+                logger.info('Unlinking model: %s, res_ids: %s - real_res_ids found: %s' % (model, res_ids, real_res_ids))
                 self.pool.get('ir.model.export.line').unlink(cr, uid, export_line_ids, context)
                 unlink_line_ids.extend(export_line_ids)
         return unlink_line_ids
@@ -124,10 +130,10 @@ class ir_model_export_template(osv.osv):
             res_ids_list = []
             if export_template.limit:
                 i = 0
-                while(res_ids[i:i + export_template.limit]):
+                while(res_ids[i: i + export_template.limit]):
                     if export_template.max_offset and i == export_template.max_offset * export_template.limit:
                         break
-                    res_ids_list.append(res_ids[i:i + export_template.limit])
+                    res_ids_list.append(res_ids[i: i + export_template.limit])
                     i += export_template.limit
             else:
                 res_ids_list = [res_ids]
@@ -153,8 +159,8 @@ class ir_model_export_template(osv.osv):
                     'user_id': 1,
                     'model': self._name,
                     'function': 'create_export',
-                    'args': '(%d,)' % template.id,
-                    'numbercall':-1,
+                    'args': '(%d, )' % template.id,
+                    'numbercall': -1,
                 }
                 cron_id = self.pool.get('ir.cron').create(cr, uid, vals)
                 template.write({'cron_id': cron_id})
@@ -171,7 +177,7 @@ class ir_model_export_template(osv.osv):
                     'state': 'code',
                     'code': """context['bypass_domain'] = True
 context['resource_ids_to_export'] = context.get('active_ids', [])
-self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)""" % (template.id,),
+self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)""" % (template.id, ),
                 }
                 server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals, context)
                 vals2 = {
@@ -180,7 +186,7 @@ self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)"""
                     'model_id': template.model_id.id,
                     'model': template.model_id.model,
                     'key2': 'client_action_multi',
-                    'value': 'ir.actions.server,%d' % server_action_id,
+                    'value': 'ir.actions.server, %d' % server_action_id,
                 }
                 client_action_id = self.pool.get('ir.values').create(cr, uid, vals2, context)
                 template.write({'client_action_id': client_action_id, 'client_action_server_id': server_action_id, })
@@ -193,6 +199,7 @@ STATES = [
     ('exception', 'Exception'),
 ]
 
+
 def state_cleaner(method):
     def state_cleaner(self, cr, mode):
         res = method(self, cr, mode)
@@ -202,6 +209,7 @@ def state_cleaner(method):
                 self.get('ir.model.export').write(cr, 1, export_ids, {'state': 'exception'})
         return res
     return state_cleaner
+
 
 class ir_model_export(osv.osv):
     _name = 'ir.model.export'
@@ -227,7 +235,7 @@ class ir_model_export(osv.osv):
         'create_uid': fields.many2one('res.users', 'Creation User', readonly=True),
         'line_ids': fields.one2many('ir.model.export.line', 'export_id', 'Lines'),
         'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export')], readonly=True),
-        'state': fields.selection(STATES, "State", readonly=True, required=True,),
+        'state': fields.selection(STATES, "State", readonly=True, required=True, ),
         'exception': fields.text('Exception'),
     }
 
@@ -293,7 +301,7 @@ class ir_model_export(osv.osv):
                     if export_mode == 'same_thread_rollback_and_continue':
                         cr.execute("ROLLBACK TO SAVEPOINT smile_export")
                         logger.info("Export rollbacking")
-                    else: #same_thread_raise_error
+                    else:  # same_thread_raise_error
                         raise e
         return True
 
@@ -326,25 +334,25 @@ class ir_model_export(osv.osv):
                 self._run_actions(cr, uid, export, res_ids, context)
                 logger.time_info('Export done')
         except Exception, e:
-            logger.critical("Export failed: %s" % (_get_exception_message(e),))
+            logger.critical("Export failed: %s" % (_get_exception_message(e), ))
             self.write_new_cr(cr.dbname, uid, export_id, {'state': 'exception',
-                                                          'to_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                                                          'to_date': time.strftime('%Y-%m-%d %H: %M: %S'),
                                                           'exception': _get_exception_message(e), }, context)
             raise e
 
         try:
-            self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
+            self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H: %M: %S')}, context)
         except Exception, e:
             logger.error("Could not mark export %s as done: %s" % (export_id, _get_exception_message(e)))
             raise e
         return True
 ir_model_export()
 
+
 class ir_model_export_line(osv.osv):
     _name = 'ir.model.export.line'
     _description = 'Export Line'
     _rec_name = 'export_id'
-
 
     def _get_resource_label(self, cr, uid, ids, name, args, context=None):
         """ get the resource label using the name_get function of the exported model
@@ -382,6 +390,6 @@ class ir_model_export_line(osv.osv):
     _order = 'export_id desc'
 
     _defaults = {
-        'sum':1,
+        'sum': 1,
     }
 ir_model_export_line()

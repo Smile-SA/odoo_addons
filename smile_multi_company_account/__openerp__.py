@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,22 +15,22 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Smile Multi-company Accounting",
+    "name": "Smile Multi-company Accounting",
     "version": "0.1",
-    "author" : "Smile",
-    "website" : "http://www.smile.fr",
-    "category" : 'Generic Modules/Accounting',
-    "depends" : ["account", "smile_multi_company_base"],
+    "author": "Smile",
+    "website": "http: //www.smile.fr",
+    "category": 'Generic Modules/Accounting',
+    "depends": ["account", "smile_multi_company_base"],
     "description": """Override Invoice.action_move_create method to manage multi-company application
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
-    "init_xml" : [],
+    "init_xml": [],
     "update_xml": [
         'invoice_view.xml',
         'account_view.xml',

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,12 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import osv, fields
 from tools.translate import _
+
 
 class AnalyticForecastingWizard(osv.osv_memory):
     _name = 'account.analytic.forecasting.wizard'
@@ -77,8 +78,10 @@ AnalyticForecastingWizard()
 
 PERIOD_FIELDS = ['create_period_id', 'period_id']
 
+
 def _get_period_ids_for_dynamic_columns(context):
     return context[context['x_axis']]
+
 
 def _get_dynamic_columns(context):
     x_axis = context.get('x_axis', '')
@@ -87,16 +90,19 @@ def _get_dynamic_columns(context):
         dynamic_columns.extend([x_axis.replace('ids', str(period_id)) for period_id in _get_period_ids_for_dynamic_columns(context)])
     return dynamic_columns
 
+
 def _get_static_period_field(context):
-    x_axis = context['x_axis'][:-1]
+    x_axis = context['x_axis'][: -1]
     static_period = ''
     for field in PERIOD_FIELDS:
         if field != x_axis:
-            static_period = field 
+            static_period = field
     return static_period
+
 
 def _get_period_ids_to_restrict_domain(context):
     return context['%ss' % _get_static_period_field(context)]
+
 
 class AnalyticForecastingReport(osv.osv):
     _name = 'account.analytic.forecasting.report'
@@ -120,7 +126,7 @@ class AnalyticForecastingReport(osv.osv):
         args = args or []
         context = context or {}
         if context.get('x_axis'):
-            args.append((context['x_axis'][:-1], 'in', _get_period_ids_to_restrict_domain(context)))
+            args.append((context['x_axis'][: -1], 'in', _get_period_ids_to_restrict_domain(context)))
         return super(AnalyticForecastingReport, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
@@ -160,7 +166,7 @@ class AnalyticForecastingReport(osv.osv):
             for analytic_period_field in context['x_axis_period_fields']:
                 res[analytic_period_field] = {
                     'type': 'float',
-                    'string': analytic_period_names[int(analytic_period_field.replace(context['x_axis'][:-3], ''))],
+                    'string': analytic_period_names[int(analytic_period_field.replace(context['x_axis'][: -3], ''))],
                 }
         return res
 

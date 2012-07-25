@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,7 +25,6 @@ import datetime
 from ftplib import FTP
 import os.path
 import logging
-import os
 import pytz
 from random import random
 import tempfile
@@ -44,17 +43,19 @@ from tools.translate import _
 
 from text2pdf import pyText2Pdf
 
+
 def strip_accents(s):
     u = isinstance(s, unicode) and s or unicode(s, 'utf8')
     a = ''.join((c for c in unicodedata.normalize('NFKD', u) if unicodedata.category(c) != 'Mn'))
     return str(a)
 
+
 def is_a_datetime(str0, type='datetime'):
     if isinstance(str0, str):
         formats = {
-            'datetime': '%Y-%m-%d %H:%M:%S',
+            'datetime': '%Y-%m-%d %H: %M: %S',
             'date': '%Y-%m-%d',
-            'time': '%Y-%m-%d %H:%M:%S',
+            'time': '%Y-%m-%d %H: %M: %S',
         }
         try:
             if type == 'time':
@@ -64,6 +65,7 @@ def is_a_datetime(str0, type='datetime'):
         except Exception, e:
             pass
     return
+
 
 def format_lang(pool, cr, value, lang='en_US', digits=2, tz='America/New_York'):
     lang_obj = pool.get('res.lang')
@@ -84,12 +86,15 @@ def format_lang(pool, cr, value, lang='en_US', digits=2, tz='America/New_York'):
         return lang_obj.format(cr, 1, lang_id, '%.' + str(digits) + 'f', value)
     return value
 
+
 def _get_exception_message(exception):
     return isinstance(exception, osv.except_osv) and exception.value or exception
+
 
 def _render_unicode(template_src, localdict, encoding='UTF-8'):
     template = MakoTemplate(tools.ustr(template_src), output_encoding=encoding)
     return template.render_unicode(**localdict)
+
 
 def _text2pdf(string):
     tmpfilename = os.path.join(tempfile.gettempdir(), str(int(random() * 10 ** 9)))
@@ -104,6 +109,7 @@ def _text2pdf(string):
     os.remove(tmpfilename)
     os.remove(tmpfilename + '.pdf')
     return string
+
 
 class ir_model_export_file_template(osv.osv):
     _name = 'ir.model.export.file_template'
@@ -120,9 +126,9 @@ class ir_model_export_file_template(osv.osv):
             ('other', 'Other'),
         ], 'Type', required=True),
         'check_method': fields.char('Data Check Method', size=64, help="Indicate a method of the "
-            "remote model with a signature equals to (self, cr, uid, ids, context=None)"),
+                                    "remote model with a signature equals to (self, cr, uid, ids, context=None)"),
         'filename': fields.char('Filename', size=256, required=True, help="You can use a mako language "
-            "with the object and time variables"),
+                                "with the object and time variables"),
         'extension': fields.selection([
             ('pdf', '.pdf'),
             ('other', 'other'),
@@ -131,7 +137,7 @@ class ir_model_export_file_template(osv.osv):
         'encoding': fields.selection([
             ('UTF-8', 'UTF-8'),
             ('ISO-8859-15', 'ISO-8859-15'),
-            ('cp1252','Windows-CP1252'),
+            ('cp1252', 'Windows-CP1252'),
         ], 'Encoding', required=True),
         'exception_handling': fields.selection([
             ('cancel', 'Cancel export'),
@@ -151,12 +157,12 @@ class ir_model_export_file_template(osv.osv):
         'footer': fields.text('Footer'),
 
         'report_summary_template': fields.text('Report', help="Use mako language with the pool, cr, uid, object, "
-            "context, time, datetime, start_date, end_date, filename, records_number, exceptions_number and exceptions variables"),
+                                               "context, time, datetime, start_date, end_date, filename, records_number, exceptions_number and exceptions variables"),
 
         'create_attachment': fields.boolean('Create an attachement'),
         'upload_to_ftp_server': fields.boolean('Upload to FTP server'),
         'ftp_host': fields.char('Host', size=128, help="You can use a mako language "
-            "with the object and time variables"),
+                                "with the object and time variables"),
         'ftp_anonymous': fields.boolean('Anonymous'),
         'ftp_user': fields.char('User', size=64),
         'ftp_password': fields.char('Password', size=64),
@@ -241,7 +247,7 @@ class ir_model_export_file_template(osv.osv):
                             if column.min_width:
                                 column_value = getattr(column_value, column.justify)(column.min_width, tools.ustr(column.fillchar))
                             if column.max_width:
-                                column_value = column_value[:column.max_width]
+                                column_value = column_value[: column.max_width]
                         if not column.not_string and export_file.quotechar:
                             try:
                                 quotechar = export_file.quotechar and eval(export_file.quotechar) or ''
@@ -288,7 +294,7 @@ class ir_model_export_file_template(osv.osv):
                             content.append(getattr(self, content_render_method)(cr, uid, export_file, template_part, localdict))
                         except Exception, e:
                             if template_part == 'body' and export_file.exception_handling == 'continue':
-                                exceptions.append('%s - %s,%s: %s' % (template_part, export_file.model, line.id, _get_exception_message(e)))
+                                exceptions.append('%s - %s, %s: %s' % (template_part, export_file.model, line.id, _get_exception_message(e)))
                             else:
                                 raise Exception('%s - %s' % (template_part, _get_exception_message(e)))
         try:
@@ -309,11 +315,11 @@ class ir_model_export_file_template(osv.osv):
             'res_id': context.get('attach_export_id', 0),
         }
         self.pool.get('ir.attachment').create(cr, uid, vals, context)
-        
+
     def _save_in_local_dir(self, cr, uid, export_file, filename, file_content, context):
         directory = os.path.abspath(export_file.local_directory)
         if not os.path.exists(directory):
-            raise Exception('Directory %s does not exist or permission on it is not granted' % (directory,))
+            raise Exception('Directory %s does not exist or permission on it is not granted' % (directory, ))
         file = open(directory + '/' + filename, 'w')
         file.write(file_content)
         file.close()
@@ -349,7 +355,7 @@ class ir_model_export_file_template(osv.osv):
                     getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, file_content, context)
                 except osv.except_osv, e:
                     exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e) + str(e.value))
-                    raise Exception(exception_infos) 
+                    raise Exception(exception_infos)
                 except Exception, e:
                     exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e))
                     raise Exception(exception_infos)
@@ -377,7 +383,7 @@ class ir_model_export_file_template(osv.osv):
         attach_export_id = context.get('attach_export_id', False)
         summary = _render_unicode(export_file.report_summary_template, localdict)
         if exceptions and export_file.exception_logging == 'report':
-            summary += "Exceptions:\n%s" % '\n'.join(exceptions)
+            summary += "Exceptions: \n%s" % '\n'.join(exceptions)
         report_vals = {
             'name': "File Export Processing Report",
             'act_from': uid,
@@ -386,7 +392,7 @@ class ir_model_export_file_template(osv.osv):
         }
         report_id = self.pool.get('res.request').create(cr, uid, report_vals, context)
         if exceptions and export_file.exception_logging == 'file':
-            exceptions_filename = filename[:-filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
+            exceptions_filename = filename[: -filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
             exceptions_vals = {
                 'name':  exceptions_filename,
                 'type': 'binary',
@@ -407,10 +413,10 @@ class ir_model_export_file_template(osv.osv):
 
     def _get_filename(self, cr, uid, export_file, context):
         filename = _render_unicode(export_file.filename, {
-                        'object': context.get('attach_export_id', False) and self.pool.get('ir.model.export').browse(cr, uid, context['attach_export_id'], context),
-                        'localcontext': context,
-                        'time': time
-                    }, export_file.encoding)
+            'object': context.get('attach_export_id', False) and self.pool.get('ir.model.export').browse(cr, uid, context['attach_export_id'], context),
+            'localcontext': context,
+            'time': time
+        }, export_file.encoding)
         extension = '.pdf'
         if export_file.extension == 'other':
             extension = export_file.extension_custom
@@ -421,7 +427,7 @@ class ir_model_export_file_template(osv.osv):
 
     def generate_file(self, cr, uid, export_file_id, context=None):
         """Check and lay out data, save file and produce an export processing report"""
-        start_date = time.strftime('%Y-%m-%d %H:%M:%S')
+        start_date = time.strftime('%Y-%m-%d %H: %M: %S')
         context = context or {}
         if isinstance(export_file_id, list):
             export_file_id = export_file_id[0]
@@ -438,9 +444,9 @@ class ir_model_export_file_template(osv.osv):
                     if getattr(content_model, export_file.check_method)(cr, uid, content_id, context):
                         checked_content_ids.append(content_id)
                     else:
-                        exceptions.append('%s,%s: %s' % (export_file.model, content_id, 'Check failed'))
+                        exceptions.append('%s, %s: %s' % (export_file.model, content_id, 'Check failed'))
                 except Exception, e:
-                    exceptions.append('%s,%s: %s' % (export_file.model, content_id, _get_exception_message(e)))
+                    exceptions.append('%s, %s: %s' % (export_file.model, content_id, _get_exception_message(e)))
         if checked_content_ids:
             context['active_ids'] = checked_content_ids
             file_content, content_exceptions = self._lay_out_data(cr, uid, export_file, context)
@@ -451,7 +457,7 @@ class ir_model_export_file_template(osv.osv):
                     file_content = _text2pdf(file_content)
                 file_content = file_content.encode(export_file.encoding, 'replace')
                 self._save_file(cr, uid, export_file, filename, file_content, context)
-        end_date = time.strftime('%Y-%m-%d %H:%M:%S')
+        end_date = time.strftime('%Y-%m-%d %H: %M: %S')
         localdict = {
             'pool': self.pool,
             'cr': cr,
@@ -473,10 +479,11 @@ class ir_model_export_file_template(osv.osv):
         return self._save_execution_report(cr, uid, export_file, localdict)
 ir_model_export_file_template()
 
+
 class ir_model_export_file_template_column(osv.osv):
     _name = 'ir.model.export.file_template.column'
     _description = 'Export File Template Column'
-    
+
     def _has_validator(self, cr, uid, ids, name, arg, context=None):
         res = {}.fromkeys(ids, False)
         for column in self.read(cr, uid, ids, ['column_validator']):
@@ -489,14 +496,14 @@ class ir_model_export_file_template_column(osv.osv):
         'sequence': fields.integer('Sequence', required=True),
         'export_file_template_id': fields.many2one('ir.model.export.file_template', 'Export', required=True, ondelete='cascade'),
         'value': fields.text('Value',
-            help="Use mako language with the pool, cr, uid, object, line_number, localcontext and time variables"),
+                             help="Use mako language with the pool, cr, uid, object, line_number, localcontext and time variables"),
         'default_value': fields.char('Default value', size=64,
-            help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
+                                     help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'not_string': fields.boolean('Not a string'),
         'column_validator': fields.text('Column validator', help="Raise an exception if validator evaluates to False: use python language with the pool, cr, uid, object, localcontext and time variables"),
-        'has_validator': fields.function(_has_validator, method=True, type='boolean', string="Validator",),
+        'has_validator': fields.function(_has_validator, method=True, type='boolean', string="Validator", ),
         'exception_msg': fields.char('Exception Message', size=256, translate=True,
-            help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
+                                     help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'min_width': fields.integer('Min width'),
         'fillchar': fields.char('Fillchar', size=1),
         'justify': fields.selection([
@@ -505,6 +512,6 @@ class ir_model_export_file_template_column(osv.osv):
         ], 'Justify'),
         'max_width': fields.integer('Max width'),
     }
-    
+
     _order = 'sequence asc'
 ir_model_export_file_template_column()

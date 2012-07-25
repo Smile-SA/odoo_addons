@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,19 +15,29 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields, osv, orm
 from operator import __and__
+
+
+def ir_model_fields_access_decorator(fnct):
+    def new_fnct(self, cr, *args, **kwds):
+        result = getattr(osv.osv, fnct.__name__)(self, cr, *args, **kwds)
+        if result:
+            self._update_model_fields_access_cache(cr)
+        return result
+    return new_fnct
+
 
 class ir_model_fields_access(osv.osv):
     _name = 'ir.model.fields.access'
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
-        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)], select=True),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory', '=', False)], select=True),
         'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade'),
         'states': fields.char('States', size=64),
         'field_id': fields.many2one('ir.model.fields', 'Field'),
@@ -44,9 +54,9 @@ class ir_model_fields_access(osv.osv):
                 field_name = model_fields_access.field_id and model_fields_access.field_id.name or 'all_fields'
                 group_id = model_fields_access.group_id and model_fields_access.group_id.id or 0
                 self.model_fields_access_cache.setdefault(model, {}).setdefault(group_id, {}).setdefault(field_name, {})
-                states = model_fields_access.states and model_fields_access.states.replace(' ','').split(',') \
-                        or (self.pool.get(model)._columns.get('state', False) and dict(self.pool.get(model)._columns['state'].selection).keys()) \
-                        or 'none'
+                states = model_fields_access.states and model_fields_access.states.replace(' ', '').split(', ') \
+                    or (self.pool.get(model)._columns.get('state', False) and dict(self.pool.get(model)._columns['state'].selection).keys()) \
+                    or 'none'
                 for state in states:
                     state_perms = self.model_fields_access_cache[model][group_id][field_name].setdefault(state, {})
                     state_perms['readonly'] = __and__(not model_fields_access.perm_write, state_perms.get('readonly', True))
@@ -55,17 +65,9 @@ class ir_model_fields_access(osv.osv):
 
     def __init__(self, pool, cr):
         super(ir_model_fields_access, self).__init__(pool, cr)
-        cr.execute("SELECT * FROM pg_class WHERE relname=%s", (self._table,))
+        cr.execute("SELECT * FROM pg_class WHERE relname=%s", (self._table, ))
         if cr.rowcount:
             self._update_model_fields_access_cache(cr)
-
-    def ir_model_fields_access_decorator(fnct):
-        def new_fnct(self, cr, *args, **kwds):
-            result = getattr(osv.osv, fnct.__name__)(self, cr, *args, **kwds)
-            if result:
-                self._update_model_fields_access_cache(cr)
-            return result
-        return new_fnct
 
     @ir_model_fields_access_decorator
     def create(self, cr, uid, vals, context=None):
@@ -81,6 +83,7 @@ class ir_model_fields_access(osv.osv):
 ir_model_fields_access()
 
 native_orm_fields_get = orm.orm_template.fields_get
+
 
 def ir_model_fields_access_fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
     res = native_orm_fields_get(self, cr, uid, allfields, context, write_access)

@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,12 +15,13 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import fields, osv
 from tools.translate import _
+
 
 class account_invoicing_plan(osv.osv):
     _name = 'account.invoicing_plan'
@@ -44,8 +45,8 @@ class account_invoicing_plan(osv.osv):
             ('pre', 'Pre-invoicing'),
             ('post', 'Post-invoicing'),
         ], 'Invoicing mode', required=True),
-         
-        
+
+
     }
 
     _defaults = {
@@ -55,9 +56,10 @@ class account_invoicing_plan(osv.osv):
         'uop': lambda * a: 'months',
         'term': lambda * a: 'unlimited',
         'mode': lambda * a: 'post',
-       
+
     }
 account_invoicing_plan()
+
 
 class account_invoicing_plan_sub_line(osv.osv):
     _name = 'account.invoicing_plan.sub.line'
@@ -74,7 +76,7 @@ class account_invoicing_plan_sub_line(osv.osv):
             ('object.partner_id.id', 'Partner'),
             ('object.partner_id.parent_id.id', 'Parent'),
         ], 'Partner', required=True),
-       # 'invoicing_plan_line_id': fields.many2one('account.invoicing_plan.line', 'Invoicing plan modality', required=True), 
+       # 'invoicing_plan_line_id': fields.many2one('account.invoicing_plan.line', 'Invoicing plan modality', required=True),
     }
 
     _defaults = {
@@ -83,6 +85,7 @@ class account_invoicing_plan_sub_line(osv.osv):
     }
 
 account_invoicing_plan_sub_line()
+
 
 class account_invoicing_plan_line(osv.osv):
     _name = 'account.invoicing_plan.line'
@@ -112,7 +115,7 @@ class account_invoicing_plan_line(osv.osv):
 
     def _check_application_periods(self, cr, uid, ids):
         for line in self.browse(cr, uid, ids):
-            periods = line.application_periods.replace(' ', '').split(',')
+            periods = line.application_periods.replace(' ', '').split(', ')
             for period in periods:
                 if not isinstance(eval(period), int):
                     return False
@@ -138,6 +141,7 @@ class account_invoicing_plan_sub_line(osv.osv):
     }
 
 account_invoicing_plan_sub_line()
+
 
 class account_invoicing_plan(osv.osv):
     _inherit = 'account.invoicing_plan'

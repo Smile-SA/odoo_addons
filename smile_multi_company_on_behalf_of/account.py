@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2011 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,6 +24,7 @@ from osv import osv
 from smile_multi_company_account.account import FISCAL_POSITION_TYPES
 
 FISCAL_POSITION_TYPES.append(('behalf', 'Billing on behalf of'))
+
 
 class AccountMove(osv.osv):
     _inherit = "account.move"
@@ -44,7 +45,7 @@ class AccountMove(osv.osv):
                 for line in move.line_id:
                     account_id = fiscal_position_obj.map_account(cr, uid, fiscal_position, line.account_id.id, context)
                     lines.append((1, line.id, {'account_id': account_id, 'journal_id': journal_id}))
-                move.write({'journal_id': journal_id, 'line_id': lines}, context) # TODO: test it in order to check if pass constraints
+                move.write({'journal_id': journal_id, 'line_id': lines}, context)  # TODO: test it in order to check if pass constraints
                 # Create move for the destination company
                 new_move_ids = invoice.behalf_of_id.account_model_dest_id.generate(context=context)
                 for new_move in self.browse(cr, uid, new_move_ids, context):

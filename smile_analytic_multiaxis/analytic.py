@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,6 +27,7 @@ import tools
 from tools.func import wraps
 from tools.translate import _
 
+
 def analytic_decorator(original_method):
     @wraps(original_method)
     def wrapper(self, cr, *args, **kwargs):
@@ -37,6 +38,7 @@ def analytic_decorator(original_method):
                 axis_obj._update_analytic_line_columns(cr)
         return res
     return wrapper
+
 
 class AnalyticAxis(osv.osv):
     _name = 'account.analytic.axis'
@@ -100,16 +102,18 @@ class AnalyticAxis(osv.osv):
                     elif not axis.is_unicity_field and axis.column_label not in line_obj._non_unicity_fields:
                         line_obj._non_unicity_fields.append(axis.column_label)
                 ###
-                line_obj._columns[axis.column_label] = fields.many2one(axis.model, axis.name, \
-                    domain=axis.domain and eval(axis.domain) or [], required=axis.required, ondelete=axis.ondelete)
+                line_obj._columns[axis.column_label] = fields.many2one(axis.model, axis.name,
+                                                                       domain=axis.domain and eval(axis.domain) or [],
+                                                                       required=axis.required, ondelete=axis.ondelete)
                 if axis.field_ids:
                     for field in axis.field_ids:
                         column = '%s_%s' % (axis.column_label, field.id)
-                        line_obj._columns[column] = fields.related(axis.column_label, field.name, \
-                            type=field.ttype, relation=field.relation, store={
-                                # To store and to avoid the field re-computation
-                                'account.analytic.line': (lambda self, cr, uid, ids, context=None: [], None, 10),
-                            })
+                        line_obj._columns[column] = fields.related(axis.column_label,
+                                                                   field.name, type=field.ttype,
+                                                                   relation=field.relation, store={
+                                                                       # To store and to avoid the field re-computation
+                                                                       'account.analytic.line': (lambda self, cr, uid, ids, context=None: [], None, 10),
+                                                                   })
         line_obj._auto_init(cr, context)
 
         # To be compatible with smile_analytic_forecasting
@@ -120,8 +124,8 @@ class AnalyticAxis(osv.osv):
                 exists = cr.fetchone()
                 if exists[0]:
                     cr.execute('DROP INDEX account_analytic_line_multi_columns_index')
-                cr.execute('CREATE INDEX account_analytic_line_multi_columns_index '\
-                           'ON account_analytic_line (%s)' % ','.join(unicity_fields))
+                cr.execute('CREATE INDEX account_analytic_line_multi_columns_index '
+                           'ON account_analytic_line (%s)' % ', '.join(unicity_fields))
         ###
         return True
 
@@ -146,15 +150,18 @@ class AnalyticAxis(osv.osv):
         return super(AnalyticAxis, self).unlink(cr, uid, ids, context)
 AnalyticAxis()
 
+
 def concatenate_with_comma(string1, string2):
     if not string1 or not string2:
         return string1 or string2 or ''
     else:
-        return ','.join([unicode(string1), unicode(string2)])
+        return ', '.join([unicode(string1), unicode(string2)])
+
 
 def name_get(obj, cr, uid, res_id, context=None):
     res_name = obj.name_get(cr, uid, res_id, context)
     return res_name and res_name[0] or (0, _('Unknown'))
+
 
 class AnalyticDistribution(osv.osv):
     _name = 'account.analytic.distribution'
@@ -174,7 +181,7 @@ class AnalyticDistribution(osv.osv):
         'python_code': fields.text('Python code', help=""),
         'journal_ids': fields.many2many('account.analytic.journal', 'account_analytic_distribution_journal_rel',
                                         'distribution_id', 'journal_id', 'Journals'),
-        'distribution_type':fields.selection([
+        'distribution_type': fields.selection([
             ('global', 'Global'),
             ('specific', 'Specific'),
         ], 'Distribution Type', required=True),
@@ -220,7 +227,7 @@ class AnalyticDistribution(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         distribution_destinations = self._get_distribution_destinations(cr, uid)
-        return [distribution_destinations[distribution_id] for distribution_id in ids if distribution_id in distribution_destinations] # filter inactive distributions
+        return [distribution_destinations[distribution_id] for distribution_id in ids if distribution_id in distribution_destinations]  # filter inactive distributions
 
     def _get_distribution_period_ids(self, cr, uid, distribution_id, date, context=None):
         period_domain = [
@@ -318,6 +325,7 @@ class AnalyticDistribution(osv.osv):
         return res
 AnalyticDistribution()
 
+
 class AnalyticDistributionItem(osv.osv):
     _name = 'account.analytic.distribution.axis_src_item'
     _description = 'Analytic Distribution Source Axis Item'
@@ -326,7 +334,7 @@ class AnalyticDistributionItem(osv.osv):
         res = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for item in self.read(cr, uid, ids, ['res_id', 'res_model']):# Do not pass context to avoid to receive a many2one instead of integer
+        for item in self.read(cr, uid, ids, ['res_id', 'res_model']):  # Do not pass context to avoid to receive a many2one instead of integer
             item_name = self.pool.get(item['res_model']).name_get(cr, uid, [item['res_id']], context)
             res[item['id']] = item_name and item_name[0][1] or ''
         return res
@@ -368,6 +376,7 @@ class AnalyticDistributionItem(osv.osv):
         return res
 AnalyticDistributionItem()
 
+
 class AnalyticDistributionPeriod(osv.osv):
     _name = 'account.analytic.distribution.period'
     _description = 'Analytic Distribution Application Period'
@@ -399,6 +408,7 @@ class AnalyticDistributionPeriod(osv.osv):
     ]
 AnalyticDistributionPeriod()
 
+
 class AnalyticDistributionKey(osv.osv):
     _name = 'account.analytic.distribution.key'
     _description = 'Analytic Distribution Key'
@@ -408,7 +418,7 @@ class AnalyticDistributionKey(osv.osv):
         res = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for key in self.read(cr, uid, ids, ['axis_src_item_id', 'axis_src_model', 'axis_dest_item_id', 'axis_dest_model']):# Do not pass context to avoid to receive many2one instead of integer
+        for key in self.read(cr, uid, ids, ['axis_src_item_id', 'axis_src_model', 'axis_dest_item_id', 'axis_dest_model']):  # Do not pass context to avoid to receive many2one instead of integer
             axis_src_item_name = self.pool.get(key['axis_src_model']).name_get(cr, uid, [key['axis_src_item_id']], context)
             axis_dest_item_name = self.pool.get(key['axis_dest_model']).name_get(cr, uid, [key['axis_dest_item_id']], context)
             res[key['id']] = {
@@ -472,7 +482,7 @@ class AnalyticDistributionKey(osv.osv):
     def _deactivate_old_key(self, cr, uid, key_id, context=None):
         context = context or {}
         context['distribution_key_deactivation_in_progress'] = True
-        key = self.browse(cr, uid, key_id)#Do not pass context in order to have integer type fields
+        key = self.browse(cr, uid, key_id)  # Do not pass context in order to have integer type fields
         domain = [
             ('id', '!=', key.id),
             ('period_id', '=', key.period_id.id),
@@ -508,7 +518,7 @@ class AnalyticDistributionKey(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         old_key_ids = []
-        for key in self.browse(cr, uid, ids):#Do not pass context in order to have integer type fields
+        for key in self.browse(cr, uid, ids):  # Do not pass context in order to have integer type fields
             domain = [
                 ('id', '!=', key.id),
                 ('period_id', '=', key.period_id.id),
@@ -525,6 +535,7 @@ class AnalyticDistributionKey(osv.osv):
         return super(AnalyticDistributionKey, self).unlink(cr, uid, ids, context)
 AnalyticDistributionKey()
 
+
 class AnalyticJournal(osv.osv):
     _inherit = 'account.analytic.journal'
 
@@ -533,12 +544,13 @@ class AnalyticJournal(osv.osv):
     }
 AnalyticJournal()
 
+
 class AnalyticLine(osv.osv):
     _inherit = 'account.analytic.line'
 
     def __init__(self, pool, cr):
         super(AnalyticLine, self).__init__(pool, cr)
-        if self._columns.has_key('account_id'):
+        if 'account_id' in self._columns:
             self._columns['account_id'].required = False
         if not hasattr(self, '_non_unicity_fields'):
             self._non_unicity_fields = []
@@ -604,11 +616,13 @@ class AnalyticLine(osv.osv):
         return res_ids[0]
 AnalyticLine()
 
+
 def _is_distribution_destination(self, cr, uid):
     if self.pool.get('account.analytic.distribution') \
-    and self._name in self.pool.get('account.analytic.distribution')._get_distribution_destinations(cr, 1).keys():
+            and self._name in self.pool.get('account.analytic.distribution')._get_distribution_destinations(cr, 1).keys():
         return True
     return False
+
 
 def analytic_multiaxis_decorator(original_method):
     def check_deactivation(self, cr, uid, ids, *args, **kwargs):

@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2012 Smile (<http://www.smile.fr>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2012 Smile (<http: //www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -53,13 +53,15 @@ def load_native_resource_module():
             if fp:
                 fp.close()
 
+
 def get_memory():
     load_native_resource_module()
     if 'resource' in sys.modules:
         resource = sys.modules['resource']
-        return "%s kb" % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,)
+        return "%s kb" % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss, )
     else:
         return 'Unknown'
+
 
 def gc_collect(generation=None):
     if generation:
@@ -67,11 +69,14 @@ def gc_collect(generation=None):
     else:
         return gc.collect()
 
+
 def gc_garbage():
     return repr(gc.garbage)
 
+
 def get_count():
     return gc.get_count()
+
 
 def count_objects(limit=None, floor=5):
     """
@@ -84,12 +89,13 @@ def count_objects(limit=None, floor=5):
         objtype = repr(type(obj))
         d[objtype] = d.get(objtype, 0) + 1
     d = d.items()
-    d.sort(key=lambda i:i[1], reverse=True)
+    d.sort(key=lambda i: i[1], reverse=True)
     if limit:
-        d = d[:limit]
+        d = d[: limit]
     if floor:
         d = [(objtype, number) for objtype, number in d if number >= floor]
     return d
+
 
 def count_browse_records(limit=None, floor=5):
     """
@@ -103,9 +109,9 @@ def count_browse_records(limit=None, floor=5):
             objtype = obj._table_name
             d[objtype] = d.get(objtype, 0) + 1
     d = d.items()
-    d.sort(key=lambda i:i[1], reverse=True)
+    d.sort(key=lambda i: i[1], reverse=True)
     if limit:
-        d = d[:limit]
+        d = d[: limit]
     if floor:
         d = [(objtype, number) for objtype, number in d if number >= floor]
     return d
@@ -119,11 +125,13 @@ def thread_and_stack_generator():
             stack_list = format_stack(frame)
             yield (thread_, ''.join(stack_list))
         except KeyError:
-            pass # race prone, threads might finish..
+            pass  # race prone, threads might finish..
+
 
 def stacks_repr():
     return '\n'.join("{0}\n{1}".format(thread, stack)
                      for thread, stack in thread_and_stack_generator())
+
 
 def new_dispatch(self, method, auth, params):
     if method == 'get_memory':

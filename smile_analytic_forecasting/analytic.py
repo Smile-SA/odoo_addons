@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,12 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import osv, fields
 from tools.func import wraps
+
 
 def indexer(original_method):
     @wraps(original_method)
@@ -33,6 +34,7 @@ def indexer(original_method):
                 analytic_line_obj._update_index(cr, analytic_line_obj._unicity_fields)
         return res
     return wrapper
+
 
 class AnalyticLine(osv.osv):
     _inherit = 'account.analytic.line'
@@ -51,21 +53,21 @@ class AnalyticLine(osv.osv):
         cr.execute("SELECT count(0) FROM pg_class WHERE relname = 'account_analytic_line_multi_columns_index'")
         exists = cr.fetchone()
         if not exists:
-            cr.execute('CREATE INDEX account_analytic_line_multi_columns_index '\
-                       'ON account_analytic_line %s', (tuple(unicity_fields),))
+            cr.execute('CREATE INDEX account_analytic_line_multi_columns_index '
+                       'ON account_analytic_line %s', (tuple(unicity_fields), ))
 
     def _get_unicity_fields(self):
-        return [field for field in self._columns \
-            if self._columns[field]._type not in ('one2many', 'many2many') \
-            and field not in self._non_unicity_fields]
+        return [field for field in self._columns
+                if self._columns[field]._type not in ('one2many', 'many2many')
+                and field not in self._non_unicity_fields]
 
     def __init__(self, pool, cr):
         super(AnalyticLine, self).__init__(pool, cr)
         if not hasattr(self, '_non_unicity_fields'):
             self._non_unicity_fields = []
         self._non_unicity_fields.extend(['name', 'code', 'ref', 'date', 'create_period_id',
-          'amount', 'unit_amount', 'amount_currency', 'product_uom_id',
-          'currency_id', 'move_id', 'user_id', 'active', 'type'])
+                                         'amount', 'unit_amount', 'amount_currency', 'product_uom_id',
+                                         'currency_id', 'move_id', 'user_id', 'active', 'type'])
         setattr(osv.osv_pool, 'init_set', indexer(getattr(osv.osv_pool, 'init_set')))
 
     def _get_amount_currency(self, cr, uid, ids, name, arg, context=None):

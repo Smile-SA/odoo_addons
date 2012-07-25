@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,6 +29,7 @@ except ImportError:
 from osv import osv, fields
 from tools.func import wraps
 from tools.translate import _
+
 
 class AnalyticJournalView(osv.osv):
     _name = "account.analytic.journal.view"
@@ -74,13 +75,13 @@ class AnalyticJournalView(osv.osv):
         <newline/>
         <group expand="0" string="Group By..." groups="base.group_extended">
             % for column in groupable_columns:
-                <filter string="${column.name}" domain="[]" context="{'group_by':'${column.field_id.name}'}"/>
+                <filter string="${column.name}" domain="[]" context="{'group_by': '${column.field_id.name}'}"/>
             % endfor
         </group>
     % endif
 </search>
 """
-    
+
     def update_or_create_views(self, cr, uid, ids, context=None):
         view_obj = self.pool.get('ir.ui.view')
         if isinstance(ids, (int, long)):
@@ -108,6 +109,7 @@ class AnalyticJournalView(osv.osv):
         return res
 AnalyticJournalView()
 
+
 def journal_view_updater(original_method):
     @wraps(original_method)
     def wrapper(self, cr, uid, ids, *args, **kwargs):
@@ -121,6 +123,7 @@ def journal_view_updater(original_method):
             self.pool.get('account.analytic.journal.view').update_or_create_views(cr, uid, list(set(journal_ids)))
         return res
     return wrapper
+
 
 class AnalyticJournalColumn(osv.osv):
     _name = "account.analytic.journal.view.column"
@@ -163,6 +166,7 @@ class AnalyticJournalColumn(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         return super(AnalyticJournalColumn, self).unlink(cr, uid, ids, context)
 AnalyticJournalColumn()
+
 
 class AnalyticJournal(osv.osv):
     _inherit = "account.analytic.journal"
@@ -207,7 +211,7 @@ class AnalyticJournal(osv.osv):
             'name': journal.name,
             'res_model': 'account.analytic.line',
             'view_type': 'form',
-            'view_mode': 'tree,form',
+            'view_mode': 'tree, form',
             'view_id': journal.view_id and journal.view_id.tree_view_id and (journal.view_id.tree_view_id.id, 'default') or False,
             'search_view_id': journal.view_id and journal.view_id.search_view_id and (journal.view_id.search_view_id.id, 'default') or False,
             'domain': "[('journal_id', 'child_of', %s)]" % journal.id,
@@ -233,12 +237,13 @@ class AnalyticJournal(osv.osv):
             menu_id = self.pool.get('ir.ui.menu').create(cr, uid, {
                 'name': action_window_vals['name'],
                 'parent_id': parent_id,
-                'action': 'ir.actions.act_window,%s' % action_window_id,
+                'action': 'ir.actions.act_window, %s' % action_window_id,
                 'groups_id': [(6, 0, [group.id for group in journal.view_id.group_ids])],
             }, context)
             journal.write({'menu_id': menu_id}, context)
         return True
 AnalyticJournal()
+
 
 class AnalyticLine(osv.osv):
     _inherit = 'account.analytic.line'

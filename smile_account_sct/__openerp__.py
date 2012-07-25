@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,17 +15,17 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Smile Account SCT",
+    "name": "Smile Account SCT",
     "version": "0.1",
-    "author" : "Smile",
-    "website" : "http://www.smile.fr",
-    "category" : "Generic Modules/Accounting",
-    "depends" : [
+    "author": "Smile",
+    "website": "http: //www.smile.fr",
+    "category": "Generic Modules/Accounting",
+    "depends": [
         'base_iban',
         'smile_account_payment',
         'smile_export_file'
@@ -34,7 +34,7 @@
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
-    "init_xml" : [],
+    "init_xml": [],
     "update_xml": ['data/sct.xml'],
     'demo_xml': [],
     'installable': True,

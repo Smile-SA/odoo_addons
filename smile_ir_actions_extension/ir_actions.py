@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2010 Smile. All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -31,6 +31,7 @@ from osv import fields, osv
 import pooler
 import tools
 from tools.translate import _
+
 
 class actions_server_log(osv.osv):
     _name = 'ir.actions.server.log'
@@ -49,6 +50,7 @@ class actions_server_log(osv.osv):
 
     _order = "create_date desc"
 actions_server_log()
+
 
 class actions_server(osv.osv):
     _inherit = 'ir.actions.server'
@@ -74,9 +76,9 @@ class actions_server(osv.osv):
             if not isinstance(str0, str):
                 return False
             formats = {
-                'datetime': '%Y-%m-%d %H:%M:%S',
+                'datetime': '%Y-%m-%d %H: %M: %S',
                 'date': '%Y-%m-%d',
-                'time': '%Y-%m-%d %H:%M:%S',
+                'time': '%Y-%m-%d %H: %M: %S',
             }
             try:
                 if type == 'time':
@@ -112,8 +114,8 @@ class actions_server(osv.osv):
             obj_pool = self.pool.get(action.model_id.model)
             id = context.get('active_id')
             obj = obj_pool.browse(cr, uid, id, context)
-            exp = str(match.group()[2:-2]).strip()
-            localdict = {'object':obj, 'context': context, 'time':time, 'formatLang': formatLang}
+            exp = str(match.group()[2: -2]).strip()
+            localdict = {'object': obj, 'context': context, 'time': time, 'formatLang': formatLang}
             try:
                 exec "result=" + exp.replace('&nbsp;', ' ') in localdict
                 result = localdict['result']
@@ -156,7 +158,7 @@ class actions_server(osv.osv):
 
         if context is None:
             context = {}
- 
+
         if 'lang' not in context and 'context_tz' not in context:
             user = self.pool.get('res.users').read(cr, uid, uid, ['context_lang', 'context_tz'])
             if 'lang' not in context:
@@ -184,12 +186,12 @@ class actions_server(osv.osv):
                     obj_pool = self.pool.get(action.model_id.model)
                     obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
                     cxt = {
-                        'context':context,
+                        'context': context,
                         'object': obj,
-                        'time':time,
+                        'time': time,
                         'cr': cr,
-                        'pool' : self.pool,
-                        'uid' : uid,
+                        'pool': self.pool,
+                        'uid': uid,
                     }
                     expr = eval(str(action.condition), cxt)
                     if not expr:
@@ -208,7 +210,7 @@ class actions_server(osv.osv):
                             else:
                                 expr = exp.value
                             res[exp.col1.name] = expr
-        
+
                         if not action.write_id:
                             if not action.srcmodel_id:
                                 obj_pool = self.pool.get(action.model_id.model)
@@ -217,7 +219,7 @@ class actions_server(osv.osv):
                                 write_id = context.get('active_id')
                                 obj_pool = self.pool.get(action.srcmodel_id.model)
                                 obj_pool.write(cr, uid, [write_id], res)
-        
+
                         elif action.write_id:
                             obj_pool = self.pool.get(action.srcmodel_id.model)
                             rec = self.pool.get(action.model_id.model).browse(cr, uid, context.get('active_id'))
@@ -226,12 +228,12 @@ class actions_server(osv.osv):
                                 id = int(id)
                             except:
                                 raise osv.except_osv(_('Error'), _("Problem in configuration `Record Id` in Server Action!"))
-        
+
                             if type(id) != type(1):
                                 raise osv.except_osv(_('Error'), _("Problem in configuration `Record Id` in Server Action!"))
                             write_id = id
                             obj_pool.write(cr, uid, [write_id], res)
-        
+
                     if action.state == 'object_create':
                         res = {}
                         for exp in action.fields_lines:
@@ -243,14 +245,14 @@ class actions_server(osv.osv):
                             else:
                                 expr = exp.value
                             res[exp.col1.name] = expr
-        
+
                         obj_pool = None
                         res_id = False
                         obj_pool = self.pool.get(action.srcmodel_id.model)
                         res_id = obj_pool.create(cr, uid, res)
                         if action.record_id:
-                            self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
-        
+                            self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name: res_id})
+
                     if action.state == 'object_copy':
                         res = {}
                         for exp in action.fields_lines:
@@ -262,12 +264,12 @@ class actions_server(osv.osv):
                             else:
                                 expr = exp.value
                             res[exp.col1.name] = expr
-        
+
                         obj_pool = None
                         res_id = False
-        
-                        model = action.copy_object.split(',')[0]
-                        cid = action.copy_object.split(',')[1]
+
+                        model = action.copy_object.split(', ')[0]
+                        cid = action.copy_object.split(', ')[1]
                         obj_pool = self.pool.get(model)
                         res_id = obj_pool.copy(cr, uid, int(cid), res)
 
@@ -275,10 +277,10 @@ class actions_server(osv.osv):
                         result = self._run(cr, uid, [action.id], context)
 
                     if action.log:
-                        self.pool.get('ir.actions.server.log').write(cr, uid, log_id, {'end_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
-                    
+                        self.pool.get('ir.actions.server.log').write(cr, uid, log_id, {'end_date': time.strftime('%Y-%m-%d %H: %M: %S')}, context)
+
                     cr.commit()
-                    
+
                     # DIRTY IR.ACTIONS.SERVER:
                     # if result = False, no need to return the result,
                     # we can try to handle the next ir.actions.server
@@ -289,7 +291,7 @@ class actions_server(osv.osv):
                 except Exception, e:
                     stack = traceback.format_exc()
                     vals = {
-                        'end_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                        'end_date': time.strftime('%Y-%m-%d %H: %M: %S'),
                         'exception': tools.ustr(e),
                         'stack': tools.ustr(stack),
                     }

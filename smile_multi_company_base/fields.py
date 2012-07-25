@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,23 +15,25 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import orm
 from osv.fields import property as property_column
 
+
 def new_get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
     prop = obj.pool.get('ir.property')
-    vids = [obj._name + ',' + str(oid) for oid in  ids]
+    vids = [obj._name + ', ' + str(oid) for oid in ids]
 
-    # Change by Smile #
+    # Change by Smile  #
     domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
     ###################
     if vids:
         domain = [('res_id', 'in', vids)] + domain
     return prop.search(cr, uid, domain, context=context)
+
 
 def new_fnct_write(self, obj, cr, uid, id_, prop_name, id_val, obj_dest, context=None):
     if context is None:
@@ -46,7 +48,7 @@ def new_fnct_write(self, obj, cr, uid, id_, prop_name, id_val, obj_dest, context
 
     nids = self._get_by_id(obj, cr, uid, [prop_name], [id_], context)
     if nids:
-        cr.execute('DELETE FROM ir_property WHERE id IN %s', (tuple(nids),))
+        cr.execute('DELETE FROM ir_property WHERE id IN %s', (tuple(nids), ))
 
     default_val = self._get_default(obj, cr, uid, prop_name, context)
     property_create = False
@@ -62,12 +64,13 @@ def new_fnct_write(self, obj, cr, uid, id_, prop_name, id_val, obj_dest, context
         return prop.create(cr, uid, {
             'name': propdef.name,
             'value': id_val,
-            'res_id': obj._name + ',' + str(id_),
+            'res_id': obj._name + ', ' + str(id_),
             'company_id': cid,
             'fields_id': def_id,
             'type': self._type,
         }, context=context)
     return False
+
 
 def new_fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
     context = context or {}
@@ -89,7 +92,7 @@ def new_fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
         resources = obj.read(cr, uid, ids, ['company_id'], context, '_classic_write')
     for resource in resources:
         domain = global_domain[:]
-        domain.extend(['|', ('res_id', '=', '%s,%s' % (obj._name, resource['id'])), ('res_id', '=', False)])
+        domain.extend(['|', ('res_id', '=', '%s, %s' % (obj._name, resource['id'])), ('res_id', '=', False)])
         company_id = context.get('company_id', False)
         if not company_id and 'company_id' in obj._columns:
             company_id = resource['company_id']
@@ -115,7 +118,7 @@ def new_fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
     for prop in prop_name:
         for id_ in ids:
             if res[id_][prop] and hasattr(res[id_][prop], '_name'):
-                res[id_][prop] = (res[id_][prop].id , replaces[res[id_][prop]._name].get(res[id_][prop].id, False))
+                res[id_][prop] = (res[id_][prop].id, replaces[res[id_][prop]._name].get(res[id_][prop].id, False))
 
     return res
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Solucom (<http://solucom.fr>).
+#    Copyright (C) 2011-2012 Solucom (<http: //solucom.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,12 +26,14 @@ import time
 from osv import osv, fields
 from tools.translate import _
 
+
 class AnalyticInstaller(osv.osv_memory):
     _name = 'analytic.installer'
     _inherit = 'res.config.installer'
 
     _columns = {
-        'period': fields.selection([('none', 'None'), ('global', 'Common for all companies'), ('specific', 'Specific to this company')], 'Periods', required=True),
+        'period': fields.selection([('none', 'None'), ('global', 'Common for all companies'),
+                                    ('specific', 'Specific to this company')], 'Periods', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year'),
         'date_start': fields.date('Start Date'),
@@ -53,7 +55,7 @@ class AnalyticInstaller(osv.osv_memory):
         res = {'value': {'date_start': '', 'date_stop': ''}}
         if fiscalyear_id:
             fiscalyear = self.pool.get('account.fiscalyear').read(cr, uid, fiscalyear_id, ['date_start', 'date_stop'])
-            res['value'].update({'date_start': fiscalyear['date_start'], 'date_stop': fiscalyear['date_stop']}) 
+            res['value'].update({'date_start': fiscalyear['date_start'], 'date_stop': fiscalyear['date_stop']})
         return res
 
     def onchange_date_start(self, cr, uid, ids, date_start=False):

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2012 Smile (<http: //www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -28,9 +28,11 @@ import tools
 from tools.func import wraps
 from tools.safe_eval import safe_eval as eval
 
+
 def _get_exception_message(exception):
     msg = isinstance(exception, osv.except_osv) and exception.value or exception
     return tools.ustr(msg)
+
 
 def check_if_is_not_decorated(method):
     while method.func_closure:
@@ -38,6 +40,7 @@ def check_if_is_not_decorated(method):
             return False
         method = method.func_closure[0].cell_contents
     return True
+
 
 def launch_delegation_decorations(original_method):
     @wraps(original_method)
@@ -49,6 +52,7 @@ def launch_delegation_decorations(original_method):
                 delegation_tmpl_obj.decorate_delegated_methods(cr)
         return res
     return wrapper
+
 
 class DelegationTemplate(osv.osv):
     _name = 'delegation.template'
@@ -151,7 +155,7 @@ class DelegationTemplate(osv.osv):
                     'res_model': 'delegation.delegation',
                     'src_model': delegation_tmpl.model,
                     'view_type': 'form',
-                    'view_mode': 'tree,form',
+                    'view_mode': 'tree, form',
                     'target': 'new',
                 }
                 act_window_id = self.pool.get('ir.actions.act_window').create(cr, uid, act_window_vals, context)
@@ -161,12 +165,13 @@ class DelegationTemplate(osv.osv):
                     'model_id': delegation_tmpl.model_id.id,
                     'model': delegation_tmpl.model_id.model,
                     'key2': 'client_action_multi',
-                    'value': 'ir.actions.act_window,%d' % act_window_id,
+                    'value': 'ir.actions.act_window, %d' % act_window_id,
                 }
                 client_action_id = self.pool.get('ir.values').create(cr, uid, ir_value_vals, context)
                 delegation_tmpl.write({'client_action_id': client_action_id})
         return True
 DelegationTemplate()
+
 
 class Delegation(osv.osv):
     _name = 'delegation.delegation'
@@ -200,12 +205,12 @@ class Delegation(osv.osv):
     def get_delegation_ids(self, cr, uid, model, method):
         today = time.strftime('%Y-%m-%d')
         return self.search(cr, 1, [
-                ('model', '=', model),
-                ('method', '=', method),
-                ('delegate_ids', 'in', uid),
-                '|', ('date_start', '=', False), ('date_start', '<=', today),
-                '|', ('date_stop', '=', False), ('date_stop', '>=', today),
-            ], context={'active_test': True})
+            ('model', '=', model),
+            ('method', '=', method),
+            ('delegate_ids', 'in', uid),
+            '|', ('date_start', '=', False), ('date_start', '<=', today),
+            '|', ('date_stop', '=', False), ('date_stop', '>=', today),
+        ], context={'active_test': True})
 
     def cache_restart(self, cr):
         self.get_delegation_ids.clear_cache(cr.dbname)
@@ -236,6 +241,7 @@ class Delegation(osv.osv):
         }, context)
 Delegation()
 
+
 class DelegationHistory(osv.osv):
     _name = 'delegation.history'
     _description = 'Delegation History'
@@ -250,6 +256,7 @@ class DelegationHistory(osv.osv):
     }
 DelegationHistory()
 
+
 def _get_kwargs(method, args, kwargs):
     kwargs = kwargs or {}
     argument_names = inspect.getargspec(method)[0]
@@ -261,6 +268,7 @@ def _get_kwargs(method, args, kwargs):
         kwargs['context'] = {}
     return kwargs
 
+
 def _get_openerp_classic_args(kwargs):
     obj = kwargs.get('self') or kwargs.get('obj')
     cr = kwargs.get('cr') or kwargs.get('cursor')
@@ -268,15 +276,17 @@ def _get_openerp_classic_args(kwargs):
     ids = kwargs.get('ids') or kwargs.get('id')
     return obj, cr, uid, ids, kwargs.get('context', {})
 
+
 def _udpate_user_field(obj, method, cr, uid, ids, vals, context, kwargs):
     method = kwargs['method']
     if method in ('create', 'write'):
         if 'vals' in kwargs:
             kwargs['vals'].update(vals)
         else:
-            logging.getLogger('smile_delegation').warning("vals not found in %s,%s" % (obj._name, method))
+            logging.getLogger('smile_delegation').warning("vals not found in %s, %s" % (obj._name, method))
     elif ids and method != 'unlink':
         obj.write(cr, uid, ids, vals, context)
+
 
 def delegate(kwargs):
     obj, cr, uid, ids, context = _get_openerp_classic_args(kwargs)
@@ -293,6 +303,7 @@ def delegate(kwargs):
             kwargs['uid' in kwargs and 'uid' or 'user'] = delegation_obj.get_delegator_id(cr, uid, delegation.id)
             break
     return kwargs
+
 
 def delegation_decorator(original_method):
     def delegate_method(*args, **kwargs):
