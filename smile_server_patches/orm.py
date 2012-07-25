@@ -38,7 +38,7 @@ def new_store_set_values(self, cr, uid, ids, fields, context):
         for r in res:
             if r[1]:
                 field_dict.setdefault(r[0], [])
-                res_date = time.strptime((r[1])[: 19], '%Y-%m-%d %H: %M: %S')
+                res_date = time.strptime((r[1])[: 19], '%Y-%m-%d %H:%M:%s')
                 write_date = datetime.datetime.fromtimestamp(time.mktime(res_date))
                 for i in self.pool._store_function.get(self._name, []):
                     if i[5]:

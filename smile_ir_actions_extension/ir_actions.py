@@ -76,9 +76,9 @@ class actions_server(osv.osv):
             if not isinstance(str0, str):
                 return False
             formats = {
-                'datetime': '%Y-%m-%d %H: %M: %S',
+                'datetime': '%Y-%m-%d %H:%M:%s',
                 'date': '%Y-%m-%d',
-                'time': '%Y-%m-%d %H: %M: %S',
+                'time': '%Y-%m-%d %H:%M:%s',
             }
             try:
                 if type == 'time':
@@ -277,7 +277,7 @@ class actions_server(osv.osv):
                         result = self._run(cr, uid, [action.id], context)
 
                     if action.log:
-                        self.pool.get('ir.actions.server.log').write(cr, uid, log_id, {'end_date': time.strftime('%Y-%m-%d %H: %M: %S')}, context)
+                        self.pool.get('ir.actions.server.log').write(cr, uid, log_id, {'end_date': time.strftime('%Y-%m-%d %H:%M:%s')}, context)
 
                     cr.commit()
 
@@ -291,7 +291,7 @@ class actions_server(osv.osv):
                 except Exception, e:
                     stack = traceback.format_exc()
                     vals = {
-                        'end_date': time.strftime('%Y-%m-%d %H: %M: %S'),
+                        'end_date': time.strftime('%Y-%m-%d %H:%M:%s'),
                         'exception': tools.ustr(e),
                         'stack': tools.ustr(stack),
                     }

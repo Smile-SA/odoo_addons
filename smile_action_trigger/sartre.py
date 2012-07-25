@@ -353,7 +353,7 @@ class SartreTrigger(osv.osv):
         'on_date_range_operand': 'after',
         'interval_number': 1,
         'interval_type': 'hours',
-        'nextcall': time.strftime("%Y-%m-%d %H: %M: %S"),
+        'nextcall': time.strftime("%Y-%m-%d %H:%M:%s"),
         'exception_handling': 'continue',
         'exception_warning': 'custom',
         'exception_message': 'Action failed. Please, contact your administrator.',
@@ -465,7 +465,7 @@ class SartreTrigger(osv.osv):
     def _add_trigger_date_filter(self, cr, uid, trigger, context):
         """Build trigger date filter"""
         if trigger.on_date:
-            datetime_format = '%Y-%m-%d %H: %M: %S'
+            datetime_format = '%Y-%m-%d %H:%M:%s'
             now = datetime.now()
             interval_number = trigger.on_date_range
             interval_type = str(trigger.on_date_range_type)
@@ -547,11 +547,11 @@ class SartreTrigger(osv.osv):
     def _build_domain_expression(self, cr, uid, trigger, context):
         """Build domain expression"""
         # Define domain from domain_force
-        domain = trigger.domain_force and eval(trigger.domain_force.replace('%today', time.strftime('%Y-%m-%d %H: %M: %S'))) or []
+        domain = trigger.domain_force and eval(trigger.domain_force.replace('%today', time.strftime('%Y-%m-%d %H:%M:%s'))) or []
         # Add filters one by one if domain_force is empty
         if not domain:
             for filter_ in trigger.filter_ids:
-                domain.extend(eval(filter_.domain.replace('%today', time.strftime('%Y-%m-%d %H: %M: %S'))))
+                domain.extend(eval(filter_.domain.replace('%today', time.strftime('%Y-%m-%d %H:%M:%s'))))
         # Add general filters
         domain.extend(filter(bool, [getattr(self, filter_name)(cr, uid, trigger, context) for filter_name in ('_add_trigger_date_filter', '_add_max_executions_filter')]))
         # Update filters based on old or dynamic values or Python operators
@@ -705,7 +705,7 @@ class SartreTrigger(osv.osv):
     def check_triggers(self, cr, uid, context=None):
         """Call the scheduler to check date based trigger triggers"""
         # Search triggers to execute
-        trigger_ids = self.search(cr, uid, [('active', '=', True), ('on_date', '=', True), ('nextcall', '<=', time.strftime("%Y-%m-%d %H: %M: %S"))])
+        trigger_ids = self.search(cr, uid, [('active', '=', True), ('on_date', '=', True), ('nextcall', '<=', time.strftime("%Y-%m-%d %H:%M:%s"))])
         if trigger_ids:
             # Launch triggers execution
             context = context or {}

@@ -27,7 +27,7 @@ def write_infos_to_file(filename, data_type='objects', limit=0, floor=10):
     else:
         mem_usage = int(mem_usage[: -3])
     objects_count.insert(0, ('memory', mem_usage))
-    point = (time.strftime('%Y-%m-%d %H: %M: %S'), objects_count)
+    point = (time.strftime('%Y-%m-%d %H:%M:%s'), objects_count)
     with open(filename, 'a') as log:
         log.write(repr(point) + '\n')
 

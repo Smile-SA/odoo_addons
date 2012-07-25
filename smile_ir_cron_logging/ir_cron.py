@@ -68,10 +68,10 @@ End Time: %s
                 cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
                 for job in cr.dictfetchall():
                     # Added by Smile
-                    start_time = time.strftime('%Y-%m-%d %H: %M: %S')
+                    start_time = time.strftime('%Y-%m-%d %H:%M:%s')
                     try:
                     ##
-                        nextcall = datetime.strptime(job['nextcall'], '%Y-%m-%d %H: %M: %S')
+                        nextcall = datetime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%s')
                         numbercall = job['numbercall']
 
                         ok = False
@@ -87,12 +87,12 @@ End Time: %s
                         if not numbercall:
                             addsql = ', active=False'
                         cr.execute("update ir_cron set nextcall=%s, numbercall=%s" + addsql + " where id=%s",
-                                   (nextcall.strftime('%Y-%m-%d %H: %M: %S'), numbercall, job['id']))
+                                   (nextcall.strftime('%Y-%m-%d %H:%M:%s'), numbercall, job['id']))
                     # Added by Smile
                         report += "No errors"
                     except Exception, e:
                         report += "Exception: \n" + tools.ustr(e)
-                    end_time = time.strftime('%Y-%m-%d %H: %M: %S')
+                    end_time = time.strftime('%Y-%m-%d %H:%M:%s')
                     self.write(cr, 1, job['id'], {'report': report % (start_time, end_time)})
                     ##
                     cr.commit()
@@ -100,7 +100,7 @@ End Time: %s
             cr.execute('select min(nextcall) as min_next_call from ir_cron where numbercall<>0 and active')
             next_call = cr.dictfetchone()['min_next_call']
             if next_call:
-                next_call = time.mktime(time.strptime(next_call, '%Y-%m-%d %H: %M: %S'))
+                next_call = time.mktime(time.strptime(next_call, '%Y-%m-%d %H:%M:%s'))
             else:
                 next_call = int(time.time()) + 3600   # if do not find active cron job from database, it will run again after 1 day
 
