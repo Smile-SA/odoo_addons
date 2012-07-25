@@ -216,7 +216,7 @@ class AnalyticLine(osv.osv):
     def create(self, cr, uid, vals, context=None):
         vals = vals or {}
         if not vals.get('period_id'):
-            vals['period_id'] = self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, vals['date'],
+            vals['period_id'] = self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, vals.get('date', time.strftime('%Y-%m-%d')),
                                                                                                  vals.get('company_id', False), context)
         return super(AnalyticLine, self).create(cr, uid, vals, context)
 
