@@ -53,9 +53,9 @@ def strip_accents(s):
 def is_a_datetime(str0, type='datetime'):
     if isinstance(str0, str):
         formats = {
-            'datetime': '%Y-%m-%d %H:%M:%s',
+            'datetime': '%Y-%m-%d %H:%M:%S',
             'date': '%Y-%m-%d',
-            'time': '%Y-%m-%d %H:%M:%s',
+            'time': '%Y-%m-%d %H:%M:%S',
         }
         try:
             if type == 'time':
@@ -427,7 +427,7 @@ class ir_model_export_file_template(osv.osv):
 
     def generate_file(self, cr, uid, export_file_id, context=None):
         """Check and lay out data, save file and produce an export processing report"""
-        start_date = time.strftime('%Y-%m-%d %H:%M:%s')
+        start_date = time.strftime('%Y-%m-%d %H:%M:%S')
         context = context or {}
         if isinstance(export_file_id, list):
             export_file_id = export_file_id[0]
@@ -457,7 +457,7 @@ class ir_model_export_file_template(osv.osv):
                     file_content = _text2pdf(file_content)
                 file_content = file_content.encode(export_file.encoding, 'replace')
                 self._save_file(cr, uid, export_file, filename, file_content, context)
-        end_date = time.strftime('%Y-%m-%d %H:%M:%s')
+        end_date = time.strftime('%Y-%m-%d %H:%M:%S')
         localdict = {
             'pool': self.pool,
             'cr': cr,

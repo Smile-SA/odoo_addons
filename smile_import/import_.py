@@ -73,7 +73,7 @@ class IrModelImportTemplate(osv.osv):
                 'test_mode': test_mode,
                 'pid': logger.pid,
                 'state': 'running',
-                'from_date': time.strftime('%Y-%m-%d %H:%M:%s'),
+                'from_date': time.strftime('%Y-%m-%d %H:%M:%S'),
             }, context)
 
             if import_mode == 'new_thread':
@@ -216,7 +216,7 @@ class IrModelImport(osv.osv):
                 cr.execute("ROLLBACK TO SAVEPOINT smile_import_test_mode")
                 logger.info("Import rollbacking: %s" % (import_id, ))
         try:
-            self.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%s')}, context)
+            self.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
             logger.error("Could not mark import %s as done: %s" % (import_id, tools.ustr(repr(e))))
             raise e

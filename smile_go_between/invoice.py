@@ -93,7 +93,7 @@ class account_invoice(osv.osv):
                     'product_id': line['product_id'],
                     'product_uom': line['uos_id'],
                     'price_unit': price,
-                    'date_planned': time.strftime('%Y-%m-%d %H:%M:%s'),
+                    'date_planned': time.strftime('%Y-%m-%d %H:%M:%S'),
                 }
 
                 product = prod_obj.browse(cr, uid, line['product_id'])

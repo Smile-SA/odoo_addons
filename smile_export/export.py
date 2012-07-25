@@ -336,12 +336,12 @@ class ir_model_export(osv.osv):
         except Exception, e:
             logger.critical("Export failed: %s" % (_get_exception_message(e), ))
             self.write_new_cr(cr.dbname, uid, export_id, {'state': 'exception',
-                                                          'to_date': time.strftime('%Y-%m-%d %H:%M:%s'),
+                                                          'to_date': time.strftime('%Y-%m-%d %H:%M:%S'),
                                                           'exception': _get_exception_message(e), }, context)
             raise e
 
         try:
-            self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%s')}, context)
+            self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
             logger.error("Could not mark export %s as done: %s" % (export_id, _get_exception_message(e)))
             raise e

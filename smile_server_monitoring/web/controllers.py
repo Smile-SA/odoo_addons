@@ -60,7 +60,7 @@ def status(self):
     except Exception, e:
         msg += "KO<br/>Exception: %s" % _get_exception_message(e)
     finally:
-        msg += '<br/>%s' % time.strftime('%Y-%m-%d %H:%M:%s %Z')
+        msg += '<br/>%s' % time.strftime('%Y-%m-%d %H:%M:%S %Z')
         return msg
 
 Root.status = status

@@ -51,7 +51,7 @@ class User(osv.osv):
         self._duration = 3600  # equals to cookie['max-age'] = 3600 [WebHome]/addons/openerp/controllers/utils.py line 172 secured.wrapper
 
     def get_expiry_date(self):
-        return (datetime.now() + timedelta(seconds=self._duration)).strftime('%Y-%m-%d %H:%M:%s')
+        return (datetime.now() + timedelta(seconds=self._duration)).strftime('%Y-%m-%d %H:%M:%S')
 
     def sso_login(self, db, login, length=64, context=None):
         password = generate_random_password(length)
