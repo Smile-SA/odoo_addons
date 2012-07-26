@@ -23,28 +23,41 @@ from osv import orm
 from osv.fields import property as property_column
 
 
-def new_get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
+def new_get_defaults(self, obj, cr, uid, prop_name, context=None):
     prop = obj.pool.get('ir.property')
-    vids = [obj._name + ', ' + str(oid) for oid in ids]
+    domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name), ('res_id', '=', False), ('company_id', '=', False)]
+    ids = prop.search(cr, uid, domain, context=context)
+    replaces = {}
+    default_value = {}.fromkeys(prop_name, False)
+    for prop_rec in prop.browse(cr, uid, ids, context=context):
+        if default_value.get(prop_rec.fields_id.name, False):
+            continue
+        value = prop.get_by_record(cr, uid, prop_rec, context=context) or False
+        default_value[prop_rec.fields_id.name] = value
+        if value and (prop_rec.type == 'many2one'):
+            replaces.setdefault(value._name, {})
+            replaces[value._name][value.id] = True
+    return default_value, replaces
 
-    # Change by Smile  #
-    domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
-    ###################
+
+def new_get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
+    property_obj = obj.pool.get('ir.property')
+    vids = [obj._name + ', ' + str(oid) for oid in ids]
+    domain = property_obj._get_domain(cr, uid, prop_name, obj._name, context)
     if vids:
         domain = [('res_id', 'in', vids)] + domain
-    return prop.search(cr, uid, domain, context=context)
+    return property_obj.search(cr, uid, domain, context=context)
 
 
 def new_fnct_write(self, obj, cr, uid, id_, prop_name, id_val, obj_dest, context=None):
-    if context is None:
-        context = {}
+    context = context or {}
 
-    def_id = self._field_get(cr, uid, obj._name, prop_name)
-    company = obj.pool.get('res.company')
-    cid = context.get('company_id', None)
-    if not cid:
-        cid = company._company_default_get(cr, uid, obj._name, def_id, context=context)
-    context['force_company'] = cid
+    field_id = self._field_get(cr, uid, obj._name, prop_name)
+    company_obj = obj.pool.get('res.company')
+    company_id = context.get('force_company') or context.get('company_id')  # company_id in context is used in account module
+    if not company_id:
+        company_id = company_obj._company_default_get(cr, uid, obj._name, field_id, context=context)
+    context['force_company'] = company_id
 
     nids = self._get_by_id(obj, cr, uid, [prop_name], [id_], context)
     if nids:
@@ -59,49 +72,58 @@ def new_fnct_write(self, obj, cr, uid, id_, prop_name, id_val, obj_dest, context
         property_create = True
 
     if property_create:
-        propdef = obj.pool.get('ir.model.fields').browse(cr, uid, def_id, context=context)
-        prop = obj.pool.get('ir.property')
-        return prop.create(cr, uid, {
-            'name': propdef.name,
+        ir_property = obj.pool.get('ir.model.fields').browse(cr, uid, field_id, context=context)
+        return obj.pool.get('ir.property').create(cr, uid, {
+            'name': ir_property.name,
             'value': id_val,
             'res_id': obj._name + ', ' + str(id_),
-            'company_id': cid,
-            'fields_id': def_id,
+            'company_id': company_id,
+            'fields_id': field_id,
             'type': self._type,
-        }, context=context)
+        }, context)
     return False
 
 
 def new_fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
     context = context or {}
+    force_company_id = context.get('force_company') or context.get('company_id')
+    user_company_id = obj.pool.get('res.users').read(cr, uid, uid, ['company_id'], context, '_classic_write')['company_id']
 
     if isinstance(ids, (int, long)):
         ids = [ids]
 
-    default_val, replaces = self._get_defaults(obj, cr, uid, prop_name, context)
+    default_value, replaces = self._get_defaults(obj, cr, uid, prop_name, context)
     res = {}
     for resource_id in ids:
-        res[resource_id] = default_val.copy()
+        res[resource_id] = default_value.copy()
 
-    properties = obj.pool.get('ir.property')
-    global_domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
-    user_company_id = obj.pool.get('res.users').read(cr, uid, uid, ['company_id'], context, '_classic_write')['company_id']
-
-    resources = map(lambda x: {'id': x}, ids)
-    if 'company_id' in obj._columns:
+    property_obj = obj.pool.get('ir.property')
+    resources = [{'id': id_} for id_ in ids]
+    if obj._columns.get('company_id'):
         resources = obj.read(cr, uid, ids, ['company_id'], context, '_classic_write')
     for resource in resources:
-        domain = global_domain[:]
-        domain.extend(['|', ('res_id', '=', '%s, %s' % (obj._name, resource['id'])), ('res_id', '=', False)])
-        company_id = context.get('company_id', False)
-        if not company_id and 'company_id' in obj._columns:
-            company_id = resource['company_id']
-        if not company_id:
-            company_id = user_company_id
-        domain.extend(['|', ('company_id', '=', company_id), ('company_id', '=', False)])
-        nids = properties.search(cr, uid, domain, context=context)
-        for prop in properties.browse(cr, uid, nids, context):
-            value = properties.get_by_record(cr, uid, prop, context=context)
+        company_id = force_company_id or resource.get('company_id') or user_company_id
+        specific_domain = [
+            ('fields_id.model', '=', obj._name),
+            ('fields_id.name', 'in', prop_name),
+            ('company_id', '=', company_id),
+            ('res_id', '=', '%s, %s' % (obj._name, resource['id'])),
+        ]
+        property_ids = property_obj.search(cr, uid, specific_domain, context=context)
+        fields_wo_prop = prop_name[:]
+        for prop in property_obj.browse(cr, uid, property_ids, context):
+            fields_wo_prop.remove(prop.fields_id.name)
+        if fields_wo_prop:
+            for prop in fields_wo_prop:
+                specific_domain = [('fields_id.model', '=', obj._name), ('fields_id.name', '=', prop)]
+                if default_value[prop]:
+                    specific_domain += [('company_id', '=', False), ('res_id', '=', '%s, %s' % (obj._name, resource['id']))]
+                else:
+                    specific_domain += [('company_id', '=', company_id), ('res_id', '=', False)]
+                property_ids += property_obj.search(cr, uid, specific_domain, limit=1, context=context)
+
+        for prop in property_obj.browse(cr, uid, property_ids, context):
+            value = property_obj.get_by_record(cr, uid, prop, context=context)
             res[resource['id']][prop.fields_id.name] = value or False
             if value and (prop.type == 'many2one'):
                 record_exists = obj.pool.get(value._name).exists(cr, uid, value.id)
@@ -122,6 +144,7 @@ def new_fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
 
     return res
 
+property_column._get_defaults = new_get_defaults
 property_column._get_by_id = new_get_by_id
 property_column._fnct_write = new_fnct_write
 property_column._fnct_read = new_fnct_read

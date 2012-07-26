@@ -32,7 +32,7 @@ def new_get_domain(self, cr, uid, prop_name, model, context=None):
     if not res:
         return None
 
-    if 'force_company' in context and context['force_company']:
+    if context.get('force_company'):
         cid = context['force_company']
     else:
         company = self.pool.get('res.company')
