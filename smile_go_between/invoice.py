@@ -28,7 +28,6 @@ class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
     def _get_invoice_line_ids2charge(self, cr, uid, ids):
-        ret = []
         ret = self.pool.get('account.invoice.line').search(cr, uid, [('invoice_id', 'in', ids), ('invoice_line2charge_ok', '=', True), ('charged_ok', '=', False)])
         return ret
 
@@ -74,7 +73,6 @@ class account_invoice(osv.osv):
                     'description': x[7]}
 
             partner_map[x[0]].append(data)
-
 
         for partner_id in partner_map:
             pol_data_list = []
@@ -138,7 +136,7 @@ class account_invoice(osv.osv):
                     'order_id': purchase_id
                 })
 
-                pol_id = self.pool.get('purchase.order.line').create(cr, uid, data)
+                self.pool.get('purchase.order.line').create(cr, uid, data)
 
         self.pool.get('account.invoice.line').write(cr, uid, invoice_line_ids, {'charged_ok': True})
 
@@ -151,9 +149,8 @@ class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
     _columns = {
-            'subscriber_invoice_line_id': fields.many2one('account.invoice.line', 'Subscriber invoice line', required=False, readonly=True),
-            'invoice_line2charge_ok': fields.boolean('Invoice line to charge', required=False),
-            'charged_ok': fields.boolean('Charged', required=False),
-
-                    }
+        'subscriber_invoice_line_id': fields.many2one('account.invoice.line', 'Subscriber invoice line', required=False, readonly=True),
+        'invoice_line2charge_ok': fields.boolean('Invoice line to charge', required=False),
+        'charged_ok': fields.boolean('Charged', required=False),
+    }
 account_invoice_line()

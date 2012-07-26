@@ -20,13 +20,8 @@
 ##############################################################################
 
 from osv import fields, osv
-import decimal_precision as dp
-from operator import __add__
-import time
-from datetime import datetime, timedelta
-import calendar
-from smile_invoicing_plan.invoicing_plan_tools import compute_date
 
+from smile_invoicing_plan.invoicing_plan_tools import compute_date
 
 
 class wizard_change_commitment(osv.osv_memory):
@@ -34,24 +29,15 @@ class wizard_change_commitment(osv.osv_memory):
     _description = 'Change commitment'
 
     _columns = {
-            'name': fields.many2one('sale.order.line', 'Subscription', required=True),
-            'nb_periods': fields.integer('Nb periods')
-                    }
+        'name': fields.many2one('sale.order.line', 'Subscription', required=True),
+        'nb_periods': fields.integer('Nb periods')
+    }
+
     def change_commitment(self, cr, uid, ids, context=None):
         for cc in self.browse(cr, uid, ids):
             commitment_end_date = cc.name.commitment_end_date
-
             if commitment_end_date:
-
                 commitment_end_date = compute_date(commitment_end_date, cc.nb_periods)
                 self.pool.get('sale.order.line').write(cr, uid, [cc.name.id], {'commitment_end_date': commitment_end_date})
-
-
-
         return {'type': 'ir.actions.act_window_close'}
-
-
-
 wizard_change_commitment()
-
-

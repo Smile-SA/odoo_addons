@@ -22,12 +22,9 @@
 import mx.DateTime as dt
 
 
-
-
 def compute_date(start_date, delta=0, uop='months', operation='add', format='%Y-%m-%d'):
     # delta = Nb of uop
     # operation 'add', minus
-
     if not start_date:
         return False
 
@@ -36,17 +33,15 @@ def compute_date(start_date, delta=0, uop='months', operation='add', format='%Y-
 
     new_date = False
     if operation == 'add':
-        if uop=='months':
+        if uop == 'months':
             new_date = dt.strptime(start_date, format)
             new_date += dt.RelativeDateTime(months=delta)
             #new_date -= dt.DateTimeDelta(1)
             new_date = new_date.Format(format)
     if operation == 'sub':
-        if uop=='months':
+        if uop == 'months':
             new_date = dt.strptime(start_date, format)
             new_date -= dt.RelativeDateTime(months=delta)
             #new_date += dt.DateTimeDelta(1)
             new_date = new_date.Format(format)
-
     return new_date
-    

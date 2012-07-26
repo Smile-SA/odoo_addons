@@ -107,7 +107,7 @@ End Time: %s
             if not check:
                 self.setAlarm(self._poolJobs, next_call, dbname, dbname)
 
-        except Exception, ex:
+        except Exception, e:
             self._logger.warning('Exception in cron: ', exc_info=True)
 
         finally:

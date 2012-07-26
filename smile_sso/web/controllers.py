@@ -23,7 +23,7 @@ import cherrypy
 
 import openobject.tools
 from openobject.tools import expose, redirect
-from openerp.controllers import SecuredController, unsecured
+from openerp.controllers import unsecured
 from openerp.controllers.root import Root
 from openerp.controllers.utils import login
 from openerp.utils import rpc
@@ -57,7 +57,7 @@ def sso_login(self, db=None, *args, **kwargs):
             rpc.session._logged_as(db, user_info['id'], user_info['password'])
             raise redirect('/')
         elif sso_portal == '/':
-            return login(sso_portal, message=_('Unknown user!'), db=db, user=user, action='sso_login')
+            return login(sso_portal, message='Unknown user!', db=db, user=user, action='sso_login')
     raise redirect(sso_portal)
 
 

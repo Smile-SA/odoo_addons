@@ -23,18 +23,20 @@ import cherrypy
 
 from openerp.utils import cache, rpc
 
+native_fields_view_get = cache.fields_view_get
+native_fields_get = cache.fields_get
+
 
 def fields_view_get(model, view_id, view_type, context, hastoolbar=False, hassubmenu=False):
     if model in cherrypy.config.get('cache.exceptions', '').split(', '):
         return rpc.RPCProxy(model).fields_view_get(view_id, view_type, context, hastoolbar, hassubmenu)
-    return __fields_view_get(model, view_id, view_type, context, hastoolbar=hastoolbar, hassubmenu=hassubmenu, uid=rpc.session.uid)
-
-cache.fields_view_get = fields_view_get
+    return native_fields_view_get(model, view_id, view_type, context, hastoolbar=hastoolbar, hassubmenu=hassubmenu, uid=rpc.session.uid)
 
 
 def fields_get(model, fields, context):
     if model in cherrypy.config.get('cache.exceptions', '').split(', '):
         return rpc.RPCProxy(model).fields_get(fields, context)
-    return __fields_get(model, fields, context, uid=rpc.session.uid)
+    return native_fields_get(model, fields, context, uid=rpc.session.uid)
 
+cache.fields_view_get = fields_view_get
 cache.fields_get = fields_get

@@ -295,10 +295,10 @@ class IrModelImport(osv.osv):
 
             logger = SmileDBLogger(cr.dbname, 'ir.model.import.template', import_.import_tmpl_id.id, uid)
             self.write_new_cr(cr.dbname, uid, import_.id, {
-                 'state': 'running',
-                 'cancel_pid': logger.pid,
-                 'cancel_from_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-             }, context)
+                'state': 'running',
+                'cancel_pid': logger.pid,
+                'cancel_from_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+            }, context)
 
             if import_mode == 'new_thread':
                 t = threading.Thread(target=self._process_cancel_import_with_new_cursor, args=(cr.dbname, uid, import_.id, logger, context))

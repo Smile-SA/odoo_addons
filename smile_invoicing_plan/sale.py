@@ -52,24 +52,24 @@ sale_config_picking_policy()
 
 
 class sale_order_line_period_info(osv.osv):
-
     _name = "sale.order.line.period.info"
     _description = "Period Infos"
 
     _columns = {
-            'name': fields.char('Period', size=64, required=True, readonly=True),
-            'periods': fields.char('Periods', size=128),
-            'invoiced': fields.boolean('Invoiced', required=False),
-            'to_invoice': fields.boolean('To Invoice', required=False),
-            'start_date': fields.date('Start date', required=True),
-            'stop_date': fields.date('Stop date', required=True),
-            'invoice_line_ids': fields.one2many('account.invoice.line', 'sale_order_line_period_info_id', 'Invoice lines', required=False),
-            'order_line_id': fields.many2one('sale.order.line', 'Sale order line', required=True, ondelete='cascade'),
-                    }
+        'name': fields.char('Period', size=64, required=True, readonly=True),
+        'periods': fields.char('Periods', size=128),
+        'invoiced': fields.boolean('Invoiced', required=False),
+        'to_invoice': fields.boolean('To Invoice', required=False),
+        'start_date': fields.date('Start date', required=True),
+        'stop_date': fields.date('Stop date', required=True),
+        'invoice_line_ids': fields.one2many('account.invoice.line', 'sale_order_line_period_info_id', 'Invoice lines', required=False),
+        'order_line_id': fields.many2one('sale.order.line', 'Sale order line', required=True, ondelete='cascade'),
+    }
+
     _defaults = {
         'invoiced': lambda * a: False,
         'to_invoice': lambda * a: False,
-        }
+    }
 sale_order_line_period_info()
 
 
@@ -77,12 +77,10 @@ class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
 
     def _get_subscription_cost(self, line):
-
         pu = 0.0
 
         if not line.is_subscription:
             return pu
-
 
         for period in range(1, line.invoicing_plan_id.commitment + 1):
 
@@ -99,7 +97,7 @@ class sale_order_line(osv.osv):
                             pu += line.price_subtotal
                         elif sub_mod.value == 'fixed':
                             pu += sub_mod.value_amount
-                        else:  #elif modality.value == 'percent':
+                        else:  # elif modality.value == 'percent':
                             pu += line.price_subtotal * sub_mod.value_amount
                     break
 
@@ -137,16 +135,14 @@ class sale_order_line(osv.osv):
     def _get_sale_order_line_ids_from_invoice_lines(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        res = []
         account_invoice_line_pool = self.pool.get('account.invoice.line')
         invoice_line_ids = account_invoice_line_pool.search(cr, uid, [])
         sale_order_line_names = [invline['name'] for invline in account_invoice_line_pool.read(cr, uid, invoice_line_ids)]
         return self.pool.get('sale.order.line').search(cr, uid, [('name', 'in', sale_order_line_names)])
 
-
     def _get_dates(self, cr, uid, ids, field_name, arg, context={}):
-       res = {}
-       for line in self.browse(cr, uid, ids):
+        res = {}
+        for line in self.browse(cr, uid, ids):
 
             invoicing_plan = line.invoicing_plan_id
 
@@ -156,12 +152,12 @@ class sale_order_line(osv.osv):
             else:
                 next_date = compute_date(line.invoicing_start_date, invoicing_plan.periodicity)
                 res[line.id] = {'invoicing_next_date': next_date, 'commitment_end_date': commitment_end_date}
-
-       return res
+        return res
 
     def _set_invoicing_next_date(self, cr, uid, ids, name, value, arg, context=None):
-        if not value: return False
-        if type(ids) != type([]):
+        if not value:
+            return False
+        if not isinstance(ids, list):
             ids = [ids]
 
         for line in self.browse(cr, uid, ids, context=context):
@@ -173,8 +169,9 @@ class sale_order_line(osv.osv):
         return True
 
     def _set_new_commitment_date(self, cr, uid, ids, name, value, arg, context=None):
-        if not value: return False
-        if type(ids) != type([]):
+        if not value:
+            return False
+        if not isinstance(ids, list):
             ids = [ids]
 
         for line in self.browse(cr, uid, ids, context=context):
@@ -184,7 +181,6 @@ class sale_order_line(osv.osv):
                     id=%s""", (value, line.id))
 
         return True
-
 
     def _is_commited(self, cr, uid, ids, name, arg, context):
         res = {}
@@ -200,8 +196,9 @@ class sale_order_line(osv.osv):
         return res
 
     def _set_commitment_state(self, cr, uid, ids, name, value, arg, context=None):
-        if not value: return False
-        if type(ids) != type([]):
+        if not value:
+            return False
+        if not isinstance(ids, list):
             ids = [ids]
 
         for line in self.browse(cr, uid, ids, context=context):
@@ -212,9 +209,7 @@ class sale_order_line(osv.osv):
 
         return True
 
-
     _columns = {
-
         'is_subscription': fields.related('product_id', 'subscription_ok', type='boolean', string='Is a subscription', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'invoicing_plan_id': fields.many2one('account.invoicing_plan', 'Invoicing Plan', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'invoicing_start_date': fields.date('Invoicing Start Date', required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -222,16 +217,16 @@ class sale_order_line(osv.osv):
         'invoicing_end_date': fields.date('Invoicing End Date', readonly=True),
 
         'commitment_end_date': fields.function(_get_dates, fnct_inv=_set_new_commitment_date, method=True, type='date', string="Commitment End Date", store={
-                    'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, ['invoicing_start_date'], 10)
-                }, multi='dates'),
+            'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, ['invoicing_start_date'], 10)
+        }, multi='dates'),
 
         'invoicing_next_date': fields.function(_get_dates, fnct_inv=_set_invoicing_next_date, method=True, type='date', string="Invoicing Next Date", store={
-                    'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, ['invoicing_start_date'], 10)
-                }, multi='dates'),
+            'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, ['invoicing_start_date'], 10)
+        }, multi='dates'),
 
         'commitment_state': fields.function(_is_commited, fnct_inv=_set_commitment_state, method=True, type='boolean', string="Already commited", store={
-                    'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, ['invoicing_next_date', 'commitment_end_date'], 10)
-                }),
+            'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, ['invoicing_next_date', 'commitment_end_date'], 10)
+        }),
 
         'residual': fields.function(_get_residual, method=True, type='float', string="Residual", digits_compute=dp.get_precision('Sale Price'), store={
             'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, ['invoicing_next_date', 'commitment_end_date'], 10)
@@ -244,22 +239,19 @@ class sale_order_line(osv.osv):
         'invoicing_plan_id': lambda * a: False,
         'invoicing_start_date': lambda * a: False,
         'commitment_end_date': lambda * a: False,
-        }
-
+    }
 
     def button_change_commitment(self, cr, uid, ids, context=None):
-        id = self.pool.get('wizard.change.commitment').create(cr, uid, {'name': ids[0]})
-
+        id_ = self.pool.get('wizard.change.commitment').create(cr, uid, {'name': ids[0]})
         res = {
             'type': 'ir.actions.act_window',
             'res_model': 'wizard.change.commitment',
             'view_type': 'form',
             'view_mode': 'form',
             'target': 'new',
-            'res_id': id,
-            'context': {'active_id': id},
+            'res_id': id_,
+            'context': {'active_id': id_},
         }
-
         return res
 
     def invoicing_start_date_change(self, cr, uid, ids, start_date, invoicing_plan_id):
@@ -276,8 +268,8 @@ class sale_order_line(osv.osv):
         else:
             next_date = compute_date(start_date, invoicing_plan.periodicity)
             res['value'] = {'invoicing_next_date': next_date, 'commitment_end_date': commitment_end_date}
-
         return res
+
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, qty_uos=0, uos=False,
                           name='', partner_id=False, lang=False, update_tax=True, date_order=False,
                           packaging=False, fiscal_position=False, flag=False):
@@ -295,26 +287,22 @@ class sale_order_line(osv.osv):
             res['value'].update({'is_subscription': subscription_ok})
         return res
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id_, default=None, context=None):
         if not default:
             default = {}
         default.update({'line_invoice_info_ids': []})
-        return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
-
+        return super(sale_order_line, self).copy_data(cr, uid, id_, default, context=context)
 
     def button_confirm(self, cr, uid, ids, context=None):
         ## Before confirming, check if there is no subscribtion to confirm
         ## with a sale order in a state different than 'confirmed' one.
-
-        lines = self.browse(cr, uid, ids)
-
         subscription_ids = self.search(cr, uid, [('is_subscription', '=', True), ('id', 'in', ids)])
         if subscription_ids:
             for line in self.browse(cr, uid, subscription_ids):
                 if not line.invoicing_start_date:
                     raise osv.except_osv(_('Error !'), _('The invoicing start date of %s is not yet defined') % (line.name))
 
-                if line.invoicing_plan_id != False:
+                if line.invoicing_plan_id:
                     # confirmation is manually for periodic order line
                     if datetime.strptime(line.order_id.date_confirm, '%Y-%m-%d') > datetime.strptime(line.invoicing_start_date, '%Y-%m-%d'):
                         raise osv.except_osv(_('Error !'), _('The invoicing start date of %s must be later than  the date of confirmation') % (line.name))
@@ -323,19 +311,14 @@ class sale_order_line(osv.osv):
 
         return super(sale_order_line, self).button_confirm(cr, uid, ids)
 
-
-
     def _get_subscriptions2invoice(self, cr, uid, ids, start_date=None, end_date=None, invoice_outof_period=False):
             line_ids = []
 
             if isinstance(ids, (int, long)):
                 ids = [ids]
 
-
             if not start_date or not end_date:
                 return line_ids
-
-            filter = [('state', '=', 'confirmed'), ('is_subscription', '=', True), ('id', 'in', ids)]
 
             if invoice_outof_period:
                 filter += [('invoicing_next_date', '>=', start_date), ('invoicing_next_date', '<', end_date)]
@@ -345,34 +328,25 @@ class sale_order_line(osv.osv):
             line_ids = self.search(cr, uid, filter)
             return line_ids
 
-
     def _get_sale_order_line2invoice(self, cr, uid, ids):
-
-            line_ids = []
-
             if isinstance(ids, (int, long)):
                 ids = [ids]
-
-            filter = [('state', '=', 'confirmed'), ('is_subscription', '=', False), ('id', 'in', ids)]
-
-            line_ids = self.search(cr, uid, filter)
+            filter_ = [('state', '=', 'confirmed'), ('is_subscription', '=', False), ('id', 'in', ids)]
+            line_ids = self.search(cr, uid, filter_)
             return line_ids
-
 
     def invoice_line_create(self, cr, uid, ids, context=None):
         start_date = None
         end_date = None
+
         def _get_line_period_date(line):
             ## periods_info[line_start_period] = start date
             ## periods_info[line_stop_period] = end date
-
             ## periods_info[periods] = [sub_periods]
             ## sub_periods = (start_date, stop_date, num_period)
             ## num_period = the number of the period = f(invoicing_next_date, invoicing_start_date)
 
-
             periods_info = {}
-
 
             if line.invoicing_plan_id.mode == 'pre':
                 periods_info['line_start_period'] = line.invoicing_next_date
@@ -381,7 +355,6 @@ class sale_order_line(osv.osv):
 
                 periods_info['line_start_period'] = compute_date(line.invoicing_next_date, line.invoicing_plan_id.periodicity, 'months', 'sub')
                 periods_info['line_stop_period'] = line.invoicing_next_date
-
 
             periods_info['periods'] = []
             coefs = {'days': 1, 'weeks': 7, 'months': 30}
@@ -396,11 +369,9 @@ class sale_order_line(osv.osv):
                 start_date = stop_date
                 stop_date = compute_date(start_date, 1)
 
-
             return periods_info
 
         def _get_line_pu(line):
-
             res = {}
             periods_info = _get_line_period_date(line)
 
@@ -410,7 +381,6 @@ class sale_order_line(osv.osv):
             for p in periods_info['periods']:
 
                 for modality in line.invoicing_plan_id.line_ids:
-
                     # Only the first valid modality applies
                     pu = 0.0
 
@@ -426,7 +396,7 @@ class sale_order_line(osv.osv):
                                 pu = line.residual
                             elif sub_mod.value == 'fixed':
                                 pu = sub_mod.value_amount
-                            else:  #elif modality.value == 'percent':
+                            else:  # elif modality.value == 'percent':
                                 pu = line.price_unit * sub_mod.value_amount
 
                             if line.detail_periods:
@@ -436,7 +406,6 @@ class sale_order_line(osv.osv):
 
                                 if sub_mod.partner == 'object.partner_id.id':
                                     res[(p[0], p[1])]['price_unit']['partner'] = (res[(p[0], p[1])]['price_unit']['partner'][0] + pu, True)
-
 
                                 else:
                                     res[(p[0], p[1])]['price_unit']['parent'] = (res[(p[0], p[1])]['price_unit']['parent'][0] + pu, True)
@@ -458,7 +427,6 @@ class sale_order_line(osv.osv):
                         break
             return res
 
-
         if isinstance(ids, (int, long)):
             ids = [ids]
 
@@ -466,8 +434,6 @@ class sale_order_line(osv.osv):
             context = {}
 
         invoice_line_ids = []
-        no_periodic_sale_order_line_ids_to_invoice = []
-        subscriptions_ids = []
 
         ## get if retrieve uninvoiced periods
         invoice_outof_period = context.get('invoice_outof_period', False)
@@ -495,12 +461,10 @@ class sale_order_line(osv.osv):
             if not line.invoicing_next_date:
                 raise osv.except_osv(_('Error !'), _('You try to invoice sale order line which have not a valid invoicing next date: %s!') % (line.name))
 
-
             uosqty = line.product_uom_qty
 
             if line.product_uos:
                 uosqty = line.product_uos_qty or 0.0
-            pu = 0.0
             ## Compute price
             ## price depends on invoicing period.
             ##
@@ -538,7 +502,6 @@ class sale_order_line(osv.osv):
 
                     invoice_line_ids.append(inv_id)
 
-
                 if period_pu[period]['price_unit']['parent'][1]:
 
                     inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
@@ -558,32 +521,29 @@ class sale_order_line(osv.osv):
 
                     invoice_line_ids.append(inv_id)
 
-
-
-                period_info = { 'name': period_str,
-                                'periods': str(period_pu[period]['period_numbers']),
-                                'invoiced': False,
-                                'to_invoice': True,
-                                'start_date': period[0],
-                                'stop_date': period[1],
-                                'invoice_line_ids': [(6, 0, invoice_line_ids)],
-                                'order_line_id': line.id,
-                               }
+                period_info = {
+                    'name': period_str,
+                    'periods': str(period_pu[period]['period_numbers']),
+                    'invoiced': False,
+                    'to_invoice': True,
+                    'start_date': period[0],
+                    'stop_date': period[1],
+                    'invoice_line_ids': [(6, 0, invoice_line_ids)],
+                    'order_line_id': line.id,
+                }
 
                 self.pool.get('sale.order.line.period.info').create(cr, uid, period_info)
 
                 cr.execute('insert into sale_order_line_invoice_rel (order_line_id, invoice_id) values (%s, %s)', (line.id, inv_id))
 
-
                 invoice_line_ids.append(inv_id)
-
 
             invoicing_next_date_str = compute_date(line.invoicing_next_date, line.invoicing_plan_id.periodicity)
             invoicing_next_date = datetime.strptime(invoicing_next_date_str, '%Y-%m-%d')
 
             if line.invoicing_plan_id.term == 'fixed':
                 if (line.invoicing_plan_id.mode == 'pre' and invoicing_next_date > datetime.strptime(line.commitment_end_date, '%Y-%m-%d'))\
-                or (line.invoicing_plan_id.mode == 'post' and invoicing_next_date > datetime.strptime(compute_date(line.commitment_end_date, line.invoicing_plan_id.periodicity))):
+                        or (line.invoicing_plan_id.mode == 'post' and invoicing_next_date > datetime.strptime(compute_date(line.commitment_end_date, line.invoicing_plan_id.periodicity))):
                     self.write(cr, uid, [line.id], {'invoiced': True, 'state': 'done', 'invoicing_next_date': invoicing_next_date_str})
 
             else:
@@ -594,9 +554,7 @@ class sale_order_line(osv.osv):
 
         return invoice_line_ids
 
-
     def write(self, cr, uid, ids, vals, context=None):
-
         if isinstance(ids, (int, long)):
             ids = [ids]
 
@@ -612,7 +570,7 @@ class sale_order_line(osv.osv):
                     if sub_mod.partner == 'object.partner_id.parent_id.id':
                         if not order_line.order_id.partner_id.parent_id:
                             raise osv.except_osv(_('Error !'),
-                                                    _('Parent partner is needed in invoicing plan, you should configure it in partner form'))
+                                                 _('Parent partner is needed in invoicing plan, you should configure it in partner form'))
 
         super(sale_order_line, self).write(cr, uid, ids, vals, context)
 
@@ -622,7 +580,7 @@ class sale_order_line(osv.osv):
 sale_order_line()
 
 
-class sale_order(osv.osv):
+class sale_order2(osv.osv):
     _inherit = "sale.order"
 
     def _invoiced(self, cr, uid, ids, name, arg, context=None):
@@ -635,7 +593,6 @@ class sale_order(osv.osv):
                         break
         return res
 
-
     def _get_sale_order_ids_from_sale_order_lines(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -645,19 +602,16 @@ class sale_order(osv.osv):
         'invoicing_start_date': fields.date('Invoicing Start Date', help='set to confirmation date if the field is empty', readonly=True, states={'draft': [('readonly', False)]}),
         'invoicing_next_date': fields.date('Invoicing Next Date', help='Computed after confirming contract', readonly=True),
         'periodicity': fields.integer('Periodicity', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'uop': fields.selection([
-                                 ('months', 'Months'),
-                                 ], 'Unit Of Periods', required=True),
+        'uop': fields.selection([('months', 'Months'), ], 'Unit Of Periods', required=True),
         'contract_ok': fields.boolean('Is contract', required=False),
         'apply_global_invoicing_periodicity': fields.boolean('Apply global periodicity', required=False),
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)], 'progress': [('readonly', False)], 'manual': [('readonly', False)]}),
-
     }
 
     _defaults = {
         'periodicity': lambda * a: 1,
         'uop': lambda * a: 'months',
-        }
+    }
 
     def action_wait(self, cr, uid, ids, *args):
         for o in self.browse(cr, uid, ids):
@@ -669,7 +623,6 @@ class sale_order(osv.osv):
                     self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d'), 'invoicing_next_date': o.invoicing_start_date})
                 else:
                     self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d'), 'invoicing_start_date': time.strftime('%Y-%m-%d'), 'invoicing_next_date': time.strftime('%Y-%m-%d')})
-
 
                 self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line], True)
                 message = _("The quotation '%s' has been converted to a sales order.") % (o.name, )
@@ -687,7 +640,6 @@ class sale_order(osv.osv):
         ## should return current invoice according to the order parent  partner parameter
         return False
 
-
     def _make_invoice(self, cr, uid, order, lines, context=None):
 
         if not order.contract_ok:
@@ -695,14 +647,13 @@ class sale_order(osv.osv):
         else:
             journal_obj = self.pool.get('account.journal')
             inv_obj = self.pool.get('account.invoice')
-            obj_invoice_line = self.pool.get('account.invoice.line')
             if context is None:
                 context = {}
 
             journal_ids = journal_obj.search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)], limit=1)
             if not journal_ids:
                 raise osv.except_osv(_('Error !'),
-                    _('There is no sales journal defined for this company: "%s" (id: %d)') % (order.company_id.name, order.company_id.id))
+                                     _('There is no sales journal defined for this company: "%s" (id: %d)') % (order.company_id.name, order.company_id.id))
             a = order.partner_id.property_account_receivable.id
             pay_term = order.payment_term and order.payment_term.id or False
             sale_line_ids = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id)], context=context)
@@ -729,14 +680,14 @@ class sale_order(osv.osv):
                     self.pool.get('account.invoice.line').write(cr, uid, partner_lines, {'invoice_id': inv_id})
                 else:
 
-                    str = order.client_order_ref or order.name
-                    str += ' Period: '
-                    str += order.invoicing_next_date
-                    str += '-'
-                    str += compute_date(order.invoicing_next_date, order.periodicity)
+                    str_ = order.client_order_ref or order.name
+                    str_ += ' Period: '
+                    str_ += order.invoicing_next_date
+                    str_ += '-'
+                    str_ += compute_date(order.invoicing_next_date, order.periodicity)
 
                     inv = {
-                        'name': str,
+                        'name': str_,
                         'origin': order.name,
                         'type': 'out_invoice',
                         'reference': "P%dSO%d" % (order.partner_id.id, order.id),
@@ -763,7 +714,6 @@ class sale_order(osv.osv):
 
                     inv_obj.button_compute(cr, uid, [inv_id])
                     invoice_ids.append(inv_id)
-
 
             if parent_lines:
                 parent_inv_id = self._get_parent_current_inv(order)
@@ -793,8 +743,6 @@ class sale_order(osv.osv):
                         'user_id': order.user_id and order.user_id.id or False,
                         'date_invoice': order.invoicing_next_date,
                     }
-
-
                     parent_inv_id = inv_obj.create(cr, uid, parent_inv, context=context)
                     data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [parent_inv_id], pay_term, time.strftime('%Y-%m-%d'))
                     if data.get('value', False):
@@ -865,8 +813,8 @@ class sale_order(osv.osv):
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     if o.order_policy == 'picking':
                         picking_obj.write(cr, uid, map(lambda x: x.id, o.picking_ids), {'invoice_state': 'invoiced'})
-                    for id in res:
-                        cr.execute('insert into sale_order_invoice_rel (order_id, invoice_id) values (%s, %s)', (o.id, id))
+                    for id_ in res:
+                        cr.execute('insert into sale_order_invoice_rel (order_id, invoice_id) values (%s, %s)', (o.id, id_))
                         invoice.write(cr, uid, res, {'origin': invoice_ref, 'name': invoice_ref})
             else:
                 for order, il in val:
@@ -876,11 +824,8 @@ class sale_order(osv.osv):
                     if order.order_policy == 'picking':
                         picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids), {'invoice_state': 'invoiced'})
 
-                    for id in res:
-                        cr.execute('insert into sale_order_invoice_rel (order_id, invoice_id) values (%s, %s)', (o.id, id))
-
-
-
+                    for id_ in res:
+                        cr.execute('insert into sale_order_invoice_rel (order_id, invoice_id) values (%s, %s)', (o.id, id_))
         return invoice_ids
 
     # if mode == 'finished':
@@ -927,21 +872,15 @@ class sale_order(osv.osv):
             inv_id = self.action_invoice_create(cr, uid, [sale_order.id], grouped, states, date_inv, context)
             if inv_id and sale_order.order_policy == 'periodic':
                 invoice_ids.append(inv_id)
-                str = sale_order.client_order_ref or sale_order.name
-                str += ' Period: '
-                str += sale_order.invoicing_next_date
-                str += '-'
-                str += compute_date(sale_order.invoicing_next_date, sale_order.periodicity)
-                invoice_data = {'name': str, 'date_invoice': sale_order.invoicing_next_date }
-
+                str_ = sale_order.client_order_ref or sale_order.name
+                str_ += ' Period: '
+                str_ += sale_order.invoicing_next_date
+                str_ += '-'
+                str_ += compute_date(sale_order.invoicing_next_date, sale_order.periodicity)
+                invoice_data = {'name': str_, 'date_invoice': sale_order.invoicing_next_date}
                 self.pool.get('account.invoice').write(cr, uid, [inv_id], invoice_data)
-
             new_next_date = compute_date(sale_order.invoicing_next_date, sale_order.periodicity)
             self.write(cr, uid, sale_order.id, {'invoicing_next_date': new_next_date})
 
         return invoice_ids
-
-
-sale_order()
-
-
+sale_order2()

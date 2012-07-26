@@ -45,18 +45,15 @@ class account_invoicing_plan(osv.osv):
             ('pre', 'Pre-invoicing'),
             ('post', 'Post-invoicing'),
         ], 'Invoicing mode', required=True),
-
-
     }
 
     _defaults = {
-        'trigger': lambda * a: 'manual',
-        'periodicity': lambda * a: 1,
-        'commitment': lambda * a: 12,
-        'uop': lambda * a: 'months',
-        'term': lambda * a: 'unlimited',
-        'mode': lambda * a: 'post',
-
+        'trigger': 'manual',
+        'periodicity': 1,
+        'commitment': 12,
+        'uop': 'months',
+        'term': 'unlimited',
+        'mode': 'post',
     }
 account_invoicing_plan()
 
@@ -76,14 +73,13 @@ class account_invoicing_plan_sub_line(osv.osv):
             ('object.partner_id.id', 'Partner'),
             ('object.partner_id.parent_id.id', 'Parent'),
         ], 'Partner', required=True),
-       # 'invoicing_plan_line_id': fields.many2one('account.invoicing_plan.line', 'Invoicing plan modality', required=True),
+        #'invoicing_plan_line_id': fields.many2one('account.invoicing_plan.line', 'Invoicing plan modality', required=True),
     }
 
     _defaults = {
         'name': 'sous modalite',
         #'partner': lambda * a: 'object.partner_id.id',
     }
-
 account_invoicing_plan_sub_line()
 
 
@@ -110,7 +106,7 @@ class account_invoicing_plan_line(osv.osv):
 
     _defaults = {
         'application_periods': lambda * a: '0',
-#        'partner': lambda * a: 'object.partner_id.id',
+        #'partner': lambda * a: 'object.partner_id.id',
     }
 
     def _check_application_periods(self, cr, uid, ids):
@@ -127,7 +123,7 @@ class account_invoicing_plan_line(osv.osv):
 account_invoicing_plan_line()
 
 
-class account_invoicing_plan_sub_line(osv.osv):
+class account_invoicing_plan_sub_line2(osv.osv):
     _inherit = 'account.invoicing_plan.sub.line'
 
     _columns = {
@@ -137,19 +133,15 @@ class account_invoicing_plan_sub_line(osv.osv):
 
     _defaults = {
         'name': 'sous modalite',
-        'partner': lambda * a: 'object.partner_id.id',
+        'partner': 'object.partner_id.id',
     }
+account_invoicing_plan_sub_line2()
 
-account_invoicing_plan_sub_line()
 
-
-class account_invoicing_plan(osv.osv):
+class account_invoicing_plan2(osv.osv):
     _inherit = 'account.invoicing_plan'
 
     _columns = {
         'line_ids': fields.one2many('account.invoicing_plan.line', 'invoicing_plan_id', 'Modalities'),
     }
-account_invoicing_plan()
-
-
-
+account_invoicing_plan2()

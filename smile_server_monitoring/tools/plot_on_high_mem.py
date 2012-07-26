@@ -1,13 +1,11 @@
 
 import xmlrpclib
-import time
 import os.path
 
 from plot_usage_graph import write_infos_to_file, dump_stack_traces
 
 if __name__ == '__main__':
     import sys
-    import pprint
 
     usage = """ Usage: python plot_on_high_mem.py filename mem_limit [--browse_records]
     mem_limit expected in kb

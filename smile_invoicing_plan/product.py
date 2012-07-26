@@ -32,5 +32,5 @@ class product_product(osv.osv):
 
     _defaults = {
         'subscription_ok': lambda * a: False,
-        }
+    }
 product_product()

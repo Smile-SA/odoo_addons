@@ -22,8 +22,8 @@
 import time
 
 from openobject.errors import TinyError, TinyException
-from openobject.tools import expose, redirect
-from openerp.controllers import SecuredController, unsecured
+from openobject.tools import expose
+from openerp.controllers import unsecured
 from openerp.controllers.root import Root
 from openerp.utils import rpc
 

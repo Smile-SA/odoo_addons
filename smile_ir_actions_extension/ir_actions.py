@@ -72,7 +72,7 @@ class actions_server(osv.osv):
         if not keystr:
             return str("")
 
-        def is_a_datetime(str0, type='datetime'):
+        def is_a_datetime(str0, type_='datetime'):
             if not isinstance(str0, str):
                 return False
             formats = {
@@ -81,9 +81,9 @@ class actions_server(osv.osv):
                 'time': '%Y-%m-%d %H:%M:%S',
             }
             try:
-                if type == 'time':
+                if type_ == 'time':
                     str0 = datetime.datetime.today().strftime(formats['date']) + ' ' + str0
-                result = datetime.datetime.strptime(str0, formats[type])
+                result = datetime.datetime.strptime(str0, formats[type_])
                 return result
             except Exception, e:
                 return False
@@ -100,20 +100,20 @@ class actions_server(osv.osv):
                     'date': str(lang['date_format']),
                     'time': str(lang['time_format']),
                 }
-                for type in output_formats:
-                    if is_a_datetime(value, type):
+                for type_ in output_formats:
+                    if is_a_datetime(value, type_):
                         if tz:
-                            return pytz.timezone(tz).fromutc(is_a_datetime(value)).strftime(output_formats[type])
+                            return pytz.timezone(tz).fromutc(is_a_datetime(value)).strftime(output_formats[type_])
                         else:
-                            return is_a_datetime(value).strftime(output_formats[type])
+                            return is_a_datetime(value).strftime(output_formats[type_])
                 return lang_pool.format(self, cr, uid, lang_id, '%.' + str(digits) + 'f', value)
             return value
 
         def merge(match):
             logger = netsvc.Logger()
             obj_pool = self.pool.get(action.model_id.model)
-            id = context.get('active_id')
-            obj = obj_pool.browse(cr, uid, id, context)
+            id_ = context.get('active_id')
+            obj = obj_pool.browse(cr, uid, id_, context)
             exp = str(match.group()[2: -2]).strip()
             localdict = {'object': obj, 'context': context, 'time': time, 'formatLang': formatLang}
             try:
@@ -154,10 +154,7 @@ class actions_server(osv.osv):
         return super(actions_server, self).run(cr, uid, ids, context)
 
     def run(self, cr, uid, ids, context=None):
-        logger = netsvc.Logger()
-
-        if context is None:
-            context = {}
+        context = context or {}
 
         if 'lang' not in context and 'context_tz' not in context:
             user = self.pool.get('res.users').read(cr, uid, uid, ['context_lang', 'context_tz'])
@@ -223,16 +220,15 @@ class actions_server(osv.osv):
                         elif action.write_id:
                             obj_pool = self.pool.get(action.srcmodel_id.model)
                             rec = self.pool.get(action.model_id.model).browse(cr, uid, context.get('active_id'))
-                            id = eval(action.write_id, {'object': rec})
+                            id_ = eval(action.write_id, {'object': rec})
                             try:
-                                id = int(id)
+                                id_ = int(id_)
                             except:
                                 raise osv.except_osv(_('Error'), _("Problem in configuration `Record Id` in Server Action!"))
 
-                            if type(id) != type(1):
+                            if not isinstance(id_, (int, long)):
                                 raise osv.except_osv(_('Error'), _("Problem in configuration `Record Id` in Server Action!"))
-                            write_id = id
-                            obj_pool.write(cr, uid, [write_id], res)
+                            obj_pool.write(cr, uid, [id_], res)
 
                     if action.state == 'object_create':
                         res = {}

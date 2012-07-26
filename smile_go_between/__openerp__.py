@@ -42,8 +42,7 @@
         'partner_view.xml',
         'wizard/compute_commission_view.xml'
     ],
-    "test": [
-             ],
+    "test": [],
     "demo_xml": [],
     "installable": True,
     "active": False,

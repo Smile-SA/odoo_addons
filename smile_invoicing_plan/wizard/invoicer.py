@@ -19,74 +19,64 @@
 #
 ##############################################################################
 
-from osv import fields, osv
 import time
-from datetime import datetime, timedelta
-from smile_invoicing_plan.invoicing_plan_tools import compute_date
 
+from osv import fields, osv
 
 
 class account_invoicer(osv.osv):
     _name = 'account.invoicer'
 
     _columns = {
-            'periodic_sale_order_ids': fields.many2many('sale.order', 'sale_order_invoicer_rel', 'invoicer_id', 'sale_order_id', 'Sale orders'),
-            'non_periodic_sale_order_ids': fields.many2many('sale.order', 'np_sale_order_invoicer_rel', 'invoicer_id', 'sale_order_id', 'Sale orders'),
-            'invoice_ids': fields.many2many('account.invoice', 'invoices_invoicer_rel', 'invoice_id', 'invoicer_id', 'Sale orders'),
-            'name': fields.char('Name', size=64, required=True),
-            'start_date': fields.date('Start period date'),
-            'end_date': fields.date('End period date'),
-            'invoice_outof_period': fields.boolean('Invoice out of period', required=False, help='Retrieve all subscription that invoicing next date is lower than end_date'),
-            'invoice_contracts': fields.boolean('Invoice contracts', required=False, help='Include invoicing contracts'),
-            'invoice_non_contracts': fields.boolean('Invoice sale orders', required=False, help='Include invoicing sale orders'),
-                    }
+        'periodic_sale_order_ids': fields.many2many('sale.order', 'sale_order_invoicer_rel', 'invoicer_id', 'sale_order_id', 'Sale orders'),
+        'non_periodic_sale_order_ids': fields.many2many('sale.order', 'np_sale_order_invoicer_rel', 'invoicer_id', 'sale_order_id', 'Sale orders'),
+        'invoice_ids': fields.many2many('account.invoice', 'invoices_invoicer_rel', 'invoice_id', 'invoicer_id', 'Sale orders'),
+        'name': fields.char('Name', size=64, required=True),
+        'start_date': fields.date('Start period date'),
+        'end_date': fields.date('End period date'),
+        'invoice_outof_period': fields.boolean('Invoice out of period', required=False, help='Retrieve all subscription that invoicing next date is lower than end_date'),
+        'invoice_contracts': fields.boolean('Invoice contracts', required=False, help='Include invoicing contracts'),
+        'invoice_non_contracts': fields.boolean('Invoice sale orders', required=False, help='Include invoicing sale orders'),
+    }
+
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d'),
         'invoice_contracts': lambda *a: True,
         'invoice_outof_period': lambda *a: True,
         'start_date': lambda *a: time.strftime('%Y-%m-%d'),
-        }
-
+    }
 
     def get_sale_orders2invoice(self, cr, uid, ids, context={}):
-        sale_order_ids = []
-
         invoicer = self.browse(cr, uid, ids)[0]
-
         perdiodic_sale_order2invoice_ids = self.pool.get('sale.order').search(cr, uid, [('invoicing_next_date', '<=', invoicer.end_date),
-                                                                                      ('contract_ok', '=', True),
-                                                                    #('invoicing_next_date', '>=', invoicer.start_date),
-                                                                    '|', ('state', '=', 'progress'), ('state', '=', 'manual'),
-                                                                    ])
-
-
-
+                                                                                        ('contract_ok', '=', True),
+                                                                                        #('invoicing_next_date', '>=', invoicer.start_date),
+                                                                                        '|', ('state', '=', 'progress'), ('state', '=', 'manual'),
+                                                                                        ])
         non_perdiodic_sale_order2invoice_ids = self.pool.get('sale.order').search(cr, uid, [('contract_ok', '=', False),
-                                                                                          '|',
-                                                                                          ('state', '=', 'progress'), ('state', '=', 'manual'),
-                                                                    ])
-
-
+                                                                                            '|',
+                                                                                            ('state', '=', 'progress'), ('state', '=', 'manual'),
+                                                                                            ])
         self.write(cr, uid, ids, {'periodic_sale_order_ids': [(6, 0, perdiodic_sale_order2invoice_ids)],
-                        'non_periodic_sale_order_ids': [(6, 0, non_perdiodic_sale_order2invoice_ids)]})
+                                  'non_periodic_sale_order_ids': [(6, 0, non_perdiodic_sale_order2invoice_ids)]})
         return True
 
     def pre_invoice(self, cr, uid, ids, context={}):
         ## create invoices in draft state
         invoicer = self.browse(cr, uid, ids)[0]
         if not context:
-            context={}
+            context = {}
 
         contract2invoice_ids = []
         sale_order_ids = []
 
         context.update({'invoicing_period': {'start_date':  invoicer.start_date,
-                                            'end_date':  invoicer.end_date,
-                                            },
+                                             'end_date':  invoicer.end_date,
+                                             },
                         'invoice_contracts': invoicer.invoice_contracts,
                         'invoice_non_contracts': invoicer.invoice_non_contracts,
                         'invoice_outof_period': invoicer.invoice_outof_period,
-                                 })
+                        })
 
         if invoicer.invoice_contracts:
             cr.execute('select sale_order_id from sale_order_invoicer_rel where invoicer_id=%s', (invoicer.id, ))
@@ -110,8 +100,4 @@ class account_invoicer(osv.osv):
         if invoice_ids:
             invoicer.write({'invoice_ids': [(6, 0, invoice_ids)]})
         return True
-
-
 account_invoicer()
-
-

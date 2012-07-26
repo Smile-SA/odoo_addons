@@ -35,7 +35,7 @@ def generate_random_password(length):
     new_password = ''
     if length:
         chars = string.letters + string.digits + string.punctuation
-        new_password = ''.join(choice(chars) for _ in xrange(length))
+        new_password = ''.join(choice(chars) for x in xrange(length))
     return new_password
 
 
