@@ -25,7 +25,7 @@ ALTER TABLE sartre_rule_server_action_rel RENAME TO sartre_trigger_server_action
 ALTER TABLE sartre_trigger_server_action_rel RENAME sartre_rule_id TO trigger_id;
 ALTER TABLE sartre_trigger_server_action_rel RENAME server_action_id TO action_id;
 UPDATE ir_model_data SET model = 'sartre.trigger' WHERE model = 'sartre.rule';
-UPDATE ir_model_data SET model = 'sartre.filter' WHERE model = 'sartre.condition';*/
+UPDATE ir_model_data SET model = 'sartre.filter' WHERE model = 'sartre.condition';
 UPDATE ir_model SET model = 'sartre.trigger' WHERE model = 'sartre.rule';
 UPDATE ir_model SET model = 'sartre.filter' WHERE model = 'sartre.condition';
 -- DROP TABLE sartre_exception;
