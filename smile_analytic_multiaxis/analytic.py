@@ -329,6 +329,7 @@ AnalyticDistribution()
 class AnalyticDistributionItem(osv.osv):
     _name = 'account.analytic.distribution.axis_src_item'
     _description = 'Analytic Distribution Source Axis Item'
+    _rec_name = 'res_name'
 
     def _get_names(self, cr, uid, ids, name, arg, context=None):
         res = {}
