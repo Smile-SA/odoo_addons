@@ -25,7 +25,6 @@ import time
 from osv import osv, fields
 import pooler
 import tools
-from tools.translate import _
 
 from smile_log.db_handler import SmileDBLogger
 
@@ -42,8 +41,6 @@ class IrModelImportTemplate(osv.osv):
         'import_ids': fields.one2many('ir.model.import', 'import_tmpl_id', 'Imports', readonly=True),
         'server_action_id': fields.many2one('ir.actions.server', 'Server Action'),
         'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import.template')], readonly=True),
-
-        'method_cancel': fields.char('Cancel Method', size=64, help="Arguments passed through **kwargs"),
     }
 
     def create_import(self, cr, uid, ids, context=None):
@@ -115,9 +112,6 @@ STATES = [
     ('running', 'Running'),
     ('done', 'Done'),
     ('exception', 'Exception'),
-
-    ('cancel', 'Cancel'),
-    ('exception_cancel', 'Cancel Exception'),
 ]
 
 
@@ -158,12 +152,6 @@ class IrModelImport(osv.osv):
         'pid': fields.integer('PID', readonly=True),
         'log_ids': fields.function(_get_logs, method=True, type='one2many', relation='smile.log', string="Logs"),
         'state': fields.selection(STATES, "State", readonly=True, required=True, ),
-        'line_ids': fields.one2many('ir.model.import.line', 'import_id', 'Lines'),
-
-        'cancel_from_date': fields.datetime('From date', readonly=True),
-        'cancel_to_date': fields.datetime('To date', readonly=True),
-        'cancel_pid': fields.integer('PID', readonly=True),
-        'cancel_log_ids': fields.function(_get_logs, method=True, type='one2many', relation='smile.log', string="Logs", multi='log'),
     }
 
     def create_new_cr(self, dbname, uid, vals, context):
@@ -232,85 +220,6 @@ class IrModelImport(osv.osv):
             cr.rollback()
         finally:
             cr.close()
-
-    def _process_cancel_import(self, cr, uid, import_id, logger, context):
-        assert isinstance(import_id, (int, long)), 'ir.model.import, run_import: import_id is supposed to be an integer'
-
-        context = context and context.copy() or {}
-        import_ = self.browse(cr, uid, import_id, context)
-        context['logger'] = logger
-
-        try:
-            model_obj = self.pool.get(import_.import_tmpl_id.model)
-            if not model_obj:
-                raise Exception('Unknown model: %s' % (import_.import_tmpl_id.model,))
-            model_method = import_.import_tmpl_id.method_cancel
-
-            getattr(model_obj, model_method)(cr, uid, context)
-        except Exception, e:
-            logger.critical("Import failed: %s" % (tools.ustr(repr(e))))
-            self.write_new_cr(cr.dbname, uid, import_id, {'state': 'exception_cancel', 'cancel_to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
-            raise e
-        try:
-            self.write(cr, uid, import_id, {'state': 'cancel', 'cancel_to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
-        except Exception, e:
-            logger.error("Could not mark import %s as done: %s" % (import_id, tools.ustr(repr(e))))
-            raise e
-
-    def _process_cancel_import_with_new_cursor(self, dbname, uid, import_id, logger, context=None):
-        db = pooler.get_db(dbname)
-        cr = db.cursor()
-
-        try:
-            self._process_cancel_import(cr, uid, import_id, logger, context)
-            cr.commit()
-        except Exception, e:
-            cr.rollback()
-        finally:
-            cr.close()
-
-    def cancel_import(self, cr, uid, ids, context=None):
-        """
-        context used to specify test_mode and import_mode
-        import_mode can be:
-        - same_thread_raise_error (default)
-        - new_thread
-        """
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        context = context or {}
-
-        import_mode = context.get('import_mode', 'same_thread_full_rollback')
-
-        for import_ in self.browse(cr, uid, ids, context):
-            context['import_id'] = import_.id
-            if import_.state == 'running':
-                raise osv.except_osv(_('Error'), _('You cannot cancel an importation in progress!'))
-
-            if not import_.import_tmpl_id.method_cancel:
-                raise osv.except_osv(_('Error'), _('You must define a cancel method in import template!'))
-
-            if import_.test_mode:
-                return True
-
-            logger = SmileDBLogger(cr.dbname, 'ir.model.import.template', import_.import_tmpl_id.id, uid)
-            self.write_new_cr(cr.dbname, uid, import_.id, {
-                'state': 'running',
-                'cancel_pid': logger.pid,
-                'cancel_from_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-            }, context)
-
-            if import_mode == 'new_thread':
-                t = threading.Thread(target=self._process_cancel_import_with_new_cursor, args=(cr.dbname, uid, import_.id, logger, context))
-                t.start()
-            else:
-                try:
-                    self._process_cancel_import(cr, uid, import_.id, logger, context)
-                except osv.except_osv, e:
-                    raise e
-                except Exception, e:
-                    raise osv.except_osv(_('Error'), e.message)
-        return True
 IrModelImport()
 
 
