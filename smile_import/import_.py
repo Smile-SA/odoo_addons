@@ -106,6 +106,7 @@ STATES = [
     ('exception', 'Exception'),
 ]
 
+
 class IrModelImport(Model):
     _name = 'ir.model.import'
     _description = 'Import'

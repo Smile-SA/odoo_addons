@@ -193,6 +193,7 @@ STATES = [
     ('exception', 'Exception'),
 ]
 
+
 class ir_model_export(Model):
     _name = 'ir.model.export'
     _description = 'Export'
