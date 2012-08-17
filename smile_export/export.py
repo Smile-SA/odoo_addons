@@ -299,7 +299,7 @@ class ir_model_export(Model):
                 raise e
 
         try:
-            self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
+            return self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
             logger.error("Could not mark export %s as done: %s" % (export_id, _get_exception_message(e)))
             raise e
