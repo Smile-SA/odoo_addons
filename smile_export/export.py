@@ -24,7 +24,6 @@ import time
 
 from osv import fields
 from osv.orm import Model, except_orm
-from modules.registry import Registry
 import pooler
 import tools
 from tools.translate import _
