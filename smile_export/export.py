@@ -261,6 +261,7 @@ class ir_model_export(Model):
         context['export_error_management'] = 'rollback_and_continue'
         try:
             self._generate(cr, uid, export_id, logger, context)
+            cr.commit()
         finally:
             cr.close()
         return
@@ -294,17 +295,17 @@ class ir_model_export(Model):
                 cr.execute("ROLLBACK TO SAVEPOINT smile_export")
                 logger.info("Export rollbacking")
                 return self.write(cr, uid, export_id, {'state': 'exception',
-                                                       'to_date': time.strftime('%Y-%m-%d %H:%M:%S'),
                                                        'exception': _get_exception_message(e), }, context)
             else:  # export_error_management = raise
                 raise e
 
         try:
-            return self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
+            print 'done'
+            print self.write(cr, uid, export_id, {'state': 'done'}, context)
+            return True
         except Exception, e:
             logger.error("Could not mark export %s as done: %s" % (export_id, _get_exception_message(e)))
             raise e
-        return True
 
 
 class ir_model_export_line(Model):
