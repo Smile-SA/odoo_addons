@@ -25,7 +25,7 @@
 									<field name="create_uid" />
 									<field name="line_ids" />
 									<field name="state" readonly="1"/>
-									<button type="object" name="generate" icon="terp-gtk-jump-to-ltr" string="Re-generate" />
+									<button type="object" name="generate" icon="terp-gtk-jump-to-ltr" string="Re-generate" context="{'commit_and_new_thread':True}"/>
 								</tree>
 								<form string="Export">
 									<group colspan="4" col="6">
