@@ -262,6 +262,8 @@ class ir_model_export(Model):
         try:
             self._generate(cr, uid, export_id, logger, context)
             cr.commit()
+        except Exception, e:
+            cr.rollback()
         finally:
             cr.close()
         return
