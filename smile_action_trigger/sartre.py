@@ -27,7 +27,7 @@ import threading
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp.modules import loading
+from openerp.modules.registry import Registry
 
 from osv import fields, osv, orm
 import pooler
@@ -66,10 +66,9 @@ def _get_id_from_browse_record(value):
 
 def cache_restarter(original_method):
     @wraps(original_method)
-    def wrapper(db_name, force_demo=False, status=None, update_module=False):
-        res = original_method(db_name, force_demo=False, status=None, update_module=False)
-        db, pool = pooler.get_pool(db_name, force_demo, status, update_module)
-        trigger_obj = pool.get('sartre.trigger')
+    def wrapper(self, cr, module):
+        res = original_method(self, cr, module)
+        trigger_obj = self.get('sartre.trigger')
         if trigger_obj and hasattr(trigger_obj, 'cache_restart'):
             trigger_obj.cache_restart(cr)
         return res
@@ -122,32 +121,35 @@ class SartreOperator(osv.osv):
     }
 
     @tools.cache(skiparg=3)
-    def _get_operator(self, cr, uid, name, context=None):
-        opposite_operator = False
+    def _get_operator(self, cr, uid, name):
+        operator = opposite_operator = None
         if name.startswith('not '):
             opposite_operator = True
             name = name.replace('not ', '')
-        operator_id = self.search(cr, uid, ['|', ('symbol', '=', name), ('opposite_symbol', '=', name)], limit=1, context=context)
+        operator_id = self.search(cr, uid, ['|', ('symbol', '=', name), ('opposite_symbol', '=', name)], limit=1)
         if operator_id:
-            operator = self.browse(cr, uid, operator_id[0], context)
+            operator = self.browse(cr, uid, operator_id[0])
             if name == operator.opposite_symbol:
                 opposite_operator = not opposite_operator
-            return operator, opposite_operator
-        return
+        return operator, opposite_operator
+
+    def __init__(self, pool, cr):
+        super(SartreOperator, self).__init__(pool, cr)
+        self.clear_caches()
 
     def create(self, cr, uid, vals, context=None):
         operator_id = super(SartreOperator, self).create(cr, uid, vals, context)
-        self._get_operator.clear_cache(self)
+        self.clear_caches()
         return operator_id
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(SartreOperator, self).write(cr, uid, ids, vals, context)
-        self._get_operator.clear_cache(self)
+        self.clear_caches()
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(SartreOperator, self).unlink(cr, uid, ids, context)
-        self._get_operator.clear_cache(self)
+        self.clear_caches()
         return res
 SartreOperator()
 
@@ -229,7 +231,7 @@ class SartreTrigger(osv.osv):
             if self._is_dynamic_field(item[0], model_obj):
                 return True
             # Python operator
-            operator = self.pool.get('sartre.operator')._get_operator(cr, uid, item[1], context)
+            operator = self.pool.get('sartre.operator')._get_operator(cr, uid, item[1])
             if operator and operator[0] and operator[0].native_operator == 'none':
                 return True
             # Dynamic comparison value
@@ -386,7 +388,7 @@ class SartreTrigger(osv.osv):
                 trigger.write({'on_client_action_id': client_action_id})
         return True
 
-    @tools.cache()
+    @tools.cache(skiparg=3)
     def get_trigger_ids(self, cr, uid, model, method):
         domain = [('model', '=', model)]
         if method in ['create', 'write', 'unlink', 'function']:
@@ -395,7 +397,7 @@ class SartreTrigger(osv.osv):
             domain.append(('on_other_method', '=', method))
         return self.search(cr, uid, domain, context={'active_test': True})
 
-    @tools.cache()
+    @tools.cache(skiparg=3)
     def get_fields_to_save_old_values(self, cr, uid, ids):
         res = []
         if isinstance(id, (int, long)):
@@ -427,6 +429,9 @@ class SartreTrigger(osv.osv):
                         if original_method:
                             methods_to_decorate.append(original_method)
             if trigger.on_other:
+                class_obj = self.pool.get(trigger.model_id.model)
+                if not class_obj:
+                    continue
                 m_class = self.pool.get(trigger.model_id.model).__class__
                 m_name = trigger.on_other_method
                 if m_name and hasattr(m_class, m_name):
@@ -447,7 +452,7 @@ class SartreTrigger(osv.osv):
 
     def __init__(self, pool, cr):
         super(SartreTrigger, self).__init__(pool, cr)
-        setattr(loading, 'load_modules', cache_restarter(getattr(loading, 'load_modules')))
+        setattr(Registry, 'load', cache_restarter(getattr(Registry, 'load')))
 
     def create(self, cr, uid, vals, context=None):
         trigger_id = super(SartreTrigger, self).create(cr, uid, vals, context)
@@ -517,7 +522,7 @@ class SartreTrigger(osv.osv):
                 fields_list = field.replace('OLD_', '').split('.')
                 field, remote_field = fields_list[0], len(fields_list) > 1 and '.'.join(fields_list[1:]) or ''
                 try:
-                    operator_inst, opposite_operator = operator_obj._get_operator(cr, uid, operator_symbol, context=context)
+                    operator_inst, opposite_operator = operator_obj._get_operator(cr, uid, operator_symbol)
                 except:
                     raise osv.except_osv(_('Warning!'), _("The operator %s doesn't exist!") % operator_symbol)
                 dynamic_other_value = other_value and re.match('(\[\[.+?\]\])', str(other_value))
@@ -688,6 +693,7 @@ class SartreTrigger(osv.osv):
         context['active_ids'] = self._get_ids_by_group(cr, uid, action, object_ids, context)
         for active_id in context['active_ids']:
             context['active_id'] = active_id
+            context['active_model'] = action.model_id.model
             self.pool.get('ir.actions.server').run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context)
         return True
 
