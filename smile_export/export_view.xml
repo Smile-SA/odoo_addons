@@ -18,14 +18,14 @@
 					</group>
 					<notebook colspan="4">
 						<page string="Exports">
-							<button type="object" name="create_export" string="New Export" colspan="4" />
+							<button type="object" name="create_export" string="New Export" colspan="4" context="{'commit_and_new_thread':True}"/>
 							<field name="export_ids" nolabel="1" colspan="4" mode="tree,form" readonly="1">
 								<tree string="Exports" editable="top">
 									<field name="create_date" />
 									<field name="create_uid" />
 									<field name="line_ids" />
 									<field name="state" readonly="1"/>
-									<button type="object" name="generate" icon="terp-gtk-jump-to-ltr" string="Re-generate" />
+									<button type="object" name="generate" icon="terp-gtk-jump-to-ltr" string="Re-generate" context="{'commit_and_new_thread':True}"/>
 								</tree>
 								<form string="Export">
 									<group colspan="4" col="6">

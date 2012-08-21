@@ -468,8 +468,8 @@ class ir_model_export_file_template(Model):
         extension = export_file.extension
         if extension == 'other':
             extension = export_file.extension_custom
-            if extension.find('.'):
-                extension = '.%s' % extension
+        if not extension.startswith('.'):
+            extension = '.%s' % extension
         filename += extension
         return filename
 

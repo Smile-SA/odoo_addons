@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+	    <record id="group_smile_import_manager" model="res.groups">
+	        <field name="name">Smile import / Manager</field>
+	    </record>
+	    
+	    <record id="group_smile_import_user" model="res.groups">
+	        <field name="name">Smile import / User</field>
+	    </record>
+
+	</data>
+</openerp>
