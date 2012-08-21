@@ -245,6 +245,8 @@ class SartreTrigger(osv.osv):
         res = {}.fromkeys(ids, False)
         for trigger in self.browse(cr, uid, ids, context):
             model_obj = self.pool.get(trigger.model_id.model)
+            if not model_obj:
+                continue
             if trigger.on_date and trigger.on_date_type_display1 == 'other_date':
                 #other date is function field without fnct_search and not stored
                 if self._is_dynamic_field(trigger.on_date_type, model_obj):
