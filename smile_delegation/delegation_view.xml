@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<!-- Delegation Template -->
+
+		<record id="delegation_template_tree_view" model="ir.ui.view">
+			<field name="name">delegation.template.tree</field>
+			<field name="model">delegation.template</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Delegation Templates">
+					<field name="name"/>
+					<field name="model_id"/>
+					<field name="method_id"/>
+					<field name="active"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="delegation_template_search_view" model="ir.ui.view">
+			<field name="name">delegation.template.search</field>
+			<field name="model">delegation.template</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Delegation Templates">
+					<field name="name"/>
+					<field name="model_id"/>
+					<field name="method_id"/>
+					<newline/>
+	                <group expand="0" string="Extended..." groups="base.group_extended">
+						<field name="active"/>
+	                </group>
+				</search>
+			</field>
+		</record>
+
+		<record id="delegation_template_form_view" model="ir.ui.view">
+			<field name="name">delegation.template.form</field>
+			<field name="model">delegation.template</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Delegation Template">
+					<field name="name"/>
+					<field name="active"/>
+					<field name="model_id" 
+						on_change="onchange_model_or_method(model_id, method_id)"/>
+					<field name="method_id" domain="[('model_id', '=', model_id)]" 
+						on_change="onchange_model_or_method(model_id, method_id)"/>
+					<field name="user_field_id" domain="[('model_id', '=', model_id)]"/>
+					<field name="method_args"/>
+					<separator colspan="4" string="Domain"/>
+					<field name="domain" nolabel="1" colspan="4"/>
+					<separator colspan="4" string="Action"/>
+					<field name="client_action_id"/>
+					<button name="create_client_action" type="object" string="Create Client Action" 
+						attrs="{'readonly': [('client_action_id', '!=', False)]}" colspan="2"/>
+				</form>
+			</field>
+		</record>
+
+		<record id="delegation_template_action" model="ir.actions.act_window">
+			<field name="name">Delegation Templates</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">delegation.template</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{'active_test': False}</field>
+		</record>
+
+		<menuitem action="delegation_template_action" id="delegation_template_menu" parent="base.menu_security" sequence="50" />
+
+		<!-- Delegation -->
+
+		<record id="delegation_tree_view" model="ir.ui.view">
+			<field name="name">delegation.tree</field>
+			<field name="model">delegation.delegation</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Delegations">
+					<field name="delegation_tmpl_id"/>
+					<field name="user_id"/>
+					<field name="delegate_ids"/>
+					<field name="history_ids"/>
+					<field name="date_start"/>
+					<field name="date_stop"/>
+					<field name="active"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="delegation_search_view" model="ir.ui.view">
+			<field name="name">delegation.search</field>
+			<field name="model">delegation.delegation</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Delegations">
+					<field name="delegation_tmpl_id"/>
+					<field name="user_id"/>
+					<field name="delegate_ids"/>
+					<newline/>
+	                <group expand="0" string="Extended..." groups="base.group_extended">
+						<field name="date_start"/>
+						<field name="date_stop"/>
+						<field name="active"/>
+	                </group>
+				</search>
+			</field>
+		</record>
+
+		<record id="delegation_form_view" model="ir.ui.view">
+			<field name="name">delegation.form</field>
+			<field name="model">delegation.delegation</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Delegation">
+					<label string="" colspan="2"/>
+					<field name="active" groups="smile_delegation.group_smile_delegation_manager"/>
+					<field name="delegation_tmpl_id" widget="selection"/>
+					<field name="user_id" readonly="1"/>
+					<field name="date_start"/>
+					<field name="date_stop"/>
+					<field name="delegate_ids" colspan="4" nolabel="1" mode="tree,form">
+						<tree string="Delegates">
+							<field name="name"/>
+						</tree>
+					</field>
+					<field name="history_ids" colspan="4" nolabel="1" mode="tree,form">
+						<tree string="History" editable="top">
+							<field name="create_date"/>
+							<field name="delegate_id"/>
+							<field name="method_args"/>
+						</tree>
+					</field>
+				</form>
+			</field>
+		</record>
+
+		<record id="delegation_action" model="ir.actions.act_window">
+			<field name="name">Delegations</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">delegation.delegation</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{'active_test': False}</field>
+		</record>
+
+		<menuitem action="delegation_action" id="delegation_menu" parent="base.menu_security" sequence="60" />
+
+	</data>
+</openerp>

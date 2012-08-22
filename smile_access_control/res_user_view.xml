@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+		<!-- Users -->
+
+		<record id="view_res_user_form" model="ir.ui.view">
+			<field name="name">res.users.form</field>
+			<field name="model">res.users</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="base.view_users_form" />
+			<field name="arch" type="xml">
+				<data>
+					<field name="new_password" position="before">
+						<field name="user_profile" on_change="onchange_user_profile(user_profile)"/>
+					</field>
+					<field name="new_password" position="after">
+						<field name="user_profile_id" widget="selection" attrs="{'invisible': [('user_profile', '=', True)], 'required': [('user_profile', '!=', True)]}"/>
+					</field>
+					<notebook position="inside">
+						<page string="Configuration" attrs="{'invisible': [('user_profile', '!=', True)]}">
+							<separator string="Linked users" colspan="4"/>
+							<field name="user_ids" nolabel="1" colspan="4" widget="many2many"/>
+							<separator string="Fields to update for linked users" colspan="4"/>
+							<field name="field_ids" nolabel="1" colspan="4"/>
+						</page>
+					</notebook>
+				</data>
+			</field>
+		</record>
+
+		<record id="action_res_user_profiles" model="ir.actions.act_window">
+			<field name="name">User Profiles</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.users</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="base.view_users_tree" />
+			<field name="search_view_id" ref="base.view_users_search" />
+			<field name="domain">[('user_profile', '=', True)]</field>
+			<field name="context">{'active_test': False}</field>
+			<field name="help"></field>
+		</record>
+		<menuitem action="action_res_user_profiles" id="menu_action_res_user_profiles"
+			parent="base.menu_users" />
+
+		<record id="base.action_res_users" model="ir.actions.act_window">
+			<field name="domain">[('user_profile', '=', False)]</field>
+		</record>
+
+    </data>
+</openerp>

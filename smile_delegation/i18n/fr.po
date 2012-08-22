@@ -1,0 +1,183 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_delegation
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.4\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-06-08 08:55+0000\n"
+"PO-Revision-Date: 2012-06-08 08:55+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_delegation
+#: field:delegation.template,client_action_id:0
+msgid "Client Action"
+msgstr "Action client"
+
+#. module: smile_delegation
+#: field:delegation.delegation,delegation_tmpl_id:0
+#: view:delegation.template:0
+#: model:ir.model,name:smile_delegation.model_delegation_template
+msgid "Delegation Template"
+msgstr "Modèle de délégation"
+
+#. module: smile_delegation
+#: view:delegation.delegation:0
+#: view:delegation.template:0
+msgid "Extended..."
+msgstr "Etendre..."
+
+#. module: smile_delegation
+#: field:delegation.history,method_args:0
+msgid "Method Arguments"
+msgstr "Arguments"
+
+#. module: smile_delegation
+#: field:delegation.template,method_args:0
+msgid "Arguments"
+msgstr "Arguments"
+
+#. module: smile_delegation
+#: view:delegation.delegation:0
+#: model:ir.actions.act_window,name:smile_delegation.delegation_action
+#: model:ir.ui.menu,name:smile_delegation.delegation_menu
+msgid "Delegations"
+msgstr "Délégations"
+
+#. module: smile_delegation
+#: field:delegation.template,user_field_id:0
+msgid "User field"
+msgstr "Champ utilisateur"
+
+#. module: smile_delegation
+#: field:delegation.delegation,method:0
+#: field:delegation.template,method:0
+#: field:delegation.template,method_id:0
+msgid "Method"
+msgstr "Méthode"
+
+#. module: smile_delegation
+#: field:ir.model.methods,name:0
+msgid "Method name"
+msgstr "Nom"
+
+#. module: smile_delegation
+#: field:ir.model.methods,model_id:0
+msgid "Object"
+msgstr "Objet"
+
+#. module: smile_delegation
+#: view:delegation.delegation:0
+#: field:delegation.delegation,delegate_ids:0
+msgid "Delegates"
+msgstr "Mandataires"
+
+#. module: smile_delegation
+#: model:ir.model,name:smile_delegation.model_ir_model
+msgid "Objects"
+msgstr "Objets"
+
+#. module: smile_delegation
+#: field:delegation.history,create_date:0
+msgid "Date"
+msgstr "Date"
+
+#. module: smile_delegation
+#: field:delegation.delegation,user_id:0
+msgid "Delegator"
+msgstr "Mandant"
+
+#. module: smile_delegation
+#: field:delegation.delegation,date_stop:0
+msgid "End Date"
+msgstr "Date de fin"
+
+#. module: smile_delegation
+#: field:delegation.template,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_delegation
+#: help:delegation.template,user_field_id:0
+msgid "To save delegate user in object"
+msgstr "Enregistre le mandataire dans ce champ de l'objet"
+
+#. module: smile_delegation
+#: field:delegation.delegation,active:0
+#: field:delegation.template,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_delegation
+#: field:delegation.history,delegate_id:0
+msgid "Delegate"
+msgstr "Mandataire"
+
+#. module: smile_delegation
+#: model:ir.model,name:smile_delegation.model_ir_model_methods
+msgid "Model Method"
+msgstr "Méthode"
+
+#. module: smile_delegation
+#: view:delegation.template:0
+msgid "Action"
+msgstr "Action"
+
+#. module: smile_delegation
+#: field:delegation.delegation,model:0
+#: field:delegation.template,model:0
+#: field:delegation.template,model_id:0
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_delegation
+#: view:delegation.template:0
+#: model:ir.actions.act_window,name:smile_delegation.delegation_template_action
+#: model:ir.ui.menu,name:smile_delegation.delegation_template_menu
+msgid "Delegation Templates"
+msgstr "Modèles de délégation"
+
+#. module: smile_delegation
+#: view:delegation.delegation:0
+#: field:delegation.delegation,history_ids:0
+msgid "History"
+msgstr "Historique"
+
+#. module: smile_delegation
+#: view:delegation.template:0
+#: field:delegation.template,domain:0
+msgid "Domain"
+msgstr "Domaine"
+
+#. module: smile_delegation
+#: model:ir.module.module,shortdesc:smile_delegation.module_meta_information
+msgid "Smile Delegation"
+msgstr "Smile Delegation"
+
+#. module: smile_delegation
+#: view:delegation.delegation:0
+#: field:delegation.history,delegation_id:0
+#: model:ir.model,name:smile_delegation.model_delegation_delegation
+msgid "Delegation"
+msgstr "Délégation"
+
+#. module: smile_delegation
+#: field:delegation.delegation,date_start:0
+msgid "Start Date"
+msgstr "Date de début"
+
+#. module: smile_delegation
+#: model:ir.model,name:smile_delegation.model_delegation_history
+msgid "Delegation History"
+msgstr "Historique"
+
+#. module: smile_delegation
+#: view:delegation.template:0
+msgid "Create Client Action"
+msgstr "Créer une action client"
