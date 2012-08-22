@@ -51,7 +51,6 @@ def new_get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
 
 def new_fnct_write(self, obj, cr, uid, id_, prop_name, id_val, obj_dest, context=None):
     context = context or {}
-
     field_id = self._field_get(cr, uid, obj._name, prop_name)
     company_obj = obj.pool.get('res.company')
     company_id = context.get('force_company') or context.get('company_id')  # company_id in context is used in account module

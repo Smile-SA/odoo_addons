@@ -82,6 +82,7 @@ class IrActionsServer(osv.osv):
                     if result:
                         res.append(result)
                 return res
+
         else:
             act_ids.append(action.id)
 
