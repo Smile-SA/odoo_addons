@@ -1,0 +1,71 @@
+-
+  I create an analytic axis "Analytic Journal"
+-
+  !record {model: account.analytic.axis, id: analytic_axis_analytic_journal}:
+    name: Analytic Journal
+    column_label: journal_id
+    active: True
+    model_id: account.model_account_analytic_journal
+    required: True
+    ondelete: restrict
+    is_unicity_field: True
+-
+  I create an analytic axis "Analytic Account"
+-
+  !record {model: account.analytic.axis, id: analytic_axis_analytic_account}:
+    name: Analytic Account
+    column_label: account_id
+    active: True
+    model_id: analytic.model_account_analytic_account
+    domain: []
+    required: True
+    ondelete: cascade
+    is_unicity_field: True
+-
+  I create an analytic axis "General Account"
+-
+  !record {model: account.analytic.axis, id: analytic_axis_general_account}:
+    name: General Account
+    column_label: general_account_id
+    active: True
+    model_id: account.model_account_account
+    domain: []
+    required: True
+    ondelete: restrict
+    is_unicity_field: True
+-
+  I create an analytic axis "Account Move"
+-
+  !record {model: account.analytic.axis, id: analytic_axis_account_move_line}:
+    name: Account Move Line
+    column_label: move_id
+    active: True
+    model_id: account.model_account_move_line
+    domain: []
+    required: False
+    is_unicity_field: False
+-
+  I create an analytic axis "Product"
+-
+  !record {model: account.analytic.axis, id: analytic_axis_product}:
+    name: Product
+    column_label: product_id
+    active: True
+    model_id: product.model_product_product
+    domain: []
+    required: False
+    ondelete: set null
+    is_unicity_field: True
+    field_ids: [product.field_product_product_product_tmpl_id]
+-
+  I create an analytic axis "Product UoM"
+-
+  !record {model: account.analytic.axis, id: analytic_axis_product_uom}:
+    name: Product UoM
+    column_label: product_uom_id
+    active: True
+    model_id: product.model_product_uom
+    domain: []
+    required: False
+    ondelete: set null
+    is_unicity_field: False
