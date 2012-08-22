@@ -108,9 +108,9 @@ class User(orm.Model):
                     logger.error(error_msg)
                     raise OpenERPException(error_msg, ('', '', ''))
                 self._uid_cache.setdefault(db, {}).update({uid: passwd})
-            cr.execute("UPDATE res_users SET expiry_date=%s WHERE id=%s", (self.get_expiry_date(), int(uid)))
-            cr.commit()
-            logger.debug("Server session extended for the user [uid=%s]", uid)
+#            cr.execute("UPDATE res_users SET expiry_date=%s WHERE id=%s", (self.get_expiry_date(), int(uid)))
+#            cr.commit()
+#            logger.debug("Server session extended for the user [uid=%s]", uid)
         finally:
             cr.close()
 

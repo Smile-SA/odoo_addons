@@ -27,7 +27,7 @@ import threading
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp.modules.registry import Registry
+from modules.registry import Registry
 
 from osv import fields, osv, orm
 import pooler
@@ -70,7 +70,9 @@ def cache_restarter(original_method):
         res = original_method(self, cr, module)
         trigger_obj = self.get('sartre.trigger')
         if trigger_obj and hasattr(trigger_obj, 'cache_restart'):
-            trigger_obj.cache_restart(cr)
+            cr.execute("SELECT relname FROM pg_class WHERE relname=%s", (trigger_obj._table,))
+            if cr.fetchall():
+                trigger_obj.cache_restart(cr)
         return res
     return wrapper
 
