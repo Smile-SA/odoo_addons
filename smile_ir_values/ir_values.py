@@ -25,7 +25,7 @@ import pickle
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
-    'report_sxw_content_data', 'report_rml_content_data', 'search_view', ))
+    'report_sxw_content_data', 'report_rml_content_data', 'search_view',))
 
 
 class IrValues(osv.osv):
@@ -106,7 +106,7 @@ class IrValues(osv.osv):
                 return False
             keys.append(x[1])
             if x[3]:
-                model, id = x[2].split(', ')
+                model, id = x[2].split(',')
                 # FIXME: It might be a good idea to opt-in that kind of stuff
                 # FIXME: instead of arbitrarily removing random fields
                 fields = [
