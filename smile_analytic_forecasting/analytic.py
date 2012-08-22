@@ -162,6 +162,8 @@ class AnalyticLine(osv.osv):
         return domain
 
     def _deactivate_old_forecast_lines(self, cr, uid, ids, initial_domain=None, context=None):
+        if not hasattr(self, '_unicity_fields'):
+            return True
         line_ids_to_deactivate = []
         context = context or {}
         context['bypass_forecast_lines_deactivation'] = True
