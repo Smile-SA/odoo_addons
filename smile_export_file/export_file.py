@@ -77,7 +77,7 @@ def is_a_datetime(str0, type='datetime'):
                 str0 = datetime.datetime.today().strftime(formats['date']) + ' ' + str0
             result = datetime.datetime.strptime(str0, formats[type])
             return result
-        except Exception, e:
+        except Exception:
             pass
     return
 

@@ -23,7 +23,7 @@ import threading
 import time
 
 from osv import fields
-from osv.orm import Model, except_orm
+from osv.orm import Model
 import pooler
 import tools
 
@@ -179,7 +179,7 @@ class IrModelImport(Model):
         try:
             self._process_import(cr, uid, import_id, logger, context)
             cr.commit()
-        except Exception, e:
+        except Exception:
             cr.rollback()
         finally:
             cr.close()

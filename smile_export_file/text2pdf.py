@@ -284,9 +284,6 @@ class pyText2Pdf:
         # or last element in options list (in case of an error!)
         if len(args):
             self._ifile = args[0]
-        else:
-            l = len(optlist)
-            tup = optlist[l - 1]
 
         # parse options list
         if len(optlist):

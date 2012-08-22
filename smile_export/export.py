@@ -20,7 +20,6 @@
 ##############################################################################
 
 import threading
-import time
 
 from osv import fields
 from osv.orm import Model, except_orm
@@ -154,7 +153,7 @@ class ir_model_export_template(Model):
                     'model': self._name,
                     'function': 'create_export',
                     'args': '(%d,)' % template.id,
-                    'numbercall':-1,
+                    'numbercall': -1,
                 }
                 cron_id = self.pool.get('ir.cron').create(cr, uid, vals)
                 template.write({'cron_id': cron_id})
@@ -262,7 +261,7 @@ class ir_model_export(Model):
         try:
             self._generate(cr, uid, export_id, logger, context)
             cr.commit()
-        except Exception, e:
+        except Exception:
             cr.rollback()
         finally:
             cr.close()
