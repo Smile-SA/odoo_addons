@@ -64,12 +64,14 @@ def _get_id_from_browse_record(value):
 
 def cache_restarter(original_method):
     @wraps(original_method)
-    def wrapper(self, cr, mode):
-        res = original_method(self, cr, mode)
+    def wrapper(self, module, cr):
+        res = original_method(self, module, cr)
         if isinstance(self, osv.osv_pool):
             trigger_obj = self.get('sartre.trigger')
             if trigger_obj and hasattr(trigger_obj, 'cache_restart'):
-                trigger_obj.cache_restart(cr)
+                cr.execute("SELECT relname FROM pg_class WHERE relname=%s", (trigger_obj._table,))
+                if cr.fetchall():
+                    trigger_obj.cache_restart(cr)
         return res
     return wrapper
 
@@ -369,7 +371,7 @@ class SartreTrigger(osv.osv):
                     'name': trigger.name,
                     'model_id': trigger.model_id.id,
                     'state': 'code',
-                    'code': "self.pool.get('sartre.trigger').run_now(cr, uid, %d, context)" % (trigger.id, ),
+                    'code': "self.pool.get('sartre.trigger').run_now(cr, uid, %d, context)" % (trigger.id,),
                 }
                 server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals, context)
                 vals2 = {
@@ -425,7 +427,10 @@ class SartreTrigger(osv.osv):
                         if original_method:
                             methods_to_decorate.append(original_method)
             if trigger.on_other:
-                m_class = self.pool.get(trigger.model_id.model).__class__
+                class_obj = self.pool.get(trigger.model_id.model)
+                if not class_obj:
+                    continue
+                m_class = class_obj.__class__
                 m_name = trigger.on_other_method
                 if m_name and hasattr(m_class, m_name):
                     other_method = getattr(m_class, m_name)
@@ -445,7 +450,7 @@ class SartreTrigger(osv.osv):
 
     def __init__(self, pool, cr):
         super(SartreTrigger, self).__init__(pool, cr)
-        setattr(osv.osv_pool, 'init_set', cache_restarter(getattr(osv.osv_pool, 'init_set')))
+        setattr(osv.osv_pool, 'instanciate', cache_restarter(getattr(osv.osv_pool, 'instanciate')))
 
     def create(self, cr, uid, vals, context=None):
         trigger_id = super(SartreTrigger, self).create(cr, uid, vals, context)
@@ -520,7 +525,7 @@ class SartreTrigger(osv.osv):
                 dynamic_other_value = other_value and re.match('(\[\[.+?\]\])', str(other_value))
                 for object_ in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
                     if dynamic_other_value:
-                        other_value = _get_id_from_browse_record(eval(str(dynamic_other_value.group()[2: -2]).strip(), {
+                        other_value = _get_id_from_browse_record(eval(str(dynamic_other_value.group()[2:-2]).strip(), {
                             'object': object_,
                             'context': context,
                             'time': time,
@@ -596,7 +601,7 @@ class SartreTrigger(osv.osv):
 
         # Get sequence in order to differentiate logs per run
         if context.get('test_mode', False):
-            logger.info('[%s] Trigger in test mode' % (pid, ))
+            logger.info('[%s] Trigger in test mode' % (pid,))
         logger.debug('[%s] Trigger on %s' % (pid, context.get('trigger', 'manual')))
         logger.debug('[%s] Context: %s' % (pid, context))
         trigger = self.browse(cr, uid, trigger_id, context)
@@ -612,7 +617,7 @@ class SartreTrigger(osv.osv):
                 return True
             else:
                 cr.rollback()
-                logger.time_info("[%s] Transaction rolled back" % (pid, ))
+                logger.time_info("[%s] Transaction rolled back" % (pid,))
                 if trigger.exception_warning == 'custom':
                     raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (trigger.exception_message, pid))
                 elif trigger.exception_warning == 'native':
@@ -621,11 +626,11 @@ class SartreTrigger(osv.osv):
         if filtered_object_ids or trigger.force_actions_execution:
             logger.info('[%s] Trigger on %s for objects %s, %s' % (pid, context.get('trigger', 'manual'), trigger.model_id.model, filtered_object_ids))
             if context.get('test_mode', False):
-                cr.execute("SAVEPOINT smile_action_trigger_test_mode_%s", (trigger.id, ))
+                cr.execute("SAVEPOINT smile_action_trigger_test_mode_%s", (trigger.id,))
             for action in trigger.action_ids:
                 if action.active:
                     if trigger.exception_handling == 'continue':
-                        cr.execute("SAVEPOINT smile_action_trigger_%s", (trigger.id, ))
+                        cr.execute("SAVEPOINT smile_action_trigger_%s", (trigger.id,))
                     try:
                         logger.debug('[%s] Launch Action: %s - Objects: %s, %s' % (pid, action.name, action.model_id.model, filtered_object_ids))
                         self._run_action(cr, uid, action, filtered_object_ids, context, logger, pid)
@@ -636,10 +641,10 @@ class SartreTrigger(osv.osv):
                     except Exception, e:
                         logger.exception('[%s] Action failed: %s - %s' % (pid, action.name, _get_exception_message(e)))
                         if trigger.exception_handling == 'continue' and not action.force_rollback:
-                            cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_%s", (trigger.id, ))
+                            cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_%s", (trigger.id,))
                         else:
                             cr.rollback()
-                            logger.time_info("[%s] Transaction rolled back" % (pid, ))
+                            logger.time_info("[%s] Transaction rolled back" % (pid,))
                             if trigger.exception_warning == 'custom':
                                 raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (trigger.exception_message, pid))
                             elif trigger.exception_warning == 'native':
@@ -647,12 +652,12 @@ class SartreTrigger(osv.osv):
                             else:  # elif trigger.exception_warning == 'none':
                                 return True
             if context.get('test_mode', False):
-                cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_test_mode_%s", (trigger.id, ))
-                logger.time_info("[%s] Actions execution rolled back" % (pid, ))
+                cr.execute("ROLLBACK TO SAVEPOINT smile_action_trigger_test_mode_%s", (trigger.id,))
+                logger.time_info("[%s] Actions execution rolled back" % (pid,))
             if trigger.executions_max_number:
                 for object_id in filtered_object_ids:
                     self.pool.get('sartre.execution').update_executions_counter(cr, uid, trigger, object_id)
-        logger.time_debug('[%s] End' % (pid, ))
+        logger.time_debug('[%s] End' % (pid,))
         return True
 
     def _run_action(self, cr, uid, action, object_ids, context, logger, pid):
@@ -759,7 +764,7 @@ class SartreFilter(osv.osv):
         """Build field expression"""
         field_pool = self.pool.get('ir.model.fields')
         field_obj = field_pool.read(cr, uid, field_id, ['name', 'ttype', 'relation', 'model'])
-        field_expr = field_expression and (field_expression.split('.')[: -1] and '.'.join(field_expression.split('.')[: -1]) or field_expression) + '.' or ''
+        field_expr = field_expression and (field_expression.split('.')[:-1] and '.'.join(field_expression.split('.')[:-1]) or field_expression) + '.' or ''
         obj = self.pool.get(field_obj['model'])
         if field_obj['name'] in obj._columns and 'fields.related' in str(obj._columns[field_obj['name']]):
             field_expr += obj._columns[field_obj['name']].arg[0] + '.'
@@ -772,7 +777,7 @@ class SartreFilter(osv.osv):
 
     def _check_field_expression(self, cr, uid, model_id, field_expression='', context=None):
         """Check field expression"""
-        field_list = field_expression and (field_expression.split('.')[: -1] or [field_expression])
+        field_list = field_expression and (field_expression.split('.')[:-1] or [field_expression])
         if field_list:
             field_pool = self.pool.get('ir.model.fields')
             model = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])['model']
