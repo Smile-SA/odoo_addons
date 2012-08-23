@@ -38,7 +38,7 @@ class ResUser(osv.osv):
     def _get_default_field_ids(self, cr, uid, ids, context=None):
         return self.pool.get('ir.model.fields').search(cr, uid, [
             ('model', '=', 'res.users'),
-            ('name', 'in', ('action_id', 'menu_id', 'groups_id')),
+            ('name', 'in', ('action_id', 'menu_id', 'groups_id', 'view')),
         ], context=context)
 
     _defaults = {
