@@ -51,12 +51,12 @@ class User(orm.Model):
         self._duration = 60 * 60 * 24 * 365  # TODO: indicate file
 
     def get_expiry_date(self):
-        return (datetime.now() + timedelta(seconds=self._duration)).strftime('%Y-%m-%d %H:%M:%S')
+        return (datetime.utcnow() + timedelta(seconds=self._duration)).strftime('%Y-%m-%d %H:%M:%S')
 
     def sso_login(self, db, login, length=64, context=None):
         password = generate_random_password(length)
         expiry_date = self.get_expiry_date()
-        set_clause = 'date=now(), password=%s'
+        set_clause = "date=now() AT TIME ZONE 'UTC', password=%s"
         params = [password]
         if expiry_date:
             set_clause += ', expiry_date=%s'
@@ -65,8 +65,9 @@ class User(orm.Model):
         params.append(login)
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute('SELECT id, password FROM res_users WHERE login=%s AND password IS NOT NULL '
-                       'AND active=TRUE AND (expiry_date IS NULL OR expiry_date>=now()) LIMIT 1', (login,))
+            cr.execute("SELECT id, password FROM res_users WHERE login=%s AND password IS NOT NULL "
+                       "AND active=TRUE AND (expiry_date IS NULL OR expiry_date>=now() AT TIME ZONE 'UTC') "
+                       "LIMIT 1 FOR UPDATE NOWAIT", (login,))
             res = cr.dictfetchone()
             if not res or not res['password']:
                 query = 'UPDATE res_users SET %s WHERE %s RETURNING id, password' % (set_clause, where_clause)
@@ -99,6 +100,7 @@ class User(orm.Model):
             raise OpenERPException(error_msg, ('', '', ''))
         cr = pooler.get_db(db).cursor()
         try:
+            cr.autocommit(True)
             if self._uid_cache.get(db, {}).get(uid) != passwd:
                 cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND '
                            'active=TRUE AND (expiry_date IS NULL OR expiry_date>=now()) LIMIT 1', (int(uid), passwd))
@@ -108,10 +110,8 @@ class User(orm.Model):
                     logger.error(error_msg)
                     raise OpenERPException(error_msg, ('', '', ''))
                 self._uid_cache.setdefault(db, {}).update({uid: passwd})
-# TODO: fix me to avoid TransactionRollbackError: could not serialize access due to concurrent update
-#            cr.execute("UPDATE res_users SET expiry_date=%s WHERE id=%s", (self.get_expiry_date(), int(uid)))
-#            cr.commit()
-#            logger.debug("Server session extended for the user [uid=%s]", uid)
+            cr.execute("UPDATE res_users SET expiry_date=%s AT TIME ZONE 'UTC' WHERE id=%s", (self.get_expiry_date(), int(uid)))
+            logger.debug("Server session extended for the user [uid=%s]", uid)
         finally:
             cr.close()
 
