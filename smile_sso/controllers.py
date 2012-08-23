@@ -54,7 +54,8 @@ def sso_login(self, req):
     if db and login and security_key:
         user_info = req.session.proxy('common').sso_login(db, login, security_key)
         if user_info and user_info['id'] > 0:
-            req.session.authenticate(db, login, user_info['password'], {})
+            req.session.bind(db, user_info['id'], login, user_info['password'])
+            req.session.get_context()
             addr = redirect('/web/webclient/home', 303)
             cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
             addr.set_cookie('session0|session_id', cookie_val)
