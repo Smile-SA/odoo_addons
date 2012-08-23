@@ -18,7 +18,7 @@ openerp.web.search.DateField = openerp.web.search.DateField.extend({
         return this.datewidget2.get_value() || null;
     },
     clear: function () {
-        this.datewidget.set_value(false);
+        this._super();
         this.datewidget2.set_value(false);
     },
     get_domain: function () {
@@ -27,11 +27,9 @@ openerp.web.search.DateField = openerp.web.search.DateField.extend({
         if ((val === null || val === '') && (val2 === null || val2 === '')) {
             return;
         }
-        var domain = this.attrs['filter_domain'];
-        return this.make_domain2(this.attrs.name, val, val2);
-        return _.extend({}, domain, {own_values: {self: val}});
+        return this.make_domain(this.attrs.name, val, val2);
     },
-    make_domain2: function (name, value1, value2) {
+    make_domain: function (name, value1, value2) {
         if (value1 != null && value1 != '' && value2 != null && value2 != '') {
             return ['&', [name, '>=', value1],
                          [name, '<=', value2]];
@@ -40,19 +38,31 @@ openerp.web.search.DateField = openerp.web.search.DateField.extend({
         } else {
             return [[name, '<=', value2]];
         }
-    }
+    },
 });
 
 openerp.web.search.DateTimeField = openerp.web.search.DateField.extend({
-    make_domain2: function (name, value1, value2) {
-        if (value1 != null && value1 != '') {
-            value1 = value1 + ' 00:00:00';
-        }
-        if (value2 != null && value2 != '') {
-            value2 = value2 + ' 23:59:59';
-        }
-        return this._super(name, value1, value2);
-    }
+    // Instead of the date widget, let search datetime fields use the datetime wiget (which was the default for OpenERP 6.0 and early)
+    start: function () {
+        this._super();
+        // Remove all default date widget
+        this.$element.find(".oe_datepicker_root").remove();
+        // Build range's start datetime widget
+        this.datewidget = new openerp.web.DateTimeWidget(this);
+        this.datewidget.prependTo(this.$element);
+        this.datewidget.$element.find("input")
+            .attr("size", 15)
+            .attr("autofocus", this.attrs.default_focus === '1' ? 'autofocus' : null)
+            .removeAttr('style');
+        this.datewidget.set_value(this.defaults[this.attrs.name] || false);
+        // Build range's end datetime widget
+        this.datewidget2 = new openerp.web.DateTimeWidget(this);
+        this.datewidget2.appendTo(this.$element);
+        this.datewidget2.$element.find("input")
+            .attr("size", 15)
+            .removeAttr('style');
+        this.datewidget2.set_value(this.defaults[this.attrs.name] || false);
+    },
 });
 
 };

@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012 credativ Ltd (<http://credativ.co.uk>).
+#    Copyright (C) 2012 Smile (<http://www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,14 +20,20 @@
 #
 ##############################################################################
 {
-    "name": "Date ranges in search views",
+    "name": "Date and datetime ranges in search views",
     "description":
         """
-        OpenERP Web module which replaces single date search fields with a range
+        1 - Replaces single date and datetime search fields to a range.
+            This was the default behaviour in OpenERP 6.0 but was removed in 6.1:
+            => https://bugs.launchpad.net/openerp-web/+bug/926390
+
+        2 - Allow selection of time in datetime search fields.
+            Again, this was removed in 6.1:
+            => https://bugs.launchpad.net/openerp-web/+bug/1037658
         """,
     "version": "1.0",
-    "author" : "credativ Ltd",
-    "website" : "http://credativ.co.uk",
+    "author" : "credativ Ltd & Smile",
+    "website" : "http://smile.fr",
     "category" : "Tools",
     "depends" : ["web"],
     "js": [
