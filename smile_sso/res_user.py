@@ -102,16 +102,16 @@ class User(orm.Model):
         try:
             cr.autocommit(True)
             if self._uid_cache.get(db, {}).get(uid) != passwd:
-                cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND '
-                           'active=TRUE AND (expiry_date IS NULL OR expiry_date>=now()) LIMIT 1', (int(uid), passwd))
-                res = cr.fetchone()[0]
+                cr.execute('SELECT id FROM res_users WHERE id=%s AND password=%s AND active=TRUE '
+                           'AND (expiry_date IS NULL OR expiry_date>=now()) FOR UPDATE NOWAIT', (int(uid), passwd))
+                res = cr.fetchone()
                 if not res:
                     error_msg = "Server session expired for the user [uid=%s]" % uid
                     logger.error(error_msg)
                     raise OpenERPException(error_msg, ('', '', ''))
                 self._uid_cache.setdefault(db, {}).update({uid: passwd})
-            cr.execute("UPDATE res_users SET expiry_date=%s AT TIME ZONE 'UTC' WHERE id=%s", (self.get_expiry_date(), int(uid)))
-            logger.debug("Server session extended for the user [uid=%s]", uid)
+#            cr.execute("UPDATE res_users SET expiry_date=%s AT TIME ZONE 'UTC' WHERE id=%s", (self.get_expiry_date(), int(uid)))
+#            logger.debug("Server session extended for the user [uid=%s]", uid)
         finally:
             cr.close()
 

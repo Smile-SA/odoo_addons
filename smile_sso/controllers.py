@@ -32,8 +32,12 @@ config_options = openerp.tools.config.options or {}
 sso_portal = config_options.get('smile_sso.portal_redirect') or '/'
 
 
-def _get_connection_info(req):
-    return (req.httprequest.args.get('db', config_options.get('db_name')),
+def _get_connection_info(req, **kwargs):
+    db = None
+    for k in kwargs:
+        if k == 'db':
+            db = kwargs[k]
+    return (db or config_options.get('db_name'),
             req.httprequest.headers.get('Remote-User'),
             config_options.get('smile_sso.shared_secret_pin'))
 
@@ -48,8 +52,8 @@ def _check_connection_info(db, user, security_key):
 
 
 @openerpweb.httprequest
-def sso_login(self, req):
-    db, login, security_key = _get_connection_info(req)
+def sso_login(self, req, **kwargs):
+    db, login, security_key = _get_connection_info(req, **kwargs)
     _check_connection_info(db, login, security_key)
     if db and login and security_key:
         user_info = req.session.proxy('common').sso_login(db, login, security_key)
@@ -65,8 +69,8 @@ def sso_login(self, req):
     return redirect(sso_portal)
 
 
-def destroy(self, req):
-    db, user, security_key = _get_connection_info(req)
+def destroy(self, req, **kwargs):
+    db, user, security_key = _get_connection_info(req, **kwargs)
     _check_connection_info(db, user, security_key)
     if db and user and security_key:
         req.session.proxy('common').sso_logout(db, user, security_key)
@@ -74,8 +78,8 @@ def destroy(self, req):
 
 
 @openerpweb.httprequest
-def sso_logout(self, req):
-    destroy(self, req)
+def sso_logout(self, req, **kwargs):
+    destroy(self, req, **kwargs)
     return redirect(sso_portal)
 
 Session.destroy = openerpweb.jsonrequest(destroy)
