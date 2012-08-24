@@ -1,4 +1,4 @@
-openerp.web_searchdaterange = function(openerp) {
+openerp.web_smile_search_range = function(openerp) {
 var QWeb = openerp.web.qweb,
       _t =  openerp.web._t,
      _lt = openerp.web._lt;

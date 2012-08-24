@@ -32,7 +32,7 @@
             => https://bugs.launchpad.net/openerp-web/+bug/1037658
         """,
     "version": "1.1",
-    "author" : "credativ Ltd & Smile",
+    "author" : "Smile & credativ Ltd",
     "website" : "http://smile.fr",
     "category" : "Tools",
     "depends" : ["web"],
