@@ -39,56 +39,55 @@ def generate_random_password(length):
     return new_password
 
 
-class User(orm.Model):
-    _inherit = 'res.users'
+class ResUsersExpiry(orm.Model):
+    _name = 'res.users.expiry'
+    _description = 'User Connection Expiry'
+    _log_access = False
 
     _columns = {
+        'user_id': fields.many2one("res.users", "User", required=True, ondelete="cascade", readonly=True),
+        'login': fields.related('user_id', 'login', type="char", string="Login", store=True, select=True, readonly=True),
         'expiry_date': fields.datetime("Expiry Date", readonly=True),
     }
 
     def __init__(self, pool, cr):
-        super(User, self).__init__(pool, cr)
-        self._duration = 60 * 60 * 24 * 365  # TODO: indicate file
+        super(ResUsersExpiry, self).__init__(pool, cr)
+        self._duration = 60 * 60 * 24 * 365  # TODO: indicate file where is defined
 
     def get_expiry_date(self):
         return (datetime.utcnow() + timedelta(seconds=self._duration)).strftime('%Y-%m-%d %H:%M:%S')
 
+
+class ResUsers(orm.Model):
+    _inherit = 'res.users'
+
     def sso_login(self, db, login, length=64, context=None):
-        password = generate_random_password(length)
-        expiry_date = self.get_expiry_date()
-        set_clause = "date=now() AT TIME ZONE 'UTC', password=%s"
-        params = [password]
-        if expiry_date:
-            set_clause += ', expiry_date=%s'
-            params.append(expiry_date)
-        where_clause = 'login=%s'
-        params.append(login)
+        logger = logging.getLogger('smile_sso')
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute("SELECT id, password FROM res_users WHERE login=%s AND password IS NOT NULL "
-                       "AND active=TRUE AND (expiry_date IS NULL OR expiry_date>=now() AT TIME ZONE 'UTC') "
-                       "LIMIT 1 FOR UPDATE NOWAIT", (login,))
+            cr.execute("SELECT u.id, u.password FROM res_users u LEFT JOIN res_users_expiry e ON u.id = e.user_id "
+                       "WHERE u.login=%s AND u.active=TRUE AND (e.expiry_date IS NULL OR e.expiry_date>=now() AT TIME ZONE 'UTC') "
+                       "LIMIT 1", (login,))
             res = cr.dictfetchone()
-            if not res or not res['password']:
-                query = 'UPDATE res_users SET %s WHERE %s RETURNING id, password' % (set_clause, where_clause)
-                cr.execute(query, params)
-                res = cr.dictfetchone()
+            if not res:
+                logger.error("Server connection refused for the user [login=%s]" % login)
+            if res and not res['password']:
+                password = generate_random_password(length)
+                cr.execute("UPDATE res_users SET password=%s WHERE login=%s", (password, login))
                 cr.commit()
-            if res:
-                logging.getLogger('smile_sso').debug("Login of the user [login=%s]", login)
-                return res
+                logger.debug("Login of the user [login=%s]", login)
+                res['password'] = password
+            return res
         finally:
             cr.close()
 
     def sso_logout(self, db, login, context=None):
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute("UPDATE res_users SET password=NULL, expiry_date=NULL WHERE login=%s RETURNING id", (login,))
-            res = cr.fetchone()
+            cr.execute("UPDATE res_users SET password=NULL WHERE login=%s", (login,))
+            cr.execute("UPDATE res_users_expiry SET expiry_date=NULL WHERE login=%s", (login,))
             cr.commit()
-            if res:
-                logging.getLogger('smile_sso').debug("Logout of the user [login=%s]", login)
-                return True
+            logging.getLogger('smile_sso').debug("Logout of the user [login=%s]", login)
         finally:
             cr.close()
 
@@ -102,20 +101,35 @@ class User(orm.Model):
         try:
             cr.autocommit(True)
             if self._uid_cache.get(db, {}).get(uid) != passwd:
-                cr.execute('SELECT id FROM res_users WHERE id=%s AND password=%s AND active=TRUE '
-                           'AND (expiry_date IS NULL OR expiry_date>=now()) FOR UPDATE NOWAIT', (int(uid), passwd))
+                cr.execute("SELECT u.id, u.password FROM res_users u LEFT JOIN res_users_expiry e ON u.id = e.user_id "
+                           "WHERE u.id=%s AND u.password=%s AND u.active=TRUE "
+                           "AND (e.expiry_date IS NULL OR e.expiry_date>=now() AT TIME ZONE 'UTC') "
+                           "LIMIT 1", (int(uid), passwd))
                 res = cr.fetchone()
                 if not res:
                     error_msg = "Server session expired for the user [uid=%s]" % uid
                     logger.error(error_msg)
                     raise OpenERPException(error_msg, ('', '', ''))
                 self._uid_cache.setdefault(db, {}).update({uid: passwd})
-#            cr.execute("UPDATE res_users SET expiry_date=%s AT TIME ZONE 'UTC' WHERE id=%s", (self.get_expiry_date(), int(uid)))
-#            logger.debug("Server session extended for the user [uid=%s]", uid)
+            expiry_date = self.pool.get('res.users.expiry').get_expiry_date()
+            cr.execute("SELECT u.login, e.login FROM res_users u LEFT JOIN res_users_expiry e ON u.id = e.user_id "
+                       "WHERE u.id=%s LIMIT 1", (int(uid),))
+            user_info = cr.fetchone()
+            if user_info[1]:
+                cr.execute("UPDATE res_users_expiry SET expiry_date=%s WHERE user_id=%s", (expiry_date, int(uid)))
+            else:
+                cr.execute("INSERT INTO res_users_expiry (user_id, login, expiry_date) VALUES (%s, %s, %s AT TIME ZONE 'UTC')",
+                           (int(uid), user_info[0], expiry_date))
+            logger.debug("Server session extended for the user [uid=%s]", uid)
         finally:
             cr.close()
+
+    def create(self, cr, uid, vals, context=None):
+        user_id = super(ResUsers, self).create(cr, uid, vals, context)
+        self.pool.get('res.users.expiry').create(cr, uid, {'user_id': user_id}, context)
+        return user_id
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('password') and not (uid == 1 and ids in (1, [1])):
             raise orm.except_orm(_('Operation Canceled'), _('You cannot modify user password when the module smile_sso is installed!'))
-        return super(User, self).write(cr, uid, ids, vals, context)
+        return super(ResUsers, self).write(cr, uid, ids, vals, context)
