@@ -37,7 +37,7 @@ def _get_connection_info(req, **kwargs):
     for k in kwargs:
         if k == 'db':
             db = kwargs[k]
-    return (db or config_options.get('db_name'),
+    return (db or req.session._db or config_options.get('db_name'),
             req.httprequest.headers.get('Remote-User'),
             config_options.get('smile_sso.shared_secret_pin'))
 
