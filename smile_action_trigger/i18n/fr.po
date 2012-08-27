@@ -41,6 +41,11 @@ msgid "Group by"
 msgstr "Grouper par"
 
 #. module: smile_action_trigger
+#: field:ir.actions.server,specific_thread:0
+msgid "Specific Thread"
+msgstr "Processus spécifique"
+
+#. module: smile_action_trigger
 #: view:sartre.trigger:0
 msgid "Group By..."
 msgstr "Grouper par..."
@@ -70,7 +75,7 @@ msgstr "Méthodes avec la signature suivante : self, cr, uid, ids, *args, **kwar
 #. module: smile_action_trigger
 #: help:ir.actions.server,group_by:0
 msgid "If run_once is set to True: instances are passed to the actions grouped with other instances having the same group_by evaluation"
-msgstr "If run_once is set to True: instances are passed to the actions grouped with other instances having the same group_by evaluation"
+msgstr "Si cette case est cochée, les instances sont transmises groupées aux actions serveur"
 
 #. module: smile_action_trigger
 #: field:ir.model.methods,model_id:0
@@ -78,7 +83,7 @@ msgstr "If run_once is set to True: instances are passed to the actions grouped 
 #: view:sartre.trigger:0
 #: field:sartre.trigger,model_id:0
 msgid "Object"
-msgstr "Object"
+msgstr "Objet"
 
 #. module: smile_action_trigger
 #: field:sartre.operator,native_operator:0
@@ -89,11 +94,6 @@ msgstr "Opérateur natif"
 #: field:sartre.trigger,on_date_range_type:0
 msgid "Delay Type"
 msgstr "Type de délai"
-
-#. module: smile_action_trigger
-#: model:ir.actions.server,subject:smile_action_trigger.ir_actions_server_youremailchanged0
-msgid "[OpenERP] Your email changed"
-msgstr "[OpenERP] Your email changed"
 
 #. module: smile_action_trigger
 #: view:sartre.operator:0
@@ -498,7 +498,7 @@ msgstr "Alerte"
 #. module: smile_action_trigger
 #: model:ir.model,name:smile_action_trigger.model_ir_actions_server
 msgid "ir.actions.server"
-msgstr "ir.actions.server"
+msgstr "Actions serveur"
 
 #. module: smile_action_trigger
 #: field:sartre.trigger,on_write:0
@@ -534,7 +534,7 @@ msgstr "Opérateurs"
 #. module: smile_action_trigger
 #: field:ir.actions.server,run_once:0
 msgid "Run once for all instances"
-msgstr "Run once for all instances"
+msgstr "Exécution groupée"
 
 #. module: smile_action_trigger
 #: view:sartre.trigger:0
@@ -549,7 +549,7 @@ msgstr "Date"
 #. module: smile_action_trigger
 #: field:ir.actions.server,user_id:0
 msgid "User"
-msgstr "User"
+msgstr "Utilisateur"
 
 #. module: smile_action_trigger
 #: model:ir.actions.act_window,name:smile_action_trigger.sartre_trigger_action
@@ -644,17 +644,11 @@ msgid "Trigger Date Type 1"
 msgstr "Type de date 1"
 
 #. module: smile_action_trigger
-#: model:ir.actions.server,name:smile_action_trigger.ir_actions_server_youremailchanged0
-msgid "Your email changed"
-msgstr "Your email changed"
-
-#. module: smile_action_trigger
 #: model:ir.actions.act_window,name:smile_action_trigger.sartre_operator_action
 #: model:ir.ui.menu,name:smile_action_trigger.sartre_operator_menu
 #: view:sartre.operator:0
 msgid "Filter Operators"
 msgstr "Opérateurs"
-
 
 #. module: smile_action_trigger
 #: model:ir.actions.act_window,name:smile_action_trigger.sartre_category_action
@@ -702,7 +696,7 @@ msgstr "Actuelle"
 #. module: smile_action_trigger
 #: model:ir.model,name:smile_action_trigger.model_sartre_operator
 msgid "Action Trigger Operator"
-msgstr "Action Trigger Operator"
+msgstr "Opérateur de filtres de déclenchement"
 
 #. module: smile_action_trigger
 #: view:sartre.trigger:0
@@ -862,3 +856,23 @@ msgstr "Forcer l'exécution des actions quand la liste des ressources est vide"
 #: field:sartre.trigger,category_id:0
 msgid "Category"
 msgstr "Catégorie"
+
+#. module: smile_action_trigger
+#: field:ir.actions.server,execution_type:0
+msgid "Execution"
+msgstr "Exécution"
+
+#. module: smile_action_trigger
+#: selection:ir.actions.server,execution_type:0
+msgid "Parallel"
+msgstr "Parallèle"
+
+#. module: smile_action_trigger
+#: selection:ir.actions.server,execution_type:0
+msgid "Sequential"
+msgstr "Séquentielle"
+
+#. module: smile_action_trigger
+#: selection:ir.actions.server,execution_type:0
+msgid "Locked"
+msgstr "Verrouillée"

@@ -29,7 +29,7 @@ from dateutil.relativedelta import relativedelta
 
 from modules.registry import Registry
 
-from osv import fields, osv, orm
+from osv import fields, orm, osv
 import pooler
 import tools
 from tools.func import wraps
@@ -39,7 +39,7 @@ from smile_log.db_handler import SmileDBLogger
 
 
 def _get_exception_message(exception):
-    msg = isinstance(exception, osv.except_osv) and exception.value or exception
+    msg = isinstance(exception, (osv.except_osv, orm.except_orm)) and exception.value or exception
     return tools.ustr(msg)
 
 
@@ -86,7 +86,7 @@ def get_original_method(method):
     return method
 
 
-class IrModelMethods(osv.osv):
+class IrModelMethods(orm.Model):
     _name = 'ir.model.methods'
     _description = 'Model Method'
 
@@ -94,10 +94,9 @@ class IrModelMethods(osv.osv):
         'name': fields.char('Method name', size=128, select=True, required=True),
         'model_id': fields.many2one('ir.model', 'Object', select=True, required=True),
     }
-IrModelMethods()
 
 
-class SartreOperator(osv.osv):
+class SartreOperator(orm.Model):
     _name = 'sartre.operator'
     _description = 'Action Trigger Operator'
 
@@ -153,20 +152,18 @@ class SartreOperator(osv.osv):
         res = super(SartreOperator, self).unlink(cr, uid, ids, context)
         self.clear_caches()
         return res
-SartreOperator()
 
 
-class SartreCategory(osv.osv):
+class SartreCategory(orm.Model):
     _name = 'sartre.category'
     _description = 'Action Trigger Category'
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
     }
-SartreCategory()
 
 
-class SartreTrigger(osv.osv):
+class SartreTrigger(orm.Model):
     _name = 'sartre.trigger'
     _description = 'Action Trigger'
 
@@ -283,7 +280,7 @@ class SartreTrigger(osv.osv):
             try:
                 value = int(value)
             except ValueError:
-                raise osv.except_osv(_('Error !'), _('Pid search field: please enter an integer'))
+                raise orm.except_orm(_('Error !'), _('Pid search field: please enter an integer'))
             log_obj = self.pool.get('smile.log')
             log_ids = log_obj.search(cr, uid, [('pid', '=', value), ('model_name', '=', 'sartre.trigger')], context=context)
             trigger_ids = [log['res_id'] for log in log_obj.read(cr, uid, log_ids, ['res_id'], context)]
@@ -361,7 +358,7 @@ class SartreTrigger(osv.osv):
         'on_date_range_operand': 'after',
         'interval_number': 1,
         'interval_type': 'hours',
-        'nextcall': time.strftime("%Y-%m-%d %H:%M:%S"),
+        'nextcall': lambda *a: time.strftime("%Y-%m-%d %H:%M:%S"),
         'exception_handling': 'continue',
         'exception_warning': 'custom',
         'exception_message': 'Action failed. Please, contact your administrator.',
@@ -528,7 +525,7 @@ class SartreTrigger(osv.osv):
                 try:
                     operator_inst, opposite_operator = operator_obj._get_operator(cr, uid, operator_symbol)
                 except:
-                    raise osv.except_osv(_('Warning!'), _("The operator %s doesn't exist!") % operator_symbol)
+                    raise orm.except_orm(_('Warning!'), _("The operator %s doesn't exist!") % operator_symbol)
                 dynamic_other_value = other_value and re.match('(\[\[.+?\]\])', str(other_value))
                 for object_ in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
                     if dynamic_other_value:
@@ -626,9 +623,9 @@ class SartreTrigger(osv.osv):
                 cr.rollback()
                 logger.time_info("[%s] Transaction rolled back" % (pid,))
                 if trigger.exception_warning == 'custom':
-                    raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (trigger.exception_message, pid))
+                    raise orm.except_orm(_('Error'), _('%s\n[Pid: %s]') % (trigger.exception_message, pid))
                 elif trigger.exception_warning == 'native':
-                    raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (_get_exception_message(e), pid))
+                    raise orm.except_orm(_('Error'), _('%s\n[Pid: %s]') % (_get_exception_message(e), pid))
         # Execute server actions for filtered objects
         if filtered_object_ids or trigger.force_actions_execution:
             logger.info('[%s] Trigger on %s for objects %s,%s' % (pid, context.get('trigger', 'manual'), trigger.model_id.model, filtered_object_ids))
@@ -655,9 +652,9 @@ class SartreTrigger(osv.osv):
                             cr.rollback()
                             logger.time_info("[%s] Transaction rolled back" % (pid,))
                             if trigger.exception_warning == 'custom':
-                                raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (trigger.exception_message, pid))
+                                raise orm.except_orm(_('Error'), _('%s\n[Pid: %s]') % (trigger.exception_message, pid))
                             elif trigger.exception_warning == 'native':
-                                raise osv.except_osv(_('Error'), _('%s\n[Pid: %s]') % (_get_exception_message(e), pid))
+                                raise orm.except_orm(_('Error'), _('%s\n[Pid: %s]') % (_get_exception_message(e), pid))
                             else:  # elif trigger.exception_warning == 'none':
                                 return True
             if context.get('test_mode', False):
@@ -696,6 +693,7 @@ class SartreTrigger(osv.osv):
     def _run_action_for_object_ids(self, cr, uid, action, object_ids, context):
         context['active_ids'] = self._get_ids_by_group(cr, uid, action, object_ids, context)
         for active_id in context['active_ids']:
+            context['launch_by_trigger'] = True
             context['active_id'] = active_id
             context['active_model'] = action.model_id.model
             self.pool.get('ir.actions.server').run(cr, action.user_id and action.user_id.id or uid, [action.id], context=context)
@@ -746,10 +744,9 @@ class SartreTrigger(osv.osv):
                     if trigger.on_function_field_id.name not in field_name or trigger.on_function_type not in [calculation_method, 'both']:
                         trigger_ids.remove(trigger_id)
         return trigger_ids
-SartreTrigger()
 
 
-class SartreFilter(osv.osv):
+class SartreFilter(orm.Model):
     _name = 'sartre.filter'
     _description = 'Action Trigger Filter'
     _rec_name = 'field_id'
@@ -798,13 +795,13 @@ class SartreFilter(osv.osv):
                     f_name = f_name[:f_name.index('[')]
                 f_id = field_pool.search(cr, uid, [('model', '=', model), ('name', '=', f_name)], limit=1, context=context)
                 if not f_id:
-                    raise osv.except_osv(_('Error'), _("The field %s is not in the model %s !" % (f_name, model)))
+                    raise orm.except_orm(_('Error'), _("The field %s is not in the model %s !" % (f_name, model)))
                 f_obj = field_pool.read(cr, uid, f_id[0], ['name', 'ttype', 'relation'])
                 if f_obj['ttype'] in ['many2one', 'one2many', 'many2many']:
                     model = f_obj['relation']
                     model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model)], limit=1, context=context)[0]
                 elif len(field_expression.split('.')) > 1:
-                    raise osv.except_osv(_('Error'), _("The field %s is not a relation field !" % f_obj['name']))
+                    raise orm.except_orm(_('Error'), _("The field %s is not a relation field !" % f_obj['name']))
         return model_id
 
     def onchange_get_field_domain(self, cr, uid, ids, model_id, field_expression='', context=None):
@@ -852,10 +849,9 @@ class SartreFilter(osv.osv):
         'value_age': 'current',
         'value_type': 'static',
     }
-SartreFilter()
 
 
-class SartreExecution(osv.osv):
+class SartreExecution(orm.Model):
     _name = 'sartre.execution'
     _description = 'Action Trigger Execution'
     _rec_name = 'trigger_id'
@@ -870,7 +866,7 @@ class SartreExecution(osv.osv):
     def update_executions_counter(self, cr, uid, trigger, res_id):
         """Update executions counter"""
         if not (trigger and res_id):
-            raise osv.except_osv(_('Error'), _('Action Trigger Execution: all arguments are mandatory !'))
+            raise orm.except_orm(_('Error'), _('Action Trigger Execution: all arguments are mandatory !'))
         log_id = self.search(cr, uid, [('trigger_id', '=', trigger.id), ('model_id', '=', trigger.model_id.id), ('res_id', '=', res_id)], limit=1)
         if log_id:
             executions_number = self.read(cr, uid, log_id[0], ['executions_number'])['executions_number'] + 1
@@ -878,7 +874,6 @@ class SartreExecution(osv.osv):
         else:
             return self.create(cr, uid, {'trigger_id': trigger.id, 'model_id': trigger.model_id.id,
                                          'res_id': res_id, 'executions_number': 1}) and True
-SartreExecution()
 
 
 def _get_args(method, args, kwargs):
