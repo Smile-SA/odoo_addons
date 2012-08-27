@@ -168,7 +168,8 @@
 			<field name="view_mode">tree,form</field>
 			<field name="context">{'active_test': False}</field>
 		</record>
-		<menuitem action="sartre_trigger_action" id="sartre_trigger_menu" parent="base.next_id_6" sequence="10" />
+		<menuitem name="Action Triggers" id="sartre_trigger_menu" parent="base.next_id_6" sequence="10" />
+		<menuitem action="sartre_trigger_action" id="sartre_trigger_submenu" parent="sartre_trigger_menu" sequence="10" />
 
 		<!-- Sartre Operator -->
 
@@ -198,8 +199,23 @@
 					<field name="native_operator" />
 					<field name="value_age_filter" />
 					<field name="other_value_necessary" />
-					<field name="other_value_transformation" attrs="{'readonly': [('native_operator', '=', 'none'),('other_value_mandatory', '=', False)]}" />
+					<field name="other_value_transformation" attrs="{'readonly': [('native_operator', '=', 'none'),('other_value_necessary', '=', False)]}" />
 					<field name="expression" colspan="4" />
+					<label string=""/>
+					<group colspan="2">
+						<html>
+							<div>
+								<p>You can use the following variables</p>
+								<ul>
+									<li>selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')</li>
+									<li>current_field_value (useful if value age filter != 'Both')</li>
+									<li>old_field_value (useful if value age filter != 'Both')</li>
+									<li>other_value (static or dynamic)</li>
+								</ul>
+								<p>You must assign a boolean value to the variable 'result'</p>
+							</div>
+						</html>
+					</group>
 				</form>
 			</field>
 		</record>

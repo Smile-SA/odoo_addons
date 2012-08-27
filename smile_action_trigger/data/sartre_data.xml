@@ -11,13 +11,7 @@
 			<field name="native_operator">=</field>
 			<field name="value_age_filter">both</field>
 			<field name="other_value_necessary" eval="1"/>
-			<field eval="&quot;&quot;&quot;# You can use the following variables
-\n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
-\n#    - current_field_value (useful if value age filter != 'Both')
-\n#    - old_field_value (useful if value age filter != 'Both')
-\n#    - other_value (fixed or dynamic)
-\n# You must assign a boolean value to the variable &quot;result&quot;
-\nresult = selected_field_value == other_value&quot;&quot;&quot;" name="expression"/>
+			<field name="expression">result = selected_field_value == other_value</field>
 		</record>
 		<record id="sartre_operator_lessthan0" model="sartre.operator">
 			<field name="name">less than</field>
@@ -26,13 +20,7 @@
 			<field name="native_operator">&lt;=</field>
 			<field name="value_age_filter">both</field>
 			<field name="other_value_necessary" eval="1"/>
-			<field eval="&quot;&quot;&quot;# You can use the following variables
-\n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
-\n#    - current_field_value (useful if value age filter != 'Both')
-\n#    - old_field_value (useful if value age filter != 'Both')
-\n#    - other_value (fixed or dynamic)
-\n# You must assign a boolean value to the variable &quot;result&quot;
-\nresult = selected_field_value &lt;= other_value&quot;&quot;&quot;" name="expression"/>
+			<field name="expression">result = selected_field_value &lt;= other_value</field>
 		</record>
 		<record id="sartre_operator_greaterthan0" model="sartre.operator">
 			<field name="name">greater than</field>
@@ -41,13 +29,7 @@
 			<field name="native_operator">&gt;=</field>
 			<field name="value_age_filter">both</field>
 			<field name="other_value_necessary" eval="1"/>
-			<field eval="&quot;&quot;&quot;# You can use the following variables
-\n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
-\n#    - current_field_value (useful if value age filter != 'Both')
-\n#    - old_field_value (useful if value age filter != 'Both')
-\n#    - other_value (fixed or dynamic)
-\n# You must assign a boolean value to the variable &quot;result&quot;
-\nresult = selected_field_value &gt;= other_value&quot;&quot;&quot;" name="expression"/>
+			<field name="expression">result = selected_field_value &gt;= other_value</field>
 		</record>
 		<record id="sartre_operator_containsexactly0" model="sartre.operator">
 			<field name="name">contains exactly</field>
@@ -57,13 +39,7 @@
 			<field name="value_age_filter">both</field>
 			<field name="other_value_necessary" eval="1"/>
 			<field name="other_value_transformation">'%'+value+'%'</field>
-			<field eval="&quot;&quot;&quot;# You can use the following variables
-\n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
-\n#    - current_field_value (useful if value age filter != 'Both')
-\n#    - old_field_value (useful if value age filter != 'Both')
-\n#    - other_value (fixed or dynamic)
-\n# You must assign a boolean value to the variable &quot;result&quot;
-\nresult = other_value in selected_field_value&quot;&quot;&quot;" name="expression"/>
+			<field name="expression">result = other_value in selected_field_value</field>
 		</record>
 		<record id="sartre_operator_contains0" model="sartre.operator">
 			<field name="name">contains</field>
@@ -73,13 +49,7 @@
 			<field name="value_age_filter">both</field>
 			<field name="other_value_necessary" eval="1"/>
 			<field name="other_value_transformation">'%'+value+'%'</field>
-			<field eval="&quot;&quot;&quot;# You can use the following variables
-\n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
-\n#    - current_field_value (useful if value age filter != 'Both')
-\n#    - old_field_value (useful if value age filter != 'Both')
-\n#    - other_value (fixed or dynamic)
-\n# You must assign a boolean value to the variable &quot;result&quot;
-\nresult = other_value.upper() in selected_field_value.upper()&quot;&quot;&quot;" name="expression"/>
+			<field name="expression">result = other_value.upper() in selected_field_value.upper()</field>
 		</record>
 		<record id="sartre_operator_in0" model="sartre.operator">
 			<field name="name">in</field>
@@ -89,13 +59,7 @@
 			<field name="value_age_filter">both</field>
 			<field name="other_value_necessary" eval="1"/>
 			<field name="other_value_transformation">value.split(',')</field>
-			<field eval="&quot;&quot;&quot;# You can use the following variables
-\n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
-\n#    - current_field_value (useful if value age filter != 'Both')
-\n#    - old_field_value (useful if value age filter != 'Both')
-\n#    - other_value (fixed or dynamic)
-\n# You must assign a boolean value to the variable &quot;result&quot;
-\nresult = selected_field_value in str(other_value).split(',')&quot;&quot;&quot;" name="expression"/>
+			<field name="expression">result = selected_field_value in str(other_value).split(',')</field>
 		</record>
 		<record id="sartre_operator_childof0" model="sartre.operator">
 			<field name="name">child of</field>
@@ -105,13 +69,7 @@
 			<field name="value_age_filter">current</field>
 			<field name="other_value_necessary" eval="1"/>
 			<field name="other_value_transformation">value.split(',')</field>
-			<field eval="&quot;&quot;&quot;# You can use the following variables:
-\n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
-\n#    - current_field_value (useful if value age filter != 'Both')
-\n#    - old_field_value (useful if value age filter != 'Both')
-\n#    - other_value (fixed or dynamic)
-\n# Your expression must return True or False
-&quot;&quot;&quot;" name="expression"/>
+			<field name="expression"></field>
 		</record>
 		<record id="sartre_operator_ischanging0" model="sartre.operator">
 			<field name="name">is changing</field>
@@ -120,14 +78,7 @@
 			<field name="native_operator">none</field>
 			<field name="value_age_filter">old</field>
 			<field name="other_value_necessary" eval="0"/>
-			<field eval="&quot;&quot;&quot;# You can use the following variables
-\n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
-\n#    - current_field_value (useful if value age filter != 'Both')
-\n#    - old_field_value (useful if value age filter != 'Both')
-\n#    - other_value (fixed or dynamic)
-\n# You must assign a boolean value to the variable &quot;result&quot;
-\nresult = current_field_value != old_field_value and (not other_value or current_field_value == other_value)
-\n&quot;&quot;&quot;" name="expression"/>
+			<field name="expression">result = current_field_value != old_field_value and (not other_value or current_field_value == other_value)</field>
 		</record>
 		<record id="sartre_operator_isupdating0" model="sartre.operator">
 			<field name="name">is updating</field>
@@ -136,14 +87,7 @@
 			<field name="native_operator">none</field>
 			<field name="value_age_filter">old</field>
 			<field name="other_value_necessary" eval="0"/>
-			<field eval="&quot;&quot;&quot;# You can use the following variables
-\n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
-\n#    - current_field_value (useful if value age filter != 'Both')
-\n#    - old_field_value (useful if value age filter != 'Both')
-\n#    - other_value (fixed or dynamic)
-\n# You must assign a boolean value to the variable &quot;result&quot;
-\nresult = arg_value != None and arg_value == current_field_value and arg_value != old_field_value and (not other_value or arg_value == other_value)
-\n&quot;&quot;&quot;" name="expression"/>
+			<field name="expression">result = arg_value != None and arg_value == current_field_value and arg_value != old_field_value and (not other_value or arg_value == other_value)</field>
 		</record>
 		<record id="sartre_operator_exists0" model="sartre.operator">
 			<field name="name">exists</field>
@@ -152,13 +96,7 @@
 			<field name="native_operator">none</field>
 			<field name="value_age_filter">current</field>
 			<field name="other_value_necessary" eval="0"/>
-			<field eval="&quot;&quot;&quot;# You can use the following variables
-\n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
-\n#    - current_field_value (useful if value age filter != 'Both')
-\n#    - old_field_value (useful if value age filter != 'Both')
-\n#    - other_value (fixed or dynamic)
-\n# You must assign a boolean value to the variable &quot;result&quot;
-\nresult = bool(current_field_value)&quot;&quot;&quot;" name="expression"/>
+			<field name="expression">result = bool(current_field_value)</field>
 		</record>
 		<record id="sartre_operator_increasesover0" model="sartre.operator">
 			<field name="name">increases over 20%</field>
@@ -167,16 +105,10 @@
 			<field name="native_operator">none</field>
 			<field name="value_age_filter">old</field>
 			<field name="other_value_necessary" eval="0"/>
-			<field eval="&quot;&quot;&quot;# You can use the following variables
-\n#    - selected_field_value (current or old value according to the value age choosed by the user - value age filter == 'Both')
-\n#    - current_field_value (useful if value age filter != 'Both')
-\n#    - old_field_value (useful if value age filter != 'Both')
-\n#    - other_value (fixed or dynamic)
-\n# You must assign a boolean value to the variable &quot;result&quot;
-\nif old_field_value:
-\n    result = (current_field_value - old_field_value) / old_field_value >= 0.20
-\nelse:
-\n    result = current_field_value > old_field_value&quot;&quot;&quot;" name="expression"/>
+			<field name="expression">if old_field_value:
+    result = (current_field_value - old_field_value) / old_field_value >= 0.20
+else:
+    result = current_field_value > old_field_value</field>
 		</record>
 
 		<!-- Sartre Categories -->

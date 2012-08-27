@@ -1,4 +1,4 @@
--- Migrate from 5.0 to 6.0
+﻿-- Migrate from 5.0 to 6.0
 -- WARNING: Sartre Exceptions are not migrated (Use of smile_log in 6.0)
 ALTER TABLE sartre_rule RENAME TO sartre_trigger;
 ALTER TABLE sartre_trigger RENAME trigger_create TO on_create;
@@ -24,4 +24,8 @@ ALTER TABLE sartre_execution RENAME rule_id TO trigger_id;
 ALTER TABLE sartre_rule_server_action_rel RENAME TO sartre_trigger_server_action_rel;
 ALTER TABLE sartre_trigger_server_action_rel RENAME sartre_rule_id TO trigger_id;
 ALTER TABLE sartre_trigger_server_action_rel RENAME server_action_id TO action_id;
+UPDATE ir_model_data SET model = 'sartre.trigger' WHERE model = 'sartre.rule';
+UPDATE ir_model_data SET model = 'sartre.filter' WHERE model = 'sartre.condition';
+UPDATE ir_model SET model = 'sartre.trigger' WHERE model = 'sartre.rule';
+UPDATE ir_model SET model = 'sartre.filter' WHERE model = 'sartre.condition';
 -- DROP TABLE sartre_exception;

@@ -21,7 +21,7 @@
 
 {
     "name": "Server Actions R* Trigger Rules Engine (aka Sartre)",
-    "version": "5.0",
+    "version": "6.0",
     "category": "Tools",
     "author": "Smile",
     "website": 'http://www.smile.fr',
@@ -59,12 +59,15 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         'data/sartre_data.xml',
     ],
     "update_xml": [
-        'ir.xml',
-        'sartre_view.xml',
+        'view/ir.xml',
+        'view/sartre_view.xml',
     ],
     "demo_xml": [
-        'demo/sartre_demo.xml'
+        'demo/sartre_demo.xml',
     ],
-    "installable": True,
-    "active": False,
+    "test": [
+        'test/sartre_test.yml',
+    ],
+    'installable': True,
+    'active': False,
 }
