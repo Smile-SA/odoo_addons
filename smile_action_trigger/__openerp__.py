@@ -70,7 +70,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         'demo/sartre_demo.xml',
     ],
     "test": [
-#        'test/sartre_test.yml',
+        'test/sartre_test.yml',
     ],
     'installable': True,
     'auto_install': False,

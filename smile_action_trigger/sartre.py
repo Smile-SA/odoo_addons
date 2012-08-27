@@ -453,6 +453,9 @@ class SartreTrigger(orm.Model):
 
     def __init__(self, pool, cr):
         super(SartreTrigger, self).__init__(pool, cr)
+        cr.execute("SELECT relname FROM pg_class WHERE relname=%s", (self._table,))
+        if cr.fetchall():
+            self.decorate_trigger_methods(cr)
         setattr(Registry, 'load', cache_restarter(getattr(Registry, 'load')))
 
     def create(self, cr, uid, vals, context=None):
