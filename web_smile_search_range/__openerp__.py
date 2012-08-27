@@ -21,8 +21,7 @@
 ##############################################################################
 {
     "name": "Date, datetime & float ranges in search views.",
-    "description":
-        """
+    "description": """
         1 - Replaces single date, datetime and float search fields to a range.
             This was the default behaviour in OpenERP 6.0 but was ditched in 6.1:
             => https://bugs.launchpad.net/openerp-web/+bug/926390
@@ -32,10 +31,10 @@
             => https://bugs.launchpad.net/openerp-web/+bug/1037658
         """,
     "version": "1.1",
-    "author" : "Smile & credativ Ltd",
-    "website" : "http://smile.fr",
-    "category" : "Tools",
-    "depends" : ["web"],
+    "author": "Smile & credativ Ltd",
+    "website": "http://smile.fr",
+    "category": "Tools",
+    "depends": ["web"],
     "js": [
         "static/src/js/search.js",
     ],
