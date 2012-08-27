@@ -44,5 +44,6 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     'author': 'Smile',
     'website': 'http://www.smile.fr',
     'depends': ['web'],
+    'init_xml': ['security/ir.model.access.csv'],
     'auto_install': True,
 }
