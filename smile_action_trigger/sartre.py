@@ -89,11 +89,19 @@ def get_original_method(method):
 class IrModelMethods(orm.Model):
     _name = 'ir.model.methods'
     _description = 'Model Method'
+    _order = 'name'
 
     _columns = {
         'name': fields.char('Method name', size=128, select=True, required=True),
-        'model_id': fields.many2one('ir.model', 'Object', select=True, required=True),
+        'model_id': fields.many2one('ir.model', 'Object', select=True, required=True, ondelete='cascade'),
     }
+
+    def get_method_args(self, cr, uid, method_id, context=None):
+        assert isinstance(method_id, (int, long)), 'method_id must be an integer'
+        method = self.browse(cr, uid, method_id, context=context)
+        model_class = self.pool.get(method.model_id.model).__class__
+        original_method = get_original_method(getattr(model_class, method.name))
+        return ', '.join(inspect.getargspec(original_method)[0])
 
 
 class SartreOperator(orm.Model):
@@ -433,7 +441,7 @@ class SartreTrigger(orm.Model):
                 class_obj = self.pool.get(trigger.model_id.model)
                 if not class_obj:
                     continue
-                m_class = self.pool.get(trigger.model_id.model).__class__
+                m_class = class_obj.__class__
                 m_name = trigger.on_other_method
                 if m_name and hasattr(m_class, m_name):
                     other_method = getattr(m_class, m_name)
@@ -536,6 +544,7 @@ class SartreTrigger(orm.Model):
                             'object': object_,
                             'context': context,
                             'time': time,
+                            'relativedelta': relativedelta,
                         }))
                     current_field_value = current_values.get(object_.id, {}).get(field)
                     old_field_value = old_values.get(object_.id, {}).get(field)
@@ -795,7 +804,7 @@ class SartreFilter(orm.Model):
             model = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])['model']
             for f_name in field_list:
                 if '[' in f_name:
-                    f_name = f_name[:f_name.index('[')]
+                    f_name = f_name[: f_name.index('[')]
                 f_id = field_pool.search(cr, uid, [('model', '=', model), ('name', '=', f_name)], limit=1, context=context)
                 if not f_id:
                     raise orm.except_orm(_('Error'), _("The field %s is not in the model %s !" % (f_name, model)))

@@ -42,8 +42,7 @@ A rule applies to a single object and is composed of:
     * object deletion
     * object date (creation date, last update date or another date)
     * object function field recalculation (thus you can trigger the calculation of function fields on cascade)
-    * object methods (with an argument named id or ids in its signature)
-    * user login
+    * object methods (with an argument named self, cr, uid, ids in its signature)
 2. Filters
     * operators: you can create your own operators (which apply to current or old field value)
     * value age: current or old values if the rule trigger is the object update
@@ -53,7 +52,6 @@ A rule applies to a single object and is composed of:
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
-    "images": [],
     "depends": ['smile_log'],
     "init_xml": [
         'security/sartre_security.xml',
