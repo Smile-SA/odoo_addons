@@ -21,7 +21,7 @@
 
 {
     "name" : "Smile matrix demo module",
-    "version" : "0.8.dev",
+    "version" : "0.8",
     "author" : "Smile",
     "website": 'http://github.com/Smile-SA/smile_openerp_matrix_widget',
     "category" : "Custom",

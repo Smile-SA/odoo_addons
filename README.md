@@ -89,7 +89,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Changelog
 ---------
 
-* **0.8.dev** (unreleased)
+* **0.8** (2012-08-28)
   * Update intermediate-level totals on cell value change
   * Add a `precision` parameter to force float rounding
   * Fix initialization of matrix in tabs
