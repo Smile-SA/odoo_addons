@@ -463,7 +463,14 @@ class SartreTrigger(orm.Model):
         super(SartreTrigger, self).__init__(pool, cr)
         cr.execute("SELECT relname FROM pg_class WHERE relname=%s", (self._table,))
         if cr.fetchall():
-            self.decorate_trigger_methods(cr)
+            columns = [column for column in self._columns if not self._columns[column]._type.endswith('2many') and
+                       (not isinstance(self._columns[column], (fields.function, fields.property, fields.related)) or 
+                        self._columns[column].store)]
+            cr.execute("SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname=%s) AND attname IN %s",
+                       (self._table, tuple(columns)))
+            res = cr.fetchall()
+            if res and len(res) == len(columns):
+                self.decorate_trigger_methods(cr)
         setattr(Registry, 'load', cache_restarter(getattr(Registry, 'load')))
 
     def create(self, cr, uid, vals, context=None):
