@@ -352,7 +352,7 @@ class SartreTrigger(orm.Model):
         category_id = False
         try:
             dummy, category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'smile_action_trigger', 'sartre_category_default0')
-        except:
+        except Exception:
             pass
         return category_id
 
@@ -464,7 +464,7 @@ class SartreTrigger(orm.Model):
         cr.execute("SELECT relname FROM pg_class WHERE relname=%s", (self._table,))
         if cr.fetchall():
             columns = [column for column in self._columns if not self._columns[column]._type.endswith('2many') and
-                       (not isinstance(self._columns[column], (fields.function, fields.property, fields.related)) or 
+                       (not isinstance(self._columns[column], (fields.function, fields.property, fields.related)) or
                         self._columns[column].store)]
             cr.execute("SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname=%s) AND attname IN %s",
                        (self._table, tuple(columns)))
@@ -542,7 +542,7 @@ class SartreTrigger(orm.Model):
                 field, remote_field = fields_list[0], len(fields_list) > 1 and '.'.join(fields_list[1:]) or ''
                 try:
                     operator_inst, opposite_operator = operator_obj._get_operator(cr, uid, operator_symbol)
-                except:
+                except Exception:
                     raise orm.except_orm(_('Warning!'), _("The operator %s doesn't exist!") % operator_symbol)
                 dynamic_other_value = other_value and re.match('(\[\[.+?\]\])', str(other_value))
                 for object_ in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
@@ -696,7 +696,7 @@ class SartreTrigger(orm.Model):
     def _run_action_in_new_thread(self, dbname, uid, action, object_ids, context, logger, pid):
         try:
             db = pooler.get_db(dbname)
-        except:
+        except Exception:
             return
         cr = db.cursor()
         try:

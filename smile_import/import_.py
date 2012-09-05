@@ -205,7 +205,7 @@ class IrModelImportLine(Model):
             name_get_result = []
             try:
                 name_get_result = self.pool.get(model).name_get(cr, uid, res_ids, context)
-            except:
+            except Exception:
                 name_get_result = [(res_id, "name_get error") for res_id in res_ids]
             for res_id, name in name_get_result:
                 buf_result[(res_id, model)] = name

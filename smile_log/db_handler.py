@@ -57,7 +57,7 @@ class SmileDBHandler(logging.Handler):
 
         try:
             cr.execute(request, params)
-        except:
+        except Exception:
             # retry
             cr = self._get_cursor(dbname)
             cr.execute(request, params)

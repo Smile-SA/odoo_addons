@@ -253,7 +253,7 @@ class ir_model_export_file_template(Model):
         template = []
         try:
             delimiter = eval(export_file.delimiter)
-        except:
+        except TypeError:
             delimiter = export_file.delimiter
         # Header & Footer
         if getattr(export_file, template_part):
@@ -286,7 +286,7 @@ class ir_model_export_file_template(Model):
                             if not validation:
                                 try:
                                     exception_msg = _render_unicode(column.exception_msg, localdict)
-                                except:
+                                except Exception:
                                     exception_msg = column.exception_msg
                                 raise except_orm(_('Error'), exception_msg)
                         column_value = tools.ustr(column_value)
@@ -298,7 +298,7 @@ class ir_model_export_file_template(Model):
                         if not column.not_string and export_file.extension != 'xls' and export_file.quotechar:
                             try:
                                 quotechar = export_file.quotechar and eval(export_file.quotechar) or ''
-                            except:
+                            except TypeError:
                                 quotechar = export_file.quotechar
                             column_value = '%(quotechar)s%(column_value)s%(quotechar)s' % {
                                 'column_value': quotechar and column_value.replace(quotechar, "\\" + quotechar) or column_value,
@@ -310,7 +310,7 @@ class ir_model_export_file_template(Model):
                 template.append(delimiter.join(line))
         try:
             lineterminator = eval(export_file.lineterminator)
-        except:
+        except TypeError:
             lineterminator = export_file.lineterminator
         return lineterminator.join(template)
 
@@ -346,7 +346,7 @@ class ir_model_export_file_template(Model):
                                 raise Exception('%s - %s' % (template_part, _get_exception_message(e)))
         try:
             lineterminator = eval(export_file.lineterminator)
-        except:
+        except TypeError:
             lineterminator = export_file.lineterminator
         return (lineterminator.join(content), exceptions)
 
