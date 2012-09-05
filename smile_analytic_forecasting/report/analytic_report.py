@@ -26,6 +26,7 @@ from tools.translate import _
 class AnalyticForecastingWizard(osv.osv_memory):
     _name = 'account.analytic.forecasting.wizard'
     _description = 'Analytic Forecasting Wizard'
+    _rec_name = 'measure'
 
     _columns = {
         'create_period_ids': fields.dummy(type='many2many', relation='account.analytic.period', string="Reference Periods", required=True),
@@ -66,6 +67,7 @@ class AnalyticForecastingWizard(osv.osv_memory):
         assert len(ids) == 1, 'ids length should be equal to 1.'
         context = context or {}
         context.update(self.datas[ids[0]])
+        context['from_analytic_forecasting_wizard'] = True
         return {
             'name': 'Analytic Lines Analysis',
             'type': 'ir.actions.act_window',
@@ -178,7 +180,8 @@ class AnalyticForecastingReport(osv.osv):
         return x_axis_fields
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if view_type != 'tree':
+        context = context or {}
+        if not context.get('from_analytic_forecasting_wizard') or view_type != 'tree':
             return self.pool.get(self._inherit).fields_view_get(cr, uid, False, view_type, context, toolbar, submenu)
         else:
             res = {'type': 'tree', 'model': self._name, 'name': 'default', 'field_parent': False, 'view_id': 0}
