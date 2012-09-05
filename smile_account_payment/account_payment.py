@@ -44,8 +44,8 @@ class PaymentMode(osv.osv):
 
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
         res = {'value': {'partner_id': False}}
-        if not company_id:
-            res['value']['partner_id'] = self.pool.get('res.company_id').read(cr, uid, company_id, ['partner_id'], context, '_classic_write')['partner_id']
+        if company_id:
+            res['value']['partner_id'] = self.pool.get('res.company').read(cr, uid, company_id, ['partner_id'], context, '_classic_write')['partner_id']
         return res
 
     def get_payment_id(self, cr, uid, payment_mode_id, context=None):
