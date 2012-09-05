@@ -1,0 +1,546 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_export_file
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-08-30 10:36+0000\n"
+"PO-Revision-Date: 2012-08-30 10:36+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,extension:0
+msgid ".pdf"
+msgstr ".pdf"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,extension:0
+msgid ".xls"
+msgstr ".xls"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,fieldnames_in_header:0
+msgid "Add column labels in header"
+msgstr "Ajouter les libellés de colonne dans l'en-tête"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+msgid "Advanced configuration"
+msgstr "Configuration avancée"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,ftp_anonymous:0
+msgid "Anonymous"
+msgstr "Anonyme"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,email_attach_exceptions_file:0
+msgid "Attach exceptions file"
+msgstr "Joindre le fichier d'erreurs"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,email_attach_export_file:0
+msgid "Attach export file"
+msgstr "Joindre le fichier d'export"
+
+#. module: smile_export_file
+#: field:ir.model.export,attachment_id:0
+#: view:ir.model.export.file_template:0
+msgid "Attachment"
+msgstr "Pièce-jointe"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+#: field:ir.model.export.file_template,body:0
+#: field:ir.model.export.file_template,email_body:0
+msgid "Body"
+msgstr "Corps du mail"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,email_cc:0
+msgid "CC"
+msgstr "Copie à"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,exception_handling:0
+msgid "Cancel export"
+msgstr "Annuler l'export"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+msgid "Column"
+msgstr "Colonne"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,column_validator:0
+msgid "Column validator"
+msgstr "Validateur de colonne"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+#: field:ir.model.export.file_template,column_ids:0
+msgid "Columns"
+msgstr "Colonnes"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,refer_to_underlying_object:0
+msgid "Columns correspond to an underlying object"
+msgstr "Les colonnes ne correspondent pas à l'objet sous-jacent"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+msgid "Content"
+msgstr "Contenu"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,create_attachment:0
+msgid "Create an attachement"
+msgstr "Créer une pièce-jointe"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,extension_custom:0
+msgid "Custom Extension"
+msgstr "Extension personnalisée"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,check_method:0
+msgid "Data Check Method"
+msgstr "Méthode de vérificaiton des données"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,exception_logging:0
+msgid "Dedicated file"
+msgstr "Fichier dédié"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,default_value:0
+msgid "Default value"
+msgstr "Valeur par défaut"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,delimiter:0
+msgid "Delimiter"
+msgstr "Délimiteur"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,ftp_directory:0
+msgid "Directory"
+msgstr "Répertoire"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+msgid "Email"
+msgstr "Email"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,encoding:0
+msgid "Encoding"
+msgstr "Encodage"
+
+#. module: smile_export_file
+#: code:addons/smile_export_file/export_file.py:291
+#: code:addons/smile_export_file/export_file.py:309
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,exception_handling:0
+msgid "Exception Handling"
+msgstr "Gestion des erreurs"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,exception_logging:0
+msgid "Exception Logging"
+msgstr "Log des erreurs"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,exception_msg:0
+msgid "Exception Message"
+msgstr "Message d'erreur"
+
+#. module: smile_export_file
+#: field:ir.model.export,exceptions_attachment_id:0
+msgid "Exceptions"
+msgstr "Erreurs"
+
+#. module: smile_export_file
+#: field:ir.model.export,exceptions_file:0
+msgid "Exceptions File"
+msgstr "Fichier d'erreurs"
+
+#. module: smile_export_file
+#: field:ir.model.export,exceptions_filename:0
+msgid "Exceptions Filename"
+msgstr "Nom du fichier d'erreurs"
+
+#. module: smile_export_file
+#: model:ir.model,name:smile_export_file.model_ir_model_export
+#: field:ir.model.export.file_template.column,export_file_template_id:0
+msgid "Export"
+msgstr "Export"
+
+#. module: smile_export_file
+#: model:ir.module.module,shortdesc:smile_export_file.module_meta_information
+msgid "Export File"
+msgstr "Fichier d'export"
+
+#. module: smile_export_file
+#: model:ir.model,name:smile_export_file.model_ir_model_export_file_template
+msgid "Export File Template"
+msgstr "Modèle de fichier d'export"
+
+#. module: smile_export_file
+#: model:ir.model,name:smile_export_file.model_ir_model_export_file_template_column
+msgid "Export File Template Column"
+msgstr "Colonne de modèle de fichier d'export"
+
+#. module: smile_export_file
+#: model:ir.model,name:smile_export_file.model_ir_model_export_template
+msgid "Export Template"
+msgstr "Modèle d'export"
+
+#. module: smile_export_file
+#: model:ir.module.module,description:smile_export_file.module_meta_information
+msgid "Export data in flat file\n"
+"\n"
+"Principle\n"
+"\n"
+"* Define a file template\n"
+"* Choose storage methods\n"
+"    * create an attachment\n"
+"    * upload in FTP server\n"
+"    * send by email\n"
+"\n"
+"Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr\n"
+""
+msgstr "Exporter les données dans un fichier plat\n"
+"\n"
+"Principe\n"
+"\n"
+"* Définir un modèle de fichier\n"
+"* Choisir des méthodes de stockage\n"
+"    * créer une pièce-jointe\n"
+"    * uploader sur un serveur ftp\n"
+"    * envoyer par mail\n"
+"\n"
+"Suggestions & retours à : corentin.pouhet-brunerie@smile.fr\n"
+""
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,extension:0
+msgid "Extension"
+msgstr "Extension"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+msgid "FTP"
+msgstr "FTP"
+
+#. module: smile_export_file
+#: field:ir.model.export,file:0
+msgid "File"
+msgstr "Fichier"
+
+#. module: smile_export_file
+#: field:ir.model.export,export_file_template_id:0
+#: view:ir.model.export.file_template:0
+#: field:ir.model.export.template,export_file_template_id:0
+msgid "File Template"
+msgstr "Modèle de fichier"
+
+#. module: smile_export_file
+#: model:ir.actions.act_window,name:smile_export_file.action_export_file
+#: view:ir.model.export.file_template:0
+#: model:ir.ui.menu,name:smile_export_file.menu_export_file
+msgid "File Templates"
+msgstr "Modèles de fichier"
+
+#. module: smile_export_file
+#: field:ir.model.export,filename:0
+#: field:ir.model.export.file_template,filename:0
+msgid "Filename"
+msgstr "Nom de fichier"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,fillchar:0
+msgid "Fillchar"
+msgstr "Caractère de remplissage"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+#: field:ir.model.export.file_template,footer:0
+msgid "Footer"
+msgstr "Pied de page"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+#: field:ir.model.export.file_template,header:0
+msgid "Header"
+msgstr "En-tête"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,ftp_host:0
+msgid "Host"
+msgstr "Hôte"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,encoding:0
+msgid "ISO-8859-15"
+msgstr "ISO-8859-15"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,exception_handling:0
+msgid "Ignore wrong line"
+msgstr "Ignorer les lignes incorrectes"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,exception_logging:0
+msgid "Included in report"
+msgstr "Inclus dans le rapport"
+
+#. module: smile_export_file
+#: help:ir.model.export.file_template,check_method:0
+msgid "Indicate a method of the remote model with a signature equals to (self, cr, uid, ids, context=None)"
+msgstr "Indiquer une méthode du modèle distant avec une signature égale à (self, cr, uid, ids, context=None)"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,justify:0
+msgid "Justify"
+msgstr "Justifier"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,name:0
+msgid "Label"
+msgstr "Libellé"
+
+#. module: smile_export_file
+#: view:ir.model.export.template:0
+msgid "Last Execution Report"
+msgstr "Dernière exécution du rapport"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template.column,justify:0
+msgid "Left"
+msgstr "Gauche"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,lineterminator:0
+msgid "Line Terminator"
+msgstr "Caractère de fin de ligne"
+
+#. module: smile_export_file
+#: field:ir.model.export,exception_during_last_run:0
+msgid "Lines in exception"
+msgstr "Lignes en erreur"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,local_directory:0
+msgid "Local directory"
+msgstr "Répertoire local"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+msgid "Local storage"
+msgstr "Stockage local"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+msgid "Logs and Exceptions"
+msgstr "Logs et erreurs"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,max_width:0
+msgid "Max width"
+msgstr "Largeur maximale"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,min_width:0
+msgid "Min width"
+msgstr "Largeur minimale"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,not_string:0
+msgid "Not a string"
+msgstr "Pas une chaîne de caractères"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,model:0
+#: field:ir.model.export.file_template,model_id:0
+msgid "Object"
+msgstr "Objet"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,state:0
+msgid "Other"
+msgstr "Autre"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,ftp_password:0
+msgid "Password"
+msgstr "Mot de passe"
+
+#. module: smile_export_file
+#: help:ir.model.export.file_template,records:0
+#: help:ir.model.export.template,records:0
+msgid "Provide the field name that refers to the records to export. If it is empty it will refer to the current object."
+msgstr "Fournir un nom de champ qui fait référence aux enregistrements à exporter. Si vide, cela va référer à l'objet courant."
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,quotechar:0
+msgid "Quote Character"
+msgstr "Délimiteur de chaîne de caractères"
+
+#. module: smile_export_file
+#: help:ir.model.export.file_template.column,column_validator:0
+msgid "Raise an exception if validator evaluates to False: use python language with the pool, cr, uid, object, localcontext and time variables"
+msgstr "Raise an exception if validator evaluates to False: use python language with the pool, cr, uid, object, localcontext and time variables"
+
+#. module: smile_export_file
+#: field:ir.model.export,records:0
+#: field:ir.model.export.file_template,records:0
+#: field:ir.model.export.template,records:0
+msgid "Records"
+msgstr "Enregistrements"
+
+#. module: smile_export_file
+#: field:ir.model.export,report_id:0
+#: field:ir.model.export,report_summary:0
+#: field:ir.model.export.file_template,report_summary_template:0
+msgid "Report"
+msgstr "Rapport"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template.column,justify:0
+msgid "Right"
+msgstr "Droite"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,save_in_local_dir:0
+msgid "Save in a local directory"
+msgstr "Enregistrer dans un répertoire local"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+msgid "Search"
+msgstr "Chercher"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,send_by_email:0
+msgid "Send by email"
+msgstr "Envoyer par mail"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+msgid "Storage"
+msgstr "Stockage"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,email_subject:0
+msgid "Subject"
+msgstr "Sujet"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,state:0
+msgid "Tabular"
+msgstr "Tabulé"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+msgid "Template"
+msgstr "Modèle"
+
+#. module: smile_export_file
+#: help:ir.model.export.file_template,body:0
+msgid "Template language: Mako"
+msgstr "Langage de template : Mako"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,email_to:0
+msgid "To"
+msgstr "Pour"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,state:0
+msgid "Type"
+msgstr "Type"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,encoding:0
+msgid "UTF-8"
+msgstr "UTF-8"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,upload_to_ftp_server:0
+msgid "Upload to FTP server"
+msgstr "Uploader sur un serveur FTP"
+
+#. module: smile_export_file
+#: view:ir.model.export.file_template:0
+msgid "Use Mako language."
+msgstr "Use Mako language."
+
+#. module: smile_export_file
+#: help:ir.model.export.file_template,report_summary_template:0
+msgid "Use mako language with the pool, cr, uid, object, context, time, datetime, start_date, end_date, filename, records_number, exceptions_number and exceptions variables"
+msgstr "Use mako language with the pool, cr, uid, object, context, time, datetime, start_date, end_date, filename, records_number, exceptions_number and exceptions variables"
+
+#. module: smile_export_file
+#: help:ir.model.export.file_template.column,value:0
+msgid "Use mako language with the pool, cr, uid, object, line_number, localcontext and time variables"
+msgstr "Use mako language with the pool, cr, uid, object, line_number, localcontext and time variables"
+
+#. module: smile_export_file
+#: help:ir.model.export.file_template.column,default_value:0
+#: help:ir.model.export.file_template.column,exception_msg:0
+msgid "Use mako language with the pool, cr, uid, object, localcontext and time variables"
+msgstr "Use mako language with the pool, cr, uid, object, localcontext and time variables"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template,ftp_user:0
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,has_validator:0
+msgid "Validator"
+msgstr "Validateur"
+
+#. module: smile_export_file
+#: field:ir.model.export.file_template.column,value:0
+msgid "Value"
+msgstr "Valeur"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,encoding:0
+msgid "Windows-CP1252"
+msgstr "Windows-CP1252"
+
+#. module: smile_export_file
+#: help:ir.model.export.file_template,filename:0
+#: help:ir.model.export.file_template,ftp_host:0
+msgid "You can use a mako language with the object and time variables"
+msgstr "You can use a mako language with the object and time variables"
+
+#. module: smile_export_file
+#: selection:ir.model.export.file_template,extension:0
+msgid "other"
+msgstr "autre"
+
