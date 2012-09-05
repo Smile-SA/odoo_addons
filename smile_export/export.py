@@ -43,7 +43,7 @@ class ir_model_export_template(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
-        'filter_type': fields.selection([('domain', 'Domain'), ('method', 'Method')], string="Filter method", required=True, ),
+        'filter_type': fields.selection([('domain', 'Domain'), ('method', 'Method')], string="Filter method", required=True),
         'domain': fields.char('Filter domain', size=256),
         'filter_method': fields.char('Filter method', size=64, help="signature: method(cr, uid, context)"),
         'limit': fields.integer('Limit'),
@@ -110,14 +110,14 @@ class ir_model_export_template(osv.osv):
         """
         context used to specify export_mode
         export_mode can be:
-        - same_thread_raise_error (default)
-        - same_thread_rollback_and_continue
+        - same_thread_raise_error 
+        - same_thread_rollback_and_continue (default)
         - new_thread
         """
         if isinstance(ids, (int, long)):
             ids = [ids]
         context = context or {}
-        context.setdefault('export_mode', 'same_thread_full_rollback')
+        context.setdefault('export_mode', 'same_thread_rollback_and_continue')
         export_pool = self.pool.get('ir.model.export')
         export_ids = []
 
@@ -235,7 +235,7 @@ class ir_model_export(osv.osv):
         'create_uid': fields.many2one('res.users', 'Creation User', readonly=True),
         'line_ids': fields.one2many('ir.model.export.line', 'export_id', 'Lines'),
         'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export')], readonly=True),
-        'state': fields.selection(STATES, "State", readonly=True, required=True, ),
+        'state': fields.selection(STATES, "State", readonly=True, required=True),
         'exception': fields.text('Exception'),
     }
 
@@ -286,7 +286,7 @@ class ir_model_export(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         context = context or {}
-        export_mode = context.get('export_mode', 'same_thread_full_rollback')
+        export_mode = context.get('export_mode', 'same_thread_rollback_and_continue')
 
         for export_id in ids:
             logger = SmileDBLogger(cr.dbname, 'ir.model.export', export_id, uid)
