@@ -27,7 +27,7 @@ def __can_create(model, uid):
     proxy = rpc.RPCProxy('ir.model.access')
     try:
         return proxy.check(model, 'create')
-    except:
+    except Exception:
         pass
     return False
 
@@ -43,7 +43,7 @@ def __can_unlink(model, uid):
     proxy = rpc.RPCProxy('ir.model.access')
     try:
         return proxy.check(model, 'unlink')
-    except:
+    except Exception:
         pass
     return False
 

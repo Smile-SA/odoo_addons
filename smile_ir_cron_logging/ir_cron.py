@@ -43,7 +43,7 @@ class ir_cron(osv.osv, netsvc.Agent):
         try:
             f = getattr(m, func)
             f(cr, uid, *args)
-        except:
+        except Exception:
             cr.rollback()
             self._logger.exception("Job call of self.pool.get('%s').%s(cr, uid, *%r) failed" % (model, func, args))
             raise
@@ -59,7 +59,7 @@ End Time: %s
         ##
         try:
             db, pool = pooler.get_db_and_pool(dbname)
-        except:
+        except Exception:
             return False
         cr = db.cursor()
         try:

@@ -216,7 +216,7 @@ class IrModelImport(osv.osv):
         try:
             self._process_import(cr, uid, import_id, logger, context)
             cr.commit()
-        except Exception, e:
+        except Exception:
             cr.rollback()
         finally:
             cr.close()
@@ -243,7 +243,7 @@ class IrModelImportLine(osv.osv):
             name_get_result = []
             try:
                 name_get_result = self.pool.get(model).name_get(cr, uid, res_ids, context)
-            except:
+            except Exception:
                 name_get_result = [(res_id, "name_get error") for res_id in res_ids]
             for res_id, name in name_get_result:
                 buf_result[(res_id, model)] = name

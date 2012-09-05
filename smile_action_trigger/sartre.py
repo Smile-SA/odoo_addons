@@ -354,7 +354,7 @@ class SartreTrigger(osv.osv):
         category_id = False
         try:
             dummy, category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'smile_action_trigger', 'sartre_category_default0')
-        except:
+        except Exception:
             pass
         return category_id
 
@@ -534,7 +534,7 @@ class SartreTrigger(osv.osv):
                 field, remote_field = fields_list[0], len(fields_list) > 1 and '.'.join(fields_list[1:]) or ''
                 try:
                     operator_inst, opposite_operator = operator_obj._get_operator(cr, uid, operator_symbol)
-                except:
+                except Exception:
                     raise osv.except_osv(_('Warning!'), _("The operator %s doesn't exist!") % operator_symbol)
                 dynamic_other_value = other_value and re.match('(\[\[.+?\]\])', str(other_value))
                 for object_ in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
@@ -688,7 +688,7 @@ class SartreTrigger(osv.osv):
     def _run_action_in_new_thread(self, dbname, uid, action, object_ids, context, logger, pid):
         try:
             db = pooler.get_db(dbname)
-        except:
+        except Exception:
             return
         cr = db.cursor()
         try:

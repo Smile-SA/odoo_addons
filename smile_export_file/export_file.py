@@ -50,7 +50,7 @@ def strip_accents(s):
     return str(a)
 
 
-def is_a_datetime(str0, type='datetime'):
+def is_a_datetime(str0, type_='datetime'):
     if isinstance(str0, str):
         formats = {
             'datetime': '%Y-%m-%d %H:%M:%S',
@@ -58,11 +58,11 @@ def is_a_datetime(str0, type='datetime'):
             'time': '%Y-%m-%d %H:%M:%S',
         }
         try:
-            if type == 'time':
+            if type_ == 'time':
                 str0 = datetime.datetime.today().strftime(formats['date']) + ' ' + str0
-            result = datetime.datetime.strptime(str0, formats[type])
+            result = datetime.datetime.strptime(str0, formats[type_])
             return result
-        except Exception, e:
+        except Exception:
             pass
     return
 
@@ -210,7 +210,7 @@ class ir_model_export_file_template(osv.osv):
         template = []
         try:
             delimiter = eval(export_file.delimiter)
-        except:
+        except TypeError:
             delimiter = export_file.delimiter
         # Header & Footer
         if getattr(export_file, template_part):
@@ -239,7 +239,7 @@ class ir_model_export_file_template(osv.osv):
                             if not validation:
                                 try:
                                     exception_msg = _render_unicode(column.exception_msg, localdict)
-                                except:
+                                except Exception:
                                     exception_msg = column.exception_msg
                                 raise osv.except_osv(_('Error'), exception_msg)
                         column_value = tools.ustr(column_value)
@@ -251,7 +251,7 @@ class ir_model_export_file_template(osv.osv):
                         if not column.not_string and export_file.quotechar:
                             try:
                                 quotechar = export_file.quotechar and eval(export_file.quotechar) or ''
-                            except:
+                            except TypeError:
                                 quotechar = export_file.quotechar
                             column_value = '%(quotechar)s%(column_value)s%(quotechar)s' % {
                                 'column_value': quotechar and column_value.replace(quotechar, "\\" + quotechar) or column_value,
@@ -263,7 +263,7 @@ class ir_model_export_file_template(osv.osv):
                 template.append(delimiter.join(line))
         try:
             lineterminator = eval(export_file.lineterminator)
-        except:
+        except TypeError:
             lineterminator = export_file.lineterminator
         return lineterminator.join(template)
 
@@ -299,7 +299,7 @@ class ir_model_export_file_template(osv.osv):
                                 raise Exception('%s - %s' % (template_part, _get_exception_message(e)))
         try:
             lineterminator = eval(export_file.lineterminator)
-        except:
+        except TypeError:
             lineterminator = export_file.lineterminator
         return (lineterminator.join(content), exceptions)
 

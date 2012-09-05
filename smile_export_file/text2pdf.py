@@ -217,7 +217,7 @@ class pyText2Pdf:
                     x += 1
                     try:
                         a = argslist[x]
-                    except:
+                    except IndexError:
                         msg = "Argument error for option " + o
                         sys.exit(msg)
 

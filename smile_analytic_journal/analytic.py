@@ -224,7 +224,7 @@ class AnalyticJournal(osv.osv):
     def create_menu(self, cr, uid, ids, context=None):
         try:
             dummy, parent_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'account_analytic_journal_entries')
-        except:
+        except Exception:
             raise osv.except_osv(_('Error'), _('The menu [xml_id=account.account_analytic_journal_entries] is not found!'))
         if isinstance(ids, (int, long)):
             ids = [ids]

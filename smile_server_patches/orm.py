@@ -75,7 +75,7 @@ def new_store_set_values(self, cr, uid, ids, fields, context):
                     #####################
                         try:
                             value[v] = value[v][0]
-                        except:
+                        except (IndexError, KeyError):
                             pass
                     upd0.append('"' + v + '"=' + self._columns[v]._symbol_set[0])
                     upd1.append(self._columns[v]._symbol_set[1](value[v]))
@@ -96,7 +96,7 @@ def new_store_set_values(self, cr, uid, ids, fields, context):
                     if self._columns[f]._type in ('many2one', 'one2one'):
                         try:
                             value = value[0]
-                        except:
+                        except IndexError:
                             pass
                     cr.execute('update "' + self._table + '" set ' + '"' + f + '"=' + self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value), id_))
     return True

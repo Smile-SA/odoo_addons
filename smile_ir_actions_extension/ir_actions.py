@@ -85,7 +85,7 @@ class actions_server(osv.osv):
                     str0 = datetime.datetime.today().strftime(formats['date']) + ' ' + str0
                 result = datetime.datetime.strptime(str0, formats[type_])
                 return result
-            except Exception, e:
+            except Exception:
                 return False
 
         def formatLang(value, lang=context.get('context_lang', 'en_US'), digits=2, tz=context.get('context_tz', 'Europe/London')):
@@ -141,7 +141,7 @@ class actions_server(osv.osv):
     def _run_now_new_cursor(self, dbname, uid, ids, context):
         try:
             db = pooler.get_db(dbname)
-        except:
+        except Exception:
             return False
         cr = db.cursor()
         try:
@@ -223,7 +223,7 @@ class actions_server(osv.osv):
                             id_ = eval(action.write_id, {'object': rec})
                             try:
                                 id_ = int(id_)
-                            except:
+                            except (ValueError, TypeError):
                                 raise osv.except_osv(_('Error'), _("Problem in configuration `Record Id` in Server Action!"))
 
                             if not isinstance(id_, (int, long)):

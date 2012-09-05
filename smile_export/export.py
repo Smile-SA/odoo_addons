@@ -308,7 +308,7 @@ class ir_model_export(osv.osv):
     def _generate_with_new_cursor(self, dbname, uid, export_id, logger, context):
         try:
             db = pooler.get_db(dbname)
-        except:
+        except Exception:
             return False
         cr = db.cursor()
         try:
@@ -369,7 +369,7 @@ class ir_model_export_line(osv.osv):
             name_get_result = []
             try:
                 name_get_result = self.pool.get(model).name_get(cr, uid, res_ids, context)
-            except:
+            except Exception:
                 name_get_result = [(res_id, "name_get error") for res_id in res_ids]
             for res_id, name in name_get_result:
                 buf_result[(res_id, model)] = name
