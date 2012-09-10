@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import controllers
+import web
 import web_services

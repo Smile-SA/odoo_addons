@@ -19,7 +19,4 @@
 #
 ##############################################################################
 
-import res_user
-import security
-import web
-import web_services
+import controllers
