@@ -65,18 +65,17 @@ class ResUsers(orm.Model):
         logger = logging.getLogger('smile_sso')
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute("SELECT u.id, u.password FROM res_users u LEFT JOIN res_users_expiry e ON u.id = e.user_id "
+            cr.execute("SELECT u.id FROM res_users u LEFT JOIN res_users_expiry e ON u.id = e.user_id "
                        "WHERE u.login=%s AND u.active=TRUE AND (e.expiry_date IS NULL OR e.expiry_date>=now() AT TIME ZONE 'UTC') "
                        "LIMIT 1", (login,))
             res = cr.dictfetchone()
             if not res:
                 logger.error("Server connection refused for the user [login=%s]" % login)
-            if res and not res['password']:
-                password = generate_random_password(length)
-                cr.execute("UPDATE res_users SET password=%s WHERE login=%s", (password, login))
-                cr.commit()
-                logger.debug("Login of the user [login=%s]", login)
-                res['password'] = password
+            password = generate_random_password(length)
+            cr.execute("UPDATE res_users SET password=%s WHERE login=%s", (password, login))
+            cr.commit()
+            logger.debug("Login of the user [login=%s]", login)
+            res['password'] = password
             return res
         finally:
             cr.close()
@@ -84,7 +83,6 @@ class ResUsers(orm.Model):
     def sso_logout(self, db, login, context=None):
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute("UPDATE res_users SET password=NULL WHERE login=%s", (login,))
             cr.execute("UPDATE res_users_expiry SET expiry_date=NULL WHERE login=%s", (login,))
             cr.commit()
             logging.getLogger('smile_sso').debug("Logout of the user [login=%s]", login)
