@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import res_user
+import res_users
 import security
 import web
 import web_services

@@ -16,9 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: smile_sso
-#: field:res.users,expiry_date:0
-msgid "Expiry Date"
-msgstr "Date d'expiration"
+#: field:res.users,sso:0
+msgid "SSO Authentification"
+msgstr "Authentification SSO"
 
 #. module: smile_sso
 #: sql_constraint:res.users:0

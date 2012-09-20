@@ -32,7 +32,7 @@ def new_dispatch(self, method, params):
         res = getattr(security, method)(params[0], params[1], params[2])
         msg = res and 'Successful %s' % method.replace('sso_', '') or 'Bad login or password'
         #TODO: log the client IP address..
-        logging.getLogger("web-service").info("%s from '%s' using database '%s'", (msg, params[1], params[0]))
+        logging.getLogger("web-service").info("%s from '%s' using database '%s'" % (msg, params[1], params[0]))
         return res
     else:
         return native_dispatch(self, method, params)

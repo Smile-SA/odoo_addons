@@ -60,12 +60,14 @@ def sso_login(self, req, **kwargs):
         if user_info and user_info['id'] > 0:
             req.session.bind(db, user_info['id'], login, user_info['password'])
             req.session.get_context()
-            addr = redirect('/web/webclient/home', 303)
-            cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
-            addr.set_cookie('session0|session_id', cookie_val)
-            return addr
         elif sso_portal == '/':
-            return self.login(req, db, login, security_key)
+            req.session.authenticate(db, login, security_key, {})
+        else:
+            return redirect(sso_portal)
+        addr = redirect('/web/webclient/home', 303)
+        cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
+        addr.set_cookie('session0|session_id', cookie_val)
+        return addr
     return redirect(sso_portal)
 
 
