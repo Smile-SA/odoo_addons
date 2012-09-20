@@ -929,7 +929,7 @@ def sartre_decorator(original_method):
             # Search triggers
             trigger_ids = trigger_obj.check_method_based_triggers(obj, cr, uid, method_name, field_name, calculation_method)
             # Save old values if triggers exist
-            if trigger_ids and ids:
+            if trigger_ids:
                 fields_list = trigger_obj.get_fields_to_save_old_values(cr, 1, trigger_ids)
                 context.update({
                     'active_object_ids': ids,
