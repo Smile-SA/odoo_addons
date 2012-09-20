@@ -520,8 +520,11 @@ class SartreTrigger(orm.Model):
             cr.execute("SELECT res_id FROM sartre_execution WHERE trigger_id=%s AND executions_number>=%s",
                        (trigger.id, trigger.executions_max_number))
             res_ids_off = cr.fetchall()
-            res_ids = list(set(context.get('active_object_ids', [])) - set([item[0] for item in res_ids_off]))
-            return ('id', 'in', res_ids)
+            if context.get('active_object_ids'):
+                res_ids = list(set(context.get('active_object_ids', [])) - set([item[0] for item in res_ids_off]))
+                return ('id', 'in', res_ids)
+            else:
+                return ('id', 'not in', [item[0] for item in res_ids_off])
         return
 
     def _build_python_domain(self, cr, uid, trigger, domain, context):
