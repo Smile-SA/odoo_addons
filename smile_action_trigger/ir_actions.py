@@ -88,7 +88,7 @@ class IrActionsServer(orm.Model):
             if action.execution_type == 'locked' and not context.get('launch_actions_execution'):
                 execution_args = self._get_execution_args(cr, uid, action, context)
                 res = self.run(cr, **execution_args)
-            if not isinstance(res, bool):
+            if not isinstance(res, bool) and res:
                 return res
         return False
 
