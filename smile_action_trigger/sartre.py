@@ -561,7 +561,7 @@ class SartreTrigger(osv.osv):
                                  'arg_value': arg_value}
                     if operator_inst:
                         exec operator_inst.expression in localdict
-                    if opposite_operator == localdict.get('result', opposite_operator):
+                    if bool(opposite_operator) == bool(localdict.get('result', opposite_operator)):
                         active_object_ids.remove(object_.id)
                 domain[index] = ('id', 'in', active_object_ids)
         return domain
