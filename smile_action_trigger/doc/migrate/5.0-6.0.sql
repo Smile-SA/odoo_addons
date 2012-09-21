@@ -1,6 +1,7 @@
 ﻿-- Migrate from 5.0 to 6.0
 -- WARNING: Sartre Exceptions are not migrated (Use of smile_log in 6.0)
 ALTER TABLE sartre_rule RENAME TO sartre_trigger;
+ALTER SEQUENCE sartre_rule_id_seq RENAME TO sartre_trigger_id_seq;
 ALTER TABLE sartre_trigger RENAME trigger_create TO on_create;
 ALTER TABLE sartre_trigger RENAME trigger_write TO on_write;
 ALTER TABLE sartre_trigger RENAME trigger_unlink TO on_unlink;
@@ -19,6 +20,7 @@ ALTER TABLE sartre_trigger RENAME trigger_date_range TO on_date_range;
 ALTER TABLE sartre_trigger RENAME trigger_date_range_type TO on_date_range_type;
 ALTER TABLE sartre_trigger RENAME trigger_date_range_operand TO on_date_range_operand;
 ALTER TABLE sartre_condition RENAME TO sartre_filter;
+ALTER SEQUENCE sartre_condition_id_seq RENAME TO sartre_filter_id_seq;
 ALTER TABLE sartre_filter RENAME sartre_rule_id TO trigger_id;
 ALTER TABLE sartre_execution RENAME rule_id TO trigger_id;
 ALTER TABLE sartre_rule_server_action_rel RENAME TO sartre_trigger_server_action_rel;
