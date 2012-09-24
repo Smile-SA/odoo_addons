@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- Asset History -->
+
+	    <record model="ir.ui.view" id="view_account_asset_history_form">
+	        <field name="name">account.asset.history.form</field>
+	        <field name="model">account.asset.history</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form string="Asset Update">
+                  <field name="asset_id" on_change="onchange_asset_id(asset_id)" colspan="4"/>
+                  <field name="purchase_value"/>
+                  <field name="salvage_value"/>
+				  <group colspan="2" col="2">
+				  	  <separator string="Accounting Depreciation" colspan="2"/>
+	                  <field name="accounting_method" on_change="onchange_accounting_method(accounting_method)"/>
+	                  <field name="accounting_periods"
+							attrs="{'required': [('accounting_method', '!=', 'none')], 'invisible': [('accounting_method', '=', 'none')]}"/>
+	                  <field name="accounting_degressive_rate"
+							attrs="{'invisible': [('accounting_method', '!=', 'degressive')], 'required': [('accounting_method', '=', 'degressive')]}"/>
+	                  <field name="accounting_prorata"
+							attrs="{'invisible': [('accounting_method', '=', 'none')]}"/>
+					  <field name="period_length"
+							attrs="{'invisible': [('accounting_method', '=', 'none')], 'required': [('accounting_method', '!=', 'none')]}"/>
+				  </group>
+				  <group colspan="2" col="2">
+				  	  <separator string="Fiscal Depreciation" colspan="2"/>
+	                  <field name="fiscal_method" attrs="{'readonly': [('accounting_method', '=', 'none')]}"/>
+	                  <field name="fiscal_periods"
+							attrs="{'required': [('fiscal_method', '!=', 'none')], 'invisible': [('fiscal_method', '=', 'none')]}"/>
+	                  <field name="fiscal_degressive_rate"
+							attrs="{'invisible': [('fiscal_method', '!=', 'degressive')], 'required': [('fiscal_method', '=', 'degressive')]}"/>
+	                  <field name="fiscal_prorata" attrs="{'invisible': [('fiscal_method', '=', 'none')]}"/>
+				  </group>
+			  	  <separator string="Reason" colspan="4"/>
+                  <field name="note" nolabel="1" colspan="4"/>
+                  <button special="cancel" string="Cancel" icon="gtk-cancel" colspan="2"/>
+                  <button type="object" name="button_validate" string="Validate" icon="gtk-execute" colspan="2"/>
+	            </form>
+	        </field>
+	    </record>
+
+	</data>
+</openerp>

@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	    <!-- Asset -->
+
+	    <record model="ir.ui.view" id="view_account_asset_asset_search">
+	        <field name="name">account.asset.asset.search</field>
+	        <field name="model">account.asset.asset</field>
+	        <field name="type">search</field>
+	        <field name="arch" type="xml">
+	            <search string="Assets">
+ 					<filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
+                    <filter icon="terp-dolar" string="Running" domain="[('state','=','open')]"/>
+                    <filter icon="terp-dolar_ok!" string="Sold Or Scrapped" domain="[('state','=','close')]"/>
+                    <separator orientation="vertical"/>
+	                <field name="name"/>
+	                <field name="code"/>
+	                <field name="category_id"/>
+	                <field name="asset_account_id" string="Account"/>
+	                <field name="company_id" groups="base.group_multi_company"/>
+	                <field name="asset_type"/>
+	                <field name="depreciation_date_start"/>
+					<newline/>
+                    <group string="Group By..." expand="0">
+                        <filter string="Company" context="{'group_by':'company_id'}" icon="terp-folder-green" groups="base.group_multi_company"/>
+                        <filter string="Asset Category" context="{'group_by':'category_id'}" icon="terp-folder-orange"/>
+                        <filter string="Account" context="{'group_by':'asset_account_id'}" icon="terp-folder-violet"/>
+                        <filter string="Currency" context="{'group_by':'currency_id'}" icon="terp-dolar" groups="base.group_extended"/>
+					</group>
+	            </search>
+	        </field>
+	    </record>
+
+	    <record model="ir.ui.view" id="view_account_asset_asset_tree">
+	        <field name="name">account.asset.asset.tree</field>
+	        <field name="model">account.asset.asset</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <tree string="Assets">
+	                <field name="name"/>
+	                <field name="parent_id" invisible="1"/>
+	                <field name="code"/>
+	                <field name="category_id"/>
+	                <field name="company_id" groups="base.group_multi_company"/>
+	                <field name="asset_account_id" string="Account" invisible="1"/>
+	                <field name="asset_type"/>
+	                <field name="depreciation_date_start"/>
+	                <field name="purchase_value"/>
+	                <field name="amount_to_depreciate"/>
+	                <field name="currency_id" groups="base.group_extended"/>
+	                <field name="state"/>
+	            </tree>
+	        </field>
+	    </record>
+
+	    <record model="ir.ui.view" id="view_account_asset_asset_form">
+	        <field name="name">account.asset.asset.form</field>
+	        <field name="model">account.asset.asset</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form string="Asset">
+	            	<group colspan="4" col="6">
+		            	<field name="name"/>
+		                <field name="category_id" on_change="onchange_category_id(category_id)"
+		                	domain="[('company_id', '=', company_id)]"/>
+		                <field name="code"/>
+		                <field name="purchase_value"/>
+		                <field name="salvage_value"/>
+		                <field name="amount_to_depreciate"/>
+		                <field name="company_id" widget="selection" groups="base.group_multi_company"
+		                	on_change="onchange_company_id(company_id)"/>
+		                <field name="currency_id" groups="base.group_extended"/>
+		                <group colspan="2" col="2">
+	                        <button name="button_split" states="draft,open" string="Split" type="object" colspan="1"/>
+	                        <button name="button_modify" states="open" string="Modify" type="object" colspan="1"/>
+		                </group>
+	            	</group>
+	                <notebook colspan="4">
+	                	<page name="general" string="General">
+							<group colspan="2" col="2" name="characteristics">
+								<separator string="Characteristics" colspan="2"/>
+	                    		<field name="parent_id" attrs="{'required': [('asset_type', '=', 'purchase_refund')]}"/>
+	                    		<field name="asset_type" attrs="{'readonly': ['|', ('parent_id', '=', False), ('state', '!=', 'draft')]}"/>
+	                    		<field name="depreciation_date_start"/>
+							</group>
+							<group colspan="2" col="3" name="purchase">
+								<separator string="Purchase" colspan="3"/>
+	                    		<field name="supplier_id" colspan="3"/>
+	                    		<field name="purchase_date" colspan="3" on_change="onchange_purchase_date(purchase_date)"/>
+	                    		<field name="quantity"/>
+	                    		<field name="uom_id" nolabel="1"/>
+	                    		<field name="purchase_tax_amount" colspan="3"/>
+	                    		<field name="purchase_tax_ids" colspan="3"/>
+							</group>
+		               </page>
+		               <page string="Depreciation Board">
+							<group colspan="2" col="2" name="accounting_depreciation">
+								<separator string="Accounting Depreciation" colspan="2"/>
+								<field name="accounting_method"
+									on_change="onchange_accounting_method(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"/>
+								<field name="accounting_periods"
+									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
+									attrs="{'required': [('accounting_method', '!=', 'none')], 'invisible': [('accounting_method', '=', 'none')]}"/>
+								<field name="accounting_degressive_rate"
+									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
+									attrs="{'invisible': [('accounting_method', '!=', 'degressive')], 'required': [('accounting_method', '=', 'degressive')]}"/>
+								<field name="accounting_prorata"
+									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
+									attrs="{'invisible': [('accounting_method', '=', 'none')]}"/>
+	                    		<field name="depreciation_date_stop"
+									attrs="{'invisible': [('accounting_method', '=', 'none')]}"/>
+								<field name="period_length"
+									attrs="{'invisible': [('accounting_method', '=', 'none')], 'required': [('accounting_method', '!=', 'none')]}"/>
+							</group>
+							<group colspan="2" col="2" name="fiscal_depreciation">
+								<separator string="Fiscal Depreciation" colspan="2"/>
+								<field name="fiscal_method" attrs="{'readonly': [('accounting_method', '=', 'none')]}"
+									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"/>
+								<field name="fiscal_periods"
+									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
+									attrs="{'required': [('fiscal_method', '!=', 'none')], 'invisible': [('fiscal_method', '=', 'none')]}"/>
+								<field name="fiscal_degressive_rate"
+									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
+									attrs="{'invisible': [('fiscal_method', '!=', 'degressive')], 'required': [('fiscal_method', '=', 'degressive')]}"/>
+								<field name="fiscal_prorata" attrs="{'invisible': [('fiscal_method', '=', 'none')]}"
+									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"/>
+								<field name="benefit_accelerated_depreciation" attrs="{'invisible': [('fiscal_method', '=', 'none')]}"/>
+							</group>
+							<group colspan="4" col="2" name="depreciation_buttons" attrs="{'invisible': [('accounting_method', '=', 'none')]}">
+			                    <button type="object" name="compute_depreciation_board" string="Compute depreciation board" attrs="{'invisible':[('state','=','close')]}"/>
+			                    <button type="action" name="%(action_account_asset_depreciation_line_form)d" string="Depreciate Asset"
+			                    	context="{'default_asset_id': active_id}" attrs="{'invisible':[('state','in',('draft', 'close'))]}"/>
+							</group>
+							<field name="accounting_depreciation_line_ids" colspan="2" nolabel="1" mode="tree" attrs="{'invisible': [('accounting_method', '=', 'none')]}">
+		                       <tree string="Accounting Depreciation Board" colors="blue:(move_id == False);black:(move_id != False)">
+		                          <field name="depreciation_date"/>
+		                          <field name="base_value"/>
+		                          <field name="depreciation_value" readonly="1" string="Amortization"/>
+		                          <field name="accumulated_value"/>
+		                          <field name="exceptional_value"/>
+		                          <field name="book_value"/>
+		                          <field name="move_id" invisible="1"/>
+		                          <field name="state" invisible="1"/>
+		                          <button name="post_depreciation_line" icon="gtk-execute" string="Post" type="object" attrs="{'invisible':['|',('move_id','!=',False),('state','!=','open')]}"/>
+		                       </tree>
+		                       <form string="Depreciation Line">
+		                          <field name="depreciation_date"/>
+		                          <field name="base_value"/>
+		                          <field name="depreciation_value" readonly="1"/>
+		                          <field name="accumulated_value"/>
+		                          <field name="exceptional_value"/>
+		                          <field name="book_value"/>
+		                       </form>
+		                    </field>
+							<field name="fiscal_depreciation_line_ids" colspan="2" nolabel="1" mode="tree"
+								attrs="{'invisible': ['|', ('fiscal_method', '=', 'none'), ('benefit_accelerated_depreciation', '=', False)]}">
+		                       <tree string="Fiscal Depreciation Board" colors="blue:(move_id == False);black:(move_id != False)">
+		                          <field name="depreciation_date"/>
+		                          <field name="depreciation_value" readonly="1" string="Fiscal Depreciation"/>
+		                          <field name="accounting_value"/>
+		                          <field name="accelerated_value"/>
+		                          <field name="move_id" invisible="1"/>
+		                          <field name="state" invisible="1"/>
+		                          <button name="post_depreciation_line" icon="gtk-execute" string="Post" type="object" attrs="{'invisible':['|',('move_id','!=',False),('state','!=','open')]}"/>
+		                       </tree>
+		                       <form string="Depreciation Line">
+		                          <field name="depreciation_date"/>
+		                          <field name="depreciation_value" readonly="1" string="Fiscal Depreciation"/>
+		                          <field name="accounting_value"/>
+		                          <field name="accelerated_value"/>
+		                       </form>
+		                    </field>
+	                   </page>
+	                   <page string="Disposal" attrs="{'invisible': [('state', '!=', 'close')]}">
+							<group colspan="4" col="2">
+								<field name="sale_date"/>
+								<field name="disposal_type"/>
+								<field name="customer_id"/>
+								<field name="sale_value" string="Amount Excl Tax"/>
+								<field name="sale_tax_amount"/>
+								<field name="sale_tax_ids" colspan="2"/>
+								<field name="regularization_tax_amount"/>
+								<field name="sale_result"/>
+							</group>
+	                   </page>
+	                   <page string="History" attrs="{'invisible': [('asset_history_ids', '=', False)]}">
+							<field name="asset_history_ids" colspan="4" nolabel="1" mode="tree">
+		                       <tree string="History">
+		                          <field name="create_date"/>
+				                  <field name="purchase_value"/>
+				                  <field name="salvage_value"/>
+				                  <field name="accounting_method"/>
+				                  <field name="accounting_periods"/>
+				                  <field name="accounting_degressive_rate"/>
+				                  <field name="accounting_prorata"/>
+				                  <field name="fiscal_method"/>
+				                  <field name="fiscal_periods"/>
+				                  <field name="fiscal_degressive_rate"/>
+				                  <field name="fiscal_prorata"/>
+								  <field name="period_length"/>
+				                  <field name="note" string="Reason"/>
+		                       </tree>
+		                       <form string="History">
+				                  <field name="asset_id" on_change="onchange_asset_id(asset_id)" colspan="4"/>
+				                  <field name="purchase_value"/>
+				                  <field name="salvage_value"/>
+								  <group colspan="2" col="2">
+								  	  <separator string="Accounting Depreciation" colspan="2"/>
+					                  <field name="accounting_method"/>
+					                  <field name="accounting_periods"/>
+					                  <field name="accounting_degressive_rate"
+											attrs="{'invisible': [('accounting_method', '!=', 'degressive')], 'required': [('accounting_method', '=', 'degressive')]}"/>
+					                  <field name="accounting_prorata"/>
+									  <field name="period_length"/>
+								  </group>
+								  <group colspan="2" col="2">
+								  	  <separator string="Fiscal Depreciation" colspan="2"/>
+					                  <field name="fiscal_method"/>
+					                  <field name="fiscal_periods"/>
+					                  <field name="fiscal_degressive_rate"
+											attrs="{'invisible': [('accounting_method', '!=', 'degressive')], 'required': [('accounting_method', '=', 'degressive')]}"/>
+					                  <field name="fiscal_prorata"/>
+								  </group>
+							  	  <separator string="Notes" colspan="4"/>
+				                  <field name="note" nolabel="1" colspan="4"/>
+		                       </form>
+		                    </field>
+	                   </page>
+	                   <page string="Notes">
+		                   <field name="note" nolabel="1" colspan="4"/>
+		               </page>
+	                </notebook>
+                    <group colspan="4" col="6">
+	                   <field name="state" readonly="1" colspan="2"/>
+                       <button name="button_validate" states="draft" string="Confirm" type="object" icon="terp-camera_test"/>
+                       <button name="button_sell" states="open" string="Sell Or Scrap" type="object"/>
+                       <button name="button_output" attrs="{'invisible': ['|', ('state', '!=', 'close'), ('is_out', '!=', False)]}"
+                       	string="Retire" type="object" />
+                       <field name="is_out" readonly="1" invisible="1"/>
+                    </group>
+	            </form>
+	        </field>
+	    </record>
+
+	    <record model="ir.actions.act_window" id="action_account_asset_asset_form">
+	        <field name="name">Assets</field>
+	        <field name="res_model">account.asset.asset</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">tree,form</field>
+	        <field name="view_id" ref="view_account_asset_asset_tree"/>
+	        <field name="search_view_id" ref="view_account_asset_asset_search"/>
+	    </record>
+
+	    <menuitem id="menu_account_asset_asset_form" parent="menu_finance_assets"
+	    	action="action_account_asset_asset_form" sequence="10"/>
+
+	    <record model="ir.ui.view" id="view_account_asset_asset_hierarchy_tree">
+	        <field name="name">account.asset.asset.hierarchy</field>
+	        <field name="model">account.asset.asset</field>
+	        <field name="type">tree</field>
+	        <field name="field_parent">child_ids</field>
+	        <field name="arch" type="xml">
+	            <tree string="Assets">
+	                <field name="name"/>
+	                <field name="code"/>
+	                <field name="category_id"/>
+	                <field name="company_id" groups="base.group_multi_company"/>
+	                <field name="asset_type"/>
+	                <field name="depreciation_date_start"/>
+	                <field name="purchase_value"/>
+	                <field name="amount_to_depreciate"/>
+	                <field name="currency_id" groups="base.group_extended"/>
+	                <field name="state"/>
+	            </tree>
+	        </field>
+	    </record>
+
+	    <record model="ir.actions.act_window" id="action_account_asset_asset_tree">
+	        <field name="name">Asset Hierarchy</field>
+	        <field name="res_model">account.asset.asset</field>
+	        <field name="view_type">tree</field>
+	        <field name="view_mode">tree</field>
+	        <field name="domain">[('parent_id','=',False)]</field>
+	        <field name="view_id" ref="view_account_asset_asset_hierarchy_tree"/>
+	    </record>
+
+	    <menuitem id="menu_account_asset_asset_tree" parent="menu_finance_assets"
+	    	action="action_account_asset_asset_tree" sequence="20" groups="base.group_extended"/>
+
+		<record model="ir.actions.server" id="open_asset">
+	        <field name="name">Open Asset</field>
+	        <field name="model_id" ref="smile_account_asset.model_account_asset_asset"/>
+	        <field name="state">code</field>
+	        <field name="code">action = {
+    'type': 'ir.actions.act_window',
+    'view_type': 'form',
+    'view_mode': 'form',
+    'res_model': 'account.asset.asset',
+    'res_id': context['active_id'],
+    'target': 'new',
+}</field>
+		</record>
+
+        <record id="account_asset_asset_tree_but_open" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">account.asset.asset</field>
+            <field name="name">Open Asset</field>
+            <field name="value" eval="'ir.actions.server,%d' % ref('open_asset')"/>
+        </record>
+
+	    <record model="ir.ui.view" id="view_account_asset_asset_sale_form">
+	        <field name="name">account.asset.asset.sale.form</field>
+	        <field name="model">account.asset.asset</field>
+	        <field name="type">form</field>
+	        <field name="priority">50</field>
+	        <field name="arch" type="xml">
+	            <form string="Asset Sale/Scrapping" col="2">
+					<field name="sale_date" required="1" string="Date"/>
+	                <field name="disposal_type" required="1"/>
+					<field name="customer_id" attrs="{'required': [('disposal_type', '=', 'sale')]}"/>
+	                <field name="sale_value" string="Amount Excl Tax" required="1"/>
+	                <field name="sale_tax_ids" colspan="2"/>
+					<group colspan="2" col="2">
+		                <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+						<button name="button_confirm_asset_sale" type="object" string="Confirm Asset Sale" icon="terp-camera_test"/>
+					</group>
+					<field name="state" invisible="1"/>
+	            </form>
+			</field>
+		</record>
+
+	    <record model="ir.ui.view" id="view_account_asset_asset_disposal_search">
+	        <field name="name">account.asset.asset.disposal.search</field>
+	        <field name="model">account.asset.asset</field>
+	        <field name="type">search</field>
+	        <field name="arch" type="xml">
+	            <search string="Asset Disposals">
+ 					<filter icon="terp-dolar" string="Sale" domain="[('disposal_type','=','sale')]"/>
+                    <filter icon="gtk-delete" string="Scrapping" domain="[('disposal_type','=','scrapping')]"/>
+                    <separator orientation="vertical"/>
+ 					<filter icon="gtk-home" string="In Heritage" domain="[('is_out','=',False)]"/>
+                    <filter icon="gtk-quit" string="Out Of Heritage" domain="[('is_out','=',True)]"/>
+                    <separator orientation="vertical"/>
+	                <field name="name"/>
+	                <field name="code"/>
+	                <field name="category_id"/>
+	                <field name="company_id" groups="base.group_multi_company"/>
+	                <field name="disposal_receivable_account_id" string="Account"/>
+	                <field name="sale_date"/>
+					<newline/>
+                    <group string="Group By..." expand="0">
+                        <filter string="Company" context="{'group_by':'company_id'}" icon="terp-folder-green" groups="base.group_multi_company"/>
+                        <filter string="Asset Category" context="{'group_by':'category_id'}" icon="terp-folder-orange"/>
+                        <filter string="Account" context="{'group_by':'disposal_receivable_account_id'}" icon="terp-folder-violet"/>
+                        <filter string="Currency" context="{'group_by':'currency_id'}" icon="terp-dolar" groups="base.group_extended"/>
+					</group>
+	            </search>
+	        </field>
+	    </record>
+
+	    <record model="ir.ui.view" id="view_account_asset_asset_disposal_tree">
+	        <field name="name">account.asset.asset.disposal.tree</field>
+	        <field name="model">account.asset.asset</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <tree string="Asset Disposals">
+	                <field name="name"/>
+	                <field name="code"/>
+	                <field name="category_id"/>
+	                <field name="company_id" groups="base.group_multi_company"/>
+	                <field name="disposal_receivable_account_id" string="Account" invisible="1"/>
+	                <field name="disposal_type"/>
+	                <field name="purchase_date"/>
+	                <field name="sale_date"/>
+	                <field name="purchase_value"/>
+	                <field name="accumulated_amortization_value"/>
+	                <field name="book_value"/>
+	                <field name="sale_value"/>
+	                <field name="sale_result"/>
+	                <field name="sale_result_short_term" string="Short Term" groups="base.group_extended"/>
+	                <field name="sale_result_long_term" string="Long Term" groups="base.group_extended"/>
+	                <field name="currency_id" groups="base.group_extended"/>
+	                <field name="state" invisible="1"/>
+	                <field name="is_out" invisible="1"/>
+                    <button name="button_output" attrs="{'invisible': ['|', ('state', '!=', 'close'), ('is_out', '!=', False)]}"
+                       	icon="gtk-redo" help="Retire" type="object" />
+	            </tree>
+	        </field>
+	    </record>
+
+	    <record model="ir.actions.act_window" id="action_account_asset_asset_disposal_tree">
+	        <field name="name">Asset Disposals</field>
+	        <field name="res_model">account.asset.asset</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">tree,form</field>
+	        <field name="domain">[('state', '=', 'close')]</field>
+	        <field name="view_id" ref="view_account_asset_asset_disposal_tree"/>
+	        <field name="search_view_id" ref="view_account_asset_asset_disposal_search"/>
+	    </record>
+
+	    <menuitem id="menu_account_asset_asset_disposal_tree" parent="menu_finance_assets"
+	    	action="action_account_asset_asset_disposal_tree" sequence="80"/>
+
+	</data>
+</openerp>
