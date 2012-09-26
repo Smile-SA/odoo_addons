@@ -115,7 +115,7 @@
 							</group>
 							<group colspan="2" col="2" name="fiscal_depreciation">
 								<separator string="Fiscal Depreciation" colspan="2"/>
-								<field name="fiscal_method" attrs="{'readonly': [('accounting_method', '=', 'none')]}"
+								<field name="fiscal_method" attrs="{'readonly': ['|', ('accounting_method', '=', 'none'), ('state', '!=', 'draft')]}"
 									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"/>
 								<field name="fiscal_periods"
 									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
