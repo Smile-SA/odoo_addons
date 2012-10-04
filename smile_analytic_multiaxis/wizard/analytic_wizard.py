@@ -33,7 +33,8 @@ class AnalyticDistributionKeyWizard(osv.osv):
         total_rate = sum([vals[k] for k in vals if k.startswith('axis_dest_item_id_')])
         if total_rate != 100.00:
             raise osv.except_osv(_('Error'), _('A distribution key is complete only if total rate is equal to 100% !'))
-        cr.execute("SELECT id, axis_dest_item_id, rate FROM account_analytic_distribution_key WHERE axis_src_item_id = %s AND active = TRUE", (vals['axis_src_item_id'], ))
+        cr.execute("SELECT id, axis_dest_item_id, rate FROM account_analytic_distribution_key WHERE axis_src_item_id = %s "
+                   "AND active = TRUE", (vals['axis_src_item_id'], ))
         old_keys = dict([(item[1], {'rate': item[2], 'key_id': item[0]}) for item in cr.fetchall()])
         key_obj = self.pool.get(self._inherit)
         for item_id in (int(k.replace('axis_dest_item_id_', '')) for k in vals if k.startswith('axis_dest_item_id_')):
@@ -52,7 +53,7 @@ class AnalyticDistributionKeyWizard(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         raise osv.except_osv(_('Error'), _('You cannot delete distribution keys!'))
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+    def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
         res = []
         args = args or []
         context = context or {}
@@ -73,6 +74,9 @@ class AnalyticDistributionKeyWizard(osv.osv):
         domain = [('axis_src_item_id', 'in', ids)]
         context = context or {}
         if context.get('distribution_id'):
+            if isinstance(context['distribution_id'], basestring):
+                module, xml_id = context['distribution_id'].split('.')
+                context['distribution_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, xml_id)
             domain.append(('period_id.distribution_id', '=', context['distribution_id']))
         key_obj = self.pool.get(self._inherit)
         key_ids = key_obj.search(cr, uid, domain, context=context)
@@ -80,9 +84,10 @@ class AnalyticDistributionKeyWizard(osv.osv):
             res.setdefault(key.axis_src_item_id, {}).update({
                 'id': key.axis_src_item_id,
                 'period_id': self.pool.get(key.period_id._name).name_get(cr, uid, [key.period_id.id], context)[0],
-                'axis_src_item_id': self.pool.get(key.period_id.distribution_id.axis_src_id.model).name_get(cr, uid, [key.axis_src_item_id], context)[0],
+                'axis_src_item_id': self.pool.get(key.period_id.distribution_id.axis_src_id.model).name_get(cr, uid, [key.axis_src_item_id],
+                                                                                                            context)[0],
                 'axis_dest_item_id_%s' % key.axis_dest_item_id: key.rate,
-                'axis_dest_item_id': key.axis_dest_item_id.id,
+                'axis_dest_item_id': key.axis_dest_item_id,
                 'rate': key.rate,
             })
             res[key.axis_src_item_id].setdefault('keys_count', 0)
@@ -92,6 +97,9 @@ class AnalyticDistributionKeyWizard(osv.osv):
     def fields_get(self, cr, uid, fields=None, context=None):
         context = context or {}
         if context.get('distribution_id'):
+            if isinstance(context['distribution_id'], basestring):
+                module, xml_id = context['distribution_id'].split('.')
+                context['distribution_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, xml_id)
             res = self.pool.get(self._inherit).fields_get(cr, uid, ['period_id', 'axis_src_item_id', 'axis_dest_item_id', 'rate'], context)
             distrib = self.pool.get('account.analytic.distribution').browse(cr, uid, context['distribution_id'], context)
             res['axis_src_item_id']['string'] = distrib.axis_src_id.model_id.name
@@ -114,6 +122,9 @@ class AnalyticDistributionKeyWizard(osv.osv):
         res = {}
         context = context or {}
         if context.get('distribution_id') and view_type in ('tree', 'form'):
+            if isinstance(context['distribution_id'], basestring):
+                module, xml_id = context['distribution_id'].split('.')
+                context['distribution_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, xml_id)
             res['fields'] = self.fields_get(cr, uid, context=context)
             if view_type == 'form':
                 res['arch'] = """<form string="%s">
@@ -146,6 +157,13 @@ class AnalyticDistributionKeyWizard(osv.osv):
             res = self.pool.get(self._inherit).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         res.update({'name': 'default', 'model': self._name, 'view_id': 0})
         return res
+
+    def default_get(self, cr, uid, fields_list, context=None):
+        context = context or {}
+        if context.get('default_period_id') and isinstance(context['default_period_id'], basestring):
+            module, xml_id = context['default_period_id'].split('.')
+            context['default_period_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, xml_id)
+        return super(AnalyticDistributionKeyWizard, self).default_get(cr, uid, fields_list, context)
 AnalyticDistributionKeyWizard()
 
 
@@ -157,7 +175,8 @@ class AnalyticDistributionPeriod(osv.osv):
             ids = [ids]
         res = {}
         for period_id in ids:
-            res[period_id] = self.pool.get('account.analytic.distribution.key.wizard').search(cr, uid, [('period_id', '=', period_id)], context=context)
+            res[period_id] = self.pool.get('account.analytic.distribution.key.wizard').search(cr, uid, [('period_id', '=', period_id)],
+                                                                                              context=context)
         return res
 
     def _set_key_wizards(self, cr, uid, ids, field_name, field_value, arg, context=None):
@@ -166,7 +185,8 @@ class AnalyticDistributionPeriod(osv.osv):
         return True
 
     _columns = {
-        'key_wizard_ids': fields.function(_get_key_wizards, fnct_inv=_set_key_wizards, method=True, type='one2many', relation='account.analytic.distribution.key.wizard', string="Keys", store=False),
+        'key_wizard_ids': fields.function(_get_key_wizards, fnct_inv=_set_key_wizards, method=True, type='one2many',
+                                          relation='account.analytic.distribution.key.wizard', string="Keys", store=False),
     }
 AnalyticDistributionPeriod()
 
@@ -179,7 +199,8 @@ AnalyticDistributionPeriod()
 #AnalyticDistributionKey()
 
 ########## SAMPLE  ##########
-#    <field colspan="4" name="distribution_key_ids" mode="form" nolabel="1" context="{'distribution_id': 3, 'default_period_id': 11, 'default_axis_src_item_id': active_id}"/>
+#    <field colspan="4" name="distribution_key_ids" mode="form" nolabel="1"
+#        context="{'distribution_id': 3, 'default_period_id': 11, 'default_axis_src_item_id': active_id}"/>
 #class InvoiceLine(osv.osv):
 #    _inherit = 'account.invoice.line'
 #
@@ -188,7 +209,9 @@ AnalyticDistributionPeriod()
 #            ids = [ids]
 #        res = {}
 #        for line_id in ids:
-#            res[line_id] = self.pool.get('account.analytic.distribution.key.wizard').search(cr, uid, [('axis_src_model', '=', 'account.invoice.line'), ('axis_src_item_id', '=', line_id)], context=context)
+#            res[line_id] = self.pool.get('account.analytic.distribution.key.wizard').search(cr, uid, [
+#                ('axis_src_model', '=', self._name), ('axis_src_item_id', '=', line_id),
+#            ], context=context)
 #        return res
 #
 #    def _set_key_wizards(self, cr, uid, ids, field_name, field_value, arg, context=None):
@@ -200,6 +223,7 @@ AnalyticDistributionPeriod()
 #        return True
 #
 #    _columns = {
-#        'distribution_key_ids': fields.function(_get_key_wizards, fnct_inv=_set_key_wizards, method=True, type='one2many', relation='account.analytic.distribution.key.wizard', string="Keys", store=False),
+#        'distribution_key_ids': fields.function(_get_key_wizards, fnct_inv=_set_key_wizards, method=True, type='one2many',
+#                                                relation='account.analytic.distribution.key.wizard', string="Keys", store=False),
 #    }
 #InvoiceLine()

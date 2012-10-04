@@ -73,6 +73,7 @@
                     <field name="axis_src_id"/>
                     <field name="axis_dest_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="priority"/>
                     <notebook colspan="4">
                     	<page string="Distribution">
 		                    <field name="computation_mode" colspan="4"/>
@@ -138,6 +139,7 @@
                     <field name="computation_mode"/>
                     <field name="distribution_type"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="priority"/>
                 </tree>
             </field>
         </record>

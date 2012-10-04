@@ -112,7 +112,8 @@ class AnalyticAxis(osv.osv):
                                                                    field.name, type=field.ttype,
                                                                    relation=field.relation, store={
                                                                        # To store and to avoid the field re-computation
-                                                                       'account.analytic.line': (lambda self, cr, uid, ids, context=None: [], None, 10),
+                                                                       'account.analytic.line': (lambda self, cr, uid, ids,
+                                                                                                 context=None: [], None, 10),
                                                                    })
         line_obj._auto_init(cr, context)
 
@@ -166,10 +167,12 @@ def name_get(obj, cr, uid, res_id, context=None):
 class AnalyticDistribution(osv.osv):
     _name = 'account.analytic.distribution'
     _description = 'Analytic Distribution'
+    _order = 'priority asc'
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'active': fields.boolean('Active'),
+        'priority': fields.integer('Priority', required=True),
         'axis_src_id': fields.many2one('account.analytic.axis', 'Source Axis', required=True, ondelete='cascade'),
         'axis_dest_id': fields.many2one('account.analytic.axis', 'Destination Axis', required=True, ondelete='cascade'),
         'period_ids': fields.one2many('account.analytic.distribution.period', 'distribution_id', 'Application Periods'),
@@ -190,6 +193,7 @@ class AnalyticDistribution(osv.osv):
 
     _defaults = {
         'active': True,
+        'priority': 15,
         'computation_mode': 'static',
         'distribution_type': 'specific',
         'python_code': """# You can use the following variables
@@ -206,7 +210,8 @@ class AnalyticDistribution(osv.osv):
     @tools.cache(skiparg=3)
     def _get_distribution_destinations(self, cr, uid):
         distribution_ids = self.search(cr, uid, [], context={'active_test': True})
-        return dict([(distrib.id, distrib.axis_dest_id.model) for distrib in self.browse(cr, uid, distribution_ids) if distrib.computation_mode == 'static'])
+        return dict([(distrib.id, distrib.axis_dest_id.model) for distrib in self.browse(cr, uid, distribution_ids)
+                     if distrib.computation_mode == 'static'])
 
     def create(self, cr, uid, vals, context=None):
         distribution_id = super(AnalyticDistribution, self).create(cr, uid, vals, context)
@@ -227,7 +232,8 @@ class AnalyticDistribution(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         distribution_destinations = self._get_distribution_destinations(cr, uid)
-        return [distribution_destinations[distribution_id] for distribution_id in ids if distribution_id in distribution_destinations]  # filter inactive distributions
+        return [distribution_destinations[distribution_id] for distribution_id in ids
+                if distribution_id in distribution_destinations]  # filter inactive distributions
 
     def _get_distribution_period_ids(self, cr, uid, distribution_id, date, context=None):
         period_domain = [
@@ -419,7 +425,8 @@ class AnalyticDistributionKey(osv.osv):
         res = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for key in self.read(cr, uid, ids, ['axis_src_item_id', 'axis_src_model', 'axis_dest_item_id', 'axis_dest_model']):  # Do not pass context to avoid to receive many2one instead of integer
+        for key in self.read(cr, uid, ids, ['axis_src_item_id', 'axis_src_model', 'axis_dest_item_id', 'axis_dest_model']):
+            # Do not pass context to avoid to receive many2one instead of integer
             axis_src_item_name = self.pool.get(key['axis_src_model']).name_get(cr, uid, [key['axis_src_item_id']], context)
             axis_dest_item_name = self.pool.get(key['axis_dest_model']).name_get(cr, uid, [key['axis_dest_item_id']], context)
             res[key['id']] = {
@@ -436,8 +443,9 @@ class AnalyticDistributionKey(osv.osv):
         'axis_dest_item_id': fields.integer('Item of Destination Axis', required=True),
         'axis_dest_model': fields.related('period_id', 'distribution_id', 'axis_dest_id', 'model', string="Model of Destination Axis", readonly=True),
         'axis_dest_item_name': fields.function(_get_items, method=True, type='char', string='Item of Destination Axis', multi='distribution_key'),
-        'rate': fields.float('Rate (%)', digits=(1, 2), required=True),
-        'company_id': fields.related('period_id', 'distribution_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
+        'rate': fields.float('Rate (%)', required=True),
+        'company_id': fields.related('period_id', 'distribution_id', 'company_id', type='many2one', relation='res.company', string='Company',
+                                     readonly=True),
         'active': fields.boolean('Active', readonly=True),
         'date_start': fields.related('period_id', 'date_start', type='date', string='Start Date', readonly=True, store=True),
         'date_stop': fields.related('period_id', 'date_stop', type='date', string='End Date', readonly=True, store=True),
@@ -492,7 +500,7 @@ class AnalyticDistributionKey(osv.osv):
         ]
         key_ids_to_deactivate = self.search(cr, uid, domain, context={'active_test': True})
         if not key.rate:
-            key_ids_to_deactivate.append(key.id)
+            key.write({'active': False}, context)
         if key_ids_to_deactivate:
             self.write(cr, uid, key_ids_to_deactivate, {'active': False, 'date_stop': time.strftime('%Y-%m-%d')}, context)
         return True
@@ -541,7 +549,8 @@ class AnalyticJournal(osv.osv):
     _inherit = 'account.analytic.journal'
 
     _columns = {
-        'distribution_ids': fields.many2many('account.analytic.distribution', 'account_analytic_distribution_journal_rel', 'journal_id', 'distribution_id', 'Distributions'),
+        'distribution_ids': fields.many2many('account.analytic.distribution', 'account_analytic_distribution_journal_rel',
+                                             'journal_id', 'distribution_id', 'Distributions'),
     }
 AnalyticJournal()
 
@@ -568,7 +577,8 @@ class AnalyticLine(osv.osv):
             if analytic_line['currency_id'] and analytic_line['company_id']:
                 context['date'] = analytic_line['date']
                 company_currency_id = company_obj.read(cr, uid, analytic_line['company_id'][0], ['currency_id'], context)['currency_id'][0]
-                res[analytic_line['id']] = currency_obj.compute(cr, uid, company_currency_id, analytic_line['currency_id'][0], analytic_line['amount'], context=context)
+                res[analytic_line['id']] = currency_obj.compute(cr, uid, company_currency_id, analytic_line['currency_id'][0],
+                                                                analytic_line['amount'], context=context)
             else:
                 res[analytic_line['id']] = analytic_line['amount']
         return res
@@ -584,7 +594,8 @@ class AnalyticLine(osv.osv):
     def _distribute(self, cr, uid, vals, context=None):
         res = [vals]
         if vals.get('journal_id'):
-            distribution_ids = self.pool.get('account.analytic.journal').read(cr, uid, vals['journal_id'], ['distribution_ids'], context)['distribution_ids']
+            distribution_ids = self.pool.get('account.analytic.journal').read(cr, uid, vals['journal_id'], ['distribution_ids'],
+                                                                              context)['distribution_ids']
             distribution_obj = self.pool.get('account.analytic.distribution')
             circular_count = 0
             circular_limit = len(distribution_ids)
@@ -634,7 +645,8 @@ def analytic_multiaxis_decorator(original_method):
             if isinstance(ids, (int, long)):
                 ids = [ids]
             if method_name == 'unlink':
-                key_ids = self.pool.get('account.analytic.distribution.key').search(cr, uid, [('axis_dest_item_id', 'in', ids)], context={'active_test': True})
+                key_ids = self.pool.get('account.analytic.distribution.key').search(cr, uid, [('axis_dest_item_id', 'in', ids)],
+                                                                                    context={'active_test': True})
                 if key_ids:
                     exception = True
             elif method_name == 'write':
@@ -645,7 +657,8 @@ def analytic_multiaxis_decorator(original_method):
                             break
             if exception:
                 methods = {'write': _('modify'), 'unlink': _('delete')}
-                raise osv.except_osv(_('Error'), _('You cannot %s this resource before reviewing associated analytic distributions!') % methods[method_name])
+                raise osv.except_osv(_('Error'), _('You cannot %s this resource before reviewing associated analytic distributions!')
+                                     % methods[method_name])
         # Execute original method
         return original_method(self, cr, uid, ids, *args, **kwargs)
     return check_deactivation
