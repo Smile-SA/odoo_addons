@@ -120,7 +120,8 @@ class ir_model_export_file_template(osv.osv):
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'model': fields.related('model_id', 'model', type='char', string='Object', readonly=True),
         'refer_to_underlying_object': fields.boolean('Columns correspond to an underlying object'),
-        'records': fields.char('Records', size=256, help="Provide the field name that refers to the records to export. If it is empty it will refer to the current object."),
+        'records': fields.char('Records', size=256, help="Provide the field name that refers to the records to export. "
+                                                         "If it is empty it will refer to the current object."),
         'state': fields.selection([
             ('tab', 'Tabular'),
             ('other', 'Other'),
@@ -157,7 +158,8 @@ class ir_model_export_file_template(osv.osv):
         'footer': fields.text('Footer'),
 
         'report_summary_template': fields.text('Report', help="Use mako language with the pool, cr, uid, object, "
-                                               "context, time, datetime, start_date, end_date, filename, records_number, exceptions_number and exceptions variables"),
+                                               "context, time, datetime, start_date, end_date, filename, records_number, "
+                                               "exceptions_number and exceptions variables"),
 
         'create_attachment': fields.boolean('Create an attachement'),
         'upload_to_ftp_server': fields.boolean('Upload to FTP server'),
@@ -413,7 +415,8 @@ class ir_model_export_file_template(osv.osv):
 
     def _get_filename(self, cr, uid, export_file, context):
         filename = _render_unicode(export_file.filename, {
-            'object': context.get('attach_export_id', False) and self.pool.get('ir.model.export').browse(cr, uid, context['attach_export_id'], context),
+            'object': context.get('attach_export_id', False) and self.pool.get('ir.model.export').browse(cr, uid, context['attach_export_id'],
+                                                                                                         context),
             'localcontext': context,
             'time': time
         }, export_file.encoding)
@@ -500,7 +503,8 @@ class ir_model_export_file_template_column(osv.osv):
         'default_value': fields.char('Default value', size=64,
                                      help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'not_string': fields.boolean('Not a string'),
-        'column_validator': fields.text('Column validator', help="Raise an exception if validator evaluates to False: use python language with the pool, cr, uid, object, localcontext and time variables"),
+        'column_validator': fields.text('Column validator', help="Raise an exception if validator evaluates to False: use python language "
+                                                                 "with the pool, cr, uid, object, localcontext and time variables"),
         'has_validator': fields.function(_has_validator, method=True, type='boolean', string="Validator", ),
         'exception_msg': fields.char('Exception Message', size=256, translate=True,
                                      help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),

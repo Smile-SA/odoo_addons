@@ -65,7 +65,8 @@ class AnalyticJournalView(osv.osv):
     % endfor
     % if extended_filter_columns:
         <newline/>
-        <group expand="0" string="Extended..." groups="base.group_extended" colspan="${len(searchable_columns)}" col="${len(extended_filter_columns)}">
+        <group expand="0" string="Extended..." groups="base.group_extended" colspan="${len(searchable_columns)}"
+                col="${len(extended_filter_columns)}">
             % for column in extended_filter_columns:
                 <field name="${column.field_id.name}" string="${column.name}"/>
             % endfor
@@ -131,7 +132,8 @@ class AnalyticJournalColumn(osv.osv):
 
     _columns = {
         'name': fields.char('Column Label', size=64, required=True),
-        'field_id': fields.many2one('ir.model.fields', 'Field', required=True, domain=[('model_id.model', '=', 'account.analytic.line')], ondelete='cascade'),
+        'field_id': fields.many2one('ir.model.fields', 'Field', required=True,
+                                    domain=[('model_id.model', '=', 'account.analytic.line')], ondelete='cascade'),
         'view_id': fields.many2one('account.journal.view', 'Journal View', select=True, required=True, ondelete='cascade'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column.", required=True),
         'required': fields.boolean('Required'),
@@ -188,8 +190,13 @@ class AnalyticJournal(osv.osv):
         return res
 
     _columns = {
-        'sign': fields.selection([('1', 'Identical'), ('-1', 'Opposite')], 'Coefficent for parent', required=True, help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set Identical/Opposite if you want to add/substract it.'),
-        'view_id': fields.many2one('account.analytic.journal.view', 'Display Mode', help="Gives the view used when writing or browsing entries in this journal. The view tells OpenERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
+        'sign': fields.selection([('1', 'Identical'), ('-1', 'Opposite')], 'Coefficent for parent', required=True,
+                                 help="You can specify here the coefficient that will be used when consolidating the amount of this case "
+                                      "into its parent. For example, set Identical/Opposite if you want to add/substract it."),
+        'view_id': fields.many2one('account.analytic.journal.view', 'Display Mode',
+                                   help="Gives the view used when writing or browsing entries in this journal. The view tells OpenERP which "
+                                        "fields should be visible, required or readonly and in which order. You can create your own view for "
+                                        "a faster encoding in each journal."),
         'menu_id': fields.many2one('ir.ui.menu', 'Menu', help="To access to display mode view"),
         'parent_id': fields.many2one('account.analytic.journal', 'Parent', ondelete='cascade'),
         'child_ids': fields.one2many('account.analytic.journal', 'parent_id', 'Children'),
@@ -263,7 +270,8 @@ class AnalyticLine(osv.osv):
             if analytic_line['currency_id'] and analytic_line['company_id']:
                 context['date'] = analytic_line['date']
                 company_currency_id = company_obj.read(cr, uid, analytic_line['company_id'][0], ['currency_id'], context)['currency_id'][0]
-                res[analytic_line['id']] = currency_obj.compute(cr, uid, company_currency_id, analytic_line['currency_id'][0], analytic_line['amount'], context=context)
+                res[analytic_line['id']] = currency_obj.compute(cr, uid, company_currency_id, analytic_line['currency_id'][0],
+                                                                analytic_line['amount'], context=context)
             else:
                 res[analytic_line['id']] = analytic_line['amount']
         return res

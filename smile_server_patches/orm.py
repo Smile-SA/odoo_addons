@@ -98,7 +98,8 @@ def new_store_set_values(self, cr, uid, ids, fields, context):
                             value = value[0]
                         except Exception:
                             pass
-                    cr.execute('update "' + self._table + '" set ' + '"' + f + '"=' + self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value), id_))
+                    cr.execute('update "' + self._table + '" set ' + '"' + f + '"=' +
+                               self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value), id_))
     return True
 
 orm.orm._store_set_values = new_store_set_values

@@ -39,7 +39,9 @@ class ResPartner(osv.osv):
         return res
 
     _columns = {
-        'is_intragroup_company': fields.function(_get_partner_company, method=True, type='boolean', string='Is an intra-group company', store=True, multi='intragroup'),
-        'partner_company_id': fields.function(_get_partner_company, method=True, type='many2one', relation="res.company", string='Company', store=True, multi='intragroup'),
+        'is_intragroup_company': fields.function(_get_partner_company, method=True, type='boolean',
+                                                 string='Is an intra-group company', store=True, multi='intragroup'),
+        'partner_company_id': fields.function(_get_partner_company, method=True, type='many2one', relation="res.company",
+                                              string='Company', store=True, multi='intragroup'),
     }
 ResPartner()

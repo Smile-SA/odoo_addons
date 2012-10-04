@@ -81,7 +81,8 @@ class AnalyticLine(osv.osv):
             if analytic_line['currency_id'] and analytic_line['company_id']:
                 context['date'] = analytic_line['date']
                 company_currency_id = company_obj.read(cr, uid, analytic_line['company_id'][0], ['currency_id'], context)['currency_id'][0]
-                res[analytic_line['id']] = currency_obj.compute(cr, uid, company_currency_id, analytic_line['currency_id'][0], analytic_line['amount'], context=context)
+                res[analytic_line['id']] = currency_obj.compute(cr, uid, company_currency_id, analytic_line['currency_id'][0],
+                                                                analytic_line['amount'], context=context)
             else:
                 res[analytic_line['id']] = analytic_line['amount']
         return res
@@ -111,10 +112,10 @@ class AnalyticLine(osv.osv):
         return self.pool.get('account.analytic.line').search(cr, uid, [('move_id', 'in', ids)], context=context)
 
     _columns = {
-        'currency_id': fields.function(_get_currency_id, fnct_inv=_set_currency_id, method=True, type='many2one', relation='res.currency', string='Account currency', store={
+        'currency_id': fields.function(_get_currency_id, fnct_inv=_set_currency_id, method=True, type='many2one', store={
             'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['move_id'], 10),
             'account.move.line': (_get_analytic_line_ids_from_account_moves, ['currency_id'], 10),
-        }, help="The related account currency if not equal to the company one.", readonly=True),
+        }, relation='res.currency', string='Account currency', help="The related account currency if not equal to the company one.", readonly=True),
         'amount_currency': fields.function(_get_amount_currency, method=True, type='float', string='Amount currency', store={
             'account.analytic.line': (lambda self, cr, uid, ids, context=None: ids, ['amount', 'date', 'account_id', 'move_id'], 20),
         }, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
@@ -132,7 +133,8 @@ class AnalyticLine(osv.osv):
             ids = [ids]
         operator_ = entry_type == 'actual' and '__gt__' or '__lt__'
         for line in self.browse(cr, uid, ids, context):
-            if line.active and line.period_id and getattr(line.period_id.date_start, operator_)(line.create_period_id.date_start) and line.type == entry_type:
+            if line.active and line.period_id and getattr(line.period_id.date_start, operator_)(line.create_period_id.date_start) \
+                    and line.type == entry_type:
                 return False
         return True
 
@@ -224,3 +226,21 @@ class AnalyticLine(osv.osv):
         self._deactivate_old_forecast_lines(cr, uid, ids, [('id', 'not in', ids)], context_copy)
         return super(AnalyticLine, self).unlink(cr, uid, ids, context)
 AnalyticLine()
+
+
+class AnalyticPeriod(osv.osv):
+    _inherit = 'account.analytic.period'
+
+    def button_close(self, cr, uid, ids, context=None):
+        context_copy = (context or {}).copy()
+        context_copy['bypass_forecast_lines_deactivation'] = True
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        analytic_line_obj = self.pool.get('account.analytic.line')
+        analytic_line_ids = analytic_line_obj.search(cr, uid, [
+            ('period_id', 'in', ids),
+            ('type', '=', 'forecast'),
+        ], context={'active_test': True})
+        if analytic_line_ids:
+            analytic_line_obj.write(cr, uid, analytic_line_ids, {'active': False}, context_copy)
+        return super(AnalyticPeriod, self).button_close(cr, uid, ids, context)

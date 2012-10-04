@@ -44,14 +44,16 @@ class PaymentMode(osv.osv):
 
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
         res = {'value': {'partner_id': False}}
-        if company_id:
-            res['value']['partner_id'] = self.pool.get('res.company').read(cr, uid, company_id, ['partner_id'], context, '_classic_write')['partner_id']
+        if not company_id:
+            res['value']['partner_id'] = self.pool.get('res.company_id').read(cr, uid, company_id, ['partner_id'], context,
+                                                                              '_classic_write')['partner_id']
         return res
 
     def get_payment_id(self, cr, uid, payment_mode_id, context=None):
         assert isinstance(payment_mode_id, (int, long)), 'payment_mode_id must be an integer!'
         payment_order_obj = self.pool.get('payment.order')
-        payment_ids = payment_order_obj.search(cr, uid, [('payment_mode_id', '=', payment_mode_id), ('state', '=', 'draft')], limit=1, context=context)
+        payment_ids = payment_order_obj.search(cr, uid, [('payment_mode_id', '=', payment_mode_id), ('state', '=', 'draft')],
+                                               limit=1, context=context)
         if payment_ids:
             return payment_ids[0]
         return payment_order_obj.create(cr, uid, {'payment_mode_id': payment_mode_id}, context)
@@ -137,6 +139,7 @@ class PaymentOrder(osv.osv):
     def onchange_payment_mode_id(self, cr, uid, ids, payment_mode_id, context=None):
         res = {'value': {'journal_id': False}}
         if payment_mode_id:
-            res['value']['journal_id'] = self.pool.get('payment.mode').read(cr, uid, payment_mode_id, ['journal_id'], context, '_classic_write')['journal_id']
+            res['value']['journal_id'] = self.pool.get('payment.mode').read(cr, uid, payment_mode_id, ['journal_id'], context,
+                                                                            '_classic_write')['journal_id']
         return res
 PaymentOrder()

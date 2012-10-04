@@ -124,12 +124,12 @@ class AnalyticForecastingReport(osv.osv):
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         return self.pool.get(self._inherit).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby)
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+    def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
         args = args or []
         context = context or {}
         if context.get('x_axis'):
             args.append((context['x_axis'][: -1], 'in', _get_period_ids_to_restrict_domain(context)))
-        return super(AnalyticForecastingReport, self).search(cr, uid, args, offset, limit, order, context, count)
+        return super(AnalyticForecastingReport, self)._search(cr, uid, args, offset, limit, order, context, count, access_rights_uid)
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         fields = fields or []
@@ -164,7 +164,8 @@ class AnalyticForecastingReport(osv.osv):
         res = self.pool.get(self._inherit).fields_get(cr, uid, fields, context)
         context = context or {}
         if context.get('origin') == 'fields_view_get':
-            analytic_period_names = dict(self.pool.get('account.analytic.period').name_get(cr, uid, _get_period_ids_for_dynamic_columns(context), context))
+            analytic_period_names = dict(self.pool.get('account.analytic.period').name_get(cr, uid, _get_period_ids_for_dynamic_columns(context),
+                                                                                           context))
             for analytic_period_field in context['x_axis_period_fields']:
                 res[analytic_period_field] = {
                     'type': 'float',

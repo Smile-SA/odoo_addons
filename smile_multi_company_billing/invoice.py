@@ -54,7 +54,10 @@ class Invoice(osv.osv):
                 journal_id = journal[2]
         if not journal_id:
             company_name = self.pool.get('res.company').read(cr, uid, company_id, ['name'], context)['name']
-            raise osv.except_osv(_('Configuration Error !'), (_('Can\'t find any account journal of %s type for the company %s.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.') % (journal_type, company_name)))
+            raise osv.except_osv(_('Configuration Error !'), (_('Can\'t find any account journal of %s type '
+                                                                'for the company %s.\n\nYou can create one in the menu: \n'
+                                                                'Configuration\Financial Accounting\Accounts\Journals.')
+                                                              % (journal_type, company_name)))
         context = context or {}
         return self.get_journal_from_fiscal_position(cr, uid, context.get('invoice_fiscal_position'), journal_id)
 
@@ -67,8 +70,10 @@ class Invoice(osv.osv):
             quantity = line.quantity
             price_unit = line.price_unit
             invoice_line_vals = self.pool.get('account.invoice.line').product_id_change(cr, uid, False, product_id, uos_id,
-                                                                                        line.quantity, name, context.get('invoice_type', False), context.get('invoice_partner_id', False),
-                                                                                        context.get('invoice_fiscal_position', False), price_unit, context.get('partner_address_invoice_id', False),
+                                                                                        line.quantity, name, context.get('invoice_type', False),
+                                                                                        context.get('invoice_partner_id', False),
+                                                                                        context.get('invoice_fiscal_position', False), price_unit,
+                                                                                        context.get('partner_address_invoice_id', False),
                                                                                         context.get('invoice_currency_id', False), context
                                                                                         )['value']
             invoice_line_vals.update({
@@ -145,13 +150,15 @@ class Invoice(osv.osv):
             company_obj = self.pool.get('res.company')
             company_name = company_obj.read(cr, uid, company_id, ['name'])['name']
             company_dest_name = company_obj.read(cr, uid, company_dest_id, ['name'])['name']
-            raise osv.except_osv(_('Error'), _('Cannot find fiscal position for the company %s to the company %s. Please create one') % (company_name, company_dest_name))
+            raise osv.except_osv(_('Error'), _('Cannot find fiscal position for the company %s to the company %s. Please create one')
+                                 % (company_name, company_dest_name))
         return fiscal_position_ids[0]
 
     def _update_onchange_result_with_fiscal_position(self, cr, uid, res, company_id, partner_id):
         res = res or {}
         if company_id and partner_id:
-            partner_company_id = self.pool.get('res.partner').read(cr, uid, partner_id, ['partner_company_id'], load='_classic_write')['partner_company_id']
+            partner_company_id = self.pool.get('res.partner').read(cr, uid, partner_id, ['partner_company_id'],
+                                                                   load='_classic_write')['partner_company_id']
             if partner_company_id:
                 fiscal_position_id = self.get_fiscal_position_id(cr, uid, company_id, partner_company_id)
                 res.setdefault('value', {}).update({'fiscal_position': fiscal_position_id})

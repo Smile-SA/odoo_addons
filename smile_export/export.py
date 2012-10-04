@@ -110,7 +110,7 @@ class ir_model_export_template(osv.osv):
         """
         context used to specify export_mode
         export_mode can be:
-        - same_thread_raise_error 
+        - same_thread_raise_error
         - same_thread_rollback_and_continue (default)
         - new_thread
         """

@@ -55,7 +55,8 @@ class Invoice(osv.osv):
             self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
 
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
-                raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
+                raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total '
+                                                         'does not match the computed total.'))
 
             if inv.payment_term:
                 total_fixed = total_percent = 0
@@ -66,7 +67,8 @@ class Invoice(osv.osv):
                         total_percent += line.value_amount
                 total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
-                    raise osv.except_osv(_('Error !'), _("Cannot create the invoice !\nThe payment term defined gives a computed amount greater than the total invoiced amount."))
+                    raise osv.except_osv(_('Error !'), _("Cannot create the invoice !\nThe payment term defined "
+                                                         "gives a computed amount greater than the total invoiced amount."))
 
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
@@ -212,7 +214,8 @@ class InvoiceLine(osv.osv):
         if context.get('company_id'):
             tax_ids = res.get('value', {}).get('invoice_line_tax_id')
             if tax_ids:
-                company_tax_ids = self.pool.get('account.tax').search(cr, uid, [('id', 'in', tax_ids), ('company_id', '=', context['company_id'])], context=context)
+                company_tax_ids = self.pool.get('account.tax').search(cr, uid, [('id', 'in', tax_ids),
+                                                                                ('company_id', '=', context['company_id'])], context=context)
                 res['value']['invoice_line_tax_id'] = company_tax_ids
         return res
 InvoiceLine()
