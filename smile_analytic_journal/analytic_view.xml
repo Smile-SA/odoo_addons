@@ -123,5 +123,27 @@
 
         <menuitem action="action_account_analytic_journal_structure" id="menu_account_analytic_journal_structure" parent="account.menu_analytic_accounting" sequence="6"/>
 
+		<record model="ir.actions.server" id="open_analytic_journal">
+	        <field name="name">Open Asset</field>
+	        <field name="model_id" ref="account.model_account_analytic_journal"/>
+	        <field name="state">code</field>
+	        <field name="code">action = {
+    'type': 'ir.actions.act_window',
+    'view_type': 'form',
+    'view_mode': 'form',
+    'res_model': 'account.analytic.journal',
+    'res_id': context['active_id'],
+    'target': 'new',
+}</field>
+		</record>
+
+        <record id="account_analytic_journal_tree_but_open" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="name">Open Analytic Journal</field>
+            <field name="value" eval="'ir.actions.server,%d' % ref('open_analytic_journal')"/>
+            <field eval="True" name="object"/>
+        </record>
+
     </data>
 </openerp>
