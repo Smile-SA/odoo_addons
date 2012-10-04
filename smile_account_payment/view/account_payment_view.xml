@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="7"/>
+        <menuitem id="menu_main_payment" name="Payments" parent="account.menu_finance" sequence="3"/>
 
 		<!-- Payment Mode -->
 
@@ -30,7 +30,7 @@
             <field name="arch" type="xml">
                 <tree string="Payment Modes">
                     <field name="name"/>
-                    <field name="journal_id"/>
+                    <field name="journal_id" domain="[('type', '=', 'bank')]"/>
                     <field name="bank_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>

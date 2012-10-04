@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
-
+from tools.translate import _
 
 class AccountVoucher(osv.osv):
     _inherit = 'account.voucher'
@@ -32,7 +32,8 @@ class AccountVoucher(osv.osv):
     def get_voucher_id(self, cr, uid, payment_id, partner_id, context):
         assert isinstance(payment_id, (int, long)), 'payment_id must be an integer!'
         assert isinstance(partner_id, (int, long)), 'partner_id must be an integer!'
-        voucher_ids = self.search(cr, uid, [('payment_id', '=', payment_id), ('partner_id', '=', partner_id), ('state', '=', 'draft')], limit=1, context=context)
+        voucher_ids = self.search(cr, uid, [('payment_id', '=', payment_id), ('partner_id', '=', partner_id),
+                                            ('state', '=', 'draft')], limit=1, context=context)
         if voucher_ids:
             voucher_id = voucher_ids[0]
         else:
@@ -47,4 +48,12 @@ class AccountVoucher(osv.osv):
                 'payment_id': payment_id,
             }, context)
         return voucher_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for voucher in self.browse(cr, uid, ids, context):
+            if voucher.payment_id and voucher.payment_id.state != 'draft':
+                raise osv.except_osv(_('Error'), _('You can not modify a voucher linked to a payment!'))
+        return super(AccountVoucher, self).write(cr, uid, ids, vals, context)
 AccountVoucher()

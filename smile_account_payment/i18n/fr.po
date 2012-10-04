@@ -82,7 +82,7 @@ msgstr "Ordres de paiement"
 #. module: smile_account_payment
 #: field:payment.mode,name:0
 msgid "Name"
-msgstr "Référence"
+msgstr "Nom"
 
 #. module: smile_account_payment
 #: field:payment.mode,company_id:0
@@ -116,9 +116,13 @@ msgstr "Configuration"
 
 #. module: smile_account_payment
 #: field:account.voucher,payment_id:0
-#: model:ir.ui.menu,name:smile_account_payment.menu_main_payment
 msgid "Payment"
 msgstr "Paiement"
+
+#. module: smile_account_payment
+#: model:ir.ui.menu,name:smile_account_payment.menu_main_payment
+msgid "Payments"
+msgstr "Paiements"
 
 #. module: smile_account_payment
 #: model:ir.model,name:smile_account_payment.model_payment_order
@@ -230,3 +234,9 @@ msgstr "Aucun compte bancaire trouvé pour le fournisseur %s"
 #: field:payment.mode,partner_id:0
 msgid "Partner"
 msgstr "Partenaire"
+
+#. module: smile_account_payment
+#: code:addons\smile_account_payment\account_voucher.py:57
+#, python-format
+msgid "You can not modify a voucher linked to a payment!"
+msgstr "Vous ne pouvez pas modifier un paiement lié à un ordre de virement !"
