@@ -583,8 +583,10 @@ class SartreTrigger(orm.Model):
             for filter_ in trigger.filter_ids:
                 domain.extend(eval(filter_.domain.replace('%today', time.strftime('%Y-%m-%d %H:%M:%S'))))
         # Add general filters
-        domain.extend(filter(bool, [getattr(self, filter_name)(cr, uid, trigger, context)
-                                    for filter_name in ('_add_trigger_date_filter', '_add_max_executions_filter')]))
+        for filter_name in ('_add_trigger_date_filter', '_add_max_executions_filter'):
+            domain_extension = getattr(self, filter_name)(cr, uid, trigger, context)
+            if domain_extension:
+                domain.append(domain_extension)
         # Update filters based on old or dynamic values or Python operators
         if trigger.python_domain:
             domain = self._build_python_domain(cr, uid, trigger, domain, context)
@@ -620,7 +622,7 @@ class SartreTrigger(orm.Model):
 
         # Get sequence in order to differentiate logs per run
         context.setdefault('pid_list', []).append(str(logger.pid).rjust(8, '0'))
-        pid = '-'.join([str(x) for x in context['pid_list']])
+        pid = '-'.join((str(x) for x in context['pid_list']))
         if not pid:
             logger.critical('Action Trigger failed: impossible to get a pid for dbname %s' % (cr.dbname))
             return
