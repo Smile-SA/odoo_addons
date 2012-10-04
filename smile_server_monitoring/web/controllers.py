@@ -43,7 +43,7 @@ def status(self, req):
     try:
         db_list = req.session.proxy('db').list()
         msg += "OK<br/>"
-        msg += "Databases: %s<br/>" % ', '.join(map(str, db_list))
+        msg += "Databases: %s<br/>" % ', '.join([str(x) for x in db_list])
         # Memory
         common_proxy = req.session.proxy('common')
         mem_usage = common_proxy.get_memory()

@@ -620,7 +620,7 @@ class SartreTrigger(orm.Model):
 
         # Get sequence in order to differentiate logs per run
         context.setdefault('pid_list', []).append(str(logger.pid).rjust(8, '0'))
-        pid = '-'.join(map(str, context['pid_list']))
+        pid = '-'.join([str(x) for x in context['pid_list']])
         if not pid:
             logger.critical('Action Trigger failed: impossible to get a pid for dbname %s' % (cr.dbname))
             return
