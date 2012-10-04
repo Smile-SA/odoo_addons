@@ -111,11 +111,25 @@ msgstr "Nom"
 
 #. module: smile_workdays
 #: model:ir.model,name:smile_workdays.model_res_country
-#: model:ir.ui.menu,name:smile_workdays.menu_country_organisation
 #: field:res.company,country_id:0
 #: field:res.country.holiday,country_id:0
 msgid "Country"
 msgstr "Pays"
+
+#. module: smile_workdays
+#: model:ir.ui.menu,name:smile_workdays.menu_geography
+msgid "Localisation"
+msgstr "Localisation"
+
+#. module: smile_workdays
+#: model:ir.ui.menu,name:smile_workdays.menu_country_organisation
+msgid "Countries"
+msgstr "Pays"
+
+#. module: smile_workdays
+#: model:ir.ui.menu,name:smile_workdays.menu_state_organisation
+msgid "States"
+msgstr "Etats"
 
 #. module: smile_workdays
 #: model:ir.model,name:smile_workdays.model_res_company
