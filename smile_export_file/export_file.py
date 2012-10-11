@@ -32,6 +32,8 @@ from tempfile import mkstemp
 import time
 import unicodedata
 import re
+import StringIO
+import csv
 
 try:
     from mako.template import Template as MakoTemplate
@@ -137,10 +139,26 @@ def _text2pdf(string):
     return string
 
 
-def _save_excel_file(content, filename):
+def _generate_excel_file(content, delimiter, quotechar, lineterminator):
     workbook = xlwt.Workbook()
     sheet = workbook.add_sheet('sheet 1')
-    for row, cols in enumerate(content):
+    csv_input = StringIO.StringIO(content)
+
+    # csv module work in ascii. See: http://docs.python.org/library/csv.html#examples
+    def unicode_csv_reader(unicode_csv_data, dialect=csv.excel, **kwargs):
+        # csv.py doesn't do Unicode; encode temporarily as UTF-8:
+        csv_reader = csv.reader(utf_8_encoder(unicode_csv_data),
+                            dialect=dialect, **kwargs)
+        for row in csv_reader:
+            # decode UTF-8 back to Unicode, cell by cell:
+            yield [unicode(cell, 'utf-8') for cell in row]
+
+    def utf_8_encoder(unicode_csv_data):
+        for line in unicode_csv_data:
+            yield line.encode('utf-8')
+
+    csv_content = unicode_csv_reader(csv_input, delimiter=delimiter, quotechar=quotechar, lineterminator=lineterminator)
+    for row, cols in enumerate(csv_content):
         for col, data in enumerate(cols):
             params = ()
             if isinstance(data, datetime.datetime):
@@ -148,7 +166,9 @@ def _save_excel_file(content, filename):
             elif isinstance(data, datetime.date):
                 params = (DATE_STYLE,)
             sheet.write(row, col, data, *params)
-    workbook.save(filename)
+    binary_file = StringIO.StringIO()
+    workbook.save(binary_file)
+    return binary_file.getvalue()
 
 
 class ir_model_export_file_template(Model):
@@ -503,7 +523,13 @@ class ir_model_export_file_template(Model):
                 filename = self._get_filename(cr, uid, export_file, context)
                 if export_file.extension == 'pdf':
                     file_content = _text2pdf(file_content)
-                file_content = file_content.encode(export_file.encoding, 'replace')
+                if export_file.extension == 'xls':
+                    delimiter = eval(export_file.delimiter)
+                    quotechar = eval(export_file.quotechar)
+                    lineterminator = eval(export_file.lineterminator)
+                    file_content = _generate_excel_file(file_content, delimiter, quotechar, lineterminator)
+                else:
+                    file_content = file_content.encode(export_file.encoding, 'replace')
                 self._save_file(cr, uid, export_file, filename, file_content, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
         localdict = {
