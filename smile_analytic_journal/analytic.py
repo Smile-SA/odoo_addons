@@ -283,6 +283,7 @@ class AnalyticLine(osv.osv):
     }
 
     def create(self, cr, uid, vals, context=None):
-        vals['amount'] *= int(self.pool.get('account.analytic.journal').read(cr, uid, vals['journal_id'], ['sign'], context)['sign'])
+        if vals.get('journal_id'):
+            vals['amount'] *= int(self.pool.get('account.analytic.journal').read(cr, uid, vals['journal_id'], ['sign'], context)['sign'])
         return super(AnalyticLine, self).create(cr, uid, vals, context)
 AnalyticLine()
