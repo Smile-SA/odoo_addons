@@ -405,7 +405,7 @@ class AnalyticDistributionPeriod(osv.osv):
             if period.date_start:
                 domain += ['|', ('date_stop', '>=', period.date_start), ('date_stop', '=', False)]
             if period.date_stop:
-                domain += ['|', ('date_start', '>=', period.date_stop), ('date_start', '=', False)]
+                domain += ['|', ('date_start', '<=', period.date_stop), ('date_start', '=', False)]
             if self.search(cr, uid, domain, context={'active_test': True}):
                 return False
         return True
