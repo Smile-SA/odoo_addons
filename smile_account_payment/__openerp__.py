@@ -42,6 +42,7 @@ Changes from editor module:
         "view/account_payment_view.xml",
         "view/account_invoice_view.xml",
         "view/res_company_view.xml",
+        "view/account_voucher_view.xml",
     ],
     "demo_xml": [],
     "installable": True,

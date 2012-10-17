@@ -11,7 +11,7 @@
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
 	            <field name="payment_term" position="after">
-	                <field name="payment_mode_id" required="1" attrs="{'readonly': [('state', 'in', ('open', 'paid'))]}"/>
+	                <field name="payment_mode_id" required="1" attrs="{'readonly': [('state', 'in', ('paid'))]}"/>
                 </field>
             </field>
         </record>

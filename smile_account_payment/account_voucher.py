@@ -19,8 +19,10 @@
 #
 ##############################################################################
 
+import netsvc
 from osv import osv, fields
 from tools.translate import _
+
 
 class AccountVoucher(osv.osv):
     _inherit = 'account.voucher'
@@ -49,11 +51,34 @@ class AccountVoucher(osv.osv):
             }, context)
         return voucher_id
 
-    def write(self, cr, uid, ids, vals, context=None):
+    def cancel_voucher(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        posted_voucher_ids = []
+        voucher_to_post_ids = []
+        for voucher in self.browse(cr, uid, ids, context):
+            if voucher.state == 'posted':
+                posted_voucher_ids.append(voucher.id)
+            elif voucher.payment_id and voucher.payment_id.state != 'draft':
+                raise osv.except_osv(_('Error'), _('You can not modify a voucher linked to a payment!'))
+            else:
+                voucher_to_post_ids.append(voucher.id)
+        if posted_voucher_ids:
+            super(AccountVoucher, self).cancel_voucher(cr, uid, posted_voucher_ids, context)
+        if voucher_to_post_ids:
+            wkf_service = netsvc.LocalService("workflow")
+            for voucher_id in ids:
+                wkf_service.trg_validate(uid, 'account.voucher', voucher_id, 'cancel_voucher', cr)
+        return True
+
+    def proforma_voucher(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for voucher in self.browse(cr, uid, ids, context):
             if voucher.payment_id and voucher.payment_id.state != 'draft':
                 raise osv.except_osv(_('Error'), _('You can not modify a voucher linked to a payment!'))
-        return super(AccountVoucher, self).write(cr, uid, ids, vals, context)
+        wkf_service = netsvc.LocalService("workflow")
+        for voucher_id in ids:
+            wkf_service.trg_validate(uid, 'account.voucher', voucher_id, 'proforma_voucher', cr)
+        return True
 AccountVoucher()

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_voucher_tree">
+            <field name="name">account.voucher.tree</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_voucher_tree"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <button name="proforma_voucher" position="before">
+	                <field name="payment_id" invisible="1"/>
+				</button>
+                <button name="proforma_voucher" position="attributes">
+                	<attribute name="type">object</attribute>
+                	<attribute name="attrs">{'invisible': [('state', '!=', 'draft'), '|', ('payment_id', '=', False), ('payment_id.state', '=', 'draft')]}</attribute>
+                </button>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_voucher_form">
+            <field name="name">account.voucher.form</field>
+            <field name="model">account.voucher</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">        
+                <button name="cancel_voucher" string="Cancel" states="draft,proforma" position="attributes">
+                	<attribute name="type">object</attribute>
+                </button>
+                <button name="proforma_voucher" position="before">
+	                <field name="payment_id" invisible="1"/>
+				</button>
+                <button name="proforma_voucher" position="attributes">
+                	<attribute name="type">object</attribute>
+                	<attribute name="attrs">{'invisible': [('state', '!=', 'draft'), '|', ('payment_id', '=', False), ('payment_id.state', '=', 'draft')]}</attribute>
+                </button>
+            </field>
+        </record>
+
+	</data>
+</openerp>
