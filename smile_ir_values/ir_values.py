@@ -55,8 +55,8 @@ class IrValues(osv.osv):
         window_action_id = ''
         if context.get('active_model') == 'ir.ui.menu':
             action = self.pool.get('ir.ui.menu').read(cr, uid, context.get('active_id', False), ['action'], context)['action']
-            if action and action.startswith('ir.actions.act_window, '):
-                window_action_id = action.replace('ir.actions.act_window, ', '')
+            if action and action.startswith('ir.actions.act_window,'):
+                window_action_id = action.replace('ir.actions.act_window,', '')
         #####
         result = []
         for m in models:
