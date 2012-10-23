@@ -15,7 +15,7 @@
 					<field name="method" />
 					<separator string="Trigger" colspan="4"/>
 					<field name="server_action_id" />
-					<button type="object" name="create_server_action" string="Create Server Action" colspan="2" attrs="{'readonly': [('cron_id', '!=', False)]}"/>
+					<button type="object" name="create_server_action" string="Create Server Action" colspan="2" attrs="{'readonly': [('server_action_id', '!=', False)]}"/>
                     <notebook colspan="4">
                         <page string="Imports">
                             <field name="import_ids" colspan="4" nolabel="1"/>
