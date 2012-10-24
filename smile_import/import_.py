@@ -64,7 +64,7 @@ class IrModelImportTemplate(Model):
             import_name = import_name or template.name
 
             logger = SmileDBLogger(cr.dbname, 'ir.model.import.template', template.id, uid)
-            import_id = import_obj.create_new_cr(cr.dbname, uid, {
+            import_id = import_obj.create(cr, uid, {
                 'name': import_name,
                 'import_tmpl_id': template.id,
                 'test_mode': test_mode,
