@@ -1,4 +1,4 @@
-openerp.web_colored = function (instance) {
+openerp.web_smile_colored = function (instance) {
 
   instance.web.form.FieldColored = instance.web.form.FieldFloat.extend({
 

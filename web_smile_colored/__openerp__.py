@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Colored widget",
+    "name" : "Smile Colored widget",
     "category" : "Hidden",
     "description":"""Add new widget 'colored':
 <field name="field_name" widget="colored" attrs="{'colored':{'blue':'&gt;200','red':'&lt;200'}}"/> in form and list view""",
