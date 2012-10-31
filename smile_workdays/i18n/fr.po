@@ -1,0 +1,188 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_workdays
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-12-07 14:17+0000\n"
+"PO-Revision-Date: 2011-12-07 14:17+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_workdays
+#: field:res.company,inherit_dayoff:0
+msgid "Inherit days off and weekdays from parent company ?"
+msgstr "Hériter des jours chaumés de la société mère ?"
+
+#. module: smile_workdays
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
+msgstr "Le code du pays doit être unique !"
+
+#. module: smile_workdays
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Erreur ! Vous ne pouvez pas créer de sociétés récursives"
+
+#. module: smile_workdays
+#: field:res.company,thu:0
+msgid "Thursday"
+msgstr "Jeudi"
+
+#. module: smile_workdays
+#: field:res.company,sun:0
+msgid "Sunday"
+msgstr "Dimanche"
+
+#. module: smile_workdays
+#: model:ir.model,name:smile_workdays.model_res_country_holiday
+msgid "Public Holiday"
+msgstr "Jours Feriés"
+
+#. module: smile_workdays
+#: code:addons/smile_workdays/workdays.py:129
+#: constraint:res.company:0
+#, python-format
+msgid "You cannot inherit off days if you have no parent company!"
+msgstr "Vous ne pouvez pas choisir d'hériter des jours chaumés si vous n'avez pas défini de société mère!"
+
+#. module: smile_workdays
+#: field:res.company,mon:0
+msgid "Monday"
+msgstr "Lundi"
+
+#. module: smile_workdays
+#: field:res.company.dayoff,company_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_workdays
+#: field:res.company,fri:0
+msgid "Friday"
+msgstr "Samedi"
+
+#. module: smile_workdays
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr "Le nom du pays doit être unique !"
+
+#. module: smile_workdays
+#: field:res.country,holiday_ids:0
+msgid "Holidays"
+msgstr "Jour Feriés"
+
+#. module: smile_workdays
+#: field:res.company.dayoff,date:0
+msgid "Date"
+msgstr "Date"
+
+#. module: smile_workdays
+#: model:ir.module.module,description:smile_workdays.module_meta_information
+msgid "Defines objects that differenciates workdays from non-workdays\n"
+"    \n"
+"    Development in progress\n"
+"    "
+msgstr "Defines objects that differenciates workdays from non-workdays\n"
+"    \n"
+"    Development in progress\n"
+"    "
+
+#. module: smile_workdays
+#: constraint:res.country.holiday:0
+msgid "You cannot define a date which will never exist in any calendar !"
+msgstr "Vous ne pouvez pas définir une date qui n'existera dans aucun calendrier !"
+
+#. module: smile_workdays
+#: field:res.country.holiday,day:0
+msgid "Day"
+msgstr "Jour"
+
+#. module: smile_workdays
+#: field:res.company.dayoff,name:0
+#: field:res.country.holiday,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_workdays
+#: model:ir.model,name:smile_workdays.model_res_country
+#: field:res.company,country_id:0
+#: field:res.country.holiday,country_id:0
+msgid "Country"
+msgstr "Pays"
+
+#. module: smile_workdays
+#: model:ir.ui.menu,name:smile_workdays.menu_geography
+msgid "Localisation"
+msgstr "Localisation"
+
+#. module: smile_workdays
+#: model:ir.ui.menu,name:smile_workdays.menu_country_organisation
+msgid "Countries"
+msgstr "Pays"
+
+#. module: smile_workdays
+#: model:ir.ui.menu,name:smile_workdays.menu_state_organisation
+msgid "States"
+msgstr "Etats"
+
+#. module: smile_workdays
+#: model:ir.model,name:smile_workdays.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: smile_workdays
+#: field:res.company,wed:0
+msgid "Wednesday"
+msgstr "Mercredi"
+
+#. module: smile_workdays
+#: code:addons/smile_workdays/workdays.py:64
+#: code:addons/smile_workdays/workdays.py:93
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_workdays
+#: view:res.company:0
+#: field:res.company,dayoff_ids:0
+msgid "Days off"
+msgstr "Jours Chaumés"
+
+#. module: smile_workdays
+#: field:res.company,tue:0
+msgid "Tuesday"
+msgstr "Mardi"
+
+#. module: smile_workdays
+#: field:res.country.holiday,month:0
+msgid "Month"
+msgstr "Mois"
+
+#. module: smile_workdays
+#: code:addons/smile_workdays/workdays.py:64
+#: code:addons/smile_workdays/workdays.py:93
+#, python-format
+msgid "Date must be a string!"
+msgstr "La date doit être une chaine de caractères!"
+
+#. module: smile_workdays
+#: model:ir.model,name:smile_workdays.model_res_company_dayoff
+msgid "Days Off"
+msgstr "Jours Chaumés"
+
+#. module: smile_workdays
+#: model:ir.module.module,shortdesc:smile_workdays.module_meta_information
+msgid "Smile Workdays"
+msgstr "Smile Workdays"
+
+#. module: smile_workdays
+#: field:res.company,sat:0
+msgid "Saturday"
+msgstr "Samedi"
+

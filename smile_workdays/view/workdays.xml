@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Country -->
+
+        <record id="workday_view_country_form" model="ir.ui.view">
+            <field name="name">workday.res.country.form</field>
+            <field name="model">res.country</field>
+            <field name="type">form</field>
+			<field name="inherit_id" ref="base.view_country_form"/>
+            <field name="arch" type="xml">
+	            <field name="code" position="after">
+		           	<field name="holiday_ids" colspan="4" mode="tree">
+			            <tree editable="top">
+				            <field name="name"/>
+				            <field name="date"/>
+			            </tree>
+		           	</field>
+	            </field>
+            </field>
+        </record>
+        
+        <!-- Remaking old V5 country menu in Administration / Parameters -->
+        <menuitem id="menu_geography" parent="base.menu_config" name="Localisation" groups="base.group_system" sequence="150"/>
+        <menuitem action="base.action_country" id="menu_country_organisation" parent="menu_geography" name="Countries" sequence="10"/>
+        <menuitem action="base.action_country_state" id="menu_state_organisation" parent="menu_geography" name="States" sequence="20"/>
+        
+        <!-- Company -->
+        
+        <record id="workday_view_company_form" model="ir.ui.view">
+            <field name="name">workday.res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+			<field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+				 <notebook position="inside">
+				 	<page string="Days off">
+				 		<field name="inherit_dayoff"/>
+				 		<separator/>
+				 		<group col="2" colspan="2" attrs="{'invisible': [('inherit_dayoff', '=', True)]}">
+				 			<field name="mon"/>
+				 			<field name="tue"/>
+				 			<field name="wed"/>
+				 			<field name="thu"/>
+				 			<field name="fri"/>
+				 			<field name="sat"/>
+				 			<field name="sun"/>
+				 		</group>
+				 		<group colspan="2" attrs="{'invisible': [('inherit_dayoff', '=', True)]}">
+				 			<field name="dayoff_ids">
+				 				<tree editable="bottom">
+					 				<field name="name"/>
+					 				<field name="date"/>
+				 				</tree>
+				 			</field>
+				 		</group>
+				 	</page>
+				 </notebook>
+            </field>
+        </record>
+        
+	</data>
+</openerp>
