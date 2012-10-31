@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<!-- Import Template -->
+
+		<record id="view_import_template_form" model="ir.ui.view">
+			<field name="name">ir.model.import.template.form</field>
+			<field name="model">ir.model.import.template</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Import">
+					<field name="name" colspan="4"/>
+					<field name="model_id" />
+					<field name="method" />
+					<separator string="Trigger" colspan="4"/>
+					<field name="server_action_id" />
+					<button type="object" name="create_server_action" string="Create Server Action" colspan="2" attrs="{'readonly': [('server_action_id', '!=', False)]}"/>
+                    <notebook colspan="4">
+                        <page string="Imports">
+                            <field name="import_ids" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Logs">
+                            <field name="log_ids" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_import_template_tree" model="ir.ui.view">
+			<field name="name">ir.model.import.template.tree</field>
+			<field name="model">ir.model.import.template</field>
+			<field name="type">tree</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<tree string="Imports">
+					<field name="name" />
+					<field name="model_id" />
+					<field name="method" />
+					<field name="import_ids" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_import_template_search" model="ir.ui.view">
+			<field name="name">ir.model.import.template.search</field>
+			<field name="model">ir.model.import.template</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<group col="6" colspan="4">
+						<field name="name" />
+						<field name="model_id" />
+						<field name="method" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_import_template" model="ir.actions.act_window">
+			<field name="name">Imports</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ir.model.import.template</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem action="action_import_template" id="menu_import_template" parent="base.menu_config" sequence="100" />
+
+		<!-- Import -->
+
+		<record id="view_import_form" model="ir.ui.view">
+			<field name="name">ir.model.import.form</field>
+			<field name="model">ir.model.import</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Import">
+					<field name="name" />
+					<field name="import_tmpl_id" />
+					<field name="state" />
+					<field name="test_mode"/>
+                    <field name="pid"/>
+					
+					<newline/>
+					<field name="from_date" />
+					<field name="to_date" />
+					<separator string="Logs" colspan="4"/>
+					<field name="log_ids" colspan="4" nolabel="1" mode="tree,form">
+						<tree string="Logs">
+							<field name="log_date" />
+							<field name="level" />
+							<field name="message" />
+						</tree>
+						<form string="Log">
+							<field name="log_date" />
+							<field name="level" />
+							<field name="message" colspan="4"/>
+						</form>
+					</field>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_import_tree" model="ir.ui.view">
+			<field name="name">ir.model.import.tree</field>
+			<field name="model">ir.model.import</field>
+			<field name="type">tree</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<tree string="Imports">
+					<field name="name" />
+					<field name="state" />
+					<field name="import_tmpl_id" />
+					<field name="from_date" />
+					<field name="to_date" />
+					<field name="test_mode"/>
+					<field name="log_ids" />
+				</tree>
+			</field>
+		</record>
+
+	</data>
+</openerp>
