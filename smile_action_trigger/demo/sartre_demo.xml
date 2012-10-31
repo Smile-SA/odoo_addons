@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="ir_actions_server_youremailchanged" model="ir.actions.server">
+			<field name="type">ir.actions.server</field>
+			<field name="name">Your email changed</field>
+			<field name="model_id" ref="base.model_res_partner_address"/>
+			<field name="srcmodel_id" ref="base.model_res_partner"/>
+			<field name="state">object_write</field>
+			<field eval="5" name="sequence"/>
+			<field name="condition">True</field>
+			<field eval="1" name="active"/>
+			<field name="write_id">object.partner_id.id</field>
+		</record>
+		<record id="ir_actions_server_line_youremailchanged" model="ir.server.object.lines">
+			<field name="type">equation</field>
+			<field name="value">"%s\nOld email: %s" % (object.partner_id.comment, context['old_values'][object.id]['email'])</field>
+			<field name="col1" ref="base.field_res_partner_comment"/>
+			<field name="server_id" ref="ir_actions_server_youremailchanged"/>
+		</record>
+		<record id="sartre_trigger_partneremailchanges" model="sartre.trigger">
+			<field name="name">Partner Email Changes</field>
+			<field eval="1" name="active"/>
+			<field name="model_id" ref="base.model_res_partner_address"/>
+			<field eval="1" name="on_write"/>
+			<field eval="[(6,0,[ref('ir_actions_server_youremailchanged')])]" name="action_ids"/>
+		</record>
+		<record id="sartre_filter_partneremailchanges" model="sartre.filter">
+			<field name="trigger_id" ref="sartre_trigger_partneremailchanges"/>
+			<field name="domain">[('OLD_email', u'U', '')]</field>
+		</record>
+
+	</data>
+</openerp>

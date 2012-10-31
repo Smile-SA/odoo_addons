@@ -1,0 +1,13 @@
+-
+  I change the email of Sylvie Lelitre
+-
+  !record {model: res.partner.address, id: base.res_partner_address_8}:
+    email: s.l@agrolait.be
+-
+  !record {model: res.partner.address, id: base.res_partner_address_8}:
+    email: sylvie.lelitre@agrolait.be
+-
+  I chek if the old email is indicate in partner comment
+-
+  !assert {model: res.partner, id: base.res_partner_agrolait, string: Action Trigger 'Email Change'}:
+    - comment and comment.endswith('s.l@agrolait.be')

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<openerp>
+	<data noupdate="1">
+
+		<!-- Set access to menu -->
+
+		<record model="ir.ui.menu" id="sartre_trigger_menu">
+			<field name="groups_id" eval="[(6,0, [ref('base.group_system')])]"/>
+		</record>
+
+	</data>
+</openerp>

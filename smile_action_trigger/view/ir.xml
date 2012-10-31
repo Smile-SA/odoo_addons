@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_server_action_form_inherit">
+            <field name="name">Server Action Inherit Form View</field>
+            <field name="model">ir.actions.server</field>
+            <field name="type">form</field>
+            <field name="priority">25</field>
+            <field name="inherit_id" ref="base.view_server_action_form" />
+            <field name="arch" type="xml">
+                <field name="condition" position="after">
+                    <field name="user_id"/>
+                    <field name="execution_type"/>
+                    <field name="run_once"/>
+                    <field name="group_by" attrs="{'invisible':[('run_once','=',False)]}"/>
+                    <newline/>
+                    <field name="force_rollback" on_change="onchange_force_rollback(specific_thread, force_rollback)"/>
+                    <field name="specific_thread" on_change="onchange_specific_thread(force_rollback, specific_thread)"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_server_action_tree_inherit">
+            <field name="name">Server Action Inherit Tree View</field>
+            <field name="model">ir.actions.server</field>
+            <field name="type">tree</field>
+            <field name="priority">25</field>
+            <field name="inherit_id" ref="base.view_server_action_tree" />
+            <field name="arch" type="xml">
+                <field name="sequence" position="before">
+                    <field name="execution_type"/>
+                    <field name="force_rollback"/>
+                    <field name="specific_thread"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
