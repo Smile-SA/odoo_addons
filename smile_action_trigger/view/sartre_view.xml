@@ -62,17 +62,17 @@
 							<field name="executions_max_number"/>
 							<field name="filter_ids" colspan="4" nolabel="1">
 								<form string="Filter">
-									<group colspan="2">
+									<group colspan="2" col="4">
 										<separator string="Domain" colspan="4" />
 										<field name="field_name" colspan="3" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" />
 										<field name="value_age" nolabel="1" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" attrs="{'readonly': [('value_age_readonly', '=', True)]}" />
-										<field name="value_age_readonly" invisible="1" />
 										<field name="operator_id" on_change="onchange_get_value_age_domain(field_name, operator_id, opposite, value, value_age, value_type)" widget="selection" />
 										<field name="opposite" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" />
 										<field name="value" colspan="3" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" />
 										<field name="value_type" nolabel="1" on_change="onchange_get_domain(field_name, operator_id, opposite, value, value_age, value_type)" />
 										<separator string="Force domain" colspan="4" />
 										<field name="domain" nolabel="1" colspan="4" />
+										<field name="value_age_readonly" invisible="1" />
 									</group>
 									<group colspan="2" col="2">
 										<separator string="Expression builder for field or dynamic value" colspan="2" />
@@ -95,7 +95,7 @@
 						<page string="Actions">
 							<field name="force_actions_execution"/>
 							<field name="action_ids" colspan="4" nolabel="1" domain="[('model_id','=',model_id)]" />
-							<group name="exception_management" attrs="{'invisible': [('test_mode', '=', True)]}" colspan="4">
+							<group name="exception_management" attrs="{'invisible': [('test_mode', '=', True)]}" colspan="4" col="4">
 								<field name="exception_handling"/>
 								<field name="exception_warning" attrs="{'invisible': [('exception_handling', '!=', 'rollback')]}"/>
 								<field name="exception_message" colspan="4" attrs="{'invisible': ['|', ('exception_handling', '!=', 'rollback'), ('exception_warning', '!=', 'custom')]}"/>
