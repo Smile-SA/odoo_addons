@@ -146,7 +146,7 @@ class matrix(fields.dummy):
             'date_format': conf_dict.get('date_format', "%Y-%m-%d"),
 
             # The date of the column to highlight
-            'highlight_date': conf_dict.get('highlight_date', datetime.datetime.today()),
+            'highlight_date': conf_dict.get('highlight_date', 'today'),
 
             # Add read-only columns at the end of the matrix.
             # It needs a list of dictionnary like this:

@@ -90,8 +90,8 @@ Changelog
 ---------
 
 * **0.9.dev** (unreleased)
-
-No changes yet.
+  * Introduce a new `today` keyword for the `highlight_date` parameter
+  * Fix today's column default highlighting by recomputing dates every time a matrix is displayed
 
 * **0.8** (2012-08-28)
   * Update intermediate-level totals on cell value change

@@ -18,8 +18,12 @@
 <%def name="print_now(date)">
 <%
     # Print the 'now' class
-    if highlight_date and dt.strptime(date, '%Y%m%d') == dt.strptime(highlight_date, '%Y%m%d'):
-        return 'now'
+    if highlight_date:
+        now_date = highlight_date
+        if highlight_date == 'today':
+            now_date = dt.today().strftime('%Y%m%d')
+        if dt.strptime(date, '%Y%m%d') == dt.strptime(now_date, '%Y%m%d'):
+            return 'now'
 %>
 </%def>
 
