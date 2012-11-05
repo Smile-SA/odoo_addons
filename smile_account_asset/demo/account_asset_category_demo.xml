@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Asset Category -->
+
+        <record id="account_asset_category_fixedassets" model="account.asset.category">
+            <field name="name">Hardware - 5 Years</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="asset_journal_id" ref="account.expenses_journal"/>
+            <field name="asset_account_id" ref="account.xfa"/>
+            <field name="amortization_account_id" ref="account.xfa"/>
+            <field name="amortization_expense_account_id" ref="account.a_expense"/>
+            <field name="amortization_income_account_id" ref="account.a_sale"/>
+            <field name="depreciation_account_id" ref="account.xfa"/>
+            <field name="depreciation_expense_account_id" ref="account.a_expense"/>
+            <field name="depreciation_income_account_id" ref="account.a_sale"/>
+            <field name="disposal_receivable_account_id" ref="account.xfa"/>
+            <field name="disposal_expense_account_id" ref="account.a_expense"/>
+            <field name="disposal_income_account_id" ref="account.a_sale"/>
+        </record>
+
+        <record id="account_asset_category_digitalassets" model="account.asset.category">
+            <field name="name">Software - 5 Years</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="accounting_method">linear</field>
+            <field name="accounting_periods">5</field>
+            <field name="fiscal_method">degressive</field>
+            <field name="fiscal_periods">2</field>
+            <field name="fiscal_degressive_rate">50.0</field>
+            <field name="asset_journal_id" ref="account.expenses_journal"/>
+            <field name="asset_account_id" ref="account.xfa"/>
+            <field name="amortization_account_id" ref="account.xfa"/>
+            <field name="amortization_expense_account_id" ref="account.a_expense"/>
+            <field name="amortization_income_account_id" ref="account.a_sale"/>
+            <field name="depreciation_account_id" ref="account.xfa"/>
+            <field name="depreciation_expense_account_id" ref="account.a_expense"/>
+            <field name="depreciation_income_account_id" ref="account.a_sale"/>
+            <field name="disposal_receivable_account_id" ref="account.xfa"/>
+            <field name="disposal_expense_account_id" ref="account.a_expense"/>
+            <field name="disposal_income_account_id" ref="account.a_sale"/>
+        </record>
+
+    </data>
+</openerp>

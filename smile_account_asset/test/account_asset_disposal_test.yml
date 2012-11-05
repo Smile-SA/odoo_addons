@@ -1,0 +1,25 @@
+-
+  I sell asset "account_asset_asset_digitalasset0"
+-
+  !python {model: account.asset.asset}: |
+    import time
+    self.write(cr, uid, ref("account_asset_asset_digitalasset0"), {
+      'sale_date': time.strftime('%Y-%m-%d'),
+      'disposal_type': 'sale',
+      'customer_id': ref("base.res_partner_agrolait"),
+      'sale_value': 18000.0,
+    }, context)
+    self.button_confirm_asset_sale(cr, uid, ref("account_asset_asset_digitalasset0"), context)
+-
+  I output asset "account_asset_asset_digitalasset0"
+-
+  !python {model: account.asset.asset}: |
+    self.button_output(cr, uid, ref("account_asset_asset_digitalasset0"), context)
+-
+  I check account balance
+-
+  !python {model: account.move.line}: |
+    asset = self.pool.get('account.asset.asset').browse(cr, uid, ref("account_asset_asset_digitalasset0"), context)
+    move_lines = asset.account_move_line_ids
+    balance = sum([line.credit - line.debit for line in move_lines], 0.0)
+    assert round(asset.sale_result, 2) == round(balance, 2), "Valid Account Move Lines"
