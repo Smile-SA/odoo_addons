@@ -27,6 +27,7 @@ Requirements
   * OpenERP 6.0.x
   * Chromium >= 1.5
   * Firefox >= 8.0
+  * Internet Explorer >= 9.0
 
 If you've successfully tested this widget with other or older browsers, please notify us.
 
@@ -92,6 +93,7 @@ Changelog
 * **0.9.dev** (unreleased)
   * Introduce a new `today` keyword for the `highlight_date` parameter
   * Fix today's column default highlighting by recomputing dates every time a matrix is displayed
+  * Strip spaces and line returns between cell's definition to fix IE9 misalignment
 
 * **0.8** (2012-08-28)
   * Update intermediate-level totals on cell value change

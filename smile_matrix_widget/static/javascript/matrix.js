@@ -681,6 +681,11 @@ jQuery(document).ready(function($){
         var custom_js_func = matrix.attr("id") + "_custom_js";
         window[custom_js_func]();
         //eval(custom_js_func + '();');
+        // Fix IE9 cells misalignment
+        // See: http://social.msdn.microsoft.com/Forums/en-US/iewebdevelopment/thread/e6f49d52-ec3f-47c5-802e-b80d1a58ed39/
+        matrix.find("table tr").contents().filter(function() {
+            return this.nodeType == 3;
+        }).remove();
         // Mark matrix as initialized
         matrix.addClass("initialized");
     };
