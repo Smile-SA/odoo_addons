@@ -50,6 +50,8 @@ class IrModelImportTemplate(Model):
          - import_error_management: 'rollback_and_continue' or 'raise' (default='raise', see _process function)
          - commit_and_new_thread: True/False (default=False)
          if commit_and_new_thread = True, import_error_management is forced to rollback_and_continue
+
+        returns a dict: {'template_id1': import_id1, ...}
         """
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -59,6 +61,8 @@ class IrModelImportTemplate(Model):
         import_name = context.get('import_name', '')
         test_mode = context.get('test_mode', False)
         commit_and_new_thread = context.get('commit_and_new_thread', False)
+
+        result = {}
 
         for template in self.browse(cr, uid, ids, context):
             import_name = import_name or template.name
@@ -73,13 +77,15 @@ class IrModelImportTemplate(Model):
                 'from_date': time.strftime('%Y-%m-%d %H:%M:%S'),
             }, context)
 
+            result[template.id] = import_id
+
             if commit_and_new_thread:
                 cr.commit()
                 t = threading.Thread(target=import_obj._process_with_new_cursor, args=(cr.dbname, uid, import_id, logger, context))
                 t.start()
             else:
                 import_obj._process_import(cr, uid, import_id, logger, context)
-        return True
+        return result
 
     def create_server_action(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
