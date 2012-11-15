@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import orm
 import safe_eval
 import ir_actions
 import sartre
