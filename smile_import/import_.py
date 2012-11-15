@@ -50,6 +50,8 @@ class IrModelImportTemplate(osv.osv):
         - same_thread_raise_error (default)
         - same_thread_rollback_and_continue
         - new_thread
+        
+        returns a dict: {'template_id1': import_id1, ...}
         """
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -59,6 +61,8 @@ class IrModelImportTemplate(osv.osv):
         import_name = context.get('import_name', '')
         test_mode = context.get('test_mode', False)
         import_mode = context.get('import_mode', 'same_thread_full_rollback')
+
+        result = {}
 
         for template in self.browse(cr, uid, ids, context):
             import_name = import_name or template.name
@@ -73,6 +77,8 @@ class IrModelImportTemplate(osv.osv):
                 'from_date': time.strftime('%Y-%m-%d %H:%M:%S'),
             }, context)
 
+            result[template.id] = import_id
+
             if import_mode == 'new_thread':
                 t = threading.Thread(target=import_obj._process_with_new_cursor, args=(cr.dbname, uid, import_id, logger, context))
                 t.start()
@@ -86,7 +92,7 @@ class IrModelImportTemplate(osv.osv):
                         logger.info("Import rollbacking")
                     else:  # same_thread_raise_error
                         raise e
-        return True
+        return result
 
     def create_server_action(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
