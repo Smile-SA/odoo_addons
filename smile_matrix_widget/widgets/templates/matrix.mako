@@ -10,7 +10,8 @@
         f = float(f)
     if int(f) == f:
         f = int(f)
-    return "%.*f" % (precision, f)
+    f = "%.*f" % (precision, f)
+    return f.rstrip('0').rstrip('.')
 %>
 </%def>
 
