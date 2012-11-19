@@ -93,6 +93,7 @@ Changelog
 * **0.9.dev** (unreleased)
   * Introduce a new `today` keyword for the `highlight_date` parameter
   * Fix today's column default highlighting by recomputing dates every time a matrix is displayed
+  * Auto-remove trailing zeros when adding floats
   * Strip spaces and line returns between cell's definition to fix IE9 misalignment
 
 * **0.8** (2012-08-28)
