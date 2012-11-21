@@ -85,4 +85,16 @@ class SmileLog(osv.osv):
         'level': fields.char('Level', size=16, readonly=True),
         'message': fields.text('Message', readonly=True),
     }
+
+    def archive_and_delete_old_logs(self, cr, uid, nb_days=90, archive_path='', context=None):
+        # Thanks to transaction isolation, the COPY and DELETE will find the same smile_log records
+        if archive_path:
+            file_name = time.strftime("%Y%m%d_%H%M%S.log.csv")
+            file_path = os.path.join(archive_path, file_name)
+            cr.execute(""" COPY (SELECT * FROM smile_log WHERE log_date + interval'%s days' < NOW())
+            TO %s
+            WITH (FORMAT csv, ENCODING utf8)""", (nb_days, file_path,))
+        cr.execute("DELETE FROM smile_log WHERE log_date + interval '%s days' < NOW()", (nb_days,))
+        return True
+
 SmileLog()
