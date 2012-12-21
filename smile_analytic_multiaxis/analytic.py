@@ -86,6 +86,7 @@ class AnalyticAxis(osv.osv):
             ids = self.search(cr, 1, [], context={'active_test': False})
 
         line_obj = self.pool.get('account.analytic.line')
+        non_unicity_fields = line_obj._non_unicity_fields
         for axis in self.browse(cr, 1, ids, context):
             if (not axis.active or context.get('unlink_axis')) and axis.column_label in line_obj._columns:
                 del line_obj._columns[axis.column_label]
@@ -118,9 +119,8 @@ class AnalyticAxis(osv.osv):
         line_obj._auto_init(cr, context)
 
         # To be compatible with smile_analytic_forecasting
-        if hasattr(line_obj, '_unicity_fields'):
-            unicity_fields = line_obj._get_unicity_fields()
-            if line_obj._unicity_fields != unicity_fields:
+        if hasattr(line_obj, '_non_unicity_fields'):
+            if line_obj._non_unicity_fields != non_unicity_fields:
                 cr.execute("SELECT count(0) FROM pg_class WHERE relname = 'account_analytic_line_multi_columns_index'")
                 exists = cr.fetchone()
                 if exists[0]:
