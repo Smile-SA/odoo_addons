@@ -30,8 +30,8 @@ def indexer(original_method):
         if isinstance(self, osv.osv_pool):
             analytic_line_obj = self.get('account.analytic.line')
             if analytic_line_obj and hasattr(analytic_line_obj, '_update_index'):
-                analytic_line_obj._unicity_fields = analytic_line_obj._get_unicity_fields()
-                analytic_line_obj._update_index(cr, analytic_line_obj._unicity_fields)
+                unicity_fields = analytic_line_obj._get_unicity_fields()
+                analytic_line_obj._update_index(cr, unicity_fields)
         return res
     return wrapper
 
@@ -54,7 +54,7 @@ class AnalyticLine(osv.osv):
         exists = cr.fetchone()
         if not exists:
             cr.execute('CREATE INDEX account_analytic_line_multi_columns_index '
-                       'ON account_analytic_line %s', (tuple(unicity_fields), ))
+                       'ON account_analytic_line %s', (tuple(unicity_fields),))
 
     def _get_unicity_fields(self):
         return [field for field in self._columns
@@ -158,13 +158,14 @@ class AnalyticLine(osv.osv):
 
     def _build_unicity_domain(self, line, domain=None):
         domain = list(domain or [])
-        for field in self._unicity_fields:
+        unicity_fields = self._get_unicity_fields()
+        for field in unicity_fields:
             value = isinstance(line[field], tuple) and line[field][0] or line[field]
             domain.append((field, '=', value))
         return domain
 
     def _deactivate_old_forecast_lines(self, cr, uid, ids, initial_domain=None, context=None):
-        if not hasattr(self, '_unicity_fields'):
+        if not hasattr(self, '_non_unicity_fields'):
             return True
         line_ids_to_deactivate = []
         context = context or {}
@@ -172,7 +173,8 @@ class AnalyticLine(osv.osv):
         context['force_analytic_line_update'] = True
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for line in self.read(cr, uid, ids, self._unicity_fields, {}):
+        unicity_fields = self._get_unicity_fields()
+        for line in self.read(cr, uid, ids, unicity_fields, {}):
             domain = self._build_unicity_domain(line, initial_domain)
             key_line_ids = self.search(cr, uid, domain, order='create_period_id desc, type asc, id desc', context=context)
             no_actual_lines = 1
@@ -205,7 +207,7 @@ class AnalyticLine(osv.osv):
             context_copy['forecast_line_to_activate'] = True
             vals = vals or {}
             for field in vals:
-                if field in self._unicity_fields:
+                if field not in self._non_unicity_fields:
                     self._deactivate_old_forecast_lines(cr, uid, ids, [('id', 'not in', ids)], context_copy)
                     break
         res = super(AnalyticLine, self).write(cr, uid, ids, vals, context)
@@ -213,7 +215,7 @@ class AnalyticLine(osv.osv):
             context_copy = dict(context or {})
             context_copy['active_test'] = False
             for field in vals:
-                if field in self._unicity_fields or field == 'type':
+                if field not in self._non_unicity_fields or field == 'type':
                     self._deactivate_old_forecast_lines(cr, uid, ids, context=context_copy)
                     break
         return res
