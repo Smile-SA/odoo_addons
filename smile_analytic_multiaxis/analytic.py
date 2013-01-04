@@ -86,7 +86,7 @@ class AnalyticAxis(osv.osv):
             ids = self.search(cr, 1, [], context={'active_test': False})
 
         line_obj = self.pool.get('account.analytic.line')
-        non_unicity_fields = line_obj._non_unicity_fields
+        non_unicity_fields = line_obj._non_unicity_fields[:]
         for axis in self.browse(cr, 1, ids, context):
             if (not axis.active or context.get('unlink_axis')) and axis.column_label in line_obj._columns:
                 del line_obj._columns[axis.column_label]
@@ -126,7 +126,7 @@ class AnalyticAxis(osv.osv):
                 if exists[0]:
                     cr.execute('DROP INDEX account_analytic_line_multi_columns_index')
                 cr.execute('CREATE INDEX account_analytic_line_multi_columns_index '
-                           'ON account_analytic_line (%s)' % ', '.join(unicity_fields))
+                           'ON account_analytic_line (%s)' % ', '.join(self._get_unicity_fields()))
         ###
         return True
 
