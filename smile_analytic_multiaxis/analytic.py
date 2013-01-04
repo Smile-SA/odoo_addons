@@ -126,7 +126,7 @@ class AnalyticAxis(osv.osv):
                 if exists[0]:
                     cr.execute('DROP INDEX account_analytic_line_multi_columns_index')
                 cr.execute('CREATE INDEX account_analytic_line_multi_columns_index '
-                           'ON account_analytic_line (%s)' % ', '.join(self._get_unicity_fields()))
+                           'ON account_analytic_line (%s)' % ', '.join(line_obj._get_unicity_fields()))
         ###
         return True
 
