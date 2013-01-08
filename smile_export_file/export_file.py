@@ -53,10 +53,11 @@ from tools.translate import _
 from text2pdf import pyText2Pdf
 
 MAKO_EXPR = re.compile('\$\{(.+?)\}')
+EASYXF_EXPR = re.compile('\!\{(.+?)\}')
 DATETIME_EXPR = re.compile('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}')
 DATE_EXPR = re.compile('\d{4}-\d{2}-\d{2}')
 DATE_TIME_STYLE = xlwt.XFStyle()
-DATE_TIME_STYLEnum_format_str = 'DD-MM-YYYY hh:mm:ss'
+DATE_TIME_STYLE.num_format_str = 'DD-MM-YYYY hh:mm:ss'
 DATE_STYLE = xlwt.XFStyle()
 DATE_STYLE.num_format_str = 'DD-MM-YYYY'
 
@@ -165,6 +166,10 @@ def _generate_excel_file(content, delimiter, quotechar, lineterminator):
                 params = (DATE_TIME_STYLE,)
             elif isinstance(data, datetime.date):
                 params = (DATE_STYLE,)
+            elif EASYXF_EXPR.match(data):
+                style_str = EASYXF_EXPR.match(data).group(1)
+                params = (xlwt.easyxf(style_str),)
+                data = EASYXF_EXPR.sub('',data)
             sheet.write(row, col, data, *params)
     binary_file = StringIO.StringIO()
     workbook.save(binary_file)
