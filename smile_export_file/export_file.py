@@ -447,7 +447,7 @@ class ir_model_export_file_template(Model):
             attachments.append((localdict['filename'], localdict['file']))
         if export_file.exception_logging == 'file' and export_file.email_attach_exceptions_file:
             attachments.append((export.exceptions_filename, export.exceptions_file))
-            return tools.email_send(False, email_to, email_subject, email_body, email_cc, attachments,cr,uid)
+            return tools.email_send(False, email_to, email_subject, email_body, email_cc, attachments=attachments,cr=cr,uid=uid)
 
     # ***** Execution report storage method *****
 
