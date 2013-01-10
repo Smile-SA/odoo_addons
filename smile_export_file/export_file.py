@@ -285,9 +285,9 @@ class ir_model_export_file_template(Model):
             template.append(self._render(cr, uid, export_file, template_part, localdict))
         # Header with fieldnames
         if template_part == 'header' and export_file.fieldnames_in_header:
-            template.append(delimiter.join((tools.ustr(column.name) for column in export_file.column_ids)))
+            template.append(delimiter.join((tools.ustr('!{font:bold on}'+column.name) for column in export_file.column_ids)))
         if export_file.extension == 'xls':
-            _render_func = _render_data
+            _render_func = _render_unicode
         else:
             _render_func = _render_unicode
         # Body
