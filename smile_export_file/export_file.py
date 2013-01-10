@@ -140,7 +140,7 @@ def _text2pdf(string):
     return string
 
 
-def _generate_excel_file(content, delimiter, quotechar, lineterminator):
+def _generate_excel_file(content, delimiter, quotechar, lineterminator,col_num):
     workbook = xlwt.Workbook()
     sheet = workbook.add_sheet('sheet 1')
     csv_input = StringIO.StringIO(content)
@@ -170,7 +170,10 @@ def _generate_excel_file(content, delimiter, quotechar, lineterminator):
                 style_str = EASYXF_EXPR.match(data).group(1)
                 params = (xlwt.easyxf(style_str),)
                 data = EASYXF_EXPR.sub('',data)
-            sheet.write(row, col, data, *params)
+            if row == 0:
+                sheet.write_merge(0,0,0,col_num, data, *params)
+            else:        
+                sheet.write(row, col, data, *params)
     binary_file = StringIO.StringIO()
     workbook.save(binary_file)
     return binary_file.getvalue()
@@ -285,7 +288,7 @@ class ir_model_export_file_template(Model):
             template.append(self._render(cr, uid, export_file, template_part, localdict))
         # Header with fieldnames
         if template_part == 'header' and export_file.fieldnames_in_header:
-            template.append(delimiter.join((tools.ustr('!{font:bold on}'+column.name) for column in export_file.column_ids)))
+            template.append(delimiter.join((tools.ustr(column.name) for column in export_file.column_ids)))
         if export_file.extension == 'xls':
             _render_func = _render_unicode
         else:
@@ -532,7 +535,7 @@ class ir_model_export_file_template(Model):
                     delimiter = eval(export_file.delimiter)
                     quotechar = eval(export_file.quotechar)
                     lineterminator = eval(export_file.lineterminator)
-                    file_content = _generate_excel_file(file_content, delimiter, quotechar, lineterminator)
+                    file_content = _generate_excel_file(file_content, delimiter, quotechar, lineterminator,len(export_file.column_ids)-1)
                 else:
                     file_content = file_content.encode(export_file.encoding, 'replace')
                 self._save_file(cr, uid, export_file, filename, file_content, context)
