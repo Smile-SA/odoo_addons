@@ -65,6 +65,7 @@
 							</field>
 						</page>
 						<page string="Advanced">
+							<field name="force_execute_action" />
 							<separator string="Triggers" colspan="4"/>
 							<field name="cron_id" />
 							<button type="object" name="create_cron" string="Create Scheduled Action" colspan="2" attrs="{'readonly': [('cron_id', '!=', False)]}"/>

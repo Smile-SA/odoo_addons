@@ -57,6 +57,7 @@ class ir_model_export_template(Model):
         'client_action_id': fields.many2one('ir.values', 'Client Action'),
         'client_action_server_id': fields.many2one('ir.actions.server', 'Client Action Server'),
         'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export.template')], readonly=True),
+        'force_execute_action': fields.boolean('Force execute action', help="Even if there are no resources to export"),
     }
 
     _defaults = {
@@ -139,6 +140,7 @@ class ir_model_export_template(Model):
                     'line_ids': [(0, 0, {'res_id': res_id}) for res_id in export_res_ids],
                     'offset': index + 1,
                 }, context))
+
         export_pool.generate(cr, uid, export_ids, context)
         return export_ids
 
@@ -285,7 +287,7 @@ class ir_model_export(Model):
 
         cr.execute('SAVEPOINT smile_export')
         try:
-            if export.line_ids:
+            if export.line_ids or export.export_tmpl_id.force_execute_action:
                 res_ids = [line.res_id for line in export.line_ids]
                 logger.info('Export start')
                 self._run_actions(cr, uid, export, res_ids, context)
