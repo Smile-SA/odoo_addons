@@ -57,6 +57,7 @@ class ir_model_export_template(osv.osv):
         'client_action_id': fields.many2one('ir.values', 'Client Action'),
         'client_action_server_id': fields.many2one('ir.actions.server', 'Client Action Server'),
         'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export.template')], readonly=True),
+        'force_execute_action': fields.boolean('Force Action Execution', help="Even if there are no resources to export"),
     }
 
     _defaults = {
@@ -328,7 +329,7 @@ class ir_model_export(osv.osv):
         context['export_id'] = export.id
 
         try:
-            if export.line_ids:
+            if export.line_ids or export.export_tmpl_id.force_execute_action:
                 res_ids = [line.res_id for line in export.line_ids]
                 logger.info('Export start')
                 self._run_actions(cr, uid, export, res_ids, context)
