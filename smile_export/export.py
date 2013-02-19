@@ -353,7 +353,6 @@ class ir_model_export(osv.osv):
         try:
             if export.line_ids or export.resource_ids or export.export_tmpl_id.force_execute_action:
                 res_ids = export.resource_ids or [line.res_id for line in export.line_ids]
-                import pdb ; pdb.set_trace()
                 logger.info('Export start')
                 self._run_actions(cr, uid, export, res_ids, context)
                 logger.time_info('Export done')
