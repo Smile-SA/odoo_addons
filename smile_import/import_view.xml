@@ -83,7 +83,7 @@
 					<field name="test_mode"/>
                     <field name="pid"/>
 					
-					<newline/>
+					<separator string='Importation' colspan="4"/>
 					<field name="from_date" />
 					<field name="to_date" />
 					<separator string="Logs" colspan="4"/>

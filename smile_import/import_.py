@@ -107,7 +107,7 @@ class IrModelImportTemplate(osv.osv):
                         'user_id': 1,
                         'model_id': model_id,
                         'state': 'code',
-                        'code': "self.pool.get('ir.model.import.template').create_import(cr, uid, %d, context)" % (template.id, ),
+                        'code': "self.pool.get('ir.model.import.template').create_import(cr, uid, %d, context)" % (template.id,),
                     }
                     server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals)
                     template.write({'server_action_id': server_action_id})
@@ -157,7 +157,8 @@ class IrModelImport(osv.osv):
         'test_mode': fields.boolean('Test Mode', readonly=True),
         'pid': fields.integer('PID', readonly=True),
         'log_ids': fields.function(_get_logs, method=True, type='one2many', relation='smile.log', string="Logs"),
-        'state': fields.selection(STATES, "State", readonly=True, required=True, ),
+        'state': fields.selection(STATES, "State", readonly=True, required=True,),
+        'line_ids': fields.one2many('ir.model.import.line', 'import_id', 'Lines'),
     }
 
     def create_new_cr(self, dbname, uid, vals, context):
@@ -197,18 +198,21 @@ class IrModelImport(osv.osv):
         try:
             model_obj = self.pool.get(import_.import_tmpl_id.model)
             if not model_obj:
-                raise Exception('Unknown model: %s' % (import_.import_tmpl_id.model, ))
+                raise Exception('Unknown model: %s' % (import_.import_tmpl_id.model,))
             model_method = import_.import_tmpl_id.method
 
             getattr(model_obj, model_method)(cr, uid, context)
         except Exception, e:
             logger.critical("Import failed: %s" % (tools.ustr(repr(e))))
+            logger.warning("Rollbacking import")
+            # Mandatory if import method changed the import or create an import line
+            cr.execute("ROLLBACK TO SAVEPOINT smile_import_test_mode")
             self.write_new_cr(cr.dbname, uid, import_id, {'state': 'exception', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
             raise e
         finally:
             if import_.test_mode:
                 cr.execute("ROLLBACK TO SAVEPOINT smile_import_test_mode")
-                logger.info("Import rollbacking: %s" % (import_id, ))
+                logger.info("Import rollbacking: %s" % (import_id,))
         try:
             self.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
