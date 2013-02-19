@@ -53,10 +53,11 @@ from tools.translate import _
 from text2pdf import pyText2Pdf
 
 MAKO_EXPR = re.compile('\$\{(.+?)\}')
+EASYXF_EXPR = re.compile('\!\{(.+?)\}')
 DATETIME_EXPR = re.compile('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}')
 DATE_EXPR = re.compile('\d{4}-\d{2}-\d{2}')
 DATE_TIME_STYLE = xlwt.XFStyle()
-DATE_TIME_STYLEnum_format_str = 'DD-MM-YYYY hh:mm:ss'
+DATE_TIME_STYLE.num_format_str = 'DD-MM-YYYY hh:mm:ss'
 DATE_STYLE = xlwt.XFStyle()
 DATE_STYLE.num_format_str = 'DD-MM-YYYY'
 
@@ -139,7 +140,7 @@ def _text2pdf(string):
     return string
 
 
-def _generate_excel_file(content, delimiter, quotechar, lineterminator):
+def _generate_excel_file(content, delimiter, quotechar, lineterminator,col_num):
     workbook = xlwt.Workbook()
     sheet = workbook.add_sheet('sheet 1')
     csv_input = StringIO.StringIO(content)
@@ -165,7 +166,14 @@ def _generate_excel_file(content, delimiter, quotechar, lineterminator):
                 params = (DATE_TIME_STYLE,)
             elif isinstance(data, datetime.date):
                 params = (DATE_STYLE,)
-            sheet.write(row, col, data, *params)
+            elif EASYXF_EXPR.match(data):
+                style_str = EASYXF_EXPR.match(data).group(1)
+                params = (xlwt.easyxf(style_str),)
+                data = EASYXF_EXPR.sub('',data)
+            if row == 0:
+                sheet.write_merge(0,0,0,col_num, data, *params)
+            else:        
+                sheet.write(row, col, data, *params)
     binary_file = StringIO.StringIO()
     workbook.save(binary_file)
     return binary_file.getvalue()
@@ -282,7 +290,7 @@ class ir_model_export_file_template(Model):
         if template_part == 'header' and export_file.fieldnames_in_header:
             template.append(delimiter.join((tools.ustr(column.name) for column in export_file.column_ids)))
         if export_file.extension == 'xls':
-            _render_func = _render_data
+            _render_func = _render_unicode
         else:
             _render_func = _render_unicode
         # Body
@@ -439,7 +447,7 @@ class ir_model_export_file_template(Model):
             attachments.append((localdict['filename'], localdict['file']))
         if export_file.exception_logging == 'file' and export_file.email_attach_exceptions_file:
             attachments.append((export.exceptions_filename, export.exceptions_file))
-        return tools.email_send(False, email_to, email_subject, email_body, email_cc, attach=attachments)
+            return tools.email_send(False, email_to, email_subject, email_body, email_cc, attachments=attachments,cr=cr,uid=uid)
 
     # ***** Execution report storage method *****
 
@@ -527,7 +535,7 @@ class ir_model_export_file_template(Model):
                     delimiter = eval(export_file.delimiter)
                     quotechar = eval(export_file.quotechar)
                     lineterminator = eval(export_file.lineterminator)
-                    file_content = _generate_excel_file(file_content, delimiter, quotechar, lineterminator)
+                    file_content = _generate_excel_file(file_content, delimiter, quotechar, lineterminator,len(export_file.column_ids)-1)
                 else:
                     file_content = file_content.encode(export_file.encoding, 'replace')
                 self._save_file(cr, uid, export_file, filename, file_content, context)
