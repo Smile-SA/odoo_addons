@@ -22,41 +22,23 @@
 from osv import osv, fields
 
 
-class FiscalPositionJournal(osv.osv):
-    _name = 'account.fiscal.position.journal'
-    _description = 'Journals Fiscal Position'
-    _rec_name = 'position_id'
-
-    _columns = {
-        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
-        'journal_src_id': fields.many2one('account.journal', 'Journal Source', required=True, ondelete='restrict'),
-        'journal_dest_id': fields.many2one('account.journal', 'Journal Destination', required=True, ondelete='restrict')
-    }
-FiscalPositionJournal()
-
-FISCAL_POSITION_TYPES = [('standard', 'Standard')]
-
-
-class FiscalPosition(osv.osv):
+class AccountFiscalPosition(osv.osv):
     _inherit = 'account.fiscal.position'
 
     _columns = {
-        'type': fields.selection(FISCAL_POSITION_TYPES, 'Type', required=True),
-        'company_id': fields.many2one('res.company', 'Source Company'),
-        'company_dest_id': fields.many2one('res.company', 'Destination Company'),
-        'journal_ids': fields.one2many('account.fiscal.position.journal', 'position_id', 'Journal Mapping'),
+        'company_id': fields.many2one('res.company', 'Company Source'),
+        'company_dest_id': fields.many2one('res.company', 'Company Destination'),
     }
 
-    _defaults = {
-        'type': 'standard',
-    }
+    def _check_company_ids(self, cr, uid, ids, context=None):
+        for position in self.browse(cr, uid, ids, context):
+            if position.type != 'standard' and not position.company_id:
+                return False
+        return True
 
-    def map_journal(self, cr, uid, fposition_id, journal_id, context=None):
-        if not fposition_id:
-            return journal_id
-        for pos in fposition_id.journal_ids:
-            if pos.journal_src_id.id == journal_id:
-                journal_id = pos.journal_dest_id.id
-                break
-        return journal_id
-FiscalPosition()
+    _constraints = [
+        (_check_company_ids, 'Please indicate a company source and a company destination for each not standard fiscal position!',
+         ['company_id', 'company_dest_id']),
+    ]
+
+AccountFiscalPosition()

@@ -183,23 +183,6 @@ class Invoice(osv.osv):
             self.pool.get('account.move').post(cr, uid, [move_id], context={'invoice': inv})
         self._log_event(cr, uid, ids)
         return True
-
-    def get_journal_from_fiscal_position(self, cr, uid, fiscal_position_id=False, journal_id=False):
-        if fiscal_position_id and journal_id:
-            fiscal_position = self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position_id)
-            for fiscal_position_journal in fiscal_position.journal_ids:
-                if fiscal_position_journal.journal_src_id.id == journal_id:
-                    journal_id = fiscal_position_journal.journal_dest_id.id
-                    break
-        return journal_id
-
-    def onchange_fiscal_position(self, cr, uid, ids, fiscal_position_id=False, journal_id=False):
-        return {'value': {'journal_id': self.get_journal_from_fiscal_position(cr, uid, fiscal_position_id, journal_id)}}
-
-    def onchange_journal_id(self, cr, uid, ids, journal_id=False, fiscal_position_id=False):
-        res = super(Invoice, self).onchange_journal_id(cr, uid, ids, journal_id)
-        res.setdefault('value', {})['journal_id'] = self.get_journal_from_fiscal_position(cr, uid, fiscal_position_id, journal_id)
-        return res
 Invoice()
 
 

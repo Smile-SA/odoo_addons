@@ -19,18 +19,6 @@
 	                    <field name="company_dest_id" widget="selection" groups="base.group_multi_company"
 	                    	attrs="{'invisible': [('type', '=', 'standard')], 'required': [('type', '!=', 'standard')]}"/>
 					</field>
-	                <field name="account_ids" position="after">
-	                    <field name="journal_ids" colspan="4" widget="one2many_list" nolabel="1">
-	                        <tree string="Journal Mapping" editable="bottom">
-	                            <field name="journal_src_id"/>
-	                            <field name="journal_dest_id"/>
-	                        </tree>
-	                        <form string="Journal Mapping">
-	                            <field name="journal_src_id"/>
-	                            <field name="journal_dest_id"/>
-	                        </form>
-	                    </field>
-	                </field>
             	</data>
             </field>
         </record>

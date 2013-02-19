@@ -13,7 +13,6 @@
 	                <field name="journal_id" position="attributes">
 	                	<attribute name="widget"></attribute>
 	                	<attribute name="domain">[('company_id', '=', company_id)]</attribute>
-	                	<attribute name="on_change">onchange_journal_id(journal_id, fiscal_position)</attribute>
 	                </field>
                     <field name="period_id" position="attributes">
 	                	<attribute name="widget"></attribute>
@@ -33,15 +32,11 @@
 	                <field name="journal_id" position="attributes">
 	                	<attribute name="widget"></attribute>
 	                	<attribute name="domain">[('company_id', '=', company_id)]</attribute>
-	                	<attribute name="on_change">onchange_journal_id(journal_id, fiscal_position)</attribute>
 	                </field>
                     <field name="period_id" position="attributes">
 	                	<attribute name="widget"></attribute>
 	                	<attribute name="domain">[('company_id', '=', company_id)]</attribute>
                     </field>
-	                <field name="fiscal_position" position="attributes">
-	                	<attribute name="on_change">onchange_fiscal_position(fiscal_position, journal_id)</attribute>
-	                </field>
 				</data>
             </field>
         </record>
