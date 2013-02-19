@@ -12,18 +12,21 @@
 						<field name="name" />
 						<field name="model_id" />
                         <field name="filter_type"/>
-                        <field name="unique" />
-                        <field name="domain" colspan="4" attrs="{'invisible': [('filter_type','!=','domain')]}" nolabel="1"/>
-                        <field name="filter_method" colspan="4" attrs="{'invisible': [('filter_type','!=','method')]}" nolabel="1"/>
+                        <group colspan="2" col="1">
+	                        <field name="domain" attrs="{'invisible': [('filter_type','!=','domain')]}" nolabel="1"/>
+	                        <field name="filter_method" attrs="{'invisible': [('filter_type','!=','method')]}" nolabel="1"/>
+                        </group>
+                        <field name="unique" colspan="1"/>
+                        <field name="link_resources" colspan="1"/>
 					</group>
 					<notebook colspan="4">
 						<page string="Exports">
 							<button type="object" name="create_export" string="New Export" colspan="4" context="{'commit_and_new_thread':True}"/>
 							<field name="export_ids" nolabel="1" colspan="4" mode="tree,form" readonly="1">
-								<tree string="Exports" editable="top">
+								<tree string="Exports">
 									<field name="create_date" />
 									<field name="create_uid" />
-									<field name="line_ids" />
+									<field name="line_count" />
 									<field name="state" readonly="1"/>
 									<button type="object" name="generate" icon="terp-gtk-jump-to-ltr" string="Re-generate" context="{'commit_and_new_thread':True}"/>
 								</tree>

@@ -20,7 +20,9 @@
 ##############################################################################
 
 import threading
+import time
 
+from modules.registry import Registry
 from osv import fields
 from osv.orm import Model, except_orm
 import pooler
@@ -43,13 +45,14 @@ class ir_model_export_template(Model):
         'name': fields.char('Name', size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
-        'filter_type': fields.selection([('domain', 'Domain'), ('method', 'Method')], string="Filter method", required=True,),
+        'filter_type': fields.selection([('domain', 'Domain'), ('method', 'Method')], string="Filter method", required=True),
         'domain': fields.char('Filter domain', size=256),
         'filter_method': fields.char('Filter method', size=64, help="signature: method(cr, uid, context)"),
         'limit': fields.integer('Limit'),
         'max_offset': fields.integer('Max Offset'),
         'order': fields.char('Order by', size=64),
         'unique': fields.boolean('Unique', help="If unique, each instance is exported only once"),
+        'link_resources': fields.boolean('Link resources'),
         'method': fields.char('Method', size=64, help="Indicate a method with a signature equals to (self, cr, uid, ids, *args, context=None)"),
         'action_id': fields.many2one('ir.actions.server', 'Action'),
         'export_ids': fields.one2many('ir.model.export', 'export_tmpl_id', 'Exports'),
@@ -63,6 +66,7 @@ class ir_model_export_template(Model):
     _defaults = {
         'domain': '[]',
         'filter_type': 'domain',
+        'link_resources': True,
     }
 
     def _get_res_ids(self, cr, uid, template, context):
@@ -85,10 +89,12 @@ class ir_model_export_template(Model):
         return res_ids
 
     def get_exported_res_ids(self, cr, uid, export_template_id, context):
-        export_line_ids = self.pool.get('ir.model.export.line').search(cr, uid, [
-            ('export_id.export_tmpl_id', '=', export_template_id),
-        ], context=context)
-        return [line['res_id'] for line in self.pool.get('ir.model.export.line').read(cr, uid, export_line_ids, ['res_id'], context)]
+        res_ids = []
+        for export in self.browse(cr, uid, export_template_id, context).export_ids:
+            res_ids.extend(export.resource_ids)
+            for line in export.line_ids:
+                res_ids.append(line.res_id)
+        return res_ids
 
     def unlink_res_ids(self, cr, uid, ids, model, res_ids, context):
         unlink_line_ids = []
@@ -109,10 +115,16 @@ class ir_model_export_template(Model):
 
     def create_export(self, cr, uid, ids, context=None):
         """
-        some options can be set in the context, see 'ir.model.export' generate function
+        context used to specify export_mode
+        export_mode can be:
+        - same_thread_raise_error
+        - same_thread_rollback_and_continue (default)
+        - new_thread
         """
         if isinstance(ids, (int, long)):
             ids = [ids]
+        context = context or {}
+        context.setdefault('export_mode', 'same_thread_rollback_and_continue')
         export_pool = self.pool.get('ir.model.export')
         export_ids = []
 
@@ -133,13 +145,17 @@ class ir_model_export_template(Model):
             else:
                 res_ids_list = [res_ids]
 
+            vals = {
+                'export_tmpl_id': export_template.id,
+                'state': 'running',
+            }
             for index, export_res_ids in enumerate(res_ids_list):
-                export_ids.append(export_pool.create(cr, uid, {
-                    'export_tmpl_id': export_template.id,
-                    'state': 'started',
-                    'line_ids': [(0, 0, {'res_id': res_id}) for res_id in export_res_ids],
-                    'offset': index + 1,
-                }, context))
+                if export_template.link_resources:
+                    vals['line_ids'] = [(0, 0, {'res_id': res_id}) for res_id in export_res_ids]
+                else:
+                    vals['resource_ids'] = export_res_ids
+                vals['offset'] = index + 1
+                export_ids.append(export_pool.create_new_cr(cr.dbname, uid, vals, context))
 
         export_pool.generate(cr, uid, export_ids, context)
         return export_ids
@@ -189,16 +205,41 @@ self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)"""
 
 
 STATES = [
-    ('started', 'Started'),
+    ('running', 'Running'),
     ('done', 'Done'),
     ('exception', 'Exception'),
 ]
+
+
+def state_cleaner(method):
+    def state_cleaner(self, cr, module):
+        res = method(self, cr, module)
+        if self.get('ir.model.export'):
+            export_ids = self.get('ir.model.export').search(cr, 1, [('state', '=', 'running')])
+            if export_ids:
+                self.get('ir.model.export').write(cr, 1, export_ids, {'state': 'exception'})
+        return res
+    return state_cleaner
 
 
 class ir_model_export(Model):
     _name = 'ir.model.export'
     _description = 'Export'
     _rec_name = 'create_date'
+    _order = 'create_date desc'
+
+    def __init__(self, pool, cr):
+        super(ir_model_export, self).__init__(pool, cr)
+        setattr(Registry, 'load', state_cleaner(getattr(Registry, 'load')))
+
+    def _get_line_count(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for export in self.browse(cr, uid, ids, context):
+            if export.export_tmpl_id.link_resources:
+                res[export.id] = len(export.line_ids)
+            else:
+                res[export.id] = len(export.resource_ids)
+        return res
 
     _columns = {
         'export_tmpl_id': fields.many2one('ir.model.export.template', 'Template', required=True, ondelete='cascade'),
@@ -214,12 +255,40 @@ class ir_model_export(Model):
         'create_date': fields.datetime('Creation Date', readonly=True),
         'create_uid': fields.many2one('res.users', 'Creation User', readonly=True),
         'line_ids': fields.one2many('ir.model.export.line', 'export_id', 'Lines'),
+        'line_count': fields.function(_get_line_count, method=True, type='integer', string='Lines'),
+        'resource_ids': fields.serialized('Resource Ids', readonly=True),
         'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export')], readonly=True),
-        'state': fields.selection(STATES, "State", readonly=True, required=True,),
+        'state': fields.selection(STATES, "State", readonly=True, required=True),
         'exception': fields.text('Exception'),
     }
 
-    _order = 'create_date desc'
+    _defaults = {
+        'resource_ids': [],
+    }
+
+    def create_new_cr(self, dbname, uid, vals, context):
+        db = pooler.get_db(dbname)
+        cr = db.cursor()
+
+        try:
+            export_id = self.pool.get('ir.model.export').create(cr, uid, vals, context)
+            cr.commit()
+        finally:
+            cr.close()
+
+        return export_id
+
+    def write_new_cr(self, dbname, uid, ids, vals, context):
+        db = pooler.get_db(dbname)
+        cr = db.cursor()
+
+        try:
+            result = self.pool.get('ir.model.export').write(cr, uid, ids, vals, context)
+            cr.commit()
+        finally:
+            cr.close()
+
+        return result
 
     def _run_actions(self, cr, uid, export, res_ids=[], context=None):
         """Execute export method and action"""
@@ -233,24 +302,32 @@ class ir_model_export(Model):
 
     def generate(self, cr, uid, ids, context=None):
         """
-        context used to specify:
-         - export_error_management: 'rollback_and_continue' or 'raise' (default='raise', see _generate function)
-         - commit_and_new_thread: True/False (default=False)
-         if commit_and_new_thread = True, export_error_management is forced to rollback_and_continue
+        context used to specify export_mode
+        export_mode can be:
+        - same_thread_raise_error (default)
+        - same_thread_rollback_and_continue
+        - new_thread
         """
         if isinstance(ids, (int, long)):
             ids = [ids]
         context = context or {}
-        commit_and_new_thread = context.get('commit_and_new_thread', False)
+        export_mode = context.get('export_mode', 'same_thread_rollback_and_continue')
 
         for export_id in ids:
             logger = SmileDBLogger(cr.dbname, 'ir.model.export', export_id, uid)
-            if commit_and_new_thread:
-                cr.commit()
+            if export_mode == 'new_thread':
                 t = threading.Thread(target=self._generate_with_new_cursor, args=(cr.dbname, uid, export_id, logger, context))
                 t.start()
             else:
-                self._generate(cr, uid, export_id, logger, context)
+                cr.execute('SAVEPOINT smile_export')
+                try:
+                    self._generate(cr, uid, export_id, logger, context)
+                except Exception, e:
+                    if export_mode == 'same_thread_rollback_and_continue':
+                        cr.execute("ROLLBACK TO SAVEPOINT smile_export")
+                        logger.info("Export rollbacking")
+                    else:  # same_thread_raise_error
+                        raise e
         return True
 
     def _generate_with_new_cursor(self, dbname, uid, export_id, logger, context):
@@ -259,23 +336,15 @@ class ir_model_export(Model):
         except Exception:
             return False
         cr = db.cursor()
-        context['export_error_management'] = 'rollback_and_continue'
         try:
             self._generate(cr, uid, export_id, logger, context)
-            cr.commit()
-        except Exception:
-            cr.rollback()
         finally:
             cr.close()
         return
 
     def _generate(self, cr, uid, export_id, logger, context=None):
-        """
-        Call export method and action
-        Catch and log exceptions
-        context used to specify:
-         - export_error_management: 'rollback_and_continue' or 'raise' (default='raise')
-         """
+        """Call export method and action
+        Catch and log exceptions"""
         assert isinstance(export_id, (int, long)), 'ir.model.export, _generate: export_id is supposed to be an integer'
 
         context = context and context.copy() or {}
@@ -283,29 +352,21 @@ class ir_model_export(Model):
         context['logger'] = logger
         context['export_id'] = export.id
 
-        error_management = context.get('export_error_management', 'raise')
-
-        cr.execute('SAVEPOINT smile_export')
         try:
-            if export.line_ids or export.export_tmpl_id.force_execute_action:
-                res_ids = [line.res_id for line in export.line_ids]
+            if export.line_ids or export.resource_ids or export.export_tmpl_id.force_execute_action:
+                res_ids = export.resource_ids or [line.res_id for line in export.line_ids]
                 logger.info('Export start')
                 self._run_actions(cr, uid, export, res_ids, context)
                 logger.time_info('Export done')
         except Exception, e:
             logger.critical("Export failed: %s" % (_get_exception_message(e),))
-            if error_management == 'rollback_and_continue':
-                cr.execute("ROLLBACK TO SAVEPOINT smile_export")
-                logger.info("Export rollbacking")
-                return self.write(cr, uid, export_id, {'state': 'exception',
-                                                       'exception': _get_exception_message(e), }, context)
-            else:  # export_error_management = raise
-                raise e
+            self.write_new_cr(cr.dbname, uid, export_id, {'state': 'exception',
+                                                          'to_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                                                          'exception': _get_exception_message(e), }, context)
+            raise e
 
         try:
-            print 'done'
-            print self.write(cr, uid, export_id, {'state': 'done'}, context)
-            return True
+            self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
             logger.error("Could not mark export %s as done: %s" % (export_id, _get_exception_message(e)))
             raise e
