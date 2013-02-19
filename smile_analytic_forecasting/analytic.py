@@ -158,8 +158,7 @@ class AnalyticLine(osv.osv):
 
     def _build_unicity_domain(self, line, domain=None):
         domain = list(domain or [])
-        unicity_fields = self._get_unicity_fields()
-        for field in unicity_fields:
+        for field in self._get_unicity_fields():
             value = isinstance(line[field], tuple) and line[field][0] or line[field]
             domain.append((field, '=', value))
         return domain
@@ -227,6 +226,7 @@ class AnalyticLine(osv.osv):
             ids = [ids]
         self._deactivate_old_forecast_lines(cr, uid, ids, [('id', 'not in', ids)], context_copy)
         return super(AnalyticLine, self).unlink(cr, uid, ids, context)
+
 AnalyticLine()
 
 
@@ -246,3 +246,5 @@ class AnalyticPeriod(osv.osv):
         if analytic_line_ids:
             analytic_line_obj.write(cr, uid, analytic_line_ids, {'active': False}, context_copy)
         return super(AnalyticPeriod, self).button_close(cr, uid, ids, context)
+
+AnalyticPeriod()
