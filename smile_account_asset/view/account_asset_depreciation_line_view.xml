@@ -54,6 +54,7 @@
 	                <field name="account_id" invisible="1"/>
 	                <field name="purchase_value"/>
 	                <field name="salvage_value"/>
+                    <field name="depreciation_type"/>
 	                <field name="previous_accumulated_value"/>
 	                <field name="depreciation_value" string="Amortization"/>
 	                <field name="accumulated_value"/>

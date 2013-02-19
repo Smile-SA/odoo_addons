@@ -370,6 +370,7 @@ class AccountAssetAsset(orm.Model):
         depreciation_line_obj.unlink(cr, uid, line_ids_to_delete, context)
         # Create new lines
         asset = self.browse(cr, uid, asset_id, context)
+        salvage_value = depreciation_type == 'accounting' and asset.salvage_value or 0.0
         method = getattr(asset, '%s_method' % depreciation_type)
         periods = getattr(asset, '%s_periods' % depreciation_type)
         degressive_rate = getattr(asset, '%s_degressive_rate' % depreciation_type)
@@ -385,7 +386,7 @@ class AccountAssetAsset(orm.Model):
             elif line.depreciation_type == 'exceptional':
                 exceptional_values.setdefault(period_stop_month, 0.0)
                 exceptional_values[period_stop_month] += line.depreciation_value
-        board = DepreciationBoard(asset.purchase_value, method, periods, degressive_rate, asset.salvage_value,
+        board = DepreciationBoard(asset.purchase_value, method, periods, degressive_rate, salvage_value,
                                   asset.depreciation_date_start, starts_on_first_day_of_month, asset.sale_date or None, asset.period_length,
                                   readonly_values, exceptional_values, fiscalyear_start_day, asset.accounting_periods,
                                   rounding=len(str(asset.company_id.currency_id.rounding).split('.')[-1]))

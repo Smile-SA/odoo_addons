@@ -180,3 +180,8 @@ class AccountInvoice(orm.Model):
         res = super(AccountInvoice, self).line_get_convert(cr, uid, invoice_line_info, partner_id, date, context)
         res['asset_id'] = invoice_line_info.get('asset_id', False)
         return res
+
+    def copy_data(self, cr, uid, id_, default=None, context=None):
+        default = default or {}
+        default['rg_voucher_line'] = []
+        return super(AccountInvoice, self).copy_data(cr, uid, id_, default, context)

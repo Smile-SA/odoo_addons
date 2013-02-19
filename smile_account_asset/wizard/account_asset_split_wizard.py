@@ -92,10 +92,22 @@ class AccountAssetSplitWizard(orm.TransientModel):
                 vals['quantity'] = wizard.asset_id.quantity - wizard.quantity
             new_asset_id = asset_obj.copy(cr, uid, wizard.asset_id.id, default, context)
             wizard.asset_id.write(vals)
-            asset_obj.compute_depreciation_board(cr, uid, wizard.asset_id.id, context)
             if wizard.asset_id.state == 'open':
-                asset_obj.create_reversal_move(cr, uid, wizard.asset_id.id, wizard.purchase_value, context)
+                move_ids = {}
+                move_ids['accounting'] = dict([(line.depreciation_date, line.move_id.id)
+                                               for line in wizard.asset_id.accounting_depreciation_line_ids])
+                move_ids['fiscal'] = dict([(line.depreciation_date, line.move_id.id)
+                                           for line in wizard.asset_id.fiscal_depreciation_line_ids])
+                line_ids = [line.id for line in wizard.asset_id.accounting_depreciation_line_ids + wizard.asset_id.fiscal_depreciation_line_ids]
+                self.pool.get('account.asset.depreciation.line').unlink(cr, uid, line_ids, context)
+                asset_obj.compute_depreciation_board(cr, uid, wizard.asset_id.id, context)
                 asset_obj.validate(cr, uid, new_asset_id, context)
+                for asset_id in (wizard.asset_id.id, new_asset_id):
+                    asset = asset_obj.browse(cr, uid, asset_id, context)
+                    for line in asset.accounting_depreciation_line_ids + asset.fiscal_depreciation_line_ids:
+                        if move_ids[line.depreciation_type].get(line.depreciation_date, False):
+                            line.write({'move_id': move_ids[line.depreciation_type][line.depreciation_date]})
             else:
+                asset_obj.compute_depreciation_board(cr, uid, wizard.asset_id.id, context)
                 asset_obj.compute_depreciation_board(cr, uid, new_asset_id, context)
         return {'type': 'ir.actions.act_window_close'}
