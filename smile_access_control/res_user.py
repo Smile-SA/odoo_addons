@@ -89,4 +89,10 @@ class ResUser(osv.osv):
                 if user_profile['user_profile'] and user_profile['user_ids']:
                     self.write(cr, uid, user_profile['user_ids'], {'user_profile_id': user_profile['id']}, context)
         return True
+
+    def copy_data(self, cr, uid, user_id, default=None, context=None):
+        default = default.copy() if default else {}
+        default['user_ids'] = []
+        return super(ResUser, self).copy_data(cr, uid, user_id, default, context)
+
 ResUser()
