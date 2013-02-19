@@ -1,0 +1,6 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_account_journal_template","account.journal.template","model_account_journal_template","account.group_account_manager",1,1,1,1
+"access_account_account_template_by_resource","account.account.template.by_resource","model_account_account_template_by_resource","account.group_account_manager",1,1,1,1
+"access_ir_sequence_template","ir.sequence.template","model_ir_sequence_template","account.group_account_manager",1,1,1,1
+"access_account_model_template","account.model.template","model_account_model_template","account.group_account_manager",1,1,1,1
+"access_account_model_template_line","account.model.line.template","model_account_model_line_template","account.group_account_manager",1,1,1,1

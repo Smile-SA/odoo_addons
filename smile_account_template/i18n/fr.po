@@ -1,0 +1,623 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_account_template
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.4\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2013-01-14 22:45+0000\n"
+"PO-Revision-Date: 2013-01-14 22:45+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_account_template
+#: field:account.model.line.template,account_id:0
+msgid "Account"
+msgstr "Compte"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "Account Journal Template"
+msgstr "Modèle de journaux"
+
+#. module: smile_account_template
+#: field:account.chart.template,journal_ids:0
+#: view:account.journal.template:0
+msgid "Account Journal Templates"
+msgstr "Modèles de journaux"
+
+#. module: smile_account_template
+#: field:account.chart.template,account_model_ids:0
+msgid "Account Model Templates"
+msgstr "Modèles de modèles d'écriture comptable"
+
+#. module: smile_account_template
+#: field:account.account.template.by_resource,account_id:0
+msgid "Account Template"
+msgstr "Modèle de compte"
+
+#. module: smile_account_template
+#: view:account.account.template.by_resource:0
+msgid "Account Template by Resource"
+msgstr "Modèle de compte par ressource"
+
+#. module: smile_account_template
+#: view:account.account.template.by_resource:0
+msgid "Account Templates by Resource"
+msgstr "Modèles de comtpes par ressource"
+
+#. module: smile_account_template
+#: field:account.chart.template,by_resource_ids:0
+#: model:ir.model,name:smile_account_template.model_account_account_template_by_resource
+msgid "Account Templates by resource"
+msgstr "Modèles de comptes par ressource"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+#: field:account.journal.template,account_control_ids:0
+msgid "Accounts"
+msgstr "Comptes"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "Accounts Allowed (empty for no control)"
+msgstr "Comptes autorisés (vide pour aucun contrôle)"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "Accounts Type Allowed (empty for no control)"
+msgstr "Type de comptes autorisés (vide pour aucun contrôle)"
+
+#. module: smile_account_template
+#: field:ir.sequence.template,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_account_template
+#: field:account.journal.template,update_posted:0
+msgid "Allow Cancelling Entries"
+msgstr "Autoriser l'annulation d'écriture"
+
+#. module: smile_account_template
+#: field:account.model.line.template,amount_currency:0
+msgid "Amount Currency"
+msgstr "Montant devisé"
+
+#. module: smile_account_template
+#: field:account.model.line.template,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Compte analytique"
+
+#. module: smile_account_template
+#: field:account.journal.template,analytic_journal_id:0
+msgid "Analytic Journal"
+msgstr "Journal analytique"
+
+#. module: smile_account_template
+#: selection:account.journal.template,type:0
+msgid "Bank and Cheques"
+msgstr "Banques et chèques"
+
+#. module: smile_account_template
+#: selection:account.journal.template,type:0
+msgid "Cash"
+msgstr "Liquidités"
+
+#. module: smile_account_template
+#: field:account.journal.template,centralisation:0
+msgid "Centralised counterpart"
+msgstr "Centralisation"
+
+#. module: smile_account_template
+#: field:account.account.template.by_resource,chart_template_id:0
+#: field:account.journal.template,chart_template_id:0
+#: field:account.model.template,chart_template_id:0
+msgid "Chart Template"
+msgstr "Modèle de plan comptable"
+
+#. module: smile_account_template
+#: field:account.journal.template,allow_date:0
+msgid "Check Date not in the Period"
+msgstr "Date de vérification hors période"
+
+#. module: smile_account_template
+#: help:account.journal.template,entry_posted:0
+msgid "Check this box if you don't want new journal entries to pass through the 'draft' state and instead goes directly to the 'posted state' without any manual validation. \n"
+"Note that journal entries that are automatically created by the system are always skipping that state."
+msgstr "Cochez cette case si vous voulez que les nouvelles écritures saisies dans le journal ne passent pas par l'état \"Brouillon\" et soient enregistrées directement comme validées. \n"
+"Notez que les pièces comptables générées automatiquement par le système sont validées automatiquement sans passer par l'état \"Brouillon\"."
+
+#. module: smile_account_template
+#: help:account.journal.template,update_posted:0
+msgid "Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"
+msgstr "Cochez cette case si vous voulez autoriser l'annulation des écritures ou des factures associées à ce journal."
+
+#. module: smile_account_template
+#: help:account.journal.template,centralisation:0
+msgid "Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."
+msgstr "Cochez cette case pour indiquer que chaque écriture de ce journal ne créera pas une nouvelle contrepartie, mais partagera la même contrepartie. Cela est utilisé dans la clôture des exercices comptables."
+
+#. module: smile_account_template
+#: field:account.journal.template,code:0
+#: field:ir.sequence.template,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_account_template
+#: field:account.model.line.template,credit:0
+msgid "Credit"
+msgstr "Crédit"
+
+#. module: smile_account_template
+#: field:account.journal.template,currency:0
+#: field:account.model.line.template,currency_id:0
+msgid "Currency"
+msgstr "Devise"
+
+#. module: smile_account_template
+#: selection:account.model.line.template,date_maturity:0
+msgid "Date of the day"
+msgstr "Date du jour"
+
+#. module: smile_account_template
+#: field:account.model.line.template,debit:0
+msgid "Debit"
+msgstr "Débit"
+
+#. module: smile_account_template
+#: field:account.journal.template,default_credit_account_id:0
+msgid "Default Credit Account"
+msgstr "Compte de crédit par défaut"
+
+#. module: smile_account_template
+#: field:account.journal.template,default_debit_account_id:0
+msgid "Default Debit Account"
+msgstr "Compte de débit par défaut"
+
+#. module: smile_account_template
+#: field:account.journal.template,view_id:0
+msgid "Display Mode"
+msgstr "Mode d'affichage"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "Entry Controls"
+msgstr "Contrôle des écritures"
+
+#. module: smile_account_template
+#: field:account.journal.template,sequence_id:0
+msgid "Entry Sequence"
+msgstr "Séquence d'écriture"
+
+#. module: smile_account_template
+#: field:account.account.template.by_resource,field_id:0
+msgid "Field"
+msgstr "Champs"
+
+#. module: smile_account_template
+#: help:account.journal.template,refund_journal:0
+msgid "Fill this if the journal is to be used for refunds of invoices."
+msgstr "À remplir si des avoirs doivent être comptabilisés dans ce journal."
+
+#. module: smile_account_template
+#: selection:account.journal.template,type:0
+msgid "General"
+msgstr "Général"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "General Information"
+msgstr "Informations générales"
+
+#. module: smile_account_template
+#: help:account.journal.template,view_id:0
+msgid "Gives the view used when writing or browsing entries in this journal. The view tells OpenERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."
+msgstr "Donne la vue utilisée lors de la saisie des écritures ou de la navigation dans le journal. La vue définit quels champs doivent être visibles, requis ou en lecture seule et dans quel ordre. Vous pouvez créer votre propre vue pour une saisie plus rapide dans chaque journal."
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+#: view:account.model.template:0
+msgid "Group By..."
+msgstr "Regrouper par..."
+
+#. module: smile_account_template
+#: field:account.journal.template,group_invoice_lines:0
+msgid "Group Invoice Lines"
+msgstr "Grouper les lignes de facture"
+
+#. module: smile_account_template
+#: field:account.journal.template,groups_id:0
+msgid "Groups"
+msgstr "Groupes"
+
+#. module: smile_account_template
+#: help:account.journal.template,allow_date:0
+msgid "If set to True then do not accept the entry if the entry date is not into the period dates"
+msgstr "Si la case est cochée, les écritures dont la date n'est pas dans la période comptable seront refusées."
+
+#. module: smile_account_template
+#: help:account.journal.template,group_invoice_lines:0
+msgid "If this box is checked, the system will try to group the accounting lines when generating them from invoices."
+msgstr "Si cette case est cochée, le système essaiera de grouper les lignes comptables lorsqu'il les créera à partir des factures."
+
+#. module: smile_account_template
+#: field:ir.sequence.template,number_increment:0
+msgid "Increment Number"
+msgstr "Numéro incrémental"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "Invoicing Data"
+msgstr "Données de facturation"
+
+#. module: smile_account_template
+#: help:account.journal.template,default_credit_account_id:0
+msgid "It acts as a default account for credit amount"
+msgstr "Sert de compte par défaut pour le crédit"
+
+#. module: smile_account_template
+#: help:account.journal.template,default_debit_account_id:0
+msgid "It acts as a default account for debit amount"
+msgstr "Ça sert de compte par défaut pour les montants en débit"
+
+#. module: smile_account_template
+#: view:account.model.template:0
+#: field:account.model.template,journal_id:0
+msgid "Journal"
+msgstr "Journal"
+
+#. module: smile_account_template
+#: view:account.model.template:0
+msgid "Journal Entry Model"
+msgstr "Modèle de pièce comptable"
+
+#. module: smile_account_template
+#: view:account.model.line.template:0
+msgid "Journal Entry Model Line"
+msgstr "Modèle d'écriture comptable"
+
+#. module: smile_account_template
+#: field:account.journal.template,name:0
+msgid "Journal Name"
+msgstr "Nom du journal"
+
+#. module: smile_account_template
+#: model:ir.model,name:smile_account_template.model_account_journal_template
+msgid "Journal Template"
+msgstr "Modèle de journaux"
+
+#. module: smile_account_template
+#: model:ir.actions.act_window,name:smile_account_template.action_account_journal_template
+#: model:ir.ui.menu,name:smile_account_template.menu_account_journal_template
+msgid "Journal Templates"
+msgstr "Modèles de journaux"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "Journal View"
+msgstr "Vue journal"
+
+#. module: smile_account_template
+#: help:account.journal.template,analytic_journal_id:0
+msgid "Journal for analytic entries"
+msgstr "Journal d'écritures analytiques"
+
+#. module: smile_account_template
+#: model:ir.ui.menu,name:smile_account_template.menu_account_journal_templates
+msgid "Journals"
+msgstr "Journaux"
+
+#. module: smile_account_template
+#: view:account.model.template:0
+#: field:account.model.template,legend:0
+msgid "Legend"
+msgstr "Légende"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "Liquidity"
+msgstr "Liquidités"
+
+#. module: smile_account_template
+#: field:account.model.line.template,date_maturity:0
+msgid "Maturity date"
+msgstr "Echéance"
+
+#. module: smile_account_template
+#: field:account.model.line.template,model_id:0
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_account_template
+#: field:account.model.template,lines_id:0
+msgid "Model Entries"
+msgstr "Modèle d'écritures"
+
+#. module: smile_account_template
+#: field:account.model.template,name:0
+msgid "Model Name"
+msgstr "Nom du modèle"
+
+#. module: smile_account_template
+#: field:account.model.line.template,name:0
+#: field:ir.sequence.template,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_account_template
+#: field:ir.sequence.template,number_next:0
+msgid "Next Number"
+msgstr "Prochain numéro"
+
+#. module: smile_account_template
+#: help:ir.sequence.template,number_next:0
+msgid "Next number of this sequence"
+msgstr "Prochain numéro de cette séquence"
+
+#. module: smile_account_template
+#: field:ir.sequence.template,padding:0
+msgid "Number padding"
+msgstr "Logueur du numéro"
+
+#. module: smile_account_template
+#: field:account.account.template.by_resource,model_id:0
+msgid "Object"
+msgstr "Objet"
+
+#. module: smile_account_template
+#: help:ir.sequence.template,padding:0
+msgid "OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."
+msgstr "OpenERP ajoutera automatiquement des '0' à gauche du 'Prochain numéro' pour obtenir la longueur requise du numéro."
+
+#. module: smile_account_template
+#: selection:account.journal.template,type:0
+msgid "Opening/Closing Situation"
+msgstr "Journal de situation Ouverture/Clôture"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "Other Configuration"
+msgstr "Autre configuration"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "Others"
+msgstr "Autres"
+
+#. module: smile_account_template
+#: field:account.model.line.template,partner_id:0
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_account_template
+#: selection:account.model.line.template,date_maturity:0
+msgid "Partner Payment Term"
+msgstr "Condition de règlement"
+
+#. module: smile_account_template
+#: field:ir.sequence.template,prefix:0
+msgid "Prefix"
+msgstr "Prefix"
+
+#. module: smile_account_template
+#: help:ir.sequence.template,prefix:0
+msgid "Prefix value of the record for the sequence"
+msgstr "Prefix value of the record for the sequence"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+#: selection:account.journal.template,type:0
+#: view:account.model.template:0
+msgid "Purchase"
+msgstr "Achat"
+
+#. module: smile_account_template
+#: selection:account.journal.template,type:0
+msgid "Purchase Refund"
+msgstr "Avoir fournisseur"
+
+#. module: smile_account_template
+#: field:account.model.line.template,quantity:0
+msgid "Quantity"
+msgstr "Quantité"
+
+#. module: smile_account_template
+#: model:ir.actions.act_window,name:smile_account_template.action_model_template
+#: model:ir.ui.menu,name:smile_account_template.menu_action_model_form
+msgid "Recurring Models"
+msgstr "Modèles récurrents"
+
+#. module: smile_account_template
+#: field:account.journal.template,refund_journal:0
+msgid "Refund Journal"
+msgstr "Journal d'avoirs"
+
+#. module: smile_account_template
+#: field:account.account.template.by_resource,res_id:0
+msgid "Resource Id"
+msgstr "Identifiant de la ressource"
+
+#. module: smile_account_template
+#: field:account.account.template.by_resource,res_name:0
+msgid "Resource Name"
+msgstr "Nom de la ressource"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+#: selection:account.journal.template,type:0
+#: view:account.model.template:0
+msgid "Sale"
+msgstr "Vente"
+
+#. module: smile_account_template
+#: selection:account.journal.template,type:0
+msgid "Sale Refund"
+msgstr "Avoir de vente"
+
+#. module: smile_account_template
+#: help:account.journal.template,type:0
+msgid "Select 'Sale' for Sale journal to be used at the time of making invoice. Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order. Select 'Cash' to be used at the time of making payment. Select 'General' for miscellaneous operations. Select 'Opening/Closing Situation' to be used at the time of new fiscal year creation or end of year entries generation."
+msgstr "Sélectionner \"Vente\" pour le journal des Ventes au moment de l'édition de la facture. Sélectionner \"Achat\" pour le Journal des achats au moment de l'approbation des bons de commande. Sélectionner \"Comptant\" au moment d'effectuer le paiement. Sélectionner \"Divers\" pour les opérations diverses.Sélectionner \"Ouverture / Fermeture\" lors de la création du nouvel exercice ou lors de la génération des écritures de fin d'année."
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+#: field:account.model.line.template,sequence:0
+#: view:ir.sequence.template:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: smile_account_template
+#: model:ir.model,name:smile_account_template.model_ir_sequence_template
+#: view:ir.sequence.template:0
+msgid "Sequence Template"
+msgstr "Modèle de séquences"
+
+#. module: smile_account_template
+#: model:ir.actions.act_window,name:smile_account_template.action_sequence_template
+#: view:ir.sequence.template:0
+#: model:ir.ui.menu,name:smile_account_template.menu_sequence_template
+msgid "Sequence Templates"
+msgstr "Modèles de séquences"
+
+#. module: smile_account_template
+#: field:account.journal.template,entry_posted:0
+msgid "Skip 'Draft' State for Manual Entries"
+msgstr "Sauter l'état \"Brouillon\" pour les écritures manuelles"
+
+#. module: smile_account_template
+#: model:ir.module.module,shortdesc:smile_account_template.module_meta_information
+msgid "Smile Account Template"
+msgstr "Smile Account Template"
+
+#. module: smile_account_template
+#: field:ir.sequence.template,suffix:0
+msgid "Suffix"
+msgstr "Suffix"
+
+#. module: smile_account_template
+#: help:ir.sequence.template,suffix:0
+msgid "Suffix value of the record for the sequence"
+msgstr "Suffix value of the record for the sequence"
+
+#. module: smile_account_template
+#: model:ir.model,name:smile_account_template.model_account_model_template
+msgid "Template for Account Model"
+msgstr "Modèle de modèles de pièce comptable"
+
+#. module: smile_account_template
+#: model:ir.model,name:smile_account_template.model_account_model_line_template
+#: model:ir.model,name:smile_account_template.model_account_model_template_line
+msgid "Template for Account Model Entries"
+msgstr "Modèle de modèles d'écriture comptable"
+
+#. module: smile_account_template
+#: model:ir.model,name:smile_account_template.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr "Modèles de plan comptable"
+
+#. module: smile_account_template
+#: help:account.model.line.template,amount_currency:0
+msgid "The amount expressed in an optional other currency."
+msgstr "Le montant exprimé dans une autre devise optionelle."
+
+#. module: smile_account_template
+#: sql_constraint:account.journal.template:0
+msgid "The code of the journal must be unique per chart template!"
+msgstr "Le code du journal doit être unique dans chaque société !"
+
+#. module: smile_account_template
+#: help:account.journal.template,code:0
+msgid "The code will be used to generate the numbers of the journal entries of this journal."
+msgstr "Le code sera utilisé pour générer les numéros des écritures de ce journal."
+
+#. module: smile_account_template
+#: help:account.journal.template,currency:0
+msgid "The currency used to enter statement"
+msgstr "La devise utilisée pour entrer les relevés"
+
+#. module: smile_account_template
+#: help:account.model.line.template,date_maturity:0
+msgid "The maturity date of the generated entries for this model. You can choose between the creation date or the creation date of the entries plus the partner payment terms."
+msgstr "The maturity date of the generated entries for this model. You can choose between the creation date or the creation date of the entries plus the partner payment terms."
+
+#. module: smile_account_template
+#: sql_constraint:account.journal.template:0
+msgid "The name of the journal must be unique per chart template!"
+msgstr "The name of the journal must be unique per chart template!"
+
+#. module: smile_account_template
+#: help:ir.sequence.template,number_increment:0
+msgid "The next number of the sequence will be incremented by this number"
+msgstr "The next number of the sequence will be incremented by this number"
+
+#. module: smile_account_template
+#: help:account.model.line.template,quantity:0
+msgid "The optional quantity on entries"
+msgstr "La quantité factultative sur les écritures"
+
+#. module: smile_account_template
+#: help:account.model.line.template,sequence:0
+msgid "The sequence field is used to order the resources from lower sequences to higher ones"
+msgstr "The sequence field is used to order the resources from lower sequences to higher ones"
+
+#. module: smile_account_template
+#: help:account.journal.template,user_id:0
+msgid "The user responsible for this journal"
+msgstr "L'utilisateur responsable pour ce journal"
+
+#. module: smile_account_template
+#: help:account.journal.template,sequence_id:0
+msgid "This field contains the informatin related to the numbering of the journal entries of this journal."
+msgstr "Ce champ contient les informations relatives à la numérotation des pièce comptables de ce journal."
+
+#. module: smile_account_template
+#: help:account.model.template,name:0
+msgid "This is a model for recurring accounting entries"
+msgstr "Ceci est un modèle pour des écritures comptable récurrentes"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+#: field:account.journal.template,type:0
+msgid "Type"
+msgstr "Type"
+
+#. module: smile_account_template
+#: field:account.journal.template,type_control_ids:0
+msgid "Type Controls"
+msgstr "Types de contrôle"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+#: field:account.journal.template,user_id:0
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: smile_account_template
+#: view:account.journal.template:0
+msgid "Validations"
+msgstr "Validations"
+
+#. module: smile_account_template
+#: view:ir.sequence.template:0
+msgid "Week of the year: %(woy)s"
+msgstr "Week of the year: %(woy)s"
+
+#. module: smile_account_template
+#: sql_constraint:account.model.line.template:0
+msgid "Wrong credit or debit value in model (Credit + Debit Must Be greater \"0\")!"
+msgstr "Crédit ou débit erroné dans le modèle (crédit + débit doit être supérieur à \"0\") !"
+
+#. module: smile_account_template
+#: sql_constraint:account.model.line.template:0
+msgid "Wrong credit or debit value in model (Credit Or Debit Must Be \"0\")!"
+msgstr "Débit ou crédit erroné dans le modèle (le crédit ou le débit doit être à \"0\") !"
