@@ -40,7 +40,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "init_xml": [],
     "update_xml": [
-        'res_company_view.xml',
+        'view/res_company_view.xml',
     ],
     'demo_xml': [],
     'installable': True,

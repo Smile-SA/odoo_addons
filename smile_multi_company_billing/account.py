@@ -19,6 +19,6 @@
 #
 ##############################################################################
 
-from smile_multi_company_account.account import FISCAL_POSITION_TYPES
+from smile_account_fiscal_position_journal.account import FISCAL_POSITION_TYPES
 
 FISCAL_POSITION_TYPES.append(('inter', 'Inter-company billing'))

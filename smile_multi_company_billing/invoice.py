@@ -138,7 +138,7 @@ class Invoice(osv.osv):
 
     def get_fiscal_position_domain(self, cr, uid, company_id, company_dest_id, context=None):
         if company_id and company_dest_id:
-            return [('company_id', '=', company_id), ('company_dest_id', '=', company_dest_id)]
+            return [('company_id', '=', company_id), ('company_dest_id', '=', company_dest_id), ('type', '=', 'inter')]
         return []
 
     def get_fiscal_position_id(self, cr, uid, company_id, company_dest_id, context=None):
@@ -150,7 +150,7 @@ class Invoice(osv.osv):
             company_obj = self.pool.get('res.company')
             company_name = company_obj.read(cr, uid, company_id, ['name'])['name']
             company_dest_name = company_obj.read(cr, uid, company_dest_id, ['name'])['name']
-            raise osv.except_osv(_('Error'), _('Cannot find fiscal position for the company %s to the company %s. Please create one')
+            raise osv.except_osv(_('Error'), _('Inter-billing fiscal position for the company %s to the company %s not found. Please create one')
                                  % (company_name, company_dest_name))
         return fiscal_position_ids[0]
 

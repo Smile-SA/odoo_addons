@@ -34,8 +34,8 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         'security/ir.model.access.csv',
     ],
     "update_xml": [
-        'invoice_view.xml',
-        'res_company_view.xml',
+        'view/invoice_view.xml',
+        'view/res_company_view.xml',
     ],
     'demo_xml': [],
     'test': [],
