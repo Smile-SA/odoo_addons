@@ -38,7 +38,7 @@ class ResUser(osv.osv):
     def _get_default_field_ids(self, cr, uid, ids, context=None):
         return self.pool.get('ir.model.fields').search(cr, uid, [
             ('model', '=', 'res.users'),
-            ('name', 'in', ('action_id', 'menu_id', 'groups_id')),
+            ('name', 'in', ('action_id', 'menu_id', 'groups_id', 'view')),
         ], context=context)
 
     _defaults = {
@@ -75,8 +75,11 @@ class ResUser(osv.osv):
         return super(ResUser, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
+        if not ids:
+            return True
         if isinstance(ids, (int, long)):
             ids = [ids]
+        ids = filter(bool, ids)
         if vals.get('user_profile_id'):
             for user in self.read(cr, uid, ids, ['user_profile'], context):
                 if user['user_profile']:
@@ -89,4 +92,10 @@ class ResUser(osv.osv):
                 if user_profile['user_profile'] and user_profile['user_ids']:
                     self.write(cr, uid, user_profile['user_ids'], {'user_profile_id': user_profile['id']}, context)
         return True
+
+    def copy_data(self, cr, uid, user_id, default=None, context=None):
+        default = default.copy() if default else {}
+        default['user_ids'] = []
+        return super(ResUser, self).copy_data(cr, uid, user_id, default, context)
+
 ResUser()
