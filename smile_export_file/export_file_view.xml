@@ -14,7 +14,7 @@
 						<field name="state"/>
 						<field name="filename" colspan="3"/>
 						<field name="extension"/>
-						<field name="extension_custom" nolabel="1" attrs="{'readonly': [('extension', '=', 'pdf')]}"/>
+						<field name="extension_custom" nolabel="1" attrs="{'readonly': [('extension', '!=', 'other')], 'required': [('extension', '=', 'other')]}"/>
 						<field name="encoding"/>
 					</group>
 					<notebook colspan="4">

@@ -140,7 +140,7 @@ def _text2pdf(string):
     return string
 
 
-def _generate_excel_file(content, delimiter, quotechar, lineterminator,col_num):
+def _generate_excel_file(content, delimiter, quotechar, lineterminator, col_num):
     workbook = xlwt.Workbook()
     sheet = workbook.add_sheet('sheet 1')
     csv_input = StringIO.StringIO(content)
@@ -169,10 +169,10 @@ def _generate_excel_file(content, delimiter, quotechar, lineterminator,col_num):
             elif EASYXF_EXPR.match(data):
                 style_str = EASYXF_EXPR.match(data).group(1)
                 params = (xlwt.easyxf(style_str),)
-                data = EASYXF_EXPR.sub('',data)
+                data = EASYXF_EXPR.sub('', data)
             if row == 0:
-                sheet.write_merge(0,0,0,col_num, data, *params)
-            else:        
+                sheet.write_merge(0, 0, 0, col_num, data, *params)
+            else:
                 sheet.write(row, col, data, *params)
     binary_file = StringIO.StringIO()
     workbook.save(binary_file)
@@ -301,7 +301,7 @@ class ir_model_export_file_template(Model):
             if not isinstance(sub_objects, list):
                 sub_objects = [sub_objects]
             for index, sub_object in enumerate(sub_objects):
-                localdict['line_number'] = index + 1
+                localdict['line_number'] += index
                 localdict['object'] = sub_object
                 line = []
                 for column in export_file.column_ids:
@@ -363,8 +363,9 @@ class ir_model_export_file_template(Model):
             for template_part in ['header', 'body', 'footer']:
                 if export_file.state == 'tab' and export_file.column_ids or getattr(export_file, template_part):
                     template_parts = template_part == 'body' and objects or [objects]
-                    for line in template_parts:
+                    for index, line in enumerate(template_parts):
                         localdict['object'] = line
+                        localdict['line_number'] = index + 1
                         try:
                             content.append(getattr(self, content_render_method)(cr, uid, export_file, template_part, localdict))
                         except Exception, e:
@@ -535,7 +536,7 @@ class ir_model_export_file_template(Model):
                     delimiter = eval(export_file.delimiter)
                     quotechar = eval(export_file.quotechar)
                     lineterminator = eval(export_file.lineterminator)
-                    file_content = _generate_excel_file(file_content, delimiter, quotechar, lineterminator,len(export_file.column_ids)-1)
+                    file_content = _generate_excel_file(file_content, delimiter, quotechar, lineterminator, len(export_file.column_ids) - 1)
                 else:
                     file_content = file_content.encode(export_file.encoding, 'replace')
                 self._save_file(cr, uid, export_file, filename, file_content, context)
