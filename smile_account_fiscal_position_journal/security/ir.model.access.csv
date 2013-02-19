@@ -1,0 +1,3 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_account_fiscal_position_journal","account.fiscal.position.journal all","model_account_fiscal_position_journal","base.group_user",1,0,0,0
+"access_account_fiscal_position_journal_manager","account.fiscal.position.journal account.manager","model_account_fiscal_position_journal","account.group_account_manager",1,1,1,1
