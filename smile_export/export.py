@@ -303,9 +303,7 @@ class ir_model_export(Model):
                 raise e
 
         try:
-            print 'done'
-            print self.write(cr, uid, export_id, {'state': 'done'}, context)
-            return True
+            return self.write(cr, uid, export_id, {'state': 'done'}, context)
         except Exception, e:
             logger.error("Could not mark export %s as done: %s" % (export_id, _get_exception_message(e)))
             raise e
