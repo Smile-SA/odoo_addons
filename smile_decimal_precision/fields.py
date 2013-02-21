@@ -28,7 +28,7 @@ native_field_to_dict = fields.field_to_dict
 
 def new_field_to_dict(model, cr, user, field, context=None):
     res = native_field_to_dict(model, cr, user, field, context)
-    if getattr(field, 'digits_compute', None):
+    if getattr(field, 'digits_compute', None) and field.digits_compute.func_closure:
         application = field.digits_compute.func_closure[0].cell_contents
         res['digits'] = dp.get_display_precision(cr, user, application)
     return res
