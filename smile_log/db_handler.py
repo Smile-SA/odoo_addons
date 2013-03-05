@@ -35,7 +35,7 @@ class SmileDBHandler(logging.Handler):
     def _get_cursor(self, dbname):
         cr = self._dbname_to_cr.get(dbname)
         if not cr or (cr and cr.closed):
-            db, pool = pooler.get_db_and_pool(dbname, pooljobs=False)
+            db, pool = pooler.get_db_and_pool(dbname)
             cr = db.cursor()
             self._dbname_to_cr[dbname] = cr
         return cr
@@ -100,7 +100,7 @@ class SmileDBLogger():
         assert isinstance(uid, (int, long)), 'uid should be an integer'
         self._logger = logging.getLogger('smile_log')
 
-        db, pool = pooler.get_db_and_pool(dbname, pooljobs=False)
+        db, pool = pooler.get_db_and_pool(dbname)
         pid = 0
         try:
             cr = db.cursor()
