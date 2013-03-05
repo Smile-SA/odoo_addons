@@ -28,15 +28,15 @@ native_fields_get = cache.fields_get
 
 
 def fields_view_get(model, view_id, view_type, context, hastoolbar=False, hassubmenu=False):
-    if model in cherrypy.config.get('cache.exceptions', '').split(', '):
+    if model in cherrypy.config.get('cache.exceptions', '').replace(' ', '').split(','):
         return rpc.RPCProxy(model).fields_view_get(view_id, view_type, context, hastoolbar, hassubmenu)
-    return native_fields_view_get(model, view_id, view_type, context, hastoolbar=hastoolbar, hassubmenu=hassubmenu, uid=rpc.session.uid)
+    return native_fields_view_get(model, view_id, view_type, context, hastoolbar, hassubmenu)
 
 
 def fields_get(model, fields, context):
-    if model in cherrypy.config.get('cache.exceptions', '').split(', '):
+    if model in cherrypy.config.get('cache.exceptions', '').replace(' ', '').split(','):
         return rpc.RPCProxy(model).fields_get(fields, context)
-    return native_fields_get(model, fields, context, uid=rpc.session.uid)
+    return native_fields_get(model, fields, context)
 
 cache.fields_view_get = fields_view_get
 cache.fields_get = fields_get
