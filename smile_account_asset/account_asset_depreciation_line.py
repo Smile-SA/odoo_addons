@@ -103,6 +103,14 @@ class AccountAssetDepreciationLine(orm.Model):
         cr.execute('SELECT id FROM account_asset_depreciation_line WHERE company_id IN %s', (tuple(ids),))
         return [line[0] for line in cr.fetchall()]
 
+    def _is_manual(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for line in self.browse(cr, uid, ids, context):
+            res[line.id] = getattr(line.asset_id, '%s_method' % line.depreciation_type) == 'manual'
+        return res
+
     _columns = {
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, ondelete='cascade'),
         'depreciation_type': fields.selection([('accounting', 'Accounting'), ('fiscal', 'Fiscal'), ('exceptional', 'Exceptional')], 'Type',
@@ -152,6 +160,7 @@ class AccountAssetDepreciationLine(orm.Model):
             'account.asset.asset': (_get_line_ids_from_assets, ['asset_type'], 5),
         }, readonly=True, ondelete='restrict'),
         'year': fields.function(_get_year, method=True, type='char', size=4, string='Year', store=True),
+        'is_manual': fields.function(_is_manual, method=True, type='boolean', string='Manual Depreciation'),
     }
 
     _defaults = {

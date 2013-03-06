@@ -22,4 +22,5 @@
     asset = self.pool.get('account.asset.asset').browse(cr, uid, ref("account_asset_asset_digitalasset0"), context)
     move_lines = asset.account_move_line_ids
     balance = sum([line.credit - line.debit for line in move_lines], 0.0)
+    log("balance = %s" % balance)
     assert round(asset.sale_result, 2) == round(balance, 2), "Valid Account Move Lines"

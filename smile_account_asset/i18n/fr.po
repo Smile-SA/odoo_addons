@@ -729,12 +729,6 @@ msgid "Unposted"
 msgstr "Non comptabilisé"
 
 #. module: smile_account_asset
-#: constraint:account.asset.asset:0
-#: constraint:account.asset.category:0
-msgid "Fiscal depreciation must be faster than accounting depreciation!"
-msgstr "L'amortissement fiscal doit être plus rapide que l'amortissement comptable !"
-
-#. module: smile_account_asset
 #: field:account.asset.asset,child_ids:0
 msgid "Children Assets"
 msgstr "Immobilisations secondaires"
@@ -1326,3 +1320,19 @@ msgstr "Non sortie"
 #: view:account.asset.asset:0
 msgid "Out Of Heritage"
 msgstr "Sortie du patrimoine"
+
+#. module: smile_account_asset
+#: selection:account.asset.asset,accounting_method:0
+#: selection:account.asset.asset,fiscal_method:0
+#: selection:account.asset.category,accounting_method:0
+#: selection:account.asset.category,fiscal_method:0
+#: selection:account.asset.history,accounting_method:0
+#: selection:account.asset.history,fiscal_method:0
+msgid "Manual"
+msgstr "Manuelle"
+
+#. module: smile_account_asset
+#: view:account.asset.asset:0
+msgid "Account Moves"
+msgstr "Ecritures comptables"
+

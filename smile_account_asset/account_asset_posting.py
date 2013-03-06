@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from copy import deepcopy
 import time
 
 from osv import orm
@@ -135,6 +134,9 @@ class AccountAssetAsset(orm.Model):
 
     def validate(self, cr, uid, ids, context=None):
         super(AccountAssetAsset, self).validate(cr, uid, ids, context)
+        context = context or {}
+        if context.get('do_not_create_account_move_at_validation'):
+            return True
         if isinstance(ids, (int, long)):
             ids = [ids]
         asset_ids = []
@@ -148,64 +150,6 @@ class AccountAssetAsset(orm.Model):
     def confirm_asset_sale(self, cr, uid, ids, context=None):
         super(AccountAssetAsset, self).confirm_asset_sale(cr, uid, ids, context)
         return self.create_move(cr, uid, ids, 'sale', context)
-
-    def _get_reversal_move_lines(self, cr, uid, asset, amount_to_reverse, default=None, context=None):
-        lines = []
-        asset_line_vals = (default or {}).copy()
-        asset_line_vals.update({
-            'account_id': asset.category_id.disposal_income_account_id.id,
-            'debit': 0.0,
-            'credit': amount_to_reverse,
-            'asset_id': asset.id,
-            'analytic_account_id': asset.category_id.analytic_account_id and
-            asset.category_id.analytic_account_id.id or False,
-        })
-        lines.append(asset_line_vals)
-        tax_obj = self.pool.get('account.tax')
-        initial_amounts = tax_obj.compute_all(cr, uid, asset.purchase_tax_ids, asset.purchase_value + amount_to_reverse, 1.0)
-        new_amounts = tax_obj.compute_all(cr, uid, asset.purchase_tax_ids, asset.purchase_value, 1.0)
-        tax_amount = (initial_amounts['total_included'] - initial_amounts['total']) - (new_amounts['total_included'] - new_amounts['total'])
-        if tax_amount:
-            initial_tax_lines = tax_obj._get_move_lines(cr, uid, asset.purchase_tax_ids, asset.purchase_value + amount_to_reverse,
-                                                        'purchase', default, context)
-            new_tax_lines = tax_obj._get_move_lines(cr, uid, asset.purchase_tax_ids, asset.purchase_value, 'purchase', default, context)
-            for index, line in enumerate(deepcopy(initial_tax_lines)):
-                line.update({
-                    'credit': initial_tax_lines[index]['debit'] - new_tax_lines[index]['debit'],
-                    'debit': initial_tax_lines[index]['credit'] - new_tax_lines[index]['credit'],
-                })
-                lines.append(line)
-        partner_line_vals = (default or {}).copy()
-        partner_line_vals.update({
-            'account_id': asset.supplier_id.property_account_payable.id,
-            'debit': amount_to_reverse + tax_amount,
-            'credit': 0.0,
-        })
-        lines.append(partner_line_vals)
-        return lines
-
-    def create_reversal_move(self, cr, uid, ids, amount_to_reverse, context=None):
-        move_ids = []
-        move_obj = self.pool.get('account.move')
-        context_copy = (context or {}).copy()
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for asset in self.browse(cr, uid, ids, context):
-            context_copy['company_id'] = asset.company_id.id
-            period_ids = self.pool.get('account.period').find(cr, uid, asset.depreciation_date_start, context_copy)
-            vals = {
-                'name': _('Asset Split: %s') % asset.name,
-                'ref': asset.code,
-                'date': time.strftime('%Y-%m-%d'),
-                'period_id': period_ids and period_ids[0] or False,
-                'journal_id': asset.category_id.asset_journal_id.id,
-                'company_id': asset.company_id.id,
-            }
-            default = vals.copy()
-            default['currency_id'] = asset.currency_id.id
-            vals['line_id'] = [(0, 0, x) for x in self._get_reversal_move_lines(cr, uid, asset, amount_to_reverse, default, context)]
-            move_ids.append(move_obj.create(cr, uid, vals, context))
-        return move_obj.post(cr, uid, move_ids, context)
 
     def _get_inventory_move_tax_lines(self, cr, uid, asset, context=None):
         tax_amounts = {}
@@ -379,11 +323,9 @@ class AccountAssetDepreciationLine(orm.Model):
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': asset.category_id.amortization_journal_id and asset.category_id.amortization_journal_id.id
                 or asset.category_id.asset_journal_id.id,
-            }
-            vals.update({
                 'company_id': asset.company_id.id,
-                'line_id': [(0, 0, x) for x in self._get_move_lines(cr, uid, depreciation_line, default=vals.copy(), context=context_copy)],
-            })
+            }
+            vals['line_id'] = [(0, 0, x) for x in self._get_move_lines(cr, uid, depreciation_line, default=vals.copy(), context=context_copy)]
             move_id = move_obj.create(cr, uid, vals, context)
             if not context_copy.get('asset_output'):
                 depreciation_line.write({'move_id': move_id})

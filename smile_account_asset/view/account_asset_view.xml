@@ -105,17 +105,17 @@
 									on_change="onchange_accounting_method(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"/>
 								<field name="accounting_periods"
 									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
-									attrs="{'required': [('accounting_method', '!=', 'none')], 'invisible': [('accounting_method', '=', 'none')]}"/>
+									attrs="{'required': [('accounting_method', 'not in', ('none', 'manual'))], 'invisible': [('accounting_method', 'in', ('none', 'manual'))]}"/>
 								<field name="accounting_degressive_rate"
 									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
 									attrs="{'invisible': [('accounting_method', '!=', 'degressive')], 'required': [('accounting_method', '=', 'degressive')]}"/>
 								<field name="accounting_prorata"
 									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
-									attrs="{'invisible': [('accounting_method', '=', 'none')]}"/>
+									attrs="{'invisible': [('accounting_method', 'in', ('none', 'manual'))]}"/>
 	                    		<field name="depreciation_date_stop"
-									attrs="{'invisible': [('accounting_method', '=', 'none')]}"/>
+									attrs="{'invisible': [('accounting_method', 'in', ('none', 'manual'))]}"/>
 								<field name="period_length"
-									attrs="{'invisible': [('accounting_method', '=', 'none')], 'required': [('accounting_method', '!=', 'none')]}"/>
+									attrs="{'invisible': [('accounting_method', 'in', ('none', 'manual'))], 'required': [('accounting_method', 'not in', ('none', 'manual'))]}"/>
 							</group>
 							<group colspan="2" col="2" name="fiscal_depreciation">
 								<separator string="Fiscal Depreciation" colspan="2"/>
@@ -123,20 +123,22 @@
 									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"/>
 								<field name="fiscal_periods"
 									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
-									attrs="{'required': [('fiscal_method', '!=', 'none')], 'invisible': [('fiscal_method', '=', 'none')]}"/>
+									attrs="{'required': [('fiscal_method', 'not in', ('none', 'manual'))], 'invisible': [('fiscal_method', 'in', ('none', 'manual'))]}"/>
 								<field name="fiscal_degressive_rate"
 									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
 									attrs="{'invisible': [('fiscal_method', '!=', 'degressive')], 'required': [('fiscal_method', '=', 'degressive')]}"/>
-								<field name="fiscal_prorata" attrs="{'invisible': [('fiscal_method', '=', 'none')]}"
+								<field name="fiscal_prorata" attrs="{'invisible': [('fiscal_method', 'in', ('none', 'manual'))]}"
 									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"/>
-								<field name="benefit_accelerated_depreciation" attrs="{'invisible': [('fiscal_method', '=', 'none')]}"/>
+								<field name="benefit_accelerated_depreciation" attrs="{'invisible': [('fiscal_method', 'in', ('none', 'manual'))]}"/>
 							</group>
 							<group colspan="4" col="2" name="depreciation_buttons" attrs="{'invisible': [('accounting_method', '=', 'none')]}">
 			                    <button type="object" name="compute_depreciation_board" string="Compute depreciation board" attrs="{'invisible':[('state','=','close')]}"/>
 			                    <button type="action" name="%(action_account_asset_depreciation_line_form)d" string="Depreciate Asset"
 			                    	context="{'default_asset_id': active_id}" attrs="{'invisible':[('state','in',('draft', 'close'))]}"/>
 							</group>
-							<field name="accounting_depreciation_line_ids" colspan="2" nolabel="1" mode="tree" attrs="{'invisible': [('accounting_method', '=', 'none')]}">
+							<field name="accounting_depreciation_line_ids" colspan="2" nolabel="1" mode="tree"
+								attrs="{'invisible': [('accounting_method', '=', 'none')], 'readonly': [('accounting_method', '!=', 'manual')]}"
+								context="{'default_is_manual': accounting_method == 'manual', 'default_depreciation_type': 'accounting'}">
 		                       <tree string="Accounting Depreciation Board" colors="blue:(move_id == False);black:(move_id != False)">
 		                          <field name="depreciation_date"/>
 		                          <field name="base_value"/>
@@ -151,14 +153,17 @@
 		                       <form string="Depreciation Line">
 		                          <field name="depreciation_date"/>
 		                          <field name="base_value"/>
-		                          <field name="depreciation_value" readonly="1"/>
+		                          <field name="depreciation_value" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}"/>
 		                          <field name="accumulated_value"/>
 		                          <field name="exceptional_value"/>
 		                          <field name="book_value"/>
+		                          <field name="is_manual" invisible="1"/>
+		                          <field name="depreciation_type" invisible="1"/>
 		                       </form>
 		                    </field>
 							<field name="fiscal_depreciation_line_ids" colspan="2" nolabel="1" mode="tree"
-								attrs="{'invisible': ['|', ('fiscal_method', '=', 'none'), ('benefit_accelerated_depreciation', '=', False)]}">
+								attrs="{'invisible': ['|', ('fiscal_method', '=', 'none'), ('benefit_accelerated_depreciation', '=', False)], 'readonly': [('fiscal_method', '!=', 'manual')]}"
+								context="{'default_is_manual': accounting_method == 'manual', 'default_depreciation_type': 'fiscal'}">
 		                       <tree string="Fiscal Depreciation Board" colors="blue:(move_id == False);black:(move_id != False)">
 		                          <field name="depreciation_date"/>
 		                          <field name="depreciation_value" readonly="1" string="Fiscal Depreciation"/>
@@ -170,9 +175,12 @@
 		                       </tree>
 		                       <form string="Depreciation Line">
 		                          <field name="depreciation_date"/>
-		                          <field name="depreciation_value" readonly="1" string="Fiscal Depreciation"/>
+		                          <field name="base_value"/>
+		                          <field name="depreciation_value" string="Fiscal Depreciation" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}"/>
 		                          <field name="accounting_value"/>
 		                          <field name="accelerated_value"/>
+		                          <field name="is_manual" invisible="1"/>
+		                          <field name="depreciation_type" invisible="1"/>
 		                       </form>
 		                    </field>
 	                   </page>
@@ -231,6 +239,9 @@
 		                       </form>
 		                    </field>
 	                   </page>
+	                   <page string="Account Moves" groups="account.group_account_user">
+		                   <field name="account_move_line_ids" nolabel="1" colspan="4"/>
+		               </page>
 	                   <page string="Notes">
 		                   <field name="note" nolabel="1" colspan="4"/>
 		               </page>

@@ -22,7 +22,9 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-DEPRECIATION_METHODS = ['linear', 'degressive']
+from openerp.tools import float_round
+
+DEPRECIATION_METHODS = ['linear', 'degressive', 'manual']
 
 
 def get_date(date, default_value=None):
@@ -74,7 +76,8 @@ class DepreciationBoard(object):
 
     def __init__(self, gross_value, method, years, degressive_rate=0.0, salvage_value=0.0, depreciation_start_date=None,
                  starts_on_first_day_of_month=False, disposal_date=None, period_length=12,
-                 readonly_values=None, exceptional_values=None, fiscalyear_start_day='01-01', accounting_years=0, rounding=2):
+                 readonly_values=None, exceptional_values=None, fiscalyear_start_day='01-01', accounting_years=0, rounding=2,
+                 depreciate_base_value=False):
 
         assert period_length in (1, 2, 3, 4, 6, 12), 'period_length must be in (1, 2, 3, 4, 6, 12)'
         assert method in DEPRECIATION_METHODS, 'method must be in %s' % DEPRECIATION_METHODS
@@ -88,11 +91,12 @@ class DepreciationBoard(object):
         if starts_on_first_day_of_month:
             self.depreciation_start_date += relativedelta(day=1)
         self.readonly_values = check_and_format_vals(readonly_values, 'readonly_values')
-        self.exceptional_values = check_and_format_vals(exceptional_values, 'readonly_values')
+        self.exceptional_values = check_and_format_vals(exceptional_values, 'exceptional_values')
         self.fiscalyear_start_day = fiscalyear_start_day
         self.period_length = period_length
         self.accounting_years = accounting_years or years
         self.rounding = rounding
+        self.depreciate_base_value = depreciate_base_value
         self.disposal_date = get_date(disposal_date)
 
         self.prorata_temporis = get_prorata_temporis(self.depreciation_start_date, self.fiscalyear_start_day)
@@ -106,7 +110,7 @@ class DepreciationBoard(object):
         self.depreciation_position = 0
         self.base_value = self.gross_value - self.salvage_value
         self.years = self.method_years
-        self.total_years = self.accounting_years
+        self.total_years = max(self.accounting_years, self.method_years)
         self.accumulated_value = 0.0
         self.accumulated_exceptional_value = 0.0
         self.book_value = self.gross_value
@@ -191,6 +195,13 @@ class DepreciationBoard(object):
         new_base_value = self.base_value - depreciation_value
         return depreciation_value, new_base_value, readonly
 
+    def _compute_manual_amortization(self):
+        depreciation_value, readonly = self._get_readonly_value()
+        base_value = self.base_value
+        if self.depreciate_base_value:
+            base_value -= depreciation_value
+        return depreciation_value, base_value, readonly
+
     def _get_exceptional_value(self):
         exceptional_value = 0.0
         if self.depreciation_position <= (self.years + self.is_linear_and_doesnt_start_on_fiscalyear_start_day):
@@ -251,12 +262,12 @@ class DepreciationBoardLine(object):
     def __init__(self, depreciation_date, base_value, depreciation_value, accumulated_value, book_value,
                  exceptional_value=0.0, book_value_wo_exceptional=0.0, readonly=False, rounding=2):
         self.depreciation_date = depreciation_date
-        self.base_value = round(base_value, rounding)
-        self.depreciation_value = round(depreciation_value, rounding)
-        self.accumulated_value = round(accumulated_value, rounding)
-        self.book_value = round(book_value, rounding)
-        self.exceptional_value = round(exceptional_value, rounding)
-        self.book_value_wo_exceptional = round(book_value_wo_exceptional or book_value, rounding)
+        self.base_value = float_round(base_value, precision_digits=rounding)
+        self.depreciation_value = float_round(depreciation_value, precision_digits=rounding)
+        self.accumulated_value = float_round(accumulated_value, precision_digits=rounding)
+        self.book_value = float_round(book_value, precision_digits=rounding)
+        self.exceptional_value = float_round(exceptional_value, precision_digits=rounding)
+        self.book_value_wo_exceptional = float_round(book_value_wo_exceptional or book_value, precision_digits=rounding)
         self.readonly = readonly
 
     def __repr__(self):
@@ -339,7 +350,7 @@ class DepreciationBoardLine(object):
                 period_dates.append(board.disposal_date)
             stop_period_date = min(stop_period_date, board.disposal_date)
         else:
-            depreciation_stop_date = board.depreciation_start_date + relativedelta(years=board.method_years, days=-1)
+            depreciation_stop_date = board.depreciation_start_date + relativedelta(years=max(board.method_years, board.accounting_years), days=-1)
             if depreciation_stop_date not in period_dates:
                 depreciation_stop_date += relativedelta(months=board.period_length)
             stop_period_date = min(stop_period_date, depreciation_stop_date)

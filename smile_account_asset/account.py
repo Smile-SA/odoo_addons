@@ -19,8 +19,21 @@
 #
 ##############################################################################
 
-from osv import orm
+from osv import orm, fields
 from tools.translate import _
+
+
+class AccountMove(orm.Model):
+    _inherit = 'account.move'
+
+    _columns = {
+        'asset_depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'move_id', 'Asset Depreciation Lines', readonly=True),
+    }
+
+    def copy_data(self, cr, uid, move_id, default=None, context=None):
+        default = default or {}
+        default['asset_depreciation_line_ids'] = []
+        return super(AccountMove, self).copy_data(cr, uid, move_id, default, context=context)
 
 
 class AccountTax(orm.Model):

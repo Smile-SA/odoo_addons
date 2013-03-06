@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import time
 
 import decimal_precision as dp
@@ -40,6 +42,8 @@ class AccountAssetAsset(orm.Model):
 
     def _get_depreciation_infos(self, cr, uid, ids, name, arg, context=None):
         res = {}
+        if not ids:
+            return res
         cr.execute("SELECT asset_id as id, round(sum(debit-credit)) as amount "
                    "FROM account_move_line WHERE asset_id IN %s GROUP BY asset_id", (tuple(ids),))
         res.update(dict(cr.fetchall()))
@@ -56,8 +60,10 @@ class AccountAssetAsset(orm.Model):
                 book_value = res.get(asset['id'], 0.0)
             else:
                 book_value = asset['salvage_value']
+            depreciation_date_stop = datetime.strptime(asset['depreciation_date_start'], '%Y-%m-%d')
+            depreciation_date_stop += relativedelta(years=max(asset['accounting_periods'], asset['fiscal_periods']))
             res[asset['id']] = {
-                'depreciation_date_stop': get_period_stop_date(asset['depreciation_date_start'],
+                'depreciation_date_stop': get_period_stop_date(depreciation_date_stop,
                                                                fiscalyear_start_day,
                                                                asset['period_length']).strftime('%Y-%m-%d'),
                 'benefit_accelerated_depreciation': accelerated_depreciation,
@@ -141,9 +147,9 @@ class AccountAssetAsset(orm.Model):
                                                   multi='depreciation'),
 
         'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True),
-        'accounting_depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True,
+        'accounting_depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=False,
                                                             domain=[('depreciation_type', '=', 'accounting')]),
-        'fiscal_depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True,
+        'fiscal_depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=False,
                                                         domain=[('depreciation_type', '=', 'fiscal')]),
         'exceptional_depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True,
                                                              domain=[('depreciation_type', '=', 'exceptional')]),
@@ -238,9 +244,6 @@ class AccountAssetAsset(orm.Model):
                 return False
         return True
 
-    def _check_fiscal_depreciation_length(self, cr, uid, ids, context=None):
-        return self._check_asset(cr, uid, ids, "asset.fiscal_method != 'none' and asset.fiscal_periods > asset.accounting_periods", context)
-
     def _check_asset_type(self, cr, uid, ids, context=None):
         return self._check_asset(cr, uid, ids, "asset.asset_type == 'purchase_refund' and not asset.parent_id", context)
 
@@ -275,8 +278,6 @@ class AccountAssetAsset(orm.Model):
         (_check_company, 'Asset must be linked to the same company as category', ['company_id', 'category_id']),
         (_check_recursion, 'You cannot create recursive assets!', ['parent_id']),
         (_check_degressive_rates, 'Degressive rates must be percentages!', ['accounting_degressive_rate', 'fiscal_degressive_rate']),
-        (_check_fiscal_depreciation_length, 'Fiscal depreciation must be faster than accounting depreciation!',
-         ['accounting_periods', 'fiscal_periods']),
         (_check_asset_type, 'Purchase refund is possible only for secondary assets', ['asset_type']),
         (_check_quantity, 'Quantity cannot be negative!', ['quantity']),
         (_check_purchase_value, 'Gross value cannot be negative!', ['purchase_value']),
@@ -312,11 +313,6 @@ class AccountAssetAsset(orm.Model):
 
     def onchange_accelerated_depreciation(self, cr, uid, ids, accounting_method, accounting_periods, accounting_degressive_rate, accounting_prorata,
                                           fiscal_method, fiscal_periods, fiscal_degressive_rate, fiscal_prorata, context=None):
-        if fiscal_periods > accounting_periods:
-            return {'warning': {
-                'title': _('Warning'),
-                'message': _('Fiscal depreciation must be faster than accounting depreciation!'),
-            }}
         return {'value': {'benefit_accelerated_depreciation': get_accelerated_depreciation(**{
             'accounting_method': accounting_method,
             'accounting_periods': accounting_periods,
@@ -361,14 +357,7 @@ class AccountAssetAsset(orm.Model):
             res['value']['depreciation_date_start'] = purchase_date
         return res
 
-    def _compute_depreciation_lines(self, cr, uid, asset_id, depreciation_type='accounting', context=None):
-        depreciation_line_obj = self.pool.get('account.asset.depreciation.line')
-        # Delete old lines
-        line_ids_to_delete = depreciation_line_obj.search(cr, uid, [('asset_id', '=', asset_id),
-                                                                    ('depreciation_type', '=', depreciation_type),
-                                                                    ('move_id', '=', False)], context=context)
-        depreciation_line_obj.unlink(cr, uid, line_ids_to_delete, context)
-        # Create new lines
+    def _get_depreciation_arguments(self, cr, uid, asset_id, depreciation_type, context):
         asset = self.browse(cr, uid, asset_id, context)
         salvage_value = depreciation_type == 'accounting' and asset.salvage_value or 0.0
         method = getattr(asset, '%s_method' % depreciation_type)
@@ -380,34 +369,66 @@ class AccountAssetAsset(orm.Model):
         exceptional_values = {}
         for line in asset.depreciation_line_ids:
             period_stop_month = get_period_stop_date(line.depreciation_date, fiscalyear_start_day, asset.period_length).strftime('%Y-%m')
-            if line.depreciation_type == depreciation_type and line.move_id:
+            if line.depreciation_type == depreciation_type and (line.move_id or method == 'manual'):
                 readonly_values.setdefault(period_stop_month, 0.0)
                 readonly_values[period_stop_month] += line.depreciation_value
             elif line.depreciation_type == 'exceptional':
                 exceptional_values.setdefault(period_stop_month, 0.0)
                 exceptional_values[period_stop_month] += line.depreciation_value
-        board = DepreciationBoard(asset.purchase_value, method, periods, degressive_rate, salvage_value,
-                                  asset.depreciation_date_start, starts_on_first_day_of_month, asset.sale_date or None, asset.period_length,
-                                  readonly_values, exceptional_values, fiscalyear_start_day, asset.accounting_periods,
-                                  rounding=len(str(asset.company_id.currency_id.rounding).split('.')[-1]))
+        context = context or {}
+        return {
+            'gross_value': asset.purchase_value,
+            'method': method,
+            'years': periods,
+            'degressive_rate': degressive_rate,
+            'salvage_value': salvage_value,
+            'depreciation_start_date': asset.depreciation_date_start,
+            'starts_on_first_day_of_month': starts_on_first_day_of_month,
+            'disposal_date': asset.sale_date or None,
+            'period_length': asset.period_length,
+            'readonly_values': readonly_values,
+            'exceptional_values': exceptional_values,
+            'fiscalyear_start_day': fiscalyear_start_day,
+            'accounting_years': asset.accounting_periods,
+            'rounding': len(str(asset.company_id.currency_id.rounding).split('.')[-1]),
+            'depreciate_base_value': context.get('depreciate_%s_base_value' % depreciation_type),
+        }
+
+    def _update_or_create_depreciation_lines(self, cr, uid, asset_id, line_infos, depreciation_type, context):
         asset = self.browse(cr, uid, asset_id, context)
-        board_lines = board.compute()
-        for line in board_lines:
-            vals = line.__dict__
-            vals['depreciation_date'] = vals['depreciation_date'].strftime('%Y-%m-%d')
+        for vals in line_infos:
+            vals.update({
+                'asset_id': asset.id,
+                'depreciation_type': depreciation_type,
+                'depreciation_date': vals['depreciation_date'].strftime('%Y-%m-%d'),
+            })
             readonly = vals['readonly']
             del vals['readonly']
             if readonly:
-                for dline in asset.depreciation_line_ids:
-                    if dline.depreciation_date == vals['depreciation_date'] and dline.move_id:
+                for dline in getattr(asset, '%s_depreciation_line_ids' % depreciation_type):
+                    if dline.depreciation_date == vals['depreciation_date'] and \
+                            (dline.move_id or getattr(dline.asset_id, '%s_method' % depreciation_type) == 'manual'):
                         dline.write(vals)
                         break
                 continue
-            vals['asset_id'] = asset.id
-            vals['depreciation_type'] = depreciation_type
+            self.pool.get('account.asset.depreciation.line').create(cr, uid, vals, context)
             vals['previous_accumulated_value'] = vals['accumulated_value'] - vals['depreciation_value']
-            depreciation_line_obj.create(cr, uid, line.__dict__, context)
         return True
+
+    def _compute_depreciation_lines(self, cr, uid, asset_id, depreciation_type='accounting', context=None):
+        depreciation_line_obj = self.pool.get('account.asset.depreciation.line')
+        # Delete old lines
+
+        line_ids_to_delete = depreciation_line_obj.search(cr, uid, [('asset_id', '=', asset_id),
+                                                                    ('depreciation_type', '=', depreciation_type),
+                                                                    ('move_id', '=', False),
+                                                                    ('asset_id.%s_method' % depreciation_type, '!=', 'manual')], context=context)
+        depreciation_line_obj.unlink(cr, uid, line_ids_to_delete, context)
+        # Create new lines
+        kwargs = self._get_depreciation_arguments(cr, uid, asset_id, depreciation_type, context)
+        board = DepreciationBoard(**kwargs)
+        line_infos = [line.__dict__ for line in board.compute()]
+        return self._update_or_create_depreciation_lines(cr, uid, asset_id, line_infos, depreciation_type, context)
 
     def compute_depreciation_board(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):

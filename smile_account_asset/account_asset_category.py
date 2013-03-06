@@ -22,7 +22,7 @@
 from osv import orm, fields
 from tools.translate import _
 
-DEPRECIATION_METHODS = [('none', 'None'), ('linear', 'Linear'), ('degressive', 'Degressive')]
+DEPRECIATION_METHODS = [('none', 'None'), ('linear', 'Linear'), ('degressive', 'Degressive'), ('manual', 'Manual')]
 DEPRECIATION_FIELDS = ['method', 'periods', 'degressive_rate']
 DEPRECIATION_TYPES = ['accounting', 'fiscal']
 ALL_DEPRECIATION_FIELDS = ['%s_%s' % (depreciation_type, field) for field in DEPRECIATION_FIELDS for depreciation_type in DEPRECIATION_TYPES]
@@ -158,16 +158,6 @@ class AccountAssetCategory(orm.Model):
                     return False
         return True
 
-    def _check_fiscal_depreciation_length(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for category in self.browse(cr, uid, ids, context):
-            if category.accounting_method == 'none' or category.fiscal_method == 'none':
-                continue
-            if category.fiscal_periods > category.accounting_periods:
-                return False
-        return True
-
     def _check_period_length(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -198,19 +188,12 @@ class AccountAssetCategory(orm.Model):
     _constraints = [
         (_check_companies, 'Accounts and journal must be linked to the same company as asset category', ACCOUNTING_FIELDS),
         (_check_degressive_rates, 'Degressive rates must be percentages!', ['accounting_degressive_rate', 'fiscal_degressive_rate']),
-        (_check_fiscal_depreciation_length, 'Fiscal depreciation must be faster than accounting depreciation!',
-         ['accounting_periods', 'fiscal_periods']),
         (_check_period_length, 'Period length must be equal to 1, 2, 3, 4, 6 or 12 months!', ['period_length']),
         (_check_depreciation_length, 'Depreciation length must be a multiple of 12 (months)!', ['period_length', 'accounting_periods']),
     ]
 
     def onchange_accelerated_depreciation(self, cr, uid, ids, accounting_method, accounting_periods, accounting_degressive_rate, accounting_prorata,
                                           fiscal_method, fiscal_periods, fiscal_degressive_rate, fiscal_prorata, context=None):
-        if fiscal_periods > accounting_periods:
-            return {'warning': {
-                'title': _('Warning'),
-                'message': _('Fiscal depreciation must be faster than accounting depreciation!'),
-            }}
         return {'value': {'benefit_accelerated_depreciation': get_accelerated_depreciation(**{
             'accounting_method': accounting_method,
             'accounting_periods': accounting_periods,
