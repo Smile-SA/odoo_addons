@@ -1,0 +1,15 @@
+-
+  Create Accounting / Invoice
+-
+  !record {model: import.data.run.object, id: planning_planning}:
+    run_id: smile_import_data.run0
+    name: Planning
+    sequence: 0
+    model_id: solucom_hr.model_planning_planning
+    import_type: import_data 
+    import_script_name: 
+    validation_script_name : 
+    apply_generic_validation_ok: True
+    check_key_ok: True
+    check_nb_columns_ok: True
+    validation_script_name: script

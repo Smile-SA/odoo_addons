@@ -149,7 +149,7 @@ class SmileScript(osv.osv):
             'logger': LOGGER,
             'intervention_id': intervention_id,
         }
-        exec(script.code, exec_locals, {})
+        exec(script.code, exec_locals)
 
     def dump_database(self, cr):
         dump_path = tools.config.get('smile_script_dump_path')

@@ -1,0 +1,13 @@
+id,maintenance_ok,internal_profile_id/id,product_id/id,price_unit,product_uom_qty,price_subtotal,lot_type,time_spent_ok,free_days,project_id/id,advancement_ok,bl_id/id
+ID,Maintenance,Profil de refacturation,Product,Unit Price,Nb days,Subtotal,Lot type,Time spent,Quantity of free days,Lot,Advancement,Business Line
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,"Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file product.product.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file product.product.csv
+
+                                As exemple import_data.product1 The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Selection field type: Autorised value: ['product', 'maintenance', 'advancement', 'time_spent', 'internal', 'subcontracting', 'r_and_d'] 
+Value corresponding: 
+{'product': 'Product', 'maintenance': 'Maintenance', 'advancement': 'Advancement', 'time_spent': 'Time spent', 'internal': 'Internal', 'subcontracting': 'Subcontracting', 'r_and_d': 'R&D'} The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file project.project.csv
+
+                                As exemple import_data.product1 The field is required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file practice.bl.csv
+
+                                As exemple import_data.product1 The field is not required"

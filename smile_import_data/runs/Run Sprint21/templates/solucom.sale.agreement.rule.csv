@@ -1,0 +1,7 @@
+id,amount_max,amount_max_required,agreement_id/id,amount_min_not_required,amount_min,type,value
+ID,Amount Max.,Amount Max. Required,Business Agreement,Amount Min. Not Required,Amount Min.,Type,Value
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file solucom.sale.agreement.csv
+
+                                As exemple import_data.product1 The field is required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Selection field type: Autorised value: ['slot', 'global', 'fixed'] 
+Value corresponding: 
+{'slot': 'Discount by slot (%)', 'global': 'Global discount (%)', 'fixed': 'Regularization'} The field is required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is required

@@ -1,0 +1,5 @@
+id,perimeter,targeted_adr,active,practice_initials,name,billable_ok
+ID,Périmetre,TJM,Active,Initials,Name of the practice,Billable
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,"Selection field type: Autorised value: ['total', 'constant'] 
+Value corresponding: 
+{'total': 'Total', 'constant': 'Constant'} The field is required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Boolean field: Autorised value: ""True"" or ""False"".  The field is not required",Char field type: Autorised value: a string with 16 as max size The field is required,Char field type: Autorised value: a string with 64 as max size The field is required,"Boolean field: Autorised value: ""True"" or ""False"".  The field is not required"

@@ -1,0 +1,63 @@
+id,code,supplier_practice_id/id,partner_bank_id/id,lot_type_id/id,company_id/id,currency_id/id,agreement_id/id,payroll_section_id/id,adjustment,bl_id/id,employee_id/id,user_id/id,sale_company_id/id,journal_id/id,supplier_company_id/id,type,supplier_employee_id/id,end_of_month_presence,account_id/id,general_account_id/id,affair_id/id,supplier_department_id/id,employee_attendance_rate,create_period_id/id,period_id/id,sales_margin,date,origin_res_id,regul_id/id,active,supplier_bl_id/id,move_id/id,name,origin_model,payroll_account_id/id,cancel_line,product_id/id,ref,practice_id/id,project_id/id,hr_employee_attendance_rate,unit_amount,product_uom_id/id,amount_currency,amount,regul_type_id/id
+ID,Code,Supplier Practice,Bank Account,Type of lot,Company,Account currency,Accord cadre,Payroll section,Adjustment,BL,Employee,User,Société de l IA,Analytic Journal,Supplier Company,Type,Supplier Employee,End of month presence,Analytic Account,General Account,Affair,Supplier Department,Employee attendance rate,Create Period,Period,Sales Margin,Date,Origin Resource Id,Regularization,Active,Supplier BL,Move Line,Description,Origin Model,Payroll account,Cancel,Product,Ref.,Practice,Project,Employee attendance rate,Quantity,UoM,Amount currency,Amount,Regularization Type
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,Char field type: Autorised value: a string with 8 as max size The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file practice.practice.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.partner.bank.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file lot.type.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.company.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.currency.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file solucom.sale.agreement.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.payroll.section.csv
+
+                                As exemple import_data.product1 The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file practice.bl.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.employee.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.users.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.company.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.journal.csv
+
+                                As exemple import_data.product1 The field is required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.company.csv
+
+                                As exemple import_data.product1 The field is not required","Selection field type: Autorised value: ['actual', 'forecast'] 
+Value corresponding: 
+{'actual': 'Actual', 'forecast': 'Forecast'} The field is required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.employee.csv
+
+                                As exemple import_data.product1 The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.account.csv
+
+                                As exemple import_data.product1 The field is required","Many2one field type: Autorised value: 'module_name.key' defined on the file account.account.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file affair.affair.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.department.csv
+
+                                As exemple import_data.product1 The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.period.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.period.csv
+
+                                As exemple import_data.product1 The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,Date field type: Autorised value: AAAA-MM-DD as exemple: 2012-05-28 The field is required,"Intedger field type: Autorised value: XXXXX as exemple: 125 Please note that the number is without ',' or '.' The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file lot.regularization.csv
+
+                                As exemple import_data.product1 The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file practice.bl.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file account.move.line.csv
+
+                                As exemple import_data.product1 The field is not required",Char field type: Autorised value: a string with 256 as max size The field is required,Char field type: Autorised value: a string with 64 as max size The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.account.csv
+
+                                As exemple import_data.product1 The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file product.product.csv
+
+                                As exemple import_data.product1 The field is not required",Char field type: Autorised value: a string with 64 as max size The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file practice.practice.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file project.project.csv
+
+                                As exemple import_data.product1 The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file product.uom.csv
+
+                                As exemple import_data.product1 The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is required,"Many2one field type: Autorised value: 'module_name.key' defined on the file lot.regularization.type.csv
+
+                                As exemple import_data.product1 The field is not required"

@@ -1,0 +1,27 @@
+id,current_mobility_ok,cancel_ok,create_date,last_modified_mobility_date,stop_date,productivity_rate,initial_company_id/id,modify_hr_ok,initial_bl_id/id,period_id/id,initial_start_date,bl_id/id,employee_id/id,modify_ok,initial,company_id/id,practice_id/id,validation_date,cancel_date,state,initial_practice_id/id,experience_id/id,category_id/id,start_date,department_id/id
+ID,Is current mobility,Cancel allowed,Create Date,Last Modified Mobility Date,Stop date,Coeff. de Prod.,Initial Company,Modification allowed,Initial BL,Period,Initial Start Date,Business Line,Employee,Modification allowed,Intial Mobility,Company,Practice,Annonce mobilité,Annulation mobilité,State,Initial Practice,Experience,Category,Date,Department
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,"Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required",Datetime field type: Autorised value: AAAA-MM-DD HH:MM:SS as exemple: 2012-05-28 12:30:SS The field is not required,Date field type: Autorised value: AAAA-MM-DD as exemple: 2012-05-28 The field is not required,Date field type: Autorised value: AAAA-MM-DD as exemple: 2012-05-28 The field is not required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is required,"Many2one field type: Autorised value: 'module_name.key' defined on the file res.company.csv
+
+                                As exemple import_data.product1 The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file practice.bl.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.period.csv
+
+                                As exemple import_data.product1 The field is not required",Date field type: Autorised value: AAAA-MM-DD as exemple: 2012-05-28 The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file practice.bl.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.employee.csv
+
+                                As exemple import_data.product1 The field is required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.company.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file practice.practice.csv
+
+                                As exemple import_data.product1 The field is not required",Datetime field type: Autorised value: AAAA-MM-DD HH:MM:SS as exemple: 2012-05-28 12:30:SS The field is not required,Datetime field type: Autorised value: AAAA-MM-DD HH:MM:SS as exemple: 2012-05-28 12:30:SS The field is not required,"Selection field type: Autorised value: ['done', 'draft', 'canceled'] 
+Value corresponding: 
+{'done': 'Done', 'draft': 'Draft', 'canceled': 'Canceled'} The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file practice.practice.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.employee.experience.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.employee.category.csv
+
+                                As exemple import_data.product1 The field is required",Date field type: Autorised value: AAAA-MM-DD as exemple: 2012-05-28 The field is required,"Many2one field type: Autorised value: 'module_name.key' defined on the file hr.department.csv
+
+                                As exemple import_data.product1 The field is not required"

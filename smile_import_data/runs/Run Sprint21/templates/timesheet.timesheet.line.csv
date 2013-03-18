@@ -1,0 +1,11 @@
+id,analytic_account_id/id,employee_id/id,sequence,period_date_stop,solucom_type,period_days_number,delete_property,analytic_period_id/id,write_date,timesheet_id/id,period_date_start,total,input_chain,display_property
+ID,Analytic Account,Employee,Sequence,Period End Date,Line Account type,Period Days Number,Delete property,Period,Update date,Timesheet,Period Start Date,Total,Input Chain,Display property
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,"Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.account.csv
+
+                                As exemple import_data.product1 The field is required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.employee.csv
+
+                                As exemple import_data.product1 The field is not required","Intedger field type: Autorised value: XXXXX as exemple: 125 Please note that the number is without ',' or '.' The field is not required",Date field type: Autorised value: AAAA-MM-DD as exemple: 2012-05-28 The field is not required,Char field type: Autorised value: a string with 16 as max size The field is not required,"Intedger field type: Autorised value: XXXXX as exemple: 125 Please note that the number is without ',' or '.' The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.period.csv
+
+                                As exemple import_data.product1 The field is not required",Datetime field type: Autorised value: AAAA-MM-DD HH:MM:SS as exemple: 2012-05-28 12:30:SS The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file timesheet.timesheet.csv
+
+                                As exemple import_data.product1 The field is required",Date field type: Autorised value: AAAA-MM-DD as exemple: 2012-05-28 The field is not required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,Text field type: Autorised value: Text The field is required,Char field type: Autorised value: a string with 32 as max size The field is not required

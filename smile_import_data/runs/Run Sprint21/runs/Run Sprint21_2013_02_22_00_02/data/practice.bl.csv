@@ -1,0 +1,103 @@
+id,name,bl_initials,practice_id/id,billable_ok
+solucom_import_data.unite10,ASIL-RH & ADMINISTRATION,ASIL-RH&ADM,solucom_import_data.practice3,0
+solucom_import_data.unite100,S&RM,S&RM,solucom_import_data.practice13,1
+solucom_import_data.unite101,T&I,T&I,solucom_import_data.practice16,1
+solucom_import_data.unite102,TSI2,TSI2,solucom_import_data.practice18,1
+solucom_import_data.unite103,TSIP,TSIP,solucom_import_data.practice17,1
+solucom_import_data.unite11,ASIT-FINANCE,ASIT-FIN,solucom_import_data.practice4,0
+solucom_import_data.unite12,ASIT-IA,ASIT-IA,solucom_import_data.practice4,0
+solucom_import_data.unite13,ASIT-RH & ADMINISTRATION,ASIT-RH&ADM,solucom_import_data.practice4,0
+solucom_import_data.unite14,SECURITE,ASSI,solucom_import_data.practice13,1
+solucom_import_data.unite15,MGT DE LA SECURITE,ASSI-MDS,solucom_import_data.practice13,1
+solucom_import_data.unite16,PROTECTION INFORMATION,ASSI-PI,solucom_import_data.practice13,1
+solucom_import_data.unite17,ASSURANCE,ASSU,solucom_import_data.practice2,1
+solucom_import_data.unite18,NEWARCH_OLD,BL-NEW,solucom_import_data.practice5,1
+solucom_import_data.unite19,SOLUCOMDV_OLD,BL-SDV,solucom_import_data.practice5,1
+solucom_import_data.unite2,ALT-RH & ADMINISTRATION,ALT-RH&ADM,solucom_import_data.practice2,0
+solucom_import_data.unite20,CDT_OLD,CDT,solucom_import_data.practice14,1
+solucom_import_data.unite21,CDT S,CDT S,solucom_import_data.practice14,1
+solucom_import_data.unite22,CDTS,CDTS,solucom_import_data.practice14,1
+solucom_import_data.unite23,COMMUNICATION,COMM,solucom_import_data.practice12,0
+solucom_import_data.unite24,DATACENTER&DESK SERV_OLD,D2S,solucom_import_data.practice5,1
+solucom_import_data.unite25,Datacenter & Cloud Serv,DCS,solucom_import_data.practice5,1
+solucom_import_data.unite26,DIRECTION,DIR,solucom_import_data.practice12,0
+solucom_import_data.unite27,DIRCO,DIRCO,solucom_import_data.practice12,0
+solucom_import_data.unite28,Enterprise & Project Arch,EPA,solucom_import_data.practice5,1
+solucom_import_data.unite29,EVEHO ACTUARIAT,EVA,solucom_import_data.practice6,1
+solucom_import_data.unite3,ASI-DIRECTION,ASI-DIR,solucom_import_data.practice5,0
+solucom_import_data.unite30,EVEHO CONSEIL,EVC,solucom_import_data.practice6,1
+solucom_import_data.unite31,EVE-FINANCE,EVE-FIN,solucom_import_data.practice6,0
+solucom_import_data.unite32,EVE-RH & ADMINISTRATION,EVE-RH&ADM,solucom_import_data.practice6,0
+solucom_import_data.unite33,EVEHO SERVICES,EVS,solucom_import_data.practice6,1
+solucom_import_data.unite34,FINANCE,FIN,solucom_import_data.practice12,0
+solucom_import_data.unite35,GOUVERNANCE OP OLD,GOOP,solucom_import_data.practice10,1
+solucom_import_data.unite36,GOUVERNANCE OP S,GOOPS,solucom_import_data.practice10,1
+solucom_import_data.unite37,GOUV-FINANCE,GOUV-FIN,solucom_import_data.practice10,0
+solucom_import_data.unite38,GOUV-IA,GOUV-IA,solucom_import_data.practice10,0
+solucom_import_data.unite39,GOUV-RH & ADMINISTRATION,GOUV-RH&ADM,solucom_import_data.practice10,0
+solucom_import_data.unite4,ASI-FINANCE,ASI-FIN,solucom_import_data.practice5,0
+solucom_import_data.unite40,GOUV Nantes,GOUVN,solucom_import_data.practice10,1
+solucom_import_data.unite41,GOUVNA,GOUVNA,solucom_import_data.practice10,1
+solucom_import_data.unite42,GOUV Paris,GOUVP,solucom_import_data.practice10,1
+solucom_import_data.unite43,GOUVS,GOUVS,solucom_import_data.practice10,1
+solucom_import_data.unite44,ID & ACCESS MANAGEMENT,IAM,solucom_import_data.practice13,1
+solucom_import_data.unite45,INTRA-GROUPE,IG,solucom_import_data.practice12,1
+solucom_import_data.unite46,INNOVATION SECURITE OLD,ISEC,solucom_import_data.practice13,1
+solucom_import_data.unite47,INNOVATION SECURITE,ISECS,solucom_import_data.practice13,1
+solucom_import_data.unite48,KLC OLD,KLC,solucom_import_data.practice10,1
+solucom_import_data.unite49,MAROC,MAROC,solucom_import_data.practice11,1
+solucom_import_data.unite5,ASI-IA,ASI-IA,solucom_import_data.practice5,0
+solucom_import_data.unite50,METHODE,METH,solucom_import_data.practice2,1
+solucom_import_data.unite51,NANTES OLD,NANTES,solucom_import_data.practice10,1
+solucom_import_data.unite52,OSI_OLD,OSI,solucom_import_data.practice14,1
+solucom_import_data.unite53,OSIC_OLD,OSIC,solucom_import_data.practice14,1
+solucom_import_data.unite54,OSI,OSIS,solucom_import_data.practice14,1
+solucom_import_data.unite55,PLAN CONTINUITE ACTIVITE,PCA,solucom_import_data.practice13,1
+solucom_import_data.unite56,PIWEB_OLD,PIWEB,solucom_import_data.practice19,1
+solucom_import_data.unite57,PIWEB,PIWEBS,solucom_import_data.practice19,1
+solucom_import_data.unite58,POP,POP,solucom_import_data.practice2,1
+solucom_import_data.unite59,PRCA,PRCA,solucom_import_data.practice14,1
+solucom_import_data.unite6,ASI-RH & ADMINISTRATION,ASI-RH&ADM,solucom_import_data.practice5,0
+solucom_import_data.unite60,PRCS,PRCS,solucom_import_data.practice14,1
+solucom_import_data.unite61,RH & ADMINISTRATION,RH&ADM,solucom_import_data.practice12,0
+solucom_import_data.unite62,Risk Management,RM,solucom_import_data.practice13,1
+solucom_import_data.unite63,S&M-FINANCE,S&M-FIN,solucom_import_data.practice15,0
+solucom_import_data.unite64,S&M-IA,S&M-IA,solucom_import_data.practice15,0
+solucom_import_data.unite65,S&M-RH & ADMINISTRATION,S&M-RH&ADM,solucom_import_data.practice15,0
+solucom_import_data.unite66,S&RM-FINANCE,S&RM-FIN,solucom_import_data.practice13,0
+solucom_import_data.unite67,S&RM-IA,S&RM-IA,solucom_import_data.practice13,0
+solucom_import_data.unite68,S&RM-RH & ADMINISTRATION,S&RM-RH&ADM,solucom_import_data.practice13,0
+solucom_import_data.unite69,SUD OUEST,SDO,solucom_import_data.practice2,1
+solucom_import_data.unite7,ASIL-DIRECTION,ASIL-DIR,solucom_import_data.practice3,0
+solucom_import_data.unite70,SDV-EAR_OLD,SDV-EAR,solucom_import_data.practice5,1
+solucom_import_data.unite71,SDV-LCI_OLD,SDV-LCI,solucom_import_data.practice5,1
+solucom_import_data.unite72,SDV-TDB_OLD,SDV-TDB,solucom_import_data.practice5,1
+solucom_import_data.unite73,SLSI_OLD,SLSI,solucom_import_data.practice19,1
+solucom_import_data.unite74,SLSIM_OLD,SLSIM,solucom_import_data.practice19,1
+solucom_import_data.unite75,SLSIM,SLSIMS,solucom_import_data.practice19,1
+solucom_import_data.unite76,SLSI,SLSIS,solucom_import_data.practice19,1
+solucom_import_data.unite77,SMTI-FINANCE,SMTI-FIN,solucom_import_data.practice14,0
+solucom_import_data.unite78,SMTI-IA,SMTI-IA,solucom_import_data.practice14,0
+solucom_import_data.unite79,SMTI-RH & ADMINISTRATION,SMTI-RH&ADM,solucom_import_data.practice14,0
+solucom_import_data.unite8,ASIL-FINANCE,ASIL-FIN,solucom_import_data.practice3,0
+solucom_import_data.unite80,SOLU,SOLU,solucom_import_data.practice19,1
+solucom_import_data.unite81,STRAT,STRAT,solucom_import_data.practice14,1
+solucom_import_data.unite82,T&I-FINANCE,T&I-FIN,solucom_import_data.practice16,0
+solucom_import_data.unite83,T&I-IA,T&I-IA,solucom_import_data.practice16,0
+solucom_import_data.unite84,T&I-RH & ADMINISTRATION,T&I-RH&ADM,solucom_import_data.practice16,0
+solucom_import_data.unite85,TELECOMS ARC,TEL-ARC,solucom_import_data.practice14,1
+solucom_import_data.unite86,TELECOMS SOL,TEL-SOL,solucom_import_data.practice14,1
+solucom_import_data.unite87,TSI-FINANCE,TSI-FIN,solucom_import_data.practice19,0
+solucom_import_data.unite88,TSI-IA,TSI-IA,solucom_import_data.practice19,0
+solucom_import_data.unite89,TSI-RH & ADMINISTRATION,TSI-RH&ADM,solucom_import_data.practice19,0
+solucom_import_data.unite9,ASIL-IA,ASIL-IA,solucom_import_data.practice3,0
+solucom_import_data.unite90,TSI2-FINANCE,TSI2-FIN,solucom_import_data.practice18,0
+solucom_import_data.unite91,TSI2-IA,TSI2-IA,solucom_import_data.practice18,0
+solucom_import_data.unite92,TSI2-RH & ADMINISTRATION,TSI2-RH&ADM,solucom_import_data.practice18,0
+solucom_import_data.unite93,TSIP-FINANCE,TSIP-FIN,solucom_import_data.practice17,0
+solucom_import_data.unite94,TSIP-IA,TSIP-IA,solucom_import_data.practice17,0
+solucom_import_data.unite95,TSIP-RH & ADMINISTRATION,TSIP-RH&ADM,solucom_import_data.practice17,0
+solucom_import_data.unite96,User & Workplace Serv,UWS,solucom_import_data.practice5,1
+solucom_import_data.unite97,GOUV,GOUV,solucom_import_data.practice10,1
+solucom_import_data.unite98,MUT,MUT,solucom_import_data.practice12,1
+solucom_import_data.unite99,S&M,S&M,solucom_import_data.practice15,1

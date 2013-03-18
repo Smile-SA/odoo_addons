@@ -1,0 +1,3 @@
+id,name
+ID,Entitled
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,Char field type: Autorised value: a string with 64 as max size The field is not required
