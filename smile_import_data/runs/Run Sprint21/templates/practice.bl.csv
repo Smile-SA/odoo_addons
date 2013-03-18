@@ -1,0 +1,11 @@
+id,analytic_account_id/id,deactivation_date,name,bl_initials,practice_id/id,virtual_employee_id/id,perimeter,active,is_direction_and_administration,billable_ok,average_wage_increase
+ID,Expense Account,Deactivation date,Name of the BL,Initials,Practice,Virtual Employee,Perimeter,Active,Is direction & administration,Billable,Average wage increase
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,"Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.account.csv
+
+                                As exemple import_data.product1 The field is not required",Date field type: Autorised value: AAAA-MM-DD as exemple: 2012-05-28 The field is not required,Char field type: Autorised value: a string with 64 as max size The field is required,Char field type: Autorised value: a string with 16 as max size The field is required,"Many2one field type: Autorised value: 'module_name.key' defined on the file practice.practice.csv
+
+                                As exemple import_data.product1 The field is required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.employee.csv
+
+                                As exemple import_data.product1 The field is not required","Selection field type: Autorised value: ['total', 'constant'] 
+Value corresponding: 
+{'total': 'Total', 'constant': 'Constant'} The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required

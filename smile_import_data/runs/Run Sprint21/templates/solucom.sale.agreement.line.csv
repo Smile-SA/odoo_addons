@@ -1,0 +1,9 @@
+id,discount_for_billable_amount,period_id/id,amount_billed,amount_billable,agreement_id/id,discount_for_billed_amount,type,discount_billed
+ID,Discount on billable amount,Analytic Period,Billed amount,Billable amount,Business Agreement,Discount on billed amount,Type,Credit Note
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.period.csv
+
+                                As exemple import_data.product1 The field is required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file solucom.sale.agreement.csv
+
+                                As exemple import_data.product1 The field is required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Selection field type: Autorised value: ['actual', 'forecast'] 
+Value corresponding: 
+{'actual': 'Actual', 'forecast': 'Forecast'} The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required

@@ -103,3 +103,13 @@ def new_store_set_values(self, cr, uid, ids, fields, context):
     return True
 
 orm.orm._store_set_values = new_store_set_values
+
+
+def clean_store_function(init_func):
+    def clean_store_init(self, cr):
+        init_func(self, cr)
+        for model in self.pool._store_function:
+            self.pool._store_function[model] = list(set(self.pool._store_function[model]))
+    return clean_store_init
+
+orm.orm.__init__ = clean_store_function(orm.orm.__init__)

@@ -327,3 +327,13 @@ msgstr "signature: method(cr, uid, context)"
 msgid "unlink_res_ids: model(%s) does not match template model (%s, %s)"
 msgstr "unlink_res_ids: model(%s) does not match template model (%s, %s)"
 
+#. module: smile_export
+#: field:ir.model.export.template,force_execute_action:0
+msgid "Force Action Execution"
+msgstr "Forcer l'exécution de l'action"
+
+#. module: smile_export
+#: help:ir.model.export.template,force_execute_action:0
+msgid "Even if there are no resources to export"
+msgstr "Même s'il n'existe aucune ressource à exporter"
+

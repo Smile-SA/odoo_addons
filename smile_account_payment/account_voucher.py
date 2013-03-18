@@ -77,8 +77,5 @@ class AccountVoucher(osv.osv):
         for voucher in self.browse(cr, uid, ids, context):
             if voucher.payment_id and voucher.payment_id.state != 'draft':
                 raise osv.except_osv(_('Error'), _('You can not modify a voucher linked to a payment!'))
-        wkf_service = netsvc.LocalService("workflow")
-        for voucher_id in ids:
-            wkf_service.trg_validate(uid, 'account.voucher', voucher_id, 'proforma_voucher', cr)
-        return True
+        return super(AccountVoucher, self).proforma_voucher(cr, uid, ids, context)
 AccountVoucher()

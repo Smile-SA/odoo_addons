@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+		
+		<menuitem id="menu_import_data" parent="base.menu_config" name="Import data" sequence="100"/>
+		<!--
+			Template run
+			-->
+		<record id="view_import_data_run_template_form" model="ir.ui.view">
+			<field name="name">import.data.run.template.form</field>
+			<field name="model">import.data.run</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Template Run">
+					<group colspan="4" col="4">
+						<group colspan="2" col="2">
+							<field name="name" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+							<field name="root_path"/>
+							<field name="config_path"/>
+							<field name="templates_path"/>
+							<field name="runs_path"/>
+							<field name="ir_model_data_ref"/>
+							<field name="state" invisible="1"/>
+						</group>
+						<group colspan="2" col="2">
+							<button name="validate_template" type="object" string="Validate template" icon="gtk-apply" states="draft"/>
+							<label string=""/>
+							<button name="init_from_config_file" type="object" string="Init from config file" icon="gtk-goto-top" states="template" confirm="Please check that files are attented in the config folder. This init will erase all current config"/>
+							<field name="config_yml_file_path" string="Config file to import" attrs="{'invisible':[('state','=','draft')]}"/>
+							<button name="generate_config_file" type="object" string="Generate config file" icon="gtk-goto-bottom" states="template"  confirm="Please check that files are generated in the config folder"/>
+							<button name="initialize_objects" type="object" string="Auto init" icon="gtk-execute" states="template"  confirm="This operation will remove all fields generated"/>
+							<button name="genertate_template_file" type="object" string="Generate file templates" icon="gtk-convert" states="template"/>
+							
+						</group>
+					</group>
+					<notebook>
+						<page string="Configuration">
+				            <field name="object_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','draft')]}" context="{'active_test': True}">
+				            	<tree string="Objects">
+				            		<field name="sequence"/>
+				            		<field name="name"/>
+				            		<field name="model_id"/>
+				            		<field name="manage_manually_ok"/>
+				            		<button name="set_manage_manually_true" string="Manage manually" type="object" icon="gtk-ok" attrs="{'invisible':[('manage_manually_ok','=',True)]}"/>
+				            		<button name="set_manage_manually_false" string="Auto manage" type="object" icon="gtk-cancel" attrs="{'invisible':[('manage_manually_ok','=',False)]}"/>
+				            		<button name="genertate_template_file" string="Generate template" icon="gtk-convert"  type="object"/>
+				            	</tree>
+				            	<form string="Object">
+				            		<group colspan="2" col="2">
+				            			<field name="sequence"/>
+				            			<field name="name"/>
+				            			<field name="model_id"/>
+				            			<field name="manage_manually_ok"/>
+				            		</group>
+				            		<group colspan="2" col="2">
+					            		<field name="import_type"/>
+					            		<field name="import_script_name" attrs="{'invisible':[('import_type','=','import_data')]}"/>
+					            	</group>
+				            		<notebook colspan="4">
+				            			<page string="Files to import">
+				            				<field name="file_ids" nolabel="1" colspan="4">
+				            					<tree string="Files to import">
+				            						<field name="sequence"/>
+				            						<field name="name"/>
+				            					</tree>
+				            					<form string="Files to import">
+				            						<field name="sequence"/>
+				            						<field name="object_id"/>
+				            						<field name="name"/>
+				            					</form>
+				            				</field>
+				            			</page>
+				            			<page string="Validations">
+				            				<field name="apply_generic_validation_ok"/>
+				            				<field name="check_key_ok" attrs="{'invisible':[('apply_generic_validation_ok','=',False)]}"/>
+				            				<field name="check_nb_columns_ok" attrs="{'invisible':[('apply_generic_validation_ok','=',False)]}"/>
+				            				<field name="validation_script_name" colspan="4"/>
+				            				<field name="validation_field_ids" nolabel="1" colspan="4">
+				            					<tree string="Fields">
+				            						<field name="field_id"/>
+				            						<field name="file_field_name"/>
+				            						<field name="field_type"/>
+				            						<field name="required_ok"/>
+				            					</tree>
+				            					<form string="Field">
+				            						<field name="object_id"/>
+				            						<field name="field_id" domain="[('parent.model_id','=','model_id')]"/>
+				            						<field name="required_ok"/>
+				            						<field name="file_field_name"/>
+				            						<field name="field_type"/>
+				            						<field name="target_file"/>
+				            						<field name="python_code"/>
+				            						<field name="description"/>
+				            					</form>
+				            				</field>
+				            			</page>
+				            			<page string="Notes">
+							        		<field name="note" nolabel="1" colspan="4" widget="text_html"/>
+							        	</page>
+				            		</notebook>
+				            	</form>
+				            </field>
+				        </page>
+				        <page string="Notes">
+				        	<field name="note" nolabel="1" colspan="4" widget="text_html"/>
+				        </page>
+			        </notebook>
+				</form>
+			</field>
+		</record>
+		
+		<record id="view_import_data_run_template_tree" model="ir.ui.view">
+			<field name="name">import.data.run.tree</field>
+			<field name="model">import.data.run</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Template Run">
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record id="view_import_data_run_template_search" model="ir.ui.view">
+			<field name="name">import.data.run.template.search</field>
+			<field name="model">import.data.run</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Search template run">
+					<field name="name"/>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_import_data_run_template_view" model="ir.actions.act_window">
+			<field name="name">Template Runs</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">import.data.run</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_import_data_run_template_tree"/>
+			<field name="search_view_id" ref="view_import_data_run_template_search"/>
+			<field name="domain">[('template_ok','=',True)]</field>
+			<field name="context">{'default_template_ok':True}</field>
+		</record>
+		
+		<record id="action_import_data_run_template_tree_view" model="ir.actions.act_window.view">
+			<field name="sequence">0</field>
+			<field name="view_id" ref="view_import_data_run_template_tree"/>
+			<field name="act_window_id" ref="action_import_data_run_template_view"/>
+			<field name="view_mode">tree</field>
+		</record>
+		
+        <record id="action_import_data_run_template_form_view" model="ir.actions.act_window.view">
+			<field name="sequence">1</field>
+			<field name="view_id" ref="view_import_data_run_template_form"/>
+			<field name="act_window_id" ref="action_import_data_run_template_view"/>
+			<field name="view_mode">form</field>
+		</record>
+
+		<menuitem action="action_import_data_run_template_view" id="menu_run_template" parent="menu_import_data" sequence="0"/>
+
+<!--
+	Run views
+	-->
+		
+		<record id="view_import_data_run_form" model="ir.ui.view">
+			<field name="name">import.data.run.form</field>
+			<field name="model">import.data.run</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Run">
+					<group colspan="4" col="6">
+						<group colspan="2" col="2">
+							<separator string="Information"/>
+							<field name="name" readonly="1"/>
+							<field name="extract_file_date" required="1" attrs="{'readonly':[('state','=','done')]}"/>
+				            <field name="template_run_id" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+				            <field name="run_path" readonly="1"/>
+				            <field name="run_data_path" readonly="1"/>
+				            <label string=""/>
+			           	</group>
+			           	<group colspan="2" col="2">
+			           		<separator string="Results/State"/>
+			           		<field name="state"/>
+				            <field name="start_date"/>
+				            <field name="files_validaiton_ok"/>
+				            <field name="files_validaiton_date"/>
+				            <field name="last_import_date" attrs="{'invisible':[('state','=','draft')]}"/>
+				            <field name="done_date" attrs="{'invisible':[('state','!=','done')]}"/>
+				        </group>
+				        <group colspan="2" col="2">
+				        	<separator string="Configurations/Actions"/>
+			           		<field name="keep_logs_ok"/>
+			           		<button name="button_start_run" string="Start Run" type="object" icon="gtk-go-forward" states="draft"/>
+			           		<label string=""/>
+			           		<button name="button_init_run" string="Refresh object conf."  type="object" states="draft,in_progress" icon="gtk-refresh" confirm="All items attached to this run will be removed. Please confirm to continue"/>
+			           		<button name="delete_logs" string="Delete logs" type="object" icon="gtk-clear" states="in_progress"/>
+			           		<button name="check_file_validation" string="Check files" icon="gtk-apply"  type="object" states="in_progress"/>
+				            <button name="button_import" string="Import files" icon="gtk-convert"  type="object" states="in_progress"/>
+				            <button name="close_run" string="Close" icon="gtk-cancel"  type="object" states="in_progress"/>
+				            <button name="convert_file2csv" string="Convert" icon="gtk-execute"  type="object" states="in_progress"/>
+				        </group>
+				    </group>
+			        <notebook>
+			        	<page string="Objects">
+			        		<field name="object_ids" nolabel="1" colspan="4" readonly="1"/>
+			        	</page>
+			        	<page string="Logs">
+			        		
+		        			<group colspan="4" col="2">
+					        	<separator string="Error logs"/>
+            					<field name="error_log_ids" nolabel="1"/>
+					        </group>
+					        <group colspan="4" col="2">
+					        	<separator string="Warning logs"/>
+            					<field name="warning_log_ids" nolabel="1"/>
+					        </group>
+					        <group colspan="4" col="2">
+					        	<separator string="Success logs"/>
+            					<field name="success_log_ids" nolabel="1"/>
+					        </group>
+			        	</page>
+			        	<page string="Notes">
+			        		<field name="note" nolabel="1" colspan="4"  widget="text_html"/>
+			        	</page>
+			        	
+			        </notebook>
+				</form>
+			</field>
+		</record>
+
+		
+		<record id="view_import_data_run_tree" model="ir.ui.view">
+			<field name="name">import.data.run.tree</field>
+			<field name="model">import.data.run</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Run">
+					<field name="name"/>
+		            <field name="state"/>
+		            <field name="start_date"/>
+		            <field name="done_date"/>
+		            <field name="last_import_date"/>
+		            <field name="extract_file_date"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_import_data_run_search" model="ir.ui.view">
+			<field name="name">import.data.run.search</field>
+			<field name="model">import.data.run</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Run">
+					<field name="name"/>
+		            <field name="state"/>
+		            <field name="start_date"/>
+		            <field name="done_date"/>
+		            <field name="last_import_date"/>
+		            <field name="extract_file_date"/>
+				</search>
+			</field>
+		</record>
+		
+		
+		<record id="action_import_data_run_view" model="ir.actions.act_window">
+			<field name="name">Runs</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">import.data.run</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_import_data_run_tree"/>
+			<field name="search_view_id" ref="view_import_data_run_search"/>
+			<field name="domain">[('template_ok','=',False)]</field>
+		</record>
+		
+		<record id="action_import_data_run_tree_view" model="ir.actions.act_window.view">
+			<field name="sequence">0</field>
+			<field name="view_id" ref="view_import_data_run_tree"/>
+			<field name="act_window_id" ref="action_import_data_run_view"/>
+			<field name="view_mode">tree</field>
+		</record>
+		
+        <record id="action_import_data_run_form_view" model="ir.actions.act_window.view">
+			<field name="sequence">1</field>
+			<field name="view_id" ref="view_import_data_run_form"/>
+			<field name="act_window_id" ref="action_import_data_run_view"/>
+			<field name="view_mode">form</field>
+		</record>
+		
+		<menuitem action="action_import_data_run_view" id="menu_run" parent="menu_import_data" sequence="1"/>
+		
+		<!--
+		Run Object views
+		-->
+		
+		<record id="view_import_data_run_object_form" model="ir.ui.view">
+			<field name="name">import.data.run.object.form</field>
+			<field name="model">import.data.run.object</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Object">
+            		<group colspan="2" col="2">
+            			<field name="sequence"/>
+            			<field name="name"/>
+            			<field name="model_id"/>
+            			
+            		</group>
+            		<group colspan="2" col="2">
+	            		<field name="import_type"/>
+	            		<field name="import_script_name" attrs="{'invisible':[('import_type','=','import_data')]}"/>
+	            		<field name="nb_2import_items"/>
+	            		<field name="nb_imported_items"/>
+	            	</group>
+            		<notebook colspan="4">
+            			<page string="Files to import">
+            				<field name="file_ids" nolabel="1" colspan="4"/>
+            			</page>
+            			<page string="Validations">
+            				<field name="apply_generic_validation_ok"/>
+            				<field name="check_key_ok" attrs="{'invisible':[('apply_generic_validation_ok','=',False)]}"/>
+            				<field name="check_nb_columns_ok" attrs="{'invisible':[('apply_generic_validation_ok','=',False)]}"/>
+            				<field name="validation_script_name" colspan="4"/>
+            				<field name="validation_field_ids" nolabel="1" colspan="4"/>
+            			</page>
+            			<page string="Logs">
+            				<field name="log_ids" nolabel="1" colspan="4"/>
+            			</page>
+            			<page string="Notes">
+            				<field name="note" nolabel="1" colspan="4" widget="text_html"/>
+            			</page>
+            		</notebook>
+            	</form>
+			</field>
+		</record>
+
+		
+		<record id="view_import_data_run_object_tree" model="ir.ui.view">
+			<field name="name">import.data.run.object.tree</field>
+			<field name="model">import.data.run.object</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Objects">
+					<field name="sequence"/>
+        			<field name="name"/>
+        			<field name="model_id"/>
+        			<field name="validation_date"/>
+        			<field name="validation_succeed_ok"/>
+        			<field name="file_missed_ok"/>
+        			<button name="check_file_validation" type="object" string="Check file" icon="gtk-execute"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_import_data_run_object_search" model="ir.ui.view">
+			<field name="name">import.data.run.search</field>
+			<field name="model">import.data.run.object</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Run">
+					<field name="name"/>
+        			<field name="model_id"/>
+				</search>
+			</field>
+		</record>
+		
+		
+		<record id="action_import_data_run_object_view" model="ir.actions.act_window">
+			<field name="name">Runs</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">import.data.run.object</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_import_data_run_object_tree"/>
+			<field name="search_view_id" ref="view_import_data_run_object_search"/>
+		</record>
+		
+				<!--
+		Run Object File views
+		-->
+		
+		<record id="view_import_data_run_object_file_form" model="ir.ui.view">
+			<field name="name">import.data.run.object.file.form</field>
+			<field name="model">import.data.run.object.file</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="File">
+            		<group colspan="2" col="2">
+            			<field name="sequence"/>
+            			<field name="name"/>
+            			<field name="import_once"/>
+            			<field name="import_script_name"/>
+            			
+            		</group>
+            		<group colspan="2" col="2">
+	            		<field name="file_validated_ok"/>
+	            		<field name="nb_2import_items"/>
+	            		<field name="nb_imported_items"/>
+	            		<field name="import_date"/>
+	            	</group>
+            		<field name="log_ids" nolabel="1" colspan="4"/>
+            	</form>
+			</field>
+		</record>
+
+		
+		<record id="view_import_data_run_object_file_tree" model="ir.ui.view">
+			<field name="name">import.data.run.object.file.tree</field>
+			<field name="model">import.data.run.object.file</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Files">
+					<field name="sequence"/>
+        			<field name="name"/>
+				</tree>
+			</field>
+		</record>
+
+
+				<!--
+		Run Object field validation views
+		-->
+		
+		<record id="view_import_data_run_object_validation_field_form" model="ir.ui.view">
+			<field name="name">import.data.run.object.validation.field.form</field>
+			<field name="model">import.data.run.object.validation.field</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Field validation">
+            		<field name="field_id"/>
+        			<field name="file_field_name"/>
+        			<field name="required_ok"/>
+        			<field name="field_type"/>
+        			<field name="target_file"/>
+        			<field name="python_code"/>
+        			<field name="description"/>
+            	</form>
+			</field>
+		</record>
+
+		
+		<record id="view_import_data_run_object_validation_field_tree" model="ir.ui.view">
+			<field name="name">import.data.run.object.validation.field.tree</field>
+			<field name="model">import.data.run.object.validation.field</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Field validation">
+					<field name="field_id"/>
+        			<field name="file_field_name"/>
+        			<field name="field_type"/>
+        			<field name="required_ok"/>
+        			<field name="target_file"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record id="view_import_data_log_tree" model="ir.ui.view">
+			<field name="name">import.data.log.tree</field>
+			<field name="model">import.data.log</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Logs">
+					<field name="log_create_date"/>
+        			<field name="name"/>
+				</tree>
+			</field>
+		</record>
+	
+		
+	</data>
+</openerp>

@@ -1,0 +1,19 @@
+id,name,billable_ok,practice_initials,targeted_adr,active,perimeter
+solucom_import_data.practice10,Gouvernance SI,True,GOUV,,True,total
+solucom_import_data.practice11,MAROC,True,MAROC,,True,total
+solucom_import_data.practice12,Mutualis�e,False,MUT,,True,total
+solucom_import_data.practice13,S�curit� & risk management,True,S&RM,,True,total
+solucom_import_data.practice14,SMTI,True,SMTI,,True,total
+solucom_import_data.practice15,Strat�gie & management,True,S&M,,True,total
+solucom_import_data.practice16,T�l�coms & innovation,True,T&I,,True,total
+solucom_import_data.practice17,Transformation SI - PIWEB,True,TSIP,,True,total
+solucom_import_data.practice18,Transformation SI 2,True,TSI2,,True,total
+solucom_import_data.practice19,TSI,True,TSI,,True,total
+solucom_import_data.practice2,ALTURIA,True,ALT,,True,total
+solucom_import_data.practice3,Architecture SI - logicielle,True,ASIL,,True,total
+solucom_import_data.practice4,Architecture SI - technique,True,ASIT,,True,total
+solucom_import_data.practice5,ASI,True,ASI,,True,total
+solucom_import_data.practice6,EVEHO,True,EVE,,True,total
+solucom_import_data.practice7,EVEHO ACTUARIAT,True,EVA,,True,total
+solucom_import_data.practice8,EVEHO CONSEIL,True,EVC,,True,total
+solucom_import_data.practice9,EVEHO SERVICES,True,EVS,,True,total

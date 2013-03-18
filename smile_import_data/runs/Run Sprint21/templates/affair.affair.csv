@@ -1,0 +1,23 @@
+id,comment,affair_type,portfolio_id/id,type_id/id,number,internal_ok,number_digits,partner_id/id,unstarted_lot,employee_id/id,name,state,practice_id/id,stop_period_id/id,complete_name,start_period_id/id,billable_ok,category_id/id
+ID,Comment,Affair type,Portefeuille ADV,Type of affair,Affair number,Internal?,Affair number,Client,Unstarted lot ?,Project manager,Name,Affair State,Practice,End Date,Affair complete name,Start Date,Billable?,Category
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,Text field type: Autorised value: Text The field is not required,"Selection field type: Autorised value: ['project', 'r_and_d', 'internal', 'maintenance'] 
+Value corresponding: 
+{'project': 'Project', 'r_and_d': 'R&D', 'internal': 'Internal', 'maintenance': 'Maintenance'} The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.partner.portfolio.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file affair.type.csv
+
+                                As exemple import_data.product1 The field is required",Char field type: Autorised value: a string with 64 as max size The field is not required,"Boolean field: Autorised value: ""True"" or ""False"".  The field is not required",Char field type: Autorised value: a string with 64 as max size The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file res.partner.csv
+
+                                As exemple import_data.product1 The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.employee.csv
+
+                                As exemple import_data.product1 The field is not required",Char field type: Autorised value: a string with 64 as max size The field is required,"Selection field type: Autorised value: ['started', 'unstarted', 'closed'] 
+Value corresponding: 
+{'started': 'Started', 'unstarted': 'Unstarted', 'closed': 'Closed'} The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file practice.practice.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.period.csv
+
+                                As exemple import_data.product1 The field is not required",Char field type: Autorised value: a string with 64 as max size The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.period.csv
+
+                                As exemple import_data.product1 The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file affair.category.csv
+
+                                As exemple import_data.product1 The field is not required"

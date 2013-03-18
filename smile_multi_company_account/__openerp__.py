@@ -25,16 +25,17 @@
     "author": "Smile",
     "website": "http://www.smile.fr",
     "category": 'Generic Modules/Accounting',
-    "depends": ["account", "smile_multi_company_base"],
+    "depends": ["account", "smile_account_fiscal_position_journal", "smile_multi_company_base"],
     "description": """Override Invoice.action_move_create method to manage multi-company application
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
-    "init_xml": [],
+    "init_xml": [
+        'security/multi_company_security.xml',
+    ],
     "update_xml": [
-        'invoice_view.xml',
-        'account_view.xml',
-        'security/ir.model.access.csv',
+        'view/invoice_view.xml',
+        'view/account_view.xml',
     ],
     'demo_xml': [],
     'installable': True,

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <record model="res.groups" context="{'noadmin': False}" id="base.group_multi_company">
+        <field name="users">[(4, ref('base.user_root'))]</field>
+    </record>
+    	
+	</data>
+</openerp>

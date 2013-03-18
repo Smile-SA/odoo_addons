@@ -1,0 +1,15 @@
+id,leaves_request_id/id,company_id/id,month,state,period_id/id,justification_id/id,year,justification_required,leaves_account_id/id,number_of_days
+ID,Leaves request,Company,Month,State,Period,Leaves justification,Month,Justifications required?,Leaves Account,Number of Days
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,"Many2one field type: Autorised value: 'module_name.key' defined on the file hr.leaves.request.csv
+
+                                As exemple import_data.product1 The field is required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.company.csv
+
+                                As exemple import_data.product1 The field is not required","Intedger field type: Autorised value: XXXXX as exemple: 125 Please note that the number is without ',' or '.' The field is not required","Selection field type: Autorised value: ['confirmed', 'checked', 'manager_refused', 'adm_refused', 'canceled', 'draft', 'validated'] 
+Value corresponding: 
+{'confirmed': 'Confirmed', 'checked': 'Checked', 'manager_refused': 'Refused by manager', 'adm_refused': 'Refused by administration', 'canceled': 'Canceled', 'draft': 'Draft', 'validated': 'Validated'} The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.period.csv
+
+                                As exemple import_data.product1 The field is required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.leaves.justification.csv
+
+                                As exemple import_data.product1 The field is not required","Intedger field type: Autorised value: XXXXX as exemple: 125 Please note that the number is without ',' or '.' The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file hr.leaves.account.csv
+
+                                As exemple import_data.product1 The field is required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is required

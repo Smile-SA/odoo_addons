@@ -12,9 +12,12 @@
 						<field name="name" />
 						<field name="model_id" />
                         <field name="filter_type"/>
-                        <field name="unique" />
-                        <field name="domain" colspan="4" attrs="{'invisible': [('filter_type','!=','domain')]}" nolabel="1"/>
-                        <field name="filter_method" colspan="4" attrs="{'invisible': [('filter_type','!=','method')]}" nolabel="1"/>
+                        <group colspan="2" col="1">
+	                        <field name="domain" attrs="{'invisible': [('filter_type','!=','domain')]}" nolabel="1"/>
+	                        <field name="filter_method" attrs="{'invisible': [('filter_type','!=','method')]}" nolabel="1"/>
+                        </group>
+                        <field name="unique" colspan="1"/>
+                        <field name="link_resources" colspan="1"/>
 					</group>
 					<notebook colspan="4">
 						<page string="Exports">
@@ -23,7 +26,7 @@
 								<tree string="Exports" editable="top">
 									<field name="create_date" />
 									<field name="create_uid" />
-									<field name="line_ids" />
+									<field name="line_count" />
 									<field name="state" readonly="1"/>
 									<button type="object" name="generate" icon="terp-gtk-jump-to-ltr" string="Re-generate" />
 								</tree>
@@ -65,6 +68,7 @@
 							</field>
 						</page>
 						<page string="Advanced">
+							<field name="force_execute_action" />
 							<separator string="Triggers" colspan="4"/>
 							<field name="cron_id" />
 							<button type="object" name="create_cron" string="Create Scheduled Action" colspan="2" attrs="{'readonly': [('cron_id', '!=', False)]}"/>

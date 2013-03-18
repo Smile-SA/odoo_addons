@@ -50,6 +50,7 @@ class ir_model_export_template(osv.osv):
         'max_offset': fields.integer('Max Offset'),
         'order': fields.char('Order by', size=64),
         'unique': fields.boolean('Unique', help="If unique, each instance is exported only once"),
+        'link_resources': fields.boolean('Link resources'),
         'method': fields.char('Method', size=64, help="Indicate a method with a signature equals to (self, cr, uid, ids, *args, context=None)"),
         'action_id': fields.many2one('ir.actions.server', 'Action'),
         'export_ids': fields.one2many('ir.model.export', 'export_tmpl_id', 'Exports'),
@@ -57,11 +58,13 @@ class ir_model_export_template(osv.osv):
         'client_action_id': fields.many2one('ir.values', 'Client Action'),
         'client_action_server_id': fields.many2one('ir.actions.server', 'Client Action Server'),
         'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export.template')], readonly=True),
+        'force_execute_action': fields.boolean('Force Action Execution', help="Even if there are no resources to export"),
     }
 
     _defaults = {
         'domain': '[]',
         'filter_type': 'domain',
+        'link_resources': True,
     }
 
     def _get_res_ids(self, cr, uid, template, context):
@@ -69,7 +72,7 @@ class ir_model_export_template(osv.osv):
         res_ids = context.get('resource_ids_to_export', [])
         model_obj = self.pool.get(template.model)
         if not model_obj:
-            raise osv.except_osv(_('Error'), _("Unknown object: %s") % (template.model, ))
+            raise osv.except_osv(_('Error'), _("Unknown object: %s") % (template.model,))
         if template.filter_type == 'domain':
             domain = eval(template.domain)
             if res_ids:
@@ -84,10 +87,12 @@ class ir_model_export_template(osv.osv):
         return res_ids
 
     def get_exported_res_ids(self, cr, uid, export_template_id, context):
-        export_line_ids = self.pool.get('ir.model.export.line').search(cr, uid, [
-            ('export_id.export_tmpl_id', '=', export_template_id)
-        ], context=context)
-        return [line['res_id'] for line in self.pool.get('ir.model.export.line').read(cr, uid, export_line_ids, ['res_id'], context)]
+        res_ids = []
+        for export in self.browse(cr, uid, export_template_id, context).export_ids:
+            res_ids.extend(export.resource_ids)
+            for line in export.line_ids:
+                res_ids.append(line.res_id)
+        return res_ids
 
     def unlink_res_ids(self, cr, uid, ids, model, res_ids, context):
         unlink_line_ids = []
@@ -138,13 +143,17 @@ class ir_model_export_template(osv.osv):
             else:
                 res_ids_list = [res_ids]
 
+            vals = {
+                'export_tmpl_id': export_template.id,
+                'state': 'running',
+            }
             for index, export_res_ids in enumerate(res_ids_list):
-                export_ids.append(export_pool.create_new_cr(cr.dbname, uid, {
-                    'export_tmpl_id': export_template.id,
-                    'state': 'running',
-                    'line_ids': [(0, 0, {'res_id': res_id}) for res_id in export_res_ids],
-                    'offset': index + 1,
-                }, context))
+                if export_template.link_resources:
+                    vals['line_ids'] = [(0, 0, {'res_id': res_id}) for res_id in export_res_ids]
+                else:
+                    vals['resource_ids'] = export_res_ids
+                vals['offset'] = index + 1
+                export_ids.append(export_pool.create_new_cr(cr.dbname, uid, vals, context))
 
         export_pool.generate(cr, uid, export_ids, context)
         return export_ids
@@ -160,7 +169,7 @@ class ir_model_export_template(osv.osv):
                     'model': self._name,
                     'function': 'create_export',
                     'args': '(%d, )' % template.id,
-                    'numbercall': -1,
+                    'numbercall':-1,
                 }
                 cron_id = self.pool.get('ir.cron').create(cr, uid, vals)
                 template.write({'cron_id': cron_id})
@@ -177,7 +186,7 @@ class ir_model_export_template(osv.osv):
                     'state': 'code',
                     'code': """context['bypass_domain'] = True
 context['resource_ids_to_export'] = context.get('active_ids', [])
-self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)""" % (template.id, ),
+self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)""" % (template.id,),
                 }
                 server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals, context)
                 vals2 = {
@@ -215,10 +224,20 @@ class ir_model_export(osv.osv):
     _name = 'ir.model.export'
     _description = 'Export'
     _rec_name = 'create_date'
+    _order = 'create_date desc'
 
     def __init__(self, pool, cr):
         super(ir_model_export, self).__init__(pool, cr)
         setattr(osv.osv_pool, 'init_set', state_cleaner(getattr(osv.osv_pool, 'init_set')))
+
+    def _get_line_count(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for export in self.browse(cr, uid, ids, context):
+            if export.export_tmpl_id.link_resources:
+                res[export.id] = len(export.line_ids)
+            else:
+                res[export.id] = len(export.resource_ids)
+        return res
 
     _columns = {
         'export_tmpl_id': fields.many2one('ir.model.export.template', 'Template', required=True, ondelete='cascade'),
@@ -234,12 +253,16 @@ class ir_model_export(osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True),
         'create_uid': fields.many2one('res.users', 'Creation User', readonly=True),
         'line_ids': fields.one2many('ir.model.export.line', 'export_id', 'Lines'),
+        'line_count': fields.function(_get_line_count, method=True, type='integer', string='Lines'),
+        'resource_ids': fields.serialized('Resource Ids', readonly=True),
         'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export')], readonly=True),
         'state': fields.selection(STATES, "State", readonly=True, required=True),
         'exception': fields.text('Exception'),
     }
 
-    _order = 'create_date desc'
+    _defaults = {
+        'resource_ids': [],
+    }
 
     def create_new_cr(self, dbname, uid, vals, context):
         db = pooler.get_db(dbname)
@@ -328,13 +351,13 @@ class ir_model_export(osv.osv):
         context['export_id'] = export.id
 
         try:
-            if export.line_ids:
-                res_ids = [line.res_id for line in export.line_ids]
+            if export.line_ids or export.resource_ids or export.export_tmpl_id.force_execute_action:
+                res_ids = export.resource_ids or [line.res_id for line in export.line_ids]
                 logger.info('Export start')
                 self._run_actions(cr, uid, export, res_ids, context)
                 logger.time_info('Export done')
         except Exception, e:
-            logger.critical("Export failed: %s" % (_get_exception_message(e), ))
+            logger.critical("Export failed: %s" % (_get_exception_message(e),))
             self.write_new_cr(cr.dbname, uid, export_id, {'state': 'exception',
                                                           'to_date': time.strftime('%Y-%m-%d %H:%M:%S'),
                                                           'exception': _get_exception_message(e), }, context)

@@ -19,9 +19,11 @@
 #
 ##############################################################################
 
+import time
+
 from osv import osv
 
-from smile_multi_company_account.account import FISCAL_POSITION_TYPES
+from smile_account_fiscal_position_journal.account import FISCAL_POSITION_TYPES
 
 FISCAL_POSITION_TYPES.append(('behalf', 'Billing on behalf of'))
 
@@ -38,6 +40,7 @@ class AccountMove(osv.osv):
             move_ids_to_post = ids[:]
             fiscal_position_obj = self.pool.get('account.fiscal.position')
             fiscal_position = invoice.behalf_of_id.fiscal_position_src_id
+            cur_obj = self.pool.get('res.currency')
             for move in self.browse(cr, uid, ids, context):
                 # Update move for the source company
                 journal_id = fiscal_position_obj.map_journal(cr, uid, fiscal_position, move.journal_id.id, context)
@@ -50,13 +53,22 @@ class AccountMove(osv.osv):
                 new_move_ids = invoice.behalf_of_id.account_model_dest_id.generate(context=context)
                 for new_move in self.browse(cr, uid, new_move_ids, context):
                     if new_move.amount:
+                        currency_src_id = move.company_id.currency_id.id
+                        currency_dest_id = new_move.company_id.currency_id.id
                         vals = {'partner_id': move.partner_id.id}
                         for new_line in new_move.line_id:
-                            if new_line.debit:
-                                vals['debit'] = move.amount * new_line.amount_currency / new_move.amount
-                            elif new_line.credit:
-                                vals['credit'] = move.amount * new_line.amount_currency / new_move.amount
-                            # TODO: fill amount_line if currency different from original move
+                            vals['debit'], vals['credit'] = move.amount, 0.0
+                            if new_line.credit:
+                                vals['debit'], vals['credit'] = vals['credit'], vals['debit']
+                            if currency_dest_id != currency_src_id:
+                                amount = cur_obj.compute(cr, uid, currency_src_id, currency_dest_id,
+                                                        vals['debit'] - vals['credit'], context={'date': time.strftime('%Y-%m-%d')})
+                                vals.update({
+                                    'currency_id': currency_src_id,
+                                    'debit': vals['debit'] and amount or 0.0,
+                                    'credit': vals['credit'] and amount * -1 or 0.0,
+                                    'amount_currency': vals['debit'] - vals['credit'],
+                                })
                             new_line.write(vals, context)
                         move_ids_to_post.append(new_move.id)
             ids = move_ids_to_post

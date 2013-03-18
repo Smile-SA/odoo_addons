@@ -93,9 +93,14 @@ class AnalyticPeriod(osv.osv):
         ], limit=1, context=context)
         if not period_ids:
             return 0
-        if self.read(cr, uid, period_ids[0], ['state'], context)['state'] == 'done':
-            raise osv.except_osv(_('Error'), _('You cannot pass a journal entry in a closed period!'))
         return period_ids[0]
+
+    def get_opened_period_id(self, cr, uid, company_id=False, context=None):
+        period_ids = self.search(cr, uid, [
+            ('state', '=', 'draft'),
+            ('company_id', 'in', [company_id, False])
+        ], limit=1, context=context)
+        return period_ids and period_ids[0] or False
 
     def _get_period_id(self, cr, uid, period_id, operator='>', state=None):
         if not isinstance(period_id, (int, long)):
@@ -215,9 +220,15 @@ class AnalyticLine(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         vals = vals or {}
+        p_analytic_period = self.pool.get('account.analytic.period')
         if not vals.get('period_id'):
-            vals['period_id'] = self.pool.get('account.analytic.period').get_period_id_from_date(cr, uid, vals.get('date', time.strftime('%Y-%m-%d')),
-                                                                                                 vals.get('company_id', False), context)
+            ## if not period period_id so we get the current opened period
+            vals['period_id'] = p_analytic_period.get_opened_period_id(cr, uid, vals.get('company_id', False), context)
+
+        if not vals.get('create_period_id'):
+            ## if not period period_id so we get the current opened period
+             vals['create_period_id'] = p_analytic_period.get_opened_period_id(cr, uid, vals.get('company_id', False), context)
+
         return super(AnalyticLine, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):

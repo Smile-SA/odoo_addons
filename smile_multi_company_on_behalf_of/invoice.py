@@ -48,6 +48,7 @@ class AcccountInvoiceBehalfOf(osv.osv):
         for item in self.read(cr, uid, ids, ['company_dest_id'], context, '_classic_read'):
             res.append((item['id'], item['company_dest_id'][1]))
         return res
+
 AcccountInvoiceBehalfOf()
 
 
@@ -55,7 +56,7 @@ class AccountInvoice(osv.osv):
     _inherit = 'account.invoice'
 
     _columns = {
-        'behalf_of_id': fields.many2one('account.invoice.behalf_of', 'Billing Company'),
+        'behalf_of_id': fields.many2one('account.invoice.behalf_of', 'Billing Company', readonly=True, states={'draft': [('readonly', False)]}),
     }
 
     def onchange_behalf_of_id(self, cr, uid, ids, behalf_of_id=False, company_id=False):
@@ -64,4 +65,5 @@ class AccountInvoice(osv.osv):
         company_dest_id = self.pool.get('account.invoice.behalf_of').read(cr, uid, behalf_of_id, ['company_dest_id'],
                                                                           load='_classic_write')['company_dest_id']
         return {'domain': {'fiscal_position': [('company_id', '=', company_id), ('company_dest_id', '=', company_dest_id)]}}
+
 AccountInvoice()

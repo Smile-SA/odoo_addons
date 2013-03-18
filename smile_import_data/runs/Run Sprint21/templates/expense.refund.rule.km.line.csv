@@ -1,0 +1,5 @@
+id,refund_rule_id/id,name,nb_cv_max,sequence
+ID,Refund rule,Label,Nb CV max,Sequence
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,"Many2one field type: Autorised value: 'module_name.key' defined on the file expense.refund.rule.csv
+
+                                As exemple import_data.product1 The field is required",Char field type: Autorised value: a string with 64 as max size The field is required,"Intedger field type: Autorised value: XXXXX as exemple: 125 Please note that the number is without ',' or '.' The field is required","Intedger field type: Autorised value: XXXXX as exemple: 125 Please note that the number is without ',' or '.' The field is required"

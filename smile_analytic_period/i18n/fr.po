@@ -149,7 +149,7 @@ msgstr "Erreur ! La durée de l'exercice comptable est incorrecte. "
 #. module: smile_analytic_period
 #: constraint:account.analytic.period:0
 msgid "You cannot have several analytic periods in progress at the same moment!"
-msgstr "Vous ne pouvez pas avoir plusieurs périodes analytique en cours au même moment!"
+msgstr "Vous ne pouvez pas avoir plusieurs périodes analytiques en cours au même moment !"
 
 #. module: smile_analytic_period
 #: field:analytic.installer,date_start:0

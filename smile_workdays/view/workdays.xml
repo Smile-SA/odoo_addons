@@ -38,7 +38,7 @@
 				 	<page string="Days off">
 				 		<field name="inherit_dayoff"/>
 				 		<separator/>
-				 		<group col="2" colspan="2" attrs="{invisible:[('inherit_dayoff', '=', True)]}">
+				 		<group col="2" colspan="2" attrs="{'invisible':[('inherit_dayoff', '=', True)]}">
 				 			<field name="mon"/>
 				 			<field name="tue"/>
 				 			<field name="wed"/>
@@ -47,7 +47,7 @@
 				 			<field name="sat"/>
 				 			<field name="sun"/>
 				 		</group>
-				 		<group colspan="2" attrs="{invisible:[('inherit_dayoff', '=', True)]}">
+				 		<group colspan="2" attrs="{'invisible':[('inherit_dayoff', '=', True)]}">
 				 			<field name="dayoff_ids">
 				 				<tree editable="bottom">
 					 				<field name="name"/>

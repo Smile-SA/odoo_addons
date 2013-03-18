@@ -38,10 +38,20 @@ class ResPartner(osv.osv):
                 res[company['partner_id']] = {'is_intragroup_company': True, 'partner_company_id': company['id']}
         return res
 
+    def _get_partner_ids_from_company(self, cr, uid, ids, context=None):
+        return [company.partner_id.id for company in self.browse(cr, uid, ids, context)]
+
     _columns = {
-        'is_intragroup_company': fields.function(_get_partner_company, method=True, type='boolean',
-                                                 string='Is an intra-group company', store=True, multi='intragroup'),
-        'partner_company_id': fields.function(_get_partner_company, method=True, type='many2one', relation="res.company",
-                                              string='Company', store=True, multi='intragroup'),
+        'is_intragroup_company': fields.function(_get_partner_company, method=True, type='boolean', store={
+            'res.company': (_get_partner_ids_from_company, ['partner_id'], 10),
+        }, string='Is an intra-group company', multi='intragroup'),
+        'partner_company_id': fields.function(_get_partner_company, method=True, type='many2one', relation="res.company", store={
+            'res.company': (_get_partner_ids_from_company, ['partner_id'], 10),
+        }, string='Company', multi='intragroup'),
     }
+
+    def create(self, cr, uid, vals, context=None):
+        res_id = super(ResPartner, self).create(cr, uid, vals, context)
+        self._store_set_values(cr, uid, [res_id], ['is_intragroup_company', 'partner_company_id'], context)
+        return res_id
 ResPartner()

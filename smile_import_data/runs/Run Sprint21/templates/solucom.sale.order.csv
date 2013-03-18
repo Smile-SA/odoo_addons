@@ -1,0 +1,35 @@
+id,comment,affair_type,remained_amount2value,partner_invoice_address_id/id,pending_remained_amount2value,on_behalf_of_ok,client_order_ref,date_order,partner_id/id,daily_package_amount,employee_id/id,computed_daily_package_amount,bill_expenses_ok,valued_amount,behalf_of_id/id,company_id/id,state,billing_rules,package_amount,new_or_continuation,status,non_valued_amount,portfolio_id/id,description,affair_id/id,payment_term_id/id,client_contact_id/id,ceiling_value,user_id/id,valuation_mode,name,notes,budget,practice_id/id,purchase_amount,number_of_days,client_affair_number,sales_margin
+ID,Comment,Type of affair,Le reste à valoriser,Invoice Address,Montant à valoriser (yc les NdF en attente),On behalf of,Customer Reference,Ordered Date,Client,Plafond journalier de,Business engineer,Forfait calculé,Label,QPV Validé,Billing Company,Company,State,Billing rules,Forfait,New affair or continuation,Status,QPV Validée et en attente,Portefeuille ADV,Description,N° Affair,Payment Term,Ordering Contact,Plafond,Business engineer,Condition de valorisation,N° PdC,Comments,Total after discount,Practice,Total after discount,Total after discount,Client Affair N°,Sale Margin (%)
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,Text field type: Autorised value: Text The field is not required,"Selection field type: Autorised value: ['project', 'r_and_d', 'internal', 'maintenance'] 
+Value corresponding: 
+{'project': 'Project', 'r_and_d': 'R&D', 'internal': 'Internal', 'maintenance': 'Maintenance'} The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file res.partner.address.csv
+
+                                As exemple import_data.product1 The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Boolean field: Autorised value: ""True"" or ""False"".  The field is not required",Char field type: Autorised value: a string with 256 as max size The field is not required,Date field type: Autorised value: AAAA-MM-DD as exemple: 2012-05-28 The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file res.partner.csv
+
+                                As exemple import_data.product1 The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file hr.employee.csv
+
+                                As exemple import_data.product1 The field is required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Boolean field: Autorised value: ""True"" or ""False"".  The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file account.invoice.behalf_of.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.company.csv
+
+                                As exemple import_data.product1 The field is not required","Selection field type: Autorised value: ['canceled', 'validated', 'draft'] 
+Value corresponding: 
+{'canceled': 'Canceled', 'validated': 'Validated', 'draft': 'Draft'} The field is required",Text field type: Autorised value: Text The field is not required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Selection field type: Autorised value: ['new', 'continuation'] 
+Value corresponding: 
+{'new': 'new', 'continuation': 'continuation'} The field is required","Selection field type: Autorised value: ['firm', 'intention', 'pending'] 
+Value corresponding: 
+{'firm': 'Confirmed', 'intention': 'Intention', 'pending': 'Pending'} The field is required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file res.partner.portfolio.csv
+
+                                As exemple import_data.product1 The field is not required",Char field type: Autorised value: a string with 64 as max size The field is required,"Many2one field type: Autorised value: 'module_name.key' defined on the file affair.affair.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file account.payment.term.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.partner.address.csv
+
+                                As exemple import_data.product1 The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file res.users.csv
+
+                                As exemple import_data.product1 The field is not required","Selection field type: Autorised value: ['daily_package_mode', 'none_mode', 'package_mode', 'real_mode', 'ceiling_mode'] 
+Value corresponding: 
+{'daily_package_mode': 'Forfait journalier', 'none_mode': 'Non valorisable', 'package_mode': 'Forfait simple', 'real_mode': 'Au r\xc3\xa9el', 'ceiling_mode': 'Plafond'} The field is not required",Char field type: Autorised value: a string with 64 as max size The field is required,Text field type: Autorised value: Text The field is not required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file practice.practice.csv
+
+                                As exemple import_data.product1 The field is required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,Char field type: Autorised value: a string with 64 as max size The field is not required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is required

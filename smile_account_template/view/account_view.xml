@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- Account Journal -->
+
+        <record id="view_account_journal_template_tree" model="ir.ui.view">
+            <field name="name">account.journal.template.tree</field>
+            <field name="model">account.journal.template</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Account Journal Templates">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="user_id"/>
+                    <field name="chart_template_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_journal_template_search" model="ir.ui.view">
+            <field name="name">account.journal.template.search</field>
+            <field name="model">account.journal.template</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <tree string="Account Journal Templates">
+                    <group>
+                    <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Sale" icon="terp-camera_test"/>
+                    <filter domain="['|', ('type', '=', 'purchase'), ('type', '=', 'purchase_refund')]" string="Purchase" icon="terp-purchase"/>
+                   <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity" icon="terp-dolar"/>
+                    <filter domain="['|', ('type', '=', 'general'), ('type', '=', 'situation')]" string="Others" icon="terp-stock"/>
+                    <separator orientation="vertical"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                    <filter string="User" context="{'group_by':'user_id'}" icon="terp-personal"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Type" context="{'group_by':'type'}" icon="terp-stock_symbol-selection"/>
+                    </group>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_journal_template_form" model="ir.ui.view">
+            <field name="name">account.journal.template.form</field>
+            <field name="model">account.journal.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Account Journal Template">
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+                        <field name="type" on_change="onchange_type(type, currency, context)"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="General Information">
+                            <group col="2" colspan="2">
+                                <group colspan="2" col="2">
+                                    <separator string="Accounts" colspan="4"/>
+                                    <field name="default_debit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                    <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                </group>
+                                <group colspan="2" col="2">
+                                    <separator string="Journal View" colspan="4"/>
+                                    <field name="view_id" widget="selection"/>
+                                </group>
+                            </group>
+
+                            <group colspan="2" col="2">
+                                <separator string="Company" colspan="4"/>
+                                <field name="chart_template_id"/>
+                                <field name="user_id" groups="base.group_extended"/>
+                                <field name="currency"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Validations" colspan="4"/>
+                                <field name="allow_date" groups="base.group_extended"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Other Configuration" colspan="4"/>
+                                <field name="centralisation" groups="base.group_extended"/>
+                                <field name="entry_posted"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Invoicing Data" colspan="4"/>
+                                <field name="group_invoice_lines"/>
+                            </group>
+                            <group colspan="2" col="2" groups="base.group_extended">
+                                <separator string="Sequence" colspan="4"/>
+                                <field name="sequence_id" required="0"/>
+                            </group>
+                        </page>
+                        <page string="Entry Controls" groups="base.group_extended">
+                            <separator colspan="4" string="Accounts Type Allowed (empty for no control)"/>
+                            <field colspan="4" name="type_control_ids" nolabel="1"/>
+                            <separator colspan="4" string="Accounts Allowed (empty for no control)"/>
+                            <field colspan="4" name="account_control_ids" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_journal_template" model="ir.actions.act_window">
+            <field name="name">Journal Templates</field>
+            <field name="res_model">account.journal.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_account_journal_templates" name="Journals" parent="account.account_template_folder" sequence="3"/>
+        <menuitem action="action_account_journal_template" id="menu_account_journal_template" parent="menu_account_journal_templates" sequence="2"/>
+
+        <!-- Account Account Template By Resource -->
+
+        <record id="view_account_account_template_by_resource_tree" model="ir.ui.view">
+            <field name="name">account.account.template.by_resource.tree</field>
+            <field name="model">account.account.template.by_resource</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Account Templates by Resource">
+                    <field name="model_id"/>
+                    <field name="field_id"/>
+                    <field name="res_id"/>
+                    <field name="res_name"/>
+                    <field name="account_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_account_template_by_resource_search" model="ir.ui.view">
+            <field name="name">account.account.template.by_resource.search</field>
+            <field name="model">account.account.template.by_resource</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <tree string="Account Templates by Resource">
+                    <field name="model_id"/>
+                    <field name="field_id"/>
+                    <field name="account_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_account_template_by_resource_form" model="ir.ui.view">
+            <field name="name">account.account.template.by_resource.form</field>
+            <field name="model">account.account.template.by_resource</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Account Template by Resource">
+                    <field name="model_id"/>
+                    <field name="field_id" domain="[('ttype', '=', 'many2one'), ('model_id', '=?', model_id)]"/>
+                    <field name="res_id"/>
+                    <field name="res_name"/>
+                    <field name="account_id"/>
+                </form>
+            </field>
+        </record>
+
+		<!-- Account Chart Template -->
+
+        <record id="view_account_chart_template_form" model="ir.ui.view">
+            <field name="name">account.chart.template.form</field>
+            <field name="model">account.chart.template</field>
+			<field name="inherit_id" ref="account.view_account_chart_template_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="property_reserve_and_surplus_account" position="after">
+	                <field name="by_resource_ids" colspan="4" nolabel="1"/>
+                </field>
+            </field>
+        </record>
+
+		<!-- Account Model Template -->
+
+        <record id="view_model_line_template_tree" model="ir.ui.view">
+            <field name="name">account.model.line.template.tree</field>
+            <field name="model">account.model.line.template</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Journal Entry Model Line" editable="bottom">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="account_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="partner_id"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="date_maturity"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_model_line_template_form" model="ir.ui.view">
+            <field name="name">account.model.line.template.form</field>
+            <field name="model">account.model.line.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Journal Entry Model Line">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="sequence"/>
+                    <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="partner_id"/>
+                    <field name="debit" select="1"/>
+                    <field name="credit" select="1"/>
+                     <field name="quantity"/>
+                    <field name="date_maturity"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_template_form" model="ir.ui.view">
+            <field name="name">account.model.template.form</field>
+            <field name="model">account.model.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Journal Entry Model">
+                    <field name="name"/>
+                    <field name="journal_id"/>
+                    <field colspan="4" nolabel="1" name="lines_id" height="250" widget="one2many_list"/>
+                    <separator string="Legend" colspan="4"/>
+                    <field name="legend" colspan="4" nolabel="1"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_template_tree" model="ir.ui.view">
+            <field name="name">account.model.template.tree</field>
+            <field name="model">account.model.template</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Journal Entry Model">
+                    <field name="name"/>
+                    <field name="journal_id"/>
+                    <field name="chart_template_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_model_template_search" model="ir.ui.view">
+            <field name="name">account.model.template.search</field>
+            <field name="model">account.model.template</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Journal Entry Model">
+                  <group>
+                    <filter string="Sale" icon="terp-camera_test" domain="[('journal_id.type', '=', 'sale')]"/>
+                    <filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
+                    <separator orientation="vertical"/>
+                      <field name="name"/>
+                      <field name="journal_id" widget="selection"/>
+                      <field name="chart_template_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                      <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_model_template" model="ir.actions.act_window">
+            <field name="name">Recurring Models</field>
+            <field name="res_model">account.model.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_model_template_search"/>
+        </record>
+
+        <menuitem action="action_model_template" id="menu_action_model_form" sequence="5"
+            parent="account.account_template_folder"/>
+
+    </data>
+</openerp>

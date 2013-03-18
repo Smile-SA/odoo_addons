@@ -1,0 +1,27 @@
+id,cutoff_type,portfolio_id/id,affair_id/id,billable_amount,analytic_period_id/id,lot_invoice_evidence,agreement_id/id,partner_id/id,required_invoice_evidence,billed_amount,current_qualification_id/id,lot_sale_order_status,name,state,practice_id/id,amount,keep_qualification,project_id/id,lot_invoicing_mode_id/id
+ID,Type,Portefeuille ADV,Affaire,Billable Amount,Month,Invoice Documentary Evidence,Framework Agreement,Partner,Invoice Documentary Evidence,Billed Amount,Qualification,Order State,Name,State,Practice,Amount,Keep qualification for next month ?,Lot,Invoice Mode
+Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,"Selection field type: Autorised value: ['agreement', 'lot', 'fees'] 
+Value corresponding: 
+{'agreement': 'Framework agreement', 'lot': 'Lot', 'fees': 'Fees'} The field is required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.partner.portfolio.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file affair.affair.csv
+
+                                As exemple import_data.product1 The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file account.analytic.period.csv
+
+                                As exemple import_data.product1 The field is required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file solucom.sale.agreement.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file res.partner.csv
+
+                                As exemple import_data.product1 The field is required",Text field type: Autorised value: Text The field is not required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file cutoff.qualification.csv
+
+                                As exemple import_data.product1 The field is not required","Selection field type: Autorised value: ['firm', 'intention', 'pending'] 
+Value corresponding: 
+{'firm': 'Confirmed', 'intention': 'Intention', 'pending': 'Pending'} The field is not required",Char field type: Autorised value: a string with 64 as max size The field is not required,"Selection field type: Autorised value: ['qualified', 'closed', 'unqualified'] 
+Value corresponding: 
+{'qualified': 'Qualified', 'closed': 'Closed', 'unqualified': 'Unqualified'} The field is required","Many2one field type: Autorised value: 'module_name.key' defined on the file practice.practice.csv
+
+                                As exemple import_data.product1 The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file project.project.csv
+
+                                As exemple import_data.product1 The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file invoicing.mode.csv
+
+                                As exemple import_data.product1 The field is not required"
