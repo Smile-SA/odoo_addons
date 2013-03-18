@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="product_product_link_form">
+            <field name="name">product.normal.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Product Links">
+                        <field name="product_link_ids" colspan="4" nolabel="1">
+                        	<tree string="Linked Products" editable="top">
+	                        	<field name="linked_product_id"/>
+	                        	<field name="quantity"/>
+	                        	<field name="price_type"/>
+	                        	<field name="special_price" attrs="{'readonly': [('price_type', '!=', 'special')]}"/>
+	                        	<field name="mandatory"/>
+                        	</tree>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</openerp>

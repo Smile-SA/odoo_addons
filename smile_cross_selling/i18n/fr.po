@@ -1,0 +1,102 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_cross_selling
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-03-14 15:14+0000\n"
+"PO-Revision-Date: 2013-03-14 15:14+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_cross_selling
+#: field:product.link,linked_product_id:0
+msgid "Linked product"
+msgstr "Produit lié"
+
+#. module: smile_cross_selling
+#: model:ir.model,name:smile_cross_selling.model_product_product
+msgid "Product"
+msgstr "Article"
+
+#. module: smile_cross_selling
+#: model:ir.model,name:smile_cross_selling.model_sale_order
+msgid "Sales Order"
+msgstr "Commande de ventes"
+
+#. module: smile_cross_selling
+#: model:ir.model,name:smile_cross_selling.model_sale_order_links_wizard
+msgid "Linked Products Wizard"
+msgstr "Vente croisée"
+
+#. module: smile_cross_selling
+#: view:product.product:0
+msgid "Linked Products"
+msgstr "Produits liés"
+
+#. module: smile_cross_selling
+#: selection:product.link,price_type:0
+msgid "Standard"
+msgstr "Standard"
+
+#. module: smile_cross_selling
+#: field:sale.order.links_wizard,order_id:0
+msgid "Sale Order"
+msgstr "Commande de vente"
+
+#. module: smile_cross_selling
+#: field:product.link,special_price:0
+msgid "Special Price"
+msgstr "Prix spécial"
+
+#. module: smile_cross_selling
+#: view:product.product:0
+msgid "Product Links"
+msgstr "Produits liés"
+
+#. module: smile_cross_selling
+#: model:ir.model,name:smile_cross_selling.model_product_link
+msgid "Linked Product"
+msgstr "Produit lié"
+
+#. module: smile_cross_selling
+#: field:product.link,quantity:0
+msgid "Quantity"
+msgstr "Quantité"
+
+#. module: smile_cross_selling
+#: selection:product.link,price_type:0
+msgid "Special"
+msgstr "Spécial"
+
+#. module: smile_cross_selling
+#: field:product.link,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_cross_selling
+#: field:product.link,mandatory:0
+msgid "Mandatory"
+msgstr "Obligatoire"
+
+#. module: smile_cross_selling
+#: field:product.product,product_link_ids:0
+msgid "Product links"
+msgstr "Produits liés"
+
+#. module: smile_cross_selling
+#: field:product.link,product_id:0
+msgid "Main product"
+msgstr "Produit principal"
+
+#. module: smile_cross_selling
+#: field:product.link,price_type:0
+msgid "Price Type"
+msgstr "Type de prix"
+
