@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+	        	<field name="address_allotment_id" position="attributes">
+	            	<attribute name="groups">smile_allotment_partner_procurement.group_allotment_partner</attribute>
+	        	</field>
+	        	<xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree/field[@name='name']" position="after">
+	            	<field name="address_allotment_id" groups="smile_allotment_partner_procurement.group_allotment_partner"/>
+	        	</xpath>
+	        	<field name="order_line" position="attributes">
+	            	<attribute name="context">{'default_address_allotment_id': partner_id}</attribute>
+	        	</field>
+			</field>
+		</record>
+
+	</data>
+</openerp>
