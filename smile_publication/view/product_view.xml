@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+		<!-- Product -->
+
+        <menuitem name="Sales" id="menu_publication_sale" parent="menu_publication_main" sequence="30"/>
+        <menuitem id="menu_publication_product" parent="menu_publication_sale" action="product.product_normal_action_sell"
+        	name="Products" sequence="0"/>
+
+        <record id="view_product_product_form" model="ir.ui.view">
+            <field name="name">product.product.form</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <form string="Product" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Product Name"/>
+                            </div>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="type_id" class="oe_edit_only"/>
+                            <h2><field name="type_id" on_change="onchange_product_type(type_id)"/></h2>
+                        </div>
+                        <notebook>
+                            <page string="Information">
+                                <group col="4" attrs="{'invisible': [('must_be_linked_to_publication', '=', False)]}">
+									<group colspan="2" col="2">
+										<separator string="Publication" coslpan="2"/><newline/>
+		                            	<field name="publication_id" string="Title"
+		                            		attrs="{'invisible': [('must_be_linked_to_publication', '=', False)], 'required': [('must_be_linked_to_publication', '!=', False)]}"/>
+		                            	<field name="publication_number_id" domain="[('publication_id', '=', publication_id)]" string="Number"
+		                            		attrs="{'invisible': [('must_be_linked_to_publication_number', '=', False)], 'required': [('must_be_linked_to_publication_number', '!=', False)]}"/>
+										<group colspan="2" col="3" attrs="{'invisible': [('offer_type', '=', 'unlimited')]}">
+			                            	<field name="length" string="Duration" attrs="{'required': [('offer_type', '=', 'limited')]}"/>
+			                            	<field name="length_type" nolabel="1" attrs="{'required': [('offer_type', '=', 'limited')]}"/>
+			                            	<field name="numbers" attrs="{'required': [('offer_type', '=', 'limited')]}"/>
+			                            </group>
+		                            	<field name="offer_type" invisible="1"/>
+		                            	<field name="must_be_linked_to_publication" invisible="1"/>
+		                            	<field name="must_be_linked_to_publication_number" invisible="1"/>
+									</group>
+									<group colspan="2" col="2">
+										<separator string="Prices" coslpan="2"/><newline/>
+	                                    <field name="stand_price" attrs="{'required': [('type_id', '!=', False)], 'readonly': [('must_be_linked_to_publication_number', '=', True)]}"/>
+	                                    <field name="publisher_price" attrs="{'required': [('type_id', '!=', False)], 'readonly': [('must_be_linked_to_publication_number', '=', True)]}"/>
+	                                    <field name="commission_rate" attrs="{'required': [('type_id', '!=', False)], 'readonly': [('must_be_linked_to_publication_number', '=', True)]}"/>
+									</group>
+                                </group>
+                                <group attrs="{'invisible': [('type_id', '!=', False)]}">
+                                    <field name="type"/>
+                                    <field name="procure_method"/>
+                                    <field name="supply_method"/>
+                                    <field name="list_price"/>
+                                </group>
+                                <field name="description" placeholder="describe the product characteristics..."/>
+                            </page>
+                            <page string="Sale Shops">
+                                <field name="sale_shop_ids" nolabel="1" colspan="4"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+				</form>
+			</field>
+		</record>
+
+        <record id="product.open_view_product_form1" model="ir.actions.act_window.view">
+            <field name="view_id" ref="view_product_product_form"/>
+        </record>
+
+		<!-- Product Type -->
+
+        <record id="view_product_type_search" model="ir.ui.view">
+            <field name="name">product.type.search</field>
+            <field name="model">product.type</field>
+            <field name="arch" type="xml">
+                <search string="Product Types">
+	                <filter string="Stockable product" domain="[('type', '=', 'product'))]"/>
+	                <filter string="Consumable" domain="[('type', '=', 'consu'))]"/>
+	                <filter string="Service" domain="[('type', '=', 'service'))]"/>
+                    <separator/>
+	                <filter string="Make to stock" domain="[('procure_method', '=', 'make_to_stock'))]"/>
+	                <filter string="Make to order" domain="[('procure_method', '=', 'make_to_order'))]"/>
+                    <separator/>
+	                <filter string="Buy" domain="[('supply_method', '=', 'buy'))]"/>
+	                <filter string="Manufacture" domain="[('supply_method', '=', 'produce'))]"/>
+                    <separator/>
+	                <filter string="Pre-invoicing" domain="[('invoicing_mode', '=', 'pre'))]"/>
+	                <filter string="Post-invoicing" domain="[('invoicing_mode', '=', 'post'))]"/>
+                    <separator/>
+	                <filter string="Paper" domain="[('format', '=', 'paper'))]"/>
+	                <filter string="Digital" domain="[('format', '=', 'digital'))]"/>
+                    <separator/>
+	                <filter string="Limited offer" domain="[('offer_type', '=', 'limited'))]"/>
+	                <filter string="Unlimited offer" domain="[('offer_type', '=', 'unlimited'))]"/>
+                    <separator/>
+                    <field name="format"/>
+                    <field name="offer_type"/>
+                    <field name="invoicing_mode"/>
+                    <field name="delay_start"/>
+					<field name="sale_shop_ids"/>
+                    <field name="type"/>
+                    <field name="procure_method"/>
+                    <field name="supply_method"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <group  expand='0' string='Group by...'>
+                   		<filter string='Product Format' domain="[]" context="{'group_by' : 'format'}"/>
+                   		<filter string='Product Type' domain="[]" context="{'group_by' : 'type'}"/>
+                   		<filter string='Procurement Method' domain="[]" context="{'group_by' : 'procure_method'}"/>
+                   		<filter string='Supply Method' domain="[]" context="{'group_by' : 'supply_method'}"/>
+                   		<filter string='Invoicing Mode' domain="[]" context="{'group_by' : 'invoicing_mode'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_product_type_tree" model="ir.ui.view">
+            <field name="name">product.type.tree</field>
+            <field name="model">product.type</field>
+            <field name="arch" type="xml">
+                <tree string="Product Types">
+                    <field name="name"/>
+                    <field name="format"/>
+                    <field name="offer_type"/>
+                    <field name="invoicing_mode"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_product_type_form" model="ir.ui.view">
+            <field name="name">product.type.form</field>
+            <field name="model">product.type</field>
+            <field name="arch" type="xml">
+                <form string="Product Type" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Description"/>
+                            </h1>
+                        </div>
+                        <notebook>
+                            <page string="Information">
+                            	<group colspan="4" col="4">
+	                                <group colspan="2" col="2">
+	                                	<separator string="Characteristics" colspan="2"/>
+	                                    <field name="format"/>
+	                                    <field name="offer_type"/>
+	                                    <field name="invoicing_mode"/>
+	                                    <field name="delay_start"/>
+	                                </group>
+	                                <group colspan="2" col="2">
+	                                	<separator string="Procurement" colspan="2"/>
+	                                    <field name="type"/>
+	                                    <field name="procure_method"/>
+	                                    <field name="supply_method"/>
+	                                    <field name="company_id" groups="base.group_multi_company"/>
+	                                </group>
+	                                <group colspan="2" col="2">
+	                                	<separator string="Product" colspan="2"/>
+	                                    <field name="must_be_linked_to_publication"/>
+	                                    <field name="must_be_linked_to_publication_number"/>
+	                                    <field name="can_be_sold_beyond_publication_period"/>
+	                                </group>
+	                                <group colspan="2" col="2">
+	                                	<separator string="Accounting" colspan="2"/>
+	                                    <field name="property_account_income"/>
+	                                    <field name="taxes_id" widget="many2many_tags"/>
+	                                    <field name="property_account_expense"/>
+	                                    <field name="supplier_taxes_id" widget="many2many_tags"/>
+	                                </group>
+                                </group>
+                            </page>
+                            <page string="Sale Shops">
+                                <field name="sale_shop_ids" nolabel="1" colspan="4"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+				</form>
+            </field>
+        </record>
+
+        <record id="action_product_type" model="ir.actions.act_window">
+            <field name="name">Product Types</field>
+            <field name="res_model">product.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_product_type_search"/>
+        </record>
+
+        <menuitem id="menu_product_type" parent="menu_publication_config" action="action_product_type" sequence="10"/>
+
+    </data>
+</openerp>

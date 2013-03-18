@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_sale_order_line_search" model="ir.ui.view">
+            <field name="name">sale.order.line.search</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <search string="Sales Order Lines">
+	                <filter name="uninvoiced" string="Not invoiced" domain="[('invoiced','=', False)]"/>
+	                <filter name="invoiced" string="Invoiced" domain="[('invoiced','=', True)]"/>
+                    <field name="type_id"/>
+                    <field name="product_id"/>
+                    <field name="name"/>
+                    <field name="order_partner_id"/>
+                    <field name="address_allotment_id"/>
+                    <field name="publication_id"/>
+                    <field name="publication_number_id"/>
+                    <field name="salesman_id"/>
+                    <field name="date_confirm"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <field name="invoiced"/>
+                    <group  expand='0' string='Group by...'>
+                   		<filter string='Product Type' domain="[]" context="{'group_by' : 'type_id'}"/>
+                   		<filter string='Product' domain="[]" context="{'group_by' : 'product_id'}"/>
+                   		<filter string='Salesman' domain="[]" context="{'group_by' : 'salesman_id'}"/>
+                   		<filter string='Publication' domain="[]" context="{'group_by' : 'publication_id'}"/>
+                   		<filter string='Publication Number' domain="[]" context="{'group_by' : 'publication_number_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_sale_order_line_tree" model="ir.ui.view">
+            <field name="name">sale.order.line.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Order Lines" editable="top">
+                    <field name="order_id"/>
+                    <field name="type_id" invisible="1"/>
+                    <field name="product_id" invisible="1"/>
+                    <field name="name"/>
+                    <field name="order_partner_id" readonly="1"/>
+                    <field name="address_allotment_id" readonly="1" groups="smile_allotment_partner_procurement.group_allotment_partner"/>
+                    <field name="publication_id"/>
+                    <field name="publication_number_id"/>
+                    <field name="product_uom_qty" string="Qty"/>
+                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="salesman_id"/>
+                    <field name="price_subtotal" sum="Total"/>
+                    <field name="date_confirm"/>
+                    <field name="date_start" required="1"/>
+                    <field name="date_stop" attrs="{'required': [('offer_type', '=', 'limited')]}"/>
+                    <field name="state" invisible="1"/>
+                    <field name="invoiced"/>
+                    <field name="offer_type" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_order_line" model="ir.actions.act_window">
+            <field name="name">Sales Order Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_sale_order_line_tree"/>
+            <field name="search_view_id" ref="view_sale_order_line_search"/>
+            <field name="domain">[('state', 'not in', ('draft', 'cancel'))]</field>
+            <field name="context">{"search_default_uninvoiced":1}</field>
+            <field name="filter" eval="True"/>
+            <field name="help" type="html">
+              <p>
+                Here is a list of each sales order line to be invoiced. You can
+                invoice sales orders partially, by lines of sales order. You do
+                not need this list if you invoice from the delivery orders or
+                if you invoice sales totally.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_order_line" parent="base.menu_sales" action="action_order_line" sequence="50"/>
+
+	</data>
+</openerp>

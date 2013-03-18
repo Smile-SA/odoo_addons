@@ -1,0 +1,1126 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_publication
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-03-14 15:16+0000\n"
+"PO-Revision-Date: 2013-03-14 15:16+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_publication
+#: model:ir.model,name:smile_publication.model_publication_publication
+#: view:product.product:0
+#: field:product.product,publication_id:0
+#: view:publication.number:0
+#: field:publication.number,publication_id:0
+#: field:publication.plan,publication_id:0
+#: view:publication.publication:0
+#: view:sale.order.line:0
+#: field:sale.order.line,publication_id:0
+msgid "Publication"
+msgstr "Titre"
+
+#. module: smile_publication
+#: view:product.type:0
+#: selection:product.type,type:0
+msgid "Service"
+msgstr "Service"
+
+#. module: smile_publication
+#: view:product.product:0
+msgid "Title"
+msgstr "Titre"
+
+#. module: smile_publication
+#: help:product.type,sale_shop_ids:0
+msgid "If empty, this publication is available in all shops"
+msgstr "Si vide, cette publication est disponible pour l'ensemble des magasins"
+
+#. module: smile_publication
+#: field:sale.order.line,date_confirm:0
+msgid "Confirmation Date"
+msgstr "Date de confirmation"
+
+#. module: smile_publication
+#: field:product.type,client_action_server_id:0
+msgid "Client Action Server"
+msgstr "Action serveur"
+
+#. module: smile_publication
+#: view:publication.publication:0
+msgid "Extra info"
+msgstr "Extra info"
+
+#. module: smile_publication
+#: selection:product.product,length_type:0
+msgid "Weeks"
+msgstr "Semaines"
+
+#. module: smile_publication
+#: view:sale.order.line:0
+msgid "Unit of Measure"
+msgstr "Unité de mesure"
+
+#. module: smile_publication
+#: view:product.type:0
+#: field:product.type,procure_method:0
+msgid "Procurement Method"
+msgstr "Méthode d'approvisionnement"
+
+#. module: smile_publication
+#: view:product.type:0
+#: selection:product.type,supply_method:0
+msgid "Manufacture"
+msgstr "Produire"
+
+#. module: smile_publication
+#: field:publication.plan,first_number:0
+msgid "First Number"
+msgstr "Premier Numéro"
+
+#. module: smile_publication
+#: field:publication.plan,march:0
+msgid "March"
+msgstr "Mars"
+
+#. module: smile_publication
+#: view:product.type:0
+msgid "Fields to fill"
+msgstr "Champs à renseigner"
+
+#. module: smile_publication
+#: field:publication.number,message_unread:0
+#: field:publication.plan,message_unread:0
+#: field:publication.publication,message_unread:0
+msgid "Unread Messages"
+msgstr "Messages non lus"
+
+#. module: smile_publication
+#: field:product.type,company_id:0
+#: field:publication.publication,company_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_publication
+#: field:publication.plan,friday:0
+msgid "Friday"
+msgstr "Vendredi"
+
+#. module: smile_publication
+#: selection:product.type,offer_type:0
+msgid "Unlimited"
+msgstr "Illimitée"
+
+#. module: smile_publication
+#: selection:product.type,type:0
+msgid "Stockable Product"
+msgstr "Produit stockable"
+
+#. module: smile_publication
+#: model:ir.module.category,name:smile_publication.module_category_publication_app
+msgid "Publication App"
+msgstr "Publication App"
+
+#. module: smile_publication
+#: view:publication.number.deletion_wizard:0
+#: view:publication.plan:0
+#: view:publication.publication:0
+msgid "Validate"
+msgstr "Valider"
+
+#. module: smile_publication
+#: field:product.product,must_define_length:0
+#: field:product.type,must_define_length:0
+#: field:sale.order.line,must_define_length:0
+msgid "Must define duration"
+msgstr "Définir la durée d'abonnement"
+
+#. module: smile_publication
+#: view:product.product:0
+#: view:product.type:0
+msgid "Sale Shops"
+msgstr "Magasins"
+
+#. module: smile_publication
+#: view:product.product:0
+msgid "Product Name"
+msgstr "Nom de l'article"
+
+#. module: smile_publication
+#: field:publication.plan,december:0
+msgid "December"
+msgstr "Décembre"
+
+#. module: smile_publication
+#: field:publication.number,message_ids:0
+#: field:publication.plan,message_ids:0
+#: field:publication.publication,message_ids:0
+msgid "Messages"
+msgstr "Messages"
+
+#. module: smile_publication
+#: selection:product.product,length_type:0
+msgid "Days"
+msgstr "Jours"
+
+#. module: smile_publication
+#: field:product.product,length:0
+msgid "Length"
+msgstr "Durée"
+
+#. module: smile_publication
+#: model:ir.ui.menu,name:smile_publication.menu_publication_product
+#: view:publication.number:0
+#: field:publication.number,product_ids:0
+msgid "Products"
+msgstr "Articles"
+
+#. module: smile_publication
+#: field:product.product,sale_shop_ids:0
+#: field:product.type,sale_shop_ids:0
+#: field:publication.publication,sale_shop_ids:0
+msgid "Shops"
+msgstr "Magasins"
+
+#. module: smile_publication
+#: field:product.product,numbers:0
+msgid "Publication numbers"
+msgstr "Parutions"
+
+#. module: smile_publication
+#: field:product.product,commission_rate:0
+msgid "Commission Rate"
+msgstr "Taux de commission"
+
+#. module: smile_publication
+#: help:publication.number,message_unread:0
+#: help:publication.plan,message_unread:0
+#: help:publication.publication,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Si coché, les nouveaux messages requièrent votre attention"
+
+#. module: smile_publication
+#: model:ir.ui.menu,name:smile_publication.menu_publication_config
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: smile_publication
+#: view:publication.publication:0
+msgid "Publisher:"
+msgstr "Editeur:"
+
+#. module: smile_publication
+#: view:product.type:0
+msgid "Characteristics"
+msgstr "Caractéristiques"
+
+#. module: smile_publication
+#: view:product.type:0
+#: field:product.type,invoicing_mode:0
+msgid "Invoicing Mode"
+msgstr "Mode de facturation"
+
+#. module: smile_publication
+#: field:publication.plan,sunday:0
+msgid "Sunday"
+msgstr "Dimanche"
+
+#. module: smile_publication
+#: help:publication.number,message_summary:0
+#: help:publication.plan,message_summary:0
+#: help:publication.publication,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+
+#. module: smile_publication
+#: model:ir.ui.menu,name:smile_publication.menu_publication_sale
+msgid "Sales"
+msgstr "Ventes"
+
+#. module: smile_publication
+#: model:ir.model,name:smile_publication.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_publication
+#: model:ir.model,name:smile_publication.model_sale_order
+msgid "Sales Order"
+msgstr "Commande de ventes"
+
+#. module: smile_publication
+#: field:publication.number,issn:0
+#: field:publication.publication,issn:0
+msgid "International Standard Serial Number"
+msgstr "ISSN"
+
+#. module: smile_publication
+#: model:ir.model,name:smile_publication.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de commandes de vente"
+
+#. module: smile_publication
+#: selection:publication.plan,publication_month:0
+msgid "Previous"
+msgstr "Précédent"
+
+#. module: smile_publication
+#: field:product.type,client_action_id:0
+msgid "Client Action"
+msgstr "Action client"
+
+#. module: smile_publication
+#: model:ir.model,name:smile_publication.model_product_type
+#: view:product.type:0
+#: field:product.type,type:0
+#: view:sale.order.line:0
+#: field:sale.order.line,type_id:0
+msgid "Product Type"
+msgstr "Type d'articles"
+
+#. module: smile_publication
+#: field:publication.number,plan_id:0
+msgid "Publication plan"
+msgstr "Planning"
+
+#. module: smile_publication
+#: view:product.product:0
+#: field:publication.number,number:0
+#: view:publication.publication:0
+msgid "Number"
+msgstr "Parution"
+
+#. module: smile_publication
+#: field:publication.plan,state:0
+msgid "State"
+msgstr "Etat"
+
+#. module: smile_publication
+#: field:publication.number,message_follower_ids:0
+#: field:publication.plan,message_follower_ids:0
+#: field:publication.publication,message_follower_ids:0
+msgid "Followers"
+msgstr "Followers"
+
+#. module: smile_publication
+#: view:product.type:0
+msgid "Unlimited offer"
+msgstr "Offre illimitée"
+
+#. module: smile_publication
+#: field:sale.order.line,date_start:0
+msgid "Start date"
+msgstr "Date de début"
+
+#. module: smile_publication
+#: field:publication.plan,create_date:0
+msgid "Creation Date"
+msgstr "Date de création"
+
+#. module: smile_publication
+#: field:publication.publication,plan_ids:0
+msgid "Publication Plans"
+msgstr "Plannings"
+
+#. module: smile_publication
+#: view:publication.plan:0
+#: selection:publication.plan,frequency:0
+#: selection:publication.publication,frequency:0
+msgid "From daily to bi-monthly"
+msgstr "De quotidien à bi-mensuel"
+
+#. module: smile_publication
+#: selection:product.type,procure_method:0
+msgid "Make to Stock"
+msgstr "Sur stock"
+
+#. module: smile_publication
+#: view:product.product:0
+#: view:publication.plan:0
+msgid "Prices"
+msgstr "Prix"
+
+#. module: smile_publication
+#: field:publication.plan,july:0
+msgid "July"
+msgstr "Juillet"
+
+#. module: smile_publication
+#: view:product.type:0
+#: selection:product.type,type:0
+msgid "Consumable"
+msgstr "Consommable"
+
+#. module: smile_publication
+#: help:publication.publication,weight:0
+msgid "The gross weight in Kg."
+msgstr "Le poids est en Kg."
+
+#. module: smile_publication
+#: sql_constraint:publication.publication:0
+msgid "International Standard Serial Number must be unique"
+msgstr "L'ISSN doit être unique"
+
+#. module: smile_publication
+#: view:publication.number:0
+#: field:publication.number,publisher_id:0
+#: view:publication.publication:0
+#: field:publication.publication,publisher_id:0
+msgid "Publisher"
+msgstr "Editeur"
+
+#. module: smile_publication
+#: sql_constraint:publication.number:0
+msgid "Publication number must be unique"
+msgstr "La parution doit être unique"
+
+#. module: smile_publication
+#: model:ir.ui.menu,name:smile_publication.menu_publication_publisher
+msgid "Publishers"
+msgstr "Editeurs"
+
+#. module: smile_publication
+#: field:publication.plan,publisher_price_digital:0
+msgid "Publisher Price - Digital"
+msgstr "Prix éditeur - Numérique"
+
+#. module: smile_publication
+#: field:publication.number.deletion_wizard,shift_numbers:0
+msgid "Shift numbers"
+msgstr "Décaler les numéros des parutions"
+
+#. module: smile_publication
+#: field:product.product,stand_price:0
+#: view:publication.plan:0
+msgid "Stand Price"
+msgstr "Prix kiosque"
+
+#. module: smile_publication
+#: field:publication.number,image_small:0
+#: field:publication.publication,image_small:0
+msgid "Small-sized image"
+msgstr "Vignette"
+
+#. module: smile_publication
+#: view:publication.publication:0
+msgid "Country:"
+msgstr "Pays:"
+
+#. module: smile_publication
+#: view:publication.publication:0
+msgid "Sale shops"
+msgstr "Magasins"
+
+#. module: smile_publication
+#: view:product.type:0
+#: selection:product.type,invoicing_mode:0
+msgid "Pre-invoicing"
+msgstr "Pré-facturation"
+
+#. module: smile_publication
+#: view:publication.number:0
+msgid "Delete"
+msgstr "Supprimer"
+
+#. module: smile_publication
+#: view:publication.number:0
+#: field:publication.plan,in_progress:0
+msgid "In progress"
+msgstr "En cours"
+
+#. module: smile_publication
+#: view:product.type:0
+#: selection:product.type,invoicing_mode:0
+msgid "Post-invoicing"
+msgstr "Post-facturation"
+
+#. module: smile_publication
+#: field:publication.plan,september:0
+msgid "September"
+msgstr "Septembre"
+
+#. module: smile_publication
+#: field:product.product,must_be_linked_to_publication_number:0
+#: field:product.type,must_be_linked_to_publication_number:0
+msgid "Must be linked to publication number"
+msgstr "Doit être lié à une parution"
+
+#. module: smile_publication
+#: field:publication.number,image:0
+#: field:publication.publication,image:0
+msgid "Image"
+msgstr "Image"
+
+#. module: smile_publication
+#: selection:product.product,length_type:0
+msgid "Years"
+msgstr "Années"
+
+#. module: smile_publication
+#: view:product.type:0
+#: view:publication.number:0
+#: view:publication.publication:0
+#: view:sale.order.line:0
+msgid "Group by..."
+msgstr "Grouper par..."
+
+#. module: smile_publication
+#: view:product.type:0
+#: selection:product.type,format:0
+#: view:publication.plan:0
+msgid "Paper"
+msgstr "Papier"
+
+#. module: smile_publication
+#: field:publication.publication,number_count:0
+msgid "Publication Numbers Count"
+msgstr "Nombre de parutions"
+
+#. module: smile_publication
+#: field:product.product,length_type:0
+#: field:publication.number,has_image:0
+#: field:publication.publication,has_image:0
+msgid "unknown"
+msgstr "inconnu"
+
+#. module: smile_publication
+#: field:publication.number,date_start:0
+#: field:publication.plan,date_start:0
+msgid "Start Date"
+msgstr "Date de début"
+
+#. module: smile_publication
+#: field:publication.plan,publication_day:0
+msgid "Publication Day"
+msgstr "Jour de publication"
+
+#. module: smile_publication
+#: view:sale.order.line:0
+msgid "Salesman"
+msgstr "Vendeur"
+
+#. module: smile_publication
+#: view:publication.number.deletion_wizard:0
+msgid "or"
+msgstr "ou"
+
+#. module: smile_publication
+#: view:sale.order.line:0
+msgid "Invoiced"
+msgstr "Facturé"
+
+#. module: smile_publication
+#: view:product.product:0
+#: view:product.type:0
+msgid "Information"
+msgstr "Information"
+
+#. module: smile_publication
+#: view:publication.number.deletion_wizard:0
+msgid "Publication Number Deletion"
+msgstr "Suppression des parutions"
+
+#. module: smile_publication
+#: field:publication.publication,lang_id:0
+msgid "Languages"
+msgstr "Langues"
+
+#. module: smile_publication
+#: selection:publication.plan,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_publication
+#: model:ir.model,name:smile_publication.model_publication_number
+#: field:product.product,publication_number_id:0
+#: view:publication.number:0
+#: field:publication.number.deletion_wizard,publication_number_id:0
+#: view:sale.order.line:0
+#: field:sale.order.line,publication_number_id:0
+msgid "Publication Number"
+msgstr "Parutions"
+
+#. module: smile_publication
+#: view:publication.plan:0
+msgid "Commission Rate (%)"
+msgstr "Taux de commission (%)"
+
+#. module: smile_publication
+#: field:publication.plan,weeks:0
+msgid "Weeks between publication numbers"
+msgstr "Intervalle (en semaines)"
+
+#. module: smile_publication
+#: view:product.type:0
+#: selection:product.type,supply_method:0
+msgid "Buy"
+msgstr "Acheter"
+
+#. module: smile_publication
+#: model:ir.ui.menu,name:smile_publication.menu_publication_catalog
+#: model:ir.ui.menu,name:smile_publication.menu_publication_main
+msgid "Catalogs"
+msgstr "Catalogues"
+
+#. module: smile_publication
+#: field:publication.plan,august:0
+msgid "August"
+msgstr "Août"
+
+#. module: smile_publication
+#: field:publication.plan,monday:0
+msgid "Monday"
+msgstr "Lundi"
+
+#. module: smile_publication
+#: field:publication.publication,category_ids:0
+msgid "Tags"
+msgstr "Tags"
+
+#. module: smile_publication
+#: field:product.product,publisher_price:0
+#: view:publication.plan:0
+msgid "Publisher Price"
+msgstr "Prix éditeur"
+
+#. module: smile_publication
+#: sql_constraint:product.type:0
+msgid "Product Type must be unique"
+msgstr "Le type d'articles doit être unique"
+
+#. module: smile_publication
+#: field:publication.plan,june:0
+msgid "June"
+msgstr "Juin"
+
+#. module: smile_publication
+#: help:publication.publication,sale_shop_ids:0
+msgid "If empty, this publication is available in all shops"
+msgstr "Si vide, le titre est disponible pour l'ensemble de magasins"
+
+#. module: smile_publication
+#: field:publication.number,message_is_follower:0
+#: field:publication.plan,message_is_follower:0
+#: field:publication.publication,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Is a Follower"
+
+#. module: smile_publication
+#: view:publication.plan:0
+msgid "Plan"
+msgstr "Planning"
+
+#. module: smile_publication
+#: field:publication.publication,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_publication
+#: field:publication.plan,november:0
+msgid "November"
+msgstr "Novembre"
+
+#. module: smile_publication
+#: view:publication.number:0
+#: field:publication.publication,number_ids:0
+msgid "Publication Numbers"
+msgstr "Parutions"
+
+#. module: smile_publication
+#: model:res.groups,name:smile_publication.group_publication_user
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: smile_publication
+#: field:publication.plan,october:0
+msgid "October"
+msgstr "Octobre"
+
+#. module: smile_publication
+#: view:publication.number:0
+#: field:publication.number,lang_id:0
+#: view:publication.publication:0
+msgid "Language"
+msgstr "Langue"
+
+#. module: smile_publication
+#: model:ir.model,name:smile_publication.model_publication_number_deletion_wizard
+msgid "Publication number deletion wizard"
+msgstr "Assistant de suppression des parutions"
+
+#. module: smile_publication
+#: field:publication.plan,january:0
+msgid "January"
+msgstr "Janvier"
+
+#. module: smile_publication
+#: selection:product.product,length_type:0
+msgid "Months"
+msgstr "Mois"
+
+#. module: smile_publication
+#: help:publication.number,image:0
+#: help:publication.publication,image:0
+msgid "This field holds the image used as image for the product, limited to 1024x1024px."
+msgstr "This field holds the image used as image for the product, limited to 1024x1024px."
+
+#. module: smile_publication
+#: field:sale.order.line,analytic_account_id:0
+msgid "Contract"
+msgstr "Contrat"
+
+#. module: smile_publication
+#: field:publication.number,message_summary:0
+#: field:publication.plan,message_summary:0
+#: field:publication.publication,message_summary:0
+msgid "Summary"
+msgstr "Résumé"
+
+#. module: smile_publication
+#: field:publication.plan,stand_price_paper:0
+msgid "Stand Price - Paper"
+msgstr "Prix kiosque - Papier"
+
+#. module: smile_publication
+#: view:publication.publication:0
+msgid "Language:"
+msgstr "Langue:"
+
+#. module: smile_publication
+#: field:publication.plan,stand_price_digital:0
+msgid "Stand Price - Digital"
+msgstr "Prix éditeur - Numérique"
+
+#. module: smile_publication
+#: field:publication.number,publication_date:0
+msgid "Publication Date"
+msgstr "Date de publication"
+
+#. module: smile_publication
+#: field:sale.order.line,date_stop:0
+msgid "End date"
+msgstr "Date de fin"
+
+#. module: smile_publication
+#: constraint:publication.plan:0
+msgid "Commission Rates must be between 0.0 and 100.0"
+msgstr "Les taux de commisions doivent être compris entre 0.0 et 100.0"
+
+#. module: smile_publication
+#: field:res.partner,publication_count:0
+msgid "Publications Count"
+msgstr "Nombre de titres"
+
+#. module: smile_publication
+#: field:publication.publication,weight:0
+msgid "Average Weight"
+msgstr "Poids moyen"
+
+#. module: smile_publication
+#: view:sale.order.line:0
+msgid "Qty"
+msgstr "Qté"
+
+#. module: smile_publication
+#: view:sale.order.line:0
+msgid "Not invoiced"
+msgstr "Non facturé"
+
+#. module: smile_publication
+#: field:publication.plan,frequency:0
+#: field:publication.publication,frequency:0
+msgid "Frequency"
+msgstr "Fréquence"
+
+#. module: smile_publication
+#: model:ir.actions.act_window,name:smile_publication.action_publication_number
+#: model:ir.ui.menu,name:smile_publication.menu_publication_number
+#: view:publication.publication:0
+msgid "Numbers"
+msgstr "Parutions"
+
+#. module: smile_publication
+#: field:publication.publication,image_url:0
+msgid "Image URL"
+msgstr "Image URL"
+
+#. module: smile_publication
+#: view:publication.number.deletion_wizard:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_publication
+#: view:product.type:0
+msgid "Make to order"
+msgstr "A la commande"
+
+#. module: smile_publication
+#: selection:publication.plan,state:0
+msgid "Validated"
+msgstr "Validé"
+
+#. module: smile_publication
+#: field:product.product,delay_start:0
+#: field:product.type,delay_start:0
+msgid "Delay of starting (in days)"
+msgstr "Délai de mise en place (en place)"
+
+#. module: smile_publication
+#: field:publication.plan,tuesday:0
+msgid "Tuesday"
+msgstr "Mardi"
+
+#. module: smile_publication
+#: view:product.type:0
+msgid "Stockable product"
+msgstr "Product stockable"
+
+#. module: smile_publication
+#: model:ir.actions.act_window,help:smile_publication.action_order_line
+msgid "<p>\n"
+"                Here is a list of each sales order line to be invoiced. You can\n"
+"                invoice sales orders partially, by lines of sales order. You do\n"
+"                not need this list if you invoice from the delivery orders or\n"
+"                if you invoice sales totally.\n"
+"              </p>\n"
+"            "
+msgstr "<p>\n"
+"                Ici la liste des lignes à facturer. Vous pouvez aussi\n"
+"                facturer les commandes partiellement, par lignes. Vous \n"
+"                n'avez pas besoin de cette liste si vous facturer sur livraison,\n"
+"                vous si vous facturer les commande totalement.\n"
+"              </p>\n"
+"            "
+
+#. module: smile_publication
+#: field:publication.plan,publisher_price_paper:0
+msgid "Publisher Price - Paper"
+msgstr "Prix éditeur - Papier"
+
+#. module: smile_publication
+#: field:publication.plan,thursday:0
+msgid "Thursday"
+msgstr "Jeudi"
+
+#. module: smile_publication
+#: selection:publication.plan,publication_month:0
+msgid "Current"
+msgstr "Courant"
+
+#. module: smile_publication
+#: field:publication.publication,plan_in_progress_id:0
+msgid "Publication plan in progress"
+msgstr "Planning en cours"
+
+#. module: smile_publication
+#: view:product.type:0
+msgid "Make to stock"
+msgstr "Sur stock"
+
+#. module: smile_publication
+#: view:product.type:0
+#: selection:product.type,format:0
+#: view:publication.plan:0
+msgid "Digital"
+msgstr "Numérique"
+
+#. module: smile_publication
+#: field:product.type,can_be_sold_beyond_publication_period:0
+msgid "Can be sold beyond publication period"
+msgstr "Peut être vendu au delà de la période de parution"
+
+#. module: smile_publication
+#: model:ir.actions.act_window,name:smile_publication.action_product_type
+#: model:ir.ui.menu,name:smile_publication.menu_product_type
+#: view:product.type:0
+msgid "Product Types"
+msgstr "Types d'articles"
+
+#. module: smile_publication
+#: field:product.type,offer_type:0
+msgid "Offer type"
+msgstr "Type d'offres"
+
+#. module: smile_publication
+#: model:ir.model,name:smile_publication.model_product_product
+#: view:product.product:0
+#: view:sale.order.line:0
+msgid "Product"
+msgstr "Article"
+
+#. module: smile_publication
+#: view:publication.publication:0
+msgid "Plans"
+msgstr "Plannings"
+
+#. module: smile_publication
+#: field:product.product,format:0
+#: field:product.type,format:0
+msgid "Format"
+msgstr "Format"
+
+#. module: smile_publication
+#: field:publication.plan,may:0
+msgid "May"
+msgstr "Mai"
+
+#. module: smile_publication
+#: view:publication.number:0
+msgid "n°"
+msgstr "n°"
+
+#. module: smile_publication
+#: view:product.type:0
+msgid "Limited offer"
+msgstr "Offre limitée"
+
+#. module: smile_publication
+#: selection:product.type,procure_method:0
+msgid "Make to Order"
+msgstr "A la commande"
+
+#. module: smile_publication
+#: view:product.type:0
+#: field:product.type,supply_method:0
+msgid "Supply Method"
+msgstr "Méthode de fourniture"
+
+#. module: smile_publication
+#: field:publication.plan,publication_month:0
+msgid "Publication Month"
+msgstr "Mois de publication"
+
+#. module: smile_publication
+#: field:publication.plan,commission_rate_paper:0
+msgid "Commission rate - Paper"
+msgstr "Taux de commission - Papier"
+
+#. module: smile_publication
+#: field:publication.number,date_stop:0
+#: field:publication.plan,date_stop:0
+#: field:publication.publication,date_stop:0
+msgid "End Date"
+msgstr "Date de fin"
+
+#. module: smile_publication
+#: field:publication.plan,february:0
+msgid "February"
+msgstr "Février"
+
+#. module: smile_publication
+#: field:product.type,name:0
+#: field:publication.publication,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_publication
+#: field:product.product,must_be_linked_to_publication:0
+#: field:product.type,must_be_linked_to_publication:0
+msgid "Must be linked to publication"
+msgstr "Doit être lié à un titre"
+
+#. module: smile_publication
+#: view:publication.number:0
+#: field:publication.number,country_id:0
+#: view:publication.publication:0
+#: field:publication.publication,country_id:0
+msgid "Country"
+msgstr "Pays"
+
+#. module: smile_publication
+#: field:publication.plan,wednesday:0
+msgid "Wednesday"
+msgstr "Mercredi"
+
+#. module: smile_publication
+#: help:publication.number,image_small:0
+#: help:publication.publication,image_small:0
+msgid "Small-sized image of this contact. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
+msgstr "Small-sized image of this contact. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
+
+#. module: smile_publication
+#: field:publication.plan,april:0
+msgid "April"
+msgstr "Avril"
+
+#. module: smile_publication
+#: model:ir.actions.act_window,name:smile_publication.action_publication_publication
+#: model:ir.ui.menu,name:smile_publication.menu_publication_publication
+#: view:publication.publication:0
+#: field:res.partner,publication_ids:0
+msgid "Publications"
+msgstr "Titres"
+
+#. module: smile_publication
+#: help:publication.number,message_ids:0
+#: help:publication.plan,message_ids:0
+#: help:publication.publication,message_ids:0
+msgid "Messages and communication history"
+msgstr "Messages and historique des communications"
+
+#. module: smile_publication
+#: selection:product.type,offer_type:0
+msgid "Limited"
+msgstr "Limitée"
+
+#. module: smile_publication
+#: view:sale.order.line:0
+msgid "Total"
+msgstr "Total"
+
+#. module: smile_publication
+#: model:ir.model,name:smile_publication.model_publication_plan
+msgid "Publication Plan"
+msgstr "Planning"
+
+#. module: smile_publication
+#: view:publication.plan:0
+#: selection:publication.plan,frequency:0
+#: selection:publication.publication,frequency:0
+msgid "Monthly or more"
+msgstr "Mensuel ou plus"
+
+#. module: smile_publication
+#: view:product.type:0
+msgid "Product Format"
+msgstr "Format"
+
+#. module: smile_publication
+#: model:ir.actions.act_window,name:smile_publication.action_order_line
+#: model:ir.ui.menu,name:smile_publication.menu_order_line
+#: view:sale.order.line:0
+msgid "Sales Order Lines"
+msgstr "Lignes de ventes"
+
+#. module: smile_publication
+#: model:res.groups,name:smile_publication.group_publication_manager
+msgid "Manager"
+msgstr "Responsable"
+
+#. module: smile_publication
+#: field:publication.plan,commission_rate_digital:0
+msgid "Commission rate - Digital"
+msgstr "Taux de commission - Numérique"
+
+#. module: smile_publication
+#: view:product.product:0
+msgid "Duration"
+msgstr "Durée"
+
+#. module: smile_publication
+#: field:product.type,create_analytic_account:0
+msgid "Create analytic account"
+msgstr "Créer un compte analytique"
+
+#. module: smile_publication
+#: field:product.product,type_id:0
+msgid "Offer Type"
+msgstr "Type d'offres"
+
+#. module: smile_publication
+#: field:publication.plan,saturday:0
+msgid "Saturday"
+msgstr "Samedi"
+
+#. module: smile_publication
+#: model:ir.ui.menu,name:smile_publication.menu_shop_config
+msgid "Sales Shops"
+msgstr "Magasins"
+
+#. module: smile_publication
+#: model:ir.actions.act_window,name:smile_publication.action_account_analytic_account
+#: model:ir.ui.menu,name:smile_publication.menu_account_analytic_account
+msgid "Unlimited Subscriptions"
+msgstr "Abonnements illimités"
+
+#. module: smile_publication
+#: model:ir.actions.act_window,name:smile_publication.action_account_analytic_line
+#: model:ir.ui.menu,name:smile_publication.menu_account_analytic_line
+msgid "Publication numbers to invoice"
+msgstr "Parutions à facturer"
+
+#. module: smile_publication
+#: model:ir.actions.act_window,name:smile_publication.action_account_analytic_line_creation_wizard
+#: model:ir.ui.menu,name:smile_publication.menu_account_analytic_line_creation_wizard
+msgid "Generate publication numbers to invoice"
+msgstr "Générer les parutions à facturer"
+
+#. module: smile_publication
+#: model:ir.ui.menu,name:base.menu_invoiced
+msgid "Invoicing"
+msgstr "Facturation"
+
+#. module: smile_publication
+#: model:ir.actions.act_window,name:smile_publication.action_publication_plan
+#: model:ir.ui.menu,name:smile_publication.menu_publication_plan
+msgid "Plans"
+msgstr "Plannings"
+
+#. module: smile_publication
+#: view:publication.plan:0
+msgid "Frequency"
+msgstr "Fréquence"
+
+#. module: smile_publication
+#: view:publication.plan:0
+msgid "In progress"
+msgstr "En cours"
+
+#. module: smile_publication
+#: view:publication.plan:0
+msgid "Publication"
+msgstr "Titre"
+
+#. module: smile_publication
+#: view:publication.plan:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_publication
+#: view:publication.plan:0
+msgid "Validated"
+msgstr "Validé"
+
+#. module: smile_publication
+#: view:product.type:0
+msgid "Accounting"
+msgstr "Comptabilité"
+
+#. module: smile_publication
+#: field:product.type,taxes_id:0
+msgid "Customer Taxes"
+msgstr "Taxes de vente"
+
+#. module: smile_publication
+#: field:product.type,supplier_taxes_id:0
+msgid "Supplier Taxes"
+msgstr "Taxes d'achat"
+
+#. module: smile_publication
+#: field:product.type,supplier_taxes_id:0
+msgid "Supplier Taxes"
+msgstr "Taxes d'achat"
+
+#. module: smile_publication
+#: field:product.type,property_account_income:0
+msgid "Income Account"
+msgstr "Compte produit"
+
+#. module: smile_publication
+#: field:product.type,property_account_expense:0
+msgid "Expense Account"
+msgstr "Compte charge"
+
+#. module: smile_publication
+#: model:ir.actions.act_window,name:smile_publication.action_account_analytic_account
+#: model:ir.ui.menu,name:smile_publication.menu_account_analytic_account
+msgid "Unlimited Subscriptions"
+msgstr "Abonnements illimités"
+

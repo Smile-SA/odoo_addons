@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="ir_actions_server_analytic_lines_creation" model="ir.actions.server">
+            <field name="name">Generate publication numbers to invoice</field>
+            <field name="model_id" ref="analytic.model_account_analytic_account"/>
+            <field name="state">code</field>
+            <field name="code">context['analytic_account_ids'] = context.get('active_ids', [])
+action = {
+}</field>
+		</record>
+
+        <record id="ir_values_analytic_lines_creation" model="ir.values">
+            <field name="name">Generate publication numbers to invoice</field>
+            <field name="object" eval="True"/>
+            <field name="model_id" ref="analytic.model_account_analytic_account"/>
+            <field name="model">account.analytic.account</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('ir_actions_server_analytic_lines_creation'))" />
+		</record>
+
+    </data>
+</openerp>

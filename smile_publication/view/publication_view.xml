@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Menu -->
+
+        <menuitem name="Catalogs" id="menu_publication_main" groups="group_publication_user"/>
+        <menuitem name="Catalogs" id="menu_publication_catalog" parent="menu_publication_main" sequence="10"/>
+        <menuitem name="Configuration" id="menu_publication_config" parent="menu_publication_main" groups="group_publication_manager" sequence="50"/>
+        <menuitem name="Sales Shops" id="menu_shop_config" parent="menu_publication_config" action="sale.action_shop_form" sequence="50"/>
+
+		<!-- Publication -->
+
+        <record id="view_publication_publication_search" model="ir.ui.view">
+            <field name="name">publication.publication.search</field>
+            <field name="model">publication.publication</field>
+            <field name="arch" type="xml">
+                <search string="Publications">
+					<field name="name"/>
+					<field name="issn"/>
+					<field name="publisher_id"/>
+					<field name="country_id"/>
+					<field name="lang_id"/>
+					<field name="sale_shop_ids"/>
+					<field name="frequency"/>
+                    <group  expand='0' string='Group by...'>
+                   		<filter string='Publisher' domain="[]" context="{'group_by' : 'publisher_id'}"/>
+                   		<filter string='Country' domain="[]" context="{'group_by' : 'country_id'}"/>
+                   		<filter string='Language' domain="[]" context="{'group_by' : 'lang_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_publication_publication_tree" model="ir.ui.view">
+            <field name="name">publication.publication.tree</field>
+            <field name="model">publication.publication</field>
+            <field name="arch" type="xml">
+                <tree string="Publications">
+					<field name="name"/>
+					<field name="issn"/>
+					<field name="publisher_id"/>
+					<field name="country_id"/>
+					<field name="lang_id"/>
+					<field name="frequency"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_publication_publication_kanban" model="ir.ui.view">
+            <field name="name">publication.publication.kanban</field>
+            <field name="model">publication.publication</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="issn"/>
+                    <field name="publisher_id"/>
+                    <field name="country_id"/>
+                    <field name="lang_id"/>
+                    <field name="category_ids"/>
+                    <field name="number_ids"/>
+                    <field name="number_count"/>
+                    <field name="has_image"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open">
+                                    <t t-if="record.has_image.raw_value === true">
+                                        <img t-att-src="kanban_image('publication.publication', 'image_small', record.id.value)" class="oe_kanban_image"/>
+                                    </t>
+                                    <t t-if="record.has_image.raw_value === false">
+                                        <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_image"/>
+                                    </t>
+                                </a>
+                                <div class="oe_kanban_details">
+                                    <h4 class="oe_publication_heading"><a type="open"><field name="name"/></a></h4>
+                                    <t t-if="record.issn.raw_value"><b><i><field name="issn"/></i></b></t>
+                                    <div class="oe_kanban_publication">
+                                        <a t-if="record.number_count.raw_value" name="" type="action" style="margin-right: 10px"> 
+                                            <span t-if="record.number_count.raw_value gt 1"><field name="number_count"/> Numbers</span>
+                                            <span t-if="record.number_count.raw_value lt 2"><field name="number_count"/> Number</span>
+                                        </a>
+                                    </div>
+                                    <ul>
+                                        <li t-if="record.publisher_id.raw_value">Publisher: <field name="publisher_id"/></li>
+                                        <li t-if="record.country_id.raw_value">Country: <field name="country_id"/></li>
+                                        <li t-if="record.lang_id.raw_value">Language: <field name="lang_id"/></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_publication_publication_form" model="ir.ui.view">
+            <field name="name">publication.publication.form</field>
+            <field name="model">publication.publication</field>
+            <field name="arch" type="xml">
+                <form string="Publication" version="7.0">
+	                <sheet>
+	                    <field name="image_small" widget='image' class="oe_left oe_avatar" options='{"preview_image": "image_small", "size": [90, 90]}'/>
+	                    <div class="oe_title">
+	                        <h1>
+	                            <field name="name" default_focus="1" placeholder="Title"/>
+	                        </h1>
+	                        <field name="issn" placeholder="ISSN"/>
+	                        <field name="publisher_id" placeholder="Publisher" context="{'default_supplier': True, 'default_customer': True}"/>
+	                        <field name="country_id" placeholder="Country"/>
+	                        <field name="lang_id" placeholder="Language" class="oe_inline"/>
+	                        <field name="image_url" placeholder="Image URL"/>
+	                        <field name="category_ids" widget="many2many_tags" placeholder="Tags..."/>
+	                    </div>
+	                    <notebook>
+	                    	<page string="Numbers">
+	                    		<field name="number_ids" nolabel="1" colspan="4">
+									<tree string="Numbers" editable="top">
+										<field name="number"/>
+										<field name="publication_date"/>
+										<field name="date_start"/>
+										<field name="date_stop"/>
+										<field name="product_ids"/>
+									</tree>
+	                    		</field>
+	                    	</page>
+	                    	<page string="Plans">
+								<field name="frequency"/>
+	                    		<field name="plan_ids" nolabel="1" colspan="4" context="{'default_publication_id': active_id}">
+									<tree string="Plans" colors="blue:in_progress;gray:state=='done'">
+										<field name="frequency"/>
+										<field name="date_start"/>
+										<field name="date_stop"/>
+										<field name="create_date"/>
+										<field name="first_number"/>
+										<field name="state"/>
+										<field name="in_progress" invisible="1"/>
+				                        <button string="Validate" name="button_validate" icon="STOCK_APPLY" type="object" class="oe_highlight" states="draft"/>
+									</tree>
+	                    		</field>
+	                    	</page>
+	                    	<page string="Sale shops">
+	                    		<field name="sale_shop_ids" nolabel="1" colspan="4"/>
+	                    	</page>
+	                    	<page string="Extra info">
+	                    		<group colspan="4" col="4">
+									<field name="weight"/>
+	                    		</group>
+	                    	</page>
+	                    </notebook>
+	                </sheet>
+	                <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+				</form>
+            </field>
+        </record>
+
+        <record id="action_publication_publication" model="ir.actions.act_window">
+            <field name="name">Publications</field>
+            <field name="res_model">publication.publication</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_publication_publication_search"/>
+        </record>
+
+        <menuitem id="menu_publication_publication" parent="menu_publication_catalog" action="action_publication_publication" sequence="10"/>
+
+		<!-- Publication Plan -->
+
+        <record id="view_publication_plan_search" model="ir.ui.view">
+            <field name="name">publication.plan.search</field>
+            <field name="model">publication.plan</field>
+            <field name="arch" type="xml">
+				<search string="Plans">
+               		<filter name="filter_in_progress" string='In progress' domain="[('in_progress', '=', True)]"/>
+					<newline/>
+               		<filter string='Draft' domain="[('state', '=', 'draft')]"/>
+               		<filter string='Validated' domain="[('state', '=', 'done')]"/>
+					<newline/>
+					<field name="publication_id"/>
+					<field name="frequency"/>
+					<field name="date_start"/>
+					<field name="date_stop"/>
+					<field name="create_date"/>
+					<field name="first_number"/>
+                    <group  expand='0' string='Group by...'>
+                   		<filter string='Publication' domain="[]" context="{'group_by' : 'publication_id'}"/>
+                   		<filter string='Frequency' domain="[]" context="{'group_by' : 'frequency'}"/>
+                    </group>
+				</search>
+            </field>
+        </record>
+
+        <record id="view_publication_plan_tree" model="ir.ui.view">
+            <field name="name">publication.plan.tree</field>
+            <field name="model">publication.plan</field>
+            <field name="arch" type="xml">
+				<tree string="Plans" colors="blue:in_progress;gray:state=='done'">
+					<field name="frequency"/>
+					<field name="date_start"/>
+					<field name="date_stop"/>
+					<field name="create_date"/>
+					<field name="first_number"/>
+					<field name="state"/>
+					<field name="in_progress" invisible="1"/>
+                    <button string="Validate" name="button_validate" icon="STOCK_APPLY" type="object" class="oe_highlight" states="draft"/>
+				</tree>
+            </field>
+        </record>
+
+        <record id="view_publication_plan_form" model="ir.ui.view">
+            <field name="name">publication.plan.form</field>
+            <field name="model">publication.plan</field>
+            <field name="arch" type="xml">
+                <form string="Plan" version="7.0">
+                    <header>
+                        <button string="Validate" name="button_validate" type="object" class="oe_highlight" states="draft"/>
+                        <field name="state" widget="statusbar" nolabel="1"/>
+                    </header>
+	                <sheet>
+	                    <div class="oe_title">
+	                        <h2>
+	                            <field name="publication_id" default_focus="1" placeholder="Title"/>
+	                        </h2>
+	                        <field name="frequency" placeholder="Frequency"/>
+	                    </div>
+	                    <div class="oe_right oe_button_box">
+		                    <group col="2">
+		                        <field name="first_number"/>
+		                        <field name="date_start"/>
+		                    </group>
+	                    </div>
+                		<group colspan="4" col="4" attrs="{'invisible': [('frequency', '!=', 'monthly')]}">
+                			<separator string="Monthly or more" colspan="4"/>
+                    		<group colspan="2" col="2">
+								<field name="publication_day" attrs="{'required': [('frequency', '=', 'monthly')]}"/>
+								<field name="january"/>
+								<field name="february"/>
+								<field name="march"/>
+								<field name="april"/>
+								<field name="may"/>
+								<field name="june"/>
+                    		</group>
+                    		<group colspan="2" col="2">
+								<field name="publication_month" attrs="{'required': [('frequency', '=', 'monthly')]}"/>
+								<field name="july"/>
+								<field name="august"/>
+								<field name="september"/>
+								<field name="october"/>
+								<field name="november"/>
+								<field name="december"/>
+                    		</group>
+                		</group>
+                		<group colspan="4" col="4" attrs="{'invisible': [('frequency', '!=', 'daily')]}">
+                			<separator string="From daily to bi-monthly" colspan="4"/>
+                    		<group colspan="2" col="2">
+								<field name="monday"/>
+								<field name="tuesday"/>
+								<field name="wednesday"/>
+								<field name="thursday"/>
+								<field name="friday"/>
+								<field name="saturday"/>
+								<field name="sunday"/>
+                    		</group>
+                    		<group colspan="2" col="2">
+								<field name="weeks" attrs="{'required': [('frequency', '=', 'daily')]}"/>
+                    		</group>
+                		</group>
+                		<group colspan="4" col="4">
+                			<separator string="Prices" colspan="4"/>
+							<label string=""/>
+							<label string="Stand Price"/>
+							<label string="Publisher Price"/>
+							<label string="Commission Rate (%%)"/>
+							<label string="Paper"/>
+							<field name="stand_price_paper" nolabel="1"/>
+							<field name="publisher_price_paper" nolabel="1"/>
+							<field name="commission_rate_paper" nolabel="1"/>
+							<label string="Digital"/>
+							<field name="stand_price_digital" nolabel="1"/>
+							<field name="publisher_price_digital" nolabel="1"/>
+							<field name="commission_rate_digital" nolabel="1"/>
+                		</group>
+	                </sheet>
+	                <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+				</form>
+            </field>
+        </record>
+
+        <record id="action_publication_plan" model="ir.actions.act_window">
+            <field name="name">Plans</field>
+            <field name="res_model">publication.plan</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_filter_in_progress': True}</field>
+            <field name="search_view_id" ref="view_publication_plan_search"/>
+            <field name="view_id" ref="view_publication_plan_tree"/>
+        </record>
+
+        <menuitem id="menu_publication_plan" parent="menu_publication_catalog" action="action_publication_plan" sequence="20"/>
+
+		<!-- Publication Number -->
+
+        <record id="view_publication_number_search" model="ir.ui.view">
+            <field name="name">publication.number.search</field>
+            <field name="model">publication.number</field>
+            <field name="arch" type="xml">
+                <search string="Publication Numbers">
+	                <filter string="In progress" domain="[('date_stop','&gt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&lt;=', time.strftime('%%Y-%%m-%%d'))]"/>
+					<field name="publication_id"/>
+					<field name="number"/>
+					<field name="publication_date"/>
+					<field name="product_ids"/>
+					<field name="issn" invisible="1"/>
+					<field name="publisher_id" invisible="1"/>
+					<field name="country_id" invisible="1"/>
+					<field name="lang_id" invisible="1"/>
+                    <group  expand='0' string='Group by...'>
+                   		<filter string='Publication' domain="[]" context="{'group_by' : 'publication_id'}"/>
+                   		<filter string='Publisher' domain="[]" context="{'group_by' : 'publisher_id'}"/>
+                   		<filter string='Country' domain="[]" context="{'group_by' : 'country_id'}"/>
+                   		<filter string='Language' domain="[]" context="{'group_by' : 'lang_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_publication_number_tree" model="ir.ui.view">
+            <field name="name">publication.number.tree</field>
+            <field name="model">publication.number</field>
+            <field name="arch" type="xml">
+                <tree string="Publication Numbers">
+					<field name="publication_id"/>
+					<field name="number"/>
+					<field name="publication_date"/>
+					<field name="product_ids"/>
+					<field name="issn" invisible="1"/>
+					<field name="publisher_id" invisible="1"/>
+					<field name="country_id" invisible="1"/>
+					<field name="lang_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_publication_number_kanban" model="ir.ui.view">
+            <field name="name">publication.number.kanban</field>
+            <field name="model">publication.number</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="publication_id"/>
+                    <field name="number"/>
+                    <field name="publication_date"/>
+                    <field name="issn"/>
+                    <field name="publisher_id"/>
+                    <field name="country_id"/>
+                    <field name="lang_id"/>
+                    <field name="has_image"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open">
+                                    <t t-if="record.has_image.raw_value === true">
+                                        <img t-att-src="kanban_image('publication.publication', 'image_small', record.id.value)" class="oe_kanban_image"/>
+                                    </t>
+                                    <t t-if="record.has_image.raw_value === false">
+                                        <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_image"/>
+                                    </t>
+                                </a>
+                                <div class="oe_kanban_details">
+                                    <h4 class="oe_publication_heading"><a type="open"><field name="publication_id"/> n°<field name="number"/></a></h4>
+                                    <b><i><field name="publication_date"/></i></b>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_publication_number_form" model="ir.ui.view">
+            <field name="name">publication.number.form</field>
+            <field name="model">publication.number</field>
+            <field name="arch" type="xml">
+                <form string="Publication Number" version="7.0">
+	                <sheet>
+	                    <field name="image" widget='image' class="oe_left oe_avatar" options='{"preview_image": "image_small", "size": [90, 90]}'/>
+	                    <div class="oe_title oe_inline">
+	                        <h2>
+	                            <field name="publication_id" on_change="onchange_publication(publication_id, plan_id)" default_focus="1" placeholder="Title" class="oe_inline"/> n°<field name="number" class="oe_inline" placeholder="Number"/>
+	                        </h2>
+	                        <h4>
+			                    <label for="publication_date" class="oe_edit_only"/>
+		                        <field name="publication_date" class="oe_inline"/>
+		                    </h4>
+		                        <field name="plan_id" domain="[('publication_id', '=', publication_id)]" placeholder="Publication plan"/>
+	                    </div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                        	<button name='button_delete' string="Delete" type='object'/>
+                        </div>
+	                    <notebook>
+	                    	<page string="Products">
+	                    		<field name="product_ids" nolabel="1" colspan="4"/>
+	                    	</page>
+	                    </notebook>
+	                </sheet>
+	                <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+				</form>
+            </field>
+        </record>
+
+        <record id="action_publication_number" model="ir.actions.act_window">
+            <field name="name">Numbers</field>
+            <field name="res_model">publication.number</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_publication_number_search"/>
+        </record>
+
+        <menuitem id="menu_publication_number" parent="menu_publication_catalog" action="action_publication_number" sequence="30"/>
+
+    </data>
+</openerp>

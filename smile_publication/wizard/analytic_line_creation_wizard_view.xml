@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_account_analytic_line_creation_wizard_form" model="ir.ui.view">
+            <field name="name">account.analytic.line.creation_wizard.form</field>
+            <field name="model">account.analytic.line.creation_wizard</field>
+            <field name="arch" type="xml">
+                <form string="Publication numbers to invoice" version="7.0">
+                    <sheet>
+                        <label for="date_stop"/>
+                        <field name="date_stop" class="oe_inline"/>
+                    </sheet>
+					<footer>
+						<button name="button_validate" type='object' string="Validate" class="oe_highlight"/>
+						or
+						<button string="Cancel" class="oe_link" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+        <record id="action_account_analytic_line_creation_wizard" model="ir.actions.act_window">
+            <field name="name">Generate publication numbers to invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.line.creation_wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_analytic_line_creation_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_account_analytic_line_creation_wizard" parent="base.menu_invoiced" action="action_account_analytic_line_creation_wizard" sequence="50"/>
+
+    </data>
+</openerp>

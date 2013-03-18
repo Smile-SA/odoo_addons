@@ -1,0 +1,9 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_publication_publication_user","publication.publication user","model_publication_publication","group_publication_user",1,0,0,0
+"access_publication_publication_manager","publication.publication manager","model_publication_publication","group_publication_manager",1,1,1,0
+"access_publication_plan_user","publication.plan user","model_publication_plan","group_publication_user",1,0,0,0
+"access_publication_plan_manager","publication.plan manager","model_publication_plan","group_publication_manager",1,1,1,0
+"access_publication_number_user","publication.number user","model_publication_number","group_publication_user",1,0,0,0
+"access_publication_number_manager","publication.number manager","model_publication_number","group_publication_manager",1,1,0,0
+"access_product_type_user","product.type user","model_product_type","group_publication_user",1,0,0,0
+"access_product_type_manager","product.type manager","model_product_type","group_publication_manager",1,1,1,1

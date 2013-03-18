@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <menuitem id="menu_publication_publisher" parent="menu_publication_catalog" action="base.action_partner_supplier_form"
+        	name="Publishers" sequence="0"/>
+
+	</data>
+</openerp>
