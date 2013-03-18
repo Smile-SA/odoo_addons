@@ -1,0 +1,31 @@
+-
+  I force the installation of French language
+-
+  !python {model: base.language.install}: |
+    lang_ids = self.pool.get('res.lang').search(cr, uid, [('code', '=', 'fr_FR')], limit=1, context=context)
+    if not lang_ids:
+      wizard_id = self.create(cr, uid, {'lang': 'fr_FR'}, context)
+      self.lang_install(cr, uid, [wizard_id], context)
+-
+  I make French as default language if installed
+-
+  !python {model: res.lang}: |
+    if self.search(cr, uid, [('code', '=', 'fr_FR')], limit=1):
+      self.pool.get('ir.values').create(cr, uid, {
+        'name': 'context_lang',
+        'key': 'default',
+        'key2': '',
+        'model': 'res.users',
+        'object': False,
+        'value_unpickle': 'fr_FR',
+      }, context)
+-
+  I correct date and time format for French language
+-
+  !python {model: res.lang}: |
+    lang_ids = self.search(cr, uid, [('code', '=', 'fr_FR')], limit=1)
+    if lang_ids:
+      self.write(cr, uid, lang_ids, {
+        'date_format': '%d/%m/%Y',
+        'time_format': '%H:%M:%S',
+      }, context)
