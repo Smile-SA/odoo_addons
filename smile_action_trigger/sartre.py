@@ -421,7 +421,7 @@ class SartreTrigger(osv.osv):
         if method_name == 'trigger_method':
             return
         object_class = method.im_class
-        object_name = getattr(object_class, '_name') or object_class.__name__
+        object_name = getattr(object_class, '_name', None) or object_class.__name__
         if method_name in self._decorated_methods.get(object_name, {}):
             original_class = self._decorated_methods[object_name][method_name]['original_class']
             original_method = self._decorated_methods[object_name][method_name]['original_method']
