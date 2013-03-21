@@ -267,7 +267,7 @@ class SartreTrigger(osv.osv):
     def _get_trigger_ids_from_filters(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        return [filter_['trigger_id'][0] for filter_ in self.read(cr, uid, ids, ['trigger_id'], context)]
+        return list(set([filter_['trigger_id'][0] for filter_ in self.read(cr, uid, ids, ['trigger_id'], context)]))
 
     def _get_trigger_ids_from_operators(self, cr, uid, ids, context=None):
         return self.pool.get('sartre.trigger').search(cr, uid, [], context={'active_test': False})
