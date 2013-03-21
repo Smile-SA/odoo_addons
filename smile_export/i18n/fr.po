@@ -40,22 +40,22 @@ msgstr "Impossible de trouver la méthode: %s sur l'objet %s"
 #. module: smile_export
 #: field:ir.model.export.template,client_action_id:0
 msgid "Client Action"
-msgstr "Action Client"
+msgstr "Action client"
 
 #. module: smile_export
 #: field:ir.model.export.template,client_action_server_id:0
 msgid "Client Action Server"
-msgstr "Serveur d'Actions Client"
+msgstr "Serveur d'action client"
 
 #. module: smile_export
 #: view:ir.model.export.template:0
 msgid "Create Client Action"
-msgstr "Créer une Action Client"
+msgstr "Créer une action client"
 
 #. module: smile_export
 #: view:ir.model.export.template:0
 msgid "Create Scheduled Action"
-msgstr "Créer une Action Planifiée"
+msgstr "Créer une action planifiée"
 
 #. module: smile_export
 #: field:ir.model.export,create_date:0
@@ -65,7 +65,7 @@ msgstr "Date de création"
 #. module: smile_export
 #: field:ir.model.export,create_uid:0
 msgid "Creation User"
-msgstr "Utilisateur"
+msgstr "Créer par"
 
 #. module: smile_export
 #: field:ir.model.export,domain:0
@@ -76,7 +76,7 @@ msgstr "Domaine"
 #. module: smile_export
 #: selection:ir.model.export,state:0
 msgid "Done"
-msgstr "Terminé"
+msgstr "Réalisé"
 
 #. module: smile_export
 #: code:addons/smile_export/export.py:72
@@ -108,7 +108,7 @@ msgstr "Ligne d'export"
 #. module: smile_export
 #: model:ir.model,name:smile_export.model_ir_model_export_template
 msgid "Export Template"
-msgstr "Gabarit d'Export"
+msgstr "Modèle d'export"
 
 #. module: smile_export
 #: model:ir.module.module,description:smile_export.module_meta_information
@@ -127,20 +127,20 @@ msgid "Export whatever objects\n"
 "\n"
 "Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr\n"
 ""
-msgstr "Export whatever objects\n"
+msgstr "Exporter n'importe quel objet\n"
 "\n"
-"Principle\n"
+"Principes\n"
 "\n"
-"* Define an export template\n"
-"    * choose a object\n"
-"    * define a domain to filter lines to export\n"
-"    * indicate if a line can be export only once or several times\n"
-"* Create actions to generate a new export\n"
-"    * a client action to generate a export in fly\n"
-"    * a scheduled action to generate periodically a new export\n"
-"* Log execution exceptions\n"
+"* Definir un modèle d'export\n"
+"    * choisir un objet\n"
+"    * définir un domaine pour filtrer les lignes à exporter\n"
+"    * indiquer si une ligne peut être exportée juste une fois ou plusieurs fois\n"
+"* Créer les actions pour générer un nouvel export\n"
+"    * une action client pour générer un export à la volée\n"
+"    * une action planifiée pour générer périodiquement un nouvel export\n"
+"* Log des errerus lors de l'exécution\n"
 "\n"
-"Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr\n"
+"Suggestions & Retours à : corentin.pouhet-brunerie@smile.fr\n"
 ""
 
 #. module: smile_export
@@ -156,13 +156,13 @@ msgstr "Exports"
 #. module: smile_export
 #: field:ir.model.export.template,domain:0
 msgid "Filter domain"
-msgstr "Domaine de Filtrage"
+msgstr "Domaine pour filtrer"
 
 #. module: smile_export
 #: field:ir.model.export.template,filter_method:0
 #: field:ir.model.export.template,filter_type:0
 msgid "Filter method"
-msgstr "Méthode de Filtrage"
+msgstr "Méthode pour filtrer"
 
 #. module: smile_export
 #: view:ir.model.export.template:0
@@ -172,12 +172,12 @@ msgstr "Filtres"
 #. module: smile_export
 #: help:ir.model.export.template,unique:0
 msgid "If unique, each instance is exported only once"
-msgstr "Si unique, chaque instance n'est exportée qu'une fois."
+msgstr "Si unique, chaque instance n'est exportée qu'une fois"
 
 #. module: smile_export
 #: help:ir.model.export.template,method:0
 msgid "Indicate a method with a signature equals to (self, cr, uid, ids, *args, context=None)"
-msgstr "Indicate a method with a signature equals to (self, cr, uid, ids, *args, context=None)"
+msgstr "Indiquer une méthode avec une signature égale à (self, cr, uid, ids, *args, context=None)"
 
 #. module: smile_export
 #: field:ir.model.export,limit:0
@@ -206,7 +206,7 @@ msgstr "Logs"
 #. module: smile_export
 #: field:ir.model.export.template,max_offset:0
 msgid "Max Offset"
-msgstr "Offset Maximum"
+msgstr "Offset maximal"
 
 #. module: smile_export
 #: field:ir.model.export,method:0
@@ -230,7 +230,7 @@ msgstr "Nom"
 #. module: smile_export
 #: view:ir.model.export.template:0
 msgid "New Export"
-msgstr "Nouvel Export"
+msgstr "Nouvel export"
 
 #. module: smile_export
 #: field:ir.model.export,model_id:0
@@ -247,7 +247,7 @@ msgstr "Offset"
 #: field:ir.model.export,order:0
 #: field:ir.model.export.template,order:0
 msgid "Order by"
-msgstr "Trier Par"
+msgstr "Ordonné par"
 
 #. module: smile_export
 #: view:ir.model.export.template:0
@@ -257,12 +257,12 @@ msgstr "Re-générer"
 #. module: smile_export
 #: field:ir.model.export.line,res_id:0
 msgid "Resource ID"
-msgstr "ID de la Ressource"
+msgstr "Id de la ressource"
 
 #. module: smile_export
 #: field:ir.model.export.line,res_label:0
 msgid "Resource label"
-msgstr "Nom de la ressource"
+msgstr "Libellé de la ressource"
 
 #. module: smile_export
 #: view:ir.model.export.template:0
@@ -277,7 +277,7 @@ msgstr "En cours"
 #. module: smile_export
 #: field:ir.model.export.template,cron_id:0
 msgid "Scheduled Action"
-msgstr "Action Planifiée"
+msgstr "Action planifiée"
 
 #. module: smile_export
 #: view:ir.model.export.template:0
@@ -297,12 +297,12 @@ msgstr "Somme"
 #. module: smile_export
 #: field:ir.model.export,export_tmpl_id:0
 msgid "Template"
-msgstr "Gabarit"
+msgstr "Modèle"
 
 #. module: smile_export
 #: view:ir.model.export.template:0
 msgid "Triggers"
-msgstr "Triggers"
+msgstr "Déclencheurs"
 
 #. module: smile_export
 #: field:ir.model.export,unique:0
@@ -314,7 +314,7 @@ msgstr "Unique"
 #: code:addons/smile_export/export.py:72
 #, python-format
 msgid "Unknown object: %s"
-msgstr "Objet inconnu: %s"
+msgstr "Objet inconnu : %s"
 
 #. module: smile_export
 #: help:ir.model.export.template,filter_method:0
@@ -325,7 +325,7 @@ msgstr "signature: method(cr, uid, context)"
 #: code:addons/smile_export/export.py:96
 #, python-format
 msgid "unlink_res_ids: model(%s) does not match template model (%s, %s)"
-msgstr "unlink_res_ids: model(%s) does not match template model (%s, %s)"
+msgstr "unlink_res_ids: le modèle(%s) ne correspond pas au modèle (%s, %s)"
 
 #. module: smile_export
 #: field:ir.model.export.template,force_execute_action:0
