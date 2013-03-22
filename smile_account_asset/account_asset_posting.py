@@ -112,12 +112,12 @@ class AccountAssetAsset(orm.Model):
             date = asset.validation_date
             partner_id = asset.supplier_id.id
             if move_type == 'sale':
-                date = asset.sale_date
+                date = time.strftime('%Y-%m-%d')
                 partner_id = asset.customer_id.id
             vals = {
                 'name': msg % asset.name,
                 'ref': asset.code,
-                'date': date or time.strftime('%Y-%m-%d'),
+                'date': date,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': asset.category_id.asset_journal_id.id,
                 'partner_id': partner_id,
