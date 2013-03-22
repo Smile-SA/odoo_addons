@@ -1,3 +1,0 @@
-id,active,note,name
-ID,Active,Description,Payment Term
-Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,"Boolean field: Autorised value: ""True"" or ""False"".  The field is not required",Text field type: Autorised value: Text The field is not required,Char field type: Autorised value: a string with 64 as max size The field is required

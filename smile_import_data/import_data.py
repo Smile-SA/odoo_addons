@@ -58,53 +58,49 @@ FILE_DELIMTERS = [(',', ','),
                   (';', ';')]
 
 class ImportDataRun(osv.osv):
-
     _name = 'import.data.run'
 
     _columns = {
-            'name': fields.char('Name', size=64),
-            'state': fields.selection(RUN_STATES, "State", readonly=True),
-            'start_date': fields.datetime('Start date', readonly=True),
-            'last_import_date': fields.datetime('Last import date', readonly=True),
-            'done_date': fields.datetime('Done date', readonly=True),
-            'extract_file_date': fields.datetime('Extract files date', required=False, help='Last date of extracting file'),
-            'object_ids': fields.one2many('import.data.run.object', 'run_id', 'Objects', ondelete='cascade'),
-            'template_ok':fields.boolean('Is a template'),
-            'template_run_id':fields.many2one('import.data.run', 'Template', domain=[('template_ok', '=', True)]),
-            # LOGS
-            'log_ids':fields.one2many('import.data.log', 'run_id', 'Run logs', ondelete='cascade', readonly=True, domain=[('level', '!=', 'success')],),
-            'success_log_ids':fields.one2many('import.data.log', 'run_id', 'Success logs', ondelete='cascade', domain=[('level', '=', 'success')], readonly=True),
-            'warning_log_ids':fields.one2many('import.data.log', 'run_id', 'Warning logs', ondelete='cascade', domain=[('level', '=', 'warning')], readonly=True),
-            'error_log_ids':fields.one2many('import.data.log', 'run_id', 'Error logs', ondelete='cascade', domain=[('level', '=', 'error')], readonly=True),
-            # Configuration
-            # Run configuration
-            'run_path':fields.char('Run path', size=512, readonly=True),
-            'run_data_path':fields.char('Run data path', size=512, readonly=True),
-            'keep_logs_ok':fields.boolean('Keep logs'),
-            'config_yml_file_path': fields.char('Config file', size=128, required=False),
-            # Template configuration
-            'root_path':fields.char('Root path of the template run', size=512, readonly=True),
-            'config_path':fields.char('Config path of template run', size=512, readonly=True),
-            'templates_path':fields.char('Object template files', size=512, readonly=True),
-            'runs_path':fields.char('Root of runs', size=512, readonly=True),
-            'ir_model_data_ref':fields.char('IR model data ref', size=512, readonly=True),
-            # validation result
-            'files_validaiton_ok':fields.boolean('Files validated', readonly=True),
-            'files_validaiton_date':fields.datetime('File validation date', readonly=True),
-
-            'note': fields.text('Notes'),
-
-
-            }
+        'name': fields.char('Name', size=64),
+        'state': fields.selection(RUN_STATES, "State", readonly=True),
+        'start_date': fields.datetime('Start date', readonly=True),
+        'last_import_date': fields.datetime('Last import date', readonly=True),
+        'done_date': fields.datetime('Done date', readonly=True),
+        'extract_file_date': fields.datetime('Extract files date', required=False, help='Last date of extracting file'),
+        'object_ids': fields.one2many('import.data.run.object', 'run_id', 'Objects', ondelete='cascade'),
+        'template_ok':fields.boolean('Is a template'),
+        'template_run_id':fields.many2one('import.data.run', 'Template', domain=[('template_ok', '=', True)]),
+        # LOGS
+        'log_ids':fields.one2many('import.data.log', 'run_id', 'Run logs', ondelete='cascade', readonly=True, domain=[('level', '!=', 'success')],),
+        'success_log_ids':fields.one2many('import.data.log', 'run_id', 'Success logs', ondelete='cascade', domain=[('level', '=', 'success')], readonly=True),
+        'warning_log_ids':fields.one2many('import.data.log', 'run_id', 'Warning logs', ondelete='cascade', domain=[('level', '=', 'warning')], readonly=True),
+        'error_log_ids':fields.one2many('import.data.log', 'run_id', 'Error logs', ondelete='cascade', domain=[('level', '=', 'error')], readonly=True),
+        # Configuration
+        # Run configuration
+        'run_path':fields.char('Run path', size=512, readonly=True),
+        'run_data_path':fields.char('Run data path', size=512, readonly=True),
+        'keep_logs_ok':fields.boolean('Keep logs'),
+        'config_yml_file_path': fields.char('Config file', size=128, required=False),
+        # Template configuration
+        'root_path':fields.char('Root path of the template run', size=512, readonly=True),
+        'config_path':fields.char('Config path of template run', size=512, readonly=True),
+        'templates_path':fields.char('Object template files', size=512, readonly=True),
+        'runs_path':fields.char('Root of runs', size=512, readonly=True),
+        'ir_model_data_ref':fields.char('IR model data ref', size=512, readonly=True),
+        # validation result
+        'files_validaiton_ok':fields.boolean('Files validated', readonly=True),
+        'files_validaiton_date':fields.datetime('File validation date', readonly=True),
+        'note': fields.text('Notes'),
+    }
 
     _defaults = {
-            'state':'draft',
-               }
+        'state':'draft',
+       }
 
     _sql_constraints = [
-                        ('unique_name', 'UNIQUE(name)',
-                         'The name of the run must be unique!'),
-                        ]
+        ('unique_name', 'UNIQUE(name)',
+         'The name of the run must be unique!'),
+    ]
 
     def close_run(self, cr, uid, ids, context):
         self.write(cr, uid, ids, {'state':'done'}, context)
@@ -315,51 +311,49 @@ class ImportDataRun(osv.osv):
 ImportDataRun()
 
 class ImportDataRunObjectCategory(osv.osv):
-
     _name = 'import.data.run.object.category'
 
     _columns = {
-            'name': fields.char('Name', size=128),
-                }
+        'name': fields.char('Name', size=128),
+    }
 ImportDataRunObjectCategory()
 
 class ImportDataRunObject(osv.osv):
-
     _name = 'import.data.run.object'
 
     _columns = {
-            'sequence': fields.integer('Sequence'),
-            'name': fields.char('Model name', size=256, required=True),
-            'model_id': fields.many2one('ir.model', 'Model', required=True),
-            'nb_imported_items': fields.integer('Nb. Imported items', readonly=True),
-            'nb_2import_items': fields.integer('Nb. of items to import', readonly=True),
-            'import_type': fields.selection(IMPORT_TYPES, "Import type", readonly=False, required=True,),
-            'import_script_name': fields.char('Import script name path', size=256, required=False),
-            'file_ids':fields.one2many('import.data.run.object.file', 'object_id', string='Files to import', ondelete='cascade'),
-            # validation result:
-            'validation_failed_ok': fields.boolean('Validation failed'),
-            'file_missed_ok': fields.boolean('File missed'),
-            'validation_succeed_ok': fields.boolean('Validation succeeded'),
-            'validation_date': fields.datetime('Files validated the'),
-            # Validation information
-            'apply_generic_validation_ok': fields.boolean('Apply generic checks', help='Apply generic checks'),
-            'check_key_ok': fields.boolean('Check keys duplication', help='Checks if there are not duplicated keys in the file'),
-            'check_nb_columns_ok': fields.boolean('Check number of columns ', help='Checks if the number of columns of the header is the same on all lines of the files'),
-            'validation_script_name': fields.char('Validation script name path', size=256, required=False),
-            'validation_field_ids':fields.one2many('import.data.run.object.validation.field', 'object_id', 'Field validation', ondelete='cascade'),
-            'run_id': fields.many2one('import.data.run', 'Run', required=True, ondelete='cascade'),
-            'log_ids':fields.one2many('import.data.log', 'object_id', 'Object logs', ondelete='cascade'),
-            'description':fields.text('Description'),
-            'manage_manually_ok':fields.boolean('Manage manually'),
-            # 'template_checked_ok':fields.boolean('Template checked OK'),
-            'note': fields.text('Notes'),
-            }
+        'sequence': fields.integer('Sequence'),
+        'name': fields.char('Model name', size=256, required=True),
+        'model_id': fields.many2one('ir.model', 'Model', required=True),
+        'nb_imported_items': fields.integer('Nb. Imported items', readonly=True),
+        'nb_2import_items': fields.integer('Nb. of items to import', readonly=True),
+        'import_type': fields.selection(IMPORT_TYPES, "Import type", readonly=False, required=True,),
+        'import_script_name': fields.char('Import script name path', size=256, required=False),
+        'file_ids':fields.one2many('import.data.run.object.file', 'object_id', string='Files to import', ondelete='cascade'),
+        # validation result:
+        'validation_failed_ok': fields.boolean('Validation failed'),
+        'file_missed_ok': fields.boolean('File missed'),
+        'validation_succeed_ok': fields.boolean('Validation succeeded'),
+        'validation_date': fields.datetime('Files validated the'),
+        # Validation information
+        'apply_generic_validation_ok': fields.boolean('Apply generic checks', help='Apply generic checks'),
+        'check_key_ok': fields.boolean('Check keys duplication', help='Checks if there are not duplicated keys in the file'),
+        'check_nb_columns_ok': fields.boolean('Check number of columns ', help='Checks if the number of columns of the header is the same on all lines of the files'),
+        'validation_script_name': fields.char('Validation script name path', size=256, required=False),
+        'validation_field_ids':fields.one2many('import.data.run.object.validation.field', 'object_id', 'Field validation', ondelete='cascade'),
+        'run_id': fields.many2one('import.data.run', 'Run', required=True, ondelete='cascade'),
+        'log_ids':fields.one2many('import.data.log', 'object_id', 'Object logs', ondelete='cascade'),
+        'description':fields.text('Description'),
+        'manage_manually_ok':fields.boolean('Manage manually'),
+        # 'template_checked_ok':fields.boolean('Template checked OK'),
+        'note': fields.text('Notes'),
+    }
 
     _defaults = {
-            'apply_generic_validation_ok':True,
-            'check_key_ok':True,
-            'check_nb_columns_ok':True,
-        }
+        'apply_generic_validation_ok':True,
+        'check_key_ok':True,
+        'check_nb_columns_ok':True,
+    }
 
     _order = "sequence asc"
 
@@ -886,22 +880,22 @@ class ImportDataRunObjectValidationField(osv.osv):
     _name = 'import.data.run.object.validation.field'
 
     _columns = {
-            'field_id': fields.many2one('ir.model.fields', 'Field validation rule', required=False),
-            'required_ok': fields.boolean('Required'),
-            'field_type': fields.char('Field type', size=128),
-            'check_ok': fields.boolean('Check field'),
-            'file_field_name': fields.char('File field name', size=256, required=True),
-            'target_file': fields.char('Target file', size=256, required=False, help='Please insert path of the file defines the referenced object'),
-            'python_code':fields.text('Python code'),
-            'object_id': fields.many2one('import.data.run.object', 'Object', required=True, ondelete='cascade'),
-            'description':fields.text('Description'),
-            }
-    _defaults = {
-                 }
+        'field_id': fields.many2one('ir.model.fields', 'Field validation rule', required=False),
+        'required_ok': fields.boolean('Required'),
+        'field_type': fields.char('Field type', size=128),
+        'check_ok': fields.boolean('Check field'),
+        'file_field_name': fields.char('File field name', size=256, required=True),
+        'target_file': fields.char('Target file', size=256, required=False, help='Please insert path of the file defines the referenced object'),
+        'python_code':fields.text('Python code'),
+        'object_id': fields.many2one('import.data.run.object', 'Object', required=True, ondelete='cascade'),
+        'description':fields.text('Description'),
+    }
+
+    _defaults = {}
 
     def validate_field_value(self, cr, uid, file_obj, field_browse, value, context):
         res = True
-        obj_model = self.pool.get(field_browse.model_id.model)
+        obj_model = self.pool.get(field_browse.field_id.model_id.model)
         # Split field_name to treate many2one field
         field_name = field_browse.file_field_name.split('/')
         if not field_name[0] in obj_model._columns:

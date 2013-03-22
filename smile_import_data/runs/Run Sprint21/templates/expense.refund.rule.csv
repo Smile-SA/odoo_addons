@@ -1,9 +1,0 @@
-id,name,end_date,vehicule_type,up_to,refundable_part,company_id/id,active,km_expense_ok,start_date,in_billable_case,product_id/id
-ID,Label,End date,Vehicule type,Up to,Refundable part (%),Company,Active?,Km fees,Start date,Apply even if billable case,Expense type
-Defines the key: String with alphanumeric char + '_'. One occurence of '.' is authoriorised,Char field type: Autorised value: a string with 64 as max size The field is required,Date field type: Autorised value: AAAA-MM-DD as exemple: 2012-05-28 The field is not required,"Selection field type: Autorised value: ['car', 'motorcycle', 'moped'] 
-Value corresponding: 
-{'car': 'Car', 'motorcycle': 'Motorcycle', 'moped': 'Moped'} The field is not required",Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,Float field type: Autorised value: XXXXX.DD as exemple: 125.01 Please note that the digit separator is '.' The field is not required,"Many2one field type: Autorised value: 'module_name.key' defined on the file res.company.csv
-
-                                As exemple import_data.product1 The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Boolean field: Autorised value: ""True"" or ""False"".  The field is not required",Date field type: Autorised value: AAAA-MM-DD as exemple: 2012-05-28 The field is not required,"Boolean field: Autorised value: ""True"" or ""False"".  The field is not required","Many2one field type: Autorised value: 'module_name.key' defined on the file product.product.csv
-
-                                As exemple import_data.product1 The field is required"
