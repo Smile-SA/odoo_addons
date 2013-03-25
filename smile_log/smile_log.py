@@ -19,10 +19,13 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+import os
+import time
+
+from openerp.osv import orm, fields
 
 
-class SmileLog(osv.osv):
+class SmileLog(orm.Model):
     _name = 'smile.log'
     _description = 'Smile Logs'
     _rec_name = 'message'
@@ -96,5 +99,3 @@ class SmileLog(osv.osv):
             WITH (FORMAT csv, ENCODING utf8)""", (nb_days, file_path,))
         cr.execute("DELETE FROM smile_log WHERE log_date + interval '%s days' < NOW()", (nb_days,))
         return True
-
-SmileLog()

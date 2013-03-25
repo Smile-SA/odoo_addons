@@ -23,7 +23,7 @@ import datetime
 import logging
 import traceback
 
-import pooler
+from openerp import pooler
 
 
 class SmileDBHandler(logging.Handler):

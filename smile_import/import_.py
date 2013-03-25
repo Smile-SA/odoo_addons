@@ -22,15 +22,13 @@
 import threading
 import time
 
-from osv import fields
-from osv.orm import Model
-import pooler
-import tools
+from openerp.osv import orm, fields
+from openerp import pooler, tools
 
-from smile_log.db_handler import SmileDBLogger
+from openerp.addons.smile_log.db_handler import SmileDBLogger
 
 
-class IrModelImportTemplate(Model):
+class IrModelImportTemplate(orm.Model):
     _name = 'ir.model.import.template'
     _description = 'Import Template'
 
@@ -102,7 +100,7 @@ class IrModelImportTemplate(Model):
                         'state': 'code',
                         'code': "self.pool.get('ir.model.import.template').create_import(cr, uid, %d, context)" % (template.id,),
                     }
-                    server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals)
+                    server_action_id = self.pool.get('ir.actions.server').create(cr, uid, vals, context)
                     template.write({'server_action_id': server_action_id})
         return True
 
@@ -113,7 +111,7 @@ STATES = [
 ]
 
 
-class IrModelImport(Model):
+class IrModelImport(orm.Model):
     _name = 'ir.model.import'
     _description = 'Import'
 
@@ -191,7 +189,7 @@ class IrModelImport(Model):
             cr.close()
 
 
-class IrModelImportLine(Model):
+class IrModelImportLine(orm.Model):
     _name = 'ir.model.import.line'
     _description = 'Import Line'
     _rec_name = 'import_id'

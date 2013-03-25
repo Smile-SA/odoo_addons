@@ -21,21 +21,19 @@
 
 import threading
 
-from osv import fields
-from osv.orm import Model, except_orm
-import pooler
-import tools
-from tools.translate import _
+from openerp.osv import fields, orm
+from openerp import pooler, tools
+from openerp.tools.translate import _
 
-from smile_log.db_handler import SmileDBLogger
+from openerp.addons.smile_log.db_handler import SmileDBLogger
 
 
 def _get_exception_message(exception):
-    msg = isinstance(exception, except_orm) and exception.value or exception
+    msg = isinstance(exception, orm.except_orm) and exception.value or exception
     return tools.ustr(msg)
 
 
-class ir_model_export_template(Model):
+class IrModelExportTemplate(orm.Model):
     _name = 'ir.model.export.template'
     _description = 'Export Template'
 
@@ -70,7 +68,7 @@ class ir_model_export_template(Model):
         res_ids = context.get('resource_ids_to_export', [])
         model_obj = self.pool.get(template.model)
         if not model_obj:
-            raise except_orm(_('Error'), _("Unknown object: %s") % (template.model,))
+            raise orm.except_orm(_('Error'), _("Unknown object: %s") % (template.model,))
         if template.filter_type == 'domain':
             domain = eval(template.domain)
             if res_ids:
@@ -78,7 +76,7 @@ class ir_model_export_template(Model):
             res_ids = model_obj.search(cr, uid, domain, context=context)
         elif template.filter_type == 'method':
             if not (template.filter_method and hasattr(model_obj, template.filter_method)):
-                raise except_orm(_('Error'), _("Can't find method: %s on object: %s") % (template.filter_method, template.model))
+                raise orm.except_orm(_('Error'), _("Can't find method: %s on object: %s") % (template.filter_method, template.model))
             context['ir_model_export_template_id'] = template.id
             res_ids2 = getattr(model_obj, template.filter_method)(cr, uid, context)
             return res_ids and list(set(res_ids) & set(res_ids2)) or res_ids2
@@ -94,8 +92,8 @@ class ir_model_export_template(Model):
         unlink_line_ids = []
         for template in self.browse(cr, uid, ids, context):
             if template.model != model:
-                raise except_orm(_('Error'), _("unlink_res_ids: model(%s) does not match template model (%s, %s)")
-                                 % (model, template.id, template.model))
+                raise orm.except_orm(_('Error'), _("unlink_res_ids: model(%s) does not match template model (%s, %s)")
+                                     % (model, template.id, template.model))
             export_line_ids = self.pool.get('ir.model.export.line').search(cr, uid, [('export_id.export_tmpl_id', '=', template.id),
                                                                                      ('res_id', 'in', res_ids),
                                                                                      ], context=context)
@@ -157,7 +155,7 @@ class ir_model_export_template(Model):
                     'args': '(%d,)' % template.id,
                     'numbercall': -1,
                 }
-                cron_id = self.pool.get('ir.cron').create(cr, uid, vals)
+                cron_id = self.pool.get('ir.cron').create(cr, uid, vals, context)
                 template.write({'cron_id': cron_id})
         return True
 
@@ -184,7 +182,7 @@ self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)"""
                     'value': 'ir.actions.server,%d' % server_action_id,
                 }
                 client_action_id = self.pool.get('ir.values').create(cr, uid, vals2, context)
-                template.write({'client_action_id': client_action_id, 'client_action_server_id': server_action_id, })
+                template.write({'client_action_id': client_action_id, 'client_action_server_id': server_action_id})
         return True
 
 
@@ -195,7 +193,7 @@ STATES = [
 ]
 
 
-class ir_model_export(Model):
+class IrModelExport(orm.Model):
     _name = 'ir.model.export'
     _description = 'Export'
     _rec_name = 'create_date'
@@ -309,7 +307,7 @@ class ir_model_export(Model):
             raise e
 
 
-class ir_model_export_line(Model):
+class IrModelExportLine(orm.Model):
     _name = 'ir.model.export.line'
     _description = 'Export Line'
     _rec_name = 'export_id'
