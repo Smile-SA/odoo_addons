@@ -26,7 +26,7 @@
     "author": "Smile",
     "description": "This module allows to distinguish computation digits and display digits in decimal precision",
     "website": "http://www.smile.fr",
-    "category" : "Hidden/Dependency",
+    "category": "Hidden/Dependency",
     "sequence": 32,
     "init_xml": [],
     "update_xml": [

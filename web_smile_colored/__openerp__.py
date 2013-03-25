@@ -22,7 +22,7 @@
 {
     "name": "Smile Colored widget",
     "category": "Hidden",
-    "description":"""Add new widget 'colored':
+    "description": """Add new widget 'colored':
 <field name="field_name" widget="colored" attrs="{'blue_colored':[openerp_attrs_domain]}"/> in form and list view""",
     "version": "1.0",
     "depends": ['web'],
