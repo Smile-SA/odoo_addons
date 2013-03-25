@@ -1,77 +1,0 @@
-8
-
-dir
-0
-https://sources.smile.fr/svn/projetf1/trunk/smile_addons/smile_import_data/demo
-https://sources.smile.fr/svn/projetf1
-add
-
-
-
-
-
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-c83e7e7f-3155-4657-addf-bd075fcc4937
-
-00_run_demo.yml
-file
-
-
-
-add
-
-01_organisation_objects.yml
-file
-
-
-
-add
-
-02_hr_objects.yml
-file
-
-
-
-add
-
-03_adv_objects.yml
-file
-
-
-
-add
-
-04_activity_objects.yml
-file
-
-
-
-add
-
-05_analytic_objects.yml
-file
-
-
-
-add
-
-06_accounting_objects.yml
-file
-
-
-
-add
-

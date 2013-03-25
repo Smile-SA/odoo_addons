@@ -1,8 +1,0 @@
--
-  I create a project of type time_spent
--
-  !record {model: import.data.run, id: run0}:
-    name: Run Sprint21
-    template_ok: True
-    extract_file_date: 2013-02-15
-    
