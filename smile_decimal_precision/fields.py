@@ -21,7 +21,7 @@
 
 from openerp.osv import fields
 
-from smile_decimal_precision import DecimalPrecision as dp
+from openerp.addons.smile_decimal_precision import DecimalPrecision as dp
 
 
 native_field_to_dict = fields.field_to_dict
