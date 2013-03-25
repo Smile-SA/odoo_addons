@@ -1,0 +1,32 @@
+-
+  Create import.data.run.object
+-
+  !record {model: import.data.run.object, id:  import_data_run_object6}:
+    run_id : smile_import_data.run_8
+    manage_manually_ok : False
+    model_id : base.model_res_partner
+    sequence : 0
+    name : Partenaire
+    import_type : import_data
+    import_script_name : False
+    apply_generic_validation_ok : True
+    check_key_ok : True
+    check_nb_columns_ok : True
+    validation_script_name : False
+    description : False
+-
+  Create import.data.run.object
+-
+  !record {model: import.data.run.object, id:  import_data_run_object7}:
+    run_id : smile_import_data.run_8
+    manage_manually_ok : False
+    model_id : base.model_res_groups
+    sequence : 0
+    name : groupe
+    import_type : import_data
+    import_script_name : False
+    apply_generic_validation_ok : True
+    check_key_ok : True
+    check_nb_columns_ok : True
+    validation_script_name : False
+    description : False

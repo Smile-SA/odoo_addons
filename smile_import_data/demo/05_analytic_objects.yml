@@ -1,0 +1,31 @@
+-
+  Create Accounting / Invoice
+-
+  !record {model: import.data.run.object, id: analytic_line}:
+    run_id: smile_import_data.run0
+    name: Ligne analytique
+    sequence: 30
+    model_id: account.model_account_analytic_line
+    import_type: import_data 
+    import_script_name: 
+    validation_script_name : 
+    apply_generic_validation_ok: True
+    check_key_ok: True
+    check_nb_columns_ok: True
+    validation_script_name: script
+    
+-
+  Create Accounting / Cutoff
+-
+  !record {model: import.data.run.object, id: cutoff_cutoff}:
+    run_id: smile_import_data.run0
+    name: Cutoff
+    sequence: 31
+    model_id: solucom_account_cut_off.model_cutoff_cutoff
+    import_type: import_data 
+    import_script_name: 
+    validation_script_name : 
+    apply_generic_validation_ok: True
+    check_key_ok: True
+    check_nb_columns_ok: True
+    validation_script_name: script

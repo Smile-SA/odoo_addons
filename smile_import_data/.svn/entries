@@ -1,0 +1,84 @@
+8
+
+dir
+0
+https://sources.smile.fr/svn/projetf1/trunk/smile_addons/smile_import_data
+https://sources.smile.fr/svn/projetf1
+add
+
+
+
+
+
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+c83e7e7f-3155-4657-addf-bd075fcc4937
+
+__init__.py
+file
+
+
+
+add
+
+__openerp__.py
+file
+
+
+
+add
+
+demo
+dir
+
+
+
+add
+
+doc
+dir
+
+
+
+add
+
+i18n
+dir
+
+
+
+add
+
+import_data.py
+file
+
+
+
+add
+
+runs
+dir
+
+
+
+add
+
+view
+dir
+
+
+
+add
+
