@@ -19,15 +19,17 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, orm
 import time
 from openerp.tools.translate import _
 from datetime import datetime
 import re
 from openerp import tools
 
+import cStringIO
 import xlrd
 
+import openerp.pooler as pooler
 from openerp import addons
 import csv
 import os
@@ -37,27 +39,79 @@ FIELD2SKIP = (fields.one2many,
               fields.related,
               fields.binary,
               fields.function,
-              )
+)
 
 RUN_STATES = [('draft', 'Draft'),
               ('in_progress', 'In progress'),
               ('done', 'Done'),
               ('template', 'Template'),
-              ]
+]
+
 IMPORT_TYPES = [('import_data', 'Import data'),
               ('script', 'Script'),
-              ]
+]
 
 FILE_EXTENSIONS = [
                    ('csv', 'CSV'),
                    ('xls', 'Excel 2003'),
                    ('xlsx', 'Excel 2007/2010'),
-                   ]
+]
 
 FILE_DELIMTERS = [(',', ','),
-                  (';', ';')]
+                  (';', ';')
+]
 
-class ImportDataRun(osv.osv):
+def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', noupdate=False, delimiter=','):
+    '''Import csv file :
+        quote: "
+        encoding: utf-8'''
+    if not idref:
+        idref = {}
+    model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
+    #remove folder path from model
+    head, model = os.path.split(model)
+
+    pool = pooler.get_pool(cr.dbname)
+
+    input = cStringIO.StringIO(csvcontent)  #FIXME
+    reader = csv.reader(input, quotechar='"', delimiter=delimiter)
+    fields = reader.next()
+    fname_partial = ""
+
+    uid = 1
+    datas = []
+    for line in reader:
+        if (not line) or not reduce(lambda x, y: x or y, line)  :
+            continue
+        try:
+            datas.append(map(lambda x: tools.misc.ustr(x), line))
+        except:
+            print "Cannot import the line: %s", line
+    result, rows, warning_msg, dummy = pool.get(model).import_data(cr, uid, fields, datas, mode, module, noupdate, filename=fname_partial)
+    if result < 0:
+        # Report failed import and abort module install
+        raise Exception(_('Module loading failed: file %s/%s could not be processed:\n %s') % (module, fname, warning_msg))
+
+
+class ResCar(orm.Model):
+    _name = 'res.car'
+
+    _columns = {
+        'name': fields.char('Name', size=64),
+        'color': fields.char('Color', size=64),
+        'make_car': fields.many2one('car.make', 'Make of the car'),
+    }
+
+
+class CarMake(orm.Model):
+    _name = 'car.make'
+
+    _columns = {
+        'name': fields.char('Name', size=64),
+    }
+
+
+class ImportDataRun(orm.Model):
 
     _name = 'import.data.run'
 
@@ -91,20 +145,16 @@ class ImportDataRun(osv.osv):
             # validation result
             'files_validaiton_ok':fields.boolean('Files validated', readonly=True),
             'files_validaiton_date':fields.datetime('File validation date', readonly=True),
-
             'note': fields.text('Notes'),
-
-
             }
 
     _defaults = {
-            'state':'draft',
-               }
+        'state':'draft',
+    }
 
     _sql_constraints = [
-                        ('unique_name', 'UNIQUE(name)',
-                         'The name of the run must be unique!'),
-                        ]
+        ('unique_name', 'UNIQUE(name)', 'The name of the run must be unique!'),
+    ]
 
     def close_run(self, cr, uid, ids, context):
         self.write(cr, uid, ids, {'state':'done'}, context)
@@ -126,7 +176,7 @@ class ImportDataRun(osv.osv):
     _constraints = [ (_check_state,
                       "You can't have more than one started run for the same template. Please finish in progress run",
                       [_('State')]),
-                    ]
+    ]
     def validate_template(self, cr, uid, ids, context=None):
         ir_model_data_obj = self.pool.get('ir.model.data')
         for run in self.browse(cr, uid, ids, context):
@@ -138,7 +188,7 @@ class ImportDataRun(osv.osv):
                 os.makedirs(newpath + 'config/')
                 os.makedirs(newpath + 'templates/')
             else:
-                raise osv.except_osv(_('Error'), _("The folder %s must be removed or please set another name to your Run template") % run.name)
+                raise orm.except_orm(_('Error'), _("The folder %s must be removed or please set another name to your Run template") % run.name)
 
             ir_model_data_obj.create(cr, uid, {
                             'name': 'run_%s' % (run.id),
@@ -220,7 +270,7 @@ class ImportDataRun(osv.osv):
 
         for run in self.browse(cr, uid, ids, context):
             object_ids = [obj.id for obj in run.object_ids]
-            object_obj.import_data(cr, uid, object_ids, context)
+            object_obj.import_file(cr, uid, object_ids, context)
 
         return True
 
@@ -258,10 +308,10 @@ class ImportDataRun(osv.osv):
             for obj in run.object_ids:
                 object_obj.unlink(cr, uid, obj.id, context)
             if not run.config_yml_file_path:
-                raise osv.except_osv('Error', _(u"Veuillez completer le chemin du fichier de configuration"))
+                raise orm.except_orm('Error', _(u"Veuillez completer le chemin du fichier de configuration"))
             yaml_file = run.config_path + run.config_yml_file_path
             if not os.path.exists(yaml_file):
-                raise osv.except_osv('Error', _(u"Le chemin  %s est non valide.") % yaml_file)
+                raise orm.except_orm('Error', _(u"Le chemin  %s est non valide.") % yaml_file)
             tools.convert_yaml_import(cr, 'smile_import_data', file(yaml_file), 0, mode='init', noupdate=True)
         return True
 
@@ -295,10 +345,10 @@ class ImportDataRun(osv.osv):
                     file_paths.append(os.path.join(root, i))
 
             if not os.path.exists(data2convert_path):
-                raise osv.except_osv('Error', _(u"Le dossier %s n'existe pas. Merci de le créer et de mettre les fichiers à convertir") % (data2convert_path,))
+                raise orm.except_orm('Error', _(u"Le dossier %s n'existe pas. Merci de le créer et de mettre les fichiers à convertir") % (data2convert_path,))
 
             if not file_paths:
-                raise osv.except_osv('Error', _(u"Aucun fichier n'a été trouvé à l'emplacementLe dossier %s. Merci d'y placer vos fichiers à convertir") % (data2convert_path,))
+                raise orm.except_orm('Error', _(u"Aucun fichier n'a été trouvé à l'emplacementLe dossier %s. Merci d'y placer vos fichiers à convertir") % (data2convert_path,))
 
             for file_path in file_paths:
                 file_obj.convert_file2csv(cr, uid, file_path, save_folder_path, context)
@@ -318,7 +368,7 @@ class ImportDataRun(osv.osv):
                                     context)
 
 
-class ImportDataRunObjectCategory(osv.osv):
+class ImportDataRunObjectCategory(orm.Model):
 
     _name = 'import.data.run.object.category'
 
@@ -327,7 +377,7 @@ class ImportDataRunObjectCategory(osv.osv):
                 }
 
 
-class ImportDataRunObject(osv.osv):
+class ImportDataRunObject(orm.Model):
 
     _name = 'import.data.run.object'
 
@@ -432,6 +482,7 @@ class ImportDataRunObject(osv.osv):
 
 
     def genertate_template_file(self, cr, uid, ids, context):
+        import pdb;pdb.set_trace()
         for obj in self.browse(cr, uid, ids, context):
             template_folder = obj.run_id.templates_path
             if not os.path.exists(template_folder): os.makedirs(template_folder)
@@ -606,7 +657,7 @@ class ImportDataRunObject(osv.osv):
             for file_iter in obj.file_ids:
                 file_path = obj.run_id.run_data_path + file_iter.name
                 if not os.path.exists(file_path) and log:
-                    file_iter.log(_("Missing file"), 'warning', context)
+                    file_iter.log(_("Missing file"), 'warning', context=context)
                 else:
                     attended_file_ids.append(file_iter.id)
         return attended_file_ids
@@ -636,7 +687,7 @@ class ImportDataRunObject(osv.osv):
         if not isinstance(ids, list):
             ids = [ids]
         for obj in self.browse(cr, uid, ids, context):
-            #try :
+            try :
                 obj.write({'validation_date':time.strftime('%Y-%m-%d %H:%M'),
                            'validation_succeed_ok':False,
                            'file_missed_ok':False})
@@ -665,13 +716,14 @@ class ImportDataRunObject(osv.osv):
                 if not res:
                     continue
                 obj.write({'validation_succeed_ok':True})
-            #except Exception, e:
+            except Exception, e:
                 print "Une erreur s'est produite en traitant le fichier: %s - %s" % (obj.name, e)
                 continue
 
         return res
 
-    def import_data(self, cr, uid, ids, context=None):
+
+    def import_file(self, cr, uid, ids, context=None):
         '''
             Start import data of the objects 'ids'
         '''
@@ -683,8 +735,17 @@ class ImportDataRunObject(osv.osv):
 
         file_obj = self.pool.get('import.data.run.object.file')
         for obj in self.browse(cr, uid, ids, context):
-            file_ids = [f.id for f in obj.file_ids]
-            file_obj.import_data(cr, uid, file_ids, context)
+            if obj.import_type == 'import_data':
+                for f in obj.file_ids:
+                    f.import_data_csv()
+            elif obj.import_type == 'script':
+                if not obj.import_script_name:
+                    self.log(cr, uid, obj.id, 'Import script name required!', context=context)
+                    return False
+                if not hasattr(self, obj.import_script_name):
+                    self.log(cr, uid, obj.id, 'script name %s not found!' % obj.import_script_name, context=context)
+                    return False
+                getattr(self, obj.import_script_name)(cr, uid, obj.id, context)
         return True
 
     def log(self, cr, uid, ids, description, level='error', context=None):
@@ -700,7 +761,7 @@ class ImportDataRunObject(osv.osv):
                                     context)
 
 
-class ImportDataRunObjectFile(osv.osv):
+class ImportDataRunObjectFile(orm.Model):
 
     _name = 'import.data.run.object.file'
 
@@ -724,6 +785,22 @@ class ImportDataRunObjectFile(osv.osv):
     _defaults = {'file_extension':'csv',
                  'import_once':True
                }
+
+    def import_data_csv(self, cr, uid, ids, context=None):
+        if not isinstance(ids, list):
+            ids = [ids]
+        for filecsv in self.browse(cr, uid, ids, context):
+            delimiter = ','
+            fname = filecsv.name
+            import_path = filecsv.object_id.run_id.run_data_path + fname
+            if not os.path.exists(import_path):
+                raise Exception("Import path '%s' does not exist" % (import_path,))
+
+            with open(import_path, 'r') as f:
+                csvcontent = f.read()
+                module = filecsv.object_id.model_id.model
+                convert_csv_import(cr, module, fname, csvcontent, delimiter=delimiter)
+        return True
 
     def log(self, cr, uid, ids, description, level='error', context=None):
         if not isinstance(ids, list):
@@ -754,7 +831,6 @@ class ImportDataRunObjectFile(osv.osv):
         csv_file_name = file_path.split('/')[-1]
         csv_file_name = '.'.join(csv_file_name.split('.')[:-1]) + '.csv'
         book = xlrd.open_workbook(file_path)
-        print csv_file_name
         rows = []
         for sheet in book.sheets():
             print 'NB Rows:', sheet.nrows
@@ -832,7 +908,6 @@ class ImportDataRunObjectFile(osv.osv):
             # Read file
             current_run = file_iter.object_id.run_id
             file_path = current_run.run_data_path + file_iter.name
-            print file_path
             with open(file_path, 'rb') as csvfile :
                 spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
                 header = spamreader.next()
@@ -882,7 +957,7 @@ class ImportDataRunObjectFile(osv.osv):
         return res
 
 
-class ImportDataRunObjectValidationField(osv.osv):
+class ImportDataRunObjectValidationField(orm.Model):
 
     _name = 'import.data.run.object.validation.field'
 
@@ -1020,7 +1095,7 @@ Exemple: import_data.product1""" % (field_p._obj + '.csv'))
         return res_trans + ':\n' + description + required_info
 
 
-class ImportDataLog(osv.osv):
+class ImportDataLog(orm.Model):
 
     _name = 'import.data.log'
 
