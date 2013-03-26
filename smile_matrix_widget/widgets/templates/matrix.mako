@@ -29,6 +29,18 @@
 </%def>
 
 
+<%def name="noiseless_sum(l)">
+<%
+    # Special sum method which return None if the list we want to sum is empty or composed of None values only
+    filtered_list = [v for v in l if v is not None]
+    if not len(filtered_list):
+        return None
+    else:
+        return sum(filtered_list)
+%>
+</%def>
+
+
 <%def name="render_resources(line)">
     <%
         read_only = line.get('read_only', False)
@@ -191,7 +203,7 @@
 
             %if not hide_line_totals:
                 <%
-                    row_total = sum([v['value'] for (k, v) in line.get('cells_data', dict()).items() if k in date_range])
+                    row_total = noiseless_sum([v['value'] for (k, v) in line.get('cells_data', dict()).items() if k in date_range])
                     row_total_cell_id = not read_only and "%s__row_total_%s" % (name, line['id']) or None
                     row_total_cell = {
                         'value': row_total,
@@ -274,7 +286,7 @@
             %for date in date_range:
                 <%
                     date_column_sum_cell = {
-                        'value': sum([line.get('cells_data', dict()).get(date, {}).get('value') or 0.0 for line in sub_lines]),
+                        'value': noiseless_sum([line.get('cells_data', dict()).get(date, {}).get('value') for line in sub_lines]),
                         'read_only': True,
                         }
                     cell_id = '%s__cell_%s_%s' % (name, virtual_line['id'], date)
@@ -295,7 +307,7 @@
                 for line in sub_lines:
                     row_total += [v['value'] for (k, v) in line.get('cells_data', dict()).items() if k in date_range]
                 row_total_cell = {
-                    'value': sum(row_total),
+                    'value': noiseless_sum(row_total),
                     'read_only': True,
                     }
                 row_total_cell_id = "%s__row_total_%s" % (name, virtual_line['id'])
@@ -360,7 +372,7 @@
                 'read_only': True,
             }
             if not col_def.get('hide_tree_totals', False):
-                additional_sum_cell.update({'value': sum([line.get('cells_data', dict()).get(col_def['line_property'], {}).get('value') or 0.0 for line in sub_lines])})
+                additional_sum_cell.update({'value': noiseless_sum([line.get('cells_data', dict()).get(col_def['line_property'], {}).get('value') for line in sub_lines])})
         %>
         ${render_cell(additional_sum_cell, css_classes=['additional_column'])}
     %endfor
@@ -371,7 +383,7 @@
     %for line_property in [c['line_property'] for c in [col for col in columns if col.get('position', 'right') == position] if 'line_property' in c]:
         <%
             additional_sum_cell = {
-                'value': sum([line.get('cells_data', dict()).get(line_property, {}).get('value') or 0.0 for line in body_lines]),
+                'value': noiseless_sum([line.get('cells_data', dict()).get(line_property, {}).get('value') for line in body_lines]),
                 'read_only': True,
                 }
         %>
@@ -725,7 +737,7 @@
                                 column_total_css_classes.append(print_now(date))
                                 column_values = [line['cells_data'][date]['value'] for line in body_lines if (date in line.get('cells_data', dict())) and (line['widget'] not in ['header', 'spacer'])]
                                 if len(column_values):
-                                    column_total = sum(column_values)
+                                    column_total = noiseless_sum(column_values)
                                     if column_totals_warning_threshold is not None and column_total > column_totals_warning_threshold:
                                         column_total_css_classes.append('warning')
                                     column_total_cell.update({'value': column_total})
@@ -738,7 +750,7 @@
                         %if not hide_line_totals:
                             <%
                                 grand_total_cell = {
-                                    'value': sum([sum([v['value'] for (k, v) in line['cells_data'].items() if k in date_range]) for line in body_lines if line['widget'] not in ['header', 'spacer'] ]),
+                                    'value': noiseless_sum([noiseless_sum([v['value'] for (k, v) in line['cells_data'].items() if k in date_range]) for line in body_lines if line['widget'] not in ['header', 'spacer'] ]),
                                     'read_only': True,
                                     }
                                 grand_total_cell_id = "%s__grand_total" % name
