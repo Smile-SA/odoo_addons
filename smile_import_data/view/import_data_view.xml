@@ -64,6 +64,7 @@
 				            					<form string="Files to import">
 				            						<field name="sequence"/>
 				            						<field name="object_id"/>
+				            						<field name="delimiter"/>
 				            						<field name="name"/>
 				            					</form>
 				            				</field>
@@ -182,6 +183,7 @@
 				            <field name="start_date"/>
 				            <field name="files_validaiton_ok"/>
 				            <field name="keep_logs_ok"/>
+				            <field name="import_partial"/>
 				            <field name="files_validaiton_date"/>
 				            <field name="last_import_date" attrs="{'invisible':[('state','=','draft')]}"/>
 				            <field name="done_date" attrs="{'invisible':[('state','!=','done')]}"/>
@@ -384,9 +386,9 @@
             		<group colspan="2" col="2">
             			<field name="sequence"/>
             			<field name="name"/>
+            			<field name="delimiter"/>
             			<field name="import_once"/>
             			<field name="import_script_name"/>
-            			
             		</group>
             		<group colspan="2" col="2">
 	            		<field name="file_validated_ok"/>
