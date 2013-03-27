@@ -61,7 +61,7 @@ FILE_DELIMTERS = [(',', ','),
                   (';', ';')
 ]
 
-def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', noupdate=False, delimiter=','):
+def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', noupdate=False, context=None, delimiter=','):
     '''Import csv file :
         quote: "
         encoding: utf-8'''
@@ -87,28 +87,11 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', n
             datas.append(map(lambda x: tools.misc.ustr(x), line))
         except:
             print "Cannot import the line: %s", line
-    result, rows, warning_msg, dummy = pool.get(model).import_data(cr, uid, fields, datas, mode, module, noupdate, filename=fname_partial)
-    if result < 0:
-        # Report failed import and abort module install
-        raise Exception(_('Module loading failed: file %s/%s could not be processed:\n %s') % (module, fname, warning_msg))
+    nb_imported_items, logs = pool.get(model).import_data_custom(cr, uid, fields, datas, mode, module, noupdate, filename=fname_partial, context=context)
+    if not (logs or nb_imported_items):
+        nb_imported_items = len(datas)
 
-
-class ResCar(orm.Model):
-    _name = 'res.car'
-
-    _columns = {
-        'name': fields.char('Name', size=64),
-        'color': fields.char('Color', size=64),
-        'make_car': fields.many2one('car.make', 'Make of the car'),
-    }
-
-
-class CarMake(orm.Model):
-    _name = 'car.make'
-
-    _columns = {
-        'name': fields.char('Name', size=64),
-    }
+    return len(datas), nb_imported_items, logs
 
 
 class ImportDataRun(orm.Model):
@@ -136,6 +119,7 @@ class ImportDataRun(orm.Model):
             'run_data_path':fields.char('Run data path', size=512, readonly=True),
             'keep_logs_ok':fields.boolean('Keep logs'),
             'config_yml_file_path': fields.char('Config file', size=128, required=False),
+            'import_partial': fields.boolean(u'Import partielle'),
             # Template configuration
             'root_path':fields.char('Root path of the template run', size=512, readonly=True),
             'config_path':fields.char('Config path of template run', size=512, readonly=True),
@@ -269,6 +253,7 @@ class ImportDataRun(orm.Model):
         object_obj = self.pool.get('import.data.run.object')
 
         for run in self.browse(cr, uid, ids, context):
+            context['import_partial'] = run.import_partial
             object_ids = [obj.id for obj in run.object_ids]
             object_obj.import_file(cr, uid, object_ids, context)
 
@@ -717,7 +702,7 @@ class ImportDataRunObject(orm.Model):
                     continue
                 obj.write({'validation_succeed_ok':True})
             except Exception, e:
-                print "Une erreur s'est produite en traitant le fichier: %s - %s" % (obj.name, e)
+                obj.log("Une erreur s'est produite en traitant le fichier: %s - %s" % (obj.name, e), 'error', context=context)
                 continue
 
         return res
@@ -766,31 +751,36 @@ class ImportDataRunObjectFile(orm.Model):
     _name = 'import.data.run.object.file'
 
     _columns = {
-            # Import configuration
-            'sequence': fields.integer('Sequence', required=True),
-            'name': fields.char('File path/name', size=256, required=True),
-            'import_once': fields.boolean('Import once'),
-            'import_script_name': fields.char('Import script name path', size=256, required=False),
-            'object_id': fields.many2one('import.data.run.object', 'Object', required=True, ondelete='cascade'),
-            # Import information
-            'imported_ok': fields.boolean('Imported', readonly=True),
-            'nb_2import_items': fields.integer('Nb. of items to import', readonly=True),
-            'nb_imported_items': fields.integer('Nb. Imported items', readonly=True),
-            'file_validated_ok': fields.boolean('Validated'),
-            'import_date': fields.datetime('Import date', readonly=True),
-            'file_extension': fields.selection(FILE_EXTENSIONS, 'File extension', required=True),
-            'log_ids':fields.one2many('import.data.log', 'file_id', 'File logs', ondelete='cascade'),
-            }
+        # Import configuration
+        'sequence': fields.integer('Sequence', required=True),
+        'name': fields.char('File path/name', size=256, required=True),
+        'import_once': fields.boolean('Import once'),
+        'import_script_name': fields.char('Import script name path', size=256, required=False),
+        'object_id': fields.many2one('import.data.run.object', 'Object', required=True, ondelete='cascade'),
+        'delimiter': fields.char('File separator', size=1, required=True),
+        # Import information
+        'imported_ok': fields.boolean('Imported', readonly=True),
+        'nb_2import_items': fields.integer('Nb. of items to import', readonly=True),
+        'nb_imported_items': fields.integer('Nb. Imported items', readonly=True),
+        'file_validated_ok': fields.boolean('Validated'),
+        'import_date': fields.datetime('Import date', readonly=True),
+        'file_extension': fields.selection(FILE_EXTENSIONS, 'File extension', required=True),
+        'log_ids':fields.one2many('import.data.log', 'file_id', 'File logs', ondelete='cascade'),
+    }
 
     _defaults = {'file_extension':'csv',
-                 'import_once':True
-               }
+                 'import_once':True,
+                 'delimiter': ',',
+   }
 
     def import_data_csv(self, cr, uid, ids, context=None):
         if not isinstance(ids, list):
             ids = [ids]
+        nb_2import_items = 0
+        nb_imported_items = 0
+        logs = []
         for filecsv in self.browse(cr, uid, ids, context):
-            delimiter = ','
+            delimiter = str(filecsv.delimiter)
             fname = filecsv.name
             import_path = filecsv.object_id.run_id.run_data_path + fname
             if not os.path.exists(import_path):
@@ -799,7 +789,10 @@ class ImportDataRunObjectFile(orm.Model):
             with open(import_path, 'r') as f:
                 csvcontent = f.read()
                 module = filecsv.object_id.model_id.model
-                convert_csv_import(cr, module, fname, csvcontent, delimiter=delimiter)
+                nb_2import_items, nb_imported_items, logs = convert_csv_import(cr, module, fname, csvcontent, delimiter=delimiter, context=context)
+            filecsv.object_id.write({'nb_2import_items': nb_2import_items, 'nb_imported_items': nb_imported_items})
+            for log in logs:
+                filecsv.log(log)
         return True
 
     def log(self, cr, uid, ids, description, level='error', context=None):
