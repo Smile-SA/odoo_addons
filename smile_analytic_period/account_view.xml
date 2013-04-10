@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+		<!-- Account Fiscal Year -->
+
+		<record id="view_account_fiscalyear_form" model="ir.ui.view">
+			<field name="name">account.fiscalyear.form.inherit</field>
+			<field name="model">account.fiscalyear</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="account.view_account_fiscalyear_form"/>
+			<field name="arch" type="xml">
+				<button name="create_period3" position="after">
+                	<button name="create_analytic_periods" states="draft" string="Create Monthly Analytic Periods" type="object" icon="terp-document-new"/>
+				</button>
+			</field>
+		</record>
+
+    </data>
+</openerp>

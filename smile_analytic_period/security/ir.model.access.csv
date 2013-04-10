@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_account_analytic_period_all","account.analytic.period all","model_account_analytic_period",,1,0,0,0
+"access_account_analytic_period_user","account.analytic.period user","model_account_analytic_period","account.group_account_user",1,1,0,0
+"access_account_analytic_period_manager","account.analytic.period manager","model_account_analytic_period","account.group_account_manager",1,1,1,1
