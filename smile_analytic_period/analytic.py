@@ -140,16 +140,16 @@ class AnalyticPeriod(osv.osv):
     def button_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context)
 
-    def clear_caches(self, cr):
-        self.get_previous_period_id.clear_cache(cr.dbname)
-        self.get_next_period_id.clear_cache(cr.dbname)
+    def clear_caches(self):
+        self.get_previous_period_id.clear_cache(self)
+        self.get_next_period_id.clear_cache(self)
 
     def create(self, cr, uid, vals, context=None):
-        self.clear_caches(cr)
+        self.clear_caches()
         return super(AnalyticPeriod, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        self.clear_caches(cr)
+        self.clear_caches()
         if vals.get('state') == 'done':
             if isinstance(ids, (int, long)):
                 ids = [ids]
@@ -173,7 +173,7 @@ class AnalyticPeriod(osv.osv):
         return super(AnalyticPeriod, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):
-        self.clear_caches(cr)
+        self.clear_caches()
         return super(AnalyticPeriod, self).unlink(cr, uid, ids, context)
 
     def create_periods(self, cr, uid, global_date_start, global_date_stop, context=None, interval=1):
