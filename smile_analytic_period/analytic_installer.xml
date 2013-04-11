@@ -12,31 +12,24 @@
                     <form position="attributes">
                         <attribute name="string">Analytic Application Configuration</attribute>
                     </form>
-                    <separator string="title" position="attributes">
-                        <attribute name="string">Configure Your Analytic Periods</attribute>
+                    <separator string="title" position="replace">
+                        <separator string="Configure Your Analytic Periods"/>
+                        <group colspan="8">
+                            <group colspan="4" width="600">
+                                <field name="period"/>
+                                <newline/>
+                                <field name="company_id" attrs="{'invisible': [('period', '!=', 'specific')], 'required': [('period', '=', 'specific')]}"/>
+                                <field name="fiscalyear_id" attrs="{'invisible': [('period', '!=', 'specific')], 'required': [('period', '=', 'specific')]}" domain="[('company_id', '=', company_id)]"
+                                    on_change="onchange_fiscalyear_id(fiscalyear_id)"/>
+                                <field name="date_start" attrs="{'invisible': [('period', '=', 'none')], 'readonly': [('period', '=', 'specific')], 'required': [('period', '=', 'global')]}"
+                                    on_change="onchange_date_start(date_start)"/>
+                                <field name="date_stop" attrs="{'invisible': [('period', '=', 'none')], 'readonly': [('period', '=', 'specific')], 'required': [('period', '=', 'global')]}"/>
+                            </group>
+                        </group>
                     </separator>
-                    <xpath expr="//label[@string='description']" position="attributes">
-                        <attribute name="string"></attribute>
-                    </xpath>
                     <xpath expr="//button[@string='Install Modules']" position="attributes">
                         <attribute name="string">Configure</attribute>
                     </xpath>
-                    <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                        <attribute name='rowspan'>23</attribute>
-                        <attribute name='string'></attribute>
-                    </xpath>
-                    <group colspan="8">
-                        <group colspan="4" width="600">
-                            <field name="period"/>
-                            <newline/>
-                            <field name="company_id" attrs="{'invisible': [('period', '!=', 'specific')], 'required': [('period', '=', 'specific')]}"/>
-                            <field name="fiscalyear_id" attrs="{'invisible': [('period', '!=', 'specific')], 'required': [('period', '=', 'specific')]}" domain="[('company_id', '=', company_id)]"
-                                on_change="onchange_fiscalyear_id(fiscalyear_id)"/>
-                            <field name="date_start" attrs="{'invisible': [('period', '=', 'none')], 'readonly': [('period', '=', 'specific')], 'required': [('period', '=', 'global')]}"
-                                on_change="onchange_date_start(date_start)"/>
-                            <field name="date_stop" attrs="{'invisible': [('period', '=', 'none')], 'readonly': [('period', '=', 'specific')], 'required': [('period', '=', 'global')]}"/>
-                        </group>
-                    </group>
                 </data>
             </field>
           </record>
