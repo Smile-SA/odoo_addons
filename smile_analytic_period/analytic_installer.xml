@@ -5,11 +5,10 @@
         <record id="view_analytic_configuration_installer" model="ir.ui.view">
             <field name="name">analytic.installer.form</field>
             <field name="model">analytic.installer</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
                 <data>
-                    <form position="attributes">
+                    <form position="attributes" version="7.0">
                         <attribute name="string">Analytic Application Configuration</attribute>
                     </form>
                     <separator string="title" position="replace">
@@ -44,34 +43,13 @@
             <field name="target">new</field>
         </record>
 
-        <record id="analytic_installer_todo" model="ir.actions.todo">
+        <record id="account_configuration_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_analytic_installer"/>
-            <field name="sequence">4</field>
-            <field name="restart">always</field>
-            <field eval="[(6,0,[ref('base.group_no_one')])]" name="groups_id"/>
+            <field name="sequence">5</field>
+            <field name="type">automatic</field>
         </record>
 
-        <record id="ir_actions_server_analytic_setting" model="ir.actions.server">
-            <field name="type">ir.actions.server</field>
-            <field name="condition">True</field>
-            <field name="state">code</field>
-            <field name="model_id" ref="base.model_ir_actions_todo"/>
-            <field eval="5" name="sequence"/>
-            <field name="code">
-todo_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'smile_analytic_period', 'analytic_installer_todo')[1]
-self.pool.get('ir.actions.todo').write(cr, uid, todo_id, {'state':'open'}, context=context)
-action = self.pool.get('res.config').next(cr, uid, [], context)
-</field>
-           <field name="name">New Company Financial Setting</field>
-        </record>
-
-        <record id="menu_analytic_setting" model="ir.ui.menu">
-            <field name="name">New Analytic Application Setting</field>
-            <field eval="1" name="sequence"/>
-            <field name="parent_id" ref="account.menu_analytic_accounting"/>
-            <field name="icon">STOCK_EXECUTE</field>
-            <field name="action" ref="ir_actions_server_analytic_setting"/>
-        </record>
+        <menuitem parent="account.menu_analytic_accounting" sequence="1" id="menu_analytic_setting" name="New Analytic Application Setting" action="action_analytic_installer"/>
 
     </data>
 </openerp>
