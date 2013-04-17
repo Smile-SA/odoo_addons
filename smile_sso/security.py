@@ -26,6 +26,9 @@ import pooler
 from osv import osv
 
 
+_logger = logging.getLogger('smile_sso')
+
+
 def _check_security_key(db, security_key):
     # Database parameter is absolutely required to prevent cold start errors.
     # For details, see ticket  #2: https: //github.com/Smile-SA/smile_openerp_addons_6.0/issues/2
@@ -35,7 +38,7 @@ def _check_security_key(db, security_key):
     # TODO: improve it and provides a ssl certification check
     secret_match = int(security_key) == int(config.options.get('smile_sso.shared_secret_pin'))
     if not secret_match:
-        logging.getLogger('smile_sso').error("Server and web client don't share the same secret PIN number")
+        _logger.error("Server and web client don't share the same secret PIN number")
     return secret_match
 
 

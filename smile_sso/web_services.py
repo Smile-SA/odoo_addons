@@ -27,12 +27,15 @@ from service.web_services import common
 native_dispatch = common.dispatch
 
 
+_logger = logging.getLogger("web-service")
+
+
 def new_dispatch(self, method, params):
     if method in ('sso_login', 'sso_logout'):
         res = getattr(security, method)(params[0], params[1], params[2])
         msg = res and 'Successful %s' % method.replace('sso_', '') or 'Bad login or password'
         #TODO: log the client IP address..
-        logging.getLogger("web-service").info("%s from '%s' using database '%s'" % (msg, params[1], params[0]))
+        _logger.info("%s from '%s' using database '%s'" % (msg, params[1], params[0]))
         return res
     else:
         return native_dispatch(self, method, params)

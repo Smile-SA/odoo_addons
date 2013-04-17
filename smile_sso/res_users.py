@@ -30,6 +30,9 @@ import pooler
 from tools.translate import _
 
 
+_logger = logging.getLogger('smile_sso')
+
+
 def generate_random_password(length):
     """Generate password with an entropy per symbol equal to 6.5699 bits, i.e. for a 64-length password, 420 bits"""
     new_password = ''
@@ -71,7 +74,6 @@ class ResUsers(orm.Model):
     }
 
     def sso_login(self, db, login, length=64, context=None):
-        logger = logging.getLogger('smile_sso')
         cr = pooler.get_db(db).cursor()
         try:
             cr.execute("SELECT u.id FROM res_users u LEFT JOIN res_users_expiry e ON u.id = e.user_id "
@@ -80,12 +82,12 @@ class ResUsers(orm.Model):
             res = cr.dictfetchone()
             if not res:
                 error_msg = "Server connection refused for the user [login=%s]" % login
-                logger.error(error_msg)
+                _logger.error(error_msg)
                 return {'id': 0, 'password': ''}
             password = generate_random_password(length)
             cr.execute("UPDATE res_users SET password=%s WHERE login=%s AND sso=TRUE", (password, login))
             cr.commit()
-            logger.debug("Login of the user [login=%s]", login)
+            _logger.debug("Login of the user [login=%s]", login)
             res['password'] = password
             return res
         finally:
@@ -96,15 +98,14 @@ class ResUsers(orm.Model):
         try:
             cr.execute("UPDATE res_users_expiry SET expiry_date=NULL WHERE login=%s AND sso=TRUE", (login,))
             cr.commit()
-            logging.getLogger('smile_sso').debug("Logout of the user [login=%s]", login)
+            _logger.debug("Logout of the user [login=%s]", login)
         finally:
             cr.close()
 
     def check(self, db, uid, passwd):
-        logger = logging.getLogger('smile_sso')
         if not passwd:
             error_msg = "No password authentication not supported!"
-            logger.error(error_msg)
+            _logger.error(error_msg)
             raise OpenERPException(error_msg, ('', '', ''))
         cr = pooler.get_db(db).cursor()
         try:
@@ -117,7 +118,7 @@ class ResUsers(orm.Model):
                 res = cr.fetchone()
                 if not res:
                     error_msg = "Server session expired for the user [uid=%s]" % uid
-                    logger.error(error_msg)
+                    _logger.error(error_msg)
                     raise OpenERPException(error_msg, ('', '', ''))
                 self._uid_cache.setdefault(db, {}).update({uid: passwd})
             expiry_date = self.pool.get('res.users.expiry').get_expiry_date()
@@ -130,7 +131,7 @@ class ResUsers(orm.Model):
                 else:
                     cr.execute("INSERT INTO res_users_expiry (user_id, login, expiry_date) VALUES (%s, %s, %s AT TIME ZONE 'UTC')",
                                (int(uid), user_info[0], expiry_date))
-                logger.debug("Server session extended for the user [uid=%s]", uid)
+                _logger.debug("Server session extended for the user [uid=%s]", uid)
         finally:
             cr.close()
 
