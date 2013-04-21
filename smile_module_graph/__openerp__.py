@@ -24,7 +24,11 @@
     "version": "0.1",
     "depends": ["base"],
     "author": "Smile",
-    "description": "Generate Modules Graph",
+    "description": """
+    Generate Modules Graph
+
+    Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+    """,
     "website": "http://www.smile.fr",
     "category": "Hidden",
     "sequence": 32,
