@@ -12,9 +12,9 @@
                                         <sheet>
                                           <group>
 
-
+                                            <field name="old_remaining_time"/>
+                                            <field name="new_remaining_time"/>
 </group>
-
                                                          </sheet>
                                         <footer>
                                                 <button name="button_update_remaining_time" string="Update Remaining Time" type="object" class="oe_highlight"/>

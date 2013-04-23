@@ -41,6 +41,8 @@ class RemainingTimeWizard(TransientModel):
         return self._get_task_id(context)
 
     _columns = {
+        'old_remaining_time': fields.float('Old Remaining Time', digits=(16,2), readonly=True, help="Old total remaining time."),
+        'new_remaining_time': fields.float('New Remaining Time', digits=(16,2), required=True, help="New total remaining time."),
     }
 
     def button_update_remaining_time(self, cr, uid, ids, context=None):
@@ -48,18 +50,10 @@ class RemainingTimeWizard(TransientModel):
         if not ids or len(ids) > 1:
             return False
         wizard = self.browse(cr, uid, ids[0], context)
-        lpool = self.pool.get('project.task.remaining_time.line')
         task_id = self._get_task_id(context)
-
-
-        # Archive all active remaining time lines
-        active_line_ids = lpool.search(cr, uid, [('task_id', '=', task_id), ('archived', '=', False)], context=context)
-        lpool.write(cr, uid, active_line_ids, {'archived': True}, context=context)
-        # Create our new remaining time line
-        lpool.create(cr, uid, {'task_id': task_id
-          }, context)
-
-
+        remaining_time = wizard.new_remaining_time
+        # Update task's remaining time. This will automaticcaly trigger the creation of a project.task.remaining_time.line
+        self.pool.get('project.task').write(cr, uid, task_id, {'remaining_hours': remaining_time}, context=context)
         # Go back to the task we've just updated
         return {
             'type': 'ir.actions.act_window',

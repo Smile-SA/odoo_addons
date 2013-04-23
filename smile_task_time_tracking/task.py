@@ -54,6 +54,28 @@ class Task(osv):
         (_check_active_remaining_time_lines, "No more than one active remaining time line is allowed.", ['remaining_time_line_ids']),
     ]
 
+    def _update_remaining_time_history(self, cr, uid, ids, vals, context=None):
+        # Catch every update on the legacy remaining_hours and create a line in the history to keep track on changes
+        if context is None:
+            context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        remaining_time = vals.get('remaining_hours', context.get('default_remaining_hours', None))
+        if remaining_time is not None:
+            for task_id in ids:
+                self.pool.get('project.task.remaining_time.line').update_line_history(cr, uid, task_id, remaining_time, context)
+        return
+
+    def create(self, cr, uid, vals, context=None):
+        res = super(Task, self).create(cr, uid, vals, context=context)
+        self._update_remaining_time_history(cr, uid, res, vals, context)
+        return res
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(Task, self).write(cr, uid, ids, vals, context=context)
+        self._update_remaining_time_history(cr, uid, ids, vals, context)
+        return res
+
 
 class RemainingTimeLine(osv):
     _name = 'project.task.remaining_time.line'
@@ -61,19 +83,24 @@ class RemainingTimeLine(osv):
 
     _columns = {
       'task_id': fields.many2one('project.task', 'Task', readonly=True, required=True, ondelete='cascade', help="Task this remaining time line is attached to."),
-
-
-      'write_date': fields.datetime("Modification Date", readonly=True, required=True, help="Last date when the budget line was updated."),
-      'create_uid':  fields.many2one('res.users', 'Author', readonly=True, required=True, help="The user who created this budget line."),
-      'archived': fields.boolean('Archived', readonly=True, help="Flag a budget line as archived."),
+      'remaining_time': fields.float('Remaining Time', digits=(16,2), readonly=True, required=True, help=""),
+      'write_date': fields.datetime("Modification Date", readonly=True, required=True, help="Last date when the remaining time line was updated."),
+      'create_uid':  fields.many2one('res.users', 'Author', readonly=True, required=True, help="The user who created this remaining time line."),
+      'archived': fields.boolean('Archived', readonly=True, help="Flag a remaining time line as archived."),
     }
 
     _defaults = {
         'archived': False,
     }
 
-    _sql_constraints = [
-    ]
+    def update_line_history(self, cr, uid, task_id, remaining_time, context=None):
+        """ Utility to maintain the consistency of remaining time history.
+        """
+        # Archive all active remaining time lines
+        active_line_ids = self.search(cr, uid, [('task_id', '=', task_id), ('archived', '=', False)], context=context)
+        self.write(cr, uid, active_line_ids, {'archived': True}, context=context)
+        # Create our new remaining time line
+        return self.create(cr, uid, {'task_id': task_id, 'remaining_time': remaining_time}, context)
 
 
 RemainingTimeLine()
