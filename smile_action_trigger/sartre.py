@@ -549,6 +549,7 @@ class SartreTrigger(orm.Model):
                 for object_ in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
                     if dynamic_other_value:
                         other_value = _get_id_from_browse_record(eval(str(dynamic_other_value.group()[2:-2]).strip(), {
+                            'uid': uid,
                             'object': object_,
                             'context': context,
                             'time': time,
