@@ -55,7 +55,29 @@ class Task(osv):
         (_check_active_remaining_time_lines, "No more than one active remaining time line is allowed.", ['remaining_time_line_ids']),
     ]
 
+    def _force_remaining_hours_update(self, cr, uid, ids, vals, context=None):
+        """
+        When planned time is updated alone, without a remaning time, we have to
+        manually set the latter as if it was called by onchange_planned().
+        This is required to restore the legacy behaviour we bypassed when we
+        forced the remaining_hours field to be read-only (see:
+        https://github.com/Smile-SA/smile_openerp_addons_7.0/commit/bfc6f12bfcd89a6e47b4a5dab27622152eac2243#L4R14 ).
+        """
+        if 'planned_hours' in vals and 'remaining_hours' not in vals:
+            local_context = context.copy()
+            local_context.update({'bypass_time_tracking_history': True})
+            planned = vals.get('planned_hours', None)
+            effective = vals.get('effective_hours', None)
+            for task_id in ids:
+                if effective is None:
+                    effective = self.read(cr, uid, task_id, ['effective_hours'], context=local_context)['effective_hours']
+                new_vals = self.onchange_planned(cr, uid, ids, planned, effective)['value']
+                self.write(cr, uid, task_id, new_vals, context=local_context)
+        return
+
     def _update_time_history(self, cr, uid, ids, vals, context=None):
+        if context.get('bypass_time_tracking_history', None):
+            return
         # Catch every update on the legacy remaining_hours and update the history to keep track on changes
         if context is None:
             context = {}
@@ -89,12 +111,14 @@ class Task(osv):
         return
 
     def create(self, cr, uid, vals, context=None):
-        res = super(Task, self).create(cr, uid, vals, context=context)
-        self._update_time_history(cr, uid, res, vals, context)
+        ids = super(Task, self).create(cr, uid, vals, context=context)
+        self._force_remaining_hours_update(cr, uid, ids, vals, context)
+        self._update_time_history(cr, uid, ids, vals, context)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(Task, self).write(cr, uid, ids, vals, context=context)
+        self._force_remaining_hours_update(cr, uid, ids, vals, context)
         self._update_time_history(cr, uid, ids, vals, context)
         return res
 
