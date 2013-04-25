@@ -77,6 +77,7 @@ class IrActionsServer(orm.Model):
 
     def run(self, cr, uid, ids, context=None):
         context = context or {}
+        res = None
         for action in self.browse(cr, uid, ids, context):
             if action.execution_type == 'parallel' or context.get('launch_actions_execution'):
                 res = super(IrActionsServer, self).run(cr, uid, [action.id], context)
