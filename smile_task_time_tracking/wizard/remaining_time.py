@@ -42,7 +42,7 @@ class RemainingTimeWizard(TransientModel):
 
     _columns = {
         'is_time_ratio': fields.boolean("Display remaining time as a ratio", help="Let the user enter the new remaining time as a ratio to its current value."),
-        'new_remaining_time_ratio': fields.integer('New Remaining Time Ratio (%)', required=True, help="New value of task's total remaining time, as a ratio of its current value."),
+        'new_remaining_time_ratio': fields.integer('New Remaining Time Ratio (%)', help="New value of task's total remaining time, as a ratio of its current value."),
         # Fields below are alter-egos of the ones defined in project.project.py:task() class
         'planned_time': fields.float('Initially Planned Hours', readonly=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'effective_time': fields.float('Hours Spent', readonly=True, help="Computed using the sum of the task work done."),
@@ -73,7 +73,10 @@ class RemainingTimeWizard(TransientModel):
             return False
         wizard = self.browse(cr, uid, ids[0], context)
         task_id = self._get_task_id(context)
+        # Force proper computation of new remaining time value: the onchange_remaining_time() is not enough to get reliable values. The onchange is not triggered if the field currently edited doesn't loose focus.
         remaining_time = wizard.new_remaining_time_value
+        if wizard.is_time_ratio:
+            remaining_time = self.onchange_remaining_time(cr, uid, None, wizard.current_remaining_time_value, remaining_time, wizard.new_remaining_time_ratio, wizard.is_time_ratio)['value']['new_remaining_time_value']
         # Update task's remaining time. This will automaticcaly trigger the creation of a project.task.remaining_time.line
         self.pool.get('project.task').write(cr, uid, task_id, {'remaining_hours': remaining_time}, context=context)
         # Go back to the task we've just updated
