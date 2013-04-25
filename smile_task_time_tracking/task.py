@@ -127,8 +127,3 @@ class RemainingTimeLine(osv):
     _defaults = {
         'archived': False,
     }
-
-
-RemainingTimeLine()
-TrackingLine()
-Task()
