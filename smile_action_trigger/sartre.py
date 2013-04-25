@@ -924,7 +924,8 @@ def sartre_decorator(original_method):
         context['trigger'] = method_name
         trigger_obj = obj.pool.get('sartre.trigger')
         trigger_ids = []
-        if trigger_obj:
+        if trigger_obj \
+                and (method_name != 'write' or vals):  # To avoid to execute action if write({})
             # Case: trigger on function
             calculation_method = False
             if method_name in ('get', 'set') and original_method.im_class == fields.function:
