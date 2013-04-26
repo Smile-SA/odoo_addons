@@ -84,12 +84,14 @@ def import_data_custom(self, cr, uid, fields, datas, mode='init', current_module
             raise Exception(m['message'])
 
     nb_imported = 0
-    for res_id, xml_id, res, info, log_error in self._convert_records_custom(cr, uid,
-                    self._extract_records(cr, uid, fields, datas,
-                                          context=context, log=log),
-                    context=context, log=log):
+    for l, (res_id, xml_id, res, info, log_error) in enumerate(self._convert_records_custom(
+                                                                cr,
+                                                                uid,
+                                                                self._extract_records(cr, uid, fields, datas, context=context, log=log),
+                                                                context=context,
+                                                                log=log)):
         if log_error:
-            logs.append(log_error)
+            logs.append((log_error, l))
             continue
         try:
             ir_model_data_obj._update(cr, uid, self._name,
