@@ -41,25 +41,44 @@ class RemainingTimeWizard(TransientModel):
         return self._get_task_id(context)
 
     _columns = {
+        'is_time_ratio': fields.boolean("Display remaining time as a ratio", help="Let the user enter the new remaining time as a ratio to its current value."),
+        'new_remaining_time_ratio': fields.integer('New Remaining Time Ratio (%)', help="New value of task's total remaining time, as a ratio of its current value."),
+        # Fields below are alter-egos of the ones defined in project.project.py:task() class
+        'planned_time': fields.float('Initially Planned Hours', readonly=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
+        'effective_time': fields.float('Hours Spent', readonly=True, help="Computed using the sum of the task work done."),
+        'current_remaining_time_value': fields.float('Current Remaining Time', digits=(16,2), readonly=True, help="Current value of task's total remaining time."),
+        'new_remaining_time_value': fields.float('New Remaining Time Value', digits=(16,2), required=True, help="New value of task's total remaining time."),
     }
+
+    _defaults = {
+        'is_time_ratio': False,
+    }
+
+    def onchange_remaining_time(self, cr, uid, ids, current_value, new_value, new_ratio, value_update, context=None):
+        if context is None:
+            context = {}
+        res = {}
+        if value_update:
+            res['new_remaining_time_value'] = current_value * (new_ratio / 100.0)
+        else:
+            if not current_value:
+                res['new_remaining_time_ratio'] = 0
+            else:
+                res['new_remaining_time_ratio'] = int((new_value * 100.0) / current_value)
+        return {'value': res}
 
     def button_update_remaining_time(self, cr, uid, ids, context=None):
         ids = isinstance(ids, (tuple, list)) and ids or [ids]
         if not ids or len(ids) > 1:
             return False
         wizard = self.browse(cr, uid, ids[0], context)
-        lpool = self.pool.get('project.task.remaining_time.line')
         task_id = self._get_task_id(context)
-
-
-        # Archive all active remaining time lines
-        active_line_ids = lpool.search(cr, uid, [('task_id', '=', task_id), ('archived', '=', False)], context=context)
-        lpool.write(cr, uid, active_line_ids, {'archived': True}, context=context)
-        # Create our new remaining time line
-        lpool.create(cr, uid, {'task_id': task_id
-          }, context)
-
-
+        # Force proper computation of new remaining time value: the onchange_remaining_time() is not enough to get reliable values. The onchange is not triggered if the field currently edited doesn't loose focus.
+        remaining_time = wizard.new_remaining_time_value
+        if wizard.is_time_ratio:
+            remaining_time = self.onchange_remaining_time(cr, uid, None, wizard.current_remaining_time_value, remaining_time, wizard.new_remaining_time_ratio, wizard.is_time_ratio)['value']['new_remaining_time_value']
+        # Update task's remaining time. This will automaticcaly trigger the creation of a project.task.remaining_time.line
+        self.pool.get('project.task').write(cr, uid, task_id, {'remaining_hours': remaining_time}, context=context)
         # Go back to the task we've just updated
         return {
             'type': 'ir.actions.act_window',

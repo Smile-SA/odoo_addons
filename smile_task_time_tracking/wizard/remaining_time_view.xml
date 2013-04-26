@@ -10,11 +10,16 @@
                         <field name="arch" type="xml">
                                 <form string="Task's Remaining Time Wizard" version="7.0">
                                         <sheet>
-                                          <group>
 
+                                             <group col="4">
+                                            <field name="planned_time"/><p></p><p></p>
+                                            <field name="effective_time"/><p></p><p></p>
 
+                                              <field name="current_remaining_time_value"/><p></p><p></p>
+                                            <field name="new_remaining_time_value" on_change="onchange_remaining_time(current_remaining_time_value, new_remaining_time_value, new_remaining_time_ratio, is_time_ratio)" attrs="{'readonly': [('is_time_ratio', '!=', False)]}"/><p></p><p></p>
+                                            <field name="new_remaining_time_ratio" on_change="onchange_remaining_time(current_remaining_time_value, new_remaining_time_value, new_remaining_time_ratio, is_time_ratio)" attrs="{'required': [('is_time_ratio', '!=', False)], 'readonly': [('is_time_ratio', '!=', True)]}"/>
+                                            <field name="is_time_ratio"/>
 </group>
-
                                                          </sheet>
                                         <footer>
                                                 <button name="button_update_remaining_time" string="Update Remaining Time" type="object" class="oe_highlight"/>
