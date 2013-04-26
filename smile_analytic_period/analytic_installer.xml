@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_analytic_configuration_installer" model="ir.ui.view">
+            <field name="name">analytic.installer.form</field>
+            <field name="model">analytic.installer</field>
+            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="arch" type="xml">
+                <data>
+                    <form position="attributes" version="7.0">
+                        <attribute name="string">Analytic Application Configuration</attribute>
+                    </form>
+                    <separator string="title" position="replace">
+                        <separator string="Configure Your Analytic Periods"/>
+                        <group colspan="8">
+                            <group colspan="4" width="600">
+                                <field name="period"/>
+                                <newline/>
+                                <field name="company_id" attrs="{'invisible': [('period', '!=', 'specific')], 'required': [('period', '=', 'specific')]}"/>
+                                <field name="fiscalyear_id" attrs="{'invisible': [('period', '!=', 'specific')], 'required': [('period', '=', 'specific')]}" domain="[('company_id', '=', company_id)]"
+                                    on_change="onchange_fiscalyear_id(fiscalyear_id)"/>
+                                <field name="date_start" attrs="{'invisible': [('period', '=', 'none')], 'readonly': [('period', '=', 'specific')], 'required': [('period', '=', 'global')]}"
+                                    on_change="onchange_date_start(date_start)"/>
+                                <field name="date_stop" attrs="{'invisible': [('period', '=', 'none')], 'readonly': [('period', '=', 'specific')], 'required': [('period', '=', 'global')]}"/>
+                            </group>
+                        </group>
+                    </separator>
+                    <xpath expr="//button[@string='Install Modules']" position="attributes">
+                        <attribute name="string">Configure</attribute>
+                    </xpath>
+                </data>
+            </field>
+          </record>
+
+        <record id="action_analytic_installer" model="ir.actions.act_window">
+            <field name="name">Analytic Application Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">analytic.installer</field>
+            <field name="view_id" ref="view_analytic_configuration_installer"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="account_configuration_installer_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_analytic_installer"/>
+            <field name="sequence">5</field>
+            <field name="type">automatic</field>
+        </record>
+
+        <menuitem parent="account.menu_analytic_accounting" sequence="1" id="menu_analytic_setting" name="New Analytic Application Setting" action="action_analytic_installer"/>
+
+    </data>
+</openerp>

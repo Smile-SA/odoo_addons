@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+	<!-- Account Analytic Line -->
+
+        <record id="view_account_analytic_line_form" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.inherit</field>
+            <field name="model">account.analytic.line</field>
+            <field name="type">form</field>
+			<field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                	<newline/>
+	                <field name="period_id"/>
+	                <field name="create_period_id"/>
+                </field>
+		    </field>
+		</record>
+
+        <record id="view_account_analytic_line_tree" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.inherit</field>
+            <field name="model">account.analytic.line</field>
+            <field name="type">tree</field>
+			<field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+            <field name="arch" type="xml">
+				<data>
+	                <field name="date" position="replace">
+		                <field name="period_id"/>
+	                </field>
+					<field name="user_id" position="after">
+		                <field name="create_period_id"/>
+					</field>
+	        	</data>
+            </field>
+        </record>
+
+	<!-- Account Analytic Period -->
+
+        <record id="view_account_analytic_period_form" model="ir.ui.view">
+            <field name="name">account.analytic.period.form</field>
+            <field name="model">account.analytic.period</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Period">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <field name="general_period_id" widget="selection"/>
+                    <field name="fiscalyear_id"/>
+                    <separator colspan="4" string="States"/>
+                    <field name="state"/>
+		   			<button name="button_close" type="object" string="Close" colspan="2" icon="terp-camera_test" states="draft"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_period_tree" model="ir.ui.view">
+            <field name="name">account.analytic.period.tree</field>
+            <field name="model">account.analytic.period</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+              <tree colors="blue:state in ('draft');gray:state in ('done') " string="Analytic Periods">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <field name="general_period_id" widget="selection"/>
+                    <field name="fiscalyear_id"/>
+                    <field name="state"/>
+		    		<button name="button_close" type="object" string="Close" icon="terp-camera_test" states="draft"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_period_search" model="ir.ui.view">
+            <field name="name">account.analytic.period.search</field>
+            <field name="model">account.analytic.period</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Analytic Periods">
+                    <group>
+                        <filter string="To Close" name="draft" domain="[('state','=','draft')]" icon="terp-dialog-close"/>
+                        <separator orientation="vertical"/>
+                        <field name="name"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_account_analytic_period_form" model="ir.actions.act_window">
+            <field name="name">Analytic Periods</field>
+            <field name="res_model">account.analytic.period</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="action_account_analytic_period_form" id="menu_action_account_analytic_period_form" parent="account.menu_analytic_accounting" sequence="15"/>
+
+    </data>
+</openerp>

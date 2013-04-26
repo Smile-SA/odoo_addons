@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+                <record id="remaining_time_wizard_form" model="ir.ui.view">
+                        <field name="name">project.task.remaining_time.wizard.form</field>
+                        <field name="model">project.task.remaining_time.wizard</field>
+                        <field name="type">form</field>
+                        <field name="priority">15</field>
+                        <field name="arch" type="xml">
+                                <form string="Task's Remaining Time Wizard" version="7.0">
+                                        <sheet>
+
+                                             <group col="4">
+                                            <field name="planned_time"/><p></p><p></p>
+                                            <field name="effective_time"/><p></p><p></p>
+
+                                              <field name="current_remaining_time_value"/><p></p><p></p>
+                                            <field name="new_remaining_time_value" on_change="onchange_remaining_time(current_remaining_time_value, new_remaining_time_value, new_remaining_time_ratio, is_time_ratio)" attrs="{'readonly': [('is_time_ratio', '!=', False)]}"/><p></p><p></p>
+                                            <field name="new_remaining_time_ratio" on_change="onchange_remaining_time(current_remaining_time_value, new_remaining_time_value, new_remaining_time_ratio, is_time_ratio)" attrs="{'required': [('is_time_ratio', '!=', False)], 'readonly': [('is_time_ratio', '!=', True)]}"/>
+                                            <field name="is_time_ratio"/>
+</group>
+                                                         </sheet>
+                                        <footer>
+                                                <button name="button_update_remaining_time" string="Update Remaining Time" type="object" class="oe_highlight"/>
+                                                <button string="Cancel" class="oe_link oe_right" special="cancel"/>
+                                        </footer>
+                                </form>
+                        </field>
+                </record>
+
+                <record id="action_remaining_time_wizard_form" model="ir.actions.act_window">
+                         <field name="name">Task's Remaining Time Wizard</field>
+                         <field name="type">ir.actions.act_window</field>
+                         <field name="res_model">project.task.remaining_time.wizard</field>
+                         <field name="view_type">form</field>
+                         <field name="view_mode">form</field>
+                         <field name="view_id" ref="remaining_time_wizard_form"/>
+                         <field name="target">new</field>
+                </record>
+
+        </data>
+</openerp>
+

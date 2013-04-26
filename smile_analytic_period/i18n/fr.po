@@ -1,0 +1,228 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_analytic_period
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-03-02 15:50+0000\n"
+"PO-Revision-Date: 2012-03-02 15:50+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_analytic_period
+#: selection:account.analytic.period,state:0
+msgid "Opened"
+msgstr "Ouverte"
+
+#. module: smile_analytic_period
+#: selection:analytic.installer,period:0
+msgid "Common for all companies"
+msgstr "Communes à l'ensemble des sociétés"
+
+#. module: smile_analytic_period
+#: model:ir.ui.menu,name:smile_analytic_period.menu_analytic_setting
+msgid "New Analytic Application Setting"
+msgstr "Paramétrage analytique de votre société"
+
+#. module: smile_analytic_period
+#: constraint:account.analytic.period:0
+msgid "Some periods overlap!"
+msgstr "Certaines périodes se chevauchent !"
+
+#. module: smile_analytic_period
+#: field:account.analytic.period,state:0
+msgid "State"
+msgstr "Etat"
+
+#. module: smile_analytic_period
+#: view:account.analytic.period:0
+msgid "To Close"
+msgstr "A fermer"
+
+#. module: smile_analytic_period
+#: constraint:account.analytic.line:0
+msgid "You cannot pass/update a journal entry in a closed period!"
+msgstr "Vous ne pouvez pas passer d'écritures sur une période close !"
+
+#. module: smile_analytic_period
+#: selection:account.analytic.period,state:0
+msgid "Closed"
+msgstr "Fermée"
+
+#. module: smile_analytic_period
+#: field:account.analytic.line,period_id:0
+msgid "Period"
+msgstr "Periode d'analyse"
+
+#. module: smile_analytic_period
+#: view:analytic.installer:0
+msgid "Configure Your Analytic Periods"
+msgstr "Configurer vos périodes analytiques"
+
+#. module: smile_analytic_period
+#: field:account.analytic.period,date_start:0
+msgid "Start of Period"
+msgstr "Début"
+
+#. module: smile_analytic_period
+#: selection:analytic.installer,period:0
+msgid "Specific to this company"
+msgstr "Propres à cette société"
+
+#. module: smile_analytic_period
+#: constraint:account.fiscalyear:0
+msgid "Error! You cannot define overlapping fiscal years"
+msgstr "Erreur ! Les exercices ne doivent pas se chevaucher."
+
+#. module: smile_analytic_period
+#: view:account.analytic.period:0
+#: model:ir.actions.act_window,name:smile_analytic_period.action_account_analytic_period_form
+#: model:ir.ui.menu,name:smile_analytic_period.menu_action_account_analytic_period_form
+msgid "Analytic Periods"
+msgstr "Periodes analytiques"
+
+#. module: smile_analytic_period
+#: model:ir.model,name:smile_analytic_period.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Ligne analytique"
+
+#. module: smile_analytic_period
+#: view:account.analytic.period:0
+#: model:ir.model,name:smile_analytic_period.model_account_analytic_period
+msgid "Analytic Period"
+msgstr "Période analytique"
+
+#. module: smile_analytic_period
+#: field:account.analytic.period,company_id:0
+#: field:analytic.installer,company_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_analytic_period
+#: model:ir.module.module,shortdesc:smile_analytic_period.module_meta_information
+msgid "Smile Analytic Period"
+msgstr "Smile Analytic Period"
+
+#. module: smile_analytic_period
+#: field:account.analytic.period,date_stop:0
+msgid "End of Period"
+msgstr "Fin"
+
+#. module: smile_analytic_period
+#: field:analytic.installer,date_stop:0
+msgid "End Date"
+msgstr "Date de fin"
+
+#. module: smile_analytic_period
+#: selection:analytic.installer,period:0
+msgid "None"
+msgstr "Aucune"
+
+#. module: smile_analytic_period
+#: field:account.analytic.period,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_analytic_period
+#: field:account.analytic.period,general_period_id:0
+msgid "General Period"
+msgstr "Période comptable"
+
+#. module: smile_analytic_period
+#: field:account.analytic.period,fiscalyear_id:0
+#: field:analytic.installer,fiscalyear_id:0
+#: model:ir.model,name:smile_analytic_period.model_account_fiscalyear
+msgid "Fiscal Year"
+msgstr "Année fiscale"
+
+#. module: smile_analytic_period
+#: constraint:account.fiscalyear:0
+msgid "Error! The duration of the Fiscal Year is invalid. "
+msgstr "Erreur ! La durée de l'exercice comptable est incorrecte. "
+
+#. module: smile_analytic_period
+#: constraint:account.analytic.period:0
+msgid "You cannot have several analytic periods in progress at the same moment!"
+msgstr "Vous ne pouvez pas avoir plusieurs périodes analytiques en cours au même moment !"
+
+#. module: smile_analytic_period
+#: field:analytic.installer,date_start:0
+msgid "Start Date"
+msgstr "Date de début"
+
+#. module: smile_analytic_period
+#: view:analytic.installer:0
+msgid "Configure"
+msgstr "Configurer"
+
+#. module: smile_analytic_period
+#: field:account.analytic.period,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: smile_analytic_period
+#: constraint:account.analytic.period:0
+msgid "The duration of the period is invalid or the period dates are not in the scope of the account period!"
+msgstr "La durée de la période est invalide ou hors période comptable !"
+
+#. module: smile_analytic_period
+#: model:ir.actions.server,name:smile_analytic_period.ir_actions_server_analytic_setting
+msgid "New Company Financial Setting"
+msgstr "Paramétrage financier de votre société"
+
+#. module: smile_analytic_period
+#: field:analytic.installer,config_logo:0
+msgid "Image"
+msgstr "Image"
+
+#. module: smile_analytic_period
+#: view:analytic.installer:0
+msgid "title"
+msgstr "titre"
+
+#. module: smile_analytic_period
+#: view:account.fiscalyear:0
+msgid "Create Monthly Analytic Periods"
+msgstr "Créer des périodes analytiques"
+
+#. module: smile_analytic_period
+#: constraint:account.analytic.line:0
+msgid "You cannot pass an actual entry in a future period!"
+msgstr "Vous ne pouvez pas passer d'écritures de type réalisé sur une période future !"
+
+#. module: smile_analytic_period
+#: view:account.analytic.period:0
+msgid "States"
+msgstr "Etats"
+
+#. module: smile_analytic_period
+#: constraint:account.analytic.line:0
+msgid "You cannot pass a forecast entry in a past period!"
+msgstr "Vous ne pouvez pas passer d'écritures du type prévu sur une période passée !"
+
+#. module: smile_analytic_period
+#: view:analytic.installer:0
+#: model:ir.actions.act_window,name:smile_analytic_period.action_analytic_installer
+msgid "Analytic Application Configuration"
+msgstr "Paramétrage de l'application de comptabilité analytique"
+
+#. module: smile_analytic_period
+#: field:analytic.installer,period:0
+msgid "Periods"
+msgstr "Périodes"
+
+#. module: smile_analytic_period
+#: view:account.analytic.period:0
+msgid "Close"
+msgstr "Clôturer"
+
+#. module: smile_analytic_period
+#: field:account.analytic.line,create_period_id:0
+msgid "Create Period"
+msgstr "Période de référence"
