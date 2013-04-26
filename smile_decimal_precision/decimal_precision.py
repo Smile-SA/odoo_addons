@@ -57,5 +57,8 @@ class DecimalPrecision(orm.Model):
 
     @staticmethod
     def get_display_precision(cr, uid, application):
-        res = pooler.get_pool(cr.dbname).get('decimal.precision').display_precision_get(cr, uid, application)
+        res = 2
+        dp_obj = pooler.get_pool(cr.dbname).get('decimal.precision')
+        if hasattr(dp_obj, 'display_precision_get'):
+            res = dp_obj.display_precision_get(cr, uid, application)
         return (16, res)
