@@ -14,7 +14,7 @@
                 <attribute name="readonly">True</attribute>
               </xpath>
               <field name="total_hours" position="before">
-                <button name="%(action_remaining_time_wizard_form)d" string="Update Remaining Time" type="action" class="oe_right"  context="{'default_planned_time': planned_hours, 'default_effective_time': effective_hours, 'default_current_remaining_time_value': remaining_hours, 'default_new_remaining_time_value': remaining_hours}"/>
+                <button name="%(action_remaining_time_wizard_form)d" colspan="2" string="Update Remaining Time" type="action" class="oe_right"  context="{'default_planned_time': planned_hours, 'default_effective_time': effective_hours, 'default_current_remaining_time_value': remaining_hours, 'default_new_remaining_time_value': remaining_hours}"/>
               </field>
               <xpath expr="//page[@string='Extra Info']" position="after">
                 <!-- Add a new tab for time tracking -->
