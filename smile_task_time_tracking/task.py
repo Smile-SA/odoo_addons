@@ -114,7 +114,7 @@ class Task(osv):
         ids = super(Task, self).create(cr, uid, vals, context=context)
         self._force_remaining_hours_update(cr, uid, ids, vals, context)
         self._update_time_history(cr, uid, ids, vals, context)
-        return res
+        return ids
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(Task, self).write(cr, uid, ids, vals, context=context)
