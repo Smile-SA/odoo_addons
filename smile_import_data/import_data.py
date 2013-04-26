@@ -340,16 +340,19 @@ class ImportDataRun(orm.Model):
 
         return True
 
-    def log(self, cr, uid, ids, description, level='error', context=None):
+    def log(self, cr, uid, ids, description, level='error', context=None, line=None):
         if not isinstance(ids, list):
             ids = [ids]
         id_lod_obj = self.pool.get('import.data.log')
+        if line:
+            description += ' in line %s' % line
         for run in self.browse(cr, uid, ids, context):
             id_lod_obj.log(cr, uid, run.id,
                                     False,
                                     False,
                                     description,
                                     level,
+                                    line,
                                     context)
 
 
@@ -467,7 +470,6 @@ class ImportDataRunObject(orm.Model):
 
 
     def genertate_template_file(self, cr, uid, ids, context):
-        import pdb;pdb.set_trace()
         for obj in self.browse(cr, uid, ids, context):
             template_folder = obj.run_id.templates_path
             if not os.path.exists(template_folder): os.makedirs(template_folder)
@@ -733,7 +735,7 @@ class ImportDataRunObject(orm.Model):
                 getattr(self, obj.import_script_name)(cr, uid, obj.id, context)
         return True
 
-    def log(self, cr, uid, ids, description, level='error', context=None):
+    def log(self, cr, uid, ids, description, level='error', line=None, context=None):
         if not isinstance(ids, list):
             ids = [ids]
         id_lod_obj = self.pool.get('import.data.log')
@@ -743,6 +745,7 @@ class ImportDataRunObject(orm.Model):
                                     False,
                                     description,
                                     level,
+                                    line,
                                     context)
 
 
@@ -791,11 +794,11 @@ class ImportDataRunObjectFile(orm.Model):
                 module = filecsv.object_id.model_id.model
                 nb_2import_items, nb_imported_items, logs = convert_csv_import(cr, module, fname, csvcontent, delimiter=delimiter, context=context)
             filecsv.object_id.write({'nb_2import_items': nb_2import_items, 'nb_imported_items': nb_imported_items})
-            for log in logs:
-                filecsv.log(log)
+            for log, line in logs:
+                filecsv.log(log, line=line)
         return True
 
-    def log(self, cr, uid, ids, description, level='error', context=None):
+    def log(self, cr, uid, ids, description, level='error', line=None, context=None):
         if not isinstance(ids, list):
             ids = [ids]
         id_lod_obj = self.pool.get('import.data.log')
@@ -805,6 +808,7 @@ class ImportDataRunObjectFile(orm.Model):
                                     file_iter.id,
                                     description,
                                     level,
+                                    line,
                                     context)
         return True
 
@@ -863,10 +867,10 @@ class ImportDataRunObjectFile(orm.Model):
                     continue
                 key_index = header.index(key)
                 regex = re.compile("([a-zA-Z0-9_]+\.[a-zA-Z0-9_]+$|[a-zA-Z0-9_]+$)")
-                for row in spamreader:
+                for l, row in enumerate(spamreader):
                     row_key = row[key_index]
                     if not regex.match(row_key):
-                        file_iter.log(_("The key format of %s does not match of the expected one") % (row_key,))
+                        file_iter.log(_("The key format of %s does not match of the expected one in line %s") % row_key, line=l)
                         res = False
                     else:
                         if not row_key in keys:
@@ -908,11 +912,11 @@ class ImportDataRunObjectFile(orm.Model):
                 if 'id' in header and 'id' not in field_names:
                     len_field_names += 1
                 if len(header) != len_field_names:
-                    file_iter.log(_("The header is not complete"), 'error', context)
+                    file_iter.log(_("The header is not complete"), 'error', context=context)
                     res = False
                 for field in field_names:
                     if field not in  header:
-                        file_iter.log(_("The field %s is expected please try to add it") % (field,), 'error', context)
+                        file_iter.log(_("The field %s is expected please try to add it") % (field,), 'error', context=context)
                         res = False
         return res
 
@@ -933,7 +937,7 @@ class ImportDataRunObjectFile(orm.Model):
             with open(file_path, 'rb') as csvfile :
                 spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
                 header = spamreader.next()
-                for row in spamreader:
+                for l, row in enumerate(spamreader):
                     position = 0
                     for field in header:
                         if field == 'id':
@@ -943,6 +947,7 @@ class ImportDataRunObjectFile(orm.Model):
                                                              file_iter,
                                                              field_map[field],
                                                              row[position],
+                                                             l,
                                                              context)
                         position += 1
                         if not res:
@@ -966,19 +971,19 @@ class ImportDataRunObjectValidationField(orm.Model):
             'description':fields.text('Description'),
     }
 
-    def validate_field_value(self, cr, uid, file_obj, field_browse, value, context):
+    def validate_field_value(self, cr, uid, file_obj, field_browse, value, line, context):
         res = True
         obj_model = self.pool.get(field_browse.field_id.model_id.model)
         # Split field_name to treate many2one field
         field_name = field_browse.file_field_name.split('/')
         if not field_name[0] in obj_model._columns:
             file_obj.log(_("""Le champ "%s" n'est pas définit dans l'objet""")
-                             % (field_name,), 'warning')
+                             % (field_name,), 'warning', line=line)
             return res
         field = obj_model._columns[field_name[0]]
 
         if not value and field_browse.required_ok:
-            file_obj.log(_("""Field validation error on "%s" column: the field is required, please set the right value """) % (field_name,))
+            file_obj.log(_("""Field validation error on "%s" column: the field is required, please set the right value """) % (field_name,), line=line)
             return False
         if not value:
             return res
@@ -991,7 +996,7 @@ class ImportDataRunObjectValidationField(orm.Model):
         if field_browse.field_type == 'boolean':
             # regex: ^(True|False)$
             if not isinstance(eval(value), bool):
-                file_obj.log(_("""Field validation error on "%s" column: the value "%s" does not match with expected vlaues "True" or "False" """) % (field_name, value))
+                file_obj.log(_("""Field validation error on "%s" column: the value "%s" does not match with expected vlaues "True" or "False" """) % (field_name, value), line=line)
                 res = False
         elif field._type == 'many2one':
             # regex:[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+$
@@ -999,14 +1004,14 @@ class ImportDataRunObjectValidationField(orm.Model):
             if not regex.match(value):
                 file_obj.log(_("""Field validation error on "%s" column: The value "%s" of the many2one does not match with expected 
                                 value "module_name.key" (authorized char are a=>z A=>Z 0=>9 and '_') """)
-                             % (field_name, value,))
+                             % (field_name, value,), line=line)
                 res = False
         elif field._type == 'date':
             try:
                 datetime.strptime(value, '%Y-%m-%d')
             except ValueError:  # To be compatible with the old version of this module
                 file_obj.log(_("""Field validation error on "%s" column: The value "%s" does not match with expected date format YYYY-MM-DD""")
-                             % (field_name, value,))
+                             % (field_name, value,), line=line)
                 res = False
 
         elif field._type == 'datetime':
@@ -1014,14 +1019,14 @@ class ImportDataRunObjectValidationField(orm.Model):
                 datetime.strptime(value, '%Y-%m-%d %H:%M')
             except ValueError:  # To be compatible with the old version of this module
                 file_obj.log(_("""Field validation error on "%s" column: The value "%s" does not match with expected date format YYYY-MM-DD HH:MM""")
-                             % (field_name, value,))
+                             % (field_name, value,), line=line)
                 res = False
         elif field._type == 'float':
             # [0-9]+\.[0-9]+
             regex = re.compile("[0-9]+\.[0-9]+")
             if not regex.match(value):
                 file_obj.log(_("""Field validation error on "%s" column: The value "%s" of the float does not match with expected 
-                                format "XXX.XX" (X 0 ==>9 ) and X must appear once on each side at least""") % (field_name, value,))
+                                format "XXX.XX" (X 0 ==>9 ) and X must appear once on each side at least""") % (field_name, value,), line=line)
                 res = False
         elif field._type == 'selection':
             if isinstance(field.selection, list):
@@ -1030,18 +1035,18 @@ class ImportDataRunObjectValidationField(orm.Model):
                 selection = dict(field.selection(self, cr, uid, context))
             if value not in selection.keys():
                 file_obj.log(_("""Field validation error on "%s" column: The value "%s" doesn't appear in authorized values %s""") %
-                             (field_name, value, str(selection.keys())))
+                             (field_name, value, str(selection.keys())), line=line)
                 res = False
         elif field._type == 'integer':
             regex = re.compile("[0-9]+\.[0-9]+")
             if not regex.match(value):
                 file_obj.log(_("""Field validation error on "%s" column: The value "%s" of the integer does not match with expected 
-                                format "XXX" (X 0 ==>9 ) and X must appear once  least""") % (field_name, value,))
+                                format "XXX" (X 0 ==>9 ) and X must appear once  least""") % (field_name, value,), line=line)
                 res = False
         elif field._type == 'char':
             if len(value) > field.size:
                 file_obj.log(_("""Field validation error on "%s" column: the size of the value "%s" exceed the expected one %s""")
-                             % (field_name, value, field.size))
+                             % (field_name, value, field.size), line=line)
                 res = False
         elif field._type == 'text':
             res = True
@@ -1049,7 +1054,7 @@ class ImportDataRunObjectValidationField(orm.Model):
             res = True
         else:
             file_obj.log(_("""Field validation warning on "%s" column: the expected value "%s" format is unknown""")
-                             % (field_name, value))
+                             % (field_name, value), line=line)
             res = True
         return res
 
@@ -1108,7 +1113,7 @@ class ImportDataLog(orm.Model):
 
     _order = 'log_create_date asc'
 
-    def log(self, cr, uid, run_id, object_id, file_id, description, level='error', context=None):
+    def log(self, cr, uid, run_id, object_id, file_id, description, level='error', line=None, context=None):
 
         description_bis = ''
         run_obj = self.pool.get('import.data.run')
@@ -1125,11 +1130,15 @@ class ImportDataLog(orm.Model):
         if description:
             description = '%s : %s' % (description_bis, description)
 
+        if line:
+            description = '%s in line %' % (description, line)
+
         self.create(cr, uid, {'run_id':run_id,
                             'object_id':object_id,
                             'file_id':file_id,
                             'name':description,
                             'level':level,
+                            'line': line,
                             'log_uid': uid,
                             'log_create_date': time.strftime('%Y-%m-%d %H:%M:%S'),
                             }, context)
