@@ -63,6 +63,10 @@ class Task(osv):
         forced the remaining_hours field to be read-only (see:
         https://github.com/Smile-SA/smile_openerp_addons_7.0/commit/bfc6f12bfcd89a6e47b4a5dab27622152eac2243#L4R14 ).
         """
+        if context is None:
+            context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if 'planned_hours' in vals and 'remaining_hours' not in vals:
             local_context = context.copy()
             local_context.update({'bypass_time_tracking_history': True})
