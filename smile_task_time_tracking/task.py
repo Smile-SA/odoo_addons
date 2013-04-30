@@ -137,6 +137,7 @@ class TrackingLine(osv):
       'effective_time': fields.float('Hours Spent', readonly=True, required=True, help="Computed using the sum of the task work done."),
       'remaining_time': fields.float('Remaining Time', digits=(16,2), readonly=True, required=True, help="Total remaining time of the task."),
       'write_date': fields.datetime("Modification Date", readonly=True, required=True, help="Last date when the remaining time line was updated."),
+      'create_uid':  fields.many2one('res.users', 'Author', readonly=True, required=True, help="The user who changed the time tracking values."),
     }
 
 

@@ -26,6 +26,7 @@
                         <field name="effective_time"/>
                         <field name="remaining_time"/>
                         <field name="write_date"/>
+                        <field name="create_uid"/>
                       </tree>
                     </field>
                   </group>
