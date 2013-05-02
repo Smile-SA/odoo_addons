@@ -1,0 +1,185 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_task_time_tracking
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-02 13:48+0000\n"
+"PO-Revision-Date: 2013-05-02 13:48+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_task_time_tracking
+#: field:project.task.remaining_time.wizard,current_remaining_time_value:0
+msgid "Current Remaining Time"
+msgstr "Reste à faire actuel"
+
+#. module: smile_task_time_tracking
+#: help:project.task.remaining_time.wizard,current_remaining_time_value:0
+msgid "Current value of task's total remaining time."
+msgstr "Valeur actuelle du reste à faire de la tâche."
+
+#. module: smile_task_time_tracking
+#: field:project.task.tracking_line,archived:0
+msgid "Archived"
+msgstr "Archivé"
+
+#. module: smile_task_time_tracking
+#: model:ir.model,name:smile_task_time_tracking.model_project_task_tracking_line
+msgid "project.task.tracking_line"
+msgstr "project.task.tracking_line"
+
+#. module: smile_task_time_tracking
+#: field:project.task.tracking_line,create_uid:0
+msgid "Author"
+msgstr "Auteur"
+
+#. module: smile_task_time_tracking
+#: help:project.task.tracking_line,remaining_time:0
+msgid "Total remaining time of the task."
+msgstr "Reste à faire total de la tâche."
+
+#. module: smile_task_time_tracking
+#: view:project.task:0
+msgid "Time Tracking"
+msgstr "Suivi des durées"
+
+#. module: smile_task_time_tracking
+#: help:project.task.tracking_line,archived:0
+msgid "Flag a time tracking line as archived."
+msgstr "Marque une ligne de suivi des durées comme archivée."
+
+#. module: smile_task_time_tracking
+#: help:project.task.remaining_time.wizard,is_time_ratio:0
+msgid "Let the user enter the new remaining time as a ratio to its current value."
+msgstr "Permet à l'utilisateur d'entrer le nouveau reste à faire comme un pourcentage de sa valeur actuelle."
+
+#. module: smile_task_time_tracking
+#: field:project.task.tracking_line,remaining_time:0
+msgid "Remaining Time"
+msgstr "Reste à faire"
+
+#. module: smile_task_time_tracking
+#: view:project.task:0
+#: view:project.task.remaining_time.wizard:0
+msgid "Update Remaining Time"
+msgstr "Mettre à jour le reste à faire"
+
+#. module: smile_task_time_tracking
+#: help:project.task.remaining_time.wizard,new_remaining_time_ratio:0
+msgid "New value of task's total remaining time, as a ratio of its current value."
+msgstr "Nouvelle valeur du reste à faire total de la têche, sous la forme d'un pourcentage de sa valeur actuelle."
+
+#. module: smile_task_time_tracking
+#: field:project.task.remaining_time.wizard,is_time_ratio:0
+msgid "Display remaining time as a ratio"
+msgstr "Afficher le reste à faire sous la forme d'un pourcentage"
+
+#. module: smile_task_time_tracking
+#: view:project.task:0
+msgid "True"
+msgstr "True"
+
+#. module: smile_task_time_tracking
+#: model:ir.model,name:smile_task_time_tracking.model_project_task
+#: field:project.task.tracking_line,task_id:0
+msgid "Task"
+msgstr "Tâche"
+
+#. module: smile_task_time_tracking
+#: help:project.task,time_tracking_line_ids:0
+msgid "Time tracking."
+msgstr "Suivi des durées."
+
+#. module: smile_task_time_tracking
+#: field:project.task.tracking_line,write_date:0
+msgid "Modification Date"
+msgstr "Date de modification"
+
+#. module: smile_task_time_tracking
+#: view:project.task:0
+msgid "{}"
+msgstr "{}"
+
+#. module: smile_task_time_tracking
+#: field:project.task.remaining_time.wizard,effective_time:0
+#: field:project.task.tracking_line,effective_time:0
+msgid "Hours Spent"
+msgstr "Temps passé"
+
+#. module: smile_task_time_tracking
+#: help:project.task.remaining_time.wizard,new_remaining_time_value:0
+msgid "New value of task's total remaining time."
+msgstr "Nouvelle valeur du reste à faire total de la tâche."
+
+#. module: smile_task_time_tracking
+#: field:project.task.remaining_time.wizard,new_remaining_time_ratio:0
+msgid "New Remaining Time Ratio (%)"
+msgstr "Nouveau ratio du reste à faire (%)"
+
+#. module: smile_task_time_tracking
+#: help:project.task.remaining_time.wizard,planned_time:0
+#: help:project.task.tracking_line,planned_time:0
+msgid "Estimated time to do the task, usually set by the project manager when the task is in draft state."
+msgstr "Temps estimé de réalisation de la tâche, généralement saisi par le chef de projet quand la tâche est dans l'état brouillon."
+
+#. module: smile_task_time_tracking
+#: field:project.task.remaining_time.wizard,new_remaining_time_value:0
+msgid "New Remaining Time Value"
+msgstr "Nouvelle valeur du reste à faire"
+
+#. module: smile_task_time_tracking
+#: help:project.task.remaining_time.wizard,effective_time:0
+#: help:project.task.tracking_line,effective_time:0
+msgid "Computed using the sum of the task work done."
+msgstr "Calculé en utilisant la somme des travaux réalisés sur tâche."
+
+#. module: smile_task_time_tracking
+#: model:ir.actions.act_window,name:smile_task_time_tracking.action_remaining_time_wizard_form
+#: model:ir.model,name:smile_task_time_tracking.model_project_task_remaining_time_wizard
+#: view:project.task.remaining_time.wizard:0
+msgid "Task's Remaining Time Wizard"
+msgstr "Assistant du reste à faire de la tâche"
+
+#. module: smile_task_time_tracking
+#: help:project.task.tracking_line,write_date:0
+msgid "Last date when the remaining time line was updated."
+msgstr "Dernière date à laquelle la ligne de reste à faire à été mise à jour."
+
+#. module: smile_task_time_tracking
+#: help:project.task.tracking_line,create_uid:0
+msgid "The user who changed the time tracking values."
+msgstr "L'utilisateur qui a changé les valeurs de suivi des durées."
+
+#. module: smile_task_time_tracking
+#: help:project.task.tracking_line,task_id:0
+msgid "Task this time tracking line is attached to."
+msgstr "Tâche à laquelle cette ligne de suivi des durées est attachée."
+
+#. module: smile_task_time_tracking
+#: field:project.task,time_tracking_line_ids:0
+msgid "Time Tracking Lines"
+msgstr "Ligne de suivi des durées"
+
+#. module: smile_task_time_tracking
+#: field:project.task.remaining_time.wizard,planned_time:0
+#: field:project.task.tracking_line,planned_time:0
+msgid "Initially Planned Hours"
+msgstr "Durée initiale estimée"
+
+#. module: smile_task_time_tracking
+#: view:project.task.remaining_time.wizard:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_task_time_tracking
+#: constraint:project.task:0
+msgid "No more than one active time tracking line is allowed."
+msgstr "Pas plus d'une seule ligne active de suivi des durées n'est autorisée."
+
