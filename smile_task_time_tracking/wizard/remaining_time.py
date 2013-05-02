@@ -77,7 +77,7 @@ class RemainingTimeWizard(TransientModel):
         remaining_time = wizard.new_remaining_time_value
         if wizard.is_time_ratio:
             remaining_time = self.onchange_remaining_time(cr, uid, None, wizard.current_remaining_time_value, remaining_time, wizard.new_remaining_time_ratio, wizard.is_time_ratio)['value']['new_remaining_time_value']
-        # Update task's remaining time. This will automaticcaly trigger the creation of a project.task.remaining_time.line
+        # Update task's remaining time. This will automaticcaly trigger the creation of a project.task.tracking_line
         self.pool.get('project.task').write(cr, uid, task_id, {'remaining_hours': remaining_time}, context=context)
         # Go back to the task we've just updated
         return {

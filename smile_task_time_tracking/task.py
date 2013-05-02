@@ -28,31 +28,30 @@ import openerp.addons.decimal_precision as dp
 class Task(osv):
     _inherit = 'project.task'
 
-    def _get_remaining_time_line(self, cr, uid, ids, field_name, arg, context=None):
+    def _get_time_tracking_line(self, cr, uid, ids, field_name, arg, context=None):
         if context is None:
             context = {}
         result = {}
         for task in self.browse(cr, uid, ids, context=context):
-            remaining_time_line = [l for l in task.remaining_time_line_ids if not l.archived]
-            result[task.id] = remaining_time_line and remaining_time_line[0] or False
+            lines = [l for l in task.time_tracking_line_ids if not l.archived]
+            result[task.id] = lines and lines[0] or False
         return result
 
     _columns = {
       'time_tracking_line_ids': fields.one2many('project.task.tracking_line', 'task_id', string='Time Tracking Lines', readonly=True, help="Time tracking."),
-      'remaining_time_line_ids': fields.one2many('project.task.remaining_time.line', 'task_id', string='Remaining Time Lines', readonly=True, help="Remaining time history."),
     }
 
-    def _check_active_remaining_time_lines(self, cr, uid, ids, context=None):
+    def _check_active_time_tracking_lines(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         for task in self.browse(cr, uid, ids, context):
-            active_lines = [l for l in task.remaining_time_line_ids if not l.archived]
+            active_lines = [l for l in task.time_tracking_line_ids if not l.archived]
             if len(active_lines) > 1:
                 return False
         return True
 
     _constraints = [
-        (_check_active_remaining_time_lines, "No more than one active remaining time line is allowed.", ['remaining_time_line_ids']),
+        (_check_active_time_tracking_lines, "No more than one active time tracking line is allowed.", ['time_tracking_line_ids']),
     ]
 
     def _force_remaining_hours_update(self, cr, uid, ids, vals, context=None):
@@ -94,8 +93,7 @@ class Task(osv):
         # If none of the columns we care are touched, just skip this part entirely
         if [planned_time, effective_time, remaining_time] != [None, None, None]:
             for task_id in ids:
-                tline_obj = self.pool.get('project.task.tracking_line')
-                rline_obj = self.pool.get('project.task.remaining_time.line')
+                line_obj = self.pool.get('project.task.tracking_line')
                 # Get current value for the ones not part of the current update
                 if None in [planned_time, effective_time, remaining_time]:
                     task = self.browse(cr, uid, task_id, context=context)
@@ -105,13 +103,11 @@ class Task(osv):
                         effective_time = task.effective_hours
                     if remaining_time is None:
                         remaining_time = task.remaining_hours
+                # Archive all active tracking lines
+                active_line_ids = line_obj.search(cr, uid, [('task_id', '=', task_id), ('archived', '=', False)], context=context)
+                line_obj.write(cr, uid, active_line_ids, {'archived': True}, context=context)
                 # Add a new tracking time line
-                tline_obj.create(cr, uid, {'task_id': task_id, 'planned_time': planned_time, 'effective_time': effective_time, 'remaining_time': remaining_time}, context=context)
-                # Archive all active remaining time lines
-                active_line_ids = rline_obj.search(cr, uid, [('task_id', '=', task_id), ('archived', '=', False)], context=context)
-                rline_obj.write(cr, uid, active_line_ids, {'archived': True}, context=context)
-                # Create our new remaining time line
-                rline_obj.create(cr, uid, {'task_id': task_id, 'remaining_time': remaining_time}, context=context)
+                line_obj.create(cr, uid, {'task_id': task_id, 'planned_time': planned_time, 'effective_time': effective_time, 'remaining_time': remaining_time}, context=context)
         return
 
     def create(self, cr, uid, vals, context=None):
@@ -129,7 +125,7 @@ class Task(osv):
 
 class TrackingLine(osv):
     _name = 'project.task.tracking_line'
-    _order = "write_date desc"
+    _order = "archived asc, write_date desc"
 
     _columns = {
       'task_id': fields.many2one('project.task', 'Task', readonly=True, required=True, ondelete='cascade', help="Task this time tracking line is attached to."),
@@ -138,19 +134,7 @@ class TrackingLine(osv):
       'remaining_time': fields.float('Remaining Time', digits=(16,2), readonly=True, required=True, help="Total remaining time of the task."),
       'write_date': fields.datetime("Modification Date", readonly=True, required=True, help="Last date when the remaining time line was updated."),
       'create_uid':  fields.many2one('res.users', 'Author', readonly=True, required=True, help="The user who changed the time tracking values."),
-    }
-
-
-class RemainingTimeLine(osv):
-    _name = 'project.task.remaining_time.line'
-    _order = "archived asc, write_date desc"
-
-    _columns = {
-      'task_id': fields.many2one('project.task', 'Task', readonly=True, required=True, ondelete='cascade', help="Task this remaining time line is attached to."),
-      'remaining_time': fields.float('Remaining Time', digits=(16,2), readonly=True, required=True, help="Total remaining time of the task."),
-      'write_date': fields.datetime("Modification Date", readonly=True, required=True, help="Last date when the remaining time line was updated."),
-      'create_uid':  fields.many2one('res.users', 'Author', readonly=True, required=True, help="The user who created this remaining time line."),
-      'archived': fields.boolean('Archived', readonly=True, help="Flag a remaining time line as archived."),
+      'archived': fields.boolean('Archived', readonly=True, help="Flag a time tracking line as archived."),
     }
 
     _defaults = {
