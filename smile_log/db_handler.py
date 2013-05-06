@@ -52,7 +52,8 @@ class SmileDBHandler(logging.Handler):
         uid = record.args.get('uid', 0)
         model_name = record.args.get('model_name', '')
 
-        request = "INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message) VALUES (now(), %s, %s, %s, %s, %s, %s)"
+        request = """INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message)
+        VALUES (now(), %s, %s, %s, %s, %s, %s)"""
         params = (uid, model_name, res_id, pid, record.levelname, record.msg,)
 
         try:
@@ -89,6 +90,7 @@ def add_timing(original_method):
 def add_trace(original_method):
     def new_method(self, msg):
         stack = traceback.format_exc()
+        stack = stack.replace('%', '%%')
         msg += '\n%s' % stack
         return original_method(self, msg)
     return new_method
