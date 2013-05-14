@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+		<!-- Product -->
+
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">product.normal.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="type" position="replace">
+					<field name="type_id" required="1" widget="selection" on_change="onchange_product_type(type_id)"/>
+	                <field name="type" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_normal_form_view_procurement">
+            <field name="name">product.product.procurement</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
+            <field name="arch" type="xml">
+                <field name="procure_method" position="replace">
+	                <field name="procure_method" invisible="1" groups="base.group_user"/>
+                </field>
+                <field name="supply_method" position="replace">
+	                <field name="supply_method" invisible="1" groups="base.group_user"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_normal_form_view_accounting" model="ir.ui.view">
+            <field name="name">product.normal.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="account.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <page string="Accounting" position="inside">
+                	<label string="Accounting managed via product types" colspan="4"/>
+                </page>
+	                <field name="property_account_income" position="replace">
+		                <field name="property_account_income" invisible="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="account.group_account_user"/>
+		            </field>
+	                <field name="taxes_id" position="replace">
+		                <field name="taxes_id" invisible="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="account.group_account_user"/>
+		            </field>
+	                <field name="property_account_expense" position="replace">
+		                <field name="property_account_expense" invisible="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="account.group_account_user"/>
+		            </field>
+	                <field name="supplier_taxes_id" position="replace">
+		                <field name="supplier_taxes_id" invisible="1" colspan="2" widget="many2many_tags"/>
+		            </field>
+            </field>
+        </record>
+
+		<!-- Product Type -->
+
+        <record id="view_product_type_search" model="ir.ui.view">
+            <field name="name">product.type.search</field>
+            <field name="model">product.type</field>
+            <field name="arch" type="xml">
+                <search string="Product Types">
+	                <filter string="Stockable product" domain="[('type', '=', 'product'))]"/>
+	                <filter string="Consumable" domain="[('type', '=', 'consu'))]"/>
+	                <filter string="Service" domain="[('type', '=', 'service'))]"/>
+                    <separator/>
+	                <filter string="Make to stock" domain="[('procure_method', '=', 'make_to_stock'))]"/>
+	                <filter string="Make to order" domain="[('procure_method', '=', 'make_to_order'))]"/>
+                    <separator/>
+	                <filter string="Buy" domain="[('supply_method', '=', 'buy'))]"/>
+	                <filter string="Manufacture" domain="[('supply_method', '=', 'produce'))]"/>
+                    <separator/>
+                    <field name="type"/>
+                    <field name="procure_method"/>
+                    <field name="supply_method"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <group  expand='0' string='Group by...'>
+                   		<filter string='Product Type' domain="[]" context="{'group_by' : 'type'}"/>
+                   		<filter string='Procurement Method' domain="[]" context="{'group_by' : 'procure_method'}"/>
+                   		<filter string='Supply Method' domain="[]" context="{'group_by' : 'supply_method'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_product_type_tree" model="ir.ui.view">
+            <field name="name">product.type.tree</field>
+            <field name="model">product.type</field>
+            <field name="arch" type="xml">
+                <tree string="Product Types">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="procure_method"/>
+                    <field name="supply_method"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_product_type_form" model="ir.ui.view">
+            <field name="name">product.type.form</field>
+            <field name="model">product.type</field>
+            <field name="arch" type="xml">
+                <form string="Product Type" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Description"/>
+                            </h1>
+                        </div>
+                        <notebook>
+                            <page string="Information">
+                            	<group colspan="4" col="4">
+	                                <group colspan="2" col="2">
+	                                	<separator string="Procurement" colspan="2"/>
+	                                    <field name="type"/>
+	                                    <field name="procure_method" groups="base.group_user"/>
+	                                    <field name="supply_method" groups="base.group_user"/>
+	                                    <field name="company_id" groups="base.group_multi_company"/>
+	                                </group>
+	                                <group colspan="2" col="2">
+	                                	<separator string="Accounting" colspan="2"/>
+	                                    <field name="property_account_income" groups="account.group_account_user"/>
+	                                    <field name="taxes_id" widget="many2many_tags"/>
+	                                    <field name="property_account_expense" groups="account.group_account_user"/>
+	                                    <field name="supplier_taxes_id" widget="many2many_tags"/>
+	                                </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+				</form>
+            </field>
+        </record>
+
+        <record id="action_product_type" model="ir.actions.act_window">
+            <field name="name">Product Types</field>
+            <field name="res_model">product.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_product_type_search"/>
+        </record>
+
+        <menuitem id="menu_product_type" parent="product.prod_config_main" action="action_product_type" sequence="10"/>
+
+    </data>
+</openerp>
