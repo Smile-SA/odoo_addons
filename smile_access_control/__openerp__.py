@@ -42,9 +42,9 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & matthieu.choplin@
     "depends": ['base'],
     "init_xml": [],
     "update_xml": [
-        "res_user_view.xml",
-        "res_user_data.xml",
-        "res_group_view.xml",
+        "view/res_user_view.xml",
+        "data/res_user_data.xml",
+        "view/res_group_view.xml",
     ],
     "demo_xml": [],
     "installable": True,
