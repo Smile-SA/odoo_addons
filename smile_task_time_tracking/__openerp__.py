@@ -25,20 +25,18 @@
     "author": "Smile",
     "website": "http://www.smile.fr",
     "category": "Generic Modules/Project",
-    "depends": ["project"],
     "description": "This module add an history of the time updates applied on project's tasks.",
     "summary": "Track time updates on project's tasks.",
-    "init_xml": [
-    ],
-    "update_xml": [
+    "depends": ["project"],
+    "data": [
         # Data & configuration
-
+        "security/ir.model.access.csv",
         # Wizards
         'wizard/remaining_time_view.xml',
         # Views
         'task_view.xml',
     ],
-    "demo_xml": [],
+    "demo": [],
     "test": [],
     "auto_install": False,
     "installable": True,
