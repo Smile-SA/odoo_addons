@@ -63,5 +63,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.FieldMany2One.extend({
 });
 
 // TODO: Hide create & modify entries of many2one's drop-down menus
+// Seek some inspiration from https://github.com/0k/web_m2o_enhanced
 
 };
