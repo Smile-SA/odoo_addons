@@ -110,7 +110,7 @@ msgstr "{}"
 #. module: smile_task_time_tracking
 #: field:project.task.remaining_time.wizard,effective_time:0
 #: field:project.task.tracking_line,effective_time:0
-msgid "Hours Spent"
+msgid "Time Spent"
 msgstr "Temps passé"
 
 #. module: smile_task_time_tracking
@@ -170,7 +170,7 @@ msgstr "Ligne de suivi des durées"
 #. module: smile_task_time_tracking
 #: field:project.task.remaining_time.wizard,planned_time:0
 #: field:project.task.tracking_line,planned_time:0
-msgid "Initially Planned Hours"
+msgid "Initially Planned Time"
 msgstr "Durée initiale estimée"
 
 #. module: smile_task_time_tracking

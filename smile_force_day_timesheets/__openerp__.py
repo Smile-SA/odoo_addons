@@ -20,21 +20,35 @@
 ##############################################################################
 
 {
-    "name": "Smile Task Time Tracking",
+    "name": "Smile Force Day Timesheets",
     "version": "0.1",
     "author": "Smile",
     "website": "http://www.smile.fr",
     "category": "Generic Modules/Project",
-    "description": "This module add an history of the time updates applied on project's tasks.",
-    "summary": "Track time updates on project's tasks.",
-    "depends": ["project"],
+    "description": """
+        There's one annoying ergonomic issue with the default timesheet
+        module: whatever the unit you choose to input your time (hours or
+        days), timesheets display them via an HH:MM widget. This module fix
+        that by replacing all these widgets by standard float.
+        """,
+    "summary": "Change default HH:MM widgets on timesheets to simple floats.",
+    "depends": [
+        'project',
+        'hr_timesheet',
+        'hr_timesheet_sheet',
+        'project_timesheet',
+    ],
     "data": [
         # Data & configuration
-        "security/ir.model.access.csv",
-        # Wizards
-        'wizard/remaining_time_view.xml',
+        'data/res_company.xml',
+        # Wizard
+        'task_reevaluate_wizard.xml',
         # Views
+        'project_view.xml',
         'task_view.xml',
+        'analytic_timesheet_view.xml',
+        'timesheet_sheet_view.xml',
+        'timesheet_task_user_report.xml',
     ],
     "demo": [],
     "test": [],

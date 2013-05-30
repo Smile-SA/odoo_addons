@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- project.task.reevaluate -->
+
+        <record id="view_project_task_reevaluate" model="ir.ui.view">
+            <field name="name">Re-evaluate Task</field>
+            <field name="model">project.task.reevaluate</field>
+            <field name="inherit_id" ref="project.view_project_task_reevaluate"/>
+            <field name="arch" type="xml">
+              <xpath expr="//field[@name='remaining_hours']" position="attributes">
+                <attribute name="widget">float</attribute>
+              </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

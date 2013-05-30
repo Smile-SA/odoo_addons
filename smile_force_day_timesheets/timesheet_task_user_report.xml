@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- report.timesheet.task.user -->
+
+        <record id="view_report_timesheet_task_user_tree" model="ir.ui.view">
+            <field name="name">report.timesheet.task.user.tree</field>
+            <field name="model">report.timesheet.task.user</field>
+            <field name="inherit_id" ref="project_timesheet.view_report_timesheet_task_user_tree"/>
+            <field name="arch" type="xml">
+              <xpath expr="//field[@name='timesheet_hrs']" position="attributes">
+                <attribute name="widget">float</attribute>
+              </xpath>
+              <xpath expr="//field[@name='task_hrs']" position="attributes">
+                <attribute name="widget">float</attribute>
+              </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

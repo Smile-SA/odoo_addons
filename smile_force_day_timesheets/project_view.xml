@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- project.project -->
+
+        <record id="edit_project" model="ir.ui.view">
+            <field name="name">project.project.form</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+              <xpath expr="//field[@name='planned_hours']" position="attributes">
+                <attribute name="widget">float</attribute>
+              </xpath>
+              <xpath expr="//field[@name='effective_hours']" position="attributes">
+                <attribute name="widget">float</attribute>
+              </xpath>
+            </field>
+        </record>
+
+        <record id="view_project" model="ir.ui.view">
+            <field name="name">project.project.tree</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+              <xpath expr="//tree/field[@name='planned_hours']" position="attributes">
+                <attribute name="widget">float</attribute>
+              </xpath>
+              <xpath expr="//tree/field[@name='total_hours']" position="attributes">
+                <attribute name="widget">float</attribute>
+              </xpath>
+              <xpath expr="//tree/field[@name='effective_hours']" position="attributes">
+                <attribute name="widget">float</attribute>
+              </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

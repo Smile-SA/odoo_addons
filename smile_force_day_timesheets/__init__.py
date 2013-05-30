@@ -19,26 +19,3 @@
 #
 ##############################################################################
 
-{
-    "name": "Smile Task Time Tracking",
-    "version": "0.1",
-    "author": "Smile",
-    "website": "http://www.smile.fr",
-    "category": "Generic Modules/Project",
-    "description": "This module add an history of the time updates applied on project's tasks.",
-    "summary": "Track time updates on project's tasks.",
-    "depends": ["project"],
-    "data": [
-        # Data & configuration
-        "security/ir.model.access.csv",
-        # Wizards
-        'wizard/remaining_time_view.xml',
-        # Views
-        'task_view.xml',
-    ],
-    "demo": [],
-    "test": [],
-    "auto_install": False,
-    "installable": True,
-    "application": True,
-}

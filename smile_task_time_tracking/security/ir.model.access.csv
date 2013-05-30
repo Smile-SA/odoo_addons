@@ -1,0 +1,3 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_task_tracking_line_user","project.task.tracking_line user","model_project_task_tracking_line","project.group_project_user",1,1,1,0
+"access_task_tracking_line_manager","project.task.tracking_line manager","model_project_task_tracking_line","project.group_project_manager",1,1,1,1
