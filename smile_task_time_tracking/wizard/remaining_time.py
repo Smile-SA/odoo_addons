@@ -44,8 +44,8 @@ class RemainingTimeWizard(TransientModel):
         'is_time_ratio': fields.boolean("Display remaining time as a ratio", help="Let the user enter the new remaining time as a ratio to its current value."),
         'new_remaining_time_ratio': fields.integer('New Remaining Time Ratio (%)', help="New value of task's total remaining time, as a ratio of its current value."),
         # Fields below are alter-egos of the ones defined in project.project.py:task() class
-        'planned_time': fields.float('Initially Planned Hours', readonly=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
-        'effective_time': fields.float('Hours Spent', readonly=True, help="Computed using the sum of the task work done."),
+        'planned_time': fields.float('Initially Planned Time', readonly=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
+        'effective_time': fields.float('Time Spent', readonly=True, help="Computed using the sum of the task work done."),
         'current_remaining_time_value': fields.float('Current Remaining Time', digits=(16,2), readonly=True, help="Current value of task's total remaining time."),
         'new_remaining_time_value': fields.float('New Remaining Time Value', digits=(16,2), required=True, help="New value of task's total remaining time."),
     }

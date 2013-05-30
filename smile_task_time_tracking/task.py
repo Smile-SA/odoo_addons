@@ -129,8 +129,8 @@ class TrackingLine(osv):
 
     _columns = {
       'task_id': fields.many2one('project.task', 'Task', readonly=True, required=True, ondelete='cascade', help="Task this time tracking line is attached to."),
-      'planned_time': fields.float('Initially Planned Hours', readonly=True, required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
-      'effective_time': fields.float('Hours Spent', readonly=True, required=True, help="Computed using the sum of the task work done."),
+      'planned_time': fields.float('Initially Planned Time', readonly=True, required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
+      'effective_time': fields.float('Time Spent', readonly=True, required=True, help="Computed using the sum of the task work done."),
       'remaining_time': fields.float('Remaining Time', digits=(16,2), readonly=True, required=True, help="Total remaining time of the task."),
       'write_date': fields.datetime("Modification Date", readonly=True, required=True, help="Last date when the remaining time line was updated."),
       'create_uid':  fields.many2one('res.users', 'Author', readonly=True, required=True, help="The user who changed the time tracking values."),
