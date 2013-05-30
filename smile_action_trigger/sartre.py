@@ -35,6 +35,8 @@ import tools
 from tools.func import wraps
 from tools.translate import _
 
+from openerp import SUPERUSER_ID
+
 from smile_log.db_handler import SmileDBLogger
 
 
@@ -50,7 +52,7 @@ def _get_browse_record_dict(obj, cr, uid, ids, fields_list=None, context=None):
     if fields_list is None:
         fields_list = [f for f in obj._columns if obj._columns[f]._type != 'binary']
     browse_record_dict = {}
-    for object_inst in obj.browse(cr, 1, ids, context):
+    for object_inst in obj.browse(cr, SUPERUSER_ID, ids, context):
         for field in fields_list:
             browse_record_dict.setdefault(object_inst.id, {})[field] = getattr(object_inst, field)
     return browse_record_dict
@@ -429,8 +431,8 @@ class SartreTrigger(orm.Model):
 
     def decorate_trigger_methods(self, cr):
         methods_to_decorate = []
-        trigger_ids = self.search(cr, 1, [], context={'active_test': True})
-        for trigger in self.browse(cr, 1, trigger_ids):
+        trigger_ids = self.search(cr, SUPERUSER_ID, [], context={'active_test': True})
+        for trigger in self.browse(cr, SUPERUSER_ID, trigger_ids):
             for orm_method in ('create', 'write', 'unlink'):
                 if getattr(trigger, 'on_%s' % orm_method):
                     methods_to_decorate.append(getattr(orm.Model, orm_method))
@@ -501,7 +503,7 @@ class SartreTrigger(orm.Model):
                 nextcall = datetime.strptime(trigger.nextcall, datetime_format + '.%f')
             while nextcall <= now:
                 nextcall += relativedelta(**{str(trigger.interval_type): trigger.interval_number})
-            self.write(cr, 1, trigger.id, {'nextcall': nextcall.strftime(datetime_format)}, context)
+            self.write(cr, SUPERUSER_ID, trigger.id, {'nextcall': nextcall.strftime(datetime_format)}, context)
             # Add datetime filter
             field = trigger.on_date_type
             limit_date = now
@@ -757,7 +759,7 @@ class SartreTrigger(orm.Model):
         trigger_obj = hasattr(self, 'pool') and self.pool.get('sartre.trigger') or pooler.get_pool(cr.dbname).get('sartre.trigger')
         if trigger_obj:
             # Search triggers to execute
-            trigger_ids = list(trigger_obj.get_trigger_ids(cr, 1, obj._name, method))
+            trigger_ids = list(trigger_obj.get_trigger_ids(cr, SUPERUSER_ID, obj._name, method))
             if trigger_ids and method == 'function':
                 for trigger_id in list(trigger_ids):
                     trigger = trigger_obj.browse(cr, uid, trigger_id)
@@ -934,7 +936,7 @@ def sartre_decorator(original_method):
             trigger_ids = trigger_obj.check_method_based_triggers(obj, cr, uid, method_name, field_name, calculation_method)
             # Save old values if triggers exist
             if trigger_ids:
-                fields_list = trigger_obj.get_fields_to_save_old_values(cr, 1, trigger_ids)
+                fields_list = trigger_obj.get_fields_to_save_old_values(cr, SUPERUSER_ID, trigger_ids)
                 context.update({
                     'active_object_ids': ids,
                     'old_values': _get_browse_record_dict(obj, cr, uid, ids, fields_list, context),

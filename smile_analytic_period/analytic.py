@@ -27,6 +27,8 @@ from osv import osv, fields
 import tools
 from tools.translate import _
 
+from openerp import SUPERUSER_ID
+
 
 class AnalyticPeriod(osv.osv):
     _name = 'account.analytic.period'
@@ -113,7 +115,7 @@ class AnalyticPeriod(osv.osv):
         if state:
             domain.append(('state', '=', state))
         order = 'date_start ' + (operator == '>' and 'asc' or 'desc')
-        period_ids = self.search(cr, 1, domain, limit=1, order=order)
+        period_ids = self.search(cr, SUPERUSER_ID, domain, limit=1, order=order)
         return period_ids and period_ids[0] or 0
 
     @tools.cache(skiparg=3)
