@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="mt_rental_confirmed" model="mail.message.subtype">
+            <field name="name">Rental Order confirmed</field>
+            <field name="res_model">rental.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Rental Order confirmed</field>
+        </record>
+        <record id="mt_rental_in_progress" model="mail.message.subtype">
+            <field name="name">Rental Order in progress</field>
+            <field name="res_model">rental.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Rental Order in progress</field>
+        </record>
+        <record id="mt_rental_done" model="mail.message.subtype">
+            <field name="name">Rental Order done</field>
+            <field name="res_model">rental.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Rental Order done</field>
+        </record>
+        <record id="mt_rental_cancel" model="mail.message.subtype">
+            <field name="name">Rental Order canceled</field>
+            <field name="res_model">rental.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Rental Order canceled</field>
+        </record>
+
+    </data>
+</openerp>

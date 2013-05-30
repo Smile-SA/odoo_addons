@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="sequence_rental_order_type" model="ir.sequence.type">
+            <field name="name">Rental Order</field>
+            <field name="code">rental.order</field>
+        </record>
+        <record id="sequence_rental_order" model="ir.sequence">
+            <field name="name">Rental Order</field>
+            <field name="code">rental.order</field>
+            <field name="prefix">%(year)s/%(month)s/</field>
+            <field name="suffix"></field>
+            <field name="padding">6</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+    </data>
+</openerp>

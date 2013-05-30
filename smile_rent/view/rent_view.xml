@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Rental Order -->
+
+        <record id="view_rental_order_search" model="ir.ui.view">
+            <field name="name">rental.order.search</field>
+            <field name="model">rental.order</field>
+            <field name="arch" type="xml">
+                <search string="Rental Orders">
+               		<filter string='Active' name="filter_active" domain="[('state', '!=', 'cancel')]"/>
+					<newline/>
+               		<filter string='Quotation' name="filter_quotation" domain="[('state', '=', 'draft')]"/>
+               		<filter string='Confirmed' name="filter_confirmed" domain="[('state', '=', 'confirmed')]"/>
+               		<filter string='In progress' name="filter_in_progress" domain="[('state', '=', 'in_progress')]"/>
+               		<filter string='Done' name="filter_done" domain="[('state', '=', 'done')]"/>
+               		<filter string='Canceled' name="filter_canceled" domain="[('state', '=', 'cancel')]"/>
+					<newline/>
+               		<filter string='Late removals' name="filter_late_removals" domain="[('state', '=', 'confirmed'), ('out_date_expected', '&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S'))]"/>
+               		<filter string='Late returns' name="filter_late_returns" domain="[('state', '=', 'in_progress'), ('in_date_expected', '&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S'))]"/>
+					<newline/>
+	                <field name="name"/>
+	                <field name="partner_id"/>
+	                <field name="company_id" groups="base.group_multi_company"/>
+	                <field name="warehouse_id"/>
+	                <field name="out_date_expected"/>
+	                <field name="in_date_expected"/>
+	                <field name="state"/>
+                    <group  expand='0' string='Group by...'>
+                   		<filter string='Partner' domain="[]" context="{'group_by': 'partner_id'}"/>
+                   		<filter string='Warehouse' domain="[]" context="{'group_by': 'warehouse_id'}"/>
+                   		<filter string='Company' domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                   		<filter string='State' domain="[]" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_rental_order_tree" model="ir.ui.view">
+            <field name="name">rental.order.tree</field>
+            <field name="model">rental.order</field>
+            <field name="arch" type="xml">
+                <tree string="Rental Orders" colors="grey:state in ('cancel', 'done');blue:state == 'draft';red:state == 'in_progress' and in_date_expected &lt; time.strftime('%%Y-%%m-%%d %%H:%%M:%%S')">
+	                <field name="name"/>
+	                <field name="partner_id"/>
+	                <field name="company_id" groups="base.group_multi_company"/>
+	                <field name="warehouse_id"/>
+	                <field name="out_date_expected"/>
+	                <field name="in_date_expected"/>
+	                <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_rental_order_form" model="ir.ui.view">
+            <field name="name">rental.order.form</field>
+            <field name="model">rental.order</field>
+            <field name="arch" type="xml">
+                <form string="Rental Order" version="7.0">
+                    <header>
+                        <button name="button_confirm" string="Validate" type="object" states="draft" class="oe_highlight"/>
+                        <button name="button_cancel" string="Cancel" type="workflow" states="draft,confirmed"/>
+                        <button name="button_set_to_draft" string="Set to draft" type="workflow" states="cancel"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,in_progress,done"/>
+                    </header>
+                    <sheet string="Rental Order">
+	                    <div class="oe_title">
+	                        <h1>
+	                            <label for="name"/>
+	                            <field name="name" class="oe_inline"/>
+	                        </h1>
+	                        <group col="2" colspan="2">
+	                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+	                            <field name="company_id" groups="base.group_multi_company"
+	                            	on_change="onchange_company_id(company_id)"/>
+	                            <field name="warehouse_id" domain="[('company_id', '=', company_id)]" groups="stock.group_locations"
+	                            	on_change="onchange_warehouse_id(warehouse_id)"/>
+	                        </group>
+	                    </div>
+                        <group col="4" colspan="4">
+	                        <group col="2" colspan="2" string="Delivery">
+			                    <field name="location_id" string="Stock Location" groups="stock.group_locations"/>
+	                            <field name="partner_shipping_out_id" string="Partner Address" context="{'default_type':'delivery'}" groups="smile_rent.group_rent_shipping_address"/>
+	            				<field name="out_date_expected" string="Requested date" widget="date"/>
+	            				<field name="out_date_effective" string="Effective date" widget="date"/>
+	                        </group>
+	                        <group col="2" colspan="2" string="Incoming Shipment">
+			                    <field name="location_dest_id" string="Stock Location" groups="stock.group_locations"/>
+	                            <field name="partner_shipping_in_id" string="Partner Address" context="{'default_type':'delivery'}" groups="smile_rent.group_rent_shipping_address"/>
+	            				<field name="in_date_expected" string="Requested date" widget="date"/>
+	            				<field name="in_date_effective" string="Effective date" widget="date"/>
+	                        </group>
+                        </group>
+                        <notebook>
+                            <page string="Order Lines">
+		                        <!--button name="button_add_lines" string="Add lines" type="object" states="in_progress" colspan="4"/-->
+                                <field name="line_ids"
+                                	context="{'default_out_date_expected': out_date_expected, 'default_in_date_expected': in_date_expected,
+                                	'default_location_id': location_id, 'default_location_dest_id': location_dest_id,
+                                	'default_partner_shipping_out_id': partner_shipping_out_id, 'default_partner_shipping_in_id': partner_shipping_in_id}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+	                <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_rental_order" model="ir.actions.act_window">
+            <field name="name">Rental Orders</field>
+            <field name="res_model">rental.order</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a rental order.
+              </p><p>
+                This is the list of all your rental orders.
+              </p>
+            </field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_rental_order_search"/>
+            <field name="context">{'search_default_filter_active': True}</field>
+        </record>
+ 
+		<menuitem id="menu_rental_orders" action="action_rental_order" parent="base.menu_sales"/>       
+
+		<!-- Rental Order Line -->
+
+        <record id="view_rental_order_line_tree" model="ir.ui.view">
+            <field name="name">rental.order.line.tree</field>
+            <field name="model">rental.order.line</field>
+            <field name="arch" type="xml">
+                <tree string="Rental Order Lines">
+                    <field name="order_id" invisible="1"/>
+                    <field name="product_id"/>
+                    <field name="name"/>
+                    <field name="qty"/>
+                    <field name="uom_id" string="UoM" groups="product.group_uom"/>
+                    <field name="uos_qty" groups="product.group_uos"/>
+                    <field name="uos_id" string="UoS" groups="product.group_uos"/>
+                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="out_date_expected" widget="date"/>
+                    <field name="out_date_effective" widget="date"/>
+                    <field name="location_dest_id" groups="stock.group_locations"/>
+                    <field name="in_date_expected" widget="date"/>
+                    <field name="in_date_effective" widget="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_rental_order_line_form" model="ir.ui.view">
+            <field name="name">rental.order.line.form</field>
+            <field name="model">rental.order.line</field>
+            <field name="arch" type="xml">
+                <form string="Rental Order Line">
+					<group colspan="4" col="4">
+						<group colspan="2" col="3">
+							<separator string="Product" colspan="3"/>
+		                    <field name="product_id" colspan="3"
+		                    	on_change="onchange_product_id(product_id, qty, uom_id, uos_qty, uos_id, 'product_id')"/>
+		                    <field name="name" colspan="3"/>
+		                    <field name="qty"
+		                    	 on_change="onchange_product_id(product_id, qty, uom_id, uos_qty, uos_id, 'qty')"/>
+		                    <field name="uom_id" nolabel="1" options="{'no_open': True}" groups="product.group_uom"
+		                    	 on_change="onchange_product_id(product_id, qty, uom_id, uos_qty, uos_id, 'uom_id')"/>
+		                    <field name="uos_qty" groups="product.group_uos"
+		                    	 on_change="onchange_product_id(product_id, qty, uom_id, uos_qty, uos_id, 'uos_qty')"/>
+		                    <field name="uos_id" nolabel="1" groups="product.group_uos" options="{'no_open': True}"
+		                    	 on_change="onchange_product_id(product_id, qty, uom_id, uos_qty, uos_id, 'uos_id')"/>
+		                    <!--field name="packaging_id" colspan="3"/-->
+						</group>
+						<group colspan="2" col="2">
+							<separator string="Delivery Order" colspan="2"/>
+		                    <field name="location_id" groups="stock.group_locations" string="Stock Location"/>
+                            <field name="partner_shipping_out_id" string="Partner Address" context="{'default_type':'delivery'}" groups="smile_rent.group_rent_shipping_address"/>
+		                    <field name="out_date_expected" widget="date" string="Requested date"/>
+		                    <field name="out_picking_id" string="Delivery Order"/>
+							<separator string="Incoming Shipment" colspan="2"/>
+		                    <field name="location_dest_id" groups="stock.group_locations" string="Stock Location"/>
+	                        <field name="partner_shipping_in_id" string="Partner Address" context="{'default_type':'delivery'}" groups="smile_rent.group_rent_shipping_address"/>
+		                    <field name="in_date_expected" widget="date" string="Requested date"/>
+		                    <field name="in_picking_id" string="Incoming Shipment"/>
+		            	</group>
+					</group>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_rental_order_user","rental.order user","model_rental_order","group_rent_user",1,1,1,0
+"access_rent_order_manager","rental.order manager","model_rental_order","group_rent_manager",1,1,1,1
+"access_rental_order_line_user","rental.order.line user","model_rental_order_line","group_rent_user",1,1,1,1
+"access_rent_order_line_manager","rental.order.line manager","model_rental_order_line","group_rent_manager",1,1,1,1
