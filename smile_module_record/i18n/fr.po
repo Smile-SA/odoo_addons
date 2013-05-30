@@ -1,0 +1,153 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_module_record
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-30 14:02+0000\n"
+"PO-Revision-Date: 2013-05-30 14:02+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_module_record
+#: view:base.module.record:0
+msgid "Export Customizations as a Module"
+msgstr "Exporter les personnalisations sous forme de module"
+
+#. module: smile_module_record
+#: field:base.module.record,date_filter:0
+msgid "Records only"
+msgstr "Enregistrements uniquement"
+
+#. module: smile_module_record
+#: field:base.module.record,filename:0
+msgid "Filename"
+msgstr "Nom du fichier"
+
+#. module: smile_module_record
+#: view:base.module.record:0
+msgid "Create Module"
+msgstr "Créer un module"
+
+#. module: smile_module_record
+#: field:base.module.record,state:0
+msgid "State"
+msgstr "Etat"
+
+#. module: smile_module_record
+#: selection:base.module.record,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_module_record
+#: view:base.module.record:0
+msgid "from"
+msgstr "à partir de"
+
+#. module: smile_module_record
+#: model:ir.model,name:smile_module_record.model_ir_model
+msgid "Models"
+msgstr "Modèles"
+
+#. module: smile_module_record
+#: view:base.module.record:0
+msgid "Records"
+msgstr "Enregistrements"
+
+#. module: smile_module_record
+#: field:base.module.record,model_ids:0
+msgid "Objects"
+msgstr "Objets"
+
+#. module: smile_module_record
+#: view:base.module.record:0
+msgid "Go back"
+msgstr "Précédent"
+
+#. module: smile_module_record
+#: selection:base.module.record,date_filter:0
+msgid "created or modified"
+msgstr "créés ou modifiés"
+
+#. module: smile_module_record
+#: view:base.module.record:0
+msgid "Keep empty to use all models"
+msgstr "Laisser vide pour utiliser l'ensemble des modèles"
+
+#. module: smile_module_record
+#: selection:base.module.record,filetype:0
+msgid "CSV"
+msgstr "CSV"
+
+#. module: smile_module_record
+#: view:base.module.record:0
+msgid "Options"
+msgstr "Options"
+
+#. module: smile_module_record
+#: selection:base.module.record,date_filter:0
+msgid "created"
+msgstr "créés"
+
+#. module: smile_module_record
+#: field:base.module.record,filetype:0
+msgid "Filetype"
+msgstr "Type de fichier"
+
+#. module: smile_module_record
+#: selection:base.module.record,date_filter:0
+msgid "modified"
+msgstr "modifiés"
+
+#. module: smile_module_record
+#: view:base.module.record:0
+msgid "or"
+msgstr "ou"
+
+#. module: smile_module_record
+#: selection:base.module.record,filetype:0
+msgid "YAML"
+msgstr "YAML"
+
+#. module: smile_module_record
+#: model:ir.model,name:smile_module_record.model_base_module_record
+msgid "Base Module Record"
+msgstr "Base Module Record"
+
+#. module: smile_module_record
+#: selection:base.module.record,state:0
+msgid "Done"
+msgstr "Réalisé"
+
+#. module: smile_module_record
+#: view:base.module.record:0
+#: field:base.module.record,file:0
+msgid "File"
+msgstr "Fichier"
+
+#. module: smile_module_record
+#: view:base.module.record:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_module_record
+#: view:base.module.record:0
+msgid "Close"
+msgstr "Fermer"
+
+#. module: smile_module_record
+#: field:base.module.record,start_date:0
+msgid "Records from"
+msgstr "Enregistrements à partir de"
+
+#. module: smile_module_record
+#: model:ir.actions.act_window,name:smile_module_record.action_base_module_record
+#: model:ir.ui.menu,name:smile_module_record.menu_base_module_record
+msgid "Export Data as a Module"
+msgstr "Exporter les données"
