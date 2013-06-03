@@ -25,7 +25,15 @@
     "author": "Smile",
     "website": "http://www.smile.fr",
     "category": "Generic Modules/Project",
-    "description": "This module add an history of the time updates applied on project's tasks.",
+    "description":
+        """
+        This module add an history of the time updates applied on project's tasks.
+        
+        The thing is, I created this module before stumbling upon project.task.history
+        objects, which seems to implement more or less the same features as the
+        current module (see: http://bazaar.launchpad.net/~openerp/openobject-addons/7.0/annotate/head:/project/project.py#L1339 ).
+        Maybe we should extend the later to reduce code duplication.
+        """",
     "summary": "Track time updates on project's tasks.",
     "depends": ["project"],
     "data": [
