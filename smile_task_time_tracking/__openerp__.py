@@ -33,7 +33,7 @@
         objects, which seems to implement more or less the same features as the
         current module (see: http://bazaar.launchpad.net/~openerp/openobject-addons/7.0/annotate/head:/project/project.py#L1339 ).
         Maybe we should extend the later to reduce code duplication.
-        """",
+        """,
     "summary": "Track time updates on project's tasks.",
     "depends": ["project"],
     "data": [
