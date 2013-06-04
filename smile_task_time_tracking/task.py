@@ -78,48 +78,71 @@ class Task(osv):
                 self.write(cr, uid, task_id, new_vals, context=local_context)
         return
 
-    def _update_time_history(self, cr, uid, ids, vals, context=None):
-        if context.get('bypass_time_tracking_history', None):
-            return
-        # Catch every update on the legacy remaining_hours and update the history to keep track on changes
+    def _update_history(self, cr, uid, ids, vals=None, context=None):
+        if vals is None:
+            vals = {}
         if context is None:
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if context.get('bypass_time_tracking_history', None):
+            return
         get_field_value = lambda f: vals.get(f, context.get('default_%s' % f, None))
         planned_time = get_field_value('planned_hours')
         effective_time = get_field_value('effective_hours')
         remaining_time = get_field_value('remaining_hours')
-        # If none of the columns we care are touched, just skip this part entirely
-        if [planned_time, effective_time, remaining_time] != [None, None, None]:
-            for task_id in ids:
-                line_obj = self.pool.get('project.task.tracking_line')
-                # Get current value for the ones not part of the current update
-                if None in [planned_time, effective_time, remaining_time]:
-                    task = self.browse(cr, uid, task_id, context=context)
-                    if planned_time is None:
-                        planned_time = task.planned_hours
-                    if effective_time is None:
-                        effective_time = task.effective_hours
-                    if remaining_time is None:
-                        remaining_time = task.remaining_hours
-                # Archive all active tracking lines
-                active_line_ids = line_obj.search(cr, uid, [('task_id', '=', task_id), ('archived', '=', False)], context=context)
-                line_obj.write(cr, uid, active_line_ids, {'archived': True}, context=context)
-                # Add a new tracking time line
-                line_obj.create(cr, uid, {'task_id': task_id, 'planned_time': planned_time, 'effective_time': effective_time, 'remaining_time': remaining_time}, context=context)
+        for task_id in ids:
+            line_obj = self.pool.get('project.task.tracking_line')
+            # Get current value for the ones not part of the current update
+            if None in [planned_time, effective_time, remaining_time]:
+                task = self.browse(cr, uid, task_id, context=context)
+                if planned_time is None:
+                    planned_time = task.planned_hours
+                if effective_time is None:
+                    effective_time = task.effective_hours
+                if remaining_time is None:
+                    remaining_time = task.remaining_hours
+            # Archive all active tracking lines
+            active_line_ids = line_obj.search(cr, uid, [('task_id', '=', task_id), ('archived', '=', False)], context=context)
+            line_obj.write(cr, uid, active_line_ids, {'archived': True}, context=context)
+            # Add a new tracking time line
+            line_obj.create(cr, uid, {'task_id': task_id, 'planned_time': planned_time, 'effective_time': effective_time, 'remaining_time': remaining_time}, context=context)
+        return
+
+    def _detect_updates_on(self, field_names, vals=None, context=None):
+        """
+        Utility method which returns True if one of the provided field is being updated.
+        """
+        assert isinstance(field_names, (list, tuple))
+        if vals is None:
+            vals = {}
+        if context is None:
+            context = {}
+        for f in field_names:
+            if vals.get(f, context.get('default_%s' % f, None)) != None:
+                return True
+        return False
+
+    def _track_time_changes(self, cr, uid, ids, vals=None, context=None):
+        """
+        Catch every update on the legacy remaining_hours and update the history to keep track on changes.
+        """
+        # List of time-dependent columns of project.task objects
+        FIELD_NAMES = ['planned_hours', 'effective_hours', 'remaining_hours', 'work_ids', 'state']
+        if self._detect_updates_on(FIELD_NAMES, vals, context):
+            self._update_history(cr, uid, ids, vals, context)
         return
 
     def create(self, cr, uid, vals, context=None):
         ids = super(Task, self).create(cr, uid, vals, context=context)
         self._force_remaining_hours_update(cr, uid, ids, vals, context)
-        self._update_time_history(cr, uid, ids, vals, context)
+        self._track_time_changes(cr, uid, ids, vals, context)
         return ids
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(Task, self).write(cr, uid, ids, vals, context=context)
         self._force_remaining_hours_update(cr, uid, ids, vals, context)
-        self._update_time_history(cr, uid, ids, vals, context)
+        self._track_time_changes(cr, uid, ids, vals, context)
         return res
 
 
