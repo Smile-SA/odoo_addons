@@ -435,7 +435,7 @@ class RentalOrderLine(orm.Model):
                 qty = product.uos_coeff and uos_qty / product.uos_coeff or 0.0
                 values['qty'] = qty
         if not uos_id:
-            values['uos_id'] = product.uos_id.id or uom_id
+            values['uos_id'] = product.uos_id.id or product.uom_id.id
         values['uos_qty'] = qty * product.uos_coeff if product.uos_id else qty
         return {'value': values}
 

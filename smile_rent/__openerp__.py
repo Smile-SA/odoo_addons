@@ -30,7 +30,9 @@
      * Manage product availabilities
      * Manage product packagings
      * Split rental order lines at pickings splitting
-     * Allow to select production lot in rental order line and manage picking chages
+     * Allow to select production lot in rental order line and manage picking changes
+     
+Suggestions & Feedback to: messaoud.guerrida@smile.fr, corentin.pouhet-brunerie@smile.fr
     """,
     "summary": "Rental Orders",
     "website": "http://www.smile.fr",
