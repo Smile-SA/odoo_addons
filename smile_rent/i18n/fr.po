@@ -1,0 +1,447 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#   * smile_rent
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-04-26 08:52+0000\n"
+"PO-Revision-Date: 2013-04-26 08:52+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: selection:rental.order,state:0
+msgid "Confirmed"
+msgstr "Confirmé"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: field:rental.order,warehouse_id:0
+msgid "Warehouse"
+msgstr "Entrepôt"
+
+#. module: smile_rent
+#: field:rental.order,location_id:0
+#: field:rental.order.line,location_id:0
+msgid "Delivery Location"
+msgstr "Lieu de livraison"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: view:rental.order.line:0
+msgid "Requested date"
+msgstr "Date souhaitée"
+
+#. module: smile_rent
+#: model:ir.model,name:smile_rent.model_rental_order
+#: view:rental.order:0
+#: field:rental.order.line,order_id:0
+msgid "Rental Order"
+msgstr "Bon de location"
+
+#. module: smile_rent
+#: code:addons/smile_rent/rent.py:258
+#, python-format
+msgid "You cannot confirm a rental order which has no line."
+msgstr "Vous ne pouvez pas confirmer une commande de location qui n'a pas de ligne."
+
+#. module: smile_rent
+#: view:rental.order.line:0
+#: field:rental.order.line,out_picking_id:0
+msgid "Delivery Order"
+msgstr "Ordre de livraison"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: view:rental.order.line:0
+msgid "Stock Location"
+msgstr "Emplacement de stock"
+
+#. module: smile_rent
+#: field:rental.order,location_dest_id:0
+#: field:rental.order.line,location_dest_id:0
+msgid "Incoming Shipment Location"
+msgstr "Emplacement de destination"
+
+#. module: smile_rent
+#: sql_constraint:rental.order:0
+msgid "Reference must be unique"
+msgstr "La référence doit être unique"
+
+#. module: smile_rent
+#: field:rental.order,message_follower_ids:0
+msgid "Followers"
+msgstr "Abonnées"
+
+#. module: smile_rent
+#: model:ir.model,name:smile_rent.model_stock_picking
+msgid "Picking List"
+msgstr "Opération de manutention"
+
+#. module: smile_rent
+#: constraint:rental.order.line:0
+msgid "Dates in line must be in rental order period"
+msgstr "Dates in line must be in rental order period"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: field:rental.order,line_ids:0
+msgid "Order Lines"
+msgstr "lignes de commande"
+
+#. module: smile_rent
+#: field:rental.order.line,uos_id:0
+msgid "Unit Of Stock"
+msgstr "Unité de stock"
+
+#. module: smile_rent
+#: field:rental.order,user_id:0
+msgid "Salesperson"
+msgstr "Vendeur"
+
+#. module: smile_rent
+#: view:rental.order.line:0
+msgid "UoS"
+msgstr "UoS"
+
+#. module: smile_rent
+#: field:res.company,rental_security_lead:0
+msgid "Rental Security Days"
+msgstr "Rental Security Days"
+
+#. module: smile_rent
+#: view:rental.order.line:0
+#: field:rental.order.line,product_id:0
+msgid "Product"
+msgstr "Produit"
+
+#. module: smile_rent
+#: field:rental.order.line,name:0
+msgid "Description"
+msgstr "Description"
+
+#. module: smile_rent
+#: model:ir.actions.act_window,help:smile_rent.action_rental_order
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a rental order.\n"
+"              </p><p>\n"
+"                This is the list of all your rental orders.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a rental order.\n"
+"              </p><p>\n"
+"                This is the list of all your rental orders.\n"
+"              </p>\n"
+"            "
+
+#. module: smile_rent
+#: view:rental.order:0
+msgid "Group by..."
+msgstr "Grouper par..."
+
+#. module: smile_rent
+#: field:rental.order,message_unread:0
+msgid "Unread Messages"
+msgstr "Messages non lus"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: field:rental.order,company_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_rent
+#: constraint:rental.order.line:0
+msgid "Invalid Unit of Measure"
+msgstr "Unité de mesure invalide"
+
+#. module: smile_rent
+#: model:res.groups,name:smile_rent.group_rent_manager
+msgid "Manager"
+msgstr "Responsable"
+
+#. module: smile_rent
+#: help:rental.order,message_ids:0
+msgid "Messages and communication history"
+msgstr "Messages et historique de communication"
+
+#. module: smile_rent
+#: view:rental.order:0
+msgid "Delivery"
+msgstr "Livraison"
+
+#. module: smile_rent
+#: view:rental.order:0
+msgid "Late removals"
+msgstr "Late removals"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: view:rental.order.line:0
+#: field:rental.order.line,in_picking_id:0
+msgid "Incoming Shipment"
+msgstr "Réception"
+
+#. module: smile_rent
+#: field:rental.order,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Is a Follower"
+
+#. module: smile_rent
+#: view:rental.order.line:0
+msgid "Rental Order Lines"
+msgstr "Lignes de commande"
+
+#. module: smile_rent
+#: field:rental.order,partner_shipping_in_id:0
+#: field:rental.order.line,partner_shipping_in_id:0
+msgid "Incoming Shipment Address"
+msgstr "Incoming Shipment Address"
+
+#. module: smile_rent
+#: field:rental.order,partner_shipping_out_id:0
+#: field:rental.order.line,partner_shipping_out_id:0
+msgid "Delivery Address"
+msgstr "Adresse de livraison"
+
+#. module: smile_rent
+#: model:mail.message.subtype,description:smile_rent.mt_rental_in_progress
+#: model:mail.message.subtype,name:smile_rent.mt_rental_in_progress
+msgid "Rental Order in progress"
+msgstr "Commande en cours"
+
+#. module: smile_rent
+#: model:res.groups,name:smile_rent.group_rent_shipping_address
+msgid "Addresses in Rental Orders"
+msgstr "Les adresses de commandes de location"
+
+#. module: smile_rent
+#: model:mail.message.subtype,description:smile_rent.mt_rental_done
+#: model:mail.message.subtype,name:smile_rent.mt_rental_done
+msgid "Rental Order done"
+msgstr "Commande terminé"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: view:rental.order.line:0
+msgid "Partner Address"
+msgstr "Adresse du client"
+
+#. module: smile_rent
+#: view:rental.order.line:0
+msgid "UoM"
+msgstr "UoM"
+
+#. module: smile_rent
+#: view:rental.order:0
+msgid "Quotation"
+msgstr "Devis"
+
+#. module: smile_rent
+#: field:rental.order,in_date_effective:0
+#: field:rental.order,out_date_effective:0
+#: field:rental.order.line,out_date_effective:0
+msgid "Effective Delivery Date"
+msgstr "Date de livraison effective"
+
+#. module: smile_rent
+#: field:rental.order,confirm_date:0
+msgid "Validation Date"
+msgstr "Date de Validation"
+
+#. module: smile_rent
+#: field:rental.order,message_ids:0
+msgid "Messages"
+msgstr "Messages"
+
+#. module: smile_rent
+#: model:mail.message.subtype,description:smile_rent.mt_rental_cancel
+#: model:mail.message.subtype,name:smile_rent.mt_rental_cancel
+msgid "Rental Order canceled"
+msgstr "Commandes annulées"
+
+#. module: smile_rent
+#: model:ir.model,name:smile_rent.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: smile_rent
+#: view:rental.order:0
+msgid "Effective date"
+msgstr "Date effective"
+
+#. module: smile_rent
+#: code:addons/smile_rent/rent.py:258
+#, python-format
+msgid "Error!"
+msgstr "Erreur!"
+
+#. module: smile_rent
+#: view:rental.order:0
+msgid "Validate"
+msgstr "Valider"
+
+#. module: smile_rent
+#: view:rental.order:0
+msgid "Set to draft"
+msgstr "Mettre en brouillon"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: field:rental.order,partner_id:0
+msgid "Partner"
+msgstr "Client"
+
+#. module: smile_rent
+#: field:rental.order,message_summary:0
+msgid "Summary"
+msgstr "Résumé"
+
+#. module: smile_rent
+#: model:res.groups,name:smile_rent.group_rent_user
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: smile_rent
+#: help:rental.order,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Si cochés, nouveaux messages nécessitent votre attention."
+
+#. module: smile_rent
+#: field:rental.order.line,qty:0
+msgid "Quantity"
+msgstr "Quantité"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: selection:rental.order,state:0
+msgid "In progress"
+msgstr "En cours"
+
+#. module: smile_rent
+#: constraint:rental.order.line:0
+msgid "Invalid Unit of Stock"
+msgstr "Unité de Stock invalide"
+
+#. module: smile_rent
+#: model:ir.model,name:smile_rent.model_rental_order_line
+#: view:rental.order.line:0
+msgid "Rental Order Line"
+msgstr "Ligne de mouvement"
+
+#. module: smile_rent
+#: field:rental.order,name:0
+msgid "Reference"
+msgstr "Référence"
+
+#. module: smile_rent
+#: constraint:rental.order:0
+#: constraint:rental.order.line:0
+msgid "Delivery date must be before return date"
+msgstr "La date de livraison doit être antérieure à la date de retour"
+
+#. module: smile_rent
+#: field:rental.order,in_date_expected:0
+#: field:rental.order.line,in_date_expected:0
+msgid "Requested Incoming Shipment Date"
+msgstr "Date de retour demandée"
+
+#. module: smile_rent
+#: field:rental.order,out_date_expected:0
+#: field:rental.order.line,out_date_expected:0
+msgid "Requested Delivery Date"
+msgstr "Date d'expédition demandée"
+
+#. module: smile_rent
+#: model:ir.actions.act_window,name:smile_rent.action_rental_order
+#: model:ir.ui.menu,name:smile_rent.menu_rental_orders
+#: view:rental.order:0
+msgid "Rental Orders"
+msgstr "Commandes de location"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: field:rental.order,state:0
+msgid "State"
+msgstr "État"
+
+#. module: smile_rent
+#: field:rental.order.line,in_date_effective:0
+msgid "Effective Incoming Shipment Date"
+msgstr "Date de retour effective"
+
+#. module: smile_rent
+#: field:rental.order.line,packaging_id:0
+msgid "Packaging"
+msgstr "Emballage"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: selection:rental.order,state:0
+msgid "Canceled"
+msgstr "Annulé"
+
+#. module: smile_rent
+#: help:rental.order,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+
+#. module: smile_rent
+#: model:ir.module.category,name:smile_rent.module_category_rent_app
+msgid "Renting App"
+msgstr "Location"
+
+#. module: smile_rent
+#: view:rental.order:0
+#: selection:rental.order,state:0
+msgid "Done"
+msgstr "Terminé"
+
+#. module: smile_rent
+#: view:rental.order:0
+msgid "Late returns"
+msgstr "Retours en retard"
+
+#. module: smile_rent
+#: field:rental.order.line,procurement_id:0
+msgid "Procurement Order"
+msgstr "Commande d'approvisionnement"
+
+#. module: smile_rent
+#: view:rental.order:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_rent
+#: selection:rental.order,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_rent
+#: model:mail.message.subtype,description:smile_rent.mt_rental_confirmed
+#: model:mail.message.subtype,name:smile_rent.mt_rental_confirmed
+msgid "Rental Order confirmed"
+msgstr "Commande de location confirmée"
+
+#. module: smile_rent
+#: field:rental.order.line,uos_qty:0
+msgid "Quantity (UoS)"
+msgstr "Quantité (UoS)"
+
+#. module: smile_rent
+#: field:rental.order.line,uom_id:0
+msgid "Unit Of Measure"
+msgstr "Unité de mesure"
+
+#. module: smile_rent
+#: view:rental.order:0
+msgid "Active"
+msgstr "Active"
