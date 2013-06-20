@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="location_by_partner_company_form" model="ir.ui.view">
+            <field name="name">location.by.partner.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <group name="account_grp" position="after">
+                    <group name="partner_by_location_grp" string="Partners locations">
+                        <field name="in_location_prefix"/>
+                        <field name="out_location_prefix"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+    </data>
+</openerp>
