@@ -48,5 +48,7 @@ def new_list_init(self, *args, **kwargs):
     native_list_init(self, *args, **kwargs)
     if kwargs.get('model'):
         self.dashboard = bool(self.dashboard) or not cache.can_create(kwargs['model']) or kwargs.get('context', {}).get('hide_create_button')
-        self.editable = bool(self.editable) and cache.can_unlink(kwargs['model']) and not kwargs.get('context', {}).get('hide_unlink_button')
+        self.editable = bool(self.editable) and not kwargs.get('context', {}).get('hide_all_buttons')
+
 List.__init__ = new_list_init
+

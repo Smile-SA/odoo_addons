@@ -26,7 +26,9 @@
     'description': """Smile Buttons Display
 
 Define buttons display from model access rules
-You can hide buttons by adding in context 'hide_*_button' (with * = create / write / unlink / cancel)
+You can hide buttons by adding in context:
+    * in form view, 'hide_*_button' (with * = create / write / unlink / cancel)
+    * in list view, 'hide_all_buttons'
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
 """,
