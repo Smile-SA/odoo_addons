@@ -45,7 +45,7 @@ def __can_unlink(model, uid):
     return False
 
 def can_unlink(model):
-    return __can_create(model, uid=rpc.session.uid)
+    return __can_unlink(model, uid=rpc.session.uid)
 
 cache.can_unlink = can_unlink
 
