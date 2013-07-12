@@ -578,7 +578,7 @@ class SartreTrigger(osv.osv):
         # Update filters based on old or dynamic values or Python operators
         if trigger.python_domain:
             domain = self._build_python_domain(cr, uid, trigger, domain, context)
-        elif 'active_object_ids' in context:
+        if 'active_object_ids' in context:
             domain.append(('id', 'in', context['active_object_ids']))
         return domain
 
