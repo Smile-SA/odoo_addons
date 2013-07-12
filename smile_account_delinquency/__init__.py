@@ -21,4 +21,5 @@
 
 import wizard
 import account
+import account_voucher_patch
 import account_voucher
