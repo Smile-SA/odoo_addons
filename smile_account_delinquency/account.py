@@ -41,7 +41,7 @@ class AccountMove(osv.osv):
         move_ids_to_reverse = []
         move_ids_not_to_reverse = []
         for move in self.browse(cr, uid, ids, context=context):
-            if not move.journal_id.update_posted:
+            if not move.journal_id.update_posted and move.journal_id.type in ('bank', 'cash'):
                 move_ids_to_reverse.append(move.id)
             else:
                 move_ids_not_to_reverse.append(move.id)
