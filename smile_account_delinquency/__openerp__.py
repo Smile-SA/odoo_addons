@@ -29,6 +29,8 @@
 
     Instead of deleting account move when you cancel a voucher,
     this module reserves it if this account move was validated, removes it otherwise.
+
+    WARNING: this module is not compatible with account_cancel
     """,
     "depends": ['account_voucher', 'account_reversal'],
     "init_xml": [],
