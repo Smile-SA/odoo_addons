@@ -47,7 +47,7 @@ class AccountMove(orm.Model):
                     wf_service.trg_validate(uid, 'account.invoice', invoice_id, 'invoice_cancel', cr)
             elif voucher_to_cancel_ids and not context.get('voucher_cancellation'):
                 context['voucher_cancellation'] = True
-                voucher_obj.button_cancel(cr, uid, cancel_voucher, context)
+                voucher_obj.cancel_voucher(cr, uid, voucher_to_cancel_ids, context)
             else:
                 context = context or {}
                 reversal_date = context.get('reversal_date') or time.strftime('%Y-%m-%d')
