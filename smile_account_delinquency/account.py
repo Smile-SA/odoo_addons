@@ -48,14 +48,19 @@ class AccountMove(osv.osv):
         if move_ids_to_reverse:
             invoice_obj = self.pool.get('account.invoice')
             invoice_to_cancel_ids = invoice_obj.search(cr, uid, [('move_id', 'in', move_ids_to_reverse)], context=context)
+            voucher_obj = self.pool.get('account.voucher')
+            voucher_to_cancel_ids = voucher_obj.search(cr, uid, [('move_id', 'in', move_ids_to_reverse)], context=context)
             if invoice_to_cancel_ids:
                 wf_service = netsvc.LocalService("workflow")
                 for invoice_id in invoice_to_cancel_ids:
                     wf_service.trg_validate(uid, 'account.invoice', invoice_id, 'invoice_cancel', cr)
+            elif voucher_to_cancel_ids and not context.get('voucher_cancellation'):
+                context['voucher_cancellation'] = True
+                voucher_obj.button_cancel(cr, uid, cancel_voucher, context)
             else:
                 context = context or {}
                 reversal_date = context.get('reversal_date') or time.strftime('%Y-%m-%d')
-                reversed_move_ids = self.create_reversal(cr, uid, move_ids_to_reverse, reversal_date)
+                reversed_move_ids = self.create_reversals(cr, uid, move_ids_to_reverse, reversal_date)
                 self.button_validate(cr, uid, reversed_move_ids, context)
         if move_ids_not_to_reverse:
             super(AccountMove, self).button_cancel(cr, uid, move_ids_not_to_reverse, context)
