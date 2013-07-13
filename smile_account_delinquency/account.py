@@ -46,6 +46,7 @@ class AccountMove(osv.osv):
             else:
                 move_ids_not_to_reverse.append(move.id)
         if move_ids_to_reverse:
+            context = context or {}
             invoice_obj = self.pool.get('account.invoice')
             invoice_to_cancel_ids = invoice_obj.search(cr, uid, [('move_id', 'in', move_ids_to_reverse)], context=context)
             voucher_obj = self.pool.get('account.voucher')
@@ -58,7 +59,6 @@ class AccountMove(osv.osv):
                 context['voucher_cancellation'] = True
                 voucher_obj.cancel_voucher(cr, uid, voucher_to_cancel_ids, context)
             else:
-                context = context or {}
                 reversal_date = context.get('reversal_date') or time.strftime('%Y-%m-%d')
                 reversed_move_ids = self.create_reversals(cr, uid, move_ids_to_reverse, reversal_date)
                 self.button_validate(cr, uid, reversed_move_ids, context)
