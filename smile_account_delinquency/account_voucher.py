@@ -45,5 +45,6 @@ class AccountVoucher(osv.osv):
                 'context': context
             }
         context['reversal_date'] = time.strftime('%Y-%m-%d')
+        context['voucher_cancellation'] = True
         return super(AccountVoucher, self).cancel_voucher(cr, uid, ids, context)
 AccountVoucher()
