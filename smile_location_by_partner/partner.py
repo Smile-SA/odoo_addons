@@ -49,8 +49,8 @@ class ResPartner(orm.Model):
             ids = [ids]
         customer_is_active = False
         supplier_is_active = False
-        in_prefix = self._get_default_customer_prefix(cr, uid, context)
-        out_prefix = self._get_default_supplier_prefix(cr, uid, context)
+        in_prefix = self._get_default_customer_prefix(cr, uid, context) or ''
+        out_prefix = self._get_default_supplier_prefix(cr, uid, context) or ''
         for partner in self.browse(cr, uid, ids, context):
             if partner.customer:
                 customer_is_active = True
@@ -76,11 +76,13 @@ class ResPartner(orm.Model):
     def update_stock_location(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        in_prefix = self._get_default_customer_prefix(cr, uid, context) or ''
+        out_prefix = self._get_default_supplier_prefix(cr, uid, context) or ''
         for partner in self.browse(cr, uid, ids, context):
             if partner.property_stock_customer:
-                partner.property_stock_customer.write({'name': vals['name']})
+                partner.property_stock_customer.write({'name': in_prefix + vals['name']})
             if partner.property_stock_supplier:
-                partner.property_stock_supplier.write({'name': vals['name']})
+                partner.property_stock_supplier.write({'name': out_prefix + vals['name']})
         return True
 
     def update_customer_location(self, cr, uid, ids, vals, context=None):
