@@ -413,7 +413,7 @@ class SartreTrigger(osv.osv):
                         if isinstance(domain, list):
                             for condition in domain:
                                 if condition[0].startswith('OLD_'):
-                                    res.append(condition[0].replace('OLD_', ''))
+                                    res.append(condition[0].replace('OLD_', '').split('.')[0])
         return list(set(res))
 
     def _decorate_trigger_method(self, method):
