@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="smile_import_data_form_view" model="ir.ui.view">
+            <field name="name">Smile Import Data - Form</field>
+            <field name="model">smile.import_data</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Smile Import Data Log">
+                    <field name="create_date"/>
+                    <field name="create_uid"/>
+                    <field name="model_id"/>
+                    <field name="import_fields"/>
+                    <separator colspan="4" string="Logs"/>
+                    <field name="log_ids" nolabel="1" colspan="4"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="smile_import_data_tree_view" model="ir.ui.view">
+            <field name="name">Smile Import Data - Tree</field>
+            <field name="model">smile.import_data</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Smile Import Data Logs">
+                    <field name="model_id"/>
+                    <field name="create_date"/>
+                    <field name="create_uid"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="smile_import_data_search_view" model="ir.ui.view">
+            <field name="name">Smile Import Data - Search</field>
+            <field name="model">smile.import_data</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Smile Import Data Logs">
+                    <field name="model_id"/>
+                    <field name="create_date"/>
+                    <field name="create_uid"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="act_smile_import_data" model="ir.actions.act_window">
+            <field name="name">Smile Import Logs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">smile.import_data</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_smile_import_data" parent="smile_log.menu_audit" name="Import data logs" action="act_smile_import_data"/>
+
+    </data>
+</openerp>
