@@ -75,3 +75,5 @@ def bulk_create(self, cr, uid, vals_list, context=None):
     return True
 
 BaseModel.bulk_create = bulk_create
+
+BaseModel.store_set_values = BaseModel._store_set_values
