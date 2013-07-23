@@ -19,13 +19,15 @@
 #
 ##############################################################################
 
-import account
+import account_asset_depreciation_method
 import account_asset_category
 import account_asset
 import account_asset_depreciation_line
+import account
 import account_asset_history
 import account_invoice
 import account_asset_posting
 import account_move_line
 import res_company
+import report
 import wizard

@@ -41,27 +41,16 @@ class AccountInvoiceLine(orm.Model):
                                        store=True, readonly=True),
     }
 
-    def _check_asset_category_company(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for invoice_line in self.browse(cr, uid, ids, context):
-            if invoice_line.asset_category_id and invoice_line.invoice_id.company_id != invoice_line.asset_category_id.company_id:
-                return False
-        return True
-
-    _constraints = [
-        (_check_asset_category_company, 'Asset Category must be linked to the same company as invoice!', ['asset_category_id']),
-    ]
-
-    def onchange_asset_category_id(self, cr, uid, ids, asset_category_id, context=None):
+    def onchange_asset_category_id(self, cr, uid, ids, asset_category_id, company_id, context=None):
         res = {'value': {}}
         if asset_category_id:
+            # TODO: add company_id in context of <field name="invoice_line"...> of invoice window action
             asset_category_info = self.pool.get('account.asset.category').read(cr, uid, asset_category_id,
-                                                                               ['asset_account_id', 'analytic_account_id'],
-                                                                               context, '_classic_write')
+                                                                               ['asset_account_id', 'asset_analytic_account_id'],
+                                                                               {'force_company': company_id}, '_classic_write')
             res['value'] = {
                 'account_id': asset_category_info['asset_account_id'],
-                'account_analytic_id': asset_category_info['analytic_account_id'],
+                'account_analytic_id': asset_category_info['asset_analytic_account_id'],
             }
         return res
 
@@ -78,8 +67,8 @@ class AccountInvoiceLine(orm.Model):
 
     def _get_asset_vals(self, cr, uid, lines, context=None):
         line = lines[0]
-        amount = sum([l.price_subtotal * (l.invoice_id.journal_id.type == 'purchase_refund' and -1.0 or 1.0) for l in lines], 0.0)
-        quantity = sum([l.quantity * (l.invoice_id.journal_id.type == 'purchase_refund' and -1.0 or 1.0) for l in lines], 0.0)
+        amount = sum([l.price_subtotal * (l.invoice_id.journal_id.type == 'purchase_refund' and - 1.0 or 1.0) for l in lines], 0.0)
+        quantity = sum([l.quantity * (l.invoice_id.journal_id.type == 'purchase_refund' and - 1.0 or 1.0) for l in lines], 0.0)
         vals = {
             'name': line.name,
             'category_id': line.asset_category_id.id,
@@ -94,7 +83,6 @@ class AccountInvoiceLine(orm.Model):
         }
         asset_obj = self.pool.get('account.asset.asset')
         vals.update(asset_obj.onchange_category_id(cr, uid, None, vals['category_id'], context)['value'])
-        vals.update(asset_obj.onchange_purchase_date(cr, uid, None, vals['purchase_date'], context)['value'])
         return vals
 
     def create_asset(self, cr, uid, ids, context=None):
@@ -109,8 +97,8 @@ class AccountInvoiceLine(orm.Model):
             raise orm.except_orm(_('Error'), _('No asset to create from these invoice lines!'))
         vals = self._get_asset_vals(cr, uid, lines, context)
         asset_id = asset_obj.create(cr, uid, vals, context)
-        if lines[0].asset_category_id.open_asset:
-            asset_obj.validate(cr, uid, [asset_id], context)
+        if lines[0].asset_category_id.confirm_asset:
+            asset_obj.confirm(cr, uid, [asset_id], context)
         self.write(cr, uid, [l.id for l in lines], {'asset_id': asset_id}, context)
         return asset_id
 
@@ -125,7 +113,7 @@ class AccountInvoiceLine(orm.Model):
         return res.values()
 
     def create_assets(self, cr, uid, ids, context=None):
-        context_copy = (context or {}).copy()
+        context_copy = context and context.copy() or {}
         context_copy['do_not_check_invoice_lines'] = True
         lines_by_asset = self._group_by_asset(cr, uid, ids, context)
         for line_ids in lines_by_asset:
@@ -136,11 +124,16 @@ class AccountInvoiceLine(orm.Model):
         vals = vals or {}
         if ('account_id' not in vals or 'analytic_account_id' not in vals) and vals.get('asset_category_id'):
             asset_category_info = self.pool.get('account.asset.category').read(cr, uid, vals['asset_category_id'],
-                                                                               ['asset_account_id', 'analytic_account_id'], context, '_classic_write')
+                                                                               ['asset_account_id', 'asset_analytic_account_id'],
+                                                                               context, '_classic_write')
             if 'account_id' not in vals:
-                vals['account_analytic_id'] = asset_category_info['analytic_account_id']
-            if 'analytic_account_id' not in vals:
                 vals['account_id'] = asset_category_info['asset_account_id']
+                if isinstance(vals['account_id'], tuple):  # INFO: bug with load params in read method
+                    vals['account_id'] = vals['account_id'][0]
+            if 'analytic_account_id' not in vals:
+                vals['account_analytic_id'] = asset_category_info['asset_analytic_account_id']
+                if isinstance(vals['account_analytic_id'], tuple):
+                    vals['account_analytic_id'] = vals['account_analytic_id'][0]
         return vals
 
     def create(self, cr, uid, vals, context=None):

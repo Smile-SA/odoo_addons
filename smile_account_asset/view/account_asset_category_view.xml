@@ -13,7 +13,7 @@
 					<field name="name"/>
 					<field name="company_id" groups="base.group_multi_company"/>
 					<field name="accounting_method"/>
-					<field name="benefit_accelerated_depreciation"/>
+					<field name="fiscal_method"/>
 					<newline/>
                     <group string="Group By..." expand="0" groups="base.group_multi_company">
                         <filter string="Company" context="{'group_by':'company_id'}" icon="terp-folder-green"/>
@@ -31,7 +31,7 @@
 					<field name="name"/>
 					<field name="company_id" groups="base.group_multi_company"/>
 					<field name="accounting_method"/>
-					<field name="benefit_accelerated_depreciation"/>
+					<field name="fiscal_method"/>
 				</tree>
 			</field>
 		</record>
@@ -43,84 +43,71 @@
 	        <field name="arch" type="xml">
 	            <form string="Asset Category">
 					<field name="name"/>
-					<field name="company_id" groups="base.group_multi_company"
-						attrs="{'readonly': [('is_linked_to_confirmed_assets', '=', True)]}"/>
+					<field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('asset_ids', '!=', False)]}"/>
+					<newline/>
+					<field name="asset_class"/>
+					<field name="asset_in_progress" on_change="onchange_asset_in_progress(asset_in_progress)"/>
 					<field name="asset_creation" groups="base.group_extended"/>
-					<field name="open_asset" groups="base.group_extended" attrs="{'invisible': [('asset_creation', '!=', 'auto')]}"/>
-					<field name="is_linked_to_confirmed_assets" invisible="1"/>
+					<field name="confirm_asset" groups="base.group_extended" attrs="{'invisible': [('asset_creation', '!=', 'auto')]}"/>
+					<field name="asset_ids" invisible="1"/>
 					<notebook colspan="4">
-						<page string="Depreciations">
+						<page string="Depreciations" attrs="{'invisible': [('asset_in_progress', '=', True)]}">
 							<group colspan="2" col="2">
 								<separator string="Accounting Depreciation" colspan="2"/>
-								<field name="accounting_method"
-									on_change="onchange_accounting_method(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"/>
-								<field name="accounting_periods"
-									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
-									attrs="{'required': [('accounting_method', '!=', 'none')], 'invisible': [('accounting_method', '=', 'none')]}"/>
-								<field name="accounting_degressive_rate"
-									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
-									attrs="{'invisible': [('accounting_method', '!=', 'degressive')], 'required': [('accounting_method', '=', 'degressive')]}"/>
-								<field name="accounting_prorata"
-									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
-									attrs="{'invisible': [('accounting_method', '=', 'none')]}"/>
-								<field name="period_length"
-									attrs="{'invisible': [('accounting_method', '=', 'none')], 'required': [('accounting_method', '!=', 'none')]}"/>
+								<field name="accounting_method" string="Computation Method" on_change="onchange_depreciation_method(accounting_method, fiscal_method)"/>
+								<field name="accounting_annuities" string="Annuities" attrs="{'required': [('accounting_method', '!=', 'none')], 'invisible': [('accounting_method', '=', 'none')]}"/>
+								<field name="accounting_rate" string="Amortization Rate" attrs="{'invisible': [('accounting_rate_visibility', '=', False)], 'required': [('accounting_rate_visibility', '=', True)]}"/>
+								<field name="accounting_rate_visibility" invisible="1"/>
 							</group>
 							<group colspan="2" col="2">
 								<separator string="Fiscal Depreciation" colspan="2"/>
-								<field name="fiscal_method" attrs="{'readonly': [('accounting_method', '=', 'none')]}"
-									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"/>
-								<field name="fiscal_periods"
-									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
-									attrs="{'required': [('fiscal_method', '!=', 'none')], 'invisible': [('fiscal_method', '=', 'none')]}"/>
-								<field name="fiscal_degressive_rate"
-									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"
-									attrs="{'invisible': [('fiscal_method', '!=', 'degressive')], 'required': [('fiscal_method', '=', 'degressive')]}"/>
-								<field name="fiscal_prorata" attrs="{'invisible': [('fiscal_method', '=', 'none')]}"
-									on_change="onchange_accelerated_depreciation(accounting_method,accounting_periods,accounting_degressive_rate,accounting_prorata,fiscal_method,fiscal_periods,fiscal_degressive_rate,fiscal_prorata)"/>
-								<field name="benefit_accelerated_depreciation" attrs="{'invisible': [('fiscal_method', '=', 'none')]}"/>
+								<field name="fiscal_method" string="Computation Method" attrs="{'readonly': [('accounting_method', '=', 'none')]}" on_change="onchange_depreciation_method(accounting_method, fiscal_method)"/>
+								<field name="fiscal_annuities" string="Annuities" attrs="{'required': [('fiscal_method', '!=', 'none')], 'invisible': [('fiscal_method', '=', 'none')]}"/>
+								<field name="fiscal_rate" string="Amortization Rate" attrs="{'invisible': [('fiscal_rate_visibility', '=', False)], 'required': [('fiscal_rate_visibility', '=', True)]}"/>
+								<field name="fiscal_rate_visibility" invisible="1"/>
 							</group>
 						</page>
 						<page string="Accounting">
 							<separator string="Asset" colspan="2"/>
 							<separator string="Disposal" colspan="2"/>
 
-							<field name="asset_journal_id" domain="[('company_id','=',company_id)]" string="Journal"/>
-							<field name="disposal_receivable_account_id" string="Receivable Account" domain="[('company_id','=',company_id)]"/>
+							<field name="asset_journal_id" string="Journal"/>
+							<field name="sale_receivable_account_id" string="Receivable Account"/>
 
-							<field name="asset_account_id" domain="[('company_id','=',company_id)]" string="Asset Account"/>
-							<field name="disposal_expense_account_id" string="Expense Account" domain="[('company_id','=',company_id)]"/>
+							<field name="asset_account_id" string="Asset Account"/>
+							<field name="sale_expense_account_id" string="Expense Account"/>
 
 							<label string="" colspan="2"/>
-							<field name="disposal_income_account_id" string="Income Account" domain="[('company_id','=',company_id)]"/>
+							<field name="sale_income_account_id" string="Income Account"/>
 
-							<field name="analytic_account_id" domain="[('company_id','=',company_id)]"/>
-							<field name="disposal_analytic_account_id" domain="[('company_id','=',company_id)]" string="Analytic Account"/>
+							<field name="asset_analytic_account_id"/>
+							<field name="sale_analytic_account_id" string="Analytic Account"/>
 
 							<separator string="Amortization" colspan="2"/>
 							<separator string="Depreciation" colspan="2"/>
 
-							<field name="amortization_account_id" string="Amortization Account" domain="[('company_id','=',company_id)]"
+							<field name="accounting_depreciation_account_id" string="Amortization Account"
 								attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
-							<field name="depreciation_account_id" string="Depreciation Account" domain="[('company_id','=',company_id)]"
-								attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
-
-							<field name="amortization_expense_account_id" string="Provision Account" domain="[('company_id','=',company_id)]"
-								attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
-							<field name="depreciation_expense_account_id" string="Provision Account" domain="[('company_id','=',company_id)]"
+							<field name="exceptional_depreciation_account_id" string="Depreciation Account"
 								attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
 
-							<field name="amortization_income_account_id" string="Reversal Account" domain="[('company_id','=',company_id)]"
+							<field name="accounting_depreciation_expense_account_id" string="Provision Account"
 								attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
-							<field name="depreciation_income_account_id" string="Reversal Account" domain="[('company_id','=',company_id)]"
+							<field name="exceptional_depreciation_expense_account_id" string="Provision Account"
 								attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
 
-							<field name="amortization_journal_id" domain="[('company_id','=',company_id)]" string="Journal"/>
+							<field name="accounting_depreciation_income_account_id" string="Reversal Account"
+								attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
+							<field name="exceptional_depreciation_income_account_id" string="Reversal Account"
+								attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
+
+							<field name="depreciation_journal_id" string="Journal"/>
 						</page>
 						<page string="Notes">
 							<field name="note" nolabel="1" colspan="4"/>
 						</page>
 					</notebook>
+					<field name="fiscal_deduction"/>
 				</form>
 			</field>
 		</record>

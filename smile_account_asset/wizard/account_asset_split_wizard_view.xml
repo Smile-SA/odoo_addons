@@ -18,7 +18,7 @@
 						<field name="initial_quantity"/>
 					</group>
 					<group colspan="2" col="2">
-						<separator string="Children Asset" colspan="2"/>
+						<separator string="Child Asset" colspan="2"/>
 						<field name="purchase_value"/>
 						<field name="salvage_value"/>
 						<field name="quantity"/>

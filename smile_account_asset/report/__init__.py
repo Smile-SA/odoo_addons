@@ -19,15 +19,7 @@
 #
 ##############################################################################
 
-from osv import orm
-
-
-class AccountPeriodClose(orm.TransientModel):
-    _inherit = "account.period.close"
-
-    def data_save(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, 'ids must be a list with only one item!'
-        if self.browse(cr, uid, ids[0], context).sure:
-            context = context or {}
-            self.pool.get('account.period').post_depreciation_line(cr, uid, context['active_ids'], context=context)
-        return super(AccountPeriodClose, self).data_save(cr, uid, ids, context)
+import account_asset_asset_report_parser
+import account_asset_depreciation_line_report_parser
+import account_asset_sale_report_parser
+import account_asset_fiscal_deduction_report_parser

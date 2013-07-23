@@ -39,26 +39,33 @@ class AccountMove(orm.Model):
 class AccountTax(orm.Model):
     _inherit = 'account.tax'
 
-    def _get_move_lines(self, cr, uid, taxes, amount_excl_tax, journal_type, default=None, context=None):
+    def _get_move_line_vals(self, cr, uid, taxes, amount_excl_tax, journal_type, default=None, context=None):
         lines = []
         for tax_info in self.compute_all(cr, uid, taxes, amount_excl_tax, 1.0)['taxes']:
             if tax_info['amount']:
                 tax_line_vals = (default or {}).copy()
+                tax_line_vals.update({
+                    'tax_code_id': tax_info['tax_code_id'],
+                    'tax_amount': tax_info['amount'] * tax_info['_refund' in journal_type and 'ref_base_sign' or 'base_sign'],
+                })
+                debit, credit = 0.0, tax_info['amount']
+                if tax_info['amount'] < 0.0:
+                    debit, credit = abs(credit), abs(debit)
                 if journal_type in ('purchase_refund', 'sale'):
                     if not tax_info['account_collected_id']:
                         raise orm.except_orm(_('Error'), _('Please indicate a collected tax account for %s!') % tax_info['name'])
                     tax_line_vals.update({
                         'account_id': tax_info['account_collected_id'],
-                        'debit': 0.0,
-                        'credit': tax_info['amount'],
+                        'debit': debit,
+                        'credit': credit,
                     })
                 elif journal_type in ('purchase', 'sale_refund'):
                     if not tax_info['account_paid_id']:
                         raise orm.except_orm(_('Error'), _('Please indicate a paid tax account for %s!') % tax_info['name'])
                     tax_line_vals.update({
                         'account_id': tax_info['account_paid_id'],
-                        'debit': tax_info['amount'],
-                        'credit': 0.0,
+                        'debit': credit,
+                        'credit': debit,
                     })
                 lines.append(tax_line_vals)
         return lines

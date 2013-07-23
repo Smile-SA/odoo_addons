@@ -36,9 +36,6 @@
 	        <field name="inherit_id" ref="account.view_invoice_line_tree"/>
 	        <field name="type">tree</field>
 	        <field name="arch" type="xml">
-                <tree position="attributes">
-                	<attribute name="editable">top</attribute>
-                </tree>
                 <field name="name" position="replace"/>
 	            <field name="account_id" position="before">
 	                <field name="invoice_id" string="Number" readonly="1"/>
@@ -72,7 +69,7 @@
 						<attribute name="required">0</attribute>
 					</field>
 		            <field name="account_id" position="after">
-		                <field name="asset_category_id" on_change="onchange_asset_category_id(asset_category_id)"/>
+		                <field name="asset_category_id" on_change="onchange_asset_category_id(asset_category_id, company_id)"/>
 		            </field>
 		            <field name="account_id" position="attributes">
 		                <attribute name="attrs">{'readonly': [('asset_category_id','!=',False)], 'required': [('asset_category_id','=',False)]}</attribute>

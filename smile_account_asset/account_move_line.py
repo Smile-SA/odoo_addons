@@ -26,6 +26,5 @@ class AccountMoveLine(orm.Model):
     _inherit = 'account.move.line'
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True),  # native_size=64
         'asset_id': fields.many2one('account.asset.asset', 'Asset', readonly=True, ondelete='restrict'),
     }

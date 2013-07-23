@@ -12,9 +12,8 @@
 -
   I force asset_creation value for asset category "account_asset_category_fixedassets"
 -
-  !python {model: account.asset.category}: |
-    asset_category_id = ref('account_asset_category_fixedassets')
-    self.write(cr, uid, asset_category_id, {'asset_creation': 'auto'}, context)
+  !record {model: account.asset.category, id: account_asset_category_fixedassets}:
+    asset_creation: 'auto'
 -
   I validate invoice "demo_invoice_0"
 -

@@ -45,7 +45,7 @@
 	        <field name="model">account.asset.depreciation.line</field>
 	        <field name="type">tree</field>
 	        <field name="arch" type="xml">
-	            <tree string="Depreciation Lines">
+	            <tree string="Depreciation Lines" colors="blue:is_posted==False;grey:depreciation_type=='fiscal' and benefit_accelerated_depreciation==False">
 	                <field name="year" invisible="1"/>
 	                <field name="depreciation_date"/>
 	                <field name="asset_id"/>
@@ -54,18 +54,19 @@
 	                <field name="account_id" invisible="1"/>
 	                <field name="purchase_value"/>
 	                <field name="salvage_value"/>
-                    <field name="depreciation_type"/>
-	                <field name="previous_accumulated_value"/>
+	                <field name="depreciation_type"/>
+	                <field name="previous_years_accumulated_value"/>
 	                <field name="depreciation_value" string="Amortization"/>
-	                <field name="accumulated_value"/>
 	                <field name="exceptional_value"/>
+	                <field name="current_year_accumulated_value"/>
 	                <field name="book_value"/>
 	                <field name="currency_id" groups="base.group_extended"/>
-	                <field name="move_id" invisible="1"/>
 	                <field name="state" invisible="1"/>
+	                <field name="is_posted" invisible="1"/>
 	                <field name="asset_type" invisible="1"/>
+	                <field name="benefit_accelerated_depreciation" invisible="1"/>
                     <button name="post_depreciation_line" icon="gtk-execute" string="Post" type="object" colspan="4"
-                    	attrs="{'invisible':['|',('move_id','!=',False),('state','!=','open')]}"/>
+                    	attrs="{'invisible':['|','|',('is_posted','=',True),('state','!=','open'), '&amp;', ('depreciation_type', '=', 'fiscal'), ('benefit_accelerated_depreciation', '=', False)]}"/>
 				</tree>
 			</field>
 		</record>
@@ -81,17 +82,17 @@
 	                <field name="depreciation_date" readonly="1"/>
 	                <field name="purchase_value"/>
 	                <field name="salvage_value"/>
-	                <field name="previous_accumulated_value"/>
+	                <field name="previous_years_accumulated_value"/>
 	                <field name="depreciation_value" readonly="1" string="Amortization"/>
-	                <field name="accumulated_value"/>
 	                <field name="exceptional_value"/>
+	                <field name="current_year_accumulated_value"/>
 	                <field name="book_value"/>
                     <field name="company_id" groups="base.group_multi_company"/>
 	                <field name="move_id" readonly="1" invisible="1"/>
 	                <field name="state" invisible="1"/>
 	                <field name="asset_type" invisible="1"/>
                     <button name="post_depreciation_line" icon="gtk-execute" string="Post" type="object" colspan="4"
-                    	attrs="{'invisible':['|',('move_id','!=',False),('state','!=','open')]}"/>
+                    	attrs="{'invisible':['|','|',('move_id','!=',False),('state','!=','open'), '&amp;', ('depreciation_type', '=', 'fiscal'), ('benefit_accelerated_depreciation', '=', False)]}"/>
 	            </form>
 	        </field>
 	    </record>

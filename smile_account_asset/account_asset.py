@@ -20,19 +20,30 @@
 ##############################################################################
 
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
-import time
+import logging
 
 import decimal_precision as dp
 from osv import orm, fields
 from tools.translate import _
 
-from account_asset_category import ALL_DEPRECIATION_FIELDS, DEPRECIATION_METHODS, get_accelerated_depreciation
-from depreciation_board import DepreciationBoard, get_period_stop_date
+from account_asset_category import _get_rates_visibility, _get_res_ids_from_depreciation_methods
+from account_asset_tools import get_period_stop_date
 
+ASSET_STATES = [
+    ('draft', 'Draft'),
+    ('confirm', 'Acquised Or In progress'),
+    ('open', 'Into service'),
+    ('close', 'Sold Or Scrapped'),
+    ('cancel', 'Cancel'),
+]
+ASSET_TYPES = [
+    ('purchase', 'Purchase'),
+    ('purchase_refund', 'Purchase Refund'),
+]
+SALE_FIELDS = ['customer_id', 'sale_date', 'sale_value', 'book_value', 'accumulated_amortization_value', 'sale_type', 'sale_result',
+               'sale_result_short_term', 'sale_result_long_term', 'tax_regularization', 'regularization_tax_amount', 'is_out']
 
-ASSET_STATES = [('draft', 'Draft'), ('open', 'Running'), ('close', 'Sold Or Scrapped')]
-ASSET_TYPES = [('purchase', 'Purchase'), ('purchase_refund', 'Purchase Refund')]
+_logger = logging.getLogger('account.asset.asset')
 
 
 class AccountAssetAsset(orm.Model):
@@ -40,36 +51,41 @@ class AccountAssetAsset(orm.Model):
     _description = 'Asset'
     _parent_store = True
 
-    def _get_depreciation_infos(self, cr, uid, ids, name, arg, context=None):
+    def _get_accounting_methods(self, cr, uid, context=None):
+        return self.pool.get('account.asset.depreciation.method').get_methods_selection(cr, uid, 'accounting', context)
+
+    def _get_fiscal_methods(self, cr, uid, context=None):
+        return self.pool.get('account.asset.depreciation.method').get_methods_selection(cr, uid, 'fiscal', context)
+
+    def _get_book_value(self, cr, uid, ids, name, arg, context=None):
+        # Book Value = Gross Value - Sum of accounting depreciations - Sum of exceptional depreciations
+        res = {}
+        for asset in self.browse(cr, uid, ids, context):
+            book_value = asset.purchase_value
+            for line in asset.depreciation_line_ids:
+                if line.depreciation_type != 'fiscal' and line.is_posted:
+                    book_value -= line.depreciation_value
+            res[asset.id] = book_value
+        return res
+
+    def _get_benefit_accelerated_depreciation(self, cr, uid, ids, name, arg, context=None):
         res = {}
         if not ids:
             return res
-        cr.execute("SELECT asset_id as id, round(sum(debit-credit)) as amount "
-                   "FROM account_move_line WHERE asset_id IN %s GROUP BY asset_id", (tuple(ids),))
-        res.update(dict(cr.fetchall()))
-        company_obj = self.pool.get('res.company')
-        fields_to_read = ['purchase_value', 'salvage_value', 'depreciation_date_start', 'sale_value', 'state',
-                          'period_length', 'accounting_prorata', 'company_id']
-        fields_to_read += ALL_DEPRECIATION_FIELDS
-        for asset in self.read(cr, uid, ids, fields_to_read, context, '_classic_write'):
-            fiscalyear_start_day = company_obj.get_fiscalyear_start_day(cr, uid, asset['company_id'], context)
-            accelerated_depreciation = get_accelerated_depreciation(**asset)
-            if asset['state'] == 'draft':
-                book_value = asset['purchase_value']
-            elif asset['state'] == 'open':
-                book_value = res.get(asset['id'], 0.0)
-            else:
-                book_value = asset['salvage_value']
-            depreciation_date_stop = datetime.strptime(asset['depreciation_date_start'], '%Y-%m-%d')
-            depreciation_date_stop += relativedelta(years=max(asset['accounting_periods'], asset['fiscal_periods']))
-            res[asset['id']] = {
-                'depreciation_date_stop': get_period_stop_date(depreciation_date_stop,
-                                                               fiscalyear_start_day,
-                                                               asset['period_length']).strftime('%Y-%m-%d'),
-                'benefit_accelerated_depreciation': accelerated_depreciation,
-                'amount_to_depreciate': book_value - asset['salvage_value'],
-            }
+        method_obj = self.pool.get('account.asset.depreciation.method')
+        for asset in self.browse(cr, uid, ids, context):
+            res[asset.id] = method_obj.get_benefit_accelerated_depreciation(cr, uid, asset.purchase_value, asset.salvage_value,
+                                                                            asset.purchase_date, asset.in_service_date,
+                                                                            asset.accounting_method, asset.accounting_annuities,
+                                                                            asset.accounting_rate, asset.fiscal_method,
+                                                                            asset.fiscal_annuities, asset.fiscal_rate, context)
         return res
+
+    def _set_benefit_accelerated_depreciation(self, cr, uid, ids, name, value, arg, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        cr.execute('UPDATE account_asset_asset SET benefit_accelerated_depreciation = %s WHERE id IN %s', (value, tuple(ids)))
+        return True
 
     def _get_tax_amount(self, cr, uid, amount_excl_tax, tax_ids, context=None):
         tax_obj = self.pool.get('account.tax')
@@ -89,10 +105,28 @@ class AccountAssetAsset(orm.Model):
             res[asset['id']] = self._get_tax_amount(cr, uid, asset['sale_value'], asset['sale_tax_ids'], context)
         return res
 
+    def _get_asset_accounts(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        category_obj = self.pool.get('account.asset.category')
+        for asset in self.browse(cr, uid, ids, context):
+            category = category_obj.browse(cr, uid, asset.category_id.id, {'force_company': asset.company_id.id})
+            res[asset.id] = {
+                'asset_account_id': category.asset_account_id.id,
+                'sale_receivable_account_id': category.sale_receivable_account_id.id,
+            }
+        return res
+
     def _get_asset_ids_from_categories(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        return self.pool.get('account.asset.asset').search(cr, uid, [('category_id', 'in', ids), ('state', '=', 'draft')], context=context)
+        return self.pool.get('account.asset.asset').search(cr, uid, [('category_id', 'in', ids)], context=context)
+
+    def _get_rates_visibility(self, cr, uid, ids, name, arg, context=None):
+        return _get_rates_visibility(self, cr, uid, ids, name, arg, context=None)
+
+    def _get_asset_ids_from_depreciation_methods(self, cr, uid, ids, context=None):
+        return _get_res_ids_from_depreciation_methods(self, self.pool.get('account.asset.asset'), cr, uid, ids, context)
+
+    def _get_asset_ids_from_depreciation_lines(self, cr, uid, ids, context=None):
+        return list(set([line['asset_id'] for line in self.read(cr, uid, ids, ['asset_id'], context, '_classic_write')]))
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -101,16 +135,20 @@ class AccountAssetAsset(orm.Model):
 
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=True, states={'draft': [('readonly', False)]},
                                      ondelete='cascade'),
-        'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
+        'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Child Assets'),
         'parent_left': fields.integer('Parent Left', readonly=True, select=True),
         'parent_right': fields.integer('Parent Right', readonly=True, select=True),
+        'origin_id': fields.many2one('account.asset.asset', 'Origin Asset', readonly=True, ondelete='cascade'),
 
         'category_id': fields.many2one('account.asset.category', 'Asset Category', required=True, change_default=True, readonly=True,
                                        states={'draft': [('readonly', False)]}, ondelete='restrict'),
-        'company_id': fields.many2one('res.company', 'Company', required=True, ondelete='restrict', readonly=True,
-                                      states={'draft': [('readonly', False)]}),
-        'currency_id': fields.related('company_id', 'currency_id', type="many2one", relation="res.currency", string="Currency", readonly=True,
-                                      ondelete='restrict', store=True),
+        'company_id': fields.related('category_id', 'company_id', type='many2one', relation='res.company', string='Company', store={
+            'account.asset.asset': (lambda self, cr, uid, ids, context=None: ids, ['category_id'], 5),
+            'account.asset.category': (_get_asset_ids_from_categories, ['company_id'], 5),
+        }, ondelete='restrict', readonly=True),
+        # CHANGE: allow to update anytime currency and offer a button to update asset after currency change, like in invoice form
+        'currency_id': fields.many2one("res.currency", "Currency", required=True, ondelete='restrict', readonly=True,
+                                       states={'draft': [('readonly', False)]}),
 
         'supplier_id': fields.many2one('res.partner', 'Supplier', required=True, readonly=True, states={'draft': [('readonly', False)]},
                                        ondelete='restrict', domain=[('supplier', '=', True)]),
@@ -119,32 +157,43 @@ class AccountAssetAsset(orm.Model):
                                        states={'draft': [('readonly', False)]}),
         'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'),
                                       readonly=True, states={'draft': [('readonly', False)]}),
-        'amount_to_depreciate': fields.function(_get_depreciation_infos, method=True, type='float', digits_compute=dp.get_precision('Account'),
-                                                string='Amount to depreciate', multi='depreciation'),
+        'book_value': fields.function(_get_book_value, method=True, type='float', digits_compute=dp.get_precision('Account'), store={
+            'account.asset.asset': (lambda self, cr, uid, ids, context=None: ids, ['purchase_value', 'salvage_value',
+                                                                                   'accounting_method', 'is_out'], 5),
+            'account.asset.depreciation.line': (_get_asset_ids_from_depreciation_lines, ['move_id'], 5),
+        }, string='Book Value'),
 
-        'accounting_method': fields.selection(DEPRECIATION_METHODS, 'Computation Method', required=True, readonly=True,
-                                              states={'draft': [('readonly', False)]}),
-        'accounting_periods': fields.integer('Depreciation Length (in years)', required=False, readonly=True,
-                                             states={'draft': [('readonly', False)]}),
-        'period_length': fields.integer('Period Length (in months)', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'accounting_degressive_rate': fields.float('Degressive Rate (%)', digits=(4, 2), readonly=True,
-                                                   states={'draft': [('readonly', False)]}),
-        'accounting_prorata': fields.boolean('Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done '
-                                             'from the purchase date instead of the first day of month', readonly=True,
-                                             states={'draft': [('readonly', False)]}),
+        'accounting_method': fields.selection(_get_accounting_methods, 'Accounting Method', required=True,
+                                              readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
+        'accounting_annuities': fields.integer('Accounting Annuities', required=False, readonly=True,
+                                               states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
+        'accounting_rate': fields.float('Accounting Amortization Rate (%)', digits=(4, 2), readonly=True,
+                                        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
+        'accounting_rate_visibility': fields.function(_get_rates_visibility, method=True, type='boolean', store={
+            'account.asset.asset': (lambda self, cr, uid, ids, context=None: ids, ['accounting_method'], 5),
+            'account.asset.depreciation.method': (_get_asset_ids_from_depreciation_methods, ['use_manual_rate'], 5),
+        }, string='Fiscal Amortization Rate Visibility', multi='rates_visibility'),
 
-        'fiscal_method': fields.selection(DEPRECIATION_METHODS, 'Computation Method', required=True, readonly=True,
-                                          states={'draft': [('readonly', False)]}),
-        'fiscal_periods': fields.integer('Depreciation Length (in years)', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'fiscal_degressive_rate': fields.float('Degressive Rate (%)', digits=(4, 2), readonly=True, states={'draft': [('readonly', False)]}),
-        'fiscal_prorata': fields.boolean('Prorata Temporis', readonly=True, states={'draft': [('readonly', False)]}),
+        'fiscal_method': fields.selection(_get_fiscal_methods, 'Fiscal Method', required=True,
+                                          readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
+        'fiscal_annuities': fields.integer('Fiscal Annuities', required=False, readonly=True,
+                                           states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
+        'fiscal_rate': fields.float('Fiscal Amortization Rate (%)', digits=(4, 2), readonly=True,
+                                    states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
+        'fiscal_rate_visibility': fields.function(_get_rates_visibility, method=True, type='boolean', store={
+            'account.asset.asset': (lambda self, cr, uid, ids, context=None: ids, ['fiscal_method'], 5),
+            'account.asset.depreciation.method': (_get_asset_ids_from_depreciation_methods, ['use_manual_rate'], 5),
+        }, string='Fiscal Amortization Rate Visibility', multi='rates_visibility'),
 
-        'benefit_accelerated_depreciation': fields.function(_get_depreciation_infos, method=True, type='boolean',
-                                                            string='Benefit Accelerated Depreciation', multi='depreciation'),
+        'benefit_accelerated_depreciation': fields.function(_get_benefit_accelerated_depreciation, method=True, type='boolean', store={
+            'account.asset.asset': (lambda self, cr, uid, ids, context=None: ids, ['purchase_value', 'salvage_value',
+                                                                                   'accounting_method', 'accounting_annuities', 'accounting_rate',
+                                                                                   'fiscal_method', 'fiscal_annuities', 'fiscal_rate'], 5),
+        }, string='Benefit Accelerated Depreciation', fnct_inv=_set_benefit_accelerated_depreciation, readonly=True,
+            states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
 
-        'depreciation_date_start': fields.date('Depreciation Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'depreciation_date_stop': fields.function(_get_depreciation_infos, method=True, type='date', string='Depreciation End Date',
-                                                  multi='depreciation'),
+        'in_service_date': fields.date('In-service Date', required=False, readonly=True,
+                                       states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
 
         'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True),
         'accounting_depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=False,
@@ -154,12 +203,10 @@ class AccountAssetAsset(orm.Model):
         'exceptional_depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True,
                                                              domain=[('depreciation_type', '=', 'exceptional')]),
 
-        'validation_date': fields.date('Validation Date', readonly=True),
-
         'quantity': fields.float('Quantity', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, ondelete="restrict", readonly=True,
                                   states={'draft': [('readonly', False)]}),
-        'purchase_tax_ids': fields.many2many('account.tax', 'account_asset_asset_account_tax_purchase_rel', 'asset_id', 'tax_id', 'Taxes',
+        'purchase_tax_ids': fields.many2many('account.tax', 'account_asset_asset_account_tax_purchase_rel', 'asset_id', 'tax_id', 'Purchase Taxes',
                                              domain=[('parent_id', '=', False), ('type_tax_use', '!=', 'sale')],
                                              readonly=True, states={'draft': [('readonly', False)]}),
         'purchase_tax_amount': fields.function(_get_purchase_tax_amount, method=True, type='float',
@@ -176,33 +223,35 @@ class AccountAssetAsset(orm.Model):
                                        readonly=True, states={'open': [('readonly', False)]}),
         'sale_date': fields.date('Sale Date', readonly=True, states={'open': [('readonly', False)]}),
         'sale_value': fields.float('Sale Value', digits_compute=dp.get_precision('Account'), readonly=True, states={'open': [('readonly', False)]}),
-        'book_value': fields.float('Book Value', digits_compute=dp.get_precision('Account'), readonly=True),
+        'fiscal_book_value': fields.float('Fiscal Book Value', digits_compute=dp.get_precision('Account'), readonly=True),
         'accumulated_amortization_value': fields.float('Accumulated Amortization Value', digits_compute=dp.get_precision('Account'), readonly=True),
-        'disposal_type': fields.selection([('sale', 'Sale'), ('scrapping', 'Scrapping')], 'Disposal Type',
-                                          readonly=True, states={'open': [('readonly', False)]}),
+        'sale_type': fields.selection([('sale', 'Sale'), ('scrapping', 'Scrapping')], 'Disposal Type',
+                                      readonly=True, states={'open': [('readonly', False)]}),
         'sale_result': fields.float('Sale Result', digits_compute=dp.get_precision('Account'), readonly=True),
         'sale_result_short_term': fields.float('Sale Result - Short Term', digits_compute=dp.get_precision('Account'), readonly=True),
         'sale_result_long_term': fields.float('Sale Result - Long Term', digits_compute=dp.get_precision('Account'), readonly=True),
-        'sale_tax_ids': fields.many2many('account.tax', 'account_asset_asset_account_tax_sale_rel', 'asset_id', 'tax_id', 'Taxes',
+        'sale_tax_ids': fields.many2many('account.tax', 'account_asset_asset_account_tax_sale_rel', 'asset_id', 'tax_id', 'Sale Taxes',
                                          domain=[('parent_id', '=', False), ('type_tax_use', '!=', 'sale')], readonly=True,
                                          states={'open': [('readonly', False)]}),
         'sale_tax_amount': fields.function(_get_sale_tax_amount, method=True, type='float',
                                            digits_compute=dp.get_precision('Account'), string="Tax Amount"),
+        'tax_regularization': fields.boolean('Tax regularization', readonly=True, states={'open': [('readonly', False)]}),
         'regularization_tax_amount': fields.float('Tax amount to regularize', digits_compute=dp.get_precision('Account'), readonly=True),
         'is_out': fields.boolean('Is Out Of Heritage'),
 
-        'asset_account_id': fields.related('category_id', 'asset_account_id', type='many2one', relation='account.account',
-                                           string='Asset Account', readonly=True, store=True),
-        'disposal_receivable_account_id': fields.related('category_id', 'disposal_receivable_account_id', type='many2one',
-                                                         relation='account.account', string='Disposal Receivable Account',
-                                                         readonly=True, store=True),
-
         'number': fields.related('invoice_line_ids', 'invoice_id', 'move_id', 'name', type='char', size=64, readonly=True,
                                  store=False, string='Number'),
-    }
 
-    def _get_default_company_id(self, cr, uid, context=None):
-        return self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.category', context=context)
+        # TODO: un changement de comptes doit engendrer une extourne comptable, un fields.function semble donc peu compatible
+        'asset_account_id': fields.function(_get_asset_accounts, method=True, type='many2one', relation='account.account', store={
+            'account.asset.asset': (lambda self, cr, uid, ids, context=None: ids, ['category_id'], 5),
+            'account.asset.category': (_get_asset_ids_from_categories, ['asset_account_id'], 5),
+        }, string='Asset Account', readonly=True, multi="accounts"),
+        'sale_receivable_account_id': fields.function(_get_asset_accounts, method=True, type='many2one', store={
+            'account.asset.asset': (lambda self, cr, uid, ids, context=None: ids, ['category_id'], 5),
+            'account.asset.category': (_get_asset_ids_from_categories, ['sale_receivable_account_id'], 5),
+        }, relation='account.account', string='Disposal Receivable Account', readonly=True, multi="accounts"),
+    }
 
     def _get_default_code(self, cr, uid, context=None):
         return self.pool.get('ir.sequence').get(cr, uid, 'account.asset.asset', context)
@@ -214,10 +263,8 @@ class AccountAssetAsset(orm.Model):
             return False
 
     _defaults = {
-        'company_id': _get_default_company_id,
         'code': _get_default_code,
         'state': 'draft',
-        'depreciation_date_start': lambda *a: time.strftime('%Y-%m-%d'),
         'asset_type': 'purchase',
         'quantity': 1.0,
         'uom_id': _get_default_uom_id,
@@ -226,11 +273,11 @@ class AccountAssetAsset(orm.Model):
     def _check_recursion(self, cr, uid, ids, context=None, parent=None):
         return super(AccountAssetAsset, self)._check_recursion(cr, uid, ids, context=context, parent=parent)
 
-    def _check_degressive_rates(self, cr, uid, ids, context=None):
+    def _check_rates(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for asset in self.browse(cr, uid, ids, context):
-            for field in ('accounting_degressive_rate', 'fiscal_degressive_rate'):
+            for field in ('accounting_rate', 'fiscal_rate'):
                 rate = getattr(asset, field)
                 if rate < 0.0 or rate > 100.0:
                     return False
@@ -256,34 +303,13 @@ class AccountAssetAsset(orm.Model):
     def _check_salvage_value(self, cr, uid, ids, context=None):
         return self._check_asset(cr, uid, ids, "asset.salvage_value < 0.0 or asset.salvage_value > asset.purchase_value", context)
 
-    def _check_period_length(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for asset in self.browse(cr, uid, ids, context):
-            if asset.accounting_method == 'none':
-                continue
-            if asset.period_length not in (1, 2, 3, 4, 6, 12):
-                return False
-        return True
-
-    def _check_company(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for asset in self.browse(cr, uid, ids, context):
-            if asset.company_id != asset.category_id.company_id:
-                return False
-        return True
-
     _constraints = [
-        (_check_company, 'Asset must be linked to the same company as category', ['company_id', 'category_id']),
         (_check_recursion, 'You cannot create recursive assets!', ['parent_id']),
-        (_check_degressive_rates, 'Degressive rates must be percentages!', ['accounting_degressive_rate', 'fiscal_degressive_rate']),
+        (_check_rates, 'Amortization rates must be percentages!', ['accounting_rate', 'fiscal_rate']),
         (_check_asset_type, 'Purchase refund is possible only for secondary assets', ['asset_type']),
         (_check_quantity, 'Quantity cannot be negative!', ['quantity']),
         (_check_purchase_value, 'Gross value cannot be negative!', ['purchase_value']),
         (_check_salvage_value, 'Salvage value cannot be negative nor bigger than gross value!', ['salvage_value', 'purchase_value']),
-        (_check_period_length, 'Period length must be equal to 1, 2, 3, 4, 6 or 12 months!', ['period_length']),
-        # TODO: ajouter une contrainte afin de vérifier que le montant de l'immo correspond à la somme des lignes de facture à son origine
     ]
 
     def create(self, cr, uid, vals, context=None):
@@ -301,101 +327,99 @@ class AccountAssetAsset(orm.Model):
             default['state'] = 'draft'
         if 'code' not in default:
             default['code'] = self.pool.get('ir.sequence').get(cr, uid, 'account.asset.asset', context)
+        if 'origin_id' not in default:
+            default['origin_id'] = False
         for field in ('accounting_depreciation_line_ids', 'fiscal_depreciation_line_ids', 'depreciation_line_ids', 'sale_tax_ids',
                       'invoice_line_ids', 'account_move_line_ids', 'asset_history_ids', 'child_ids', 'exceptional_depreciation_line_ids'):
             if field not in default:
                 default[field] = [(6, 0, [])]
-        for field in ('customer_id', 'sale_date', 'sale_value', 'book_value', 'accumulated_amortization_value', 'disposal_type', 'sale_result',
-                      'sale_result_short_term', 'sale_result_long_term', 'regularization_tax_amount', 'is_out'):
+        for field in SALE_FIELDS:
             if field not in default:
                 default[field] = False
         return super(AccountAssetAsset, self).copy_data(cr, uid, asset_id, default, context=context)
 
-    def onchange_accelerated_depreciation(self, cr, uid, ids, accounting_method, accounting_periods, accounting_degressive_rate, accounting_prorata,
-                                          fiscal_method, fiscal_periods, fiscal_degressive_rate, fiscal_prorata, context=None):
-        return {'value': {'benefit_accelerated_depreciation': get_accelerated_depreciation(**{
-            'accounting_method': accounting_method,
-            'accounting_periods': accounting_periods,
-            'accounting_degressive_rate': accounting_degressive_rate,
-            'accounting_prorata': accounting_prorata,
-            'fiscal_method': fiscal_method,
-            'fiscal_periods': fiscal_periods,
-            'fiscal_degressive_rate': fiscal_degressive_rate,
-            'fiscal_prorata': fiscal_prorata,
-        })}}
-
-    def onchange_accounting_method(self, cr, uid, ids, accounting_method, accounting_periods, accounting_degressive_rate,
-                                   accounting_prorata, fiscal_method, fiscal_periods, fiscal_degressive_rate, fiscal_prorata, context=None):
-        res = self.onchange_accelerated_depreciation(cr, uid, ids, accounting_method, accounting_periods, accounting_degressive_rate,
-                                                     accounting_prorata, fiscal_method, fiscal_periods, fiscal_degressive_rate, fiscal_prorata,
-                                                     context)
-        if accounting_method == 'none':
-            res.setdefault('value', {})['fiscal_method'] = 'none'
-        return res
-
-    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
-        res = {'value': {'currency_id': False}}
-        if company_id:
-            res['value']['currency_id'] = self.pool.get('res.company').read(cr, uid, company_id, ['currency_id'],
-                                                                            context, '_classic_write')['currency_id']
-        res['domain'] = {'category_id': [('company_id', '=', company_id)]}
+    def onchange_depreciation_params(self, cr, uid, ids, purchase_value, salvage_value,
+                                     purchase_date, in_service_date,
+                                     accounting_method, accounting_annuities, accounting_rate,
+                                     fiscal_method, fiscal_annuities, fiscal_rate, context=None):
+        if not (accounting_method and fiscal_method and accounting_annuities and fiscal_annuities):
+            return {}
+        method_obj = self.pool.get('account.asset.depreciation.method')
+        benefit = method_obj.get_benefit_accelerated_depreciation(cr, uid, purchase_value, salvage_value, purchase_date, in_service_date,
+                                                                  accounting_method, accounting_annuities, accounting_rate,
+                                                                  fiscal_method, fiscal_annuities, fiscal_rate, context)
+        res = {'value': {'benefit_accelerated_depreciation': benefit}}
+        res['value'].update(self.pool.get('account.asset.category').onchange_depreciation_method(cr, uid, ids, accounting_method,
+                                                                                                 fiscal_method, context)['value'])
         return res
 
     def onchange_category_id(self, cr, uid, ids, category_id, context=None):
         res = {'value': {}}
         if category_id:
-            fields_to_read = ['benefit_accelerated_depreciation', 'company_id', 'period_length', 'accounting_prorata', 'fiscal_prorata']
-            fields_to_read += ALL_DEPRECIATION_FIELDS
+            fields_to_read = ['accounting_method', 'accounting_annuities', 'accounting_rate',
+                              'fiscal_method', 'fiscal_annuities', 'fiscal_rate',
+                              'company_id']
             category = self.pool.get('account.asset.category').read(cr, uid, category_id, fields_to_read, context, '_classic_write')
             for field in fields_to_read:
                 res['value'][field] = category[field]
         return res
 
-    def onchange_purchase_date(self, cr, uid, ids, purchase_date, context=None):
-        res = {'value': {}}
-        if purchase_date:
-            res['value']['depreciation_date_start'] = purchase_date
-        return res
+    def _get_depreciation_start_date(self, cr, uid, asset, depreciation_type, context=None):
+        method_obj = self.pool.get('account.asset.depreciation.method')
+        method_info = method_obj.get_method_info(cr, uid, getattr(asset, '%s_method' % depreciation_type))
+        if method_info['depreciation_start_date'] == 'first_day_of_purchase_month':
+            depreciation_start_date = '%s-01' % asset.purchase_date[':-3']
+        else:
+            depreciation_start_date = asset.in_service_date
+        return datetime.strptime(depreciation_start_date, '%Y-%m-%s')
 
-    def _get_depreciation_arguments(self, cr, uid, asset_id, depreciation_type, context):
+    def _get_depreciation_arguments(self, cr, uid, asset_id, depreciation_type, context=None):
         asset = self.browse(cr, uid, asset_id, context)
-        salvage_value = depreciation_type == 'accounting' and asset.salvage_value or 0.0
         method = getattr(asset, '%s_method' % depreciation_type)
-        periods = getattr(asset, '%s_periods' % depreciation_type)
-        degressive_rate = getattr(asset, '%s_degressive_rate' % depreciation_type)
+        depreciation_period = asset.company_id.depreciation_period
         fiscalyear_start_day = self.pool.get('res.company').get_fiscalyear_start_day(cr, uid, asset.company_id.id, context)
-        starts_on_first_day_of_month = not getattr(asset, '%s_prorata' % depreciation_type)
         readonly_values = {}
         exceptional_values = {}
         for line in asset.depreciation_line_ids:
-            period_stop_month = get_period_stop_date(line.depreciation_date, fiscalyear_start_day, asset.period_length).strftime('%Y-%m')
+            period_stop_month = get_period_stop_date(line.depreciation_date, fiscalyear_start_day,
+                                                     asset.company_id.depreciation_period).strftime('%Y-%m')
             if line.depreciation_type == depreciation_type and (line.move_id or method == 'manual'):
-                readonly_values.setdefault(period_stop_month, 0.0)
-                readonly_values[period_stop_month] += line.depreciation_value
+                readonly_values.setdefault(period_stop_month, {'depreciation_value': 0.0, 'base_value': 0.0})
+                readonly_values[period_stop_month]['depreciation_value'] += line.depreciation_value
+                readonly_values[period_stop_month]['base_value'] = line.base_value
             elif line.depreciation_type == 'exceptional':
                 exceptional_values.setdefault(period_stop_month, 0.0)
                 exceptional_values[period_stop_month] += line.depreciation_value
-        context = context or {}
+        method_obj = self.pool.get('account.asset.depreciation.method')
+        accounting_stop_date = method_obj.get_depreciation_stop_date(cr, uid, asset.accounting_method, asset.purchase_date,
+                                                                     asset.in_service_date, asset.accounting_annuities,
+                                                                     depreciation_period, fiscalyear_start_day, exceptional_values)
+        fiscal_stop_date = method_obj.get_depreciation_stop_date(cr, uid, asset.fiscal_method, asset.purchase_date,
+                                                                 asset.in_service_date, asset.fiscal_annuities,
+                                                                 depreciation_period, fiscalyear_start_day, exceptional_values)
+        board_stop_date = max(accounting_stop_date, fiscal_stop_date)
         return {
-            'gross_value': asset.purchase_value,
-            'method': method,
-            'years': periods,
-            'degressive_rate': degressive_rate,
-            'salvage_value': salvage_value,
-            'depreciation_start_date': asset.depreciation_date_start,
-            'starts_on_first_day_of_month': starts_on_first_day_of_month,
-            'disposal_date': asset.sale_date or None,
-            'period_length': asset.period_length,
+            'code': method,
+            'purchase_value': asset.purchase_value,
+            'salvage_value': asset.salvage_value,
+            'annuities': getattr(asset, '%s_annuities' % depreciation_type),
+            'rate': getattr(asset, '%s_rate' % depreciation_type),
+            'purchase_date': asset.purchase_date,
+            'in_service_date': asset.in_service_date,
+            'sale_date': asset.sale_date,
+            'depreciation_period': depreciation_period,
+            'fiscalyear_start_day': fiscalyear_start_day,
+            'rounding': len(str(asset.currency_id.rounding).split('.')[-1]),
+            'board_stop_date': board_stop_date,
             'readonly_values': readonly_values,
             'exceptional_values': exceptional_values,
-            'fiscalyear_start_day': fiscalyear_start_day,
-            'accounting_years': asset.accounting_periods,
-            'rounding': len(str(asset.company_id.currency_id.rounding).split('.')[-1]),
-            'depreciate_base_value': context.get('depreciate_%s_base_value' % depreciation_type),
+            'context': context,
         }
 
-    def _update_or_create_depreciation_lines(self, cr, uid, asset_id, line_infos, depreciation_type, context):
-        asset = self.browse(cr, uid, asset_id, context)
+    def _update_or_create_depreciation_lines(self, cr, uid, asset_id, line_infos, depreciation_type, context=None):
+        asset = self.browse(cr, 1, asset_id, context)
+        is_manual = getattr(asset, '%s_method' % depreciation_type)
+        lines_to_create = []
         for vals in line_infos:
             vals.update({
                 'asset_id': asset.id,
@@ -405,20 +429,20 @@ class AccountAssetAsset(orm.Model):
             readonly = vals['readonly']
             del vals['readonly']
             if readonly:
-                for dline in getattr(asset, '%s_depreciation_line_ids' % depreciation_type):
-                    if dline.depreciation_date == vals['depreciation_date'] and \
-                            (dline.move_id or getattr(dline.asset_id, '%s_method' % depreciation_type) == 'manual'):
-                        dline.write(vals)
-                        break
+                if is_manual:
+                    for dline in getattr(asset, '%s_depreciation_line_ids' % depreciation_type):
+                        if dline.depreciation_date == vals['depreciation_date']:
+                            dline.write(vals)
+                            break
                 continue
-            self.pool.get('account.asset.depreciation.line').create(cr, uid, vals, context)
-            vals['previous_accumulated_value'] = vals['accumulated_value'] - vals['depreciation_value']
+            lines_to_create.append(vals)
+        if lines_to_create:
+            self.pool.get('account.asset.depreciation.line').bulk_create(cr, 1, lines_to_create, context)
         return True
 
     def _compute_depreciation_lines(self, cr, uid, asset_id, depreciation_type='accounting', context=None):
         depreciation_line_obj = self.pool.get('account.asset.depreciation.line')
         # Delete old lines
-
         line_ids_to_delete = depreciation_line_obj.search(cr, uid, [('asset_id', '=', asset_id),
                                                                     ('depreciation_type', '=', depreciation_type),
                                                                     ('move_id', '=', False),
@@ -426,31 +450,76 @@ class AccountAssetAsset(orm.Model):
         depreciation_line_obj.unlink(cr, uid, line_ids_to_delete, context)
         # Create new lines
         kwargs = self._get_depreciation_arguments(cr, uid, asset_id, depreciation_type, context)
-        board = DepreciationBoard(**kwargs)
-        line_infos = [line.__dict__ for line in board.compute()]
+        line_infos = self.pool.get('account.asset.depreciation.method').compute_depreciation_board(cr, uid, **kwargs)
         return self._update_or_create_depreciation_lines(cr, uid, asset_id, line_infos, depreciation_type, context)
 
     def compute_depreciation_board(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for asset in self.read(cr, uid, ids, ['accounting_method', 'benefit_accelerated_depreciation'], context):
-            if asset['accounting_method'] != 'none':
-                self._compute_depreciation_lines(cr, uid, asset['id'], 'accounting', context)
-                if asset['benefit_accelerated_depreciation']:
-                    self._compute_depreciation_lines(cr, uid, asset['id'], 'fiscal', context)
+        for asset_id in ids:
+            self._compute_depreciation_lines(cr, uid, asset_id, 'accounting', context)
+            self._compute_depreciation_lines(cr, uid, asset_id, 'fiscal', context)
         return True
 
+    def confirm_asset_purchase(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'confirm'}, context)
+
+    def button_confirm_asset_purchase(self, cr, uid, ids, context=None):
+        return self.confirm_asset_purchase(cr, uid, ids, context)
+
+    def _can_cancel_asset_purchase(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for asset in self.browse(cr, uid, ids, context):
+            if asset.state == 'cancel':
+                raise orm.except_orm(_('Error'), _('You cannot cancel a canceled asset!'))
+            if asset.state == 'close':
+                raise orm.except_orm(_('Error'), _('You cannot cancel a disposed asset!'))
+
+    def cancel_asset_purchase(self, cr, uid, ids, context=None):
+        # TODO: cancel automatically children ?
+        self._can_cancel_asset_purchase(cr, uid, ids, context)
+        return self.write(cr, uid, ids, {'state': 'cancel', 'invoice_line_ids': [(5,)]}, context)
+
+    def button_cancel_asset_purchase(self, cr, uid, ids, context=None):
+        return self.cancel_asset_purchase(cr, uid, ids, context)
+
+    def _can_validate(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for asset in self.browse(cr, uid, ids, context):
+            if asset.category_id.asset_in_progress or not asset.in_service_date:
+                raise orm.except_orm(_('Error'), _('You cannot validate an asset in progress or an asset without in-service date!'))
+            if asset.state == 'draft':
+                raise orm.except_orm(_('Error'), _('Please confirm this asset before validating it!'))
+
     def validate(self, cr, uid, ids, context=None):
+        self._can_validate(cr, uid, ids, context)
         self.compute_depreciation_board(cr, uid, ids, context)
         return self.write(cr, uid, ids, {'state': 'open'}, context)
 
     def button_validate(self, cr, uid, ids, context=None):
         self.validate(cr, uid, ids, context)
-        return self.write(cr, uid, ids, {'state': 'open', 'validation_date': time.strftime('%Y-%m-%d')}, context)
+        return {'type': 'ir.actions.act_window_close'}
+
+    def button_put_into_service(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'ids must be a list with only one item!'
+        context_copy = context and context.copy() or {}
+        context_copy['default_asset_id'] = ids[0]
+        context_copy['asset_validation'] = True
+        return {
+            'name': _('Asset Update'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.asset.history',
+            'target': 'new',
+            'context': context_copy,
+        }
 
     def button_modify(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'ids must be a list with only one item!'
-        context_copy = (context or {}).copy()
+        context_copy = context and context.copy() or {}
         context_copy['default_asset_id'] = ids[0]
         return {
             'name': _('Asset Update'),
@@ -464,7 +533,7 @@ class AccountAssetAsset(orm.Model):
 
     def button_split(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'ids must be a list with only one item!'
-        context_copy = (context or {}).copy()
+        context_copy = context and context.copy() or {}
         asset_info = self.read(cr, uid, ids[0], ['purchase_value', 'salvage_value', 'quantity'], context)
         context_copy.update({
             'default_asset_id': asset_info['id'],
@@ -499,21 +568,27 @@ class AccountAssetAsset(orm.Model):
             'context': context,
         }
 
-    def _get_book_value_at_disposal(self, cr, uid, asset, context=None):
-        book_value = asset.purchase_value
+    def _get_fiscal_book_value(self, cr, uid, asset, context=None):
+        # Fiscal Book Value = Gross Value - Sum of fiscal depreciations (accounting_depreciation_value + fiscal_accelerated_value)
+        fiscal_book_value = asset.purchase_value
         if asset.accounting_depreciation_line_ids:
-            book_value = asset.accounting_depreciation_line_ids[-1].book_value
-            if asset.fiscal_depreciation_line_ids:
-                book_value -= sum([depr.accelerated_value for depr in asset.fiscal_depreciation_line_ids], 0.0)
-        return book_value
+            fiscal_book_value -= sum([depr.depreciation_value for depr in asset.accounting_depreciation_line_ids], 0.0)
+            if asset.benefit_accelerated_depreciation and asset.fiscal_depreciation_line_ids:
+                fiscal_book_value -= sum([depr.accelerated_value for depr in asset.fiscal_depreciation_line_ids], 0.0)
+        return fiscal_book_value
 
     def _get_regularization_tax_coeff(self, cr, uid, asset, context=None):
+        # TODO: gérer les coeff de déduction à l'achat et à la vente
         regularization_tax_coeff = 0.0
-        total_years = asset.accounting_periods * asset.period_length / 12
-        if total_years and asset.sale_date[:4] < asset.depreciation_date_stop[:4] \
-                and asset.purchase_tax_ids and not asset.sale_tax_ids:
-            remaining_years = total_years - (int(asset.sale_date[:4]) - int(asset.depreciation_date_start[:4]) + 1)
-            regularization_tax_coeff = float(remaining_years) / total_years
+        total_years = asset.accounting_annuities
+        if total_years and asset.tax_regularization and asset.purchase_tax_ids and not asset.sale_tax_ids:
+            method_obj = self.pool.get('account.asset.depreciation.method')
+            depreciation_start_date = method_obj.get_depreciation_start_date(cr, uid, asset.accounting_method,
+                                                                             asset.purchase_date, asset.in_service_date, context)
+            # TODO: revoir cela afin de prendre en compte les années ne commençant pas le 1er janvier
+            remaining_years = total_years - (int(asset.sale_date[:4]) - int(depreciation_start_date[:4]) + 1)
+            if remaining_years > 0:
+                regularization_tax_coeff = float(remaining_years) / total_years
         return regularization_tax_coeff
 
     def get_sale_infos(self, cr, uid, ids, context=None):
@@ -521,21 +596,32 @@ class AccountAssetAsset(orm.Model):
             ids = [ids]
         res = {}
         for asset in self.browse(cr, uid, ids, context):
-            book_value = self._get_book_value_at_disposal(cr, uid, asset, context)
+            fiscal_book_value = self._get_fiscal_book_value(cr, uid, asset, context)
             regularization_tax_amount = asset.purchase_tax_amount * self._get_regularization_tax_coeff(cr, uid, asset, context)
-            sale_result = asset.sale_value - book_value - regularization_tax_amount
-            accumulated_amortization_value = asset.purchase_value - book_value
+            fiscal_sale_result = asset.sale_value - fiscal_book_value - regularization_tax_amount
+            accumulated_amortization_value = asset.purchase_value - fiscal_book_value
             res[asset.id] = {
                 'regularization_tax_amount': regularization_tax_amount,
-                'sale_result': sale_result,
-                'sale_result_short_term': min(sale_result, accumulated_amortization_value),
-                'sale_result_long_term': sale_result > accumulated_amortization_value and sale_result - accumulated_amortization_value or 0.0,
-                'book_value': book_value,
+                'sale_result': fiscal_sale_result,
+                'sale_result_short_term': min(fiscal_sale_result, accumulated_amortization_value),
+                'sale_result_long_term': fiscal_sale_result > accumulated_amortization_value and
+                fiscal_sale_result - accumulated_amortization_value or 0.0,
+                'fiscal_book_value': fiscal_book_value,
                 'accumulated_amortization_value': accumulated_amortization_value,
             }
         return res
 
+    def _can_confirm_asset_sale(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for asset in self.browse(cr, uid, ids, context=None):
+            if asset.state not in ('confirm', 'open'):
+                raise orm.except_orm(_('Error'), _('You cannot dispose a %s asset') % dict(ASSET_STATES)[asset.state])
+            if asset.sale_type == 'scrapping' and asset.sale_value:
+                raise orm.except_orm(_('Error'), _("Scrapping value must be null"))
+
     def confirm_asset_sale(self, cr, uid, ids, context=None):
+        self._can_confirm_asset_sale(cr, uid, ids, context)
         self.compute_depreciation_board(cr, uid, ids, context)
         sale_infos_by_asset = self.get_sale_infos(cr, uid, ids, context)
         for asset_id in sale_infos_by_asset:
@@ -546,7 +632,34 @@ class AccountAssetAsset(orm.Model):
         self.confirm_asset_sale(cr, uid, ids, context)
         return {'type': 'ir.actions.act_window_close'}
 
+    def _can_cancel_asset_sale(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for asset in self.browse(cr, uid, ids, context):
+            if asset.state != 'close':
+                raise orm.except_orm(_('Error'), _('You cannot cancel the disposal of an asset not disposed!'))
+
+    def cancel_asset_sale(self, cr, uid, ids, context=None):
+        # TODO: gérer les annulations des ventes liées parent-enfant
+        self._can_cancel_asset_sale(cr, uid, ids, context)
+        vals = dict([(field, False) for field in SALE_FIELDS])
+        self.write(cr, uid, ids, vals, context)
+        return self.validate(cr, uid, ids, context)
+
+    def button_cancel_asset_sale(self, cr, uid, ids, context=None):
+        return self.cancel_asset_sale(cr, uid, ids, context)
+
+    def _can_output(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for asset in self.browse(cr, uid, ids, context=None):
+            if asset.state != 'close':
+                raise orm.except_orm(_('Error'), _('You cannot output an asset not already disposed!'))
+            if asset.is_out:
+                raise orm.except_orm(_('Error'), _('You cannot output an asset already out!'))
+
     def output(self, cr, uid, ids, context=None):
+        self._can_output(cr, uid, ids, context)
         return self.write(cr, uid, ids, {'is_out': True}, context)
 
     def button_output(self, cr, uid, ids, context=None):

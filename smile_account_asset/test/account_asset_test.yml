@@ -4,7 +4,17 @@
   !record {model: res.partner, id: base.res_partner_asus}:
     property_account_payable: account.a_pay
 -
-  I confirm asset "account_asset_asset_digitalasset0"
+  I confirm asset purchase for "account_asset_asset_digitalasset0"
+-
+  !python {model: account.asset.asset}: |
+    self.confirm_asset_purchase(cr, uid, ref("account_asset_asset_digitalasset0"), context)
+-
+  I indicate a in-service date for asset "account_asset_asset_digitalasset0"
+-
+  !record {model: account.asset.asset, id: account_asset_asset_digitalasset0}:
+    in_service_date: !eval time.strftime('%Y-%m-%d')
+-
+  I validate asset "account_asset_asset_digitalasset0"
 -
   !python {model: account.asset.asset}: |
     self.validate(cr, uid, ref("account_asset_asset_digitalasset0"), context)

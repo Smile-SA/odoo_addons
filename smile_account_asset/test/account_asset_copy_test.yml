@@ -11,9 +11,9 @@
       print assertion_msg % ('name', new_asset['name'], old_asset['name'])
     for field in self._columns:
       if (self._columns[field]._type not in ('one2many', 'many2many') or field == 'purchase_tax_ids') \
-          and field not in ('name', 'code', 'state', 'customer_id', 'depreciation_date_start', 'depreciation_date_stop',
-                            'validation_date', 'purchase_date', 'parent_right', 'parent_left', 'amount_to_depreciate',
-                            'accumulated_amortization_value', 'disposal_type', 'book_value', 'is_out') \
+          and field not in ('name', 'code', 'state', 'customer_id', 'in_service_date',
+                            'purchase_date', 'parent_right', 'parent_left',
+                            'accumulated_amortization_value', 'sale_type', 'book_value', 'is_out') \
           and not field.startswith('sale_'):
         if (new_asset[field] or None) != (old_asset[field] or None):
           print assertion_msg % (field, new_asset[field], old_asset[field])

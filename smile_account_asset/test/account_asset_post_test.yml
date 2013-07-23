@@ -1,5 +1,5 @@
 -
-  I check all account moves linked to asset "account_asset_asset_digitalasset0" are not posted
+  I check all account moves linked to asset "account_asset_asset_digitalasset0" are posted
 -
   !assert {model: account.asset.asset, id: account_asset_asset_digitalasset0, string: Posted Account Moves}:
     - not [line for line in account_move_line_ids if line.move_id.state != 'posted']

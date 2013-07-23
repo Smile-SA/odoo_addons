@@ -1,0 +1,18 @@
+-
+  I cancel the sale of the asset "account_asset_asset_digitalasset0"
+-
+  !python {model: account.asset.asset}: |
+    asset_id = ref('account_asset_asset_digitalasset0')
+    self.cancel_asset_sale(cr, uid, asset_id, context)
+-
+  I check if state is open
+-
+  !assert {model: account.asset.asset, id: account_asset_asset_digitalasset0, string: Asset is into service}:
+    - state == 'open'
+-
+  I check if the cancellation is ok
+-
+  !python {model: account.asset.asset}: |
+    asset = self.browse(cr, uid, ref('account_asset_asset_digitalasset0'), context)
+    depreciation_end_date = asset.accounting_depreciation_line_ids[-1].depreciation_date
+    assert depreciation_end_date == '2017-12-31', "Depreciation End Date is wrong"

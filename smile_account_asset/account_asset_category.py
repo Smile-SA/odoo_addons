@@ -19,116 +19,116 @@
 #
 ##############################################################################
 
+import decimal_precision as dp
 from osv import orm, fields
 from tools.translate import _
 
-DEPRECIATION_METHODS = [('none', 'None'), ('linear', 'Linear'), ('degressive', 'Degressive'), ('manual', 'Manual')]
-DEPRECIATION_FIELDS = ['method', 'periods', 'degressive_rate']
-DEPRECIATION_TYPES = ['accounting', 'fiscal']
-ALL_DEPRECIATION_FIELDS = ['%s_%s' % (depreciation_type, field) for field in DEPRECIATION_FIELDS for depreciation_type in DEPRECIATION_TYPES]
-ACCOUNTING_FIELDS = ['asset_journal_id', 'asset_account_id', 'analytic_account_id', 'amortization_journal_id',
-                     'amortization_account_id', 'amortization_expense_account_id',
-                     'amortization_income_account_id', 'depreciation_account_id',
-                     'depreciation_expense_account_id', 'depreciation_income_account_id']
+ASSET_CLASSES = [('tangible', 'Tangible'), ('intangible', 'Intangible')]
 
 
-def _compare_depreciation_terms(terms1, terms2):
-    for column in DEPRECIATION_FIELDS:
-        if column == 'degressive_rate' and terms1.get('method') == terms2.get('method') == 'linear':
-            continue
-        if terms1.get(column) != terms2.get(column):
-            return False
-    return True
+def _get_rates_visibility(obj, cr, uid, ids, name, arg, context=None):
+    res = {}
+    method_infos = obj.pool.get('account.asset.depreciation.method').get_method_infos(cr, uid)
+    for resource in obj.browse(cr, uid, ids, context):
+        res[resource.id] = {
+            'accounting_rate_visibility': method_infos[resource.accounting_method]['use_manual_rate'],
+            'fiscal_rate_visibility': method_infos[resource.fiscal_method]['use_manual_rate'],
+        }
+    return res
 
 
-def get_accelerated_depreciation(**kwargs):
-    accounting_terms = dict([(column.replace('accounting_', ''), kwargs[column]) for column in kwargs if column.startswith('accounting_')])
-    fiscal_terms = dict([(column.replace('fiscal_', ''), kwargs[column]) for column in kwargs if column.startswith('fiscal_')])
-    if fiscal_terms.get('method') == 'none':
-        return False
-    return not _compare_depreciation_terms(accounting_terms, fiscal_terms)
+def _get_res_ids_from_depreciation_methods(obj, res_obj, cr, uid, ids, context=None):
+        codes_by_type = {}
+        for method in obj.browse(cr, uid, ids, context):
+            codes_by_type.setdefault(method.depreciation_type, []).append(method.code)
+        domain = []
+        for type in codes_by_type:
+            domain.append(('%s_method' % type, 'in', codes_by_type[type]))
+        if len(domain) > 1:
+            domain = ['|'] + domain
+        return domain and res_obj.search(cr, uid, domain, context=context) or []
 
 
 class AccountAssetCategory(orm.Model):
     _name = 'account.asset.category'
     _description = 'Asset Category'
 
-    def _get_accelerated_depreciation(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for category in self.read(cr, uid, ids, ALL_DEPRECIATION_FIELDS, context):
-            res[category['id']] = get_accelerated_depreciation(**category)
-        return res
+    def _get_accounting_methods(self, cr, uid, context=None):
+        return self.pool.get('account.asset.depreciation.method').get_methods_selection(cr, uid, 'accounting', context)
 
-    def _check_if_linked_assets_are_confirmed(self, cr, uid, ids, name, arg, context=None):
-        res = {}.fromkeys(ids, False)
-        for category in self.browse(cr, uid, ids, context):
-            if [asset for asset in category.asset_ids if asset.state != 'draft'] \
-                    or [invoice_line for invoice_line in category.invoice_line_ids
-                        if invoice_line.invoice_id.state not in ('draft', 'proforma', 'proforma2')]:
-                res[category.id] = True
-        return res
+    def _get_fiscal_methods(self, cr, uid, context=None):
+        return self.pool.get('account.asset.depreciation.method').get_methods_selection(cr, uid, 'fiscal', context)
+
+    def _get_rates_visibility(self, cr, uid, ids, name, arg, context=None):
+        return _get_rates_visibility(self, cr, uid, ids, name, arg, context=None)
+
+    def _get_category_ids_from_depreciation_methods(self, cr, uid, ids, context=None):
+        return _get_res_ids_from_depreciation_methods(self, self.pool.get('account.asset.category'), cr, uid, ids, context)
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True, ondelete='restrict',
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'asset_class': fields.selection(ASSET_CLASSES, 'Asset Class', required=True),
+        'asset_in_progress': fields.boolean(u'Assets in progress'),
+
+        'company_id': fields.many2one('res.company', 'Company', select=True, required=True, ondelete='restrict',
                                       help="You cannot change company once an asset was posted."),
 
         'asset_journal_id': fields.many2one('account.journal', 'Asset Journal', required=True, ondelete='restrict'),
         'asset_account_id': fields.many2one('account.account', 'Asset Account', required=True, ondelete='restrict',
                                             domain=[('type', '!=', 'view')]),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='restrict'),
+        'asset_analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='restrict'),
 
-        'amortization_journal_id': fields.many2one('account.journal', 'Amortization Journal', required=False, ondelete='restrict',
+        'depreciation_journal_id': fields.many2one('account.journal', 'Amortization Journal', required=False, ondelete='restrict',
                                                    help="Keep empty to use a unique journal for assets and amortizations"),
-        'amortization_account_id': fields.many2one('account.account', 'Amortization Account', required=False, ondelete='restrict',
-                                                   domain=[('type', '!=', 'view')]),
-        'amortization_expense_account_id': fields.many2one('account.account', 'Amortization Expense Account', required=False,
-                                                           ondelete='restrict', domain=[('type', '!=', 'view')]),
-        'amortization_income_account_id': fields.many2one('account.account', 'Amortization Income Account', required=False,
-                                                          ondelete='restrict', domain=[('type', '!=', 'view')]),
+        'accounting_depreciation_account_id': fields.many2one('account.account', 'Amortization Account', required=False, ondelete='restrict',
+                                                              domain=[('type', '!=', 'view')]),
+        'accounting_depreciation_expense_account_id': fields.many2one('account.account', 'Amortization Expense Account', required=False,
+                                                                      ondelete='restrict', domain=[('type', '!=', 'view')]),
+        'accounting_depreciation_income_account_id': fields.many2one('account.account', 'Amortization Income Account', required=False,
+                                                                     ondelete='restrict', domain=[('type', '!=', 'view')]),
 
-        'depreciation_account_id': fields.many2one('account.account', 'Depreciation Account', required=False, ondelete='restrict',
-                                                   domain=[('type', '!=', 'view')]),
-        'depreciation_expense_account_id': fields.many2one('account.account', 'Depreciation Expense Account', required=False,
-                                                           ondelete='restrict', domain=[('type', '!=', 'view')]),
-        'depreciation_income_account_id': fields.many2one('account.account', 'Depreciation Income Account', required=False,
-                                                          ondelete='restrict', domain=[('type', '!=', 'view')]),
+        'exceptional_depreciation_account_id': fields.many2one('account.account', 'Depreciation Account', required=False, ondelete='restrict',
+                                                               domain=[('type', '!=', 'view')]),
+        'exceptional_depreciation_expense_account_id': fields.many2one('account.account', 'Depreciation Expense Account', required=False,
+                                                                       ondelete='restrict', domain=[('type', '!=', 'view')]),
+        'exceptional_depreciation_income_account_id': fields.many2one('account.account', 'Depreciation Income Account', required=False,
+                                                                      ondelete='restrict', domain=[('type', '!=', 'view')]),
 
-        'disposal_receivable_account_id': fields.many2one('account.account', 'Disposal Receivable Account', required=True, ondelete='restrict',
-                                                          domain=[('type', '!=', 'view')]),
-        'disposal_expense_account_id': fields.many2one('account.account', 'Disposal Expense Account', required=True, ondelete='restrict',
-                                                       domain=[('type', '!=', 'view')]),
-        'disposal_income_account_id': fields.many2one('account.account', 'Disposal Income Account', required=True, ondelete='restrict',
+        'sale_receivable_account_id': fields.many2one('account.account', 'Disposal Receivable Account', required=True, ondelete='restrict',
                                                       domain=[('type', '!=', 'view')]),
-        'disposal_analytic_account_id': fields.many2one('account.analytic.account', 'Disposal Analytic Account', ondelete='restrict'),
+        'sale_expense_account_id': fields.many2one('account.account', 'Disposal Expense Account', required=True, ondelete='restrict',
+                                                   domain=[('type', '!=', 'view')]),
+        'sale_income_account_id': fields.many2one('account.account', 'Disposal Income Account', required=True, ondelete='restrict',
+                                                  domain=[('type', '!=', 'view')]),
+        'sale_analytic_account_id': fields.many2one('account.analytic.account', 'Disposal Analytic Account', ondelete='restrict'),
 
-        'period_length': fields.integer('Period Length (in months)', required=False),
+        'accounting_method': fields.selection(_get_accounting_methods, 'Accounting Method', required=True),
+        'accounting_annuities': fields.integer('Accounting Annuities', required=False),
+        'accounting_rate': fields.float('Accounting Amortization Rate (%)', digits=(4, 2)),
+        'accounting_rate_visibility': fields.function(_get_rates_visibility, method=True, type='boolean', store={
+            'account.asset.category': (lambda self, cr, uid, ids, context=None: ids, ['accounting_method'], 5),
+            'account.asset.depreciation.method': (_get_category_ids_from_depreciation_methods, ['use_manual_rate'], 5),
+        }, string='Accounting Amortization Rate Visibility', multi='rates_visibility'),
 
-        'accounting_method': fields.selection(DEPRECIATION_METHODS, 'Computation Method', required=True),
-        'accounting_periods': fields.integer('Depreciation Length (in years)', required=False),
-        'accounting_degressive_rate': fields.float('Degressive Rate (%)', digits=(4, 2)),
-        'accounting_prorata': fields.boolean('Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done '
-                                             'from the purchase date instead of the first day of month'),
+        'fiscal_method': fields.selection(_get_fiscal_methods, 'Fiscal Method', required=True),
+        'fiscal_annuities': fields.integer('Fiscal Annuities', required=False),
+        'fiscal_rate': fields.float('Fiscal Amortization Rate (%)', digits=(4, 2)),
+        'fiscal_rate_visibility': fields.function(_get_rates_visibility, method=True, type='boolean', store={
+            'account.asset.category': (lambda self, cr, uid, ids, context=None: ids, ['fiscal_method'], 5),
+            'account.asset.depreciation.method': (_get_category_ids_from_depreciation_methods, ['use_manual_rate'], 5),
+        }, string='Fiscal Amortization Rate Visibility', multi='rates_visibility'),
 
-        'fiscal_method': fields.selection(DEPRECIATION_METHODS, 'Computation Method', required=True),
-        'fiscal_periods': fields.integer('Depreciation Length (in years)', required=False),
-        'fiscal_degressive_rate': fields.float('Degressive Rate (%)', digits=(4, 2)),
-        'fiscal_prorata': fields.boolean('Prorata Temporis'),
-
-        'benefit_accelerated_depreciation': fields.function(_get_accelerated_depreciation, method=True, type='boolean',
-                                                            string='Benefit Accelerated Depreciation'),
-        'open_asset': fields.boolean('Skip Draft State'),
         'note': fields.text('Note'),
 
         'asset_ids': fields.one2many('account.asset.asset', 'category_id', 'Assets', readonly=True),
         'invoice_line_ids': fields.one2many('account.invoice.line', 'asset_category_id', 'Invoice Lines', readonly=True),
 
-        'is_linked_to_confirmed_assets': fields.function(_check_if_linked_assets_are_confirmed, method=True, type='boolean',
-                                                         string="Linked to confirmed assets"),
-
         'asset_creation': fields.selection([('auto', 'Automatic'), ('manual', 'Manual')], "Asset Creation", required=True,
                                            help="If automatic, an asset is created at invoice validation for each line associated "
                                                 "to this asset category"),
+        'confirm_asset': fields.boolean('Skip Draft State'),
+
+        'fiscal_deduction': fields.float('Fiscal Deduction', digits_compute=dp.get_precision('Account')),
     }
 
     def _get_default_company_id(self, cr, uid, context=None):
@@ -137,82 +137,51 @@ class AccountAssetCategory(orm.Model):
     _defaults = {
         'company_id': _get_default_company_id,
         'asset_creation': 'auto',
-        'accounting_method': 'linear',
-        'accounting_periods': 5,
-        'period_length': 12,
-        'accounting_degressive_rate': 25.0,
-        'accounting_prorata': True,
-        'fiscal_method': 'linear',
-        'fiscal_periods': 5,
-        'fiscal_degressive_rate': 25.0,
-        'fiscal_prorata': False,
+        'accounting_annuities': 5,
+        'accounting_rate': 25.0,
+        'fiscal_method': 'none',
+        'fiscal_annuities': 5,
+        'fiscal_rate': 25.0,
     }
 
-    def _check_degressive_rates(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for category in self.browse(cr, uid, ids, context):
-            for column in ('accounting_degressive_rate', 'fiscal_degressive_rate'):
-                rate = getattr(category, column)
-                if rate < 0.0 or rate > 100.0:
-                    return False
-        return True
-
-    def _check_period_length(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for category in self.browse(cr, uid, ids, context):
-            if category.accounting_method == 'none':
-                continue
-            if category.period_length not in (1, 2, 3, 4, 6, 12):
-                return False
-        return True
+    @property
+    def accounting_fields(self):
+        return [k for k in self._columns if isinstance(self._columns[k], fields.many2one)
+                and self._columns[k]._obj.startswith('account.')]
 
     def _check_companies(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for category in self.browse(cr, uid, ids, context):
-            for column in ACCOUNTING_FIELDS:
+            for column in self.accounting_fields:
                 if getattr(category, column) and getattr(category, column).company_id != category.company_id:
                     return False
         return True
 
-    def _check_depreciation_length(self, cr, uid, ids, context=None):
+    def _check_depreciation_rates(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for category in self.browse(cr, uid, ids, context):
-            if category.accounting_periods * category.period_length % 12:
-                return False
+            for column in ('accounting_rate', 'fiscal_rate'):
+                rate = getattr(category, column)
+                if rate < 0.0 or rate > 100.0:
+                    return False
         return True
 
     _constraints = [
-        (_check_companies, 'Accounts and journal must be linked to the same company as asset category', ACCOUNTING_FIELDS),
-        (_check_degressive_rates, 'Degressive rates must be percentages!', ['accounting_degressive_rate', 'fiscal_degressive_rate']),
-        (_check_period_length, 'Period length must be equal to 1, 2, 3, 4, 6 or 12 months!', ['period_length']),
-        (_check_depreciation_length, 'Depreciation length must be a multiple of 12 (months)!', ['period_length', 'accounting_periods']),
+        (_check_companies, 'Accounts and journal must be linked to the same company as asset category', ['accounting_fields']),
+        (_check_depreciation_rates, 'Amortization rates must be percentages!', ['accounting_rate', 'fiscal_rate']),
+        # TODO: ajouter des contraintes pour vérifier le bon remplissage des champs comptables
     ]
 
-    def onchange_accelerated_depreciation(self, cr, uid, ids, accounting_method, accounting_periods, accounting_degressive_rate, accounting_prorata,
-                                          fiscal_method, fiscal_periods, fiscal_degressive_rate, fiscal_prorata, context=None):
-        return {'value': {'benefit_accelerated_depreciation': get_accelerated_depreciation(**{
-            'accounting_method': accounting_method,
-            'accounting_periods': accounting_periods,
-            'accounting_degressive_rate': accounting_degressive_rate,
-            'accounting_prorata': accounting_prorata,
-            'fiscal_method': fiscal_method,
-            'fiscal_periods': fiscal_periods,
-            'fiscal_degressive_rate': fiscal_degressive_rate,
-            'fiscal_prorata': fiscal_prorata,
-        })}}
-
-    def onchange_accounting_method(self, cr, uid, ids, accounting_method, accounting_periods, accounting_degressive_rate,
-                                   accounting_prorata, fiscal_method, fiscal_periods, fiscal_degressive_rate, fiscal_prorata, context=None):
-        res = self.onchange_accelerated_depreciation(cr, uid, ids, accounting_method, accounting_periods, accounting_degressive_rate,
-                                                     accounting_prorata, fiscal_method, fiscal_periods, fiscal_degressive_rate, fiscal_prorata,
-                                                     context)
-        if accounting_method == 'none':
-            res.setdefault('value', {})['fiscal_method'] = 'none'
-        return res
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for category_id in ids:
+            old_vals = self.read(cr, uid, category_id, vals.keys(), context, '_classic_write')
+            del old_vals['id']
+            self.pool.get('account.asset.asset').change_accounts(cr, uid, '%s,%s' % (self._name, category_id), old_vals, vals, context)
+        return super(AccountAssetCategory, self).write(cr, uid, ids, vals, context)
 
     def copy_data(self, cr, uid, asset_category_id, default=None, context=None):
         default = default or {}
@@ -221,3 +190,20 @@ class AccountAssetCategory(orm.Model):
             if column not in default:
                 default[column] = []
         return super(AccountAssetCategory, self).copy_data(cr, uid, asset_category_id, default, context=context)
+
+    def onchange_depreciation_method(self, cr, uid, ids, accounting_method, fiscal_method, context=None):
+        res = {'value': {'accounting_rate_visibility': False, 'fiscal_rate_visibility': False}}
+        if accounting_method == 'none':
+            res['value']['fiscal_method'] = 'none'
+        if accounting_method == 'manual' and fiscal_method not in ('none', 'manual'):
+            res['value']['fiscal_method'] = 'manual'
+        method_infos = self.pool.get('account.asset.depreciation.method').get_method_infos(cr, uid)
+        res['value']['accounting_rate_visibility'] = method_infos[accounting_method]['use_manual_rate']
+        if fiscal_method:
+            res['value']['fiscal_rate_visibility'] = method_infos[fiscal_method]['use_manual_rate']
+        return res
+
+    def onchange_asset_in_progress(self, cr, uid, ids, asset_in_progress, context=None):
+        if asset_in_progress:
+            return {'value': {'accounting_method': 'none', 'fiscal_method': 'none'}}
+        return {}

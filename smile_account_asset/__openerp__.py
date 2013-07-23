@@ -21,8 +21,8 @@
 
 {
     "name": "Assets Management",
-    "version": "0.1",
-    "depends": ["account"],
+    "version": "0.2",
+    "depends": ["smile_base", "account", "smile_report_utils"],
     "author": "Smile",
     "description": """Financial and accounting asset management
 
@@ -30,9 +30,13 @@ This module allows to manage:
 * assets and categories
 * decomposable assets
 * amortizations (ie periodic depreciations) and depreciations (exceptional)
-* accounting and fiscal amortizations under French law
+* accounting and fiscal depreciation methods (v0.2)
 * assets sale/scrapping
 * out of heritage
+* asset decomposition
+* asset modification
+* reporting (v0.2)
+* transfer depreciation in amortization (v0.2 - French law)
 
 WARNING: This module is not compatible with account_asset, so uninstall it before installing this one.
 
@@ -45,19 +49,24 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         "security/account_asset_security.xml",
         "security/ir.model.access.csv",
         "data/account_asset_sequence.xml",
+        "data/account_asset_depreciation_method_data.xml",
     ],
     "update_xml": [
         "view/account_asset_menu.xml",
         "view/account_asset_category_view.xml",
         "view/account_asset_depreciation_line_view.xml",
+        "view/account_asset_depreciation_method_view.xml",
         "view/account_asset_view.xml",
         "view/account_asset_history_view.xml",
         "view/account_invoice_view.xml",
         "view/account_view.xml",
         "view/res_company_view.xml",
         "wizard/account_asset_split_wizard_view.xml",
+        "report/account_asset_report_header.xml",
+        "report/account_asset_report.xml",
     ],
     "demo_xml": [
+        "demo/account_demo.xml",
         "demo/account_tax_demo.xml",
         "demo/account_asset_category_demo.xml",
         "demo/account_asset_demo.xml",
@@ -68,10 +77,15 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         "test/account_asset_test.yml",
         "test/account_asset_depreciation_line_test.yml",
         "test/account_asset_post_test.yml",
+        "test/account_asset_account_changes_test.yml",
+        "test/account_asset_history_test.yml",
+        "test/account_asset_cancel_purchase_test.yml",
         "test/account_asset_copy_test.yml",
         "test/account_asset_split_test.yml",
         "test/account_asset_modify_test.yml",
-        "test/account_asset_disposal_test.yml",
+        "test/account_asset_sale_test.yml",
+        "test/account_asset_cancel_sale_test.yml",
+        "test/account_asset_scrapping_test.yml",
         "test/account_invoice_line_test.yml",
         "test/account_period_test.yml",
         "test/account_fiscalyear_test.yml",
