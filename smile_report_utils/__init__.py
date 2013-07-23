@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
+import report_helper
 import report_sxw
-import report_webkit
