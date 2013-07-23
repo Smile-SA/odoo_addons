@@ -53,7 +53,7 @@ class SmileDBHandler(logging.Handler):
         model_name = record.args.get('model_name', '')
 
         request = """INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message)
-        VALUES (now(), %s, %s, %s, %s, %s, %s)"""
+        VALUES (now() at time zone 'UTC', %s, %s, %s, %s, %s, %s)"""
         params = (uid, model_name, res_id, pid, record.levelname, record.msg,)
 
         try:
