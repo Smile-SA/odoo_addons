@@ -30,8 +30,6 @@
     * Remove the scheduled action "Update Notification" which sends companies and users info to OpenERP S.A.
     * Activate access logs for ir.translation object
     * Correct date and time format for French language
-    * Review the menu "Applications"
-    * Remove the menu "Update modules" from apps.openerp.com
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
@@ -41,7 +39,6 @@
     "sequence": 20,
     "init_xml": [
         "data/ir_lang.yml",
-        "view/module_view.xml",
     ],
     "update_xml": [],
     'demo_xml': [],
