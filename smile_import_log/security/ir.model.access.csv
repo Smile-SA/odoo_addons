@@ -1,0 +1,2 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"smile_import_data_user","smile_import_data group_user","model_smile_import_data","base.group_user",1,0,1,0
