@@ -25,4 +25,3 @@ from openerp.osv import orm
 class IrTranslation(orm.Model):
     _inherit = "ir.translation"
     _log_access = True
-    _order = 'id desc'
