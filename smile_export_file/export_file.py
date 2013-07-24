@@ -274,7 +274,7 @@ class ir_model_export_file_template(osv.osv):
         content = []
         exceptions = []
         content_render_method = export_file.state == 'tab' and '_render_tab' or '_render'
-        if content_render_method:
+        if content_render_method and context['active_ids']:
             localdict = {
                 'pool': self.pool,
                 'cr': cr,
@@ -423,7 +423,7 @@ class ir_model_export_file_template(osv.osv):
         extension = '.pdf'
         if export_file.extension == 'other':
             extension = export_file.extension_custom
-            if extension.find('.'):
+            if extension and extension.find('.'):
                 extension = '.%s' % extension
         filename += extension
         return filename
@@ -450,16 +450,14 @@ class ir_model_export_file_template(osv.osv):
                         exceptions.append('%s, %s: %s' % (export_file.model, content_id, 'Check failed'))
                 except Exception, e:
                     exceptions.append('%s, %s: %s' % (export_file.model, content_id, _get_exception_message(e)))
-        if checked_content_ids:
-            context['active_ids'] = checked_content_ids
-            file_content, content_exceptions = self._lay_out_data(cr, uid, export_file, context)
-            exceptions += content_exceptions
-            if file_content:
-                filename = self._get_filename(cr, uid, export_file, context)
-                if export_file.extension == 'pdf':
-                    file_content = _text2pdf(file_content)
-                file_content = file_content.encode(export_file.encoding, 'replace')
-                self._save_file(cr, uid, export_file, filename, file_content, context)
+        context['active_ids'] = checked_content_ids
+        file_content, content_exceptions = self._lay_out_data(cr, uid, export_file, context)
+        exceptions += content_exceptions
+        filename = self._get_filename(cr, uid, export_file, context)
+        if export_file.extension == 'pdf':
+            file_content = _text2pdf(file_content)
+        file_content = file_content.encode(export_file.encoding, 'replace')
+        self._save_file(cr, uid, export_file, filename, file_content, context)
         end_date = time.strftime('%Y-%m-%d %H:%M:%S')
         localdict = {
             'pool': self.pool,

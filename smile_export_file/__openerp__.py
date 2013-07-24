@@ -40,8 +40,8 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "depends": ['smile_export'],
     "init_xml": [],
     "update_xml": [
-        'export_file_view.xml',
-        'export_view.xml',
+        'view/export_file_view.xml',
+        'view/export_view.xml',
         'security/ir.model.access.csv',
     ],
     "demo_xml": [],
