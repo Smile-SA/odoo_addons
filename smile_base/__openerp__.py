@@ -32,6 +32,7 @@
     * Correct date and time format for French language
     * Review the menu "Applications"
     * Remove the menu "Update modules" from apps.openerp.com
+    * Add sequence and display window actions in IrValues
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
@@ -42,6 +43,7 @@
     "init_xml": [
         "data/mail_data.xml",
         "data/ir_lang.yml",
+        "view/ir_values_view.xml",
         "view/module_view.xml",
     ],
     "update_xml": [],
