@@ -311,7 +311,7 @@ class ir_model_export_file_template(osv.osv):
         vals = {
             'name': filename,
             'type': 'binary',
-            'datas': base64.encodestring(file_content),
+            'datas': file_content and base64.encodestring(file_content) or ' ',
             'datas_fname': filename,
             'res_model': 'ir.model.export',
             'res_id': context.get('attach_export_id', 0),
