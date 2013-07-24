@@ -169,7 +169,7 @@ class ir_model_export_template(osv.osv):
                     'model': self._name,
                     'function': 'create_export',
                     'args': '(%d, )' % template.id,
-                    'numbercall':-1,
+                    'numbercall': -1,
                 }
                 cron_id = self.pool.get('ir.cron').create(cr, uid, vals)
                 template.write({'cron_id': cron_id})
