@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import ir_values
 import ir_translation
 import orm
 import update

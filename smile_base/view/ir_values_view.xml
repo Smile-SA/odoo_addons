@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="values_view_form_action" model="ir.ui.view">
+            <field name="name">ir.values.form.action</field>
+            <field name="model">ir.values</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.values_view_form_action"/>
+            <field name="arch" type="xml">
+				<xpath expr="/form/group[2]" position="after">
+					<group colspan="2" col="2">
+						<separator string="Visibility Options" colspan="2"/>
+						<field name="sequence"/>
+						<label string="Let it empty if you want it to be displayed for all window actions" colspan="2"/>
+						<field name="window_action_ids" nolabel="1" colspan="2" domain="[('res_model', '=', model)]"/>
+						<field name="model" invisible="1"/>
+					</group>
+				</xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

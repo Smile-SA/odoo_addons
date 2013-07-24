@@ -39,6 +39,7 @@
     "sequence": 20,
     "init_xml": [
         "data/ir_lang.yml",
+        "view/ir_values_view.xml",
     ],
     "update_xml": [],
     'demo_xml': [],
