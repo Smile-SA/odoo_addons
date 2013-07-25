@@ -51,7 +51,7 @@ def strip_accents(s):
 
 
 def is_a_datetime(str0, type_='datetime'):
-    if isinstance(str0, str):
+    if isinstance(str0, basestring):
         formats = {
             'datetime': '%Y-%m-%d %H:%M:%S',
             'date': '%Y-%m-%d',
@@ -356,10 +356,10 @@ class ir_model_export_file_template(osv.osv):
                 try:
                     getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, file_content, context)
                 except osv.except_osv, e:
-                    exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e) + str(e.value))
+                    exception_infos = "%s: %s %s" % (save_file_method, tools.ustr(type(e)), tools.ustr(e) + tools.ustr(e.value))
                     raise Exception(exception_infos)
                 except Exception, e:
-                    exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e))
+                    exception_infos = "%s: %s %s" % (save_file_method, tools.ustr(type(e)), tools.ustr(e))
                     raise Exception(exception_infos)
 
     def _send_by_email(self, cr, uid, export_file, localdict):
