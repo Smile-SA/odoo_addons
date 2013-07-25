@@ -30,6 +30,7 @@
     * get_exception_message: a function to get exception message from OpenERP or native Python exception
     * clean_string: a function to strip accents and replace non ascii characters by space
     * timeme: a decorator to get the execution time of a function
+    * smile_detective: a decorator to log slow calls to webservices
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
