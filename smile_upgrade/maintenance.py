@@ -30,9 +30,8 @@ _logger = logging.getLogger('upgrades')
 
 
 def kill_xmlrpc_services(*args):
-    _logger.error("Service in maintenance")
-    _logger.error("Service called: %s", args)
-    raise
+    _logger.error("Service in maintenance. Call args: %s", args)
+    raise IOError('Connection refused. Service in maintenance')
 
 
 class MaintenanceManager(object):
@@ -40,10 +39,10 @@ class MaintenanceManager(object):
         self.classic_home = WebClient.home
         self.dispatch_rpc = netsvc.dispatch_rpc
 
-    def start_maintenance(self):
+    def start(self):
         WebClient.home = maintenance
         netsvc.dispatch_rpc = kill_xmlrpc_services
 
-    def stop_maintenance(self):
+    def stop(self):
         WebClient.home = self.classic_home
         netsvc.dispatch_rpc = self.dispatch_rpc

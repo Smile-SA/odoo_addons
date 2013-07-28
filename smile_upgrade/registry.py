@@ -22,22 +22,17 @@
 from openerp.modules.registry import RegistryManager
 
 from upgrade import UpgradeManager
-from maintenance import MaintenanceManager
 
 native_new = RegistryManager.new
 
 
 @classmethod
 def new(cls, db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
-    maintenance_manager = MaintenanceManager()
-    maintenance_manager.start_maintenance()
     with UpgradeManager(db_name) as upgrade_manager:
         for upgrade in upgrade_manager.upgrades:
             upgrade.pre_load()
-            update_modules = dict([(module, 1) for module in upgrade.get('modules_to_update', [])]) or False
-            native_new(db_name, update_module=update_modules, pooljobs=False)
+            native_new(db_name, update_module=upgrade.update_module, pooljobs=False)
             upgrade.post_load()
-    maintenance_manager.stop_maintenance()
     return native_new(db_name, force_demo, status, update_module, pooljobs)
 
 RegistryManager.new = new

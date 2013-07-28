@@ -25,6 +25,7 @@ import os
 from openerp import sql_db, tools
 
 from config import configuration as config
+from maintenance import MaintenanceManager
 
 _logger = logging.getLogger('upgrades')
 
@@ -39,11 +40,14 @@ class UpgradeManager(object):
         self.code_version = self._get_code_version()
         self.db_version = self._get_db_version()
         self.upgrades = self._get_upgrades()
+        self.maintenance = MaintenanceManager()
 
     def __enter__(self):
+        self.maintenance.start()
         return self
 
     def __exit__(self, type, value, traceback):
+        self.maintenance.stop()
         self.cr.close()
 
     def _get_code_version(self):
@@ -80,17 +84,14 @@ class UpgradeManager(object):
                     continue
                 with open(file_path) as f:
                     try:
-                        upgrade_info = eval(f.read())
-                        if not isinstance(upgrade_info, dict):
-                            _logger.error("%s is not valid. It must be a dictionary", file_path)
-                            continue
-                        databases = upgrade_info.get('databases', [])
-                        if (not databases or self.db_name in databases) \
-                                and self.db_version < upgrade_info.get('version') <= self.code_version:
-                            upgrades.append(Upgrade(self.cr, dir_path, upgrade_info))
+                        upgrade_infos = eval(f.read())
+                        upgrade = Upgrade(self.cr, dir_path, upgrade_infos)
+                        if (not upgrade.databases or self.db_name in upgrade.databases) \
+                                and self.db_version < upgrade.version <= self.code_version:
+                            upgrades.append(upgrade)
                     except:
-                        _logger.error('%s is not evaluable', file_path)
-        return sorted(upgrades, key=lambda upgrade: upgrade.get('version'))
+                        _logger.error('%s is not valid', file_path)
+        return sorted(upgrades, key=lambda upgrade: upgrade.version)
 
 
 class Upgrade(object):
@@ -98,13 +99,18 @@ class Upgrade(object):
     def __init__(self, cr, dir_path, infos):
         self.cr = cr
         self.dir_path = dir_path
-        self.infos = infos
+        for k, v in infos.iteritems():
+            setattr(self, k, v)
+        self.update_module = dict([(module, 1) for module in self.modules_to_update]) or False
 
-    def get(self, key, default=None):
-        return self.infos.get(key, default)
+    def __getattr__(self, key):
+        default_values = {'version': '', 'databases': [], 'modules_to_update': [], 'pre-load': [], 'post-load': []}
+        if key not in self.__dict__ and key not in default_values:
+            raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, key))
+        return self.__dict__.get(key) or default_values.get(key)
 
     def _set_db_version(self):
-        self.cr.execute("UPDATE ir_config_parameter SET value = %s WHERE key = 'code.version'", (self.get('version', ''),))
+        self.cr.execute("UPDATE ir_config_parameter SET value = %s WHERE key = 'code.version'", (self.version,))
         self.cr.commit()
 
     def _sql_import(self, f_obj):
@@ -114,8 +120,8 @@ class Upgrade(object):
                 self.cr.execute(clean_query)
 
     def _load_files(self, mode):
-        _logger.debug('%sing %s upgrade...', (mode, self.get('version')))
-        for fname in (self.get(mode) or []):
+        _logger.debug('%sing %s upgrade...', (mode, self.version))
+        for fname in getattr(self, mode, []):
             fp = os.path.join(self.dir_path, fname.replace('/', os.path.sep))
             if not os.path.exists(fp):
                 _logger.error("%s doesn't exist", fp)
@@ -133,10 +139,10 @@ class Upgrade(object):
                 _logger.debug('%s successfully imported', fname)
 
     def pre_load(self):
-        _logger.info('loading %s upgrade...', self.get('version'))
+        _logger.info('loading %s upgrade...', self.version)
         self._load_files('pre-load')
 
     def post_load(self):
         self._load_files('post-load')
         self._set_db_version()
-        _logger.info('%s upgrade successfully loaded', self.get('version'))
+        _logger.info('%s upgrade successfully loaded', self.version)
