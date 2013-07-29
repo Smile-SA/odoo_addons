@@ -31,12 +31,17 @@ _logger = logging.getLogger('upgrades')
 
 
 class UpgradeManager(object):
-    """Upgrade Manager"""
+    """Upgrade Manager
+    * Compare code and database versions
+    * Get upgrades to apply to database
+    * Pass in maintenance mode
+    """
 
     def __init__(self, db_name):
         self.db_name = db_name
         db = sql_db.db_connect(db_name)
         self.cr = db.cursor()
+        self.db_in_creation = self._get_db_in_creation()
         self.code_version = self._get_code_version()
         self.db_version = self._get_db_version()
         self.upgrades = self._get_upgrades()
@@ -50,6 +55,12 @@ class UpgradeManager(object):
         self.maintenance.stop()
         self.cr.close()
 
+    def _get_db_in_creation(self):
+        self.cr.execute("SELECT relname FROM pg_class WHERE relname='ir_config_parameter'")
+        if self.cr.rowcount:
+            return False
+        return True
+
     def _get_code_version(self):
         version = config.get('version')
         if not version:
@@ -58,6 +69,8 @@ class UpgradeManager(object):
         return version
 
     def _get_db_version(self):
+        if self.db_in_creation:
+            return ''
         self.cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'code.version' LIMIT 1")
         param = self.cr.fetchone()
         if not param:
@@ -69,7 +82,7 @@ class UpgradeManager(object):
 
     def _get_upgrades(self):
         upgrades_path = config.get('upgrades_path')
-        if not upgrades_path:
+        if self.db_in_creation or not upgrades_path:
             return []
         upgrades = []
         for dir in os.listdir(upgrades_path):
@@ -95,6 +108,10 @@ class UpgradeManager(object):
 
 
 class Upgrade(object):
+    """Upgrade
+    * Pre-load: accept only .sql files
+    * Post-load: accept .sql and .yml files
+    """
 
     def __init__(self, cr, dir_path, infos):
         self.cr = cr
