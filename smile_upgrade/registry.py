@@ -19,20 +19,35 @@
 #
 ##############################################################################
 
-from openerp.modules.registry import RegistryManager
+from openerp.modules.registry import Registry, RegistryManager
 
 from upgrade import UpgradeManager
 
 native_new = RegistryManager.new
 
 
+def set_db_version(self, version):
+    if version:
+        cr = self.db.cursor()  # INFO: cr has no attribute __exit__
+        cr.execute("INSERT INTO ir_config_parameter (key, value) VALUES ('code.version', %s)", (version,))
+        cr.commit()
+        cr.close()
+
+Registry.set_db_version = set_db_version
+
+
 @classmethod
 def new(cls, db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
+    code_at_creation = False
     with UpgradeManager(db_name) as upgrade_manager:
+        if upgrade_manager.db_in_creation:
+            code_at_creation = upgrade_manager.code_version
         for upgrade in upgrade_manager.upgrades:
             upgrade.pre_load()
             native_new(db_name, update_module=upgrade.update_module, pooljobs=False)
             upgrade.post_load()
-    return native_new(db_name, force_demo, status, update_module, pooljobs)
+    registry = native_new(db_name, force_demo, status, update_module, pooljobs)
+    registry.set_db_version(code_at_creation)
+    return registry
 
 RegistryManager.new = new
