@@ -29,6 +29,7 @@ _logger = logging.getLogger('upgrades')
 
 
 class ConfigManager(object):
+    """Configuration Manager"""
 
     def __init__(self):
         self.options = {}

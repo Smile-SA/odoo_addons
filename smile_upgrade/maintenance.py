@@ -35,6 +35,11 @@ def kill_xmlrpc_services(*args):
 
 
 class MaintenanceManager(object):
+    """Maintenance Manager
+    * Replace classic home by maintenance page
+    * Reject xmlrpc connections
+    """
+
     def __init__(self):
         self.classic_home = WebClient.home
         self.dispatch_rpc = netsvc.dispatch_rpc
