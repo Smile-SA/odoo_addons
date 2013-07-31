@@ -60,6 +60,11 @@ Essentials
             * pre-load: list of .sql files
             * post-load: list of .sql or/and .yml files
 
+    * OpenERP Server configuration
+        [options]
+        upgrades_path = <project_repository>/upgrades
+        stop_after_upgrades = True  # To kill openerp-server after upgrades
+
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "summary": "",

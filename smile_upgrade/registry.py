@@ -20,8 +20,10 @@
 ##############################################################################
 
 from contextlib import contextmanager
+import os
 
 from openerp.modules.registry import Registry, RegistryManager
+from openerp.tools import config
 
 from maintenance import MaintenanceManager
 from upgrade import UpgradeManager
@@ -50,6 +52,8 @@ def upgrade_manager(cls, db_name):
         maintenance.start()
         yield upgrade_manager
     finally:
+        upgrade_manager.cr.commit()
+        upgrade_manager.cr.close()
         maintenance.stop()
 
 
@@ -68,6 +72,8 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False, pooljo
             upgrade.post_load()
     registry = native_new(db_name, force_demo, status, update_module, pooljobs)
     registry.set_db_version(code_at_creation)
+    if config.get('stop_after_upgrades'):
+        os._exit(1)
     return registry
 
 RegistryManager.upgrade_manager = upgrade_manager

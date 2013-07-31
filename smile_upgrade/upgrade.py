@@ -23,12 +23,23 @@ from contextlib import contextmanager
 import logging
 import os
 
-from openerp import pooler, sql_db, SUPERUSER_ID, tools
+from openerp import sql_db, SUPERUSER_ID, tools
 from openerp.netsvc import Service
 
 from config import configuration as config
 
 _logger = logging.getLogger('upgrades')
+
+
+@contextmanager
+def cursor(db, auto_commit=True):
+    cr = db.cursor()
+    try:
+        yield cr
+        if auto_commit:
+            cr.commit()
+    finally:
+        cr.close()
 
 
 class UpgradeManager(object):
@@ -65,7 +76,8 @@ class UpgradeManager(object):
         self.cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'code.version' LIMIT 1")
         param = self.cr.fetchone()
         if not param:
-            self.cr.execute("INSERT INTO ir_config_parameter (key, value) VALUES ('code.version', '')")
+            with cursor(self.db) as cr:
+                cr.execute("INSERT INTO ir_config_parameter (key, value) VALUES ('code.version', '')")
             _logger.warning('Unspecified version in database')
             return ''
         _logger.debug('database version: %s', param[0])
@@ -117,18 +129,8 @@ class Upgrade(object):
             raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, key))
         return self.__dict__.get(key) or default_values.get(key)
 
-    @contextmanager
-    def cursor(self, auto_commit=True):
-        cr = self.db.cursor()
-        try:
-            yield cr
-            if auto_commit:
-                cr.commit()
-        finally:
-            cr.close()
-
     def _set_db_version(self):
-        with self.cursor() as cr:
+        with cursor(self.db) as cr:
             cr.execute("UPDATE ir_config_parameter SET value = %s WHERE key = 'code.version'", (self.version,))
 
     def _sql_import(self, cr, f_obj):
@@ -163,11 +165,11 @@ class Upgrade(object):
 
     def pre_load(self):
         _logger.info('loading %s upgrade...', self.version)
-        with self.cursor() as cr:
+        with cursor(self.db) as cr:
             self._load_files(cr, 'pre-load')
 
     def post_load(self):
-        with self.cursor() as cr:
+        with cursor(self.db) as cr:
             self._load_files(cr, 'post-load')
         self._set_db_version()
         self._reset_services()
@@ -175,7 +177,7 @@ class Upgrade(object):
 
     def force_modules_upgrade(self, registry):
         uid = SUPERUSER_ID
-        with self.cursor() as cr:
+        with cursor(self.db) as cr:
             registry.get('ir.module.module').update_list(cr, uid)
             module_obj = registry.get('ir.module.module')
             ids_to_install = module_obj.search(cr, uid, [('name', 'in', self.modules_to_upgrade),
