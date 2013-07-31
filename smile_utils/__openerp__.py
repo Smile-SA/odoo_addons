@@ -21,16 +21,17 @@
 
 {
     "name": "Smile Utils",
-    "version": "0.1",
+    "version": "0.2",
     "depends": ["mail"],
     "author": "Smile",
     "description": """Smile Utils
 
-    * decode_csv_reader: a function to decode csv content to unicode
-    * get_exception_message: a function to get exception message from OpenERP or native Python exception
-    * clean_string: a function to strip accents and replace non ascii characters by space
-    * timeme: a decorator to get the execution time of a function
-    * smile_detective: a decorator to log slow calls to webservices
+    * decode_csv_reader: a function to decode csv content to unicode.
+    * get_exception_message: a function to get exception message from OpenERP or native Python exception.
+    * clean_string: a function to strip accents and replace non ascii characters by space.
+    * profile_this: a decorator to generate profiling data based on cProfile. Statistics are saved on the file-system.
+    * timeme: a decorator to get the execution time of a function.
+    * smile_detective: a decorator to log slow calls to webservices.
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
