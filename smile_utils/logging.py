@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2013 Smile (<http://www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,8 +20,19 @@
 ##############################################################################
 
 import time
+import cProfile
 
 from openerp.tools.func import wraps
+
+
+def profile_this(fn):
+    def profiled_fn(*args, **kwargs):
+        fpath = fn.__name__ + '.profile'
+        prof = cProfile.Profile()
+        ret = prof.runcall(fn, *args, **kwargs)
+        prof.dump_stats(fpath)
+        return ret
+    return profiled_fn
 
 
 def timeme(logger, message, arg_to_display_indexes=None, log_level='info'):
