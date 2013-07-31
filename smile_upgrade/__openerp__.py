@@ -56,7 +56,7 @@ Essentials
             * version
             * databases: let's empty if valid for all databases
             * description
-            * modules_to_update: modules list to update or install
+            * modules_to_upgrade: modules list to update or install
             * pre-load: list of .sql files
             * post-load: list of .sql or/and .yml files
 

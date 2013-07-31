@@ -19,13 +19,14 @@
 #
 ##############################################################################
 
+from contextlib import contextmanager
 import logging
 import os
 
-from openerp import sql_db, tools
+from openerp import pooler, sql_db, SUPERUSER_ID, tools
+from openerp.netsvc import Service
 
 from config import configuration as config
-from maintenance import MaintenanceManager
 
 _logger = logging.getLogger('upgrades')
 
@@ -34,26 +35,16 @@ class UpgradeManager(object):
     """Upgrade Manager
     * Compare code and database versions
     * Get upgrades to apply to database
-    * Pass in maintenance mode
     """
 
     def __init__(self, db_name):
         self.db_name = db_name
-        db = sql_db.db_connect(db_name)
-        self.cr = db.cursor()
+        self.db = sql_db.db_connect(db_name)
+        self.cr = self.db.cursor()
         self.db_in_creation = self._get_db_in_creation()
         self.code_version = self._get_code_version()
         self.db_version = self._get_db_version()
         self.upgrades = self._get_upgrades()
-        self.maintenance = MaintenanceManager()
-
-    def __enter__(self):
-        self.maintenance.start()
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self.maintenance.stop()
-        self.cr.close()
 
     def _get_db_in_creation(self):
         self.cr.execute("SELECT relname FROM pg_class WHERE relname='ir_config_parameter'")
@@ -98,7 +89,7 @@ class UpgradeManager(object):
                 with open(file_path) as f:
                     try:
                         upgrade_infos = eval(f.read())
-                        upgrade = Upgrade(self.cr, dir_path, upgrade_infos)
+                        upgrade = Upgrade(self.db, dir_path, upgrade_infos)
                         if (not upgrade.databases or self.db_name in upgrade.databases) \
                                 and self.db_version < upgrade.version <= self.code_version:
                             upgrades.append(upgrade)
@@ -113,30 +104,40 @@ class Upgrade(object):
     * Post-load: accept .sql and .yml files
     """
 
-    def __init__(self, cr, dir_path, infos):
-        self.cr = cr
+    def __init__(self, db, dir_path, infos):
+        self.db = db
         self.dir_path = dir_path
         for k, v in infos.iteritems():
             setattr(self, k, v)
-        self.update_module = dict([(module, 1) for module in self.modules_to_update]) or False
 
     def __getattr__(self, key):
-        default_values = {'version': '', 'databases': [], 'modules_to_update': [], 'pre-load': [], 'post-load': []}
+        default_values = {'version': '', 'databases': [], 'modules_to_upgrade': [],
+                          'pre-load': [], 'post-load': []}
         if key not in self.__dict__ and key not in default_values:
             raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, key))
         return self.__dict__.get(key) or default_values.get(key)
 
-    def _set_db_version(self):
-        self.cr.execute("UPDATE ir_config_parameter SET value = %s WHERE key = 'code.version'", (self.version,))
-        self.cr.commit()
+    @contextmanager
+    def cursor(self, auto_commit=True):
+        cr = self.db.cursor()
+        try:
+            yield cr
+            if auto_commit:
+                cr.commit()
+        finally:
+            cr.close()
 
-    def _sql_import(self, f_obj):
+    def _set_db_version(self):
+        with self.cursor() as cr:
+            cr.execute("UPDATE ir_config_parameter SET value = %s WHERE key = 'code.version'", (self.version,))
+
+    def _sql_import(self, cr, f_obj):
         for query in f_obj.read().split(';'):
             clean_query = ' '.join(query.split())
             if clean_query:
-                self.cr.execute(clean_query)
+                cr.execute(clean_query)
 
-    def _load_files(self, mode):
+    def _load_files(self, cr, mode):
         _logger.debug('%sing %s upgrade...', (mode, self.version))
         for fname in getattr(self, mode, []):
             fp = os.path.join(self.dir_path, fname.replace('/', os.path.sep))
@@ -147,19 +148,41 @@ class Upgrade(object):
             with open(fp) as f_obj:
                 _logger.debug('importing %s file...', fname)
                 if ext == '.sql':
-                    self._sql_import(f_obj)
+                    self._sql_import(cr, f_obj)
                 elif mode != 'pre-load' and ext == '.yml':
-                    tools.convert_yaml_import(self.cr, 'base', f_obj)
+                    tools.convert_yaml_import(cr, 'base', f_obj)
                 else:
                     _logger.error('%s extension is not supported in upgrade %sing' % (ext, mode))
                     continue
                 _logger.debug('%s successfully imported', fname)
 
+    def _reset_services(self):
+        for service in Service._services.keys():
+            if service.startswith('report.'):
+                del Service._services[service]
+
     def pre_load(self):
         _logger.info('loading %s upgrade...', self.version)
-        self._load_files('pre-load')
+        with self.cursor() as cr:
+            self._load_files(cr, 'pre-load')
 
     def post_load(self):
-        self._load_files('post-load')
+        with self.cursor() as cr:
+            self._load_files(cr, 'post-load')
         self._set_db_version()
+        self._reset_services()
         _logger.info('%s upgrade successfully loaded', self.version)
+
+    def force_modules_upgrade(self, registry):
+        uid = SUPERUSER_ID
+        with self.cursor() as cr:
+            registry.get('ir.module.module').update_list(cr, uid)
+            module_obj = registry.get('ir.module.module')
+            ids_to_install = module_obj.search(cr, uid, [('name', 'in', self.modules_to_upgrade),
+                                                         ('state', 'in', ('uninstalled', 'to install'))])
+            module_obj.button_install(cr, uid, ids_to_install)
+            ids_to_upgrade = module_obj.search(cr, uid, [('name', 'in', self.modules_to_upgrade),
+                                                         ('state', 'in', ('installed', 'to upgrade'))])
+            module_obj.button_upgrade(cr, uid, ids_to_upgrade)
+            cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")
+        self._reset_services()

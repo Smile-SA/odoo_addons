@@ -19,35 +19,56 @@
 #
 ##############################################################################
 
+from contextlib import contextmanager
+
 from openerp.modules.registry import Registry, RegistryManager
 
+from maintenance import MaintenanceManager
 from upgrade import UpgradeManager
-
-native_new = RegistryManager.new
 
 
 def set_db_version(self, version):
     if version:
-        cr = self.db.cursor()  # INFO: cr has no attribute __exit__
-        cr.execute("INSERT INTO ir_config_parameter (key, value) VALUES ('code.version', %s)", (version,))
-        cr.commit()
-        cr.close()
+        cr = self.db.cursor()
+        try:
+            cr.execute("INSERT INTO ir_config_parameter (key, value) VALUES ('code.version', %s)", (version,))
+            cr.commit()
+        finally:
+            cr.close()
 
 Registry.set_db_version = set_db_version
+
+native_new = RegistryManager.new
+
+
+@classmethod
+@contextmanager
+def upgrade_manager(cls, db_name):
+    upgrade_manager = UpgradeManager(db_name)
+    maintenance = MaintenanceManager()
+    try:
+        maintenance.start()
+        yield upgrade_manager
+    finally:
+        maintenance.stop()
 
 
 @classmethod
 def new(cls, db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
     code_at_creation = False
-    with UpgradeManager(db_name) as upgrade_manager:
+    with cls.upgrade_manager(db_name) as upgrade_manager:
         if upgrade_manager.db_in_creation:
             code_at_creation = upgrade_manager.code_version
         for upgrade in upgrade_manager.upgrades:
             upgrade.pre_load()
-            native_new(db_name, update_module=upgrade.update_module, pooljobs=False)
+            if upgrade.modules_to_upgrade:
+                registry = native_new(db_name, pooljobs=False)
+                upgrade.force_modules_upgrade(registry)
+            native_new(db_name, update_module=True, pooljobs=False)
             upgrade.post_load()
     registry = native_new(db_name, force_demo, status, update_module, pooljobs)
     registry.set_db_version(code_at_creation)
     return registry
 
+RegistryManager.upgrade_manager = upgrade_manager
 RegistryManager.new = new
