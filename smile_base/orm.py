@@ -22,6 +22,7 @@
 from openerp.osv.orm import BaseModel
 
 native_validate = BaseModel._validate
+native_load = BaseModel.load
 
 
 def new_validate(self, cr, uid, ids, context=None):
@@ -29,8 +30,6 @@ def new_validate(self, cr, uid, ids, context=None):
     if context.get('no_validate'):
         return
     native_validate(self, cr, uid, ids, context)
-
-BaseModel._validate = new_validate
 
 
 # Helper function combining _store_get_values and _store_set_values
@@ -58,13 +57,24 @@ def _compute_store_set(self, cr, uid, ids, context):
         self.pool.get(model)._store_set_values(cr, uid, todo, fields_to_recompute, context)
 
 
-BaseModel._compute_store_set = _compute_store_set
+def new_load(self, cr, uid, fields, data, context=None):
+    context_copy = context and context.copy() or {}
+    context_copy['no_store_function'] = True
+    context_copy['no_validate'] = True
+    context_copy['defer_parent_store_computation'] = True
+    res = native_load(self, cr, uid, fields, data, context_copy)
+    ids = res['ids']
+    self._compute_store_set(cr, uid, ids, context)
+    self._validate(cr, uid, ids, context)
+    self._parent_store_compute(cr)
+    return res
 
 
 def bulk_create(self, cr, uid, vals_list, context=None):
     context_copy = context and context.copy() or {}
     context_copy['no_store_function'] = True
     context_copy['no_validate'] = True
+    context_copy['defer_parent_store_computation'] = True
     ids = []
     if not isinstance(vals_list, list):
         vals_list = [vals_list]
@@ -72,8 +82,11 @@ def bulk_create(self, cr, uid, vals_list, context=None):
         ids.append(self.create(cr, uid, vals, context_copy))
     self._compute_store_set(cr, uid, ids, context)
     self._validate(cr, uid, ids, context)
+    self._parent_store_compute(cr)
     return True
 
+BaseModel._validate = new_validate
+BaseModel._compute_store_set = _compute_store_set
+BaseModel.load = new_load
 BaseModel.bulk_create = bulk_create
-
 BaseModel.store_set_values = BaseModel._store_set_values
