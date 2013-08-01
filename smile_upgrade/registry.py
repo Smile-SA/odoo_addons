@@ -73,7 +73,7 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False, pooljo
     registry = native_new(db_name, force_demo, status, update_module, pooljobs)
     registry.set_db_version(code_at_creation)
     if config.get('stop_after_upgrades'):
-        os._exit(1)
+        os._exit(0)
     return registry
 
 RegistryManager.upgrade_manager = upgrade_manager
