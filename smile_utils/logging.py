@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 Smile (<http://www.smile.fr>).
+#    Copyright (C) 2011-2013 Smile (<http://www.smile.fr>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,8 +20,19 @@
 ##############################################################################
 
 import time
+import cProfile
 
 from openerp.tools.func import wraps
+
+
+def profile_this(fn):
+    def profiled_fn(*args, **kwargs):
+        fpath = fn.__name__ + '.profile'
+        prof = cProfile.Profile()
+        ret = prof.runcall(fn, *args, **kwargs)
+        prof.dump_stats(fpath)
+        return ret
+    return profiled_fn
 
 
 def timeme(logger, message, arg_to_display_indexes=None, log_level='info'):
@@ -39,3 +50,38 @@ def timeme(logger, message, arg_to_display_indexes=None, log_level='info'):
             return res
         return wrapper
     return wrap
+
+
+def smile_detective(min_delay):
+    """
+    Put this decorator on the dispatch() method in the openerp/service/web_services.py file. Eg:
+
+        === modified file 'openerp/service/web_services.py'
+        --- openerp/service/web_services.py 2013-03-18 14:41:56 +0000
+        +++ openerp/service/web_services.py 2013-07-23 10:27:02 +0000
+        @@ -603,10 +603,27 @@
+                 return sql_db.sql_counter
+
+
+         class objects_proxy(netsvc.ExportService):
+             def __init__(self, name="object"):
+                 netsvc.ExportService.__init__(self,name)
+
+        +    @smile_detective(0.5)
+             def dispatch(self, method, params):
+                 (db, uid, passwd ) = params[0:3]
+
+    """
+    def detective_log(dispatch_func):
+        def detective_dispatch(self, method, params):
+            db, uid = params[0:2]
+            param_str = repr(params[3:])
+            start = time.time()
+            result = dispatch_func(self, method, params)
+            delay = time.time() - start
+            if delay > min_delay:
+                msg = u"WS_DB:%s WS_UID:%s WS_PARAMS:%s WS_TIMER:%s" % (db, uid, param_str, delay * 1000.0,)
+                logging.getLogger('smile_detective').info(msg)
+            return result
+        return detective_dispatch
+    return detective_log
