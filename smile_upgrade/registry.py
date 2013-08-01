@@ -20,6 +20,7 @@
 ##############################################################################
 
 from contextlib import contextmanager
+import logging
 import os
 
 from openerp.modules.registry import Registry, RegistryManager
@@ -27,6 +28,8 @@ from openerp.tools import config
 
 from maintenance import MaintenanceManager
 from upgrade import UpgradeManager
+
+_logger = logging.getLogger('upgrades')
 
 
 def set_db_version(self, version):
@@ -73,6 +76,7 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False, pooljo
     registry = native_new(db_name, force_demo, status, update_module, pooljobs)
     registry.set_db_version(code_at_creation)
     if config.get('stop_after_upgrades'):
+        _logger.info('Stopping OpenERP server')
         os._exit(0)
     return registry
 

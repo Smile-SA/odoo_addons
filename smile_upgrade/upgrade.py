@@ -25,10 +25,24 @@ import os
 
 from openerp import sql_db, SUPERUSER_ID, tools
 from openerp.netsvc import Service
+from openerp.tools import config
 
-from config import configuration as config
+from config import configuration as upgrade_config
 
 _logger = logging.getLogger('upgrades')
+
+
+def stop_after_upgrades(func):
+    def wrapper(*args, **kwargs):
+        try:
+            res = func(*args, **kwargs)
+        except Exception, e:
+            if config.get('stop_after_upgrades'):
+                _logger.error(e)
+                _logger.info('Stopping OpenERP server')
+                os._exit(1)
+            raise e
+    return wrapper
 
 
 @contextmanager
@@ -64,7 +78,7 @@ class UpgradeManager(object):
         return True
 
     def _get_code_version(self):
-        version = config.get('version')
+        version = upgrade_config.get('version')
         if not version:
             _logger.warning('Unspecified version in upgrades configuration file')
         _logger.debug('code version: %s', version)
@@ -84,7 +98,7 @@ class UpgradeManager(object):
         return param[0]
 
     def _get_upgrades(self):
-        upgrades_path = config.get('upgrades_path')
+        upgrades_path = upgrade_config.get('upgrades_path')
         if self.db_in_creation or not upgrades_path:
             return []
         upgrades = []
@@ -163,11 +177,13 @@ class Upgrade(object):
             if service.startswith('report.'):
                 del Service._services[service]
 
+    @stop_after_upgrades
     def pre_load(self):
         _logger.info('loading %s upgrade...', self.version)
         with cursor(self.db) as cr:
             self._load_files(cr, 'pre-load')
 
+    @stop_after_upgrades
     def post_load(self):
         with cursor(self.db) as cr:
             self._load_files(cr, 'post-load')
