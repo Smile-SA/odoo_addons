@@ -111,6 +111,6 @@ class IrValues(orm.Model):
                     action_def['context'] = unicode(action_context)
                 ################
                 results[action['name']] = (action['id'], action['name'], action_def)
-            except orm.mexcept_orm:
+            except orm.except_orm:
                 continue
         return sorted(results.values())
