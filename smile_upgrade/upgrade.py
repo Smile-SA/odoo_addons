@@ -148,7 +148,7 @@ class Upgrade(object):
                 pass
             root, ext = os.path.splitext(fp)
             with open(fp) as f_obj:
-                _logger.debug('importing %s file...', fname)
+                _logger.info('importing %s file...', fname)
                 if ext == '.sql':
                     self._sql_import(cr, f_obj)
                 elif mode != 'pre-load' and ext == '.yml':
@@ -156,7 +156,7 @@ class Upgrade(object):
                 else:
                     _logger.error('%s extension is not supported in upgrade %sing' % (ext, mode))
                     continue
-                _logger.debug('%s successfully imported', fname)
+                _logger.info('%s successfully imported', fname)
 
     def _reset_services(self):
         for service in Service._services.keys():
