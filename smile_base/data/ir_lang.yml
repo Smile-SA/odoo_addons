@@ -7,18 +7,51 @@
       wizard_id = self.create(cr, uid, {'lang': 'fr_FR'}, context)
       self.lang_install(cr, uid, [wizard_id], context)
 -
-  I make French as default language if installed
+  I make French as user default language if installed
 -
   !python {model: res.lang}: |
     if self.search(cr, uid, [('code', '=', 'fr_FR')], limit=1):
-      self.pool.get('ir.values').create(cr, uid, {
+      value_obj = self.pool.get('ir.values')
+      ids = value_obj.search(cr, uid, [
+        ('name', '=', 'context_lang'),
+        ('key', '=', 'default'),
+        ('model', '=', 'res.users'),
+      ], limit=1, context=context)
+      vals = {
         'name': 'context_lang',
         'key': 'default',
-        'key2': '',
+        'key2': False,
         'model': 'res.users',
         'object': False,
         'value_unpickle': 'fr_FR',
-      }, context)
+      }
+      if ids:
+        value_obj.write(cr, uid, ids, vals, context)
+      else:
+        value_obj.create(cr, uid, vals, context)
+-
+  I make French as partner default language if installed
+-
+  !python {model: res.lang}: |
+    if self.search(cr, uid, [('code', '=', 'fr_FR')], limit=1):
+      value_obj = self.pool.get('ir.values')
+      ids = value_obj.search(cr, uid, [
+        ('name', '=', 'lang'),
+        ('key', '=', 'default'),
+        ('model', '=', 'res.partner'),
+      ], limit=1, context=context)
+      vals = {
+        'name': 'lang',
+        'key': 'default',
+        'key2': False,
+        'model': 'res.partner',
+        'object': False,
+        'value_unpickle': 'fr_FR',
+      }
+      if ids:
+        value_obj.write(cr, uid, ids, vals, context)
+      else:
+        value_obj.create(cr, uid, vals, context)
 -
   I correct date and time format for French language
 -
