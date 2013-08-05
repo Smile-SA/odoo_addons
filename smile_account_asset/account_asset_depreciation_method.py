@@ -152,10 +152,10 @@ class AccountAssetDepreciationMethod(orm.Model):
                                              accounting_method, accounting_annuities, accounting_rate,
                                              fiscal_method, fiscal_annuities, fiscal_rate, context=None):
         first_accounting_annuity = self.compute_depreciation_board(cr, uid, accounting_method, purchase_value, salvage_value,
-                                                                   accounting_annuities, accounting_rate, purchase_date, in_service_date)[0]
+                                                                   accounting_annuities, accounting_rate, purchase_date, in_service_date)
         first_fiscal_annuity = self.compute_depreciation_board(cr, uid, fiscal_method, purchase_value, salvage_value,
-                                                               fiscal_annuities, fiscal_rate, purchase_date, in_service_date)[0]
-        return first_fiscal_annuity > first_accounting_annuity
+                                                               fiscal_annuities, fiscal_rate, purchase_date, in_service_date)
+        return (first_fiscal_annuity and first_fiscal_annuity[0] or 0.0) > (first_accounting_annuity and first_accounting_annuity[0] or 0.0)
 
     def get_depreciation_start_date(self, cr, uid, code, purchase_date, in_service_date, context=None):
         method_info = self.get_method_info(cr, uid, code, context)

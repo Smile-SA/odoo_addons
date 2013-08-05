@@ -903,7 +903,7 @@ msgid "Fiscal Method"
 msgstr "Methode fiscale"
 
 #. module: smile_account_asset
-#: model:ir.actions.report.xml,name:smile_account_asset.report_webkit_account_asset_fiscal_deduction
+#: model:ir.actions.report.xml,name:smile_account_asset.report_webkit_account_asset_fiscal_deduction_limit
 msgid "Account Asset Fiscal Deductions"
 msgstr "Déductions fiscales"
 
@@ -960,9 +960,9 @@ msgid "Annuities"
 msgstr "Annuités"
 
 #. module: smile_account_asset
-#: field:account.asset.category,fiscal_deduction:0
-msgid "Fiscal Deduction"
-msgstr "Déduction fiscale"
+#: field:account.asset.category,fiscal_deduction_limit:0
+msgid "Fiscal Deduction Limit"
+msgstr "Limite de déduction fiscale"
 
 #. module: smile_account_asset
 #: model:ir.model,name:smile_account_asset.model_res_company
@@ -1505,3 +1505,18 @@ msgstr "Merci de renseigner depuis la fiche Société les comptes d'amortissemen
 #, python-format
 msgid "Please indicate exceptional amortization accounts in company form!"
 msgstr "Merci de renseigner depuis la fiche Société les comptes d'amortissements exceptionnels !"
+
+#. module: smile_account_asset
+#: view:account.asset.asset:0
+msgid "Accounting Date"
+msgstr "Date de comptabilisation"
+
+#. module: smile_account_asset
+#: field:account.asset.asset,purchase_account_date:0
+msgid "Accounting date for purchase"
+msgstr "Date de comptabilisation de l'acquisition"
+
+#. module: smile_account_asset
+#: field:account.asset.asset,sale_account_date:0
+msgid "Accounting date for sale"
+msgstr "Date de comptabilisation de la cession"

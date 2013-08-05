@@ -91,6 +91,7 @@
 								<separator string="Purchase" colspan="3"/>
 	                    		<field name="supplier_id" colspan="3" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
 	                    		<field name="purchase_date" colspan="3" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
+    							<field name="purchase_account_date" string="Accounting Date" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
 	                    		<field name="quantity" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
 	                    		<field name="uom_id" nolabel="1" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
 	                    		<field name="purchase_tax_amount" colspan="3"/>
@@ -182,6 +183,7 @@
 	                   <page string="Disposal" attrs="{'invisible': [('state', '!=', 'close')]}">
 							<group colspan="4" col="2">
 								<field name="sale_date"/>
+								<field name="sale_account_date" string="Accounting Date"/>
 								<field name="sale_type"/>
 								<field name="customer_id"/>
 								<field name="sale_value" string="Amount Excl Tax"/>
@@ -324,6 +326,7 @@
 	        <field name="arch" type="xml">
 	            <form string="Asset Sale/Scrapping" col="2">
 					<field name="sale_date" required="1" string="Date"/>
+					<field name="sale_account_date" string="Accounting Date"/>
 	                <field name="sale_type" required="1"/>
 					<field name="customer_id" attrs="{'required': [('sale_type', '=', 'sale')], 'invisible': [('sale_type', '=', 'scrapping')]}"/>
 	                <field name="sale_value" string="Amount Excl Tax" attrs="{'required': [('sale_type', '=', 'sale')], 'invisible': [('sale_type', '=', 'scrapping')]}"/>

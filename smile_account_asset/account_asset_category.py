@@ -128,7 +128,7 @@ class AccountAssetCategory(orm.Model):
                                                 "to this asset category"),
         'confirm_asset': fields.boolean('Skip Draft State'),
 
-        'fiscal_deduction': fields.float('Fiscal Deduction', digits_compute=dp.get_precision('Account')),
+        'fiscal_deduction_limit': fields.float('Fiscal Deduction Limit', digits_compute=dp.get_precision('Account')),
     }
 
     def _get_default_company_id(self, cr, uid, context=None):
@@ -197,10 +197,11 @@ class AccountAssetCategory(orm.Model):
             res['value']['fiscal_method'] = 'none'
         if accounting_method == 'manual' and fiscal_method not in ('none', 'manual'):
             res['value']['fiscal_method'] = 'manual'
-        method_infos = self.pool.get('account.asset.depreciation.method').get_method_infos(cr, uid)
-        res['value']['accounting_rate_visibility'] = method_infos[accounting_method]['use_manual_rate']
-        if fiscal_method:
-            res['value']['fiscal_rate_visibility'] = method_infos[fiscal_method]['use_manual_rate']
+        if accounting_method:
+            method_infos = self.pool.get('account.asset.depreciation.method').get_method_infos(cr, uid)
+            res['value']['accounting_rate_visibility'] = method_infos[accounting_method]['use_manual_rate']
+            if fiscal_method:
+                res['value']['fiscal_rate_visibility'] = method_infos[fiscal_method]['use_manual_rate']
         return res
 
     def onchange_asset_in_progress(self, cr, uid, ids, asset_in_progress, context=None):

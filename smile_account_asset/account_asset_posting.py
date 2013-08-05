@@ -124,11 +124,14 @@ class AccountAssetAsset(orm.Model):
         context_copy = context and context.copy() or {}
         context_copy['company_id'] = asset.company_id.id
         period_ids = self.pool.get('account.period').find(cr, uid, asset.purchase_date, context_copy)
-        date = asset.purchase_date
+        today = time.strftime('%Y-%m-%d')
+        date = asset.purchase_account_date or today
         partner_id = asset.supplier_id.id
         if move_type == 'sale':
-            date = time.strftime('%Y-%m-%d')
+            date = asset.sale_account_date or today
             partner_id = asset.customer_id.id
+        if reversal:
+            date = today
         msg = move_type == 'purchase' and _('Asset Purchase: %s') or _('Asset Sale: %s')
         vals = {
             'name': msg % asset.name,
@@ -421,6 +424,18 @@ class AccountAssetAsset(orm.Model):
         if move_ids:
             return move_obj.post(cr, uid, move_ids, context)
         return True
+
+    def _compute_depreciation_lines(self, cr, uid, asset_id, depreciation_type='accounting', context=None):
+        sale_date = self.read(cr, uid, asset_id, ['sale_date'], context)['sale_date']
+        if sale_date:
+            depreciation_line_obj = self.pool.get('account.asset.depreciation.line')
+            line_ids_to_reversal_and_delete = depreciation_line_obj.search(cr, uid, [('asset_id', '=', asset_id),
+                                                                                     ('depreciation_date', '>', sale_date),
+                                                                                     ('depreciation_type', '=', depreciation_type),
+                                                                                     ('is_posted', '=', True)], context=context)
+            depreciation_line_obj.post_depreciation_line(cr, uid, line_ids_to_reversal_and_delete, context, reversal=True)
+            depreciation_line_obj.unlink(cr, uid, line_ids_to_reversal_and_delete, context)
+        return super(AccountAssetAsset, self)._compute_depreciation_lines(cr, uid, asset_id, depreciation_type, context)
 
 
 class AccountAssetDepreciationLine(orm.Model):

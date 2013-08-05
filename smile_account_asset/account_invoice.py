@@ -69,10 +69,12 @@ class AccountInvoiceLine(orm.Model):
         line = lines[0]
         amount = sum([l.price_subtotal * (l.invoice_id.journal_id.type == 'purchase_refund' and - 1.0 or 1.0) for l in lines], 0.0)
         quantity = sum([l.quantity * (l.invoice_id.journal_id.type == 'purchase_refund' and - 1.0 or 1.0) for l in lines], 0.0)
+        today = time.strftime('%Y-%m-%m')
         vals = {
             'name': line.name,
             'category_id': line.asset_category_id.id,
-            'purchase_date': line.invoice_id.date_invoice or time.strftime('%Y-%m-%m'),
+            'purchase_date': line.invoice_id.date_invoice or today,
+            'purchase_account_date': line.invoice_id.date_invoice,
             'purchase_value': amount,
             'quantity': quantity,
             'asset_type': line.invoice_id.journal_id.type,

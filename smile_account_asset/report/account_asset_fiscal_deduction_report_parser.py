@@ -33,11 +33,6 @@ class AccountAssetFiscalDeductionReport(report_sxw.rml_parse):
             'get_depreciation_infos_by_asset_id': self.get_depreciation_infos_by_asset_id,
         })
 
-    @staticmethod
-    def check(assets):
-        """Call in report_sxw.getObjects method"""
-        return assets
-
     def group_by(self, assets):
         assets_by_group = {}
         for asset in assets:
@@ -64,7 +59,7 @@ class AccountAssetFiscalDeductionReport(report_sxw.rml_parse):
                 accumulated_value = last_line.accumulated_value
             book_value = asset.purchase_value - accumulated_value
             non_ded_coeff = asset.purchase_value and \
-                ((asset.purchase_value - min(asset.purchase_value, asset.category_id.fiscal_deduction)) / asset.purchase_value) or 0.0
+                ((asset.purchase_value - min(asset.purchase_value, asset.category_id.fiscal_deduction_limit)) / asset.purchase_value) or 0.0
             non_ded_year_value = year_value * non_ded_coeff
             non_ded_accumulated_value = accumulated_value * non_ded_coeff
             res[asset.id] = (year_value, accumulated_value, non_ded_year_value, non_ded_accumulated_value, book_value)

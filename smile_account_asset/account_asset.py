@@ -21,6 +21,7 @@
 
 from datetime import datetime
 import logging
+import time
 
 import decimal_precision as dp
 from osv import orm, fields
@@ -40,8 +41,10 @@ ASSET_TYPES = [
     ('purchase', 'Purchase'),
     ('purchase_refund', 'Purchase Refund'),
 ]
-SALE_FIELDS = ['customer_id', 'sale_date', 'sale_value', 'book_value', 'accumulated_amortization_value', 'sale_type', 'sale_result',
-               'sale_result_short_term', 'sale_result_long_term', 'tax_regularization', 'regularization_tax_amount', 'is_out']
+SALE_FIELDS = [
+    'customer_id', 'sale_date', 'sale_account_date', 'sale_value', 'book_value', 'accumulated_amortization_value', 'sale_type', 'sale_result',
+    'sale_result_short_term', 'sale_result_long_term', 'tax_regularization', 'regularization_tax_amount', 'is_out',
+]
 
 _logger = logging.getLogger('account.asset.asset')
 
@@ -134,11 +137,11 @@ class AccountAssetAsset(orm.Model):
         'state': fields.selection(ASSET_STATES, 'State', readonly=True),
 
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=True, states={'draft': [('readonly', False)]},
-                                     ondelete='cascade'),
+                                     ondelete='restrict'),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Child Assets'),
         'parent_left': fields.integer('Parent Left', readonly=True, select=True),
         'parent_right': fields.integer('Parent Right', readonly=True, select=True),
-        'origin_id': fields.many2one('account.asset.asset', 'Origin Asset', readonly=True, ondelete='cascade'),
+        'origin_id': fields.many2one('account.asset.asset', 'Origin Asset', readonly=True, ondelete='restrict'),
 
         'category_id': fields.many2one('account.asset.category', 'Asset Category', required=True, change_default=True, readonly=True,
                                        states={'draft': [('readonly', False)]}, ondelete='restrict'),
@@ -251,6 +254,11 @@ class AccountAssetAsset(orm.Model):
             'account.asset.asset': (lambda self, cr, uid, ids, context=None: ids, ['category_id'], 5),
             'account.asset.category': (_get_asset_ids_from_categories, ['sale_receivable_account_id'], 5),
         }, relation='account.account', string='Disposal Receivable Account', readonly=True, multi="accounts"),
+
+        'purchase_account_date': fields.date('Accounting date for purchase', readonly=True, states={'draft': [('readonly', False)]},
+                                             help="Keep empty to use the current date"),
+        'sale_account_date': fields.date('Accounting date for sale', readonly=True, states={'open': [('readonly', False)]},
+                                         help="Keep empty to use the current date"),
     }
 
     def _get_default_code(self, cr, uid, context=None):
@@ -325,6 +333,8 @@ class AccountAssetAsset(orm.Model):
         default['code'] = self._get_default_code(cr, uid, context)
         if 'state' not in default:
             default['state'] = 'draft'
+        if 'purchase_account_date' not in default:
+            default['purchase_account_date'] = False
         if 'code' not in default:
             default['code'] = self.pool.get('ir.sequence').get(cr, uid, 'account.asset.asset', context)
         if 'origin_id' not in default:
@@ -445,7 +455,7 @@ class AccountAssetAsset(orm.Model):
         # Delete old lines
         line_ids_to_delete = depreciation_line_obj.search(cr, uid, [('asset_id', '=', asset_id),
                                                                     ('depreciation_type', '=', depreciation_type),
-                                                                    ('move_id', '=', False),
+                                                                    ('is_posted', '=', False),
                                                                     ('asset_id.%s_method' % depreciation_type, '!=', 'manual')], context=context)
         depreciation_line_obj.unlink(cr, uid, line_ids_to_delete, context)
         # Create new lines
@@ -462,7 +472,18 @@ class AccountAssetAsset(orm.Model):
         return True
 
     def confirm_asset_purchase(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'confirm'}, context)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        asset_ids_with_purchase_account_date = [asset.id for asset in self.browse(cr, uid, ids, context)
+                                                if asset.purchase_account_date]
+        vals = {'state': 'confirm'}
+        if asset_ids_with_purchase_account_date:
+            self.write(cr, uid, asset_ids_with_purchase_account_date, vals, context)
+        asset_ids_without_purchase_account_date = list(set(ids) - set(asset_ids_with_purchase_account_date))
+        if asset_ids_without_purchase_account_date:
+            vals['purchase_account_date'] = time.strftime('%Y-%m-%d')
+            self.write(cr, uid, asset_ids_without_purchase_account_date, vals, context)
+        return True
 
     def button_confirm_asset_purchase(self, cr, uid, ids, context=None):
         return self.confirm_asset_purchase(cr, uid, ids, context)
@@ -595,6 +616,7 @@ class AccountAssetAsset(orm.Model):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = {}
+        today = time.strftime('%Y-%m-%d')
         for asset in self.browse(cr, uid, ids, context):
             fiscal_book_value = self._get_fiscal_book_value(cr, uid, asset, context)
             regularization_tax_amount = asset.purchase_tax_amount * self._get_regularization_tax_coeff(cr, uid, asset, context)
@@ -608,6 +630,7 @@ class AccountAssetAsset(orm.Model):
                 fiscal_sale_result - accumulated_amortization_value or 0.0,
                 'fiscal_book_value': fiscal_book_value,
                 'accumulated_amortization_value': accumulated_amortization_value,
+                'sale_account_date': asset.sale_account_date or today,
             }
         return res
 

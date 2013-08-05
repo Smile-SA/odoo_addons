@@ -16,7 +16,19 @@ body {
 h2 {
     font-size: 11px;
     text-indent: 1px;
-    margin-top: 20px;
+    margin-top: 30px;
+}
+h3 {
+    font-size: 11px;
+    text-indent: 25px;
+}
+h4 {
+    font-size: 11px;
+    text-indent: 50px;
+}
+h5 {
+    font-size: 11px;
+    text-indent: 75px;
 }
 table {
 	font-family:Arial, Helvetica, sans-serif;

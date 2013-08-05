@@ -107,7 +107,7 @@
 							<field name="note" nolabel="1" colspan="4"/>
 						</page>
 					</notebook>
-					<field name="fiscal_deduction"/>
+					<field name="fiscal_deduction_limit"/>
 				</form>
 			</field>
 		</record>
