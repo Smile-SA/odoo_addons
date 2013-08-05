@@ -19,12 +19,11 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import pooler
-import tools
+from openerp import pooler, tools
+from openerp.osv import orm, fields
 
 
-class DecimalPrecision(osv.osv):
+class DecimalPrecision(orm.Model):
     _inherit = 'decimal.precision'
 
     _columns = {
