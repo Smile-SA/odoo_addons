@@ -551,6 +551,7 @@ class SartreTrigger(orm.Model):
                 for object_ in self.pool.get(trigger.model_id.model).browse(cr, uid, active_object_ids, context):
                     if dynamic_other_value:
                         other_value = _get_id_from_browse_record(eval(str(dynamic_other_value.group()[2:-2]).strip(), {
+                            'uid': uid,
                             'object': object_,
                             'context': context,
                             'time': time,
@@ -926,7 +927,8 @@ def sartre_decorator(original_method):
         context['trigger'] = method_name
         trigger_obj = obj.pool.get('sartre.trigger')
         trigger_ids = []
-        if trigger_obj:
+        if trigger_obj \
+                and (method_name != 'write' or vals):  # To avoid to execute action if write({})
             # Case: trigger on function
             calculation_method = False
             if method_name in ('get', 'set') and original_method.im_class == fields.function:
@@ -959,6 +961,10 @@ def sartre_decorator(original_method):
 
 def sartre_validate(self, cr, uid, ids, context=None):
     context = context or {}
+    # Added by smile #
+    if context.get('no_validate'):
+        return
+    ##################
     lng = context.get('lang', False) or 'en_US'
     trans = self.pool.get('ir.translation')
     error_msgs = []
