@@ -29,7 +29,7 @@ from openerp.tools import config
 from maintenance import MaintenanceManager
 from upgrade import UpgradeManager
 
-_logger = logging.getLogger('upgrades')
+_logger = logging.getLogger(__package__)
 
 
 def set_db_version(self, version):
@@ -67,12 +67,14 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False, pooljo
         if upgrade_manager.db_in_creation:
             code_at_creation = upgrade_manager.code_version
         for upgrade in upgrade_manager.upgrades:
+            _logger.info('loading %s upgrade...', upgrade.version)
             upgrade.pre_load()
             if upgrade.modules_to_upgrade:
                 registry = native_new(db_name, pooljobs=False)
                 upgrade.force_modules_upgrade(registry)
             native_new(db_name, update_module=True, pooljobs=False)
             upgrade.post_load()
+            _logger.info('%s upgrade successfully loaded', upgrade.version)
     registry = native_new(db_name, force_demo, status, update_module, pooljobs)
     registry.set_db_version(code_at_creation)
     if config.get('stop_after_upgrades'):

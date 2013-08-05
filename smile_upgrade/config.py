@@ -25,7 +25,7 @@ import os
 
 from openerp.tools import config
 
-_logger = logging.getLogger('upgrades')
+_logger = logging.getLogger(__package__)
 
 
 class ConfigManager(object):

@@ -26,7 +26,7 @@ from openerp.addons.web.controllers.main import WebClient
 
 from openerp.addons.smile_upgrade.web.controllers import maintenance
 
-_logger = logging.getLogger('upgrades')
+_logger = logging.getLogger(__package__)
 
 
 def kill_xmlrpc_services(*args):

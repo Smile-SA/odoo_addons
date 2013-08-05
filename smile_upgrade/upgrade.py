@@ -29,16 +29,17 @@ from openerp.tools import config
 
 from config import configuration as upgrade_config
 
-_logger = logging.getLogger('upgrades')
+_logger = logging.getLogger(__package__)
 
 
 def stop_after_upgrades(func):
     def wrapper(*args, **kwargs):
         try:
-            res = func(*args, **kwargs)
+            return func(*args, **kwargs)
         except Exception, e:
             if config.get('stop_after_upgrades'):
                 _logger.error(e)
+                _logger.critical('Upgrade FAILED')
                 _logger.info('Stopping OpenERP server')
                 os._exit(1)
             raise e
@@ -153,24 +154,39 @@ class Upgrade(object):
             if clean_query:
                 cr.execute(clean_query)
 
+    def _import_file(self, cr, mode, f_obj):
+        root, ext = os.path.splitext(f_obj.name)
+        if ext == '.sql':
+            self._sql_import(cr, f_obj)
+        elif mode != 'pre-load' and ext == '.yml':
+            tools.convert_yaml_import(cr, 'base', f_obj)
+        else:
+            _logger.error('%s extension is not supported in upgrade %sing', ext, mode)
+            pass
+
     def _load_files(self, cr, mode):
-        _logger.debug('%sing %s upgrade...', (mode, self.version))
-        for fname in getattr(self, mode, []):
+        _logger.debug('%sing %s upgrade...', mode, self.version)
+        files_list = getattr(self, mode, [])
+        format_files_list = lambda f: isinstance(f, tuple) and (f[0], len(f) == 2 and f[1] or 'raise') or (f, 'raise')
+        for fname, error_management in map(format_files_list, files_list):
             fp = os.path.join(self.dir_path, fname.replace('/', os.path.sep))
             if not os.path.exists(fp):
-                _logger.error("%s doesn't exist", fp)
-                pass
-            root, ext = os.path.splitext(fp)
+                _logger.error("No such file: %s", fp)
+                continue
             with open(fp) as f_obj:
                 _logger.info('importing %s file...', fname)
-                if ext == '.sql':
-                    self._sql_import(cr, f_obj)
-                elif mode != 'pre-load' and ext == '.yml':
-                    tools.convert_yaml_import(cr, 'base', f_obj)
-                else:
-                    _logger.error('%s extension is not supported in upgrade %sing' % (ext, mode))
-                    continue
-                _logger.info('%s successfully imported', fname)
+                cr.execute('SAVEPOINT smile_upgrades')
+                try:
+                    self._import_file(cr, mode, f_obj)
+                    _logger.info('%s successfully imported', fname)
+                except Exception, e:
+                    if error_management == 'rollback_and_continue':
+                        cr.execute("ROLLBACK TO SAVEPOINT smile_upgrades")
+                        _logger.warning("%s import rollbacking: %s", fname, e)
+                    elif error_management == 'raise':
+                        raise e
+                    elif error_management != 'not_rollback_and_continue':
+                        _logger.error('%s value not supported in error management', error_management)
 
     def _reset_services(self):
         for service in Service._services.keys():
@@ -179,7 +195,6 @@ class Upgrade(object):
 
     @stop_after_upgrades
     def pre_load(self):
-        _logger.info('loading %s upgrade...', self.version)
         with cursor(self.db) as cr:
             self._load_files(cr, 'pre-load')
 
@@ -189,7 +204,6 @@ class Upgrade(object):
             self._load_files(cr, 'post-load')
         self._set_db_version()
         self._reset_services()
-        _logger.info('%s upgrade successfully loaded', self.version)
 
     def force_modules_upgrade(self, registry):
         uid = SUPERUSER_ID

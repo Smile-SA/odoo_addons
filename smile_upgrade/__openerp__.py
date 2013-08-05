@@ -31,10 +31,14 @@ Objectives
     * Allow to upgrade automatically database after code update and server restarting
     * Display a maintenance page instead of home page and kill XML/RPC services during upgrades
 
-Essentials
+Execution
+
+    su openerp -c "openerp-server -c rcfile -d db_name --load=web,smile_upgrade"
+
+Configuration
 
     * Upgrades structure
-        <project_repository>
+        <project_directory>
         `-- upgrades
             |-- 1.1
             |   |-- __init__.py
@@ -47,23 +51,31 @@ Essentials
             |   `-- *.sql
             `-- upgrade.conf
 
-    * Upgrades configuration
+    * Upgrades configuration -- upgrade.conf
         [options]
         version=1.2
 
-    * __upgrade__.py
+    * Upgrade configuration -- __upgrade__.py
         Content: dictonary with the following keys:
             * version
             * databases: let's empty if valid for all databases
             * description
             * modules_to_upgrade: modules list to update or install
             * pre-load: list of .sql files
-            * post-load: list of .sql or/and .yml files
+            * post-load: list with .sql and .yml files
 
-    * OpenERP Server configuration
+    * OpenERP server configuration -- rcfile=~/.openerp_serverrc
         [options]
-        upgrades_path = <project_repository>/upgrades
-        stop_after_upgrades = True  # To kill openerp-server after upgrades
+        upgrades_path = <project_directory>
+        stop_after_upgrades = True if you want to stop server after upgrades else False
+
+Additional features
+
+    * In post-load, you can replace filename string by tuple
+      (filename, 'rollback_and_continue' or 'not_rollback_and_continue' or 'raise') -- default value = 'raise'
+    * In .yml files, add context['store_in_secure_mode'] = True
+      if you want to compute fields.function (_store_set_values)
+      by catching errors and logging them {record_id: error}
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
