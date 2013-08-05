@@ -19,15 +19,14 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import orm, fields
 
 
-class SmileLog(osv.osv):
+class SmileLog(orm.Model):
     _name = 'smile.log'
     _description = 'Smile Logs'
     _rec_name = 'message'
     _log_access = False
-
     _order = 'log_date desc'
 
     def __init__(self, pool, cr):
@@ -85,4 +84,3 @@ class SmileLog(osv.osv):
         'level': fields.char('Level', size=16, readonly=True),
         'message': fields.text('Message', readonly=True),
     }
-SmileLog()
