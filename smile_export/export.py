@@ -22,14 +22,13 @@
 import threading
 import time
 
-from modules.registry import Registry
-from osv import fields
-from osv.orm import Model, except_orm
-import pooler
-import tools
-from tools.translate import _
+from openerp.modules.registry import Registry
+from openerp.osv import fields
+from openerp.osv.orm import Model, except_orm
+from openerp import pooler, tools
+from openerp.tools.translate import _
 
-from smile_log.db_handler import SmileDBLogger
+from openerp.addons.smile_log.db_handler import SmileDBLogger
 
 
 def _get_exception_message(exception):
@@ -37,7 +36,7 @@ def _get_exception_message(exception):
     return tools.ustr(msg)
 
 
-class ir_model_export_template(Model):
+class IrModelExportTemplate(Model):
     _name = 'ir.model.export.template'
     _description = 'Export Template'
 
@@ -173,7 +172,7 @@ class ir_model_export_template(Model):
                     'args': '(%d, )' % template.id,
                     'numbercall': -1,
                 }
-                cron_id = self.pool.get('ir.cron').create(cr, uid, vals)
+                cron_id = self.pool.get('ir.cron').create(cr, uid, vals, context)
                 template.write({'cron_id': cron_id})
         return True
 
