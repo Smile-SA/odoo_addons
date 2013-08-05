@@ -83,11 +83,17 @@ def new_unlink(self, cr, uid, ids, context=None):
     if hasattr(self, '_cascade_relations'):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        context = context or {}
+        if 'unlink_in_cascade' not in context:
+            context['unlink_in_cascade'] = {self._name: ids}
         for model, fnames in self._cascade_relations.iteritems():
             domain = ['|'] * (len(fnames) - 1) + [(fname, 'in', ids) for fname in fnames]
             sub_model_obj = self.pool.get(model)
             sub_model_ids = sub_model_obj.search(cr, uid, domain, context=context)
-            sub_model_obj.unlink(cr, uid, sub_model_ids, context)
+            sub_model_ids = list(set(sub_model_ids) - set(context['unlink_in_cascade'].get(model, [])))
+            if sub_model_ids:
+                sub_model_obj.unlink(cr, uid, sub_model_ids, context)
+                context['unlink_in_cascade'].setdefault(model, []).extend(sub_model_ids)
     return native_unlink(self, cr, uid, ids, context)
 
 
