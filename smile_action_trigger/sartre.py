@@ -959,6 +959,10 @@ def sartre_decorator(original_method):
 
 def sartre_validate(self, cr, uid, ids, context=None):
     context = context or {}
+    # Added by smile #
+    if context.get('no_validate'):
+        return
+    ##################
     lng = context.get('lang', False) or 'en_US'
     trans = self.pool.get('ir.translation')
     error_msgs = []
