@@ -35,7 +35,7 @@ msgstr "Avancé"
 #: code:addons/smile_export/export.py:80
 #, python-format
 msgid "Can't find method: %s on object: %s"
-msgstr "Pas possible de trouver la méthode : %s sur l'objet : %s"
+msgstr "Impossible de trouver la méthode: %s sur l'objet %s"
 
 #. module: smile_export
 #: field:ir.model.export.template,client_action_id:0
@@ -90,7 +90,7 @@ msgstr "Erreur"
 #: field:ir.model.export,exception:0
 #: selection:ir.model.export,state:0
 msgid "Exception"
-msgstr "Erreur"
+msgstr "Exception"
 
 #. module: smile_export
 #: model:ir.model,name:smile_export.model_ir_model_export
@@ -103,7 +103,7 @@ msgstr "Export"
 #. module: smile_export
 #: model:ir.model,name:smile_export.model_ir_model_export_line
 msgid "Export Line"
-msgstr "Lignes exportées"
+msgstr "Ligne d'export"
 
 #. module: smile_export
 #: model:ir.model,name:smile_export.model_ir_model_export_template
@@ -267,7 +267,12 @@ msgstr "Libellé de la ressource"
 #. module: smile_export
 #: view:ir.model.export.template:0
 msgid "Resources"
-msgstr "Resources"
+msgstr "Ressources"
+
+#. module: smile_export
+#: selection:ir.model.export,state:0
+msgid "Running"
+msgstr "En cours"
 
 #. module: smile_export
 #: field:ir.model.export.template,cron_id:0
@@ -277,27 +282,7 @@ msgstr "Action planifiée"
 #. module: smile_export
 #: view:ir.model.export.template:0
 msgid "Search"
-msgstr "Chercher"
-
-#. module: smile_export
-#: model:res.groups,name:smile_export.group_smile_export_log_reader
-msgid "Smile export / Log reader"
-msgstr "Smile export / Log reader"
-
-#. module: smile_export
-#: model:res.groups,name:smile_export.group_smile_export_manager
-msgid "Smile export / Manager"
-msgstr "Smile export / Manager"
-
-#. module: smile_export
-#: model:res.groups,name:smile_export.group_smile_export_user
-msgid "Smile export / User"
-msgstr "Smile export / User"
-
-#. module: smile_export
-#: selection:ir.model.export,state:0
-msgid "Started"
-msgstr "Démarré"
+msgstr "Rechercher"
 
 #. module: smile_export
 #: field:ir.model.export,state:0

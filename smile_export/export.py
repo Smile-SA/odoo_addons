@@ -108,7 +108,7 @@ class ir_model_export_template(Model):
             if export_line_ids:
                 real_res_ids = [line['res_id'] for line in self.pool.get('ir.model.export.line').read(cr, uid, export_line_ids, ['res_id'], context)]
                 logger = SmileDBLogger(cr.dbname, 'ir.model.export.template', template.id, uid)
-                logger.info('Unlinking model:%s, res_ids: %s - real_res_ids found: %s' % (model, res_ids, real_res_ids))
+                logger.info('Unlinking model: %s, res_ids: %s - real_res_ids found: %s' % (model, res_ids, real_res_ids))
                 self.pool.get('ir.model.export.line').unlink(cr, uid, export_line_ids, context)
                 unlink_line_ids.extend(export_line_ids)
         return unlink_line_ids
@@ -137,10 +137,10 @@ class ir_model_export_template(Model):
             res_ids_list = []
             if export_template.limit:
                 i = 0
-                while(res_ids[i:i + export_template.limit]):
+                while(res_ids[i: i + export_template.limit]):
                     if export_template.max_offset and i == export_template.max_offset * export_template.limit:
                         break
-                    res_ids_list.append(res_ids[i:i + export_template.limit])
+                    res_ids_list.append(res_ids[i: i + export_template.limit])
                     i += export_template.limit
             else:
                 res_ids_list = [res_ids]
@@ -170,7 +170,7 @@ class ir_model_export_template(Model):
                     'user_id': 1,
                     'model': self._name,
                     'function': 'create_export',
-                    'args': '(%d,)' % template.id,
+                    'args': '(%d, )' % template.id,
                     'numbercall': -1,
                 }
                 cron_id = self.pool.get('ir.cron').create(cr, uid, vals)
@@ -197,7 +197,7 @@ self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)"""
                     'model_id': template.model_id.id,
                     'model': template.model_id.model,
                     'key2': 'client_action_multi',
-                    'value': 'ir.actions.server,%d' % server_action_id,
+                    'value': 'ir.actions.server, %d' % server_action_id,
                 }
                 client_action_id = self.pool.get('ir.values').create(cr, uid, vals2, context)
                 template.write({'client_action_id': client_action_id, 'client_action_server_id': server_action_id, })
