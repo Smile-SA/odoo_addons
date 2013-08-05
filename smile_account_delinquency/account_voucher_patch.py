@@ -25,7 +25,6 @@ from osv import orm
 class AccountVoucher(orm.Model):
     _inherit = 'account.voucher'
 
-
     def cancel_voucher(self, cr, uid, ids, context=None):
         reconcile_pool = self.pool.get('account.move.reconcile')
         move_pool = self.pool.get('account.move')
@@ -44,8 +43,8 @@ class AccountVoucher(orm.Model):
                 move_pool.button_cancel(cr, uid, [voucher.move_id.id], context)  # context added by Smile
                 move_pool.unlink(cr, uid, [voucher.move_id.id], context)  # context added by Smile
         res = {
-            'state':'cancel',
-            'move_id':False,
+            'state': 'cancel',
+            'move_id': False,
         }
         self.write(cr, uid, ids, res, context)  # context added by Smile
         return True
