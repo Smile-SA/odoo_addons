@@ -14,7 +14,7 @@
 						<field name="state"/>
 						<field name="filename" colspan="3"/>
 						<field name="extension"/>
-						<field name="extension_custom" nolabel="1" attrs="{'readonly': [('extension', '!=', 'other')], 'required': [('extension', '=', 'other')]}"/>
+						<field name="extension_custom" nolabel="1" attrs="{'readonly': [('extension', '=', 'pdf')], 'required': [('extension', '!=', 'pdf')]}"/>
 						<field name="encoding"/>
 					</group>
 					<notebook colspan="4">
@@ -42,7 +42,7 @@
 										<field name="default_value" colspan="4"/>
 										<field name="not_string"/>
 										<field name="column_validator" colspan="4"/>
-										<field name="exception_msg" colspan="4"/>
+										<field name="exception_msg" attrs="{'invisible': [('not_none', '!=', True)], 'required': [('not_none', '=', True)]}" colspan="4"/>
 										<field name="min_width"/>
 										<field name="max_width"/>
 										<field name="fillchar" attrs="{'invisible': [('min_width', '=', 0)], 'required': [('min_width', '!=', 0)]}"/>

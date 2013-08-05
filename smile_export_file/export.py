@@ -27,8 +27,8 @@ class ir_model_export_template(osv.osv):
 
     _columns = {
         'export_file_template_id': fields.many2one('ir.model.export.file_template', 'File Template'),
-        'records': fields.char('Records', size=256, help="Provide the field name that refers to "
-                               "the records to export. If it is empty it will refer to the current object."),
+        'records': fields.char('Records', size=256, help="Provide the field name that refers to the records to export. "
+                                                         "If it is empty it will refer to the current object."),
     }
 ir_model_export_template()
 

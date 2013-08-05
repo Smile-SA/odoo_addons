@@ -68,17 +68,17 @@ def strip_accents(s):
     return str(a)
 
 
-def is_a_datetime(str0, type='datetime'):
-    if isinstance(str0, str):
+def is_a_datetime(str0, type_='datetime'):
+    if isinstance(str0, basestring):
         formats = {
             'datetime': '%Y-%m-%d %H:%M:%S',
             'date': '%Y-%m-%d',
             'time': '%Y-%m-%d %H:%M:%S',
         }
         try:
-            if type == 'time':
+            if type_ == 'time':
                 str0 = datetime.datetime.today().strftime(formats['date']) + ' ' + str0
-            result = datetime.datetime.strptime(str0, formats[type])
+            result = datetime.datetime.strptime(str0, formats[type_])
             return result
         except Exception:
             pass
@@ -149,7 +149,7 @@ def _generate_excel_file(content, delimiter, quotechar, lineterminator, col_num)
     def unicode_csv_reader(unicode_csv_data, dialect=csv.excel, **kwargs):
         # csv.py doesn't do Unicode; encode temporarily as UTF-8:
         csv_reader = csv.reader(utf_8_encoder(unicode_csv_data),
-                            dialect=dialect, **kwargs)
+                                dialect=dialect, **kwargs)
         for row in csv_reader:
             # decode UTF-8 back to Unicode, cell by cell:
             yield [unicode(cell, 'utf-8') for cell in row]
@@ -188,8 +188,8 @@ class ir_model_export_file_template(Model):
         'model_id': fields.many2one('ir.model', 'Object', domain=[('osv_memory', '=', False)], required=True, ondelete='cascade'),
         'model': fields.related('model_id', 'model', type='char', string='Object', readonly=True),
         'refer_to_underlying_object': fields.boolean('Columns correspond to an underlying object'),
-        'records': fields.char('Records', size=256, help="Provide the field name that refers to "
-                               "the records to export. If it is empty it will refer to the current object."),
+        'records': fields.char('Records', size=256, help="Provide the field name that refers to the records to export. "
+                                                         "If it is empty it will refer to the current object."),
         'state': fields.selection([
             ('tab', 'Tabular'),
             ('other', 'Other'),
@@ -289,10 +289,6 @@ class ir_model_export_file_template(Model):
         # Header with fieldnames
         if template_part == 'header' and export_file.fieldnames_in_header:
             template.append(delimiter.join((tools.ustr(column.name) for column in export_file.column_ids)))
-        if export_file.extension == 'xls':
-            _render_func = _render_unicode
-        else:
-            _render_func = _render_unicode
         # Body
         if template_part == 'body':
             sub_objects = localdict['object']
@@ -306,9 +302,9 @@ class ir_model_export_file_template(Model):
                 line = []
                 for column in export_file.column_ids:
                     try:
-                        column_value = _render_func(column.value or '', localdict)
+                        column_value = _render_unicode(column.value or '', localdict)
                         if column.default_value and not column_value:
-                            column_value = _render_func(column.default_value, localdict)
+                            column_value = _render_unicode(column.default_value, localdict)
                         if column.column_validator:
                             validation = eval(column.column_validator, localdict)
                             if not validation:
@@ -347,7 +343,7 @@ class ir_model_export_file_template(Model):
         content = []
         exceptions = []
         content_render_method = export_file.state == 'tab' and '_render_tab' or '_render'
-        if content_render_method:
+        if content_render_method and context['active_ids']:
             localdict = {
                 'pool': self.pool,
                 'cr': cr,
@@ -370,7 +366,7 @@ class ir_model_export_file_template(Model):
                             content.append(getattr(self, content_render_method)(cr, uid, export_file, template_part, localdict))
                         except Exception, e:
                             if template_part == 'body' and export_file.exception_handling == 'continue':
-                                exceptions.append('%s - %s,%s: %s' % (template_part, export_file.model, line.id, _get_exception_message(e)))
+                                exceptions.append('%s - %s, %s: %s' % (template_part, export_file.model, line.id, _get_exception_message(e)))
                             else:
                                 raise Exception('%s - %s' % (template_part, _get_exception_message(e)))
         try:
@@ -385,7 +381,7 @@ class ir_model_export_file_template(Model):
         vals = {
             'name': filename,
             'type': 'binary',
-            'datas': base64.encodestring(file_content),
+            'datas': base64.encodestring(file_content or ' '),
             'datas_fname': filename,
             'res_model': 'ir.model.export',
             'res_id': context.get('attach_export_id', 0),
@@ -395,7 +391,7 @@ class ir_model_export_file_template(Model):
     def _save_in_local_dir(self, cr, uid, export_file, filename, file_content, context):
         directory = os.path.abspath(export_file.local_directory)
         if not os.path.exists(directory):
-            raise Exception('Directory %s does not exist or permission on it is not granted' % (directory,))
+            raise Exception('Directory %s does not exist or permission on it is not granted' % (directory, ))
         file = open(directory + '/' + filename, 'w')
         file.write(file_content)
         file.close()
@@ -430,10 +426,10 @@ class ir_model_export_file_template(Model):
                 try:
                     getattr(self, '_' + save_file_method)(cr, uid, export_file, filename, file_content, context)
                 except except_orm, e:
-                    exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e) + str(e.value))
+                    exception_infos = "%s: %s %s" % (save_file_method, tools.ustr(type(e)), tools.ustr(e) + tools.ustr(e.value))
                     raise Exception(exception_infos)
                 except Exception, e:
-                    exception_infos = "%s: %s %s" % (save_file_method, str(type(e)), str(e))
+                    exception_infos = "%s: %s %s" % (save_file_method, tools.ustr(type(e)), tools.ustr(e))
                     raise Exception(exception_infos)
 
     def _send_by_email(self, cr, uid, export_file, localdict):
@@ -459,7 +455,7 @@ class ir_model_export_file_template(Model):
         attach_export_id = context.get('attach_export_id', False)
         summary = _render_unicode(export_file.report_summary_template, localdict)
         if exceptions and export_file.exception_logging == 'report':
-            summary += "Exceptions:\n%s" % '\n'.join(exceptions)
+            summary += "Exceptions: \n%s" % '\n'.join(exceptions)
         report_vals = {
             'name': "File Export Processing Report",
             'act_from': uid,
@@ -468,7 +464,7 @@ class ir_model_export_file_template(Model):
         }
         report_id = self.pool.get('res.request').create(cr, uid, report_vals, context)
         if exceptions and export_file.exception_logging == 'file':
-            exceptions_filename = filename[:-filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
+            exceptions_filename = filename[: -filename.find('.')] + '.ERRORS' + filename[-filename.find('.'):]
             exceptions_vals = {
                 'name':  exceptions_filename,
                 'type': 'binary',
@@ -521,7 +517,7 @@ class ir_model_export_file_template(Model):
                     if getattr(content_model, export_file.check_method)(cr, uid, content_id, context):
                         checked_content_ids.append(content_id)
                     else:
-                        exceptions.append('%s,%s: %s' % (export_file.model, content_id, 'Check failed'))
+                        exceptions.append('%s, %s: %s' % (export_file.model, content_id, 'Check failed'))
                 except Exception, e:
                     exceptions.append('%s,%s: %s' % (export_file.model, content_id, _get_exception_message(e)))
         if checked_content_ids:
@@ -583,9 +579,9 @@ class ir_model_export_file_template_column(Model):
         'default_value': fields.char('Default value', size=64,
                                      help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'not_string': fields.boolean('Not a string'),
-        'column_validator': fields.text('Column validator', help="Raise an exception if validator evaluates to False: "
-                                        "use python language with the pool, cr, uid, object, localcontext and time variables"),
-        'has_validator': fields.function(_has_validator, method=True, type='boolean', string="Validator",),
+        'column_validator': fields.text('Column validator', help="Raise an exception if validator evaluates to False: use python language "
+                                                                 "with the pool, cr, uid, object, localcontext and time variables"),
+        'has_validator': fields.function(_has_validator, method=True, type='boolean', string="Validator", ),
         'exception_msg': fields.char('Exception Message', size=256, translate=True,
                                      help="Use mako language with the pool, cr, uid, object, localcontext and time variables"),
         'min_width': fields.integer('Min width'),

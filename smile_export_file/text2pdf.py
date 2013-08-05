@@ -29,10 +29,10 @@
 
  Modification History:
 
- Mon Feb 17 12:20:13 2003 Changed option parsing algorithm to use
+ Mon Feb 17 12: 20: 13 2003 Changed option parsing algorithm to use
                           getopt. Use __main__ calling convention.
                           Bug in FF character fixed.
- Thu Apr 10 11:26:58 2003 Modified to use python style strings
+ Thu Apr 10 11: 26: 58 2003 Modified to use python style strings
                           and function objects.
  July 1 2003              Fixed help string errors. Added the
                           Creator property.
@@ -45,8 +45,8 @@
 
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/189858
 
-import sys
 import string
+import sys
 import time
 import getopt
 
@@ -94,7 +94,7 @@ ENCODING_STR = """\
 /edieresis /igrave /iacute /icircumflex /idieresis /eth
 /ntilde /ograve /oacute /ocircumflex /otilde /odieresis
 /divide /oslash /ugrave /uacute /ucircumflex /udieresis
-/yacute /thorn /ydieresis ]
+/yacute /thorn /ydieresis]
 >>
 """
 
@@ -272,13 +272,12 @@ class pyText2Pdf:
             x += 1
 
     def parseArgs(self):
-
         if len(sys.argv) == 1:
             self.ShowHelp()
 
         arguments = sys.argv[1:]
 
-        optlist, args = getopt.getopt(arguments, 'hIF2Lf:A:s:v:l:c:t:x:y:o:')
+        optlist, args = getopt.getopt(arguments, 'hIF2Lf: A: s: v: l: c: t: x: y: o: ')
 
         # input file is the first element in arg list
         # or last element in options list (in case of an error!)
@@ -305,7 +304,6 @@ class pyText2Pdf:
         """ Write string to output file descriptor.
         All output operations go through this function.
         We keep the current file position also here"""
-
         # update current file position
         self._fpos += len(str)
         for x in range(0, len(str)):
@@ -365,7 +363,7 @@ class pyText2Pdf:
         ws = self.writestr
 
         t = time.localtime()
-        timestr = str(time.strftime("D:%Y%m%d%H%M%S", t))
+        timestr = str(time.strftime("D: %Y%m%d%H%M%S", t))
         ws("%PDF-1.4\n")
         self._locations[1] = self._fpos
         ws("1 0 obj\n")
@@ -411,7 +409,7 @@ class pyText2Pdf:
         ws("5 0 obj\n")
         ws("<<\n")
         ws("  /Font << /F1 4 0 R >>\n")
-        ws("  /ProcSet [ /PDF /Text ]\n")
+        ws("  /ProcSet [ /PDF /Text]\n")
         ws(">>\n")
         ws("endobj\n")
 
@@ -588,7 +586,7 @@ class pyText2Pdf:
         ws("/Type /Pages\n")
         buf = "".join(("/Count ", str(self._pageNo), "\n"))
         ws(buf)
-        buf = "".join(("/MediaBox [ 0 0 ", str(self._pageWd), " ", str(self._pageHt), " ]\n"))
+        buf = "".join(("/MediaBox [ 0 0 ", str(self._pageWd), " ", str(self._pageHt), "]\n"))
         ws(buf)
         ws("/Kids [ ")
 
