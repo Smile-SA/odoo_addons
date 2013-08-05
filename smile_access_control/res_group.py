@@ -99,7 +99,7 @@ class ResGroup(orm.Model):
                 for user in user_obj.read(cr, uid, user_ids, ['user_profile', 'user_profile_id'], context, '_classic_write'):
                     if user['user_profile']:
                         user_profile_ids.append(user['id'])
-                    else:
+                    elif user['user_profile_id']:
                         user_profile_ids.append(user['user_profile_id'])
             if user_profile_ids:
                 user_obj.write(cr, uid, list(set(user_profile_ids)), {}, context)  # Update users linked to profiles
