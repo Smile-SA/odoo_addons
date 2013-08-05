@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp.osv import fields
 from openerp.osv.orm import BaseModel
 
 native_auto_init = BaseModel._auto_init
