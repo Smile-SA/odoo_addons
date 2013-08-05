@@ -21,8 +21,10 @@
 
 from openerp.osv.orm import BaseModel
 
-native_validate = BaseModel._validate
+native_import_data = BaseModel.import_data
 native_load = BaseModel.load
+native_unlink = BaseModel.unlink
+native_validate = BaseModel._validate
 
 
 def new_validate(self, cr, uid, ids, context=None):
@@ -35,7 +37,7 @@ def new_validate(self, cr, uid, ids, context=None):
 # Helper function combining _store_get_values and _store_set_values
 def _compute_store_set(self, cr, uid, ids, context):
     """
-    get the list of stored function field to recompute (via _store_get_values)
+    Get the list of stored function field to recompute (via _store_get_values)
     and recompute them (via _store_set_values)
 
     mainly useful to avoid useless (and costly) write calls in the create
@@ -70,6 +72,25 @@ def new_load(self, cr, uid, fields, data, context=None):
     return res
 
 
+def new_import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
+    context_copy = context and context.copy() or {}
+    context_copy['defer_parent_store_computation'] = True
+    return native_import_data(self, cr, uid, fields, datas, mode, current_module, noupdate, context_copy, filename)
+
+
+def new_unlink(self, cr, uid, ids, context=None):
+    """Force unlink for remote fields.many2one with ondelete='cascade'"""
+    if hasattr(self, '_cascade_relations'):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for model, fnames in self._cascade_relations.iteritems():
+            domain = ['|'] * (len(fnames) - 1) + [(fname, 'in', ids) for fname in fnames]
+            sub_model_obj = self.pool.get(model)
+            sub_model_ids = sub_model_obj.search(cr, uid, domain, context=context)
+            sub_model_obj.unlink(cr, uid, sub_model_ids, context)
+    return native_unlink(self, cr, uid, ids, context)
+
+
 def bulk_create(self, cr, uid, vals_list, context=None):
     context_copy = context and context.copy() or {}
     context_copy['no_store_function'] = True
@@ -85,8 +106,10 @@ def bulk_create(self, cr, uid, vals_list, context=None):
     self._parent_store_compute(cr)
     return True
 
-BaseModel._validate = new_validate
 BaseModel._compute_store_set = _compute_store_set
-BaseModel.load = new_load
+BaseModel._validate = new_validate
 BaseModel.bulk_create = bulk_create
+BaseModel.import_data = new_import_data
+BaseModel.load = new_load
 BaseModel.store_set_values = BaseModel._store_set_values
+BaseModel.unlink = new_unlink

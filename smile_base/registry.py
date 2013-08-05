@@ -19,8 +19,20 @@
 #
 ##############################################################################
 
-import ir_values
-import ir_translation
-import orm
-import registry
-import update
+from openerp.modules.registry import Registry
+
+native_load = Registry.load
+
+
+def new_load(self, cr, module):
+    res = native_load(self, cr, module)
+    for model_obj in res:
+        for fieldname, field in model_obj._columns.iteritems():
+            if field._type == 'many2one' and field.ondelete and field.ondelete.lower() == 'cascade':
+                remote_obj = self.get(field._obj)
+                if not hasattr(remote_obj, '_cascade_relations'):
+                    setattr(remote_obj, '_cascade_relations', {})
+                remote_obj._cascade_relations.setdefault(model_obj._name, set()).add(fieldname)
+    return res
+
+Registry.load = new_load
