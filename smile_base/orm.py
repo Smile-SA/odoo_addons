@@ -21,10 +21,20 @@
 
 from openerp.osv.orm import BaseModel
 
+native_auto_init = BaseModel._auto_init
+native_validate = BaseModel._validate
 native_import_data = BaseModel.import_data
 native_load = BaseModel.load
 native_unlink = BaseModel.unlink
-native_validate = BaseModel._validate
+
+
+def new_auto_init(self, cr, context=None):
+    '''Add foreign key with ondelete = 'set null' for stored fields.function of type many2one'''
+    res = native_auto_init(self, cr, context)
+    for fieldname, field in self._columns.iteritems():
+        if isinstance(field, fields.function) and field._type == 'many2one' and field.store:
+            self._m2o_add_foreign_key_checked(fieldname, self.pool.get(field._obj), 'set null')
+    return res
 
 
 def new_validate(self, cr, uid, ids, context=None):
@@ -112,6 +122,7 @@ def bulk_create(self, cr, uid, vals_list, context=None):
     self._parent_store_compute(cr)
     return True
 
+BaseModel._auto_init = new_auto_init
 BaseModel._compute_store_set = _compute_store_set
 BaseModel._validate = new_validate
 BaseModel.bulk_create = bulk_create
