@@ -75,6 +75,8 @@ class ResUser(orm.Model):
         return super(ResUser, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
+        if not ids:
+            return True
         if isinstance(ids, (int, long)):
             ids = [ids]
         if vals.get('user_profile_id'):
