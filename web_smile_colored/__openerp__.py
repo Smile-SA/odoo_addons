@@ -20,14 +20,14 @@
 ##############################################################################
 
 {
-    "name" : "Smile Colored widget",
-    "category" : "Hidden",
-    "description":"""Add new widget 'colored':
+    "name": "Smile Colored widget",
+    "category": "Hidden",
+    "description": """Add new widget 'colored':
 <field name="field_name" widget="colored" attrs="{'colored':{'blue':'&gt;200','red':'&lt;200'}}"/> in form and list view""",
-    "version" : "1.0",
-    "depends" : ['web'],
+    "version": "1.0",
+    "depends": ['web'],
     'auto_install': False,
-    'js' : [
+    'js': [
         'static/src/js/colored.js'
     ],
 }
