@@ -37,7 +37,7 @@
 			<field name="view_id" ref="base.view_users_tree" />
 			<field name="search_view_id" ref="base.view_users_search" />
 			<field name="domain">[('user_profile', '=', True)]</field>
-			<field name="context">{'active_test': False}</field>
+			<field name="context">{'active_test': False, 'default_user_profile': True}</field>
 			<field name="help"></field>
 		</record>
 		<menuitem action="action_res_user_profiles" id="menu_action_res_user_profiles"
