@@ -11,14 +11,24 @@
 -
   !python {model: res.lang}: |
     if self.search(cr, uid, [('code', '=', 'fr_FR')], limit=1):
-      self.pool.get('ir.values').create(cr, uid, {
-        'name': 'context_lang',
+      value_obj = self.pool.get('ir.values')
+      ids = value_obj.search(cr, uid, [
+        ('name', '=', 'lang'),
+        ('key', '=', 'default'),
+        ('model', '=', 'res.partner'),
+      ], limit=1, context=context)
+      vals = {
+        'name': 'lang',
         'key': 'default',
-        'key2': '',
-        'model': 'res.users',
+        'key2': False,
+        'model': 'res.partner',
         'object': False,
         'value_unpickle': 'fr_FR',
-      }, context)
+      }
+      if ids:
+        value_obj.write(cr, uid, ids, vals, context)
+      else:
+        value_obj.create(cr, uid, vals, context)
 -
   I correct date and time format for French language
 -
