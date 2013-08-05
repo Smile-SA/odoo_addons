@@ -27,4 +27,4 @@ class res_country(osv.Model):
 
     _columns = {
         'call_prefix': fields.char('Call prefix', size=8),
-        }
+    }

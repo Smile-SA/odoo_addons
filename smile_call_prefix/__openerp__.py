@@ -29,7 +29,8 @@
 """,
     "depends": [],
     "init_xml": [],
-    "update_xml": ['data/res.country.csv'
+    "update_xml": [
+        'data/res.country.csv',
     ],
     "demo_xml": [],
     "installable": True,
