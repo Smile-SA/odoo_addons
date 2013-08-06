@@ -21,15 +21,19 @@
 
 {
     "name": "Smile Base",
-    "version": "0.1",
+    "version": "0.2",
     "depends": ["mail"],
     "author": "Smile",
     "description": """Smile Base
 
-    * Install and make French the default language
+    * Install and make French the default language for users and partners
     * Remove the scheduled action "Update Notification" which sends companies and users info to OpenERP S.A.
     * Activate access logs for ir.translation object
     * Correct date and time format for French language
+    * Force to call unlink method at removal of remote object linked by a fields.many2one with ondelete='cascade'
+    * Deduplicate pool._store_function
+    * Add BaseModel.bulk_create, BaseModel.store_set_values and BaseModel._compute_store_set
+    * Improve BaseModel.import_data method performance
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
