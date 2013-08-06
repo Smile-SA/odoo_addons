@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="smile_script_form_view" model="ir.ui.view">
+            <field name="name">Smile script - Form</field>
+            <field name="model">smile.script</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Script">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="create_date"/>
+                    <field name="create_uid"/>
+                    <notebook colspan="4">
+                        <page name="description" string="Description">
+                            <field name="description" nolabel="1"/>
+                        </page>
+                        <page name="code" string="Code">
+                            <field name="code" nolabel="1" colspan="4"/>
+                            <field name="automatic_dump"/>
+                        </page>
+                        <page name="interventions" string="Interventions">
+                        	<group colspan="4" col="2">
+	                            <button name="run_test" type="object" string="Test"/>
+	                            <button name="run" type="object" string="Run" attrs="{'invisible': [('state', '=', 'draft')]}" confirm="Are you sure you want to perform a new intervention ?"/>
+                        	</group>
+                            <field name="intervention_ids" nolabel="1" context="{'script_form_view': True}"/>
+                        </page>
+                    </notebook>
+                    <group name="validation" colspan="4" col="8">
+                        <field name="state"/>
+                        <button name="validate" type="object" string="Validate" attrs="{'invisible': [('state', '=', 'validated')]}"/>
+                        <field name="validation_date" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                        <field name="validation_user_id" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    </group>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="smile_script_tree_view" model="ir.ui.view">
+            <field name="name">Smile script - Tree</field>
+            <field name="model">smile.script</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Scripts">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="smile_script_search_view" model="ir.ui.view">
+            <field name="name">Smile script - Search</field>
+            <field name="model">smile.script</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Scripts">
+                    <filter string="Validated" icon="terp-ok" domain="[('state', '=', 'validated')]" />
+                    <field name="name"/>
+
+                    <newline/>
+                    <group expand="0" string="Extended..." colspan="11" col="11" groups="base.group_extended">
+                        <field name="description"/>
+                        <field name="code"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="act_smile_script" model="ir.actions.act_window">
+            <field name="name">Smile scripts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">smile.script</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_smile_script" parent="base.menu_audit" name="Smile scripts" action="act_smile_script"/>
+
+        <record id="smile_script_intervention_form_view" model="ir.ui.view">
+            <field name="name">Smile script intervention - Form</field>
+            <field name="model">smile.script.intervention</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Intervention">
+                    <field name="script_id" invisible="context.get('script_form_view')"/>
+                    <group name="intervention_dates" colspan="4" col="6">
+                        <field name="create_uid"/>
+                        <field name="create_date"/>
+                        <field name="end_date"/>
+                        <field name="state"/>
+                        <field name="test_mode"/>
+                    </group>
+                    <separator string="Result" colspan="4"/>
+                    <field name="result" nolabel="1" colspan="4"/>
+                    <separator string="Logs" colspan="4"/>
+                    <field name="log_ids" colspan="4" nolabel="1"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="smile_script_intervention_tree_view" model="ir.ui.view">
+            <field name="name">Smile script intervention - Tree</field>
+            <field name="model">smile.script.intervention</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Interventions" colors="blue:state=='done';grey:test_mode==True;red:state=='exception'">
+                    <field name="script_id" invisible="context.get('script_form_view')"/>
+                    <field name="create_uid"/>
+                    <field name="create_date"/>
+                    <field name="end_date"/>
+                    <field name="state"/>
+                    <field name="test_mode"/>
+                    <field name="result"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="act_smile_script_intervention" model="ir.actions.act_window">
+            <field name="name">Smile script interventions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">smile.script.intervention</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_smile_script_intervention" parent="base.menu_audit" name="Smile script interventions" action="act_smile_script_intervention"/>
+
+    </data>
+</openerp>
