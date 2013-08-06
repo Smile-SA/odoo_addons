@@ -85,9 +85,10 @@ def new_load(self, cr, uid, fields, data, context=None):
     context_copy['defer_parent_store_computation'] = True
     res = native_load(self, cr, uid, fields, data, context_copy)
     ids = res['ids']
-    self._compute_store_set(cr, uid, ids, context)
-    self._validate(cr, uid, ids, context)
-    self._parent_store_compute(cr)
+    if ids:
+        self._compute_store_set(cr, uid, ids, context)
+        self._validate(cr, uid, ids, context)
+        self._parent_store_compute(cr)
     return res
 
 
