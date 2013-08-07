@@ -41,10 +41,8 @@ ASSET_TYPES = [
     ('purchase', 'Purchase'),
     ('purchase_refund', 'Purchase Refund'),
 ]
-SALE_FIELDS = [
-    'customer_id', 'sale_date', 'sale_account_date', 'sale_value', 'book_value', 'accumulated_amortization_value', 'sale_type', 'sale_result',
-    'sale_result_short_term', 'sale_result_long_term', 'tax_regularization', 'regularization_tax_amount', 'is_out',
-]
+SALE_FIELDS = ['customer_id', 'sale_date', 'sale_account_date', 'sale_value', 'book_value', 'accumulated_amortization_value', 'sale_type',
+               'sale_result', 'sale_result_short_term', 'sale_result_long_term', 'tax_regularization', 'regularization_tax_amount', 'is_out']
 
 _logger = logging.getLogger('account.asset.asset')
 
