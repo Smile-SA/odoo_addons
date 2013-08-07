@@ -103,7 +103,8 @@ def new_unlink(self, cr, uid, ids, context=None):
     if hasattr(self, '_cascade_relations'):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        context = context or {}
+        context = context.copy() if context else {}
+        context['active_test'] = False
         if 'unlink_in_cascade' not in context:
             context['unlink_in_cascade'] = {self._name: ids}
         for model, fnames in self._cascade_relations.iteritems():
