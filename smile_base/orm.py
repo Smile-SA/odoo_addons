@@ -41,7 +41,7 @@ def new_auto_init(self, cr, context=None):
     res = native_auto_init(self, cr, context)
     for fieldname, field in self._columns.iteritems():
         if isinstance(field, fields.function) and field._type == 'many2one' and field.store:
-            self._m2o_add_foreign_key_checked(fieldname, self.pool.get(field._obj), 'set null')
+            self._m2o_fix_foreign_key(cr, self._table, fieldname, self.pool.get(field._obj), 'set null')
     return res
 
 
@@ -82,6 +82,8 @@ def new_import_data(self, cr, uid, fields, datas, mode='init', current_module=''
 
 def new_unlink(self, cr, uid, ids, context=None):
     """Force unlink for remote fields.many2one with ondelete='cascade'"""
+    if not ids:
+        return True
     if hasattr(self, '_cascade_relations'):
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -97,7 +99,10 @@ def new_unlink(self, cr, uid, ids, context=None):
             if sub_model_ids:
                 sub_model_obj.unlink(cr, uid, sub_model_ids, context)
                 context['unlink_in_cascade'].setdefault(model, []).extend(sub_model_ids)
-    return native_unlink(self, cr, uid, ids, context)
+    existing_ids = self.exists(cr, uid, ids, context)
+    if not existing_ids:
+        return True
+    return native_unlink(self, cr, uid, existing_ids, context)
 
 
 def bulk_create(self, cr, uid, vals_list, context=None):
