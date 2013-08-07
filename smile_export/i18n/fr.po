@@ -103,7 +103,7 @@ msgstr "Export"
 #. module: smile_export
 #: model:ir.model,name:smile_export.model_ir_model_export_line
 msgid "Export Line"
-msgstr "Ligne d'export"
+msgstr "Ligne exportées"
 
 #. module: smile_export
 #: model:ir.model,name:smile_export.model_ir_model_export_template
