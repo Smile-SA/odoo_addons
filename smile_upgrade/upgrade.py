@@ -25,25 +25,10 @@ import os
 
 from openerp import sql_db, SUPERUSER_ID, tools
 from openerp.netsvc import Service
-from openerp.tools import config
 
 from config import configuration as upgrade_config
 
 _logger = logging.getLogger(__package__)
-
-
-def stop_after_upgrades(func):
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except Exception, e:
-            if config.get('stop_after_upgrades'):
-                _logger.error(e)
-                _logger.critical('Upgrade FAILED')
-                _logger.info('Stopping OpenERP server')
-                os._exit(1)
-            raise e
-    return wrapper
 
 
 @contextmanager
@@ -193,12 +178,10 @@ class Upgrade(object):
             if service.startswith('report.'):
                 del Service._services[service]
 
-    @stop_after_upgrades
     def pre_load(self):
         with cursor(self.db) as cr:
             self._load_files(cr, 'pre-load')
 
-    @stop_after_upgrades
     def post_load(self):
         with cursor(self.db) as cr:
             self._load_files(cr, 'post-load')

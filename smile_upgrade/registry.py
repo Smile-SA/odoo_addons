@@ -23,13 +23,20 @@ from contextlib import contextmanager
 import logging
 import os
 
+from openerp import tools
 from openerp.modules.registry import Registry, RegistryManager
+from openerp.osv import osv, orm
 from openerp.tools import config
 
 from maintenance import MaintenanceManager
 from upgrade import UpgradeManager
 
 _logger = logging.getLogger(__package__)
+
+
+def _get_exception_message(exception):
+    msg = isinstance(exception, (osv.except_osv, orm.except_orm)) and exception.value or exception
+    return tools.ustr(msg)
 
 
 def set_db_version(self, version):
@@ -62,25 +69,35 @@ def upgrade_manager(cls, db_name):
 
 @classmethod
 def new(cls, db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
-    code_at_creation = False
-    with cls.upgrade_manager(db_name) as upgrade_manager:
-        if upgrade_manager.db_in_creation:
-            code_at_creation = upgrade_manager.code_version
-        for upgrade in upgrade_manager.upgrades:
-            _logger.info('loading %s upgrade...', upgrade.version)
-            upgrade.pre_load()
-            if upgrade.modules_to_upgrade:
-                registry = native_new(db_name, pooljobs=False)
-                upgrade.force_modules_upgrade(registry)
-            native_new(db_name, update_module=True, pooljobs=False)
-            upgrade.post_load()
-            _logger.info('%s upgrade successfully loaded', upgrade.version)
-    registry = native_new(db_name, force_demo, status, update_module, pooljobs)
-    registry.set_db_version(code_at_creation)
-    if config.get('stop_after_upgrades'):
-        _logger.info('Stopping OpenERP server')
-        os._exit(0)
-    return registry
+    upgrades = False
+    try:
+        code_at_creation = False
+        with cls.upgrade_manager(db_name) as upgrade_manager:
+            if upgrade_manager.db_in_creation:
+                code_at_creation = upgrade_manager.code_version
+            upgrades = bool(upgrade_manager.upgrades)
+            for upgrade in upgrade_manager.upgrades:
+                _logger.info('loading %s upgrade...', upgrade.version)
+                upgrade.pre_load()
+                if upgrade.modules_to_upgrade:
+                    registry = native_new(db_name, pooljobs=False)
+                    upgrade.force_modules_upgrade(registry)
+                native_new(db_name, update_module=True, pooljobs=False)
+                upgrade.post_load()
+                _logger.info('%s upgrade successfully loaded', upgrade.version)
+        registry = native_new(db_name, force_demo, status, update_module, pooljobs)
+        registry.set_db_version(code_at_creation)
+        if upgrades and config.get('stop_after_upgrades'):
+            _logger.info('Stopping OpenERP server')
+            os._exit(0)
+        return registry
+    except Exception, e:
+        if upgrades and config.get('stop_after_upgrades'):
+            _logger.error(_get_exception_message(e))
+            _logger.critical('Upgrade FAILED')
+            _logger.info('Stopping OpenERP server')
+            os._exit(1)
+        raise e
 
 RegistryManager.upgrade_manager = upgrade_manager
 RegistryManager.new = new
