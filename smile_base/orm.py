@@ -100,6 +100,8 @@ def new_import_data(self, cr, uid, fields, datas, mode='init', current_module=''
 
 def new_unlink(self, cr, uid, ids, context=None):
     """Force unlink for remote fields.many2one with ondelete='cascade'"""
+    if not ids:
+        return True
     if hasattr(self, '_cascade_relations'):
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -113,9 +115,12 @@ def new_unlink(self, cr, uid, ids, context=None):
             sub_model_ids = sub_model_obj.search(cr, uid, domain, context=context)
             sub_model_ids = list(set(sub_model_ids) - set(context['unlink_in_cascade'].get(model, [])))
             if sub_model_ids:
-                sub_model_obj.unlink(cr, uid, sub_model_ids, context)
                 context['unlink_in_cascade'].setdefault(model, []).extend(sub_model_ids)
-    return native_unlink(self, cr, uid, ids, context)
+                sub_model_obj.unlink(cr, uid, sub_model_ids, context)
+    existing_ids = self.exists(cr, uid, ids, context)
+    if not existing_ids:
+        return True
+    return native_unlink(self, cr, uid, existing_ids, context)
 
 
 def bulk_create(self, cr, uid, vals_list, context=None):
