@@ -214,9 +214,11 @@ def state_cleaner(method):
     def state_cleaner(self, cr, module):
         res = method(self, cr, module)
         if self.get('ir.model.export'):
-            export_ids = self.get('ir.model.export').search(cr, 1, [('state', '=', 'running')])
-            if export_ids:
-                self.get('ir.model.export').write(cr, 1, export_ids, {'state': 'exception'})
+            cr.execute("select relname from pg_class where relname='ir_model_export'")
+            if cr.rowcount:
+                export_ids = self.get('ir.model.export').search(cr, 1, [('state', '=', 'running')])
+                if export_ids:
+                    self.get('ir.model.export').write(cr, 1, export_ids, {'state': 'exception'})
         return res
     return state_cleaner
 
