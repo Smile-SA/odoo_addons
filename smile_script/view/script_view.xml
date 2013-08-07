@@ -17,11 +17,12 @@
                             <field name="description" nolabel="1"/>
                         </page>
                         <page name="code" string="Code">
+                            <field name="expect_result" attrs="{'invisible': [('type', '!=', 'sql')]}"/>
                             <field name="code" nolabel="1" colspan="4"/>
-                            <field name="automatic_dump"/>
                         </page>
                         <page name="interventions" string="Interventions">
-                        	<group colspan="4" col="2">
+                        	<group colspan="4" col="4">
+	                            <field name="automatic_dump"/>
 	                            <button name="run_test" type="object" string="Test"/>
 	                            <button name="run" type="object" string="Run" attrs="{'invisible': [('state', '=', 'draft')]}" confirm="Are you sure you want to perform a new intervention ?"/>
                         	</group>

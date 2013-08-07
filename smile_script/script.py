@@ -56,9 +56,9 @@ class SmileScript(orm.Model):
                                  states={'draft': [('readonly', False)]}),
         'code': fields.text('Code', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([('draft', 'Draft'), ('validated', 'Validated')], 'State', required=True, readonly=True),
-        'automatic_dump': fields.boolean('Automatic dump', readonly=True, states={'draft': [('readonly', False)]},
-                                         help='Make sure postgresql authentification is correctly set'),
         'intervention_ids': fields.one2many('smile.script.intervention', 'script_id', 'Interventions', readonly=True),
+        'automatic_dump': fields.boolean('Automatic dump', help='Make sure postgresql authentification is correctly set'),
+        'expect_result': fields.boolean('Expect a result'),
     }
 
     _defaults = {
@@ -163,11 +163,13 @@ class SmileScript(orm.Model):
             'logger': logger,
         }
         eval(script.code, localdict, mode='exec', nocopy=True)  # INFO: nocopy allows to return 'result'
-        return localdict.get('result') or ''
+        return localdict['result'] if 'result' in localdict else 'No result'
 
     def _run_sql(self, cr, uid, script, intervention_id, context=None):
         cr.execute(script.code)
-        return tools.ustr(cr.fetchall())
+        if script.expect_result:
+            return tools.ustr(cr.fetchall())
+        return 'No result'
 
     def dump_database(self, cr):
         dump_path = tools.config.get('smile_script_dump_path')
