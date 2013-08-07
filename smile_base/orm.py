@@ -42,7 +42,7 @@ def new_auto_init(self, cr, context=None):
     res = native_auto_init(self, cr, context)
     for fieldname, field in self._columns.iteritems():
         if isinstance(field, fields.function) and field._type == 'many2one' and field.store:
-            self._m2o_add_foreign_key_checked(fieldname, self.pool.get(field._obj), 'set null')
+            self._m2o_fix_foreign_key(cr, self._table, fieldname, self.pool.get(field._obj), 'set null')
     return res
 
 
