@@ -21,12 +21,13 @@
 
 from functools import partial
 import logging
+from StringIO import StringIO
 import time
 
 from openerp import sql_db, SUPERUSER_ID, tools
 from openerp.modules.registry import Registry
 from openerp.osv import fields, osv, orm
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools import convert_xml_import
 from openerp.tools.translate import _
 
 from smile_log.db_handler import SmileDBLogger
@@ -52,7 +53,7 @@ class SmileScript(orm.Model):
 
         'name': fields.char('Name', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'description': fields.text('Description', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'type': fields.selection([('sql', 'SQL'), ('python', 'Python')], 'Type', required=True, readonly=True,
+        'type': fields.selection([('python', 'Python'), ('sql', 'SQL'), ('xml', 'XML')], 'Type', required=True, readonly=True,
                                  states={'draft': [('readonly', False)]}),
         'code': fields.text('Code', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([('draft', 'Draft'), ('validated', 'Validated')], 'State', required=True, readonly=True),
@@ -103,11 +104,13 @@ class SmileScript(orm.Model):
         return True
 
     def _run(self, cr, uid, script, intervention_id, logger, context=None):
-        _logger.info('Running script: {}\nCode:\n{}'.format(script.name, script.code))
+        _logger.info('Running script: {}\nCode:\n{}'.format(script.name, script.code.encode('utf-8')))
         if script.type == 'sql':
-            return self._run_sql(cr, uid, script, intervention_id, context)
+            return self._run_sql(cr, uid, script, context)
+        elif script.type == 'xml':
+            return self._run_xml(cr, uid, script, context)
         elif script.type == 'python':
-            return self._run_python(cr, uid, script, intervention_id, logger, context)
+            return self._run_python(cr, uid, script, logger, context)
         raise NotImplementedError(script.type)
 
     def run(self, cr, uid, ids, context=None):
@@ -153,7 +156,7 @@ class SmileScript(orm.Model):
         mod, id_str = id_str.split('.')
         return model_data_obj.get_object_reference(cr, SUPERUSER_ID, mod, id_str)[1]
 
-    def _run_python(self, cr, uid, script, intervention_id, logger, context=None):
+    def _run_python(self, cr, uid, script, logger, context=None):
         localdict = {
             'pool': self.pool,
             'cr': cr,
@@ -162,14 +165,18 @@ class SmileScript(orm.Model):
             'ref': partial(self.ref, cr),
             'logger': logger,
         }
-        eval(script.code, localdict, mode='exec', nocopy=True)  # INFO: nocopy allows to return 'result'
-        return localdict['result'] if 'result' in localdict else 'No result'
+        exec script.code in localdict
+        return localdict['result'] if 'result' in localdict else 'No expected result'
 
-    def _run_sql(self, cr, uid, script, intervention_id, context=None):
+    def _run_sql(self, cr, uid, script, context=None):
         cr.execute(script.code)
         if script.expect_result:
             return tools.ustr(cr.fetchall())
-        return 'No result'
+        return 'No expected result'
+
+    def _run_xml(self, cr, uid, script, context=None):
+        convert_xml_import(cr, __package__, StringIO(script.code.encode('utf-8')))
+        return 'No expected result'
 
     def dump_database(self, cr):
         dump_path = tools.config.get('smile_script_dump_path')
