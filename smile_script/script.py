@@ -104,7 +104,7 @@ class SmileScript(orm.Model):
         return True
 
     def _run(self, cr, uid, script, intervention_id, logger, context=None):
-        _logger.info('Running script: {}\nCode:\n{}'.format(script.name, script.code.encode('utf-8')))
+        _logger.info('Running script: {}\nCode:\n{}'.format(script.name.encode('utf-8'), script.code.encode('utf-8')))
         if script.type == 'sql':
             return self._run_sql(cr, uid, script, context)
         elif script.type == 'xml':
