@@ -1,9 +1,0 @@
-
-svn_repository = SVN_REPOSITORY
-
-internal_testing_backup_dir = INTERNAL_TESTING_BACKUP_DIR
-internal_testing_sources_dir = INTERNAL_TESTING_SOURCES_DIR
-
-customer_testing_backup_dir = CUSTOMER_TESTING_BACKUP_DIR
-customer_testing_sources_dir = CUSTOMER_TESTING_SOURCES_DIR
-customer_testing_tag_dir = LOCAL_TAG_DIR_TO_CREATE_ARCHIVE_TO_PUT_IN_CUSTOMER_TESTING
