@@ -19,8 +19,12 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, orm
+import logging
+
 from openerp.addons.base.ir.ir_values import ACTION_SLOTS, EXCLUDED_FIELDS
+from openerp.osv import fields, orm
+from openerp.tools.misc import unquote
+from openerp.tools.safe_eval import safe_eval as eval
 
 
 class IrValues(orm.Model):
@@ -106,9 +110,12 @@ class IrValues(orm.Model):
                 # keep only the first action registered for each action name
                 # Add by Smile #
                 if action_slot == 'tree_but_open' and action_def['type'] == 'ir.actions.act_window':
-                    action_context = eval(action_def['context'])
-                    action_context['window_action_id'] = action_def['id']
-                    action_def['context'] = unicode(action_context)
+                    try:
+                        action_context = eval(action_def['context'], {'active_id': unquote("active_id")})
+                        action_context['window_action_id'] = action_def['id']
+                        action_def['context'] = unicode(action_context)
+                    except Exception as e:
+                        logging.getLogger('smile.base').warning('Error in eval: %s - %s' % (action_def['context'], repr(e)))
                 ################
                 results[action['name']] = (action['id'], action['name'], action_def)
             except orm.except_orm:
