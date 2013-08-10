@@ -21,7 +21,7 @@
 
 {
     "name": "Smile Base",
-    "version": "0.2",
+    "version": "0.2.3",
     "depends": ["mail"],
     "author": "Smile",
     "description": """Smile Base
