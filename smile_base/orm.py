@@ -82,9 +82,10 @@ def new_load(self, cr, uid, fields, data, context=None):
     context_copy['defer_parent_store_computation'] = True
     res = native_load(self, cr, uid, fields, data, context_copy)
     ids = res['ids']
-    self._compute_store_set(cr, uid, ids, context)
-    self._validate(cr, uid, ids, context)
-    self._parent_store_compute(cr)
+    if ids:
+        self._compute_store_set(cr, uid, ids, context)
+        self._validate(cr, uid, ids, context)
+        self._parent_store_compute(cr)
     return res
 
 
@@ -111,8 +112,8 @@ def new_unlink(self, cr, uid, ids, context=None):
             sub_model_ids = sub_model_obj.search(cr, uid, domain, context=context)
             sub_model_ids = list(set(sub_model_ids) - set(context['unlink_in_cascade'].get(model, [])))
             if sub_model_ids:
-                sub_model_obj.unlink(cr, uid, sub_model_ids, context)
                 context['unlink_in_cascade'].setdefault(model, []).extend(sub_model_ids)
+                sub_model_obj.unlink(cr, uid, sub_model_ids, context)
     existing_ids = self.exists(cr, uid, ids, context)
     if not existing_ids:
         return True
