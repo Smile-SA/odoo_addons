@@ -1,0 +1,166 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2013 Smile (<http://www.smile.fr>). All Rights Reserved
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+import logging
+from lxml import etree
+
+from openerp import SUPERUSER_ID
+from openerp.config import config
+from openerp.tools import YamlImportException, YamlInterpreter
+
+_logger = logging.getLogger(__name__)
+
+unsafe_eval = eval
+
+native_init = YamlInterpreter.__init__
+
+
+def new_init(self, cr, module, id_map, mode, filename, noupdate=False):
+    native_init(self, cr, module, id_map, mode, filename, noupdate)
+    self.uid = SUPERUSER_ID
+
+
+def _get_uid(self, yamltag):
+    if yamltag.uid is not None:
+        uid = yamltag.uid
+        if isinstance(uid, basestring):
+            uid = self._ref()(uid)
+    else:
+        uid = self.uid
+    return uid
+
+
+def new_process_function(self, node):
+    function, params = node.items()[0]
+    if self.isnoupdate(function) and self.mode != 'init':
+        return
+    model = self.get_model(function.model)
+    if function.eval:
+        args = self.process_eval(function.eval)
+    else:
+        args = self._eval_params(function.model, params)
+    uid = self._get_uid(function)  # Added by Smile
+    method = function.name
+    getattr(model, method)(self.cr, uid, *args)
+
+
+def new_process_python(self, node):
+    def log(msg, *args):
+        _logger.log(logging.TEST, msg, *args)
+    python, statements = node.items()[0]
+    model = self.get_model(python.model)
+    statements = statements.replace("\r\n", "\n")
+    uid = self._get_uid(python)  # Added by Smile
+    code_context = {'model': model, 'cr': self.cr, 'uid': uid, 'log': log, 'context': self.context}
+    code_context.update({'self': model})  # remove me when no !python block test uses 'self' anymore
+    try:
+        code_obj = compile(statements, self.filename, 'exec')
+        unsafe_eval(code_obj, {'ref': self.get_id}, code_context)
+    except AssertionError, e:
+        self._log_assert_failure(python.severity, 'AssertionError in Python code %s: %s', python.name, e)
+        return
+    except Exception, e:
+        _logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
+        raise
+    else:
+        self.assert_report.record(True, python.severity)
+
+
+def new_process_record(self, node):
+    record, fields = node.items()[0]
+    model = self.get_model(record.model)
+    view_id = record.view
+    if view_id and (view_id is not True):
+        view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, SUPERUSER_ID, self.module, record.view)[1]
+    if model.is_transient():
+        record_dict = self.create_osv_memory_record(record, fields)
+    else:
+        self.validate_xml_id(record.id)
+        try:
+            self.pool.get('ir.model.data')._get_id(self.cr, SUPERUSER_ID, self.module, record.id)
+            default = False
+        except ValueError:
+            default = True
+        uid = self._get_uid(record)  # Added by Smile
+        if self.isnoupdate(record) and self.mode != 'init':
+
+            id = self.pool.get('ir.model.data')._update_dummy(self.cr, uid, record.model, self.module, record.id)
+            # check if the resource already existed at the last update
+            if id:
+                self.id_map[record] = int(id)
+                return None
+            else:
+                if not self._coerce_bool(record.forcecreate):
+                    return None
+        #context = self.get_context(record, self.eval_context)
+        #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
+        context = record.context
+        if view_id:
+            varg = view_id
+            if view_id is True:
+                varg = False
+            view = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
+            view_id = etree.fromstring(view['arch'].encode('utf-8'))
+
+        record_dict = self._create_record(model, fields, view_id, default=default)
+        _logger.debug("RECORD_DICT %s" % record_dict)
+        id = self.pool.get('ir.model.data')._update(self.cr, uid, record.model,
+                                                    self.module, record_dict, record.id,
+                                                    noupdate=self.isnoupdate(record),
+                                                    mode=self.mode, context=context)
+        self.id_map[record.id] = int(id)
+        if config.get('import_partial'):
+            self.cr.commit()
+
+
+def new_process_workflow(self, node):
+    workflow, values = node.items()[0]
+    if self.isnoupdate(workflow) and self.mode != 'init':
+        return
+    if workflow.ref:
+        id = self.get_id(workflow.ref)
+    else:
+        if not values:
+            raise YamlImportException('You must define a child node if you do not give a ref.')
+        if not len(values) == 1:
+            raise YamlImportException('Only one child node is accepted (%d given).' % len(values))
+        value = values[0]
+        if not 'model' in value and (not 'eval' in value or not 'search' in value):
+            raise YamlImportException('You must provide a "model" and an "eval" or "search" to evaluate.')
+        value_model = self.get_model(value['model'])
+        local_context = {'obj': lambda x: value_model.browse(self.cr, self.uid, x, context=self.context)}
+        local_context.update(self.id_map)
+        id = eval(value['eval'], self.eval_context, local_context)
+    uid = self._get_uid(workflow)  # Added by Smile
+    self.cr.execute('select distinct signal from wkf_transition')
+    signals = [x['signal'] for x in self.cr.dictfetchall()]
+    if workflow.action not in signals:
+        raise YamlImportException('Incorrect action %s. No such action defined' % workflow.action)
+    import openerp.netsvc as netsvc
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
+
+YamlInterpreter.__init__ = new_init
+YamlInterpreter._get_uid = _get_uid
+YamlInterpreter.process_function = new_process_function
+YamlInterpreter.process_python = new_process_python
+YamlInterpreter.process_record = new_process_record
+YamlInterpreter.process_workflow = new_process_workflow

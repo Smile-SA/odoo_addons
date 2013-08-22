@@ -24,3 +24,4 @@ import ir_translation
 import orm
 import registry
 import update
+import yaml_import
