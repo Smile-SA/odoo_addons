@@ -111,7 +111,7 @@ class IrValues(orm.Model):
                 # Add by Smile #
                 if action_slot == 'tree_but_open' and action_def['type'] == 'ir.actions.act_window':
                     try:
-                        action_context = eval(action_def['context'], {'active_id': unquote("active_id")})
+                        action_context = eval(action_def['context'], {'active_id': unquote("active_id"), 'uid': uid})
                         action_context['window_action_id'] = action_def['id']
                         action_def['context'] = unicode(action_context)
                     except Exception as e:
