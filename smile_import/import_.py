@@ -38,6 +38,7 @@ class IrModelImportTemplate(orm.Model):
         'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
         'method': fields.char('Method', size=64, help="Arguments passed through **kwargs", required=True),
         'import_ids': fields.one2many('ir.model.import', 'import_tmpl_id', 'Imports', readonly=True),
+        'cron_id': fields.many2one('ir.cron', 'Scheduled Action'),
         'server_action_id': fields.many2one('ir.actions.server', 'Server Action'),
         'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import.template')], readonly=True),
     }
@@ -84,6 +85,23 @@ class IrModelImportTemplate(orm.Model):
             else:
                 import_obj._process_import(cr, uid, import_id, logger, context)
         return result
+
+    def create_cron(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for template in self.browse(cr, uid, ids, context):
+            if not template.cron_id:
+                vals = {
+                    'name': template.name,
+                    'user_id': 1,
+                    'model': self._name,
+                    'function': 'create_import',
+                    'args': '(%d, )' % template.id,
+                    'numbercall': -1,
+                }
+                cron_id = self.pool.get('ir.cron').create(cr, uid, vals, context)
+                template.write({'cron_id': cron_id})
+        return True
 
     def create_server_action(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
