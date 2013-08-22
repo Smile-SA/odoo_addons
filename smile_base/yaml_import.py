@@ -23,8 +23,8 @@ import logging
 from lxml import etree
 
 from openerp import SUPERUSER_ID
-from openerp.config import config
 from openerp.tools import YamlImportException, YamlInterpreter
+from openerp.tools.config import config
 
 _logger = logging.getLogger(__name__)
 
