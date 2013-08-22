@@ -45,6 +45,7 @@
     "init_xml": [
         "data/ir_lang.yml",
         "security/base_security.xml",
+        "security/ir.model.access.csv",
         "view/ir_values_view.xml",
     ],
     "update_xml": [],
