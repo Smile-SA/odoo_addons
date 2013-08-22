@@ -21,7 +21,7 @@
 
 {
     "name": "Smile Base",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "depends": ["mail"],
     "author": "Smile",
     "description": """Smile Base
@@ -34,6 +34,7 @@
     * Deduplicate pool._store_function
     * Add BaseModel.bulk_create, BaseModel.store_set_values and BaseModel._compute_store_set
     * Improve BaseModel.import_data method performance
+    * Manage uid in Yaml tests
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
