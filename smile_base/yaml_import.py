@@ -21,21 +21,26 @@
 
 import logging
 from lxml import etree
+import time
 
-from openerp import SUPERUSER_ID
-from openerp.tools import YamlImportException, YamlInterpreter
+from openerp import pooler, SUPERUSER_ID
+from openerp.tools import is_eval, is_ref, is_string, misc, YamlImportException, YamlInterpreter
 from openerp.tools.config import config
 
 _logger = logging.getLogger(__name__)
 
 unsafe_eval = eval
-
 native_init = YamlInterpreter.__init__
 
 
 def new_init(self, cr, module, id_map, mode, filename, noupdate=False):
     native_init(self, cr, module, id_map, mode, filename, noupdate)
     self.uid = SUPERUSER_ID
+    self.eval_context.update({
+        'pool': pooler.get_pool(cr.dbname),
+        'cr': cr,
+        'uid': self.uid,
+    })
 
 
 def _get_uid(self, yamltag):
@@ -46,6 +51,55 @@ def _get_uid(self, yamltag):
     else:
         uid = self.uid
     return uid
+
+
+def _eval_field(self, model, field_name, expression, view=False, parent={}, default=True):
+    # TODO this should be refactored as something like model.get_field() in bin/osv
+    if field_name in model._columns:
+        column = model._columns[field_name]
+    elif field_name in model._inherit_fields:
+        column = model._inherit_fields[field_name][2]
+    else:
+        raise KeyError("Object '%s' does not contain field '%s'" % (model, field_name))
+    if is_ref(expression):
+        elements = self.process_ref(expression, column)
+        if column._type in ("many2many", "one2many"):
+            value = [(6, 0, elements)]
+        else:  # many2one
+            if isinstance(elements, (list, tuple)):
+                value = self._get_first_result(elements)
+            else:
+                value = elements
+    elif column._type == "many2one":
+        # Added by Smile #
+        if is_eval(expression):
+            value = self.process_eval(expression)
+        else:
+            value = self.get_id(expression)
+        ###################
+    elif column._type == "one2many":
+        other_model = self.get_model(column._obj)
+        value = [(0, 0, self._create_record(other_model, fields, view, parent, default=default)) for fields in expression]
+    elif column._type == "many2many":
+        # Changed by Smile #
+        ids = [(self.process_eval(xml_id) if is_eval(xml_id) else self.get_id(xml_id)) for xml_id in expression]
+        ####################
+        value = [(6, 0, ids)]
+    elif column._type == "date" and is_string(expression):
+        # enforce ISO format for string date values, to be locale-agnostic during tests
+        time.strptime(expression, misc.DEFAULT_SERVER_DATE_FORMAT)
+        value = expression
+    elif column._type == "datetime" and is_string(expression):
+        # enforce ISO format for string datetime values, to be locale-agnostic during tests
+        time.strptime(expression, misc.DEFAULT_SERVER_DATETIME_FORMAT)
+        value = expression
+    else:  # scalar field
+        if is_eval(expression):
+            value = self.process_eval(expression)
+        else:
+            value = expression
+        # raise YamlImportException('Unsupported column "%s" or value %s:%s' % (field_name, type(expression), expression))
+    return value
 
 
 def new_process_function(self, node):
@@ -70,7 +124,7 @@ def new_process_python(self, node):
     statements = statements.replace("\r\n", "\n")
     uid = self._get_uid(python)  # Added by Smile
     code_context = {'model': model, 'cr': self.cr, 'uid': uid, 'log': log, 'context': self.context}
-    code_context.update({'self': model})  # remove me when no !python block test uses 'self' anymore
+    code_context.update({'self': model, 'time': time})  # remove me when no !python block test uses 'self' anymore
     try:
         code_obj = compile(statements, self.filename, 'exec')
         unsafe_eval(code_obj, {'ref': self.get_id}, code_context)
@@ -159,6 +213,7 @@ def new_process_workflow(self, node):
     wf_service.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
 
 YamlInterpreter.__init__ = new_init
+YamlInterpreter._eval_field = _eval_field
 YamlInterpreter._get_uid = _get_uid
 YamlInterpreter.process_function = new_process_function
 YamlInterpreter.process_python = new_process_python
