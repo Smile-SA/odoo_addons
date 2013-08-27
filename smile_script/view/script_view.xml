@@ -26,7 +26,7 @@
 	                            <button name="run_test" type="object" string="Test"/>
 	                            <button name="run" type="object" string="Run" attrs="{'invisible': [('state', '=', 'draft')]}" confirm="Are you sure you want to perform a new intervention ?"/>
                         	</group>
-                            <field name="intervention_ids" nolabel="1" context="{'script_form_view': True}"/>
+                            <field name="intervention_ids" nolabel="1" colspan="4" context="{'script_form_view': True}"/>
                         </page>
                     </notebook>
                     <group name="validation" colspan="4" col="8">
@@ -59,9 +59,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Scripts">
-                    <filter string="Validated" icon="terp-ok" domain="[('state', '=', 'validated')]" />
+                    <filter string="Draft" icon="terp-document-new" domain="[('state', '=', 'draft')]" />
+                    <filter string="Validated" icon="terp-camera_test" domain="[('state', '=', 'validated')]" />
+                    <separator orientation="vertical"/>
                     <field name="name"/>
-
+                    <field name="type"/>
                     <newline/>
                     <group expand="0" string="Extended..." colspan="11" col="11" groups="base.group_extended">
                         <field name="description"/>
@@ -72,14 +74,15 @@
         </record>
 
         <record id="act_smile_script" model="ir.actions.act_window">
-            <field name="name">Smile scripts</field>
+            <field name="name">Intervention Scripts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">smile.script</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_smile_script" parent="base.menu_audit" name="Smile scripts" action="act_smile_script"/>
+        <menuitem id="menu_smile_script" parent="base.menu_audit" action="act_smile_script"
+        	 groups="base.group_no_one"/>
 
         <record id="smile_script_intervention_form_view" model="ir.ui.view">
             <field name="name">Smile script intervention - Form</field>
@@ -120,15 +123,48 @@
             </field>
         </record>
 
+        <record id="smile_script_intervention_search_view" model="ir.ui.view">
+            <field name="name">Smile script intervention - Search</field>
+            <field name="model">smile.script.intervention</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Interventions">
+                    <group>
+                        <filter icon="gtk-refresh" string="Running" domain="[('state','=','running')]"/>
+                        <filter icon="gtk-yes" string="Done" domain="[('state','=','done')]"/>
+                        <filter icon="gtk-no" string="Exception" domain="[('state','=','exception')]"/>
+                        <separator orientation="vertical"/>
+	                    <field name="script_id"/>
+	                    <field name="result"/>
+                    </group>
+	                <newline/>
+	                <group expand="0" string="Extended..." groups="base.group_extended">
+	                    <field name="create_uid"/>
+	                    <field name="test_mode"/>
+	                </group>
+	                <newline/>
+                    <group string="Group By..." expand="0">
+                        <filter string="Script" context="{'group_by':'script_id'}" icon="terp-folder-green"/>
+                        <filter string="State" context="{'group_by':'state'}" icon="terp-folder-blue"/>
+                        <filter string="User" context="{'group_by':'create_uid'}" icon="terp-folder-orange"/>
+					</group>
+				</search>
+            </field>
+        </record>
+
         <record id="act_smile_script_intervention" model="ir.actions.act_window">
-            <field name="name">Smile script interventions</field>
+            <field name="name">Intervention Logs</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">smile.script.intervention</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree</field>
+	        <field name="search_view_id" ref="smile_script_intervention_search_view"/>
+	        <field name="view_id" ref="smile_script_intervention_tree_view"/>
+	        <field name="context">{'search_default_test_mode': False}</field>
         </record>
 
-        <menuitem id="menu_smile_script_intervention" parent="base.menu_audit" name="Smile script interventions" action="act_smile_script_intervention"/>
+        <menuitem id="menu_smile_script_intervention" parent="base.menu_audit"
+        	action="act_smile_script_intervention" groups="base.group_no_one,base.group_extended"/>
 
     </data>
 </openerp>

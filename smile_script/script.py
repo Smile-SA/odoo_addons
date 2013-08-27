@@ -88,6 +88,13 @@ class SmileScript(orm.Model):
         validated_scripts = self._get_validated_scripts(cr, uid, ids, context)
         if validated_scripts:
             raise orm.except_orm(_('Error!'), _('You can only delete draft scripts!'))
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        intervention_ids = []
+        for script in self.read(cr, uid, ids, ['intervention_ids'], context):
+            intervention_ids.extend(script['intervention_ids'])
+        if intervention_ids:
+            self.pool.get('smile.script.intervention').unlink(cr, uid, intervention_ids, context)
         return super(SmileScript, self).unlink(cr, uid, ids, context)
 
     def copy_data(self, cr, uid, script_id, default=None, context=None):
@@ -104,7 +111,7 @@ class SmileScript(orm.Model):
         return True
 
     def _run(self, cr, uid, script, intervention_id, logger, context=None):
-        _logger.info('Running script: {}\nCode:\n{}'.format(script.name.encode('utf-8'), script.code.encode('utf-8')))
+        _logger.info('Running script: %s\nCode:\n%s' % (script.name.encode('utf-8'), script.code.encode('utf-8')))
         if script.type == 'sql':
             return self._run_sql(cr, uid, script, context)
         elif script.type == 'xml':
@@ -188,7 +195,7 @@ class SmileScript(orm.Model):
         import os
         base_64_dump = netsvc.ExportService.getService('db').exp_dump(dbname)
         dump_data = base64.b64decode(base_64_dump)
-        dump_filename = "{}_{}.dump".format(dbname, time.strftime('%Y-%m-%d %H%M%S'))
+        dump_filename = "%s_%s.dump" % (dbname, time.strftime('%Y-%m-%d %H%M%S'))
         dump_filepath = os.path.join(dump_path, dump_filename)
         with open(dump_filepath, 'w') as dump_file:
             dump_file.write(dump_data)
@@ -219,6 +226,7 @@ def state_cleaner(method):
 class SmileScriptIntervention(orm.Model):
     _name = 'smile.script.intervention'
     _description = 'Smile Script Intervention'
+    _rec_name = 'create_date'
     _order = 'create_date DESC'
 
     def __init__(self, pool, cr):
@@ -241,4 +249,9 @@ class SmileScriptIntervention(orm.Model):
     }
 
     def unlink(self, cr, uid, ids, context=None):
-        raise orm.except_orm(_('Error!'), _('Intervention should not be deleted'))
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for intervention in self.browse(cr, uid, ids, context):
+            if not intervention.test_mode:
+                raise orm.except_orm(_('Error!'), _('Intervention cannot be deleted'))
+        return super(SmileScriptIntervention, self).unlink(cr, uid, ids, context)
