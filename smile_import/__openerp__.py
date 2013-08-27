@@ -37,7 +37,7 @@ Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@s
         'security/ir.model.access.csv',
     ],
     "update_xml": [
-        'import_view.xml',
+        'view/import_view.xml',
     ],
     "demo_xml": [],
     "installable": True,

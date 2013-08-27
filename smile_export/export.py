@@ -126,7 +126,6 @@ class IrModelExportTemplate(Model):
         context.setdefault('export_mode', 'same_thread_rollback_and_continue')
         export_pool = self.pool.get('ir.model.export')
         export_ids = []
-
         for export_template in self.browse(cr, uid, ids, context):
             res_ids = self._get_res_ids(cr, uid, export_template, context)
             if export_template.unique:
@@ -255,6 +254,7 @@ class ir_model_export(Model):
         'action_id': fields.related('export_tmpl_id', 'action_id', type='many2one', relation='ir.actions.server', string='Action', readonly=True),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'create_uid': fields.many2one('res.users', 'Creation User', readonly=True),
+        'to_date': fields.datetime('End Date', readonly=True),
         'line_ids': fields.one2many('ir.model.export.line', 'export_id', 'Lines'),
         'line_count': fields.function(_get_line_count, method=True, type='integer', string='Lines'),
         'resource_ids': fields.serialized('Resource Ids', readonly=True),
@@ -326,7 +326,7 @@ class ir_model_export(Model):
                 except Exception, e:
                     if export_mode == 'same_thread_rollback_and_continue':
                         cr.execute("ROLLBACK TO SAVEPOINT smile_export")
-                        logger.info("Export rollbacking")
+                        logger.info("Export rollbacking - Error: %s" % _get_exception_message(e))
                     else:  # same_thread_raise_error
                         raise e
         return True
@@ -349,9 +349,15 @@ class ir_model_export(Model):
         assert isinstance(export_id, (int, long)), 'ir.model.export, _generate: export_id is supposed to be an integer'
 
         context = context and context.copy() or {}
-        export = self.browse(cr, uid, export_id, context)
         context['logger'] = logger
-        context['export_id'] = export.id
+        context['export_id'] = export_id
+
+        try:
+            db = pooler.get_db(cr.dbname)
+        except Exception:
+            return False
+        new_cr = db.cursor()
+        export = self.browse(new_cr, uid, export_id, context)
 
         try:
             if export.line_ids or export.resource_ids or export.export_tmpl_id.force_execute_action:
@@ -367,10 +373,12 @@ class ir_model_export(Model):
             raise e
 
         try:
-            self.write(cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
+            self.write(new_cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
             logger.error("Could not mark export %s as done: %s" % (export_id, _get_exception_message(e)))
             raise e
+        finally:
+            new_cr.close()
 
 
 class ir_model_export_line(Model):
@@ -400,7 +408,7 @@ class ir_model_export_line(Model):
 
         result = {}
         for line_id in line_id_to_res_id_model:
-            result[line_id] = buf_result[line_id_to_res_id_model[line_id]]
+            result[line_id] = buf_result.get(line_id_to_res_id_model[line_id], '')
         return result
 
     _columns = {

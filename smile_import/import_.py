@@ -23,11 +23,16 @@ import threading
 import time
 
 from osv import fields
-from osv.orm import Model
+from osv.orm import Model, except_orm
 import pooler
 import tools
 
 from smile_log.db_handler import SmileDBLogger
+
+
+def _get_exception_message(exception):
+    msg = isinstance(exception, except_orm) and exception.value or exception
+    return tools.ustr(msg)
 
 
 class IrModelImportTemplate(Model):
@@ -180,7 +185,7 @@ class IrModelImport(Model):
         except Exception, e:
             if error_management == 'rollback_and_continue':
                 cr.execute("ROLLBACK TO SAVEPOINT smile_import")
-                logger.info("Import rollbacking")
+                logger.info("Import rollbacking - Error: %s" % _get_exception_message(e))
                 return self.write(cr, uid, import_id, {'state': 'exception', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
             else:  # import_error_management = raise
                 raise e

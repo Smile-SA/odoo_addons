@@ -45,7 +45,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "update_xml": [
         'security/smile_export_security.xml',
         'security/ir.model.access.csv',
-        'export_view.xml',
+        'view/export_view.xml',
     ],
     "demo_xml": [],
     "installable": True,
