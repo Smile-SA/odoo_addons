@@ -44,6 +44,7 @@ class AccountVoucher(orm.Model):
                 'target': 'new',
                 'context': context
             }
-        context['reversal_date'] = time.strftime('%Y-%m-%d')
+        if 'reversal_date' not in context:
+            context['reversal_date'] = time.strftime('%Y-%m-%d')
         context['voucher_cancellation'] = True
         return super(AccountVoucher, self).cancel_voucher(cr, uid, ids, context)
