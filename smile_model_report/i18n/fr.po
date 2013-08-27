@@ -1,0 +1,127 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_model_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1-20121025-233243\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-07-08 13:13+0000\n"
+"PO-Revision-Date: 2013-07-08 13:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_model_report
+#: field:ir.model.fields,info:0
+msgid "Information"
+msgstr "Information"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:119
+msgid "Type"
+msgstr "Type"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:120
+msgid "Required"
+msgstr "Obligatoire"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:118
+msgid "Description"
+msgstr "Description"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:147
+msgid "Relation:"
+msgstr "ID externe du modèle :"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:147
+msgid "Relations list (comma-separated):"
+msgstr "Liste d'ID externes du modèle (séparés par des virgules) :"
+
+#. module: smile_model_report
+#: model:ir.model,name:smile_model_report.model_ir_model_fields
+msgid "Fields"
+msgstr "Champs"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:127
+msgid "External ID"
+msgstr "ID externe"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:149
+msgid "available values: 0 or 1"
+msgstr "Valeurs disponibles : 0 ou 1"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:145
+msgid "Selection:"
+msgstr "Valeurs disponibles :"
+
+#. module: smile_model_report
+#: model:ir.actions.report.xml,name:smile_model_report.webkit_model_report
+msgid "Model report"
+msgstr "Rapport des modèles"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:130
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:138
+msgid "Size:"
+msgstr "Taille :"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:117
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:105
+msgid "Objects documentation"
+msgstr "Documentation des objets"
+
+#. module: smile_model_report
+#: field:ir.model.fields,display_in_report:0
+msgid "Display in report"
+msgstr "Afficher dans les rapports"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:111
+msgid "Object name :"
+msgstr "Nom de l'objet :"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:129
+msgid "True"
+msgstr "Oui"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:112
+msgid "File :"
+msgstr "Fichier :"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:121
+msgid "Additional information"
+msgstr "Information additionnelle"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:121
+msgid "Available values: 0 or 1"
+msgstr "Valeurs disponibles : 0 ou 1"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:93
+msgid "Summary"
+msgstr "Sommaire"
+
+#. module: smile_model_report
+#: report:addons/smile_model_report/report/report_webkit_html_model_report.mako:92
+msgid "This document provides a detailed description of object attributes."
+msgstr "Ce document propose une description détaillée des attributs de chaque objet."

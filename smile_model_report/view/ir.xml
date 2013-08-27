@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_model_fields_model_report_inherit_form">
+			<field name="model">ir.model.fields</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="base.view_model_fields_form"/>
+			<field name="arch" type="xml">
+				<field name="state" position="after">
+					<field name="display_in_report" />
+				</field>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_model_fields_model_report_inherit_tree">
+			<field name="model">ir.model.fields</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="base.view_model_fields_tree"/>
+			<field name="arch" type="xml">
+				<field name="state" position="after">
+					<field name="display_in_report" />
+				</field>
+			</field>
+		</record>
+
+ 	</data>
+</openerp>
