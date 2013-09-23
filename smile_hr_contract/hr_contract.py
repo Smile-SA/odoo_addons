@@ -62,7 +62,7 @@ class HrEmployee(orm.Model):
         contract_obj = self.pool.get('hr.contract')
         for employee in self.browse(cr, uid, ids, context=context):
             # Search on closest date_start is enough: contract do not overlap
-            contract_ids = contract_obj.search(cr, uid, [('date_start', '<=', today)], order='date_start', context=context)
+            contract_ids = contract_obj.search(cr, uid, [('employee_id','=',employee.id), ('date_start', '<=', today)], order='date_start', context=context)
             if contract_ids:
                 res[employee.id] = contract_ids[-1:][0]
             else:
