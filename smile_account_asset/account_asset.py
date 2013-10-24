@@ -236,7 +236,8 @@ class AccountAssetAsset(orm.Model):
                                          states={'open': [('readonly', False)]}),
         'sale_tax_amount': fields.function(_get_sale_tax_amount, method=True, type='float',
                                            digits_compute=dp.get_precision('Account'), string="Tax Amount"),
-        'tax_regularization': fields.boolean('Tax regularization', readonly=True, states={'open': [('readonly', False)]}),
+        'sale_invoice_number': fields.char('Invoice Number', size=64),
+        'tax_regularization': fields.boolean('Tax regularization', readonly=True),
         'regularization_tax_amount': fields.float('Tax amount to regularize', digits_compute=dp.get_precision('Account'), readonly=True),
         'is_out': fields.boolean('Is Out Of Heritage'),
 
@@ -599,16 +600,24 @@ class AccountAssetAsset(orm.Model):
     def _get_regularization_tax_coeff(self, cr, uid, asset, context=None):
         # TODO: gérer les coeff de déduction à l'achat et à la vente
         regularization_tax_coeff = 0.0
-        total_years = asset.accounting_annuities
-        if total_years and asset.tax_regularization and asset.purchase_tax_ids and not asset.sale_tax_ids:
-            method_obj = self.pool.get('account.asset.depreciation.method')
-            depreciation_start_date = method_obj.get_depreciation_start_date(cr, uid, asset.accounting_method,
-                                                                             asset.purchase_date, asset.in_service_date, context)
-            # TODO: revoir cela afin de prendre en compte les années ne commençant pas le 1er janvier
-            remaining_years = total_years - (int(asset.sale_date[:4]) - int(depreciation_start_date[:4]) + 1)
-            if remaining_years > 0:
-                regularization_tax_coeff = float(remaining_years) / total_years
+        if asset.purchase_tax_ids:
+            apply_regulatization = bool(asset.sale_tax_ids) if asset.category_id.tax_regularization_application == 'with_sale_taxes' \
+                else not asset.sale_tax_ids
+            regularization_period = asset.category_id.tax_regularization_period
+            if apply_regulatization and 0.0 <= int(time.strftime('%Y')) - int(asset.purchase_date[:4]) < regularization_period:
+                method_obj = self.pool.get('account.asset.depreciation.method')
+                depreciation_start_date = method_obj.get_depreciation_start_date(cr, uid, asset.accounting_method,
+                                                                                 asset.purchase_date, asset.in_service_date, context)
+                # TODO: revoir cela afin de prendre en compte les années ne commençant pas le 1er janvier
+                remaining_years = regularization_period - (int(asset.sale_date[:4]) - int(depreciation_start_date[:4]) + 1)
+                if remaining_years > 0:
+                    regularization_tax_coeff = float(remaining_years) / regularization_period
         return regularization_tax_coeff
+
+    def _get_regularization_tax_amount(self, cr, uid, asset, context=None):
+        coeff = self._get_regularization_tax_coeff(cr, uid, asset, context)
+        tax = asset.category_id.tax_regularization_base == 'deducted' and asset.purchase_tax_amount or 0.0
+        return tax * coeff
 
     def get_sale_infos(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -617,10 +626,11 @@ class AccountAssetAsset(orm.Model):
         today = time.strftime('%Y-%m-%d')
         for asset in self.browse(cr, uid, ids, context):
             fiscal_book_value = self._get_fiscal_book_value(cr, uid, asset, context)
-            regularization_tax_amount = asset.purchase_tax_amount * self._get_regularization_tax_coeff(cr, uid, asset, context)
+            regularization_tax_amount = self._get_regularization_tax_amount(cr, uid, asset, context)
             fiscal_sale_result = asset.sale_value - fiscal_book_value - regularization_tax_amount
             accumulated_amortization_value = asset.purchase_value - fiscal_book_value
             res[asset.id] = {
+                'tax_regularization': bool(regularization_tax_amount),
                 'regularization_tax_amount': regularization_tax_amount,
                 'sale_result': fiscal_sale_result,
                 'sale_result_short_term': min(fiscal_sale_result, accumulated_amortization_value),

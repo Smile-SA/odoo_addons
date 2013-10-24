@@ -103,10 +103,10 @@ class AccountAssetDepreciationMethod(orm.Model):
         all_method_ids = self.search(cr, uid, [])
         methods = dict([(method_info['code'], method_info) for method_info in self.read(cr, uid, all_method_ids, [])])
         special_methods = {
-            'none': {'name': 'None', 'code': 'none', 'base_value': 'book_value', 'use_salvage_value': False,
+            'none': {'name': _('None'), 'code': 'none', 'base_value': 'book_value', 'use_salvage_value': False,
                      'depreciation_start_date': 'in_service_date', 'use_manual_rate': False, 'rate_formula': '0.0',
                      'prorata': False, 'need_additional_annuity': False},
-            'manual': {'name': 'Manual', 'code': 'manual', 'base_value': 'book_value', 'use_salvage_value': False,
+            'manual': {'name': _('Manual'), 'code': 'manual', 'base_value': 'book_value', 'use_salvage_value': False,
                        'depreciation_start_date': 'in_service_date', 'use_manual_rate': False, 'rate_formula': '0.0',
                        'prorata': False, 'need_additional_annuity': False},
         }

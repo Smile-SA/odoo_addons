@@ -76,11 +76,18 @@ class SmileScript(orm.Model):
                 validated_scripts.append(script)
         return validated_scripts
 
+    def _change_only_automatic_dump(self, cr, uid, vals, context):
+        vals = vals or {}
+        if 'automatic_dump' in vals and len(vals) == 1:
+            return True
+        return False
+
     def write(self, cr, uid, ids, vals, context=None):
         if not vals:
             return True
         validated_scripts = self._get_validated_scripts(cr, uid, ids, context)
-        if validated_scripts:
+        change_only_automatic_dump = self._change_only_automatic_dump(cr, uid, vals, context)
+        if validated_scripts and not change_only_automatic_dump:
             raise orm.except_orm(_('Error!'), _('You can only modify draft scripts!'))
         return super(SmileScript, self).write(cr, uid, ids, vals, context)
 
@@ -171,6 +178,7 @@ class SmileScript(orm.Model):
             'context': context,
             'ref': partial(self.ref, cr),
             'logger': logger,
+            'time': time,
         }
         exec script.code in localdict
         return localdict['result'] if 'result' in localdict else 'No expected result'

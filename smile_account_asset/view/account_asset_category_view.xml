@@ -103,11 +103,22 @@
 
 							<field name="depreciation_journal_id" string="Journal"/>
 						</page>
+						<page string="Taxation">
+							<group colspan="2" col="2">
+								<separator string="Fiscal Deduction" colspan="2"/>
+								<field name="fiscal_deduction_limit" string="Limit"/>
+							</group>
+							<group colspan="2" col="2">
+								<separator string="Tax Regularization" colspan="2"/>
+								<field name="tax_regularization_period" string="Period"/>
+								<field name="tax_regularization_base" string="Base"/>
+								<field name="tax_regularization_application" string="Application"/>
+							</group>
+						</page>
 						<page string="Notes">
 							<field name="note" nolabel="1" colspan="4"/>
 						</page>
 					</notebook>
-					<field name="fiscal_deduction_limit"/>
 				</form>
 			</field>
 		</record>

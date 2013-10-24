@@ -31,13 +31,12 @@
 									<button type="object" name="generate" icon="terp-gtk-jump-to-ltr" string="Re-generate" context="{'commit_and_new_thread':True}"/>
 								</tree>
 								<form string="Export">
-									<group colspan="4" col="6">
-										<field name="create_date" />
-										<field name="create_uid" />
-										<field name="state" readonly="1"/>
-									</group>
-                                    <notebook>
-                                        <page string="Resources">
+									<field name="create_uid" />
+									<field name="state" readonly="1"/>
+									<field name="create_date" />
+									<field name="to_date" />
+                                    <notebook colspan="4">
+                                        <page string="Resources" attrs="{'invisible': [('line_ids', '=', False)]}">
         									<field name="line_ids" colspan="4" nolabel="1" mode="tree">
         										<tree string="Lines">
         											<field name="res_label"/>
@@ -137,7 +136,6 @@
 		<menuitem action="action_export_template" id="menu_export_template"
 			parent="menu_exports" />
             
-            
         <record id="action_exports_from_template" model="ir.actions.act_window">
             <field name="name">Exports</field>
             <field name="type">ir.actions.act_window</field>
@@ -148,7 +146,6 @@
             <field name="target">current</field>
         </record>
             
-            
         <record model="ir.values" id="export_template_to_exports">
             <field name="name">Exports</field>
             <field name="key">action</field>
@@ -158,6 +155,87 @@
             <field name="value" eval="'ir.actions.act_window,' +str(ref('smile_export.action_exports_from_template'))"/>
         </record>
 
+		<record id="view_export_form" model="ir.ui.view">
+			<field name="name">ir.model.export.form</field>
+			<field name="model">ir.model.export</field>
+			<field name="type">form</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<form string="Export">
+					<field name="export_tmpl_id" />
+					<newline/>
+					<field name="create_uid" />
+					<field name="state" readonly="1"/>
+					<field name="create_date" />
+					<field name="to_date" />
+                    <notebook colspan="4">
+                        <page string="Resources" attrs="{'invisible': [('line_ids', '=', False)]}">
+							<field name="line_ids" colspan="4" nolabel="1" mode="tree">
+								<tree string="Lines">
+									<field name="res_label"/>
+									<field name="res_id"/>
+								</tree>
+							</field>
+                        </page>
+                        <page string="Logs">
+                            <field name="log_ids" colspan="4" nolabel="1" mode="tree,form">
+                                <tree string="Logs">
+                                    <field name="log_date" />
+                                    <field name="pid" />
+                                    <field name="level" />
+                                    <field name="message" />
+                                </tree>
+                                <form string="Log">
+                                    <field name="log_date" />
+                                    <field name="pid" />
+                                    <field name="level" />
+                                    <field name="message" colspan="4"/>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+					<button type="object" name="generate" string="Re-generate" colspan="4" />
+					<field name="exception" colspan="4" readonly="1" attrs="{'invisible': [('state', '!=', 'exception')]}"/>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_export_tree" model="ir.ui.view">
+			<field name="name">ir.model.export.tree</field>
+			<field name="model">ir.model.export</field>
+			<field name="type">tree</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<tree string="Exports">
+					<field name="export_tmpl_id" />
+					<field name="create_date" />
+					<field name="create_uid" />
+					<field name="line_count" />
+					<field name="state" readonly="1"/>
+					<button type="object" name="generate" icon="terp-gtk-jump-to-ltr" string="Re-generate" context="{'commit_and_new_thread':True}"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_exports" model="ir.actions.act_window">
+			<field name="name">Exports</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ir.model.export</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+        <record id="board_administration_form" model="ir.ui.view">
+            <field name="name">board.administration.form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="board.board_administration_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/board/column[2]/action" position="before">
+                	<action name="%(action_exports)d" string="Exports"/>
+                </xpath>
+            </field>
+        </record>
 
 	</data>
 </openerp>

@@ -20,11 +20,14 @@
 	                <field name="code"/>
             		<field name="number"/>
 	                <field name="category_id"/>
-	                <field name="asset_account_id" string="Account"/>
 	                <field name="company_id" groups="base.group_multi_company"/>
-	                <field name="asset_type"/>
-	                <field name="in_service_date"/>
 					<newline/>
+                    <group string="Extended..." expand="0">
+		                <field name="asset_type"/>
+		                <field name="asset_account_id" string="Account"/>
+		                <field name="in_service_date"/>
+                    </group>
+                    <newline/>
                     <group string="Group By..." expand="0">
                         <filter string="Company" context="{'group_by':'company_id'}" icon="terp-folder-green" groups="base.group_multi_company"/>
                         <filter string="Asset Category" context="{'group_by':'category_id'}" icon="terp-folder-orange"/>
@@ -91,7 +94,7 @@
 								<separator string="Purchase" colspan="3"/>
 	                    		<field name="supplier_id" colspan="3" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
 	                    		<field name="purchase_date" colspan="3" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
-    							<field name="purchase_account_date" string="Accounting Date" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
+    							<field name="purchase_account_date" colspan="3" string="Accounting Date" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
 	                    		<field name="quantity" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
 	                    		<field name="uom_id" nolabel="1" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
 	                    		<field name="purchase_tax_amount" colspan="3"/>
@@ -185,7 +188,8 @@
 								<field name="sale_date"/>
 								<field name="sale_account_date" string="Accounting Date"/>
 								<field name="sale_type"/>
-								<field name="customer_id"/>
+								<field name="customer_id" attrs="{'required': [('sale_type', '=', 'sale')], 'invisible': [('sale_type', '=', 'scrapping')]}"/>
+								<field name="sale_invoice_number" attrs="{'invisible': [('sale_type', '=', 'scrapping')]}"/>
 								<field name="sale_value" string="Amount Excl Tax"/>
 								<field name="sale_tax_amount"/>
 								<field name="sale_tax_ids" colspan="2" string="Taxes"/>
@@ -239,7 +243,7 @@
 		               </page>
 	                </notebook>
                     <group colspan="4" col="8">
-	                   <field name="state" readonly="1" colspan="2"/>
+	                   <field name="state" readonly="1" colspan="2" widget="statusbar" statusbar_visible="confirm,open,close"/>
                        <button name="button_confirm_asset_purchase" states="draft" string="Confirm" type="object"/>
                        <button name="button_cancel_asset_purchase" states="confirm,open" string="Cancel" type="object" confirm="WARNING: this operation won't cancel invoice(s)!" />
                        <button name="button_put_into_service" states="confirm" string="Put into service" type="object"/>
@@ -329,9 +333,9 @@
 					<field name="sale_account_date" string="Accounting Date"/>
 	                <field name="sale_type" required="1"/>
 					<field name="customer_id" attrs="{'required': [('sale_type', '=', 'sale')], 'invisible': [('sale_type', '=', 'scrapping')]}"/>
+					<field name="sale_invoice_number" attrs="{'invisible': [('sale_type', '=', 'scrapping')]}"/>
 	                <field name="sale_value" string="Amount Excl Tax" attrs="{'required': [('sale_type', '=', 'sale')], 'invisible': [('sale_type', '=', 'scrapping')]}"/>
 	                <field name="sale_tax_ids" string="Taxes" colspan="2" attrs="{'invisible': [('sale_type', '=', 'scrapping')]}"/>
-	                <field name="tax_regularization" attrs="{'invisible': [('sale_type', '=', 'scrapping')]}"/>
 					<group colspan="2" col="2">
 		                <button special="cancel" string="Cancel" icon="gtk-cancel"/>
 						<button name="button_confirm_asset_sale" type="object" string="Confirm Asset Sale" icon="terp-camera_test"/>

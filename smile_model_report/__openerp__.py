@@ -26,11 +26,10 @@
     "website": 'http://www.smile.fr',
     "category": "Tools",
     "description": "Model report",
-    "depends": ['report_webkit'],
+    "depends": ['smile_report_utils'],
     "init_xml": [],
     "update_xml": [
         'view/ir.xml',
-        'report/report_header.xml',
         'report/model_report.xml',
     ],
     "demo_xml": [],

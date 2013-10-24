@@ -62,6 +62,15 @@ msgid "Group By..."
 msgstr "Grouper par..."
 
 #. module: smile_account_asset
+#: view:account.asset.asset:0
+#: view:account.asset.category:0
+#: view:account.asset.depreciation.line:0
+#: view:account.asset.depreciation.method:0
+#: view:account.invoice.line:0
+msgid "Extended..."
+msgstr "Etendue..."
+
+#. module: smile_account_asset
 #: field:account.asset.asset,accumulated_amortization_value:0
 msgid "Accumulated Amortization Value"
 msgstr "Amortissement cumulé"
@@ -177,6 +186,11 @@ msgid "Depreciations"
 msgstr "Amortissements"
 
 #. module: smile_account_asset
+#: view:account.asset.category:0
+msgid "Taxation"
+msgstr "Fiscalité"
+
+#. module: smile_account_asset
 #: field:account.asset.category,sale_expense_account_id:0
 msgid "Disposal Expense Account"
 msgstr "Compte de charge d'une cession"
@@ -273,7 +287,72 @@ msgstr "Compte comptable"
 #. module: smile_account_asset
 #: field:account.asset.asset,tax_regularization:0
 msgid "Tax regularization"
-msgstr "Tax regularization"
+msgstr "Régularisation de la TVA"
+
+#. module: smile_account_asset
+#: field:account.asset.category,tax_regularization_period:0
+msgid "Tax Regularization Period"
+msgstr "Délai de régularisation de la TVA"
+
+#. module: smile_account_asset
+#: help:account.asset.category,tax_regularization_period:0
+msgid "In years"
+msgstr "En années"
+
+#. module: smile_account_asset
+#: field:account.asset.category,tax_regularization_base:0
+msgid "Tax Regularization Base"
+msgstr "Base de TVA à régulariser"
+
+#. module: smile_account_asset
+#: selection:account.asset.category,tax_regularization_base:0
+msgid "Deducted"
+msgstr "Déduite"
+
+#. module: smile_account_asset
+#: selection:account.asset.category,tax_regularization_base:0
+msgid "Undeducted"
+msgstr "Non déduite"
+
+#. module: smile_account_asset
+#: field:account.asset.category,tax_regularization_application:0
+msgid "Tax Regularization Application"
+msgstr "Condition d'application de la régularization de TVA"
+
+#. module: smile_account_asset
+#: selection:account.asset.category,tax_regularization_application:0
+msgid "Taxed Sale"
+msgstr "Cession soumise à TVA"
+
+#. module: smile_account_asset
+#: selection:account.asset.category,tax_regularization_application:0
+msgid "Untaxed Sale"
+msgstr "Cession non soumise à TVA"
+
+#. module: smile_account_asset
+#: view:account.asset.category:0
+msgid "Period"
+msgstr "Délai de régularisation"
+
+#. module: smile_account_asset
+#: view:account.asset.category:0
+msgid "Application"
+msgstr "Condition d'application"
+
+#. module: smile_account_asset
+#: view:account.asset.category:0
+msgid "Tax Regularization"
+msgstr "Régularization de TVA"
+
+#. module: smile_account_asset
+#: view:account.asset.category:0
+msgid "Fiscal Deduction"
+msgstr "Déduction fiscale"
+
+#. module: smile_account_asset
+#: view:account.asset.category:0
+msgid "Limit"
+msgstr "Limite"
 
 #. module: smile_account_asset
 #: view:account.asset.asset:0
@@ -1499,7 +1578,6 @@ msgstr "Semestrielle"
 msgid "Please indicate fiscal amortization accounts in company form!"
 msgstr "Merci de renseigner depuis la fiche Société les comptes d'amortissements dérogatoires !"
 
-
 #. module: smile_account_asset
 #: code:smile-addons/smile_account_asset/account_asset_posting.py:441
 #, python-format
@@ -1520,3 +1598,20 @@ msgstr "Date de comptabilisation de l'acquisition"
 #: field:account.asset.asset,sale_account_date:0
 msgid "Accounting date for sale"
 msgstr "Date de comptabilisation de la cession"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_depreciation_method.py:106
+#, python-format
+msgid "None"
+msgstr "Aucune"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_depreciation_method.py:109
+#, python-format
+msgid "Manual"
+msgstr "Manuelle"
+
+#. module: smile_account_asset
+#: field:account.asset.asset,sale_invoice_number:0
+msgid "Invoice Number"
+msgstr "Numéro de facture"

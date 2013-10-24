@@ -196,7 +196,8 @@ class AccountAssetAsset(orm.Model):
                     if line.is_posted:
                         context['force_account_move_amount'] += line.depreciation_value
                         last_line_id = line.id
-                depreciation_line_obj.post_depreciation_line(cr, uid, last_line_id, context_copy, reversal=True)
+                if last_line_id:
+                    depreciation_line_obj.post_depreciation_line(cr, uid, last_line_id, context_copy, reversal=True)
         return res
 
     def confirm_asset_sale(self, cr, uid, ids, context=None):

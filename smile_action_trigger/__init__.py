@@ -19,6 +19,14 @@
 #
 ##############################################################################
 
-import safe_eval
 import ir_actions
-import sartre
+import ir_model
+import orm
+import safe_eval
+import sartre_category
+import sartre_decorator
+import sartre_execution
+import sartre_filter
+import sartre_operator
+import sartre_tools
+import sartre_trigger

@@ -118,7 +118,7 @@ def bulk_create(self, cr, uid, vals_list, context=None):
     self._compute_store_set(cr, uid, ids, context)
     self._validate(cr, uid, ids, context)
     self._parent_store_compute(cr)
-    return True
+    return ids
 
 BaseModel.__init__ = clean_store_function(BaseModel.__init__)
 BaseModel._auto_init = new_auto_init

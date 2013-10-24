@@ -9,11 +9,7 @@
                 file="smile_model_report/report/report_webkit_html_model_report.mako"
                 string="Model report"
                 report_type="webkit"
-                webkit_header="ir_header_webkit_smile"/>
-
-        <record id="report_webkit.ir_header_webkit_basesample0" model="ir.header_webkit">
-            <field name="margin_top">0.0</field>
-        </record>
+                webkit_header="smile_report_utils.ir_header_webkit_smile"/>
 
     </data>
 </openerp>

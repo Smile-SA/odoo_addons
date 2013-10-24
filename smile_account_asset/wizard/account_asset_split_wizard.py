@@ -19,10 +19,13 @@
 #
 ##############################################################################
 
+import logging
+
 import decimal_precision as dp
 from osv import orm, fields
 from tools import float_round
-from tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountAssetSplitWizard(orm.TransientModel):
@@ -93,7 +96,8 @@ class AccountAssetSplitWizard(orm.TransientModel):
                 gap = float_round(gap, precision_digits=len(str(rounding).split('.')[-1]))
                 if gap > rounding:
                     # TODO: fix me
-                    raise orm.except_orm(_('Error'), _('Gap = %s > %s') % (gap, rounding))
+                    _logger.warning('Asset Split [new_asset_id=%s,line_id=%s,depreciation_type=%s] - Gap = %s > %s'
+                                    % (new_asset_id, line.id, line.depreciation_type, gap, rounding))
                 if gap:
                     line.write({'depreciation_value': line.depreciation_value + gap})
                     line_to_update_ids.append(line.id)

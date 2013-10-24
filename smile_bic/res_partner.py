@@ -27,6 +27,12 @@ from osv import fields, orm
 class ResPartnerBank(orm.Model):
     _inherit = 'res.partner.bank'
 
+    def __init__(self, pool, cr):
+        super(ResPartnerBank, self).__init__(pool, cr)
+        for index, constraint in enumerate(self._constraints):
+            if constraint[0].func_name == "_check_bank":
+                del self._constraints[index]
+
     _columns = {
         'bank_bic': fields.char('BIC/SWIFT', size=11, required=False),
     }

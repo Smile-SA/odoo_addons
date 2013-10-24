@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import logging
 import threading
 import time
 
@@ -29,6 +30,9 @@ from openerp import pooler, tools
 from openerp.tools.translate import _
 
 from openerp.addons.smile_log.db_handler import SmileDBLogger
+
+
+_logger = logging.getLogger(__package__)
 
 
 def _get_exception_message(exception):
@@ -75,7 +79,7 @@ class IrModelExportTemplate(Model):
         if not model_obj:
             raise except_orm(_('Error'), _("Unknown object: %s") % (template.model,))
         if template.filter_type == 'domain':
-            domain = eval(template.domain)
+            domain = eval(template.domain or '[]')
             if res_ids:
                 domain.append(('id', 'in', res_ids))
             res_ids = model_obj.search(cr, uid, domain, context=context)
@@ -222,14 +226,14 @@ def state_cleaner(method):
     return state_cleaner
 
 
-class ir_model_export(Model):
+class IrModelExport(Model):
     _name = 'ir.model.export'
     _description = 'Export'
     _rec_name = 'create_date'
     _order = 'create_date desc'
 
     def __init__(self, pool, cr):
-        super(ir_model_export, self).__init__(pool, cr)
+        super(IrModelExport, self).__init__(pool, cr)
         setattr(Registry, 'load', state_cleaner(getattr(Registry, 'load')))
 
     def _get_line_count(self, cr, uid, ids, name, arg, context=None):
@@ -274,18 +278,24 @@ class ir_model_export(Model):
         try:
             export_id = self.pool.get('ir.model.export').create(cr, uid, vals, context)
             cr.commit()
+        except Exception, e:
+            _logger.error("Could not create export %s: %s" % (export_id, _get_exception_message(e)))
+            raise e
         finally:
             cr.close()
 
         return export_id
 
-    def write_new_cr(self, dbname, uid, ids, vals, context):
+    def write_new_cr(self, dbname, uid, export_id, vals, context, logger):
         db = pooler.get_db(dbname)
         cr = db.cursor()
 
         try:
-            result = self.pool.get('ir.model.export').write(cr, uid, ids, vals, context)
+            result = self.pool.get('ir.model.export').write(cr, uid, export_id, vals, context)
             cr.commit()
+        except Exception, e:
+            logger.error("Could not mark export %s as %s: %s" % (export_id, vals.get('state'), _get_exception_message(e)))
+            raise e
         finally:
             cr.close()
 
@@ -326,7 +336,7 @@ class ir_model_export(Model):
                 except Exception, e:
                     if export_mode == 'same_thread_rollback_and_continue':
                         cr.execute("ROLLBACK TO SAVEPOINT smile_export")
-                        logger.info("Export rollbacking - Error: %s" % _get_exception_message(e))
+                        logger.error("Export rollbacking - Error: %s" % _get_exception_message(e))
                     else:  # same_thread_raise_error
                         raise e
         return True
@@ -357,31 +367,24 @@ class ir_model_export(Model):
         except Exception:
             return False
         new_cr = db.cursor()
-        export = self.browse(new_cr, uid, export_id, context)
 
         try:
+            export = self.browse(new_cr, uid, export_id, context)
             if export.line_ids or export.resource_ids or export.export_tmpl_id.force_execute_action:
                 res_ids = export.resource_ids or [line.res_id for line in export.line_ids]
-                logger.info('Export start')
                 self._run_actions(cr, uid, export, res_ids, context)
-                logger.time_info('Export done')
+                self.write_new_cr(cr.dbname, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context, logger)
         except Exception, e:
-            logger.critical("Export failed: %s" % (_get_exception_message(e),))
+            logger.critical("Export failed: %s" % _get_exception_message(e))
             self.write_new_cr(cr.dbname, uid, export_id, {'state': 'exception',
                                                           'to_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                                                          'exception': _get_exception_message(e), }, context)
-            raise e
-
-        try:
-            self.write(new_cr, uid, export_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
-        except Exception, e:
-            logger.error("Could not mark export %s as done: %s" % (export_id, _get_exception_message(e)))
+                                                          'exception': _get_exception_message(e), }, context, logger)
             raise e
         finally:
             new_cr.close()
 
 
-class ir_model_export_line(Model):
+class IrModelExportLine(Model):
     _name = 'ir.model.export.line'
     _description = 'Export Line'
     _rec_name = 'export_id'

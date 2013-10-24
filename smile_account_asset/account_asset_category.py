@@ -129,6 +129,11 @@ class AccountAssetCategory(orm.Model):
         'confirm_asset': fields.boolean('Skip Draft State'),
 
         'fiscal_deduction_limit': fields.float('Fiscal Deduction Limit', digits_compute=dp.get_precision('Account')),
+        'tax_regularization_period': fields.integer('Tax Regularization Period', help="In years"),
+        'tax_regularization_base': fields.selection([('deducted', 'Deducted'), ('undeducted', 'Undeducted')], 'Tax Regularization Base',
+                                                    required=True),
+        'tax_regularization_application': fields.selection([('with_sale_taxes', 'Taxed Sale'), ('without_sale_taxes', 'Untaxed Sale')],
+                                                           'Tax Regularization Application', required=True),
     }
 
     def _get_default_company_id(self, cr, uid, context=None):
@@ -142,6 +147,8 @@ class AccountAssetCategory(orm.Model):
         'fiscal_method': 'none',
         'fiscal_annuities': 5,
         'fiscal_rate': 25.0,
+        'tax_regularization_base': 'deducted',
+        'tax_regularization_application': 'with_sale_taxes',
     }
 
     @property

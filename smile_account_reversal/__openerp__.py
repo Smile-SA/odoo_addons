@@ -34,7 +34,10 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "category": "Accounting & Finance",
     "sequence": 32,
     "init_xml": [],
-    "update_xml": [],
+    "update_xml": [
+        'view/account_view.xml',
+        'wizard/account_move_line_reverse_view.xml',
+    ],
     "demo_xml": [],
     'test': [],
     "auto_install": False,

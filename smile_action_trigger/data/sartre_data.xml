@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data noupdate="0">
+	<data noupdate="1">
 
 		<!-- Sartre Operators -->
 
@@ -78,7 +78,7 @@
 			<field name="native_operator">none</field>
 			<field name="value_age_filter">old</field>
 			<field name="other_value_necessary" eval="0"/>
-			<field name="expression">result = current_field_value != old_field_value and (not other_value or current_field_value == other_value)</field>
+			<field name="expression">result = old_field_value is not None and current_field_value != old_field_value and (not other_value or current_field_value == other_value)</field>
 		</record>
 		<record id="sartre_operator_isupdating0" model="sartre.operator">
 			<field name="name">is updating</field>

@@ -32,6 +32,8 @@ class AccountMove(orm.Model):
 
     def _move_reversal(self, cr, uid, move, reversal_date, reversal_period_id=False, reversal_journal_id=False,
                        move_prefix=False, move_line_prefix=False, context=None, post_and_reconcile=False):
+        if not reversal_journal_id and move.journal_id.reversal_journal_id:
+            reversal_journal_id = move.journal_id.reversal_journal_id.id
         reversal_move_id = super(AccountMove, self)._move_reversal(cr, uid, move, reversal_date, reversal_period_id, reversal_journal_id,
                                                                    move_prefix, move_line_prefix, context)
         if post_and_reconcile:

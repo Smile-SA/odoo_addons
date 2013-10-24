@@ -23,7 +23,7 @@ import logging
 from lxml import etree
 import time
 
-from openerp import pooler, SUPERUSER_ID
+from openerp import netsvc, pooler, SUPERUSER_ID
 from openerp.tools import is_eval, is_ref, is_string, misc, YamlImportException, YamlInterpreter
 from openerp.tools.config import config
 
@@ -40,6 +40,7 @@ def new_init(self, cr, module, id_map, mode, filename, noupdate=False):
         'pool': pooler.get_pool(cr.dbname),
         'cr': cr,
         'uid': self.uid,
+        'context': None,
     })
 
 
@@ -124,7 +125,7 @@ def new_process_python(self, node):
     statements = statements.replace("\r\n", "\n")
     uid = self._get_uid(python)  # Added by Smile
     code_context = {'model': model, 'cr': self.cr, 'uid': uid, 'log': log, 'context': self.context}
-    code_context.update({'self': model, 'time': time})  # remove me when no !python block test uses 'self' anymore
+    code_context.update({'self': model, 'time': time, 'netsvc': netsvc})  # remove me when no !python block test uses 'self' anymore
     try:
         code_obj = compile(statements, self.filename, 'exec')
         unsafe_eval(code_obj, {'ref': self.get_id}, code_context)

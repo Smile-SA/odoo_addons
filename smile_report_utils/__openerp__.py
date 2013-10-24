@@ -36,7 +36,9 @@
     "category": 'Tools',
     "sequence": 20,
     "init_xml": [],
-    "update_xml": [],
+    "update_xml": [
+        'report/report_header.xml',
+    ],
     'demo_xml': [],
     'test': [],
     "auto_install": True,

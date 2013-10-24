@@ -29,6 +29,37 @@
 			</field>
 		</record>
 
+        <record id="view_users_tree" model="ir.ui.view">
+            <field name="name">res.users.tree</field>
+            <field name="model">res.users</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="base.view_users_tree"/>
+            <field name="arch" type="xml">
+                <field name="login" position="after">
+	                <field name="user_profile_id" invisible="context.get('user_profile_view', False)"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="view_users_search" model="ir.ui.view">
+            <field name="name">res.users.search</field>
+            <field name="model">res.users</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="base.view_users_search"/>
+            <field name="arch" type="xml">
+                <field name="login" position="after">
+	                <field name="user_profile_id" invisible="context.get('user_profile_view', False)"/>
+                </field>
+                <field name="company_ids" position="after">
+                	<newline/>
+		            <group expand="0" string="Group By...">
+		                <filter string="Profile" icon="terp-personal" domain="[]" context="{'group_by':'user_profile_id'}"/>
+		            </group>
+                </field>
+            </field>
+        </record>
+
 		<record id="action_res_user_profiles" model="ir.actions.act_window">
 			<field name="name">User Profiles</field>
 			<field name="type">ir.actions.act_window</field>
@@ -37,7 +68,7 @@
 			<field name="view_id" ref="base.view_users_tree" />
 			<field name="search_view_id" ref="base.view_users_search" />
 			<field name="domain">[('user_profile', '=', True)]</field>
-			<field name="context">{'active_test': False, 'default_user_profile': True}</field>
+			<field name="context">{'active_test': False, 'default_user_profile': True, 'user_profile_view': True}</field>
 			<field name="help"></field>
 		</record>
 		<menuitem action="action_res_user_profiles" id="menu_action_res_user_profiles"
