@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_account_voucher_invoice_line_manager","account.voucher.invoice.line manager","model_account_voucher_invoice_line","account.group_account_manager",1,0,0,0
+"access_account_voucher_invoice_line_invoice","account.voucher.invoice.line invoice","model_account_voucher_invoice_line","account.group_account_invoice",1,1,1,1
+"access_account_voucher_invoice_line_all","account.voucher.invoice.line all","model_account_voucher_invoice_line","base.group_user",1,0,0,0

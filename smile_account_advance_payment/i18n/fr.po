@@ -1,0 +1,204 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_account_advance_payment
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1-20121025-233243\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-09-06 08:05+0000\n"
+"PO-Revision-Date: 2013-09-06 08:05+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_account_advance_payment
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr "La référence de commande doit être unique par société !"
+
+#. module: smile_account_advance_payment
+#: constraint:account.voucher:0
+msgid "You cannot create a voucher linked to a company different from the ones of journal and account"
+msgstr "Vous ne pouvez pas créer un règlement avec une société différente de celles du mode de paiement ou du compte sélectionnés"
+
+#. module: smile_account_advance_payment
+#: view:account.voucher:0
+#: field:account.voucher,is_advance_payment:0
+#: field:account.voucher.invoice.line,voucher_id:0
+msgid "Advance Payment"
+msgstr "Acompte"
+
+#. module: smile_account_advance_payment
+#: field:account.invoice,purchase_order_ids:0
+msgid "Bons d'achat"
+msgstr "Bons d'achat"
+
+#. module: smile_account_advance_payment
+#: field:account.voucher,advance_residual:0
+msgid "Advance Residual"
+msgstr "Solde à reprendre"
+
+#. module: smile_account_advance_payment
+#: view:account.voucher:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_account_advance_payment
+#: constraint:account.voucher:0
+msgid "You cannot create an advance payment with an amount bigger than purchase order amount"
+msgstr "Vous ne pouvez pas créer d'acomptes pour un montant total supérieur à celui de la commande"
+
+#. module: smile_account_advance_payment
+#: field:account.voucher,advance_reference:0
+msgid "Numéro acompte papier fournisseur reçu"
+msgstr "Numéro acompte papier fournisseur reçu"
+
+#. module: smile_account_advance_payment
+#: model:ir.model,name:smile_account_advance_payment.model_account_journal
+msgid "Journal"
+msgstr "Journal"
+
+#. module: smile_account_advance_payment
+#: field:account.journal,is_advance_journal:0
+msgid "Advance Journal"
+msgstr "Journal d'acompte"
+
+#. module: smile_account_advance_payment
+#: field:account.journal,recovery_sequence_id:0
+msgid "Recovery Entry Sequence"
+msgstr "Séquence de reprise d'acompte"
+
+#. module: smile_account_advance_payment
+#: field:account.invoice,advance_payment_line_ids:0
+#: view:purchase.order:0
+#: field:purchase.order,advance_payment_ids:0
+msgid "Advance Payments"
+msgstr "Acomptes"
+
+#. module: smile_account_advance_payment
+#: view:account.voucher:0
+msgid "Recovery Lines"
+msgstr "Lignes de reprise d'acompte"
+
+#. module: smile_account_advance_payment
+#: view:account.voucher.invoice.line:0
+msgid "Recovery Line"
+msgstr "Ligne de reprise d'acompte"
+
+#. module: smile_account_advance_payment
+#: view:account.voucher.invoice.line:0
+msgid "Post"
+msgstr "Comptabiliser"
+
+#. module: smile_account_advance_payment
+#: model:ir.model,name:smile_account_advance_payment.model_account_voucher_invoice_line
+msgid "Advance Payment Line"
+msgstr "Lignes de reprise d'acompte"
+
+#. module: smile_account_advance_payment
+#: field:account.voucher,purchase_order_id:0
+#: model:ir.model,name:smile_account_advance_payment.model_purchase_order
+msgid "Purchase Order"
+msgstr "Bon de commande"
+
+#. module: smile_account_advance_payment
+#: field:account.voucher.invoice.line,amount:0
+msgid "Amount"
+msgstr "Montant"
+
+#. module: smile_account_advance_payment
+#: constraint:account.journal:0
+msgid "Configuration error! The currency chosen should be shared by the default accounts too."
+msgstr "Problème de configuration : la devise choisie devrait être celle des comptes par défaut."
+
+#. module: smile_account_advance_payment
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Le numéro de facture doit être unique par société !"
+
+#. module: smile_account_advance_payment
+#: field:account.voucher,advance_payment_line_ids:0
+msgid "Invoices"
+msgstr "Factures"
+
+#. module: smile_account_advance_payment
+#: model:ir.model,name:smile_account_advance_payment.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Justificatif comptable"
+
+#. module: smile_account_advance_payment
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr "Le nom du journal doit être unique dans chaque société !"
+
+#. module: smile_account_advance_payment
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr "Le code du journal doit être unique dans chaque société !"
+
+#. module: smile_account_advance_payment
+#: field:account.voucher.invoice.line,invoice_id:0
+#: model:ir.model,name:smile_account_advance_payment.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: smile_account_advance_payment
+#: view:account.voucher:0
+msgid "Payment Information"
+msgstr "Information sur le paiement"
+
+#. module: smile_account_advance_payment
+#: view:account.voucher:0
+msgid "Total"
+msgstr "Total"
+
+#. module: smile_account_advance_payment
+#: field:account.voucher.invoice.line,move_id:0
+msgid "Journal Entry"
+msgstr "Pièce comptable"
+
+#. module: smile_account_advance_payment
+#: constraint:account.voucher.invoice.line:0
+msgid "You cannot recover more than advance payment amount nor define a negative amount"
+msgstr "Vous ne pouvez pas reprendre un acompte pour une valeur négative ou supérieure à son montant"
+
+#. module: account
+#: field:account.invoice,residual:0
+msgid "Balance"
+msgstr "Solde dû"
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: selection:account.voucher,state:0
+#: view:sale.receipt.report:0
+#: selection:sale.receipt.report,state:0
+msgid "Posted"
+msgstr "Comptabilisé"
+
+#. module: account
+#: view:account.entries.report:0
+#: selection:account.entries.report,move_state:0
+#: view:account.move:0
+#: selection:account.move,state:0
+#: view:account.move.line:0
+msgid "Unposted"
+msgstr "Non validée"
+
+#. module: account
+#: view:account.entries.report:0
+#: selection:account.entries.report,move_state:0
+#: view:account.move:0
+#: selection:account.move,state:0
+#: view:account.move.line:0
+msgid "Posted"
+msgstr "Validée"
+
+#. module: account_voucher
+#: view:account.voucher:0 field:account.voucher,move_ids:0
+msgid "Journal Items"
+msgstr "Ecritures comptables"
+

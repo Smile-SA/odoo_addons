@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+
+		<record model="ir.ui.view" id="purchase_order_form">
+			<field name="name">purchase.order.form</field>
+			<field name="model">purchase.order</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form" />
+			<field name="arch" type="xml">
+				<notebook position="inside">
+					<page string="Advance Payments">
+						<field name="advance_payment_ids" nolabel="1" context="{'filter_on_advance_journal': True, 'purchase_order_form_view': True, 'form_view_ref': 'account_voucher.view_vendor_payment_form', 'default_type': 'payment', 'default_partner_id': partner_id, 'default_company_id': company_id, 'default_purchase_order_id': active_id, 'default_is_advance_payment': True, 'default_reference': name}"/>
+					</page>
+				</notebook>
+			</field>
+		</record>
+
+	</data>
+</openerp>
