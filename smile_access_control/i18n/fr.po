@@ -87,6 +87,16 @@ msgid "Linked users"
 msgstr "Utilisateurs associés"
 
 #. module: smile_access_control
+#: view:res.users:0
+msgid "Profile"
+msgstr "Profil"
+
+#. module: smile_access_control
+#: view:res.users:0
+msgid "Group by..."
+msgstr "Grouper par..."
+
+#. module: smile_access_control
 #: code:addons/smile_access_control/res_users.py:80
 #, python-format
 msgid "Warning!"

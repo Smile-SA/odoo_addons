@@ -83,7 +83,7 @@ class ResUser(orm.Model):
             new_profile_user_ids = []
             same_profile_user_ids = []
             for user in self.read(cr, uid, ids, ['user_profile', 'user_profile_id'], context, '_classic_write'):
-                if user['user_profile'] and vals.get('user_profile', True):
+                if user['user_profile']:
                     raise orm.except_orm(_('Warning!'), _('You cannot change the profile of a user which is itself a profile!'))
                 if user['user_profile_id'] == vals['user_profile_id']:
                     same_profile_user_ids.append(user['id'])
