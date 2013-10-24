@@ -80,7 +80,8 @@ class IrValues(orm.Model):
                         AND (v.res_id = %s
                              OR v.res_id IS NULL
                              OR v.res_id = 0)
-                         AND (v.window_actions=', , '
+                         AND (v.window_actions IS NULL
+                              OR v.window_actions=', , '
                               OR v.window_actions like %s)
                     ORDER BY v.sequence, v.id"""
         cr.execute(query, ('action', action_slot, model, res_id or None, ', %s, ' % context.get('window_action_id', '')))
