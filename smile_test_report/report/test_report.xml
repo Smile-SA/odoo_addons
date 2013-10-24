@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="webkit_test_report" model="ir.actions.report.xml">
+             <field name="report_type">webkit</field>
+             <field name="report_name">webkittest.report</field>
+             <field eval="[(6,0,[])]" name="groups_id"/>
+             <field eval="0" name="multi"/>
+             <field eval="0" name="auto"/>
+             <field eval="1" name="header"/>
+             <field name="model">ir.module.module</field>
+             <field name="type">ir.actions.report.xml</field>
+             <field name="name">Tests Report</field>
+             <field name="report_rml">smile_test_report/report/report_webkit_html_test_report.mako</field>
+             <field name="report_file">smile_test_report/report/report_webkit_html_test_report.mako</field>
+         </record>
+         <record id="property_webkit_test_report" model="ir.property">
+             <field name="name">webkittest.report</field>
+             <field name="fields_id" ref="report_webkit.field_ir_act_report_xml_webkit_header"/>
+             <field eval="'ir.header_webkit,'+str(ref('smile_report_utils.ir_header_webkit_smile'))" model="ir.header_webkit" name="value"/>
+             <field eval="'ir.actions.report.xml,'+str(ref('smile_test_report.webkit_test_report'))" model="ir.actions.report.xml" name="res_id"/>
+         </record>
+         <record model="ir.values" id="value_webkit_test_report">
+             <field name="name">Tests Report</field>
+             <field name="model_id" ref="base.model_ir_module_module"/>
+             <field name="model">ir.module.module</field>
+             <field name="key">action</field>
+             <field name="key2">client_print_multi</field>
+             <field name="value" eval="'ir.actions.report.xml,%d' % ref('smile_test_report.webkit_test_report')"/>
+         </record>
+
+    </data>
+</openerp>
