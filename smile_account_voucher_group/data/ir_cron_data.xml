@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record model='ir.cron' id='cron_generate_grouped_payment'>
+            <field name="name">Generate grouped payments</field>
+            <field name="model" eval="'account.invoice'" />
+            <field name="function" eval="'generate_grouped_payments'" />
+            <field name="active" eval="True" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">0</field>
+            <field name="priority">10</field>
+            <field eval="False" name="doall" />
+            <field name="user_id" ref="base.user_root" />
+            <field eval="'()'" name="args" />
+        </record>
+
+    </data>
+</openerp>
