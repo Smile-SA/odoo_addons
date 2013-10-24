@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_move_line_reverse" model="ir.ui.view">
+            <field name="name">account.move.line.reverse.form</field>
+            <field name="model">account.move.line.reverse</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Reverse Items">
+                    <field name="account_id" colspan="4"/>
+                    <field name="date"/>
+                    <field name="period_id"/>
+                    <field name="journal_id"/>
+                    <field name="move_line_prefix" />
+                    <separator colspan="4" />
+                    <group colspan="4" col="2">
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-ok" string="Reverse Items" name="action_reverse" type="object"/>
+                   </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_account_move_line_reverse" model="ir.actions.act_window">
+            <field name="name">Reverse Items</field>
+            <field name="res_model">account.move.line.reverse</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_move_line_reverse"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="ir_account_move_line_reverse" model="ir.values">
+            <field name="name">Reverse Items</field>
+            <field name="key2">client_action_multi</field>
+            <field name="model">account.move.line</field>
+            <field name="value" eval="'ir.actions.act_window,%d'%act_account_move_line_reverse" />
+        </record>
+
+    </data>
+</openerp>
