@@ -127,7 +127,7 @@ class AccountInvoice(orm.Model):
 
     def _get_payment_vals(self, cr, uid, invoices, context=None):
         context = context or {}
-        context['force_company'] = invoices[0].company_id.id
+        context['force_company'] = context['company_id'] = invoices[0].company_id.id  # company_id for period, force_company for journal
         voucher_obj = self.pool.get('account.voucher')
         partner = self.pool.get('res.partner').browse(cr, uid, invoices[0].partner_id.id, context)
         journal = partner.payment_mode_id.journal_id
