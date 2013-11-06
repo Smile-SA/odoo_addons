@@ -528,7 +528,8 @@ class SartreTrigger(osv.osv):
             all_active_object_ids = context['active_object_ids']
         else:
             all_active_object_ids = model_obj.search(cr, uid, [], context=context)
-        current_values = _get_browse_record_dict(model_obj, cr, uid, all_active_object_ids, context=context)
+        fields_list = self.get_fields_to_save_old_values(cr, 1, [trigger.id])
+        current_values = _get_browse_record_dict(model_obj, cr, uid, all_active_object_ids, fields_list, context=context)
         for index, condition in enumerate(domain):
             if self._is_dynamic_filter(cr, uid, condition, model_obj, context):
                 active_object_ids = all_active_object_ids[:]
