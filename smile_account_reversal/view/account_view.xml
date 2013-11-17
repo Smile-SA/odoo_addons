@@ -8,7 +8,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
-                <field name="entry_posted" position="after">
+                <field name="currency" position="after">
                     <field name="reversal_journal_id" domain="[('company_id', '=', company_id)]"/>
                 </field>
             </field>
