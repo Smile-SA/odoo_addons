@@ -126,7 +126,7 @@ class AccountAssetCategory(orm.Model):
         'asset_creation': fields.selection([('auto', 'Automatic'), ('manual', 'Manual')], "Asset Creation", required=True,
                                            help="If automatic, an asset is created at invoice validation for each line associated "
                                                 "to this asset category"),
-        'confirm_asset': fields.boolean('Skip Draft State'),
+        'confirm_asset': fields.boolean('Skip Draft State', help="Only in automatic mode"),
 
         'fiscal_deduction_limit': fields.float('Fiscal Deduction Limit', digits_compute=dp.get_precision('Account')),
         'tax_regularization_period': fields.integer('Tax Regularization Period', help="In years"),

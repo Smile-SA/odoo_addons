@@ -131,7 +131,7 @@ class AccountAssetAsset(orm.Model):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'code': fields.char('Reference', size=32, readonly=True, states={'draft': [('readonly', False)]}),
+        'code': fields.char('Reference', size=32, readonly=True),
         'state': fields.selection(ASSET_STATES, 'State', readonly=True),
 
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=True, states={'draft': [('readonly', False)]},
@@ -258,6 +258,11 @@ class AccountAssetAsset(orm.Model):
                                              help="Keep empty to use the current date"),
         'sale_account_date': fields.date('Accounting date for sale', readonly=True, states={'open': [('readonly', False)]},
                                          help="Keep empty to use the current date"),
+
+        'purchase_move_id': fields.many2one('account.move', 'Purchase Account Move', readonly=True),
+        'sale_move_id': fields.many2one('account.move', 'Sale Account Move', readonly=True),
+        'purchase_cancel_move_id': fields.many2one('account.move', 'Purchase Cancellation Account Move', readonly=True),
+        'sale_cancel_move_id': fields.many2one('account.move', 'Sale Cancellation Account Move', readonly=True),
     }
 
     def _get_default_code(self, cr, uid, context=None):
@@ -270,7 +275,6 @@ class AccountAssetAsset(orm.Model):
             return False
 
     _defaults = {
-        'code': _get_default_code,
         'state': 'draft',
         'asset_type': 'purchase',
         'quantity': 1.0,
@@ -320,6 +324,8 @@ class AccountAssetAsset(orm.Model):
     ]
 
     def create(self, cr, uid, vals, context=None):
+        if not vals.get('fiscal_method'):
+            vals['fiscal_method'] = 'none'
         asset_id = super(AccountAssetAsset, self).create(cr, uid, vals, context)
         fields_to_compute = [field for field in self._columns if isinstance(self._columns[field], (fields.function, fields.related))
                              and self._columns[field].store]
@@ -334,8 +340,6 @@ class AccountAssetAsset(orm.Model):
             default['state'] = 'draft'
         if 'purchase_account_date' not in default:
             default['purchase_account_date'] = False
-        if 'code' not in default:
-            default['code'] = self.pool.get('ir.sequence').get(cr, uid, 'account.asset.asset', context)
         if 'origin_id' not in default:
             default['origin_id'] = False
         for field in ('accounting_depreciation_line_ids', 'fiscal_depreciation_line_ids', 'depreciation_line_ids', 'sale_tax_ids',
@@ -371,6 +375,12 @@ class AccountAssetAsset(orm.Model):
             category = self.pool.get('account.asset.category').read(cr, uid, category_id, fields_to_read, context, '_classic_write')
             for field in fields_to_read:
                 res['value'][field] = category[field]
+        return res
+
+    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+        res = {'value': {}}
+        if company_id:
+            res['value']['currency_id'] = self.pool.get('res.company').browse(cr, uid, company_id, context).currency_id.id
         return res
 
     def _get_depreciation_start_date(self, cr, uid, asset, depreciation_type, context=None):
@@ -475,7 +485,7 @@ class AccountAssetAsset(orm.Model):
             ids = [ids]
         asset_ids_with_purchase_account_date = [asset.id for asset in self.browse(cr, uid, ids, context)
                                                 if asset.purchase_account_date]
-        vals = {'state': 'confirm'}
+        vals = {'state': 'confirm', 'code': self._get_default_code(cr, uid, context)}
         if asset_ids_with_purchase_account_date:
             self.write(cr, uid, asset_ids_with_purchase_account_date, vals, context)
         asset_ids_without_purchase_account_date = list(set(ids) - set(asset_ids_with_purchase_account_date))

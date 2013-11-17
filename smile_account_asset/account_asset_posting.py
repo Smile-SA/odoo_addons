@@ -158,7 +158,9 @@ class AccountAssetAsset(orm.Model):
             ids = [ids]
         for asset in self.browse(cr, uid, ids, context):
             vals = self._get_move_vals(cr, uid, asset, move_type, context, reversal)
-            move_ids.append(move_obj.create(cr, uid, vals, context))
+            move_id = move_obj.create(cr, uid, vals, context)
+            asset.write({'%s%s_move_id' % (move_type, reversal and '_cancel' or ''): move_id})
+            move_ids.append(move_id)
         if move_ids:
             move_obj.post(cr, uid, move_ids, context)
         return True

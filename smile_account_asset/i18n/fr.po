@@ -317,7 +317,7 @@ msgstr "Non déduite"
 #. module: smile_account_asset
 #: field:account.asset.category,tax_regularization_application:0
 msgid "Tax Regularization Application"
-msgstr "Condition d'application de la régularization de TVA"
+msgstr "Condition d'application de la régularisation de TVA"
 
 #. module: smile_account_asset
 #: selection:account.asset.category,tax_regularization_application:0
@@ -342,7 +342,7 @@ msgstr "Condition d'application"
 #. module: smile_account_asset
 #: view:account.asset.category:0
 msgid "Tax Regularization"
-msgstr "Régularization de TVA"
+msgstr "Régularisation de TVA"
 
 #. module: smile_account_asset
 #: view:account.asset.category:0
@@ -1615,3 +1615,29 @@ msgstr "Manuelle"
 #: field:account.asset.asset,sale_invoice_number:0
 msgid "Invoice Number"
 msgstr "Numéro de facture"
+
+#. module: smile_account_asset
+#: field:account.asset.asset,purchase_move_id:0
+msgid "Purchase Account Mode"
+msgstr "Pièce comptable d'acquisition"
+
+#. module: smile_account_asset
+#: field:account.asset.asset,sale_move_id:0
+msgid "Sale Account Mode"
+msgstr "Pièce comptable de cession"
+
+#. module: smile_account_asset
+#: field:account.asset.asset,purchase_cancel_move_id:0
+msgid "Purchase Cancellation Account Mode"
+msgstr "Pièce comptable d'annulation d'acquisition"
+
+#. module: smile_account_asset
+#: field:account.asset.asset,sale_cancel_move_id:0
+msgid "Sale Cancellation Account Mode"
+msgstr "Pièce comptable d'annulation de cession"
+
+#. module: smile_account_asset
+#: help:account.asset.category,confirm_asset:0
+msgid "Only in automatic mode"
+msgstr "Seulement en mode automatique"
+

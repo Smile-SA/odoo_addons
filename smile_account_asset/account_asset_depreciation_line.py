@@ -162,6 +162,10 @@ CREATE AGGREGATE public.last (
             res[line.id] = getattr(line.asset_id, '%s_method' % line.depreciation_type) == 'manual'
         return res
 
+    def _set_is_posted(self, cr, uid, ids, name, value, arg, context=None):
+        cr.execute("UDPATE account_asset_depreciation_line SET is_posted = %s WHERE id IN %s", (value, tuple(ids)))
+        return True
+
     _columns = {
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, ondelete='cascade'),
         'depreciation_type': fields.selection([('accounting', 'Accounting'), ('fiscal', 'Fiscal'), ('exceptional', 'Exceptional')], 'Type',
@@ -231,9 +235,9 @@ CREATE AGGREGATE public.last (
                                                                                          'exceptional_depreciation_account_id'], 5),
             'res.company': (_get_line_ids_from_companies_for_account, ['fiscal_depreciation_account_id'], 5),
         }, string="Account", multi="asset_info"),
-        'is_posted': fields.function(_get_asset_info, method=True, type='boolean', string='Posted Depreciation', store={
+        'is_posted': fields.function(_get_asset_info, fnct_inv=_set_is_posted, method=True, type='boolean', string='Posted Depreciation', store={
             'account.asset.depreciation.line': (lambda self, cr, uid, ids, context=None: ids, ['move_id'], 5),
-        }, multi="asset_info"),
+        }, multi="asset_info", readonly=True),
         'is_manual': fields.function(_is_manual, method=True, type='boolean', string='Manual Depreciation'),
     }
 

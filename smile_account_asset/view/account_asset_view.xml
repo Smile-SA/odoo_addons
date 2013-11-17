@@ -69,12 +69,12 @@
 	            <form string="Asset">
 	            	<group colspan="4" col="6">
 		            	<field name="name"/>
-		                <field name="category_id" on_change="onchange_category_id(category_id)" domain="[('company_id', 'in', [company_id, False])]"/>
+		                <field name="category_id" on_change="onchange_category_id(category_id)"/>
 		                <field name="code"/>
 		                <field name="purchase_value" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
 		                <field name="salvage_value"/>
 		                <field name="book_value"/>
-		                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+		                <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
 		                <field name="currency_id" groups="base.group_extended"/>
 		                <group colspan="2" col="2">
 	                        <button name="button_split" states="draft,confirm,open" string="Split" type="object" colspan="1"/>
