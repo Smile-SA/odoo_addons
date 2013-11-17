@@ -77,7 +77,8 @@ class UpgradeManager(object):
         param = self.cr.fetchone()
         if not param:
             with cursor(self.db) as cr:
-                cr.execute("INSERT INTO ir_config_parameter (key, value) VALUES ('code.version', '')")
+                cr.execute("""INSERT INTO ir_config_parameter (create_date, create_uid, key, value)
+                           VALUES (now() at time zone 'UTC', %s, 'code.version', '')""", (SUPERUSER_ID,))
             _logger.warning('Unspecified version in database')
             return ''
         _logger.debug('database version: %s', param[0])
@@ -131,7 +132,8 @@ class Upgrade(object):
 
     def _set_db_version(self):
         with cursor(self.db) as cr:
-            cr.execute("UPDATE ir_config_parameter SET value = %s WHERE key = 'code.version'", (self.version,))
+            cr.execute("""UPDATE ir_config_parameter SET (write_date, write_uid, value) = (now() at time zone 'UTC', %s, %s)
+                       WHERE key = 'code.version'""", (SUPERUSER_ID, self.version))
 
     def _sql_import(self, cr, f_obj):
         for query in f_obj.read().split(';'):
