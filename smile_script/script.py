@@ -51,7 +51,7 @@ class SmileScript(orm.Model):
         'validation_date': fields.datetime('Validation date', readonly=True),
         'validation_user_id': fields.many2one('res.users', 'Validation user', readonly=True),
 
-        'name': fields.char('Name', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.char('Name', size=128, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'description': fields.text('Description', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'type': fields.selection([('python', 'Python'), ('sql', 'SQL'), ('xml', 'XML')], 'Type', required=True, readonly=True,
                                  states={'draft': [('readonly', False)]}),
@@ -118,7 +118,6 @@ class SmileScript(orm.Model):
         return True
 
     def _run(self, cr, uid, script, intervention_id, logger, context=None):
-        _logger.info('Running script: %s\nCode:\n%s' % (script.name.encode('utf-8'), script.code.encode('utf-8')))
         if script.type == 'sql':
             return self._run_sql(cr, uid, script, context)
         elif script.type == 'xml':
@@ -140,20 +139,27 @@ class SmileScript(orm.Model):
                     self.dump_database(cr)
             intervention_id = intervention_obj.create(cr, uid, {'script_id': script.id, 'test_mode': context.get('test_mode')}, context)
             logger = SmileDBLogger(cr.dbname, 'smile.script.intervention', intervention_id, uid)
-            intervention_cr = sql_db.db_connect(cr.dbname).cursor()
+            if not context.get('do_not_use_new_cursor'):
+                intervention_cr = sql_db.db_connect(cr.dbname).cursor()
+            else:
+                intervention_cr = cr
             intervention_vals = {}
             try:
+                _logger.info('Running script: %s\nCode:\n%s' % (script.name.encode('utf-8'), script.code.encode('utf-8')))
                 result = self._run(intervention_cr, uid, script, intervention_id, logger, context)
-                if context.get('test_mode'):
+                if not context.get('do_not_use_new_cursor') and context.get('test_mode'):
                     logger.info('TEST MODE: Script rollbacking')
                     intervention_cr.rollback()
-                else:
+                elif not context.get('do_not_use_new_cursor'):
                     intervention_cr.commit()
                 intervention_vals.update({'state': 'done', 'result': result})
+                _logger.info('Script execution SUCCEEDED: %s\n' % (script.name.encode('utf-8'),))
             except Exception, e:
                 intervention_vals.update({'state': 'exception', 'result': _get_exception_message(e)})
+                _logger.error('Script execution FAILED: %s\nError:\n%s' % (script.name.encode('utf-8'), _get_exception_message(e).encode('utf-8')))
             finally:
-                intervention_cr.close()
+                if not context.get('do_not_use_new_cursor'):
+                    intervention_cr.close()
             intervention_vals.update({'end_date': time.strftime('%Y-%m-%d %H:%M:%S')})
             intervention_obj.write(cr, uid, intervention_id, intervention_vals, context)
         return True

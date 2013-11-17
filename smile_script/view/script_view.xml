@@ -66,6 +66,7 @@
                     <filter string="Validated" icon="terp-camera_test" domain="[('state', '=', 'validated')]" />
                     <separator orientation="vertical"/>
                     <field name="name"/>
+                    <field name="description"/>
                     <field name="type"/>
                     <newline/>
                     <group expand="0" string="Extended..." colspan="11" col="11" groups="base.group_extended">
