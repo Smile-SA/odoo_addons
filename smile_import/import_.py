@@ -174,8 +174,6 @@ class IrModelImport(Model):
         context['logger'] = logger
         context['import_id'] = import_id
 
-        error_management = context.get('import_error_management', 'raise')
-
         cr.execute('SAVEPOINT smile_import')
         try:
             model_obj = self.pool.get(import_.import_tmpl_id.model)
@@ -185,13 +183,12 @@ class IrModelImport(Model):
             getattr(model_obj, model_method)(cr, uid, context)
             return self.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
-            if error_management == 'rollback_and_continue':
+            if context.get('import_error_management') == 'rollback_and_continue':
                 cr.execute("ROLLBACK TO SAVEPOINT smile_import")
                 logger.error("Import rollbacking - Error: %s" % _get_exception_message(e))
                 return self.write(cr, uid, import_id, {'state': 'exception', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
-            else:  # import_error_management = raise
-                logger.error("Import failed - Error: %s" % _get_exception_message(e))
-                raise e
+            logger.error("Import failed - Error: %s" % _get_exception_message(e))
+            raise e
         finally:
             if import_.test_mode:
                 cr.execute("ROLLBACK TO SAVEPOINT smile_import")
@@ -200,7 +197,6 @@ class IrModelImport(Model):
     def _process_with_new_cursor(self, dbname, uid, import_id, logger, context):
         db = pooler.get_db(dbname)
         cr = db.cursor()
-
         context['import_error_management'] = 'rollback_and_continue'
         try:
             self._process_import(cr, uid, import_id, logger, context)

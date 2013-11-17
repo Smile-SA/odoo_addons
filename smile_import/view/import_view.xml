@@ -127,6 +127,7 @@
 			<field name="res_model">ir.model.import</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
+			<field name="limit">20</field>
 		</record>
 
         <record id="board_administration_form" model="ir.ui.view">
