@@ -54,6 +54,11 @@ msgstr "Créer une action client"
 
 #. module: smile_export
 #: view:ir.model.export.template:0
+msgid "Delete Client Action"
+msgstr "Supprimer l'action client"
+
+#. module: smile_export
+#: view:ir.model.export.template:0
 msgid "Create Scheduled Action"
 msgstr "Créer une action planifiée"
 

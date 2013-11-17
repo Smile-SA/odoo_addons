@@ -205,6 +205,14 @@ self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)"""
                 template.write({'client_action_id': client_action_id, 'client_action_server_id': server_action_id, })
         return True
 
+    def unlink_client_action(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for template in self.browse(cr, uid, ids, context):
+            if template.client_action_id:
+                template.client_action_id.unlink()
+        return True
+
 
 STATES = [
     ('running', 'Running'),
