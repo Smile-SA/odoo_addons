@@ -59,4 +59,6 @@
       self.write(cr, uid, lang_ids, {
         'date_format': '%d/%m/%Y',
         'time_format': '%H:%M:%S',
+        'grouping': '[3,3,3,3,3]',
+        'thousands_sep': ' ',
       }, context)

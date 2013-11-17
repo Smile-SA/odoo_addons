@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record model='ir.cron' id='cron_generate_monthly_cre'>
+            <field name="name">Purge user logs</field>
+            <field name="model" eval="'res.log'" />
+            <field name="function" eval="'purge'" />
+            <field name="active" eval="True" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">0</field>
+            <field name="priority">10</field>
+            <field name="doall" eval="False"/>
+            <field name="user_id" ref="base.user_root" />
+            <field name="args" eval="'()'"/>
+        </record>
+
+    </data>
+</openerp>

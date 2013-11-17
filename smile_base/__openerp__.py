@@ -35,6 +35,7 @@
     * Add BaseModel.bulk_create, BaseModel.store_set_values and BaseModel._compute_store_set
     * Improve BaseModel.import_data method performance
     * Manage uid in Yaml tests
+    * Log slow xmlrpc calls
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
@@ -44,6 +45,7 @@
     "sequence": 20,
     "init_xml": [
         "data/ir_lang.yml",
+        "data/ir_cron.xml",
         "security/base_security.xml",
         "security/ir.model.access.csv",
         "view/ir_values_view.xml",

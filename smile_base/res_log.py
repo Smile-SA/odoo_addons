@@ -19,13 +19,15 @@
 #
 ##############################################################################
 
-import ir_sequence
-import ir_translation
-import ir_values
-import orm
-import registry
-import res_log
-import sql_db
-import update
-import web_services
-import yaml_import
+from datetime import datetime, timedelta
+
+from openerp.osv import orm
+
+
+class ResLog(orm.Model):
+    _inherit = 'res.log'
+
+    def purge(self, cr, uid, days=60, context=None):
+        limit_date = (datetime.today() - timedelta(days)).strftime('%Y-%m-%d')
+        ids = self.search(cr, uid, [('read', '=', True), ('create_date', '<', limit_date)], context=context)
+        return self.unlink(cr, uid, ids, context)

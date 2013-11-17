@@ -31,6 +31,7 @@ _logger = logging.getLogger(__name__)
 
 unsafe_eval = eval
 native_init = YamlInterpreter.__init__
+native_process_node = YamlInterpreter._process_node
 
 
 def new_init(self, cr, module, id_map, mode, filename, noupdate=False):
@@ -103,6 +104,16 @@ def _eval_field(self, model, field_name, expression, view=False, parent={}, defa
     return value
 
 
+def new_process_node(self, node):
+    max_delay = isinstance(node, dict) and hasattr(node.keys()[0], 'max_delay') and node.keys()[0].max_delay or 0.0
+    start = time.time()
+    native_process_node(self, node)
+    delay = time.time() - start
+    if max_delay and delay > max_delay:
+        factor = 1000.0
+        self._log_assert_failure(logging.ERROR, "Test execution time limit (%s > %s) has been exceeded" % (delay * factor, max_delay * factor))
+
+
 def new_process_function(self, node):
     function, params = node.items()[0]
     if self.isnoupdate(function) and self.mode != 'init':
@@ -124,7 +135,11 @@ def new_process_python(self, node):
     model = self.get_model(python.model)
     statements = statements.replace("\r\n", "\n")
     uid = self._get_uid(python)  # Added by Smile
-    code_context = {'model': model, 'cr': self.cr, 'uid': uid, 'log': log, 'context': self.context}
+    create_external_id = lambda name, res_model, res_id: self.pool.get('ir.model.data').create(cr, uid, {'name': name, 'model': res_model,
+                                                                                                         'res_id': res_id, 'module': '__test__'},
+                                                                                               context)
+    code_context = {'model': model, 'cr': self.cr, 'uid': uid, 'log': log, 'context': self.context,
+                    'create_external_id': create_external_id, 'create_xml_id': create_external_id}  # Added by Smile
     code_context.update({'self': model, 'time': time, 'netsvc': netsvc})  # remove me when no !python block test uses 'self' anymore
     try:
         code_obj = compile(statements, self.filename, 'exec')
@@ -216,6 +231,7 @@ def new_process_workflow(self, node):
 YamlInterpreter.__init__ = new_init
 YamlInterpreter._eval_field = _eval_field
 YamlInterpreter._get_uid = _get_uid
+YamlInterpreter._process_node = new_process_node
 YamlInterpreter.process_function = new_process_function
 YamlInterpreter.process_python = new_process_python
 YamlInterpreter.process_record = new_process_record
