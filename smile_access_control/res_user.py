@@ -35,7 +35,7 @@ class ResUser(orm.Model):
                                               ('name', 'not in', ('user_profile', 'user_profile_id', 'user_ids', 'field_ids'))]),
     }
 
-    def _get_default_field_ids(self, cr, uid, ids, context=None):
+    def _get_default_field_ids(self, cr, uid, context=None):
         return self.pool.get('ir.model.fields').search(cr, uid, [
             ('model', '=', 'res.users'),
             ('name', 'in', ('action_id', 'menu_id', 'groups_id', 'view')),
