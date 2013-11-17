@@ -56,7 +56,7 @@ msgstr "Vous ne pouvez pas créer d'acomptes pour un montant total supérieur à
 #. module: smile_account_voucher_group
 #: field:account.payment.mode,journal_id:0
 msgid "Journal"
-msgstr "Journal"
+msgstr "Journal de règlement"
 
 #. module: smile_account_voucher_group
 #: field:account.payment.mode,partner_bank_necessary:0

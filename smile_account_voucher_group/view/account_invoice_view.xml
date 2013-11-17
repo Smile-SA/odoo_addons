@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <button name="invoice_pay_customer" position="attributes">
 					<attribute name="states"></attribute>
-					<attribute name="attrs">{'invisible':['|','|',('state','!=','open'),('payment_type','!=','I'),('residual','=',0.0)]}</attribute>
+					<attribute name="attrs">{'invisible':['|','|',('state','not in',('open','progress_paid')),('residual','=',0.0),'&amp;',('payment_type','=','G'),('type','in',('in_invoice','out_invoice'))]}</attribute>
                 </button>
                 <button name="invoice_pay_customer" position="after">
                     <button name="invoice_pay_by_group" type="object" string="Pay Invoice by group" icon="gtk-go-forward"
