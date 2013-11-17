@@ -24,7 +24,7 @@ import os
 import types
 import yaml
 
-from openerp import addons, tools
+from openerp import addons
 from openerp.osv import orm
 
 _logger = logging.getLogger(__package__)
