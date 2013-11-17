@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import orm, fields
 
 
-class ir_model_export_template(osv.osv):
+class IrModelExportTemplate(orm.Model):
     _inherit = 'ir.model.export.template'
 
     _columns = {
@@ -30,10 +30,9 @@ class ir_model_export_template(osv.osv):
         'records': fields.char('Records', size=256, help="Provide the field name that refers to the records to export. "
                                                          "If it is empty it will refer to the current object."),
     }
-ir_model_export_template()
 
 
-class ir_model_export(osv.osv):
+class IrModelExport(orm.Model):
     _inherit = 'ir.model.export'
 
     def _get_last_attachments(self, cr, uid, ids, name, args, context=None):
@@ -74,7 +73,7 @@ class ir_model_export(osv.osv):
     }
 
     def _run_actions(self, cr, uid, export, object_ids=[], context=None):
-        super(ir_model_export, self)._run_actions(cr, uid, export, object_ids, context)
+        super(IrModelExport, self)._run_actions(cr, uid, export, object_ids, context)
         if export.export_file_template_id:
             context = context or {}
             context['active_ids'] = []
@@ -89,4 +88,3 @@ class ir_model_export(osv.osv):
                         context['active_ids'] += record_ids
             context['attach_export_id'] = export.id
             self.pool.get('ir.model.export.file_template').generate_file(cr, uid, export.export_file_template_id.id, context)
-ir_model_export()

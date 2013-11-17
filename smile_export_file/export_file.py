@@ -45,10 +45,10 @@ try:
 except ImportError:
     logging.getLogger("import").exception("xlwt package is not installed")
 
-from osv import fields
-from osv.orm import Model, except_orm
-import tools
-from tools.translate import _
+from openerp.osv import fields
+from openerp.osv.orm import Model, except_orm
+from openerp import tools
+from openerp.tools.translate import _
 
 from text2pdf import pyText2Pdf
 
@@ -179,7 +179,7 @@ def _generate_excel_file(content, delimiter, quotechar, lineterminator, col_num)
     return binary_file.getvalue()
 
 
-class ir_model_export_file_template(Model):
+class IrModelExportFileTemplate(Model):
     _name = 'ir.model.export.file_template'
     _description = 'Export File Template'
 
@@ -269,6 +269,12 @@ class ir_model_export_file_template(Model):
 """,
         'email_attach_export_file': lambda * a: True,
     }
+
+    def onchange_extension(self, cr, uid, ids, extension, context=None):
+        res = {'value': {}}
+        if extension != 'other':
+            res['value']['extension_custom'] = extension
+        return res
 
     # ***** Data layout methods ****
 
@@ -556,12 +562,12 @@ class ir_model_export_file_template(Model):
             'exceptions': exceptions,
         }
         return self._save_execution_report(cr, uid, export_file, localdict)
-ir_model_export_file_template()
 
 
-class ir_model_export_file_template_column(Model):
+class Ir_ModelExportFileTemplateColumn(Model):
     _name = 'ir.model.export.file_template.column'
     _description = 'Export File Template Column'
+    _order = 'sequence asc'
 
     def _has_validator(self, cr, uid, ids, name, arg, context=None):
         res = {}.fromkeys(ids, False)
@@ -593,5 +599,5 @@ class ir_model_export_file_template_column(Model):
         'max_width': fields.integer('Max width'),
     }
 
-    _order = 'sequence asc'
-ir_model_export_file_template_column()
+    def onchange_validator(self, cr, uid, ids, column_validator, context=None):
+        return {"value": {"has_validator": bool(column_validator)}}
