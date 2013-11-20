@@ -135,9 +135,9 @@ def new_process_python(self, node):
     model = self.get_model(python.model)
     statements = statements.replace("\r\n", "\n")
     uid = self._get_uid(python)  # Added by Smile
-    create_external_id = lambda name, res_model, res_id: self.pool.get('ir.model.data').create(cr, uid, {'name': name, 'model': res_model,
-                                                                                                         'res_id': res_id, 'module': '__test__'},
-                                                                                               context)
+    create_external_id = lambda name, res_model, res_id: self.pool.get('ir.model.data').create(self.cr, uid, {
+        'name': name, 'model': res_model, 'res_id': res_id, 'module': '__test__',
+    }, self.context)
     code_context = {'model': model, 'cr': self.cr, 'uid': uid, 'log': log, 'context': self.context,
                     'create_external_id': create_external_id, 'create_xml_id': create_external_id}  # Added by Smile
     code_context.update({'self': model, 'time': time, 'netsvc': netsvc})  # remove me when no !python block test uses 'self' anymore
