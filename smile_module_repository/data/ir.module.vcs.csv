@@ -1,0 +1,5 @@
+id,name,cmd,cmd_clone,cmd_pull
+svn,Subversion,svn,checkout,update
+bzr,Launchpad,bzr,branch,pull
+git,Git,git,clone,pull
+hg,Mercurial,hg,clone,pull

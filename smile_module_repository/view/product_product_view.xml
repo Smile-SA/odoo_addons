@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_product_product_search" model="ir.ui.view">
+            <field name="name">product.product.search</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <filter name="filter_to_sell" position="after">
+                	<separator/>
+                    <filter string="Is a module" name="is_module" domain="[('is_module','=',True)]"/>
+				</filter>
+                <filter string='Category' position="before">
+                    <filter string='Templace' domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="view_product_product_tree" model="ir.ui.view">
+            <field name="name">product.product.tree</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+	                <field name="product_tmpl_id" invisible="1"/>
+	            </field>
+            </field>
+        </record>
+
+        <record id="view_product_product_form" model="ir.ui.view">
+            <field name="name">product.product.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+            	<field name="description" position="before">
+            		<group>
+                        <group>
+		            		<field name="repository_id"/>
+		            		<field name="version"/>
+		            		<field name="license"/>
+                        </group>
+                        <group>
+		            		<field name="shortdesc"/>
+		            		<field name="author"/>
+		            		<field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
+                        </group>
+            		</group>
+            	</field>
+            </field>
+        </record>
+
+	</data>
+</openerp>

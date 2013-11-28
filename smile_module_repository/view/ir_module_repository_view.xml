@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_repository_search" model="ir.ui.view">
+            <field name="name">ir.module.repository.search</field>
+            <field name="model">ir.module.repository</field>
+            <field name="arch" type="xml">
+            	<search string="Modules Repositories">
+                    <filter string="Not cloned" domain="[('state','=','draft')]"/>
+                    <filter string="Cloned" domain="[('state','=','done')]"/>
+                    <separator orientation="vertical"/>
+                    <filter string="To update" domain="[('active','=',True)]"/>
+                    <separator orientation="vertical"/>
+            		<field name="name"/>
+            		<field name="version_id"/>
+            		<field name="vcs_id"/>
+            		<field name="directory"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="OpenERP Version" domain="[]"  context="{'group_by':'version_id'}"/>
+                        <filter string="Version Control Systems" domain="[]" context="{'group_by':'vcs_id'}"/>
+					</group>
+            	</search>
+            </field>
+        </record>
+
+        <record id="view_repository_tree" model="ir.ui.view">
+            <field name="name">ir.module.repository.tree</field>
+            <field name="model">ir.module.repository</field>
+            <field name="arch" type="xml">
+            	<tree string="Modules Repositories">
+            		<field name="name"/>
+            		<field name="version_id"/>
+            		<field name="vcs_id"/>
+            		<field name="directory"/>
+            		<field name="state"/>
+            		<field name="last_update"/>
+            		<field name="active"/>
+            	</tree>
+            </field>
+        </record>
+
+        <record id="view_repository_form" model="ir.ui.view">
+            <field name="name">ir.module.repository.form</field>
+            <field name="model">ir.module.repository</field>
+            <field name="arch" type="xml">
+            	<form string="Modules Repository" version="7.0">
+	                <header>
+	            		<field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+	                </header>
+	                <sheet string="Supplier Invoice">
+	                    <div class="oe_title">
+	                        <h1><field name="name" placeholder="Name"/></h1>
+                        </div>
+	                    <div class="oe_right">
+		                    <button name="clone" states="draft" string="Clone" type="object" class="oe_highlight"/>
+		                    <group attrs="{'invisible': [('state', '=', 'draft')]}">
+			            		<field name="last_update"/>
+			            		<field name="active"/>
+			                    <button name="pull" string="Pull" type="object" attrs="{'readonly': [('active', '=', False)]}"/>
+		                    </group>
+                        </div>
+	                    <group>
+		            		<field name="version_id" widget="selection"/>
+		            		<field name="vcs_id" widget="selection"/>
+		            		<field name="directory"/>
+		            	</group>
+	            	</sheet>
+	                <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+            	</form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_repository">
+            <field name="name">Modules Repositories</field>
+            <field name="res_model">ir.module.repository</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_repository_tree"/>
+            <field name="search_view_id" ref="view_repository_search"/>
+            <field name="context">{'active_test': False}</field>
+        </record>
+
+        <menuitem id="menu_repository" parent="base.menu_management" action="action_repository" sequence="100"/>
+
+	</data>
+</openerp>
