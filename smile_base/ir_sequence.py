@@ -40,7 +40,7 @@ class IrSequence(orm.Model):
             cr.execute("SELECT nextval('ir_sequence_%03d')" % seq['id'])
             seq['number_next'] = cr.fetchone()
             # Added by Smile #
-            cr.execute("UPDATE ir_sequence SET number_next=%s+number_increment WHERE id=%s ", (seq['number_next'], seq['id']))
+            cr.execute("UPDATE ir_sequence SET number_next=%s WHERE id=%s ", (seq['number_next'], seq['id']))
             ##################
         else:
             cr.execute("SELECT number_next FROM ir_sequence WHERE id=%s FOR UPDATE NOWAIT", (seq['id'],))
