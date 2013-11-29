@@ -12,7 +12,10 @@
                     <filter string="Is a module" name="is_module" domain="[('is_module','=',True)]"/>
 				</filter>
                 <filter string='Category' position="before">
-                    <filter string='Templace' domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
+                    <filter string='Template' domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
+                    <filter string='Repository' domain="[]" context="{'group_by' : 'repository_id'}"/>
+                    <filter string='OpenERP Version' domain="[]" context="{'group_by' : 'version_id'}"/>
+                    <filter string='Version Control System' domain="[]" context="{'group_by' : 'vcs_id'}"/>
                 </filter>
             </field>
         </record>
@@ -24,6 +27,8 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
 	                <field name="product_tmpl_id" invisible="1"/>
+	                <field name="version_id" invisible="1"/>
+	                <field name="vcs_id" invisible="1"/>
 	            </field>
             </field>
         </record>
@@ -33,20 +38,45 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-            	<field name="description" position="before">
-            		<group>
-                        <group>
-		            		<field name="repository_id"/>
-		            		<field name="version"/>
-		            		<field name="license"/>
-                        </group>
-                        <group>
-		            		<field name="shortdesc"/>
-		            		<field name="author"/>
-		            		<field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
-                        </group>
-            		</group>
+            	<field name="categ_id" position="after">
+	            	<field name="is_module" invisible="1"/>
             	</field>
+                <page string="Information" position="before">
+	            	<page string="Technical Information" attrs="{'invisible': [('is_module','=',False)]}">
+	            		<group>
+	                        <group>
+			            		<field name="shortdesc"/>
+			            		<field name="author"/>
+			            		<field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
+			            		<field name="license"/>
+	                        </group>
+	                        <group>
+			            		<field name="repository_id"/>
+			            		<field name="version"/>
+			            		<field name="depends"/>
+								<button name="get_zipfile" type="object" string="Generate zip" class="oe_link"/>
+	                        </group>
+	            		</group>
+	            		<field name="description_html"/>
+	            	</page>
+            	</page>
+        		<field name="description" position="attributes">
+        			<attribute name="attrs">{'readonly': [('is_module','=',True)]}</attribute>
+        		</field>
+            </field>
+        </record>
+
+        <record id="view_product_product_form2" model="ir.ui.view">
+            <field name="name">product.product.download_zip.form</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+            	<form string="Download zip" version="7.0">
+            		<field name="zipfilename" invisible="1"/>
+            		<field name="zipfile" filename="zipfilename"/>
+                    <footer>
+                        <button string="Close" special="cancel"/>
+                    </footer>
+            	</form>
             </field>
         </record>
 

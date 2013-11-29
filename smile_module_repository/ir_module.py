@@ -20,7 +20,7 @@
 ##############################################################################
 
 import logging
-from os import listdir, path, walk
+from os import path, walk
 import re
 import shutil
 from subprocess import call
@@ -90,7 +90,8 @@ class IrModuleRepository(orm.Model):
         }),
         'state': fields.selection([('draft', 'Not cloned'), ('done', 'Cloned')], "State", required=True, readonly=True),
         'last_update': fields.datetime("Last Update", readonly=True),
-        'active': fields.boolean("Active"),
+        'active': fields.boolean("To update"),
+        'product_ids': fields.one2many('product.product', 'repository_id', 'Products', readonly=True),
     }
 
     _defaults = {
@@ -133,7 +134,7 @@ class IrModuleRepository(orm.Model):
         with cd(self._parent_path):
             for rep in self.browse(cr, uid, ids, context):
                 if rep.state != 'draft':
-                    raise om.except_orm(_('Error'), _('You cannot clone a repository already cloned'))
+                    raise orm.except_orm(_('Error'), _('You cannot clone a repository already cloned'))
                 vcs = rep.vcs_id
                 IrModuleRepository._call([vcs.cmd, vcs.cmd_clone, rep.directory, rep.relpath])
         self.extract_modules(cr, uid, ids, context)
@@ -144,7 +145,7 @@ class IrModuleRepository(orm.Model):
             ids = [ids]
         for rep in self.browse(cr, uid, ids, context):
             if rep.state == 'draft':
-                raise om.except_orm(_('Error'), _('You cannot pull a repository not cloned'))
+                raise orm.except_orm(_('Error'), _('You cannot pull a repository not cloned'))
             with cd(path.join(self._parent_path, rep.relpath)):
                 vcs = rep.vcs_id
                 IrModuleRepository._call([vcs.cmd, vcs.cmd_pull])
@@ -158,13 +159,20 @@ class IrModuleRepository(orm.Model):
         for rep in self.browse(cr, uid, ids, context):
             modules = self._extract_modules(cr, uid, rep, context)
             product_obj.create_or_update(cr, uid, modules, context)
+            rep.refresh()
+            if len(modules) > len(rep.product_ids):
+                variants = [m['variants'] for m in modules]
+                for p in rep.product_ids:
+                    if p.variants not in variants:
+                        p.write({'active': False})
         return True
 
     def _extract_modules(self, cr, uid, rep, context=None):
         modules = []
         for oerp_file in IrModuleRepository._get_oerp_files(path.join(self._parent_path, rep.relpath)):
-            module_infos = self._get_module_infos(oerp_file)
+            module_infos = IrModuleRepository._get_module_infos(oerp_file)
             module_infos['repository_id'] = rep.id
+            module_infos['default_code'] = rep.version_id.name
             modules.append(module_infos)
         return modules
 
@@ -178,25 +186,25 @@ class IrModuleRepository(orm.Model):
                         oerp_files.append(path.join(root, filename))
         return oerp_files
 
-    def _get_module_icon(self, modulepath):
-        if path.isdir(modulepath):
-            icon_path = path.join(self._parent_path, 'static', 'src', 'img', 'icon.png')
-            if path.isfile(icon_path):
-                with open(icon_path, 'rb') as icon_file:
-                    return icon_file.read().encode('base64')
+    @staticmethod
+    def _get_module_icon(modulepath):
+        icon_path = path.join(modulepath, 'static', 'src', 'img', 'icon.png')
+        if path.isfile(icon_path):
+            with open(icon_path, 'rb') as icon_file:
+                return icon_file.read().encode('base64')
         return False
 
-    def _get_module_infos(self, filepath):
+    @staticmethod
+    def _get_module_infos(filepath):
         openerp_infos = {}
         if path.isfile(filepath):
             with open(filepath) as openerp_file:
                 openerp_infos.update(eval(openerp_file.read()))
             module_path = path.dirname(filepath)
             openerp_infos.update({
-                'variants': module_path,
                 'name': path.basename(module_path),
                 'shortdesc': openerp_infos['name'],
-                'image': self._get_module_icon(module_path),
+                'image': IrModuleRepository._get_module_icon(module_path),
                 'active': True,
                 'is_module': True,
             })
@@ -211,3 +219,10 @@ class IrModuleRepository(orm.Model):
             except:
                 pass
         return super(IrModuleRepository, self).unlink(cr, uid, ids, context)
+
+    def copy_data(self, cr, uid, repository_id, default=None, context=None):
+        default = default or {}
+        default['state'] = 'draft'
+        default['active'] = False
+        default['product_ids'] = []
+        return super(IrModuleRepository, self).copy_data(cr, uid, repository_id, default, context)

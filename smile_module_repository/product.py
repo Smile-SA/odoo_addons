@@ -19,7 +19,17 @@
 #
 ##############################################################################
 
+from docutils.core import publish_string
+from os import path
+from subprocess import os
+import uuid
+from zipfile import ZipFile
+
+from openerp.addons.base.module.module import MyWriter
 from openerp.osv import orm, fields
+from openerp.tools.translate import _
+
+from tools import cd, zipdir
 
 
 class ProductProduct(orm.Model):
@@ -33,9 +43,14 @@ class ProductProduct(orm.Model):
             res[product.id] = output
         return res
 
+    def _get_product_ids_from_repositories(self, cr, uid, ids, context=None):
+        context = context and context.copy() or {}
+        context['active_test'] = False
+        return self.pool.get('product.product').search(cr, uid, [('repository_id', 'in', ids)], context=context)
+
     _columns = {
         'is_module': fields.boolean("Is module"),
-        'repository_id': fields.many2one('ir.module.repository', "Repository", readonly=True),
+        'repository_id': fields.many2one('ir.module.repository', "Repository", readonly=True, ondelete="cascade"),
         'shortdesc': fields.char('Module Name', size=64, readonly=True, translate=True),
         'version': fields.char('Latest Version', size=64, readonly=True),
         'author': fields.char("Author", size=128, readonly=True),
@@ -51,6 +66,17 @@ class ProductProduct(orm.Model):
             ('Other proprietary', 'Other Proprietary')
         ], string='License', readonly=True),
         'description_html': fields.function(_get_html_description, method=True, type='html', string='Description HTML'),
+        'vcs_id': fields.related('repository_id', 'vcs_id', type='many2one', relation='ir.module.vcs', string='Version Control System', store={
+            'product.product': (lambda self, cr, uid, ids, context=None: ids, ['repository_id'], 5),
+            'ir.module.repository': (_get_product_ids_from_repositories, ['vcs_id'], 5),
+        }),
+        'version_id': fields.related('repository_id', 'version_id', type='many2one', relation='ir.module.version', string='OpenERP Version', store={
+            'product.product': (lambda self, cr, uid, ids, context=None: ids, ['repository_id'], 5),
+            'ir.module.repository': (_get_product_ids_from_repositories, ['version_id'], 5),
+        }),
+        'zipfile': fields.binary('Download zip', readonly=True),
+        'zipfilename': fields.char('Zip file name', size=128, readonly=True),
+        'variants': fields.char('Variants', size=128),
     }
 
     _defaults = {
@@ -65,7 +91,7 @@ class ProductProduct(orm.Model):
         product_ids_by_key = dict([((p['name'], p['variants']), p['id']) for p in product_infos])
         product_tmpl_obj = self.pool.get('product.template')
         product_tmpl_ids = product_tmpl_obj.search(cr, uid, [], context=context)
-        product_tmpl_infos = product_tmpl_obj.read(cr, uid, product_ids, ['name'], context)
+        product_tmpl_infos = product_tmpl_obj.read(cr, uid, product_tmpl_ids, ['name'], context)
         product_tmpl_ids_by_key = dict([(p['name'], p['id']) for p in product_tmpl_infos])
         for vals in vals_list:
             for key in vals.keys():
@@ -81,3 +107,39 @@ class ProductProduct(orm.Model):
                     del vals['name']
                 self.create(cr, uid, vals, context)
         return True
+
+    def name_get(self, cr, uid, ids, context=None):
+        res = dict(super(ProductProduct, self).name_get(cr, uid, ids, context))
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for product in self.browse(cr, uid, ids, context):
+            if product.is_module:
+                res[product.id] = '[%s] %s - %s' % (product.default_code, product.name, product.author)
+        return res.items()
+
+    def get_zipfile(self, cr, uid, ids, context=None):
+        zfilecontent = ''
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        product = self.browse(cr, uid, ids[0], context)
+        zfilename = '%s_%s.zip' % (product.name, uuid.uuid4())
+        with cd(path.join(product.repository_id._parent_path, product.repository_id.relpath)):
+            dirpath = path.join(os.getcwd(), product.name)
+            if path.isdir(dirpath):
+                with ZipFile(zfilename, 'w') as zfile:
+                    zipdir(path.relpath(dirpath), zfile)
+                with open(zfilename, 'rb') as zfile:
+                    zfilecontent = zfile.read().encode('base64')
+                product.write({'zipfile': zfilecontent, 'zipfilename': '%s.zip' % product.name})
+        return {
+            'name': _('Download zip'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'product.product',
+            'res_id': product.id,
+            'view_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'smile_module_repository',
+                                                                           'view_product_product_form2')[1],
+            'target': 'new',
+            'context': context,
+        }
