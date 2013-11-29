@@ -21,6 +21,7 @@
 
 import inspect
 
+from openerp import SUPERUSER_ID
 from openerp.osv import orm
 from openerp.tools.translate import _
 
@@ -51,9 +52,12 @@ def sartre_validate(self, cr, uid, ids, context=None):
             else:
                 translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg) or msg
             fields_list = fields_list or []
-            error_msgs.append(
-                _("Error occurred while validating the field(s) %s: %s") % (','.join(fields_list), translated_msg)
-            )
+            if uid == SUPERUSER_ID:
+                error_msgs.append(
+                    _("Error occurred while validating the field(s) %s: %s") % (','.join(fields_list), translated_msg)
+                )
+            else:
+                error_msgs.append(translated_msg)
             self._invalids.update(fields_list)
     if error_msgs:
         # Added by smile #
