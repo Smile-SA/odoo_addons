@@ -131,6 +131,7 @@ class IrModelExportTemplate(Model):
         export_pool = self.pool.get('ir.model.export')
         export_ids = []
         for export_template in self.browse(cr, uid, ids, context):
+            context['logger'] = SmileDBLogger(cr.dbname, 'ir.model.export.template', export_template.id, uid)
             res_ids = self._get_res_ids(cr, uid, export_template, context)
             if export_template.unique:
                 old_res_ids = self.get_exported_res_ids(cr, uid, export_template.id, context)
