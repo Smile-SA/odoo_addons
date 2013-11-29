@@ -133,12 +133,14 @@ class AccountAssetAsset(orm.Model):
         if reversal:
             date = today
         msg = move_type == 'purchase' and _('Asset Purchase: %s') or _('Asset Sale: %s')
+        journal = move_type == 'sale' and asset.category_id.sale_journal_id or asset.category_id.asset_journal_id
         vals = {
-            'name': msg % asset.name,
+            'name': self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id, context),
+            'narration': msg % asset.name,
             'ref': asset.code,
             'date': date,
             'period_id': period_ids and period_ids[0] or False,
-            'journal_id': asset.category_id.asset_journal_id.id,
+            'journal_id': journal.id,
             'partner_id': partner_id,
             'company_id': asset.company_id.id,
         }
@@ -282,12 +284,14 @@ class AccountAssetAsset(orm.Model):
         for asset in self.browse(cr, uid, ids, context):
             context_copy['company_id'] = asset.company_id.id
             period_ids = self.pool.get('account.period').find(cr, uid, asset.sale_date, context_copy)
+            journal = asset.category_id.asset_journal_id
             vals = {
-                'name': _('Asset Output%s: %s') % (reversal and _(' Cancellation') or '', asset.name),
+                'name': self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id, context),
+                'narration': _('Asset Output%s: %s') % (reversal and _(' Cancellation') or '', asset.name),
                 'ref': asset.code,
                 'date': time.strftime('%Y-%m-%d'),
                 'period_id': period_ids and period_ids[0] or False,
-                'journal_id': asset.category_id.asset_journal_id.id,
+                'journal_id': journal.id,
                 'company_id': asset.company_id.id,
             }
             default = vals.copy()
@@ -410,7 +414,7 @@ class AccountAssetAsset(orm.Model):
             new_line_vals = []
             for i, j, line_vals in vals['line_id']:
                 for account, group in ACCOUNT_GROUPS.iteritems():
-                    if group != accounts_group or account not in old_accounts or 'anayltic' in account:
+                    if group != accounts_group or account not in old_accounts or 'analytic' in account:
                         continue
                     if line_vals['account_id'] == old_accounts[account] or (analytic_field in old_accounts and analytic_field in line_vals):
                         line_vals['date'] = today
@@ -529,12 +533,14 @@ class AccountAssetDepreciationLine(orm.Model):
         elif transfer:
             msg = _('Exceptional Amortization')
         prefix = context.get('asset_output_msg', '')
+        journal = category.depreciation_journal_id or category.asset_journal_id
         vals = {
-            'name': '%s%s: %s' % (prefix, msg, asset.name),
+            'name': self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id, context),
+            'narration': '%s%s: %s' % (prefix, msg, asset.name),
             'ref': asset.code,
             'date': context.get('force_account_move_date') or line.depreciation_date,
             'period_id': period_ids and period_ids[0] or False,
-            'journal_id': category.depreciation_journal_id.id or category.asset_journal_id.id,
+            'journal_id': journal.id,
             'company_id': asset.company_id.id,
         }
         vals['line_id'] = [(0, 0, x) for x in self._get_move_line_vals(cr, uid, line, default=vals.copy(), context=context,

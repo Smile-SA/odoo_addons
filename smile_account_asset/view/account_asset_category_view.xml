@@ -83,6 +83,9 @@
 							<field name="asset_analytic_account_id"/>
 							<field name="sale_analytic_account_id" string="Analytic Account"/>
 
+							<label string="" colspan="2"/>
+							<field name="sale_journal_id" string="Journal"/>
+
 							<separator string="Amortization" colspan="2"/>
 							<separator string="Depreciation" colspan="2"/>
 

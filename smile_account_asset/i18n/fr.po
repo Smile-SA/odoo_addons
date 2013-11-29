@@ -1641,3 +1641,60 @@ msgstr "Pièce comptable d'annulation de cession"
 msgid "Only in automatic mode"
 msgstr "Seulement en mode automatique"
 
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:524
+#, python-format
+msgid "Accounting Amortization"
+msgstr "Amortissement comptable"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:526
+#, python-format
+msgid "Fiscal Amortization"
+msgstr "Amortissement dérogatoire"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:528
+#, python-format
+msgid "Exceptional Depreciation"
+msgstr "Dépréciation exceptionnelle"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:530
+#, python-format
+msgid "Exceptional Amortization"
+msgstr "Amortissement exceptionnel"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:286
+#, python-format
+msgid "Asset Output%s: %s"
+msgstr "Sortie du patrimoine %s : %s"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:286
+#, python-format
+msgid " Cancellation"
+msgstr " Annulation"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:135
+#, python-format
+msgid "Asset Purchase: %s"
+msgstr "Acquisition d'immobilisation : %s"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:135
+#, python-format
+msgid "Asset Sale: %s"
+msgstr "Cession d'immobilisation : %s"
+
+#. module: smile_account_asset
+#: help:account.asset.category,sale_journal_id:0
+msgid "Keep empty to use a unique journal for asset acquisition and disposal"
+msgstr "A laisser vide pour utiliser un unique journal pour les acquisitions et cessions d'immobilisations"
+
+#. module: smile_account_asset
+#: field:account.asset.category,sale_journal_id:0
+msgid "Disposal Journal"
+msgstr "Journal des cessions"

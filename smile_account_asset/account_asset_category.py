@@ -94,6 +94,8 @@ class AccountAssetCategory(orm.Model):
         'exceptional_depreciation_income_account_id': fields.many2one('account.account', 'Depreciation Income Account', required=False,
                                                                       ondelete='restrict', domain=[('type', '!=', 'view')]),
 
+        'sale_journal_id': fields.many2one('account.journal', 'Disposal Journal', required=False, ondelete='restrict',
+                                           help="Keep empty to use a unique journal for asset acquisition and disposal"),
         'sale_receivable_account_id': fields.many2one('account.account', 'Disposal Receivable Account', required=True, ondelete='restrict',
                                                       domain=[('type', '!=', 'view')]),
         'sale_expense_account_id': fields.many2one('account.account', 'Disposal Expense Account', required=True, ondelete='restrict',
