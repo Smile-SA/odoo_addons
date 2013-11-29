@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import time
 
 import decimal_precision as dp
@@ -289,3 +291,12 @@ CREATE AGGREGATE public.last (
     def button_validate_exceptional_depreciation(self, cr, uid, ids, context=None):
         self.validate_exceptional_depreciation(cr, uid, ids, context)
         return {'type': 'ir.actions.act_window_close'}
+
+    def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        context = context or {}
+        if context.get('search_in_current_month'):
+            date_start = datetime.today().strftime('%Y-%m-01')
+            date_stop = (datetime.strptime(date_start, '%Y-%m-%d') + relativedelta(months=1)).strftime('%Y-%m-%d')
+            domain = ['&', ('depreciation_date', '>=', date_start), ('depreciation_date', '<', date_stop)]
+            args = args and (['&'] + domain + args) or domain
+        return super(AccountAssetDepreciationLine, self)._search(cr, uid, args, offset, limit, order, context, count, access_rights_uid)

@@ -16,7 +16,7 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-year" string="This Year" domain="[('year','=',time.strftime('%%Y'))]"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-month" string="This Month" domain="[('depreciation_date','&gt;=',time.strftime('%%Y-%%m-01')), ('depreciation_date','&lt;=',time.strftime('%%Y-%%m-31'))]"/>
+                        <filter icon="terp-go-month" string="This Month" context="{'search_in_current_month': True}"/>
                         <separator orientation="vertical"/>
 	                    <filter string="Unposted" icon="terp-document-new" domain="[('move_id','=',False)]"/>
 	                    <filter string="Posted" icon="terp-camera_test" domain="[('move_id','!=',False)]"/>
@@ -78,7 +78,8 @@
 	        <field name="priority">0</field>
 	        <field name="arch" type="xml">
 	            <form string="Depreciation Line">
-	                <field name="asset_id" readonly="1"/>
+	                <field name="asset_id" readonly="1" colspan="4"/>
+	                <field name="depreciation_type" readonly="1"/>
 	                <field name="depreciation_date" readonly="1"/>
 	                <field name="purchase_value"/>
 	                <field name="salvage_value"/>
@@ -91,6 +92,7 @@
 	                <field name="move_id" readonly="1" invisible="1"/>
 	                <field name="state" invisible="1"/>
 	                <field name="asset_type" invisible="1"/>
+	                <field name="benefit_accelerated_depreciation" invisible="1"/>
                     <button name="post_depreciation_line" icon="gtk-execute" string="Post" type="object" colspan="4"
                     	attrs="{'invisible':['|','|',('move_id','!=',False),('state','!=','open'), '&amp;', ('depreciation_type', '=', 'fiscal'), ('benefit_accelerated_depreciation', '=', False)]}"/>
 	            </form>
