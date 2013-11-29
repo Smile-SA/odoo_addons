@@ -40,7 +40,7 @@ class AuditLog(orm.Model):
         return data
 
     _columns = {
-        'name': fields.function(_get_name, method=True, type='char', size=64, string='Resource Name', store=True),
+        'name': fields.function(_get_name, method=True, type='char', size=256, string='Resource Name', store=True),
         'create_date': fields.datetime('Date', readonly=True),
         'user_id': fields.many2one('res.users', 'User', required=True, readonly=True),
         'model_id': fields.many2one('ir.model', 'Object', required=True, readonly=True),
@@ -48,6 +48,11 @@ class AuditLog(orm.Model):
         'res_id': fields.integer('Resource Id', readonly=True),
         'line_ids': fields.one2many('audit.log.line', 'log_id', 'Log lines', readonly=True),
     }
+
+    def create(self, cr, uid, vals, context=None):
+        res_id = super(AuditLog, self).create(cr, uid, vals, context)
+        self._store_set_values(cr, uid, [res_id], ['name'], context)
+        return res_id
 
     def unlink(self, cr, uid, ids, context=None):
         raise orm.except_orm(_('Error'), _('You cannot remove audit logs!'))
@@ -120,3 +125,8 @@ class AuditLogLine(orm.Model):
         'field_description': fields.function(_get_values, method=True, type='char', size=256, string='Field label', store=True, multi='values'),
         'field_type': fields.function(_get_values, method=True, type='selection', selection=_get_fields_type, size=64, store=True, multi='values'),
     }
+
+    def create(self, cr, uid, vals, context=None):
+        res_id = super(AuditLogLine, self).create(cr, uid, vals, context)
+        self._store_set_values(cr, uid, [res_id], ['old_value_text', 'new_value_text', 'field_id', 'field_description', 'field_type'], context)
+        return res_id

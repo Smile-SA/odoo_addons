@@ -150,11 +150,14 @@ class AuditRule(orm.Model):
         fields_list = context['fields_list']
         res_info = self.pool.get(rule.model).read(cr, uid, res_id, fields_list, context, '_classic_write')
         for field_name in fields_list:
-            lines.append({
-                'field_name': field_name,
-                'old_value': context.get('old_values', {}).get(res_id, {}).get(field_name, ''),
-                'new_value': context['method'] != 'unlink' and res_info[field_name] or '',
-            })
+            old_value = context.get('old_values', {}).get(res_id, {}).get(field_name, '')
+            new_value = context['method'] != 'unlink' and res_info[field_name] or ''
+            if old_value != new_value:
+                lines.append({
+                    'field_name': field_name,
+                    'old_value': old_value,
+                    'new_value': new_value,
+                })
         return lines
 
     def log(self, cr, uid, rule_id, context):
@@ -162,13 +165,15 @@ class AuditRule(orm.Model):
         log_obj = self.pool.get('audit.log')
         rule = self.browse(cr, SUPERUSER_ID, rule_id, context)
         for res_id in context.get('active_object_ids'):
-            log_obj.create(cr, SUPERUSER_ID, {
-                'user_id': uid,
-                'model_id': rule.model_id.id,
-                'method': context['method'],
-                'res_id': res_id,
-                'line_ids': [(0, 0, vals) for vals in self._get_log_lines(cr, uid, rule, res_id, context)],
-            }, context)
+            line_vals = [(0, 0, vals) for vals in self._get_log_lines(cr, uid, rule, res_id, context)]
+            if line_vals:
+                log_obj.create(cr, SUPERUSER_ID, {
+                    'user_id': uid,
+                    'model_id': rule.model_id.id,
+                    'method': context['method'],
+                    'res_id': res_id,
+                    'line_ids': line_vals,
+                }, context)
         return True
 
 
