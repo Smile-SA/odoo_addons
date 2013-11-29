@@ -36,7 +36,6 @@
     "init_xml": [],
     "update_xml": [
         "view/account_voucher_view.xml",
-        "view/account_view.xml",
         "wizard/account_voucher_reversal_view.xml",
     ],
     "demo_xml": [],
