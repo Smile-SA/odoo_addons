@@ -1,0 +1,260 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_module_repository
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-11-29 13:07+0000\n"
+"PO-Revision-Date: 2013-11-29 13:07+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_module_repository
+#: view:product.product:0
+msgid "Category"
+msgstr "Catégorie"
+
+#. module: smile_module_repository
+#: view:product.product:0
+msgid "Information"
+msgstr "Information"
+
+#. module: smile_module_repository
+#: view:ir.module.repository:0
+#: selection:ir.module.repository,state:0
+msgid "Not cloned"
+msgstr "Non cloné"
+
+#. module: smile_module_repository
+#: field:product.product,author:0
+msgid "Author"
+msgstr "Auteur"
+
+#. module: smile_module_repository
+#: view:product.product:0
+msgid "Generate zip"
+msgstr "Générer le zip"
+
+#. module: smile_module_repository
+#: sql_constraint:ir.module.version:0
+msgid "OpenERP version must be unique"
+msgstr "La version OpenERP doit être unique"
+
+#. module: smile_module_repository
+#: view:product.product:0
+msgid "Close"
+msgstr "Fermer"
+
+#. module: smile_module_repository
+#: view:ir.module.repository:0
+msgid "Group By..."
+msgstr "Grouper par..."
+
+#. module: smile_module_repository
+#: field:ir.module.repository,state:0
+msgid "State"
+msgstr "Etat"
+
+#. module: smile_module_repository
+#: field:product.product,zipfilename:0
+msgid "Zip file name"
+msgstr "Nom du zip"
+
+#. module: smile_module_repository
+#: sql_constraint:ir.module.repository:0
+msgid "Directory must be unique"
+msgstr "La branche doit être unique"
+
+#. module: smile_module_repository
+#: view:product.product:0
+msgid "Template"
+msgstr "Modèle"
+
+#. module: smile_module_repository
+#: view:product.product:0
+msgid "Is a module"
+msgstr "Est un module"
+
+#. module: smile_module_repository
+#: field:product.product,is_module:0
+msgid "Is module"
+msgstr "Est un module"
+
+#. module: smile_module_repository
+#: model:ir.model,name:smile_module_repository.model_product_product
+msgid "Product"
+msgstr "Article"
+
+#. module: smile_module_repository
+#: view:product.product:0
+#: field:product.product,repository_id:0
+msgid "Repository"
+msgstr "Branche"
+
+#. module: smile_module_repository
+#: field:ir.module.vcs,cmd_clone:0
+msgid "Get"
+msgstr "Récupération"
+
+#. module: smile_module_repository
+#: view:ir.module.repository:0
+msgid "Clone"
+msgstr "Récupération"
+
+#. module: smile_module_repository
+#: model:ir.model,name:smile_module_repository.model_ir_module_version
+#: view:ir.module.repository:0
+#: field:ir.module.repository,version_id:0
+#: view:product.product:0
+#: field:product.product,version_id:0
+msgid "OpenERP Version"
+msgstr "Version OpenERP"
+
+#. module: smile_module_repository
+#: field:ir.module.vcs,cmd_pull:0
+msgid "Update"
+msgstr "Mise à jour"
+
+#. module: smile_module_repository
+#: view:ir.module.repository:0
+#: selection:ir.module.repository,state:0
+msgid "Cloned"
+msgstr "Cloné"
+
+#. module: smile_module_repository
+#: model:ir.model,name:smile_module_repository.model_ir_module_vcs
+#: field:ir.module.repository,vcs_id:0
+#: view:product.product:0
+#: field:product.product,vcs_id:0
+msgid "Version Control System"
+msgstr "Gestionnaire de versions"
+
+#. module: smile_module_repository
+#: field:product.product,shortdesc:0
+msgid "Module Name"
+msgstr "Nom du module"
+
+#. module: smile_module_repository
+#: field:product.product,depends:0
+msgid "Dependencies"
+msgstr "Dépendences"
+
+#. module: smile_module_repository
+#: model:ir.actions.act_window,name:smile_module_repository.action_vcs
+#: view:ir.module.repository:0
+#: view:ir.module.vcs:0
+#: model:ir.ui.menu,name:smile_module_repository.menu_vcs
+msgid "Version Control Systems"
+msgstr "Gestionnaires de versions"
+
+#. module: smile_module_repository
+#: field:product.product,version:0
+msgid "Latest Version"
+msgstr "Dernière version"
+
+#. module: smile_module_repository
+#: field:ir.module.repository,relpath:0
+msgid "Relative Path"
+msgstr "Chemin relatif"
+
+#. module: smile_module_repository
+#: model:ir.actions.act_window,name:smile_module_repository.action_oerp_version
+#: view:ir.module.version:0
+#: model:ir.ui.menu,name:smile_module_repository.menu_oerp_version
+msgid "OpenERP Versions"
+msgstr "Versions OpenERP"
+
+#. module: smile_module_repository
+#: field:ir.module.repository,last_update:0
+msgid "Last Update"
+msgstr "Dernière mise à jour"
+
+#. module: smile_module_repository
+#: view:ir.module.repository:0
+msgid "Pull"
+msgstr "Mise à jour"
+
+#. module: smile_module_repository
+#: view:ir.module.repository:0
+#: field:ir.module.repository,name:0
+#: field:ir.module.vcs,name:0
+#: field:ir.module.version,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_module_repository
+#: field:product.product,license:0
+msgid "License"
+msgstr "License"
+
+#. module: smile_module_repository
+#: field:ir.module.vcs,cmd:0
+msgid "Command"
+msgstr "Commande"
+
+#. module: smile_module_repository
+#: view:product.product:0
+#: field:product.product,zipfile:0
+msgid "Download zip"
+msgstr "Télécharger le zip"
+
+#. module: smile_module_repository
+#: field:ir.module.repository,directory:0
+msgid "Directory"
+msgstr "Branche"
+
+#. module: smile_module_repository
+#: sql_constraint:ir.module.vcs:0
+msgid "VCS must be unique"
+msgstr "Le gestionnaire de versions doit être unique"
+
+#. module: smile_module_repository
+#: model:ir.model,name:smile_module_repository.model_ir_module_repository
+#: view:ir.module.repository:0
+msgid "Modules Repository"
+msgstr "Dépôt"
+
+#. module: smile_module_repository
+#: field:product.product,website:0
+msgid "Website"
+msgstr "Site Internet"
+
+#. module: smile_module_repository
+#: model:ir.actions.act_window,name:smile_module_repository.action_repository
+#: view:ir.module.repository:0
+#: model:ir.ui.menu,name:smile_module_repository.menu_repository
+msgid "Modules Repositories"
+msgstr "Dépôts"
+
+#. module: smile_module_repository
+#: field:ir.module.repository,state:0
+msgid "State"
+msgstr "Etat"
+
+#. module: smile_module_repository
+#: field:ir.module.repository,product_ids:0
+msgid "Products"
+msgstr "Articles"
+
+#. module: smile_module_repository
+#: field:product.product,description_html:0
+msgid "Description HTML"
+msgstr "Description HTML"
+
+#. module: smile_module_repository
+#: view:ir.module.repository:0
+#: field:ir.module.repository,active:0
+msgid "To update"
+msgstr "A mettre à jour"
+
+#. module: smile_module_repository
+#: view:product.product:0
+msgid "Technical Information"
+msgstr "Informations techniques"
+
