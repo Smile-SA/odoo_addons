@@ -99,9 +99,9 @@ class AccountInvoiceLine(orm.Model):
             raise orm.except_orm(_('Error'), _('No asset to create from these invoice lines!'))
         vals = self._get_asset_vals(cr, uid, lines, context)
         asset_id = asset_obj.create(cr, uid, vals, context)
+        self.write(cr, uid, [l.id for l in lines], {'asset_id': asset_id}, context)
         if lines[0].asset_category_id.confirm_asset:
             asset_obj.confirm_asset_purchase(cr, uid, [asset_id], context)
-        self.write(cr, uid, [l.id for l in lines], {'asset_id': asset_id}, context)
         return asset_id
 
     def _group_by_asset(self, cr, uid, ids, context=None):
