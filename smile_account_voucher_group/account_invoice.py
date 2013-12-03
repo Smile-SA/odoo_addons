@@ -63,12 +63,25 @@ class AccountInvoice(orm.Model):
                                                            if getattr(l, opposite_field)])
         return result
 
+    def _get_invoice_ids_from_partners(self, cr, uid, ids, context=None):
+        return self.pool.get('account.invoice').search(cr, uid, [('partner_id', 'in', ids),
+                                                                 ('state', 'in', ('draft', 'bap', 'open', 'proforma', 'proforma2'))],
+                                                       context=context)
+
+    def _get_invoice_ids_from_payment_modes(self, cr, uid, ids, context=None):
+        return self.pool.get('account.invoice').search(cr, uid, [('partner_id.payment_mode_id', 'in', ids),
+                                                                 ('state', 'in', ('draft', 'bap', 'open', 'proforma', 'proforma2'))],
+                                                       context=context)
+
     _columns = {
         'payment_type': fields.related('partner_id', 'payment_type', type='selection', selection=PAYMENT_TYPES, string='Payment Type', store={
             'account.invoice': (lambda self, cr, uid, ids, context=None: ids, ['partner_id'], 20),
+            'res.partner': (_get_invoice_ids_from_partners, ['payment_type'], 20),
         }, readonly=True),
         'partner_bank_necessary': fields.related('partner_id', 'payment_mode_id', 'partner_bank_necessary', type='boolean', store={
             'account.invoice': (lambda self, cr, uid, ids, context=None: ids, ['partner_id'], 20),
+            'res.partner': (_get_invoice_ids_from_partners, ['payment_mode_id'], 20),
+            'account.payment.mode': (_get_invoice_ids_from_payment_modes, ['partner_bank_necessary'], 20),
         }, string='Bank Account Necessary', readonly=True),
     }
 
