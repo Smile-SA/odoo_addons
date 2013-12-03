@@ -27,8 +27,8 @@ msgstr "Log"
 
 #. module: smile_audit
 #: field:audit.log.line,new_value_text:0
-msgid "New value Text"
-msgstr "Nouvelle valeur (text)"
+msgid "New value (text)"
+msgstr "Nouvelle valeur (texte)"
 
 #. module: smile_audit
 #: field:audit.rule,log_unlink:0
@@ -216,12 +216,17 @@ msgstr "Règles d'audit"
 
 #. module: smile_audit
 #: field:audit.log.line,old_value_text:0
-msgid "Old value Text"
-msgstr "Ancienne valeur (text)"
+msgid "Old value (text)"
+msgstr "Ancienne valeur (texte)"
 
 #. module: smile_audit
 #: view:audit.log:0
 msgid "Log Line"
 msgstr "Ligne de log"
 
+#. module: smile_audit
+#: code:addons/smile_audit/audit_rule.py:79
+#, python-format
+msgid "View logs"
+msgstr "Pistes d'audit"
 

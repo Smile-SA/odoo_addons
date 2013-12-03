@@ -55,10 +55,10 @@ def _get_args(method, args, kwargs):
 
 
 def _get_old_values(obj, cr, uid, ids, fields_list=None, context=None):
+    old_values = {}
     if isinstance(ids, (int, long)):
         ids = [ids]
-    old_values = {}
-    for res_info in obj.read(cr, SUPERUSER_ID, ids, fields_list, context):
+    for res_info in obj.read(cr, SUPERUSER_ID, ids, fields_list, context, '_classic_write'):
         old_values[res_info['id']] = res_info
     return old_values
 

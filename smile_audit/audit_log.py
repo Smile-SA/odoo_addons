@@ -96,14 +96,12 @@ class AuditLogLine(orm.Model):
                                 new_value = new_value[0]
                             new_value_text = dict(obj.name_get(cr, uid, [new_value], context))[new_value]
                     elif field.ttype in ('one2many', 'many2many'):
-                        old_value_text = []
-                        new_value_text = []
-                        for id_ in old_value:
-                            old_value_text.append(dict(obj.name_get(cr, uid, [id_], context))[id_])
-                        for id_ in new_value:
-                            new_value_text.append(dict(obj.name_get(cr, uid, [id_], context))[id_])
-                        old_value_text = str(old_value_text)
-                        new_value_text = str(new_value_text)
+                        if old_value:
+                            old_value = obj.exists(cr, uid, old_value, context)
+                            if old_value:
+                                old_value_text = str(dict(obj.name_get(cr, uid, old_value, context)).values())
+                        if new_value:
+                            new_value_text = str(dict(obj.name_get(cr, uid, new_value, context)).values())
             data[line.id] = {
                 'field_id': field and field.id or False,
                 'field_description': field and field.field_description or 'Unknown',
@@ -118,8 +116,8 @@ class AuditLogLine(orm.Model):
         'field_name': fields.char('Field name', size=64, required=True, readonly=True, select=True),
         'old_value': fields.text('Old Value', readonly=True),
         'new_value': fields.text('New Value', readonly=True),
-        'old_value_text': fields.function(_get_values, method=True, type='text', string='Old value Text', store=True, multi='values'),
-        'new_value_text': fields.function(_get_values, method=True, type='text', string='New value Text', store=True, multi='values'),
+        'old_value_text': fields.function(_get_values, method=True, type='text', string='Old value (text)', store=True, multi='values'),
+        'new_value_text': fields.function(_get_values, method=True, type='text', string='New value (text)', store=True, multi='values'),
         'field_id': fields.function(_get_values, method=True, type='many2one', relation='ir.model.fields', string='Field', store=True,
                                     multi='values'),
         'field_description': fields.function(_get_values, method=True, type='char', size=256, string='Field label', store=True, multi='values'),
