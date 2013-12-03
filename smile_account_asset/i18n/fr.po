@@ -1367,7 +1367,7 @@ msgstr "Ce mois"
 #. module: smile_account_asset
 #: constraint:account.asset.category:0
 msgid "Accounts and journal must be linked to the same company as asset category"
-msgstr "Les comptes et journaux doivent appartenir à la société de la catgéorie de l'immobilisation"
+msgstr "Les comptes et journaux doivent appartenir à la société de la catégorie de l'immobilisation"
 
 #. module: smile_account_asset
 #: field:account.asset.asset,customer_id:0
