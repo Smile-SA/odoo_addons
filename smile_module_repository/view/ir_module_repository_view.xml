@@ -16,6 +16,7 @@
             		<field name="version_id"/>
             		<field name="vcs_id"/>
             		<field name="directory"/>
+            		<field name="partner_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="OpenERP Version" domain="[]"  context="{'group_by':'version_id'}"/>
                         <filter string="Version Control Systems" domain="[]" context="{'group_by':'vcs_id'}"/>
@@ -33,6 +34,7 @@
             		<field name="version_id"/>
             		<field name="vcs_id"/>
             		<field name="directory"/>
+            		<field name="partner_id"/>
             		<field name="state"/>
             		<field name="last_update"/>
             		<field name="active"/>
@@ -64,7 +66,13 @@
 		            		<field name="version_id" widget="selection"/>
 		            		<field name="vcs_id" widget="selection"/>
 		            		<field name="directory"/>
+		            		<field name="partner_id"/>
 		            	</group>
+		            	<notebook colspan="4">
+		            		<page string="Modules">
+				            	<field name="product_ids" colspan="4" context="{'tree_view_ref': 'smile_module_repository.view_product_product_tree'}"/>
+		            		</page>
+		            	</notebook>
 	            	</sheet>
 	                <div class="oe_chatter">
 	                    <field name="message_follower_ids" widget="mail_followers"/>
