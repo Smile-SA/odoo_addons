@@ -68,7 +68,7 @@ class IrModuleVersion(orm.Model):
 
 class IrModuleRepository(orm.Model):
     _name = 'ir.module.repository'
-    _description = 'Modules Repository'
+    _description = 'Repository'
     _inherit = ['mail.thread']
 
     def _get_dirname(self, cr, uid, ids, name, arg, context=None):
@@ -92,6 +92,7 @@ class IrModuleRepository(orm.Model):
         'last_update': fields.datetime("Last Update", readonly=True),
         'active': fields.boolean("To update"),
         'product_ids': fields.one2many('product.product', 'repository_id', 'Products', readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', ondelete="restrict"),
     }
 
     _defaults = {
@@ -138,7 +139,9 @@ class IrModuleRepository(orm.Model):
                 vcs = rep.vcs_id
                 IrModuleRepository._call([vcs.cmd, vcs.cmd_clone, rep.directory, rep.relpath])
         self.extract_modules(cr, uid, ids, context)
-        return self.write(cr, uid, ids, {'active': True, 'state': 'done', 'last_update': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
+        self.write(cr, uid, ids, {'active': True, 'state': 'done', 'last_update': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
+        self.message_post(cr, uid, ids, body=_("Repository cloned"), context=context)
+        return True
 
     def pull(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -150,7 +153,9 @@ class IrModuleRepository(orm.Model):
                 vcs = rep.vcs_id
                 IrModuleRepository._call([vcs.cmd, vcs.cmd_pull])
         self.extract_modules(cr, uid, ids, context)
-        return self.write(cr, uid, ids, {'last_update': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
+        self.write(cr, uid, ids, {'last_update': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
+        self.message_post(cr, uid, ids, body=_("Repository updated"), context=context)
+        return True
 
     def extract_modules(self, cr, uid, ids, context=None):
         product_obj = self.pool.get('product.product')
@@ -161,9 +166,9 @@ class IrModuleRepository(orm.Model):
             product_obj.create_or_update(cr, uid, modules, context)
             rep.refresh()
             if len(modules) > len(rep.product_ids):
-                variants = [m['variants'] for m in modules]
+                variants = [(m['repository_id'], m['name']) for m in modules]
                 for p in rep.product_ids:
-                    if p.variants not in variants:
+                    if (p.repository_id.id, p.name) not in variants:
                         p.write({'active': False})
         return True
 
