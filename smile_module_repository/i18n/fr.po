@@ -62,6 +62,11 @@ msgid "State"
 msgstr "Etat"
 
 #. module: smile_module_repository
+#: field:ir.module.repository,partner_id:0
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_module_repository
 #: field:product.product,zipfilename:0
 msgid "Zip file name"
 msgstr "Nom du zip"
@@ -69,7 +74,7 @@ msgstr "Nom du zip"
 #. module: smile_module_repository
 #: sql_constraint:ir.module.repository:0
 msgid "Directory must be unique"
-msgstr "La branche doit être unique"
+msgstr "Le dépôt doit être unique"
 
 #. module: smile_module_repository
 #: view:product.product:0
@@ -95,7 +100,7 @@ msgstr "Article"
 #: view:product.product:0
 #: field:product.product,repository_id:0
 msgid "Repository"
-msgstr "Branche"
+msgstr "Dépôt"
 
 #. module: smile_module_repository
 #: field:ir.module.vcs,cmd_clone:0
@@ -207,7 +212,7 @@ msgstr "Télécharger le zip"
 #. module: smile_module_repository
 #: field:ir.module.repository,directory:0
 msgid "Directory"
-msgstr "Branche"
+msgstr "Dépôt"
 
 #. module: smile_module_repository
 #: sql_constraint:ir.module.vcs:0
