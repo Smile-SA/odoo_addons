@@ -32,6 +32,28 @@ from openerp.tools.translate import _
 from tools import cd, zipdir
 
 
+class ProductCategory(orm.Model):
+    _inherit = 'product.category'
+
+    def get_db_id(self, cr, uid, name, context=None):
+        if not name:
+            return False
+        ids = self.search(cr, uid, [('name', '=', name)], limit=1, context=context)
+        if ids:
+            return ids[0]
+        parent_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_category_all')[1]
+        return self.create(cr, uid, {'name': name, 'parent_id': parent_id}, context)
+
+
+class ProductTemplate(orm.Model):
+    _inherit = 'product.template'
+
+    def _get_all_products(self, cr, uid, context=None):
+        product_tmpl_ids = self.search(cr, uid, [], context=context)
+        product_tmpl_infos = self.read(cr, uid, product_tmpl_ids, ['name'], context)
+        return dict([(p['name'], p['id']) for p in product_tmpl_infos])
+
+
 class ProductProduct(orm.Model):
     _inherit = 'product.product'
 
@@ -76,28 +98,29 @@ class ProductProduct(orm.Model):
         }),
         'zipfile': fields.binary('Download zip', readonly=True),
         'zipfilename': fields.char('Zip file name', size=128, readonly=True),
-        'variants': fields.char('Variants', size=128),
     }
 
     _defaults = {
         'license': 'AGPL-3',
     }
 
+    def _get_all_products(self, cr, uid, context=None):
+        product_ids = self.search(cr, uid, [], context=context)
+        product_infos = self.read(cr, uid, product_ids, ['name', 'repository_id'], context, '_classic_write')
+        return dict([((p['name'], p['repository_id']), p['id']) for p in product_infos])
+
     def create_or_update(self, cr, uid, vals_list, context=None):
         if isinstance(vals_list, dict):
             vals_list = [vals_list]
-        product_ids = self.search(cr, uid, [], context=context)
-        product_infos = self.read(cr, uid, product_ids, ['name', 'variants'], context)
-        product_ids_by_key = dict([((p['name'], p['variants']), p['id']) for p in product_infos])
+        product_ids_by_key = self._get_all_products(cr, uid, context)
         product_tmpl_obj = self.pool.get('product.template')
-        product_tmpl_ids = product_tmpl_obj.search(cr, uid, [], context=context)
-        product_tmpl_infos = product_tmpl_obj.read(cr, uid, product_tmpl_ids, ['name'], context)
-        product_tmpl_ids_by_key = dict([(p['name'], p['id']) for p in product_tmpl_infos])
+        product_tmpl_ids_by_key = product_tmpl_obj._get_all_products(cr, uid, context)
         for vals in vals_list:
+            vals['categ_id'] = self.pool.get('product.category').get_db_id(cr, uid, vals.get('category'), context)
             for key in vals.keys():
                 if key not in self._columns and key not in product_tmpl_obj._columns:
                     del vals[key]
-            pkey = (vals['name'], vals.get('variants', ''))
+            pkey = (vals['name'], vals['repository_id'])
             if pkey in product_ids_by_key:
                 self.write(cr, uid, product_ids_by_key[pkey], vals, context)
             else:
