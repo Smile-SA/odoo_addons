@@ -33,6 +33,8 @@
     "category": 'Tools',
     "sequence": 20,
     "init_xml": [
+        "security/ir.model.access.csv",
+        "security/res_users.yml",
         "data/ir.module.vcs.csv",
         "data/ir.module.version.csv",
     ],
