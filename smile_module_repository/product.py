@@ -48,6 +48,10 @@ class ProductCategory(orm.Model):
 class ProductTemplate(orm.Model):
     _inherit = 'product.template'
 
+    _columns = {
+        'is_module': fields.boolean("Is module"),
+    }
+
     def _get_all_products(self, cr, uid, context=None):
         product_tmpl_ids = self.search(cr, uid, [], context=context)
         product_tmpl_infos = self.read(cr, uid, product_tmpl_ids, ['name'], context)
@@ -71,7 +75,6 @@ class ProductProduct(orm.Model):
         return self.pool.get('product.product').search(cr, uid, [('repository_id', 'in', ids)], context=context)
 
     _columns = {
-        'is_module': fields.boolean("Is module"),
         'repository_id': fields.many2one('ir.module.repository', "Repository", readonly=True, ondelete="cascade"),
         'shortdesc': fields.char('Module Name', size=64, readonly=True, translate=True),
         'version': fields.char('Latest Version', size=64, readonly=True),
