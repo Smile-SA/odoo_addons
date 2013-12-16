@@ -35,6 +35,7 @@ class AccountInvoiceLine(orm.Model):
     _columns = {
         'asset_category_id': fields.many2one('account.asset.category', 'Asset Category', ondelete='restrict'),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', readonly=True, ondelete='restrict'),
+        'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', ondelete='restrict'),
         'currency_id': fields.related('invoice_id', 'currency_id', type='many2one', relation='res.currency',
                                       string='Currency', store=True, readonly=True, ondelete='restrict'),
         'date_invoice': fields.related('invoice_id', 'date_invoice', type='date', string='Invoice Date',
@@ -64,6 +65,10 @@ class AccountInvoiceLine(orm.Model):
                     field_name = field_obj.read(cr, uid, field_ids[0], ['field_description'], context)['field_description']
                 raise orm.except_orm(_('Error'),
                                      _('You cannot not create an asset from invoice lines with different %s') % field_name)
+        for line in lines:
+            if line.invoice_id.type == 'in_refund' and not line.parenr_id:
+                raise orm.except_orm(_('Error'),
+                                     _('Please indicate a parent asset in line %s') % line.name)
 
     def _get_asset_vals(self, cr, uid, lines, context=None):
         line = lines[0]
@@ -72,6 +77,7 @@ class AccountInvoiceLine(orm.Model):
         today = time.strftime('%Y-%m-%m')
         vals = {
             'name': line.name,
+            'parent_id': line.parent_id.id,
             'category_id': line.asset_category_id.id,
             'purchase_date': line.invoice_id.date_invoice or today,
             'purchase_account_date': line.invoice_id.date_invoice,

@@ -240,13 +240,6 @@ class AccountAssetAsset(orm.Model):
             if line.is_posted:
                 accounting_value += line.depreciation_value
                 exceptional_amortization_value += line.book_value_wo_exceptional - line.book_value
-        exceptional_value = sum([line.depreciation_value for line in asset.exceptional_depreciation_line_ids if line.is_posted])
-        # WARNING: (asset.purchase_value - accounting_value - exceptional_amortization_value) must be equal to (asset.book_value + exceptional_value)
-        rounding = len(str(asset.currency_id.rounding).split('.')[-1])
-        if float_round(asset.purchase_value - accounting_value, precision_digits=rounding) != \
-                float_round(asset.book_value + exceptional_value, precision_digits=rounding):
-            # TODO: fix me
-            raise orm.except_orm(_('Error'), _('(asset.purchase_value - accounting_value) != (asset.book_value + exceptional_value)'))
         move_lines = [{
             'account_id': asset.category_id.sale_expense_account_id.id,
             'debit': asset.purchase_value - accounting_value - exceptional_amortization_value + asset.regularization_tax_amount,

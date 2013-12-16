@@ -70,6 +70,7 @@
 					</field>
 		            <field name="account_id" position="after">
 		                <field name="asset_category_id" on_change="onchange_asset_category_id(asset_category_id, company_id)"/>
+		                <field name="parent_id"/>
 		            </field>
 		            <field name="account_id" position="attributes">
 		                <attribute name="attrs">{'readonly': [('asset_category_id','!=',False)], 'required': [('asset_category_id','=',False)]}</attribute>

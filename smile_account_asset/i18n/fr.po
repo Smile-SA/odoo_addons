@@ -776,6 +776,7 @@ msgstr "Taux d'amortissement fiscal (%)"
 
 #. module: smile_account_asset
 #: field:account.asset.asset,parent_id:0
+#: field:account.invoice.line,parent_id:0
 #: view:account.asset.split_wizard:0
 msgid "Parent Asset"
 msgstr "Immobilisation principale"
@@ -1698,3 +1699,241 @@ msgstr "A laisser vide pour utiliser un unique journal pour les acquisitions et 
 #: field:account.asset.category,sale_journal_id:0
 msgid "Disposal Journal"
 msgstr "Journal des cessions"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account.py:56
+#: code:smile-addons/smile_account_asset/account_invoice.py:66
+#: code:smile-addons/smile_account_asset/account_asset.py:505
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account.py:56
+#, python-format
+msgid "Please indicate a collected tax account for %s!"
+msgstr "Merci d'indiquer un compte de taxes collectées pour %s !"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account.py:65
+#, python-format
+msgid "Please indicate a paid tax account for %s!"
+msgstr "Merci d'indiquer un compte de taxes payées pour %s !"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_invoice.py:67
+#, python-format
+msgid "You cannot not create an asset from invoice lines with different %s"
+msgstr "Vous ne pouvez pas créer d'immobilisation à partir de lignes de factures liées à différent %s"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_invoice.py:71
+#, python-format
+msgid "Please indicate a parent asset in line %s"
+msgstr "Merci d'indiquer une immobilisation principale au niveau de la ligne de facture suivante : %s"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_invoice.py:105
+#, python-format
+msgid "No asset to create from these invoice lines!"
+msgstr "Aucune immobilisation à créer à partir de ces lignes de facture"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:337
+#: code:smile-addons/smile_account_asset/account_asset_category.py:197
+#, python-format
+msgid "%s Copy"
+msgstr "%s Copie"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:505
+#, python-format
+msgid "You cannot cancel a canceled asset!"
+msgstr "Vous ne pouvez pas annuler une immobilisation déjà annulée"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:507
+#, python-format
+msgid "You cannot cancel a disposed asset!"
+msgstr "Vous ne pouvez pas annuler une immobilisation déjà cédée ou mise au rebut"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:522
+#, python-format
+msgid "You cannot validate an asset in progress or an asset without in-service date!"
+msgstr "Vous ne pouvez pas mettre en service une immobilisation en cours ou sans date de mise en service"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:524
+#, python-format
+msgid "Please confirm this asset before validating it!"
+msgstr "Merci d'activer l'immobilisation avant de mettre en service celle-ci"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:541
+#, python-format
+msgid "Asset Update"
+msgstr "Mise à jour de l'immobilisation"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:578
+#, python-format
+msgid "Asset Split"
+msgstr "Décomposition de l'immobilisation"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:590
+#, python-format
+msgid "Asset Sale/Scrapping"
+msgstr "Cession/Mise au rebut de l'immobilisation"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:660
+#, python-format
+msgid "You cannot dispose a %s asset"
+msgstr "Vous ne pouvez pas céder ou mettre au rebut l'immobilisation %s"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:662
+#, python-format
+msgid "Scrapping value must be null"
+msgstr "La valeur de mise au rebut doit être nulle"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:681
+#, python-format
+msgid "You cannot cancel the disposal of an asset not disposed!"
+msgstr "Vous ne pouvez pas annuler la cession d'une immobilisation non cédée"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:699
+#, python-format
+msgid "You cannot output an asset not already disposed!"
+msgstr "Vous ne pouvez pas sortir du patrimoine une immobilisation non cédée"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset.py:701
+#, python-format
+msgid "You cannot output an asset already out!"
+msgstr "Vous ne pouvez pas sortir du patrimoine une immobilisation déjà sortie"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:135
+#, python-format
+msgid "Asset Purchase: %s"
+msgstr "Acquisition de l'immobilisation %s"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:135
+#, python-format
+msgid "Asset Sale: %s"
+msgstr "Cession de l'immobilisation %s"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:290
+#, python-format
+msgid "Asset Output%s: %s"
+msgstr "Sortie%s du patrimoine de l'immobilisation %s"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:290
+#, python-format
+msgid " Cancellation"
+msgstr " annulée"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:465
+#, python-format
+msgid "Please indicate fiscal amortization accounts in company form!"
+msgstr "Merci d'indiquer les comptes d'amortissement dérogatoire sur la fiche société"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:479
+#, python-format
+msgid "Please indicate exceptional amortization accounts in company form!"
+msgstr "Merci d'indiquer les comptes d'amortissement exceptionnel sur la fiche société"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:530
+#, python-format
+msgid "Fiscal Amortization"
+msgstr "Amortissement dérogatoire"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:532
+#, python-format
+msgid "Exceptional Depreciation"
+msgstr "Dépréciation exceptionnelle"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:534
+#, python-format
+msgid "Exceptional Amortization"
+msgstr "Amortissement exceptionnel"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_depreciation_method.py:99
+#, python-format
+msgid "None"
+msgstr "Aucune"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_depreciation_method.py:99
+#, python-format
+msgid "Manual"
+msgstr "Manuelle"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_depreciation_method.py:137
+#, python-format
+msgid "You cannot unlink the method %s because it's used"
+msgstr "Vous ne pouvez pas supprimer la méthode %s car elle est utilisée"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_depreciation_method.py:148
+#, python-format
+msgid "Method code doesn't exist!"
+msgstr "Le code de la méthode 'existe pas"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_depreciation_line.py:257
+#, python-format
+msgid "Depreciation date must be after purchase date!"
+msgstr "La date de comptabilisation doit être postérieure à la date d'acquisition"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_depreciation_line.py:263
+#, python-format
+msgid "Depreciation date must be in current fiscal year!"
+msgstr "La date de comptabilisation doit être sur l'exercice fiscal courant"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_depreciation_line.py:265
+#, python-format
+msgid "Depreciation value cannot be bigger than gross value!"
+msgstr "La dépréciation ne peut être supérieure à la valeur brute de l'immobilisation"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_depreciation_line.py:267
+#, python-format
+msgid "Book value with exceptional depreciations cannot be superior to book value "
+"without exceptional depreciations, nor inferior to salvage value!"
+msgstr "La VNC avec dépréciation exceptionnelle ne peut être supérieure à la VNC "
+"sans dépréciation exceptionnelle, ni inférieure à la valeur résiduelle"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/report/account_asset_depreciation_line_report_parser.py:51
+#, python-format
+msgid "Please select only assets into service"
+msgstr "Merci de ne sélectionner que des immobilisations en service"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/report/account_asset_sale_report_parser.py:41
+#, python-format
+msgid "Please select only disposed assets"
+msgstr "Merci de ne sélectionner que des immobilisations cédées/mises au rebut"
+
+#. module: smile_account_asset
+#: model:ir.actions.report.xml,name:smile_account_asset.report_webkit_account_asset_depreciation_line
+msgid "Account Asset Fiscal Deductions"
+msgstr "Amortissement des voitures particulières"
