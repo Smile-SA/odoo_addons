@@ -91,7 +91,7 @@ class AccountVoucher(orm.Model):
             if not amount_to_pay_before_deduction:
                 return []
             for index, lv in enumerate(line_vals):
-                if amount_to_pay_before_deduction and lv['type'] == 'cr':
+                if lv['type'] == 'cr':
                     if amount_to_pay_before_deduction < lv['amount']:
                         lv['amount'] = amount_to_pay_before_deduction
                         lv['reconcile'] = False
