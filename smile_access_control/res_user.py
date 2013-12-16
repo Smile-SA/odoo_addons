@@ -23,7 +23,7 @@ from openerp.osv import orm, fields
 from openerp.tools.translate import _
 
 
-class ResUser(orm.Model):
+class ResUsers(orm.Model):
     _inherit = 'res.users'
 
     _columns = {
@@ -72,7 +72,7 @@ class ResUser(orm.Model):
     def create(self, cr, uid, vals, context=None):
         if vals.get('user_profile_id'):
             vals.update(self._get_user_vals_from_profile(cr, uid, vals['user_profile_id'], context))
-        return super(ResUser, self).create(cr, uid, vals, context)
+        return super(ResUsers, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if not ids:
@@ -90,12 +90,12 @@ class ResUser(orm.Model):
                 else:
                     new_profile_user_ids.append(user['id'])
             if same_profile_user_ids:
-                super(ResUser, self).write(cr, uid, same_profile_user_ids, vals, context)
+                super(ResUsers, self).write(cr, uid, same_profile_user_ids, vals, context)
             if new_profile_user_ids:
                 vals.update(self._get_user_vals_from_profile(cr, uid, vals['user_profile_id'], context))
-                super(ResUser, self).write(cr, uid, new_profile_user_ids, vals, context)
+                super(ResUsers, self).write(cr, uid, new_profile_user_ids, vals, context)
         else:
-            super(ResUser, self).write(cr, uid, ids, vals, context)
+            super(ResUsers, self).write(cr, uid, ids, vals, context)
             for user_profile in self.browse(cr, uid, ids, context):
                 if user_profile.user_profile and user_profile.user_ids and any(field.name in vals for field in user_profile.field_ids):
                     profile_vals = self._get_user_vals_from_profile(cr, uid, user_profile.id, context)
@@ -105,4 +105,4 @@ class ResUser(orm.Model):
     def copy_data(self, cr, uid, user_id, default=None, context=None):
         default = default.copy() if default else {}
         default['user_ids'] = []
-        return super(ResUser, self).copy_data(cr, uid, user_id, default, context)
+        return super(ResUsers, self).copy_data(cr, uid, user_id, default, context)
