@@ -134,6 +134,7 @@ class Upgrade(object):
         with cursor(self.db) as cr:
             cr.execute("""UPDATE ir_config_parameter SET (write_date, write_uid, value) = (now() at time zone 'UTC', %s, %s)
                        WHERE key = 'code.version'""", (SUPERUSER_ID, self.version))
+        _logger.debug('database version updated to %s', self.version)
 
     def _sql_import(self, cr, f_obj):
         for query in f_obj.read().split(';'):
