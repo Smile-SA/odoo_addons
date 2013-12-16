@@ -1,0 +1,83 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_access_control_period
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-11-24 11:43+0000\n"
+"PO-Revision-Date: 2011-11-24 11:43+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_access_control_period
+#: view:res.users:0
+msgid "Start date"
+msgstr "Date de début"
+
+#. module: smile_access_control_period
+#: view:res.users:0
+msgid "End date"
+msgstr "Date de fin"
+
+#. module: smile_access_control_period
+#: view:res.users:0
+msgid "Read-Only Period"
+msgstr "Période de lecture seule"
+
+#. module: smile_access_control_period
+#: field:res.users,date_start:0
+msgid "Read-only Start date"
+msgstr "Date de début de lecture seule"
+
+#. module: smile_access_control_period
+#: field:res.users,date_stop:0
+msgid "Read-only End date"
+msgstr "Date de fin de lecture seule"
+
+#. module: smile_access_control_period
+#: code:addons/smile_access_control_period/orm.py:34
+#, python-format
+msgid "You can not %s this document (%s)"
+msgstr "Vous ne pouvez pas %s ce document (%s)"
+
+#. module: smile_access_control_period
+#: code:addons/smile_access_control_period/orm.py:35
+#, python-format
+msgid "create"
+msgstr "créer"
+
+#. module: smile_access_control_period
+#: code:addons/smile_access_control_period/orm.py:35
+#, python-format
+msgid "write"
+msgstr "modifier"
+
+#. module: smile_access_control_period
+#: code:addons/smile_access_control_period/orm.py:35
+#, python-format
+msgid "unlink"
+msgstr "supprimer"
+
+#. module: smile_access_control_period
+#: code:addons/smile_access_control_period/orm.py:37
+#, python-format
+msgid " from %s"
+msgstr " à partir du %s"
+
+#. module: smile_access_control_period
+#: code:addons/smile_access_control_period/orm.py:40
+#, python-format
+msgid " to %s"
+msgstr " jusqu'au %s"
+
+#. module: smile_access_control_period
+#: code:addons/smile_access_control_period/orm.py:42
+#, python-format
+msgid "AccessError"
+msgstr " Erreur d'accès"
