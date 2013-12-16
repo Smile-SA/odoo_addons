@@ -36,6 +36,7 @@
     * Improve BaseModel.import_data method performance
     * Manage uid in Yaml tests
     * Log slow xmlrpc calls
+    * Add maintenance tools: IrModel.get_wrong_field_invalidations, db.get_duplicated_indexes, db.get_missing_indexes, db.get_unused_indexes
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
@@ -46,6 +47,7 @@
     "init_xml": [
         "data/ir_lang.yml",
         "data/ir_cron.xml",
+        "security/res_users.yml",
         "security/base_security.xml",
         "security/ir.model.access.csv",
         "view/ir_values_view.xml",

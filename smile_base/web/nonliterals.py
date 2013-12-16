@@ -19,15 +19,25 @@
 #
 ##############################################################################
 
-import ir_sequence
-import ir_translation
-import ir_values
-import orm
-import registry
-import res_log
-import sql_db
-import tools
-import update
-import web
-import web_services
-import yaml_import
+from openerp.addons.web.common.nonliterals import SuperDict
+
+native_getitem = SuperDict.__getitem__
+
+
+class ParentDict(object):
+
+    def __init__(self, d):
+        self.d = d
+
+    def __getattr__(self, name):
+        return self.d.get(name, False)
+
+
+def new_getitem(self, key):
+    tmp = native_getitem(self, key)
+    if key == 'parent' and isinstance(tmp, dict):
+        tmp = ParentDict(tmp)
+    return tmp
+
+
+SuperDict.__getitem__ = new_getitem

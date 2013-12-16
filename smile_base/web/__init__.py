@@ -19,15 +19,4 @@
 #
 ##############################################################################
 
-import ir_sequence
-import ir_translation
-import ir_values
-import orm
-import registry
-import res_log
-import sql_db
-import tools
-import update
-import web
-import web_services
-import yaml_import
+import nonliterals
