@@ -67,7 +67,7 @@ class SmileScript(orm.Model):
         'automatic_dump': True,
     }
 
-    def _get_validated_scripts(self, cr, uid, ids, context):
+    def _get_validated_scripts(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         validated_scripts = []
@@ -76,18 +76,17 @@ class SmileScript(orm.Model):
                 validated_scripts.append(script)
         return validated_scripts
 
-    def _change_only_automatic_dump(self, cr, uid, vals, context):
-        vals = vals or {}
-        if 'automatic_dump' in vals and len(vals) == 1:
-            return True
-        return False
+    def _can_write_after_validation(self, vals, context=None):
+        keys = vals and vals.keys() or []
+        for field in keys:
+            if field not in ('automatic_dump', 'name'):
+                return False
+        return True
 
     def write(self, cr, uid, ids, vals, context=None):
         if not vals:
             return True
-        validated_scripts = self._get_validated_scripts(cr, uid, ids, context)
-        change_only_automatic_dump = self._change_only_automatic_dump(cr, uid, vals, context)
-        if validated_scripts and not change_only_automatic_dump:
+        if self._get_validated_scripts(cr, uid, ids, context) and self._can_write_after_validation(vals, context):
             raise orm.except_orm(_('Error!'), _('You can only modify draft scripts!'))
         return super(SmileScript, self).write(cr, uid, ids, vals, context)
 
@@ -253,8 +252,8 @@ class SmileScriptIntervention(orm.Model):
         'create_uid': fields.many2one('res.users', 'User', required=True, readonly=True),
         'script_id': fields.many2one('smile.script', 'Script', required=True, readonly=True),
         'state': fields.selection(STATES, "State", readonly=True, required=True),
-        'test_mode': fields.boolean('Test Mode'),
-        'result': fields.text('Result'),
+        'test_mode': fields.boolean('Test Mode', readonly=True),
+        'result': fields.text('Result', readonly=True),
         'log_ids': fields.one2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'smile.script.intervention')], readonly=True),
     }
 
