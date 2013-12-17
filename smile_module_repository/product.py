@@ -41,7 +41,7 @@ class ProductCategory(orm.Model):
         ids = self.search(cr, uid, [('name', '=', name)], limit=1, context=context)
         if ids:
             return ids[0]
-        parent_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_category_all')[1]
+        parent_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'smile_module_repository', 'product_category_modules')[1]
         return self.create(cr, uid, {'name': name, 'parent_id': parent_id}, context)
 
 
@@ -74,6 +74,12 @@ class ProductProduct(orm.Model):
         context['active_test'] = False
         return self.pool.get('product.product').search(cr, uid, [('repository_id', 'in', ids)], context=context)
 
+    def _get_tag_ids(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for product in self.browse(cr, uid, ids, context):
+            res[product.id] = product.repository_id and [tag.id for tag in product.repository_id.tag_ids] or []
+        return res
+
     _columns = {
         'repository_id': fields.many2one('ir.module.repository', "Repository", readonly=True, ondelete="cascade"),
         'shortdesc': fields.char('Module Name', size=64, readonly=True, translate=True),
@@ -99,6 +105,7 @@ class ProductProduct(orm.Model):
             'product.product': (lambda self, cr, uid, ids, context=None: ids, ['repository_id'], 5),
             'ir.module.repository': (_get_product_ids_from_repositories, ['version_id'], 5),
         }),
+        'tag_ids': fields.function(_get_tag_ids, method=True, type='many2many', relation='ir.module.repository.tag', string="Tags"),
         'zipfile': fields.binary('Download zip', readonly=True),
         'zipfilename': fields.char('Zip file name', size=128, readonly=True),
     }

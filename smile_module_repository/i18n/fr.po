@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-29 13:07+0000\n"
-"PO-Revision-Date: 2013-11-29 13:07+0000\n"
+"POT-Creation-Date: 2013-12-11 16:55+0000\n"
+"PO-Revision-Date: 2013-12-11 16:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,6 +24,11 @@ msgstr "Catégorie"
 #: view:product.product:0
 msgid "Information"
 msgstr "Information"
+
+#. module: smile_module_repository
+#: selection:product.product,license:0
+msgid "GPL-2 or later version"
+msgstr "GPL-2 or later version"
 
 #. module: smile_module_repository
 #: view:ir.module.repository:0
@@ -47,6 +52,11 @@ msgid "OpenERP version must be unique"
 msgstr "La version OpenERP doit être unique"
 
 #. module: smile_module_repository
+#: selection:product.product,license:0
+msgid "Affero GPL-3"
+msgstr "Affero GPL-3"
+
+#. module: smile_module_repository
 #: view:product.product:0
 msgid "Close"
 msgstr "Fermer"
@@ -60,11 +70,6 @@ msgstr "Grouper par..."
 #: field:ir.module.repository,state:0
 msgid "State"
 msgstr "Etat"
-
-#. module: smile_module_repository
-#: field:ir.module.repository,partner_id:0
-msgid "Partner"
-msgstr "Partenaire"
 
 #. module: smile_module_repository
 #: field:product.product,zipfilename:0
@@ -82,14 +87,29 @@ msgid "Template"
 msgstr "Modèle"
 
 #. module: smile_module_repository
-#: view:product.product:0
-msgid "Is a module"
+#: view:ir.module.repository:0
+msgid "Tags..."
+msgstr "Tags..."
+
+#. module: smile_module_repository
+#: field:product.template,is_module:0
+msgid "Is module"
 msgstr "Est un module"
 
 #. module: smile_module_repository
-#: field:product.product,is_module:0
-msgid "Is module"
-msgstr "Est un module"
+#: selection:product.product,license:0
+msgid "GPL-3 or later version"
+msgstr "GPL-3 or later version"
+
+#. module: smile_module_repository
+#: selection:product.product,license:0
+msgid "GPL Version 2"
+msgstr "GPL Version 2"
+
+#. module: smile_module_repository
+#: selection:product.product,license:0
+msgid "GPL Version 3"
+msgstr "GPL Version 3"
 
 #. module: smile_module_repository
 #: model:ir.model,name:smile_module_repository.model_product_product
@@ -97,6 +117,12 @@ msgid "Product"
 msgstr "Article"
 
 #. module: smile_module_repository
+#: model:ir.model,name:smile_module_repository.model_product_category
+msgid "Product Category"
+msgstr "Catégorie d'articles"
+
+#. module: smile_module_repository
+#: model:ir.model,name:smile_module_repository.model_ir_module_repository
 #: view:product.product:0
 #: field:product.product,repository_id:0
 msgid "Repository"
@@ -106,6 +132,11 @@ msgstr "Dépôt"
 #: field:ir.module.vcs,cmd_clone:0
 msgid "Get"
 msgstr "Récupération"
+
+#. module: smile_module_repository
+#: field:ir.module.repository,message_unread:0
+msgid "Unread Messages"
+msgstr "Messages non lus"
 
 #. module: smile_module_repository
 #: view:ir.module.repository:0
@@ -122,9 +153,15 @@ msgid "OpenERP Version"
 msgstr "Version OpenERP"
 
 #. module: smile_module_repository
-#: field:ir.module.vcs,cmd_pull:0
-msgid "Update"
-msgstr "Mise à jour"
+#: model:ir.model,name:smile_module_repository.model_ir_module_repository_tag
+msgid "Repository Tag"
+msgstr "Tag des dépôts"
+
+#. module: smile_module_repository
+#: view:ir.module.repository:0
+#: field:ir.module.repository,active:0
+msgid "To update"
+msgstr "A mettre à jour"
 
 #. module: smile_module_repository
 #: view:ir.module.repository:0
@@ -151,6 +188,11 @@ msgid "Dependencies"
 msgstr "Dépendences"
 
 #. module: smile_module_repository
+#: field:ir.module.repository,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Est abonné"
+
+#. module: smile_module_repository
 #: model:ir.actions.act_window,name:smile_module_repository.action_vcs
 #: view:ir.module.repository:0
 #: view:ir.module.vcs:0
@@ -167,6 +209,11 @@ msgstr "Dernière version"
 #: field:ir.module.repository,relpath:0
 msgid "Relative Path"
 msgstr "Chemin relatif"
+
+#. module: smile_module_repository
+#: selection:product.product,license:0
+msgid "Other Proprietary"
+msgstr "Other Proprietary"
 
 #. module: smile_module_repository
 #: model:ir.actions.act_window,name:smile_module_repository.action_oerp_version
@@ -186,8 +233,14 @@ msgid "Pull"
 msgstr "Mise à jour"
 
 #. module: smile_module_repository
+#: sql_constraint:ir.module.repository.tag:0
+msgid "Repository tag must be unique"
+msgstr "Repository tag must be unique"
+
+#. module: smile_module_repository
 #: view:ir.module.repository:0
 #: field:ir.module.repository,name:0
+#: field:ir.module.repository.tag,name:0
 #: field:ir.module.vcs,name:0
 #: field:ir.module.version,name:0
 msgid "Name"
@@ -197,6 +250,39 @@ msgstr "Nom"
 #: field:product.product,license:0
 msgid "License"
 msgstr "License"
+
+#. module: smile_module_repository
+#: model:ir.actions.act_window,name:smile_module_repository.action_product_product
+#: view:ir.module.repository:0
+#: model:ir.ui.menu,name:smile_module_repository.menu_modules
+#: view:product.product:0
+msgid "Modules"
+msgstr "Modules"
+
+#. module: smile_module_repository
+#: help:ir.module.repository,message_ids:0
+msgid "Messages and communication history"
+msgstr "Historique des communications"
+
+#. module: smile_module_repository
+#: model:ir.module.repository.tag,name:smile_module_repository.tag_official
+msgid "Official"
+msgstr "Officiel"
+
+#. module: smile_module_repository
+#: field:ir.module.repository,message_ids:0
+msgid "Messages"
+msgstr "Messages"
+
+#. module: smile_module_repository
+#: field:ir.module.repository,message_summary:0
+msgid "Summary"
+msgstr "Summary"
+
+#. module: smile_module_repository
+#: model:ir.model,name:smile_module_repository.model_product_template
+msgid "Product Template"
+msgstr "Modèle d'article"
 
 #. module: smile_module_repository
 #: field:ir.module.vcs,cmd:0
@@ -220,10 +306,21 @@ msgid "VCS must be unique"
 msgstr "Le gestionnaire de versions doit être unique"
 
 #. module: smile_module_repository
-#: model:ir.model,name:smile_module_repository.model_ir_module_repository
 #: view:ir.module.repository:0
 msgid "Modules Repository"
 msgstr "Dépôt"
+
+#. module: smile_module_repository
+#: model:ir.actions.act_window,name:smile_module_repository.action_repository_tag
+#: view:ir.module.repository.tag:0
+#: model:ir.ui.menu,name:smile_module_repository.menu_repository_tag
+msgid "Modules Repositories Tags"
+msgstr "Modules Repositories Tags"
+
+#. module: smile_module_repository
+#: help:ir.module.repository,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "If checked new messages require your attention."
 
 #. module: smile_module_repository
 #: field:product.product,website:0
@@ -238,11 +335,6 @@ msgid "Modules Repositories"
 msgstr "Dépôts"
 
 #. module: smile_module_repository
-#: field:ir.module.repository,state:0
-msgid "State"
-msgstr "Etat"
-
-#. module: smile_module_repository
 #: field:ir.module.repository,product_ids:0
 msgid "Products"
 msgstr "Articles"
@@ -253,13 +345,48 @@ msgid "Description HTML"
 msgstr "Description HTML"
 
 #. module: smile_module_repository
-#: view:ir.module.repository:0
-#: field:ir.module.repository,active:0
-msgid "To update"
-msgstr "A mettre à jour"
+#: field:ir.module.vcs,cmd_pull:0
+msgid "Update"
+msgstr "Mise à jour"
+
+#. module: smile_module_repository
+#: field:ir.module.repository,tag_ids:0
+msgid "Tags"
+msgstr "Tags"
+
+#. module: smile_module_repository
+#: view:product.product:0
+msgid "Module"
+msgstr "Module"
+
+#. module: smile_module_repository
+#: view:product.product:0
+msgid "Group by..."
+msgstr "Regrouper par..."
+
+#. module: smile_module_repository
+#: help:ir.module.repository,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
 
 #. module: smile_module_repository
 #: view:product.product:0
 msgid "Technical Information"
 msgstr "Informations techniques"
+
+#. module: smile_module_repository
+#: field:ir.module.repository,partner_id:0
+#: model:ir.module.repository.tag,name:smile_module_repository.tag_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_module_repository
+#: field:ir.module.repository,message_follower_ids:0
+msgid "Followers"
+msgstr "Abonnés"
+
+#. module: smile_module_repository
+#: selection:product.product,license:0
+msgid "Other OSI Approved Licence"
+msgstr "Other OSI Approved Licence"
 

@@ -37,10 +37,13 @@
         "security/res_users.yml",
         "data/ir.module.vcs.csv",
         "data/ir.module.version.csv",
+        "data/ir.module.repository.tag.csv",
+        "data/product.category.csv",
     ],
     "update_xml": [
         "view/ir_module_vcs_view.xml",
         "view/ir_module_version_view.xml",
+        "view/ir_module_repository_tag_view.xml",
         "view/ir_module_repository_view.xml",
         "view/product_product_view.xml",
     ],

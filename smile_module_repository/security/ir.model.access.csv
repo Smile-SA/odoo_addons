@@ -1,7 +1,9 @@
-"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"ir_module_vcs_all","Version Control System","smile_module_repository.model_ir_module_vcs",,1,0,0,0
-"ir_module_version_all","OpenERP Version","smile_module_repository.model_ir_module_version",,1,0,0,0
-"ir_module_repository_all","Modules Repository","smile_module_repository.model_ir_module_repository",,1,1,1,0
-"ir_module_vcs_system","Version Control System","smile_module_repository.model_ir_module_vcs","base.group_system",1,1,1,1
-"ir_module_version_system","OpenERP Version","smile_module_repository.model_ir_module_version","base.group_system",1,1,1,1
-"ir_module_repository_system","Modules Repository","smile_module_repository.model_ir_module_repository","base.group_system",1,1,1,1
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+ir_module_vcs_all,Version Control System,smile_module_repository.model_ir_module_vcs,,1,0,0,0
+ir_module_version_all,OpenERP Version,smile_module_repository.model_ir_module_version,,1,0,0,0
+ir_module_repository_all,Modules Repository,smile_module_repository.model_ir_module_repository,,1,1,1,0
+ir_module_repository_tag_all,Modules Repository Tag,smile_module_repository.model_ir_module_repository_tag,,1,0,0,0
+ir_module_vcs_system,Version Control System,smile_module_repository.model_ir_module_vcs,base.group_system,1,1,1,1
+ir_module_version_system,OpenERP Version,smile_module_repository.model_ir_module_version,base.group_system,1,1,1,1
+ir_module_repository_system,Modules Repository,smile_module_repository.model_ir_module_repository,base.group_system,1,1,1,1
+ir_module_repository_tag_system,Modules Repository Tag,smile_module_repository.model_ir_module_repository_tag,base.group_system,1,1,1,1

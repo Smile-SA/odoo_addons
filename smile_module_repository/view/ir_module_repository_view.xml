@@ -53,6 +53,7 @@
 	                <sheet string="Supplier Invoice">
 	                    <div class="oe_title">
 	                        <h1><field name="name" placeholder="Name"/></h1>
+	                        <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
 	                    <div class="oe_right">
 		                    <button name="clone" states="draft" string="Clone" type="object" class="oe_highlight"/>

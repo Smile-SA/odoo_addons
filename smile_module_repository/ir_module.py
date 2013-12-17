@@ -66,6 +66,20 @@ class IrModuleVersion(orm.Model):
     ]
 
 
+class IrModuleRepositoryTag(orm.Model):
+    _name = 'ir.module.repository.tag'
+    _description = 'Repository Tag'
+    _order = 'name'
+
+    _columns = {
+        'name': fields.char('Name', size=32, required=True, translate=True),
+    }
+
+    _sql_constraints = [
+        ('unique_name', 'UNIQUE(name)', 'Repository tag must be unique'),
+    ]
+
+
 class IrModuleRepository(orm.Model):
     _name = 'ir.module.repository'
     _description = 'Repository'
@@ -93,6 +107,7 @@ class IrModuleRepository(orm.Model):
         'active': fields.boolean("To update"),
         'product_ids': fields.one2many('product.product', 'repository_id', 'Products', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete="restrict"),
+        'tag_ids': fields.many2many('ir.module.repository.tag', 'ir_module_repository_tag_rel', 'repository_id', 'tag_id', "Tags"),
     }
 
     _defaults = {
