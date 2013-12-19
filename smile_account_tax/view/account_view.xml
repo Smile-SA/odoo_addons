@@ -25,6 +25,9 @@
                 <field name="date_invoice" position="before">
                     <field name="date_invoice_supplier"/>
                 </field>
+                <button name="invoice_open" position="attributes">
+                    <attribute name="type">object</attribute>
+	            </button>
             </field>
 		</record>
 

@@ -19,5 +19,26 @@
 #
 ##############################################################################
 
-import account
-import wizard
+from openerp import netsvc
+from openerp.osv import orm, fields
+
+
+class AccountInvoiceTaxWizard(orm.TransientModel):
+    _name = 'account.invoice.tax.wizard'
+    _description = "Account Invoice Tax Wizard"
+
+    _columns = {
+        'invoice_ids': fields.many2many('account.invoice', 'account_invoice_tax_wizard_rel', 'wizard_id', 'invoice_id',
+                                        'Invoices to check', readonly=True),
+        'message': fields.text('Message', readonly=True),
+    }
+
+    def force_open_invoice(self, cr, uid, ids, context=None):
+        context = context or {}
+        wf_service = netsvc.LocalService('workflow')
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for wizard in self.browse(cr, uid, ids, context):
+            for invoice in wizard.invoice_ids:
+                wf_service.trg_validate(uid, 'account.invoice', invoice.id, 'invoice_open', cr)
+        return {'type': 'ir.actions.act_window_close'}

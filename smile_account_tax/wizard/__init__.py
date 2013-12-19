@@ -19,5 +19,4 @@
 #
 ##############################################################################
 
-import account
-import wizard
+import account_invoice_tax_wizard

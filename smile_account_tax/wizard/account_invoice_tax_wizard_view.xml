@@ -1,0 +1,20 @@
+<openerp>
+    <data>
+
+        <record id="account_invoice_tax_wizard_form_view" model="ir.ui.view">
+            <field name="name">account.invoice.tax.wizard.form</field>
+            <field name="model">account.invoice.tax.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+		        <form string="Unvalid taxes">
+		        	<field name="invoice_ids" invisible="1"/>
+		        	<field name="message" widget="text_html" nolabel="1" colspan="4"/>
+		        	<label string="" colspan="2"/>
+		            <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+		            <button icon="terp-camera_test" string="Force invoice opening" name="force_open_invoice" type="object" default_focus="1"/>
+		        </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

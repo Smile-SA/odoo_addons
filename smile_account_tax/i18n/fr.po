@@ -45,5 +45,26 @@ msgstr "Erreur"
 #: code:addons/smile_account_tax/account.py:52
 #, python-format
 msgid "The tax '%' in the invoice line '%s' is not valid to %s"
-msgstr "La taxe '%s' sélectionnée sur la ligne de facture '%s' n'est plus valide au %s"
+msgstr "La taxe '%s' sélectionnée sur la ligne de facture '%s' n'est pas valide au %s"
+
+#. module: smile_account_tax
+#: code:addons/smile_account_tax/account.py:49
+#, python-format
+msgid "Unvalid taxes"
+msgstr "Taxes invalides"
+
+#. module: smile_account_tax
+#: field:account.invoice.tax.wizard,invoice_id:0
+msgid "Invoices to check"
+msgstr "Factures à vérifier"
+
+#. module: smile_account_tax
+#: view:account.invoice.tax.wizard:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_account_tax
+#: view:account.invoice.tax.wizard:0
+msgid "Force invoice opening"
+msgstr "Forcer la validation de la facture"
 

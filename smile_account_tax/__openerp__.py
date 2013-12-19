@@ -36,6 +36,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "init_xml": [],
     "update_xml": [
         'view/account_view.xml',
+        'wizard/account_invoice_tax_wizard_view.xml',
     ],
     "demo_xml": [],
     'test': [],
