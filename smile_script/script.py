@@ -86,7 +86,7 @@ class SmileScript(orm.Model):
     def write(self, cr, uid, ids, vals, context=None):
         if not vals:
             return True
-        if self._get_validated_scripts(cr, uid, ids, context) and self._can_write_after_validation(vals, context):
+        if self._get_validated_scripts(cr, uid, ids, context) and not self._can_write_after_validation(vals, context):
             raise orm.except_orm(_('Error!'), _('You can only modify draft scripts!'))
         return super(SmileScript, self).write(cr, uid, ids, vals, context)
 
