@@ -43,7 +43,7 @@ class FixedLengthExport(object):
     def __init__(self, export_format, delimiter=''):
         assert isinstance(export_format, dict), 'export_format must be a dictionary with values of type tuple (position, type, length)'
         self._format = export_format
-        self._columns = sorted(export_format, key=lambda x: x[0])
+        self._columns = sorted(export_format, key=lambda x: export_format[x][0])
         self._delimiter = delimiter
 
     def _truncate(self, value, length):
@@ -72,6 +72,10 @@ class FixedLengthExport(object):
         res = []
         for column in self._columns:
             position, ttype, length = self._format[column]
-            format_method = getattr(self, '_format_%s' % ttype)
+            format_method_name = '_format_%s' % ttype
+            if hasattr(self, format_method_name):
+                format_method = getattr(self, format_method_name)
+            else:
+                format_method = self._truncate
             res.append(format_method(data.get(column), length))
         return self._delimiter.join(res)
