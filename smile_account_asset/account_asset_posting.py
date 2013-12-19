@@ -22,7 +22,6 @@
 import time
 
 from osv import orm
-from tools import float_round
 from tools.translate import _
 
 ACCOUNT_GROUPS = {
