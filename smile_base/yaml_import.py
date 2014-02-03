@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from dateutil.relativedelta import relativedelta
 import logging
 from lxml import etree
 import time
@@ -42,6 +43,10 @@ def new_init(self, cr, module, id_map, mode, filename, noupdate=False):
         'cr': cr,
         'uid': self.uid,
         'context': None,
+        'relativedelta': relativedelta,
+        'float': float,
+        'int': int,
+        'str': str,
     })
 
 
