@@ -35,7 +35,7 @@ def smile_sql_detective(min_delay):
             result = dispatch_func(self, query, params, log_exceptions)
             delay = time.time() - start
             if delay > min_delay:
-                _logger.info(u"SQL_QUERY:%s SQL_PARAMS:%s SQL_TIMER:%s" % (query, params, delay * 1000.0,))
+                _logger.info(u"SQL_BD:%s SQL_QUERY:%s SQL_PARAMS:%s SQL_TIMER:%s" % (self.dbname, query, params, delay * 1000.0,))
             return result
         return detective_execute
     return detective_log
