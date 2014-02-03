@@ -43,21 +43,21 @@ class ConfigManager(object):
         upgrade_path = config.get('upgrades_path', '')
         if not upgrade_path:
             _logger.warning("Unspecified 'upgrades_path' option in OpenERP configuration file")
-            pass
+            return
         if not os.path.exists(upgrade_path) or not os.path.isdir(upgrade_path):
             _logger.error("Specified 'upgrades_path' option is not valid")
-            pass
+            return
         self.options['upgrades_path'] = upgrade_path
         config_file = os.path.join(upgrade_path, 'upgrade.conf')
         if not os.path.exists(config_file) or not os.path.isfile(config_file):
             _logger.error(u"'upgrade.conf' doesn't exist in %s", upgrade_path)
-            pass
+            return
         self.options['config_file'] = config_file
 
     def load(self):
         config_file = self.options.get('config_file')
         if not config_file:
-            pass
+            return
         config = ConfigParser.ConfigParser()
         try:
             config.readfp(open(config_file))
