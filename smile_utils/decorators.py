@@ -22,20 +22,22 @@
 import inspect
 
 
-def get_original_method(method):
-    while method.func_closure:
-        method = method.func_closure[0].cell_contents
-    return method
-
-
-def check_if_not_decorated(method, decorator_method):
-    if method.__name__ == decorator_method:
-        return False
-    while method.func_closure:
-        if method.__name__ == decorator_method:
-            return False
-        method = method.func_closure[0].cell_contents
-    return True
+def decorate_methods(decorator):
+    if not hasattr(decorator, '_decorated_methods'):
+        decorator._decorated_methods = {}
+    def meta_decorator(methods_to_decorate):
+        for model, method_name in list(set(methods_to_decorate)):
+            model_class = model.__class__
+            if hasattr(model_class, method_name):
+                model_name = model._name
+                method = getattr(model_class, method_name)
+                if method_name in decorator._decorated_methods.get(model_name, {}):
+                    original_method = decorator._decorated_methods[model_name][method_name]
+                    setattr(original_method.im_class, method_name, original_method)
+                decorator._decorated_methods.setdefault(model_name, {})[method_name] = method
+                setattr(model_class, method_name, decorator(method))
+        return True
+    return meta_decorator
 
 
 def _get_kwargs(method, args, kwargs):
