@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data noupdate="0">
+
+	<record id="base.user_admin" model="res.users">
+		<field name="sso" eval="False"/>
+	</record>
+
+	</data>
+</openerp>

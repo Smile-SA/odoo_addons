@@ -1,0 +1,59 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_sso
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-12-19 14:59+0000\n"
+"PO-Revision-Date: 2011-12-19 14:59+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_sso
+#: field:res.users,sso:0
+msgid "SSO Authentication"
+msgstr "Authentification SSO"
+
+#. module: smile_sso
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "VOus ne pouvez pas avoir deux utilsiateurs avec le même login !"
+
+#. module: smile_sso
+#: code:addons/smile_sso/web/controllers.py:46
+#, python-format
+msgid "Unknown user!"
+msgstr "Utilisateur inconnu !"
+
+#. module: smile_sso
+#: sql_constraint:res.users:0
+msgid "The user with id = 1 must be always active!"
+msgstr "L'utilisateur dont id = 1 doit toujours être actif !"
+
+#. module: smile_sso
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "La société choisie n'est pas autorisée pour cet utilisateur."
+
+#. module: smile_sso
+#: code:addons/smile_sso/res_user.py:107
+#, python-format
+msgid "Operation Canceled"
+msgstr "Opération annulée"
+
+#. module: smile_sso
+#: code:addons/smile_sso/res_user.py:107
+#, python-format
+msgid "You cannot modify user password when the module smile_sso is installed!"
+msgstr "Vous ne pouvez pas modifier le mot de passe d'un utilisateur lorsque le module smile_sso est installé !"
+
+#. module: smile_sso
+#: model:ir.module.module,shortdesc:smile_sso.module_meta_information
+msgid "Smile SSO"
+msgstr "Smile SSO"
