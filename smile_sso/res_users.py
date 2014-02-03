@@ -50,7 +50,7 @@ class ResUsersExpiry(orm.Model):
     _columns = {
         'user_id': fields.many2one("res.users", "User", required=True, ondelete="cascade", readonly=True),
         'login': fields.related('user_id', 'login', type="char", string="Login", store=True, select=True, readonly=True),
-        'sso': fields.related('user_id', 'sso', type="boolean", string="SSO Authentification", store=True, select=True, readonly=True),
+        'sso': fields.related('user_id', 'sso', type="boolean", string="SSO Authentication", store=True, select=True, readonly=True),
         'expiry_date': fields.datetime("Expiry Date", readonly=True),
     }
 
@@ -66,7 +66,7 @@ class ResUsers(orm.Model):
     _inherit = 'res.users'
 
     _columns = {
-        'sso': fields.boolean('SSO Authentification'),
+        'sso': fields.boolean('SSO Authentication'),
     }
 
     _defaults = {
@@ -145,5 +145,5 @@ class ResUsers(orm.Model):
             ids = [ids]
         if vals.get('password') and not (uid == 1 and ids in (1, [1])) \
                 and vals.get('sso', [user for user in self.browse(cr, uid, ids, context) if user.sso]):
-            raise orm.except_orm(_('Operation Canceled'), _('You cannot modify password for user with SSO authentification!'))
+            raise orm.except_orm(_('Operation Canceled'), _('You cannot modify password for user with SSO authentication!'))
         return super(ResUsers, self).write(cr, uid, ids, vals, context)

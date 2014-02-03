@@ -17,7 +17,7 @@ msgstr ""
 
 #. module: smile_sso
 #: field:res.users,sso:0
-msgid "SSO Authentification"
+msgid "SSO Authentication"
 msgstr "Authentification SSO"
 
 #. module: smile_sso

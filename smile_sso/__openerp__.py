@@ -24,7 +24,7 @@
     'version': '2.0',
     'category': 'Hidden',
     'description': """
-This module delegate users authentification (global login and logout) to
+This module delegate users authentication (global login and logout) to
 Apache HTTP Server via some modules like mod_auth_cas, mod_auth_kerb or mod_auth_openid.
 
 It just provides:
