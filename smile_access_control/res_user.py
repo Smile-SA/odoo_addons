@@ -32,13 +32,13 @@ class ResUsers(orm.Model):
         'user_ids': fields.one2many('res.users', 'user_profile_id', 'Users', domain=[('user_profile', '=', False)]),
         'field_ids': fields.many2many('ir.model.fields', 'res_users_fields_rel', 'user_id', 'field_id', 'Fields to update',
                                       domain=[('model', '=', 'res.users'),
-                                              ('name', 'not in', ('user_profile', 'user_profile_id', 'user_ids', 'field_ids'))]),
+                                              ('name', 'not in', ('user_profile', 'user_profile_id', 'user_ids', 'field_ids', 'view'))]),
     }
 
     def _get_default_field_ids(self, cr, uid, context=None):
         return self.pool.get('ir.model.fields').search(cr, uid, [
             ('model', '=', 'res.users'),
-            ('name', 'in', ('action_id', 'menu_id', 'groups_id', 'view')),
+            ('name', 'in', ('action_id', 'menu_id', 'groups_id')),
         ], context=context)
 
     _defaults = {
