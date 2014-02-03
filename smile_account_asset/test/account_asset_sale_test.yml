@@ -4,14 +4,21 @@
   !python {model: account.fiscalyear}: |
     import time
     year = int(time.strftime('%Y')) + 1
-    fiscalyear_id = self.create(cr, uid, {
-      'company_id': ref('base.main_company'),
-      'name': 'Fiscal Year %s' % year,
-      'code': 'FY%s' % year,
-      'date_start': '%s-01-01' % year,
-      'date_stop': '%s-12-31' % year,
-    }, context)
-    self.create_period(cr, uid, [fiscalyear_id], context)
+    today = time.strftime('%Y-%m-%d')
+    domain = [
+      ('company_id', '=', ref('base.main_company')),
+      ('date_start', '<=', today),
+      ('date_stop', '>=', today),
+    ]
+    if not self.search(cr, uid, domain, context=context):
+      fiscalyear_id = self.create(cr, uid, {
+        'company_id': ref('base.main_company'),
+        'name': 'Fiscal Year %s' % year,
+        'code': 'FY%s' % year,
+        'date_start': '%s-01-01' % year,
+        'date_stop': '%s-12-31' % year,
+      }, context)
+      self.create_period(cr, uid, [fiscalyear_id], context)
 -
   I sell asset "account_asset_asset_digitalasset0"
 -

@@ -15,4 +15,6 @@
   !python {model: account.asset.asset}: |
     asset = self.browse(cr, uid, ref('account_asset_asset_digitalasset0'), context)
     depreciation_end_date = asset.accounting_depreciation_line_ids[-1].depreciation_date
-    assert depreciation_end_date == '2017-12-31', "Depreciation End Date is wrong"
+    import time
+    end_date = '%s-12-31' % (int(time.strftime('%Y')) + 4)
+    assert depreciation_end_date == end_date, "Depreciation End Date is wrong"
