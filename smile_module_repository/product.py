@@ -36,12 +36,13 @@ class ProductCategory(orm.Model):
     _inherit = 'product.category'
 
     def get_db_id(self, cr, uid, name, context=None):
+        ir_model_data_obj = self.pool.get('ir.model.data')
         if not name:
-            return False
+            return ir_model_data_obj.get_object_reference(cr, uid, 'smile_module_repository', 'product_category_unknown')[1]
         ids = self.search(cr, uid, [('name', '=', name)], limit=1, context=context)
         if ids:
             return ids[0]
-        parent_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'smile_module_repository', 'product_category_modules')[1]
+        parent_id = ir_model_data_obj.get_object_reference(cr, uid, 'smile_module_repository', 'product_category_modules')[1]
         return self.create(cr, uid, {'name': name, 'parent_id': parent_id}, context)
 
 
