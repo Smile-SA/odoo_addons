@@ -19,9 +19,6 @@
 #
 ##############################################################################
 
-import os
-import time
-
 from openerp.osv import orm, fields
 
 
@@ -30,16 +27,12 @@ class SmileLog(orm.Model):
     _description = 'Smile Logs'
     _rec_name = 'message'
     _log_access = False
-
     _order = 'log_date desc'
 
     def __init__(self, pool, cr):
         super(SmileLog, self).__init__(pool, cr)
-        cr.execute("select relname from pg_class where relname='smile_log_seq'")
-        res = cr.fetchone()
-        if not res:
-            cr.execute("create sequence smile_log_seq")
-        else:
+        cr.execute("select relname from pg_class where relname='smile_log'")
+        if cr.rowcount:
             from db_handler import SmileDBLogger
             logger = SmileDBLogger(cr.dbname, '', 0, 0)
             logger.info('OpenERP server start')

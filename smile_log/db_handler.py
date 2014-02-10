@@ -91,7 +91,7 @@ def add_trace(original_method):
     def new_method(self, msg):
         stack = traceback.format_exc()
         stack = stack.replace('%', '%%')
-        msg += '\n%s' % stack
+        msg += '\n%s' % stack.decode('utf-8')
         return original_method(self, msg)
     return new_method
 
@@ -106,6 +106,9 @@ class SmileDBLogger():
         pid = 0
         try:
             cr = db.cursor()
+            cr.execute("select relname from pg_class where relname='smile_log_seq'")
+            if not cr.rowcount:
+                cr.execute("create sequence smile_log_seq")
             cr.execute("select nextval('smile_log_seq')")
             res = cr.fetchone()
             pid = res and res[0] or 0
