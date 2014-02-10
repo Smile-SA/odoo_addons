@@ -2,7 +2,7 @@
 <openerp>
 	<data noupdate="0">
 
-	<record id="base.user_admin" model="res.users">
+	<record id="base.user_root" model="res.users">
 		<field name="sso" eval="False"/>
 	</record>
 
