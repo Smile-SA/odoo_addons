@@ -19,11 +19,26 @@
 #
 ##############################################################################
 
-import ir_values
-import ir_translation
-import orm
-import registry
-import sql_db
-import tools
-import update
-import web_services
+import logging
+import time
+
+from openerp.tools import config
+from openerp.sql_db import Cursor
+
+_logger = logging.getLogger('openerp.smile_detective')
+
+
+def smile_sql_detective(min_delay):
+    def detective_log(dispatch_func):
+        def detective_execute(self, query, params=None, log_exceptions=True):
+            start = time.time()
+            result = dispatch_func(self, query, params, log_exceptions)
+            delay = time.time() - start
+            if delay > min_delay:
+                _logger.info(u"SQL_BD:%s SQL_QUERY:%s SQL_PARAMS:%s SQL_TIMER:%s" % (self.dbname, query, params, delay * 1000.0,))
+            return result
+        return detective_execute
+    return detective_log
+
+
+Cursor.execute = smile_sql_detective(config.get('log_sql_request', 0.150))(Cursor.execute)

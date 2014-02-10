@@ -22,7 +22,6 @@
         'key': 'default',
         'key2': False,
         'model': 'res.partner',
-        'object': False,
         'value_unpickle': 'fr_FR',
       }
       if ids:

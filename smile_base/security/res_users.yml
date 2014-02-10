@@ -1,0 +1,5 @@
+-
+  I add "Technical features" group to admin user
+-
+  !record {model: res.users, id: base.user_root, view: False}:
+    groups_id: [(4, ref('base.group_no_one'))]

@@ -45,6 +45,7 @@
     "category": 'Tools',
     "sequence": 20,
     "init_xml": [
+#         "security/res_users.yml",
         "data/mail_data.xml",
         "data/ir_lang.yml",
         "view/ir_values_view.xml",

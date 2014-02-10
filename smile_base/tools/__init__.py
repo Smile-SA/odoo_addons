@@ -19,11 +19,5 @@
 #
 ##############################################################################
 
-import ir_values
-import ir_translation
-import orm
-import registry
-import sql_db
-import tools
-import update
+import ir_model
 import web_services
