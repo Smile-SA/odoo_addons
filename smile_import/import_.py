@@ -28,6 +28,11 @@ from openerp import pooler, tools
 from openerp.addons.smile_log.db_handler import SmileDBLogger
 
 
+def _get_exception_message(exception):
+    msg = isinstance(exception, except_orm) and exception.value or exception
+    return tools.ustr(msg)
+
+
 class IrModelImportTemplate(orm.Model):
     _name = 'ir.model.import.template'
     _description = 'Import Template'
@@ -47,10 +52,10 @@ class IrModelImportTemplate(orm.Model):
         """
         context used to specify:
          - import_error_management: 'rollback_and_continue' or 'raise' (default='raise', see _process function)
-         - commit_and_new_thread: True/False (default=False)
-         if commit_and_new_thread = True, import_error_management is forced to rollback_and_continue
-
-        returns a dict: {'template_id1': import_id1, ...}
+         - rollback_and_continue: True/False (default=True)
+         - commit_and_new_thread: True/False (default=False) = rollback_and_continue but in a new thread
+         if commit_and_new_thread or rollback_and_continue= True, import_error_management is forced to rollback_and_continue
+        returns a list: [import_id1, ...]
         """
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -59,32 +64,35 @@ class IrModelImportTemplate(orm.Model):
 
         import_name = context.get('import_name', '')
         test_mode = context.get('test_mode', False)
-        commit_and_new_thread = context.get('commit_and_new_thread', False)
 
-        result = {}
-
+        import_ids = []
         for template in self.browse(cr, uid, ids, context):
-            import_name = import_name or template.name
-
-            logger = SmileDBLogger(cr.dbname, 'ir.model.import.template', template.id, uid)
-            import_id = import_obj.create(cr, uid, {
-                'name': import_name,
-                'import_tmpl_id': template.id,
-                'test_mode': test_mode,
-                'pid': logger.pid,
-                'state': 'started',
-                'from_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-            }, context)
-
-            result[template.id] = import_id
-
-            if commit_and_new_thread:
-                cr.commit()
-                t = threading.Thread(target=import_obj._process_with_new_cursor, args=(cr.dbname, uid, import_id, logger, context))
-                t.start()
-            else:
-                import_obj._process_import(cr, uid, import_id, logger, context)
-        return result
+            tmpl_logger = SmileDBLogger(cr.dbname, 'ir.model.import.template', template.id, uid)
+            try:
+                import_name = import_name or template.name
+                import_id = import_obj.create(cr, uid, {
+                    'name': import_name,
+                    'import_tmpl_id': template.id,
+                    'test_mode': test_mode,
+                    'state': 'started',
+                    'from_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                }, context)
+                import_ids.append(import_id)
+                logger = SmileDBLogger(cr.dbname, 'ir.model.import', import_id, uid)
+                import_obj.write(cr, uid, import_id, {'pid': logger.pid}, context)
+                if context.get('commit_and_new_thread'):
+                    cr.commit()
+                    t = threading.Thread(target=import_obj._process_with_new_cursor, args=(cr.dbname, uid, import_id, logger, context))
+                    t.start()
+                elif context.get('rollback_and_continue', True):
+                    cr.commit()
+                    import_obj._process_with_new_cursor(cr.dbname, uid, import_id, logger, context)
+                else:
+                    import_obj._process_import(cr, uid, import_id, logger, context)
+            except Exception, e:
+                tmpl_logger.error(_get_exception_message(e))
+                raise e
+        return import_ids
 
     def create_cron(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -132,13 +140,12 @@ STATES = [
 class IrModelImport(orm.Model):
     _name = 'ir.model.import'
     _description = 'Import'
-
     _order = 'from_date desc'
 
     def _get_logs(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for import_ in self.browse(cr, uid, ids, context):
-            result[import_.id] = self.pool.get('smile.log').search(cr, uid, [('model_name', '=', 'ir.model.import.template'),
+            result[import_.id] = self.pool.get('smile.log').search(cr, uid, [('model_name', '=', 'ir.model.import'),
                                                                              ('pid', '=', import_.pid)], context=context)
         return result
 
@@ -165,38 +172,29 @@ class IrModelImport(orm.Model):
         context['logger'] = logger
         context['import_id'] = import_id
 
-        error_management = context.get('import_error_management', 'raise')
-
         cr.execute('SAVEPOINT smile_import')
         try:
             model_obj = self.pool.get(import_.import_tmpl_id.model)
             if not model_obj:
                 raise Exception('Unknown model: %s' % (import_.import_tmpl_id.model,))
             model_method = import_.import_tmpl_id.method
-
             getattr(model_obj, model_method)(cr, uid, context)
+            return self.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
         except Exception, e:
-            if error_management == 'rollback_and_continue':
+            if context.get('import_error_management') == 'rollback_and_continue':
                 cr.execute("ROLLBACK TO SAVEPOINT smile_import")
-                logger.info("Import rollbacking")
+                logger.error("Import rollbacking - Error: %s" % _get_exception_message(e))
                 return self.write(cr, uid, import_id, {'state': 'exception', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
-            else:  # import_error_management = raise
-                raise e
+            logger.error("Import failed - Error: %s" % _get_exception_message(e))
+            raise e
         finally:
             if import_.test_mode:
                 cr.execute("ROLLBACK TO SAVEPOINT smile_import")
                 logger.info("Test mode On: Import rollbacking: %s" % (import_id,))
 
-        try:
-            return self.write(cr, uid, import_id, {'state': 'done', 'to_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context)
-        except Exception, e:
-            logger.error("Could not mark import %s as done: %s" % (import_id, tools.ustr(repr(e))))
-            raise e
-
     def _process_with_new_cursor(self, dbname, uid, import_id, logger, context):
         db = pooler.get_db(dbname)
         cr = db.cursor()
-
         context['import_error_management'] = 'rollback_and_continue'
         try:
             self._process_import(cr, uid, import_id, logger, context)
@@ -211,6 +209,7 @@ class IrModelImportLine(orm.Model):
     _name = 'ir.model.import.line'
     _description = 'Import Line'
     _rec_name = 'import_id'
+    _order = 'import_id desc'
 
     def _get_resource_label(self, cr, uid, ids, name, args, context=None):
         """ get the resource label using the name_get function of the imported model
@@ -244,8 +243,6 @@ class IrModelImportLine(orm.Model):
         'res_id': fields.integer('Resource ID', required=True),
         'res_label': fields.function(_get_resource_label, method=True, type='char', size=256, string="Resource label"),
     }
-
-    _order = 'import_id desc'
 
     _defaults = {
         'sum': 1,
