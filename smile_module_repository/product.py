@@ -66,7 +66,7 @@ class ProductProduct(orm.Model):
         res = {}.fromkeys(ids, '')
         for product in self.browse(cr, uid, ids, context):
             overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
-            output = publish_string(source=product.description, settings_overrides=overrides, writer=MyWriter())
+            output = publish_string(source=product.description or '', settings_overrides=overrides, writer=MyWriter())
             res[product.id] = output
         return res
 
