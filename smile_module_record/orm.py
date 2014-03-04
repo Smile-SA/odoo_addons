@@ -34,4 +34,20 @@ def get_fields_to_export(self):
     return fields_to_export
 
 
+def _order_by_parent(self, cr, uid, ids, context=None):
+    if self._parent_name in self._columns:
+        res_by_parent = {}
+        for res in self.browse(cr, uid, ids, context):
+            res_by_parent.setdefault(getattr(res, self._parent_name).id, []).append(res.id)
+        ordered_ids = res_by_parent[False]
+        ids = list(set(ids) - set(ordered_ids))
+        while ids:
+            for parent_id in res_by_parent:
+                if parent_id in ordered_ids:
+                    ordered_ids.extend(res_by_parent[parent_id])
+            ids = list(set(ids) - set(ordered_ids))
+        ids = ordered_ids
+    return ids
+
 orm.Model.get_fields_to_export = get_fields_to_export
+orm.Model._order_by_parent = _order_by_parent
