@@ -43,7 +43,8 @@ class IrModel(orm.Model):
     def get_model_graph(self, cr, uid, ids, context=None):
         "TODO: rename this method"
         ordered_models = []
-        models = [model.model for model in self.browse(cr, uid, ids, context)]
+        models = [model.model for model in self.browse(cr, uid, ids, context)
+                  if self.pool.get(model.model)._auto and hasattr(self.pool.get(model.model), 'get_fields_to_export')]
 
         required_linked_models = self._get_linked_models(models, required=True)
         while required_linked_models:
