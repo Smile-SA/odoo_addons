@@ -101,7 +101,8 @@ class BaseModuleRecord(orm.TransientModel):
         for index, (model, fields_to_export) in enumerate(datas):
             res_obj = self.pool.get(model)
             res_ids = res_obj.search(cr, uid, res_obj._log_access and domain or [], context=context)
-            res_ids = res_obj._order_by_parent(cr, uid, res_ids, context)
+            if 'parent_left' in res_obj._columns:
+                res_ids = res_obj.search(cr, uid,  [('id', 'in', res_ids)], order='parent_left', context=context)
             res_ids_by_model[model] = res_ids
             rows = [fields_to_export]
             rows.extend(res_obj.export_data(cr, uid, res_ids, fields_to_export, context)['datas'])
