@@ -1,0 +1,188 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_import
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-11 11:01+0000\n"
+"PO-Revision-Date: 2014-03-11 11:01+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_import
+#: field:ir.model.import.line,res_id:0
+msgid "Resource ID"
+msgstr "Id de la ressource"
+
+#. module: smile_import
+#: field:ir.model.import.line,sum:0
+msgid "Sum"
+msgstr "Somme"
+
+#. module: smile_import
+#: view:ir.model.import.template:0
+msgid "Search"
+msgstr "Rechercher"
+
+#. module: smile_import
+#: help:ir.model.import.template,method:0
+msgid "Arguments passed through **kwargs"
+msgstr "Arguments passés au travers **kwargs"
+
+#. module: smile_import
+#: field:ir.model.import,state:0
+msgid "State"
+msgstr "Etat"
+
+#. module: smile_import
+#: view:ir.model.import.template:0
+msgid "Trigger"
+msgstr "Déclencheur"
+
+#. module: smile_import
+#: field:ir.model.import,import_tmpl_id:0
+msgid "Template"
+msgstr "Modèle"
+
+#. module: smile_import
+#: model:res.groups,name:smile_import.group_smile_import_manager
+msgid "Smile import / Manager"
+msgstr "Smile import / Manager"
+
+#. module: smile_import
+#: model:ir.model,name:smile_import.model_ir_model_import
+#: view:ir.model.import:0
+#: field:ir.model.import.line,import_id:0
+#: view:ir.model.import.template:0
+msgid "Import"
+msgstr "Import"
+
+#. module: smile_import
+#: model:ir.model,name:smile_import.model_ir_model_import_line
+msgid "Import Line"
+msgstr "Ligne d'import"
+
+#. module: smile_import
+#: view:ir.model.import.template:0
+msgid "Create Scheduled Action"
+msgstr "Créer une action planifiée"
+
+#. module: smile_import
+#: field:ir.model.import,create_date:0
+msgid "Creation Date"
+msgstr "Créé le"
+
+#. module: smile_import
+#: field:ir.model.import.template,model_id:0
+msgid "Object"
+msgstr "Objet"
+
+#. module: smile_import
+#: field:ir.model.import.template,method:0
+msgid "Method"
+msgstr "Méthode"
+
+#. module: smile_import
+#: field:ir.model.import.line,res_label:0
+msgid "Resource label"
+msgstr "Libellé de la ressource"
+
+#. module: smile_import
+#: field:ir.model.import,to_date:0
+msgid "End date"
+msgstr "Date de fin"
+
+#. module: smile_import
+#: field:ir.model.import,create_uid:0
+msgid "Creation User"
+msgstr "Créé par"
+
+#. module: smile_import
+#: view:ir.model.import.template:0
+msgid "New Import"
+msgstr "Nouvel import"
+
+#. module: smile_import
+#: view:ir.model.import.template:0
+msgid "Advanced"
+msgstr "Advancé"
+
+#. module: smile_import
+#: selection:ir.model.import,state:0
+msgid "Exception"
+msgstr "Exception"
+
+#. module: smile_import
+#: field:ir.model.import.template,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_import
+#: field:ir.model.import.template,server_action_id:0
+msgid "Server Action"
+msgstr "Action serveur"
+
+#. module: smile_import
+#: selection:ir.model.import,state:0
+msgid "Started"
+msgstr "Démarré"
+
+#. module: smile_import
+#: model:res.groups,name:smile_import.group_smile_import_user
+msgid "Smile import / User"
+msgstr "Smile import / Utilisateur"
+
+#. module: smile_import
+#: field:ir.model.import.line,model:0
+#: field:ir.model.import.template,model:0
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_import
+#: view:ir.model.import:0
+#: field:ir.model.import,log_ids:0
+#: view:ir.model.import.template:0
+#: field:ir.model.import.template,log_ids:0
+msgid "Logs"
+msgstr "Logs"
+
+#. module: smile_import
+#: model:ir.actions.act_window,name:smile_import.action_import_template
+#: view:ir.model.import:0
+#: view:ir.model.import.template:0
+#: field:ir.model.import.template,import_ids:0
+#: model:ir.ui.menu,name:smile_import.menu_import_template
+msgid "Imports"
+msgstr "Imports"
+
+#. module: smile_import
+#: field:ir.model.import.template,cron_id:0
+msgid "Scheduled Action"
+msgstr "Action planifiée"
+
+#. module: smile_import
+#: selection:ir.model.import,state:0
+msgid "Done"
+msgstr "Réalisé"
+
+#. module: smile_import
+#: field:ir.model.import,from_date:0
+msgid "Start date"
+msgstr "Date de début"
+
+#. module: smile_import
+#: model:ir.model,name:smile_import.model_ir_model_import_template
+msgid "Import Template"
+msgstr "Modèle d'import"
+
+#. module: smile_import
+#: field:ir.model.import,test_mode:0
+msgid "Test Mode"
+msgstr "Mode de test"
+

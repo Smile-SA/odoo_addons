@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1\n"
+"Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-30 10:35+0000\n"
-"PO-Revision-Date: 2012-08-30 10:35+0000\n"
+"POT-Creation-Date: 2014-03-11 11:04+0000\n"
+"PO-Revision-Date: 2014-03-11 11:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,99 +16,34 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: smile_export
-#: field:ir.model.export,action_id:0
-#: field:ir.model.export.template,action_id:0
-msgid "Action"
-msgstr "Action"
-
-#. module: smile_export
-#: view:ir.model.export.template:0
-msgid "Actions"
-msgstr "Actions"
-
-#. module: smile_export
-#: view:ir.model.export.template:0
-msgid "Advanced"
-msgstr "Avancé"
-
-#. module: smile_export
-#: code:addons/smile_export/export.py:80
-#, python-format
-msgid "Can't find method: %s on object: %s"
-msgstr "Impossible de trouver la méthode: %s sur l'objet %s"
-
-#. module: smile_export
 #: field:ir.model.export.template,client_action_id:0
 msgid "Client Action"
 msgstr "Action client"
 
 #. module: smile_export
+#: field:ir.model.export.line,res_id:0
+msgid "Resource ID"
+msgstr "Id de la ressource"
+
+#. module: smile_export
+#: help:ir.model.export.template,filter_method:0
+msgid "signature: method(cr, uid, context)"
+msgstr "signature: method(cr, uid, context)"
+
+#. module: smile_export
+#: field:ir.model.export.line,sum:0
+msgid "Sum"
+msgstr "Somme"
+
+#. module: smile_export
+#: view:ir.model.export.template:0
+msgid "Search"
+msgstr "Rechercher"
+
+#. module: smile_export
 #: field:ir.model.export.template,client_action_server_id:0
 msgid "Client Action Server"
-msgstr "Serveur d'action client"
-
-#. module: smile_export
-#: view:ir.model.export.template:0
-msgid "Create Client Action"
-msgstr "Créer une action client"
-
-#. module: smile_export
-#: view:ir.model.export.template:0
-msgid "Delete Client Action"
-msgstr "Supprimer l'action client"
-
-#. module: smile_export
-#: view:ir.model.export.template:0
-msgid "Create Scheduled Action"
-msgstr "Créer une action planifiée"
-
-#. module: smile_export
-#: field:ir.model.export,create_date:0
-msgid "Creation Date"
-msgstr "Date de création"
-
-#. module: smile_export
-#: field:ir.model.export,create_uid:0
-msgid "Creation User"
-msgstr "Créer par"
-
-#. module: smile_export
-#: field:ir.model.export,domain:0
-#: selection:ir.model.export.template,filter_type:0
-msgid "Domain"
-msgstr "Domaine"
-
-#. module: smile_export
-#: selection:ir.model.export,state:0
-msgid "Done"
-msgstr "Réalisé"
-
-#. module: smile_export
-#: code:addons/smile_export/export.py:72
-#: code:addons/smile_export/export.py:80
-#: code:addons/smile_export/export.py:96
-#, python-format
-msgid "Error"
-msgstr "Erreur"
-
-#. module: smile_export
-#: field:ir.model.export,exception:0
-#: selection:ir.model.export,state:0
-msgid "Exception"
-msgstr "Exception"
-
-#. module: smile_export
-#: model:ir.model,name:smile_export.model_ir_model_export
-#: field:ir.model.export.line,export_id:0
-#: view:ir.model.export.template:0
-#: model:ir.module.module,shortdesc:smile_export.module_meta_information
-msgid "Export"
-msgstr "Export"
-
-#. module: smile_export
-#: model:ir.model,name:smile_export.model_ir_model_export_line
-msgid "Export Line"
-msgstr "Lignes exportées"
+msgstr "Action serveur"
 
 #. module: smile_export
 #: model:ir.model,name:smile_export.model_ir_model_export_template
@@ -116,102 +51,14 @@ msgid "Export Template"
 msgstr "Modèle d'export"
 
 #. module: smile_export
-#: model:ir.module.module,description:smile_export.module_meta_information
-msgid "Export whatever objects\n"
-"\n"
-"Principle\n"
-"\n"
-"* Define an export template\n"
-"    * choose a object\n"
-"    * define a domain to filter lines to export\n"
-"    * indicate if a line can be export only once or several times\n"
-"* Create actions to generate a new export\n"
-"    * a client action to generate a export in fly\n"
-"    * a scheduled action to generate periodically a new export\n"
-"* Log execution exceptions\n"
-"\n"
-"Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr\n"
-""
-msgstr "Exporter n'importe quel objet\n"
-"\n"
-"Principes\n"
-"\n"
-"* Definir un modèle d'export\n"
-"    * choisir un objet\n"
-"    * définir un domaine pour filtrer les lignes à exporter\n"
-"    * indiquer si une ligne peut être exportée juste une fois ou plusieurs fois\n"
-"* Créer les actions pour générer un nouvel export\n"
-"    * une action client pour générer un export à la volée\n"
-"    * une action planifiée pour générer périodiquement un nouvel export\n"
-"* Log des errerus lors de l'exécution\n"
-"\n"
-"Suggestions & Retours à : corentin.pouhet-brunerie@smile.fr\n"
-""
-
-#. module: smile_export
-#: model:ir.actions.act_window,name:smile_export.action_export_template
-#: model:ir.actions.act_window,name:smile_export.action_exports_from_template
 #: view:ir.model.export.template:0
-#: field:ir.model.export.template,export_ids:0
-#: model:ir.ui.menu,name:smile_export.menu_export_template
-#: model:ir.ui.menu,name:smile_export.menu_exports
-msgid "Exports"
-msgstr "Exports"
+msgid "Create Client Action"
+msgstr "Créer une action client"
 
 #. module: smile_export
-#: field:ir.model.export.template,domain:0
-msgid "Filter domain"
-msgstr "Domaine pour filtrer"
-
-#. module: smile_export
-#: field:ir.model.export.template,filter_method:0
-#: field:ir.model.export.template,filter_type:0
-msgid "Filter method"
-msgstr "Méthode pour filtrer"
-
-#. module: smile_export
-#: view:ir.model.export.template:0
-msgid "Filters"
-msgstr "Filtres"
-
-#. module: smile_export
-#: help:ir.model.export.template,unique:0
-msgid "If unique, each instance is exported only once"
-msgstr "Si unique, chaque instance n'est exportée qu'une fois"
-
-#. module: smile_export
-#: help:ir.model.export.template,method:0
-msgid "Indicate a method with a signature equals to (self, cr, uid, ids, *args, context=None)"
-msgstr "Indiquer une méthode avec une signature égale à (self, cr, uid, ids, *args, context=None)"
-
-#. module: smile_export
-#: field:ir.model.export,limit:0
-#: field:ir.model.export.template,limit:0
-msgid "Limit"
-msgstr "Limite"
-
-#. module: smile_export
-#: field:ir.model.export,line_ids:0
-#: view:ir.model.export.template:0
-msgid "Lines"
-msgstr "Lignes"
-
-#. module: smile_export
-#: view:ir.model.export.template:0
-msgid "Log"
-msgstr "Log"
-
-#. module: smile_export
-#: field:ir.model.export,log_ids:0
-#: view:ir.model.export.template:0
-#: field:ir.model.export.template,log_ids:0
-msgid "Logs"
-msgstr "Logs"
-
-#. module: smile_export
-#: field:ir.model.export.template,max_offset:0
-msgid "Max Offset"
-msgstr "Offset maximal"
+#: field:ir.model.export,export_tmpl_id:0
+msgid "Template"
+msgstr "Modèle"
 
 #. module: smile_export
 #: field:ir.model.export,method:0
@@ -221,21 +68,41 @@ msgid "Method"
 msgstr "Méthode"
 
 #. module: smile_export
-#: field:ir.model.export,model:0
-#: field:ir.model.export.line,model:0
-#: field:ir.model.export.template,model:0
-msgid "Model"
-msgstr "Modèle"
+#: view:ir.model.export:0
+msgid "Resources"
+msgstr "Ressources"
 
 #. module: smile_export
-#: field:ir.model.export.template,name:0
-msgid "Name"
-msgstr "Nom"
-
-#. module: smile_export
+#: model:ir.actions.act_window,name:smile_export.action_export_template
+#: model:ir.actions.act_window,name:smile_export.action_exports
+#: model:ir.actions.act_window,name:smile_export.action_exports_from_template
+#: view:ir.model.export:0
 #: view:ir.model.export.template:0
-msgid "New Export"
-msgstr "Nouvel export"
+#: field:ir.model.export.template,export_ids:0
+#: model:ir.ui.menu,name:smile_export.menu_export_template
+msgid "Exports"
+msgstr "Exports"
+
+#. module: smile_export
+#: field:ir.model.export.template,domain:0
+msgid "Filter domain"
+msgstr "Domaine pour filtrer"
+
+#. module: smile_export
+#: field:ir.model.export.template,force_execute_action:0
+msgid "Force Action Execution"
+msgstr "Forcer l'exécution de l'action"
+
+#. module: smile_export
+#: field:ir.model.export,create_date:0
+msgid "Creation Date"
+msgstr "Créé le"
+
+#. module: smile_export
+#: field:ir.model.export,link_resources:0
+#: field:ir.model.export.template,link_resources:0
+msgid "Link resources"
+msgstr "Lier les ressources"
 
 #. module: smile_export
 #: field:ir.model.export,model_id:0
@@ -244,9 +111,47 @@ msgid "Object"
 msgstr "Objet"
 
 #. module: smile_export
+#: field:ir.model.export.line,res_label:0
+msgid "Resource label"
+msgstr "Libellé de la ressource"
+
+#. module: smile_export
+#: selection:ir.model.export,state:0
+msgid "Running"
+msgstr "En cours"
+
+#. module: smile_export
+#: field:ir.model.export,create_uid:0
+msgid "Creation User"
+msgstr "Créé par"
+
+#. module: smile_export
 #: field:ir.model.export,offset:0
 msgid "Offset"
 msgstr "Offset"
+
+#. module: smile_export
+#: view:ir.model.export.template:0
+msgid "Delete Client Action"
+msgstr "Supprimer l'action client"
+
+#. module: smile_export
+#: model:ir.model,name:smile_export.model_ir_model_export
+#: view:ir.model.export:0
+#: field:ir.model.export.line,export_id:0
+#: view:ir.model.export.template:0
+msgid "Export"
+msgstr "Export"
+
+#. module: smile_export
+#: model:ir.model,name:smile_export.model_ir_model_export_line
+msgid "Export Line"
+msgstr "Lignes exportées"
+
+#. module: smile_export
+#: view:ir.model.export.template:0
+msgid "Advanced"
+msgstr "Avancé"
 
 #. module: smile_export
 #: field:ir.model.export,order:0
@@ -255,59 +160,87 @@ msgid "Order by"
 msgstr "Ordonné par"
 
 #. module: smile_export
-#: view:ir.model.export.template:0
-msgid "Re-generate"
-msgstr "Re-générer"
+#: field:ir.model.export,to_date:0
+msgid "End Date"
+msgstr "Date de fin"
 
 #. module: smile_export
-#: field:ir.model.export.line,res_id:0
-msgid "Resource ID"
-msgstr "Id de la ressource"
-
-#. module: smile_export
-#: field:ir.model.export.line,res_label:0
-msgid "Resource label"
-msgstr "Libellé de la ressource"
-
-#. module: smile_export
-#: view:ir.model.export.template:0
-msgid "Resources"
-msgstr "Ressources"
-
-#. module: smile_export
+#: field:ir.model.export,exception:0
 #: selection:ir.model.export,state:0
-msgid "Running"
-msgstr "En cours"
+msgid "Exception"
+msgstr "Exception"
 
 #. module: smile_export
-#: field:ir.model.export.template,cron_id:0
-msgid "Scheduled Action"
-msgstr "Action planifiée"
-
-#. module: smile_export
-#: view:ir.model.export.template:0
-msgid "Search"
-msgstr "Rechercher"
-
-#. module: smile_export
-#: field:ir.model.export,state:0
-msgid "State"
-msgstr "Etat"
-
-#. module: smile_export
-#: field:ir.model.export.line,sum:0
-msgid "Sum"
-msgstr "Somme"
-
-#. module: smile_export
-#: field:ir.model.export,export_tmpl_id:0
-msgid "Template"
-msgstr "Modèle"
+#: field:ir.model.export.template,name:0
+msgid "Name"
+msgstr "Nom"
 
 #. module: smile_export
 #: view:ir.model.export.template:0
 msgid "Triggers"
 msgstr "Déclencheurs"
+
+#. module: smile_export
+#: help:ir.model.export.template,force_execute_action:0
+msgid "Even if there are no resources to export"
+msgstr "Même s'il n'existe aucune ressource à exporter"
+
+#. module: smile_export
+#: view:ir.model.export:0
+#: field:ir.model.export,line_count:0
+#: field:ir.model.export,line_ids:0
+msgid "Lines"
+msgstr "Lignes"
+
+#. module: smile_export
+#: view:ir.model.export.template:0
+msgid "New Export"
+msgstr "Nouvel export"
+
+#. module: smile_export
+#: model:res.groups,name:smile_export.group_smile_export_user
+msgid "Smile export / User"
+msgstr "Smile export / Utilisateur"
+
+#. module: smile_export
+#: field:ir.model.export,limit:0
+#: field:ir.model.export.template,limit:0
+msgid "Limit"
+msgstr "Limite"
+
+#. module: smile_export
+#: field:ir.model.export.template,max_offset:0
+msgid "Max Offset"
+msgstr "Offset maximal"
+
+#. module: smile_export
+#: field:ir.model.export,action_id:0
+#: field:ir.model.export.template,action_id:0
+msgid "Action"
+msgstr "Action"
+
+#. module: smile_export
+#: view:ir.model.export.template:0
+msgid "Create Scheduled Action"
+msgstr "Créer une action planifiée"
+
+#. module: smile_export
+#: help:ir.model.export.template,unique:0
+msgid "If unique, each instance is exported only once"
+msgstr "Si unique, chaque instance n'est exportée qu'une fois"
+
+#. module: smile_export
+#: field:ir.model.export,model:0
+#: field:ir.model.export.line,model:0
+#: field:ir.model.export.template,model:0
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_export
+#: field:ir.model.export,domain:0
+#: selection:ir.model.export.template,filter_type:0
+msgid "Domain"
+msgstr "Domaine"
 
 #. module: smile_export
 #: field:ir.model.export,unique:0
@@ -316,29 +249,66 @@ msgid "Unique"
 msgstr "Unique"
 
 #. module: smile_export
-#: code:addons/smile_export/export.py:72
-#, python-format
-msgid "Unknown object: %s"
-msgstr "Objet inconnu : %s"
+#: field:ir.model.export.template,filter_method:0
+#: field:ir.model.export.template,filter_type:0
+msgid "Filter method"
+msgstr "Méthode pour filtrer"
 
 #. module: smile_export
-#: help:ir.model.export.template,filter_method:0
-msgid "signature: method(cr, uid, context)"
-msgstr "signature: method(cr, uid, context)"
+#: view:ir.model.export:0
+#: field:ir.model.export,log_ids:0
+#: view:ir.model.export.template:0
+#: field:ir.model.export.template,log_ids:0
+msgid "Logs"
+msgstr "Logs"
 
 #. module: smile_export
-#: code:addons/smile_export/export.py:96
-#, python-format
-msgid "unlink_res_ids: model(%s) does not match template model (%s, %s)"
-msgstr "unlink_res_ids: le modèle(%s) ne correspond pas au modèle (%s, %s)"
+#: field:ir.model.export,state:0
+msgid "State"
+msgstr "Etat"
 
 #. module: smile_export
-#: field:ir.model.export.template,force_execute_action:0
-msgid "Force Action Execution"
-msgstr "Forcer l'exécution de l'action"
+#: field:ir.model.export,resource_ids:0
+msgid "Resource Ids"
+msgstr "Ids des ressources"
 
 #. module: smile_export
-#: help:ir.model.export.template,force_execute_action:0
-msgid "Even if there are no resources to export"
-msgstr "Même s'il n'existe aucune ressource à exporter"
+#: view:ir.model.export:0
+msgid "Re-generate"
+msgstr "Re-générer"
+
+#. module: smile_export
+#: view:ir.model.export.template:0
+msgid "Actions"
+msgstr "Actions"
+
+#. module: smile_export
+#: field:ir.model.export.template,cron_id:0
+msgid "Scheduled Action"
+msgstr "Action planifiée"
+
+#. module: smile_export
+#: selection:ir.model.export,state:0
+msgid "Done"
+msgstr "Réalisé"
+
+#. module: smile_export
+#: help:ir.model.export.template,method:0
+msgid "Indicate a method with a signature equals to (self, cr, uid, ids, *args, context=None)"
+msgstr "Indiquer une méthode avec une signature égale à (self, cr, uid, ids, *args, context=None)"
+
+#. module: smile_export
+#: view:ir.model.export.template:0
+msgid "Filters"
+msgstr "Filtres"
+
+#. module: smile_export
+#: field:ir.model.export,from_date:0
+msgid "Start Date"
+msgstr "Date de début"
+
+#. module: smile_export
+#: model:res.groups,name:smile_export.group_smile_export_manager
+msgid "Smile export / Manager"
+msgstr "Smile export / Manager"
 

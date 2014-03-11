@@ -7,21 +7,23 @@
 		<record id="view_import_template_form" model="ir.ui.view">
 			<field name="name">ir.model.import.template.form</field>
 			<field name="model">ir.model.import.template</field>
-			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Import">
 					<field name="name" colspan="4"/>
 					<field name="model_id" />
 					<field name="method" />
-					<separator string="Trigger" colspan="4"/>
-					<field name="server_action_id" />
-					<button type="object" name="create_server_action" string="Create Server Action" colspan="2" attrs="{'readonly': [('server_action_id', '!=', False)]}"/>
                     <notebook colspan="4">
                         <page string="Imports">
-                            <field name="import_ids" colspan="4" nolabel="1"/>
+							<button type="object" name="create_import" string="New Import" colspan="4" context="{'commit_and_new_thread':True}"/>
+                            <field name="import_ids" colspan="4" nolabel="1" context="{'import_template_form_view': True}"/>
+                        </page>
+                        <page string="Advanced">
+							<separator string="Trigger" colspan="4"/>
+							<field name="cron_id" />
+							<button type="object" name="create_cron" string="Create Scheduled Action" colspan="2" attrs="{'readonly': [('cron_id', '!=', False)]}"/>
                         </page>
                         <page string="Logs">
-                            <field name="log_ids" colspan="4" nolabel="1"/>
+                            <field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}"/>
                         </page>
                     </notebook>
 				</form>
@@ -31,7 +33,6 @@
 		<record id="view_import_template_tree" model="ir.ui.view">
 			<field name="name">ir.model.import.template.tree</field>
 			<field name="model">ir.model.import.template</field>
-			<field name="type">tree</field>
 			<field name="priority">2</field>
 			<field name="arch" type="xml">
 				<tree string="Imports">
@@ -46,7 +47,6 @@
 		<record id="view_import_template_search" model="ir.ui.view">
 			<field name="name">ir.model.import.template.search</field>
 			<field name="model">ir.model.import.template</field>
-			<field name="type">search</field>
 			<field name="arch" type="xml">
 				<search string="Search">
 					<group col="6" colspan="4">
@@ -73,31 +73,17 @@
 		<record id="view_import_form" model="ir.ui.view">
 			<field name="name">ir.model.import.form</field>
 			<field name="model">ir.model.import</field>
-			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Import">
-					<field name="name" />
-					<field name="import_tmpl_id" />
+					<field name="import_tmpl_id" colspan="4" invisible="context.get('import_template_form_view')"/>
 					<field name="state" />
-					<field name="test_mode"/>
-                    <field name="pid"/>
-					
-					<newline/>
+					<field name="create_uid" />
 					<field name="from_date" />
+					<field name="create_date" />
 					<field name="to_date" />
+					<field name="test_mode"/>
 					<separator string="Logs" colspan="4"/>
-					<field name="log_ids" colspan="4" nolabel="1" mode="tree,form">
-						<tree string="Logs">
-							<field name="log_date" />
-							<field name="level" />
-							<field name="message" />
-						</tree>
-						<form string="Log">
-							<field name="log_date" />
-							<field name="level" />
-							<field name="message" colspan="4"/>
-						</form>
-					</field>
+					<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}"/>
 				</form>
 			</field>
 		</record>
@@ -105,17 +91,15 @@
 		<record id="view_import_tree" model="ir.ui.view">
 			<field name="name">ir.model.import.tree</field>
 			<field name="model">ir.model.import</field>
-			<field name="type">tree</field>
 			<field name="priority">2</field>
 			<field name="arch" type="xml">
 				<tree string="Imports">
-					<field name="name" />
-					<field name="state" />
-					<field name="import_tmpl_id" />
-					<field name="from_date" />
-					<field name="to_date" />
+					<field name="import_tmpl_id" invisible="context.get('import_template_form_view')"/>
+					<field name="create_date" />
+					<field name="create_uid" />
 					<field name="test_mode"/>
 					<field name="log_ids" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
