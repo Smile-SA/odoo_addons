@@ -45,6 +45,7 @@
     "category": 'Tools',
     "sequence": 20,
     "data": [
+        "security/base_security.xml",
         "security/res_users.yml",
         "data/mail_data.xml",
         "data/ir_lang.yml",
