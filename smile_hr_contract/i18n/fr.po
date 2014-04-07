@@ -30,3 +30,8 @@ msgstr "Deux contrats ne peuvent pas se chevaucher pour un même employé."
 msgid "Contract"
 msgstr "Contrat"
 
+#. module: hr
+#: model:ir.ui.menu,name:hr.hr.menu_hr_job_position
+msgid "Job Positions"
+msgstr "Postes"
+
