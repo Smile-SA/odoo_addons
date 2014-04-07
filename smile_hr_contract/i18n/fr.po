@@ -1,0 +1,32 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_hr_contract
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 8.0alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-04-07 21:28+0000\n"
+"PO-Revision-Date: 2014-04-07 21:28+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_hr_contract
+#: model:ir.model,name:smile_hr_contract.model_hr_employee
+msgid "Employee"
+msgstr "Employé"
+
+#. module: smile_hr_contract
+#: constraint:hr.contract:0
+msgid "A contract can't overlap another one with the same employee."
+msgstr "Deux contrats ne peuvent pas se chevaucher pour un même employé."
+
+#. module: smile_hr_contract
+#: model:ir.model,name:smile_hr_contract.model_hr_contract
+msgid "Contract"
+msgstr "Contrat"
+
