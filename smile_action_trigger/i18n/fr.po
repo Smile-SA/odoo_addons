@@ -1,0 +1,878 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_action_trigger
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-10-18 13:55+0000\n"
+"PO-Revision-Date: 2011-10-18 13:55+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_action_trigger
+#: field:sartre.operator,other_value_necessary:0
+msgid "Other Value Necessary"
+msgstr "Autre valeur obligatoire"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Extended..."
+msgstr "Etendu..."
+
+#. module: smile_action_trigger
+#: selection:sartre.operator,native_operator:0
+msgid "none"
+msgstr "aucun"
+
+#. module: smile_action_trigger
+#: help:ir.actions.server,user_id:0
+msgid "If empty, the action is executed by the current user"
+msgstr "Si vide, l'action est exécutée par l'utilisateur courant"
+
+#. module: smile_action_trigger
+#: field:ir.actions.server,group_by:0
+msgid "Group by"
+msgstr "Grouper par"
+
+#. module: smile_action_trigger
+#: field:ir.actions.server,specific_thread:0
+msgid "Specific Thread"
+msgstr "Processus spécifique"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Group By..."
+msgstr "Grouper par..."
+
+#. module: smile_action_trigger
+#: field:sartre.execution,trigger_id:0
+#: field:sartre.filter,trigger_id:0
+msgid "Trigger"
+msgstr "Déclencheur"
+
+#. module: smile_action_trigger
+#: selection:sartre.filter,value_age:0
+msgid "Old Value"
+msgstr "Ancienne valeur"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,interval_type:0
+#: selection:sartre.trigger,on_date_range_type:0
+msgid "Weeks"
+msgstr "Semaines"
+
+#. module: smile_action_trigger
+#: help:sartre.trigger,on_other:0
+msgid "Only methods with an argument 'id' or 'ids' in their signatures"
+msgstr "Méthodes avec la signature suivante : self, cr, uid, ids, *args, **kwargs"
+
+#. module: smile_action_trigger
+#: help:ir.actions.server,group_by:0
+msgid "If run_once is set to True: instances are passed to the actions grouped with other instances having the same group_by evaluation"
+msgstr "Si cette case est cochée, les instances sont transmises groupées aux actions serveur"
+
+#. module: smile_action_trigger
+#: field:ir.model.methods,model_id:0
+#: field:sartre.execution,model_id:0
+#: view:sartre.trigger:0
+#: field:sartre.trigger,model_id:0
+msgid "Object"
+msgstr "Objet"
+
+#. module: smile_action_trigger
+#: field:sartre.operator,native_operator:0
+msgid "Native Operator"
+msgstr "Opérateur natif"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_date_range_type:0
+msgid "Delay Type"
+msgstr "Type de délai"
+
+#. module: smile_action_trigger
+#: view:sartre.operator:0
+msgid "Filter Operator"
+msgstr "Opérateur de filtrage"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Legends for static value"
+msgstr "Légendes pour les valeurs statiques"
+
+#. module: smile_action_trigger
+#: selection:sartre.operator,value_age_filter:0
+#: selection:sartre.trigger,on_function_type:0
+msgid "Both"
+msgstr "Les deux"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "on date"
+msgstr "sur date"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Trigger on function field"
+msgstr "Déclenchement sur un champs fonction"
+
+#. module: smile_action_trigger
+#: help:sartre.trigger,on_function_field_id:0
+msgid "Function, related or property field"
+msgstr "Champ fonction, relatif ou propriété"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,interval_type:0
+#: selection:sartre.trigger,on_date_range_type:0
+msgid "Days"
+msgstr "Jours"
+
+#. module: smile_action_trigger
+#: field:sartre.filter,value:0
+msgid "Value"
+msgstr "Valeur"
+
+#. module: smile_action_trigger
+#: selection:sartre.operator,native_operator:0
+msgid "greater than"
+msgstr "plus grand que"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Datetime Format - YYYY-MM-DD HH:MM:SS"
+msgstr "Format date et heure - AAAA-MM-JJ HH:MM:SS"
+
+#. module: smile_action_trigger
+#: code:addons/smile_action_trigger/sartre.py:661
+#, python-format
+msgid "The field %s is not in the model %s !"
+msgstr "Le champ %s n'est pas présent sur le modèle %s !"
+
+#. module: smile_action_trigger
+#: model:ir.model,name:smile_action_trigger.model_ir_model_methods
+msgid "Model Method"
+msgstr "Model Method"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,interval_type:0
+#: selection:sartre.trigger,on_date_range_type:0
+msgid "Work Days"
+msgstr "Jours ouvrés"
+
+#. module: smile_action_trigger
+#: field:sartre.filter,value_age:0
+msgid "Value Age"
+msgstr "Ancienneté de la valeur"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,interval_type:0
+#: selection:sartre.trigger,on_date_range_type:0
+msgid "Minutes"
+msgstr "Minutes"
+
+#. module: smile_action_trigger
+#: model:ir.module.module,description:smile_action_trigger.module_meta_information
+msgid "\n"
+"Concept\n"
+"\n"
+"* Give to functional users the possibility to create trigger rules for server actions\n"
+"* Make easier to technical users the application maintenance and scalability\n"
+"\n"
+"Principle\n"
+"\n"
+"A rule applies to a single object and is composed of:\n"
+"1. Triggers on\n"
+"    * object creation\n"
+"    * object update\n"
+"    * object deletion\n"
+"    * object date (creation date, last update date or another date)\n"
+"    * object function field recalculation (thus you can trigger the calculation of function fields on cascade)\n"
+"    * object methods (with an argument named id or ids in its signature)\n"
+"    * user login\n"
+"2. Filters\n"
+"    * operators: you can create your own operators (which apply to current or old field value)\n"
+"    * value age: current or old values if the rule trigger is the object update\n"
+"3. Actions\n"
+"    * all server action types: email (native or with poweremail), sms, object creation/update, etc\n"
+"	* run each action once per instance or once for all instances\n"
+"\n"
+"Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr\n"
+"    "
+msgstr "\n"
+"Concept\n"
+"\n"
+"* Give to functional users the possibility to create trigger rules for server actions\n"
+"* Make easier to technical users the application maintenance and scalability\n"
+"\n"
+"Principle\n"
+"\n"
+"A rule applies to a single object and is composed of:\n"
+"1. Triggers on\n"
+"    * object creation\n"
+"    * object update\n"
+"    * object deletion\n"
+"    * object date (creation date, last update date or another date)\n"
+"    * object function field recalculation (thus you can trigger the calculation of function fields on cascade)\n"
+"    * object methods (with an argument named id or ids in its signature)\n"
+"    * user login\n"
+"2. Filters\n"
+"    * operators: you can create your own operators (which apply to current or old field value)\n"
+"    * value age: current or old values if the rule trigger is the object update\n"
+"3. Actions\n"
+"    * all server action types: email (native or with poweremail), sms, object creation/update, etc\n"
+"	* run each action once per instance or once for all instances\n"
+"\n"
+"Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr\n"
+"    "
+
+#. module: smile_action_trigger
+#: selection:sartre.operator,native_operator:0
+msgid "child of"
+msgstr "fils de"
+
+#. module: smile_action_trigger
+#: field:sartre.filter,field_expression:0
+msgid "Expression to copy"
+msgstr "Expression à copier"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,pid_search:0
+msgid "Pid"
+msgstr "Pid"
+
+#. module: smile_action_trigger
+#: selection:sartre.operator,native_operator:0
+msgid "less than"
+msgstr "plus petit que"
+
+#. module: smile_action_trigger
+#: help:sartre.filter,value:0
+msgid "Dynamic value corresponds to an object field"
+msgstr "Une valeur dynamique correspond à un champ de l'objet"
+
+#. module: smile_action_trigger
+#: code:addons/smile_action_trigger/sartre.py:731
+#, python-format
+msgid "Action Trigger Execution: all arguments are mandatory !"
+msgstr "Execution du déclencheur: tous les arguments sont obligatoires !"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Trigger on other method"
+msgstr "Déclenchement sur une autre méthode de l'objet"
+
+#. module: smile_action_trigger
+#: field:sartre.filter,operator_id:0
+msgid "Operator"
+msgstr "Opérateur"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_date_type:0
+msgid "Trigger Date Type"
+msgstr "Type de date de déclenchement"
+
+#. module: smile_action_trigger
+#: field:ir.actions.server,active:0
+#: field:sartre.trigger,active:0
+msgid "Active"
+msgstr "Active"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_client_action:0
+#: field:sartre.trigger,on_client_action_id:0
+msgid "Client Action"
+msgstr "Action client"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,exception_handling:0
+msgid "Exception Handling"
+msgstr "Gestion des exceptions"
+
+#. module: smile_action_trigger
+#: selection:sartre.operator,native_operator:0
+msgid "contains (case-sensitive matching)"
+msgstr "contient (sensible à la casse)"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,on_date_type_display1:0
+msgid "Other Date"
+msgstr "Autre date"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Create Client Action"
+msgstr "Créer l'action client"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,exception_handling:0
+msgid "Rollback transaction"
+msgstr "Annuler la transaction"
+
+#. module: smile_action_trigger
+#: field:sartre.filter,value_age_readonly:0
+msgid "Value Age Readonly"
+msgstr "Value Age Readonly"
+
+#. module: smile_action_trigger
+#: field:sartre.execution,executions_number:0
+msgid "Executions"
+msgstr "Exécutions"
+
+#. module: smile_action_trigger
+#: field:ir.actions.server,force_rollback:0
+msgid "Force transaction rollback"
+msgstr "Forcer l'annulation de la transaction"
+
+#. module: smile_action_trigger
+#: code:addons/smile_action_trigger/sartre.py:248
+#, python-format
+msgid "Error !"
+msgstr "Erreur !"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_other:0
+msgid "Other method"
+msgstr "Autre méthode"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,on_date_type_display1:0
+msgid "Creation Date"
+msgstr "Date de création"
+
+#. module: smile_action_trigger
+#: model:sartre.trigger,exception_message:smile_action_trigger.sartre_trigger_partneremailchanges0
+msgid "Action failed. Please, contact your administrator."
+msgstr "Echec de l'action. Merci de contacter votre administrateur."
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Trigger on client action"
+msgstr "Déclencheur sur une action client"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,interval_type:0
+#: selection:sartre.trigger,on_date_range_type:0
+msgid "Hours"
+msgstr "Heures"
+
+#. module: smile_action_trigger
+#: help:sartre.operator,other_value_transformation:0
+msgid "Useful only for native operator"
+msgstr "Utile uniquement pour les opérateurs natifs"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,interval_type:0
+msgid "Interval Unit"
+msgstr "Unité d'intervalle"
+
+#. module: smile_action_trigger
+#: field:sartre.operator,other_value_transformation:0
+msgid "Value Transformation"
+msgstr "Transformation de la valeur"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,exception_warning:0
+msgid "None"
+msgstr "Aucune"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Run Now"
+msgstr "Lancer manuellement"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "other method"
+msgstr "autre méthode"
+
+#. module: smile_action_trigger
+#: help:sartre.trigger,executions_max_number:0
+msgid "Number of time actions are runned, indicates that actions will always be executed"
+msgstr "Nombre d'exécutions maximum de l'action"
+
+#. module: smile_action_trigger
+#: model:ir.model,name:smile_action_trigger.model_sartre_filter
+msgid "Action Trigger Filter"
+msgstr "Action Trigger Filter"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_function:0
+msgid "Function Field"
+msgstr "Champ fonction"
+
+#. module: smile_action_trigger
+#: selection:sartre.operator,native_operator:0
+msgid "contains (case-insensitive matching)"
+msgstr "contient (insensible à la casse)"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,interval_number:0
+msgid "Interval Number"
+msgstr "Intervalle"
+
+#. module: smile_action_trigger
+#: field:sartre.filter,domain:0
+#: view:sartre.trigger:0
+msgid "Domain"
+msgstr "Domaine"
+
+#. module: smile_action_trigger
+#: field:sartre.filter,value_type:0
+msgid "Value Type"
+msgstr "Type de la valeur"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+#: field:sartre.trigger,log_ids:0
+msgid "Logs"
+msgstr "Logs"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,on_function_type:0
+msgid "Manually"
+msgstr "Manuellement"
+
+#. module: smile_action_trigger
+#: code:addons/smile_action_trigger/sartre.py:548
+#, python-format
+msgid "%s\n"
+"[Pid: %s]"
+msgstr "%s\n"
+"[Pid: %s]"
+
+#. module: smile_action_trigger
+#: selection:sartre.filter,value_type:0
+msgid "Static"
+msgstr "Statique"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Time Format - HH:MM:SS"
+msgstr "Format de l'heure - HH:MM:SS"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,on_date_type_display1:0
+msgid "Update Date"
+msgstr "Date de dernière mise à jour"
+
+#. module: smile_action_trigger
+#: selection:sartre.operator,native_operator:0
+msgid "is equal to"
+msgstr "est égal à"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,on_date_range_operand:0
+msgid "Before"
+msgstr "Avant"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,test_mode:0
+msgid "Test Mode"
+msgstr "Mode test"
+
+#. module: smile_action_trigger
+#: field:sartre.operator,symbol:0
+msgid "Symbol"
+msgstr "Symbole"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Today - %today"
+msgstr "Aujourd'hui - %today"
+
+#. module: smile_action_trigger
+#: selection:sartre.filter,value_age:0
+msgid "Current Value"
+msgstr "Value actuelle"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,exception_warning:0
+msgid "Exception Warning"
+msgstr "Alerte"
+
+#. module: smile_action_trigger
+#: model:ir.model,name:smile_action_trigger.model_ir_actions_server
+msgid "ir.actions.server"
+msgstr "Actions serveur"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_write:0
+msgid "Update"
+msgstr "Mise à jour"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_unlink:0
+msgid "Deletion"
+msgstr "Suppression"
+
+#. module: smile_action_trigger
+#: model:ir.model,name:smile_action_trigger.model_sartre_trigger
+#: view:sartre.trigger:0
+msgid "Action Trigger"
+msgstr "Déclencheur d'action"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_other_method:0
+msgid "Method"
+msgstr "Methode"
+
+#. module: smile_action_trigger
+#: field:sartre.filter,opposite:0
+msgid "Opposite"
+msgstr "Opposé"
+
+#. module: smile_action_trigger
+#: view:sartre.operator:0
+msgid "Operators"
+msgstr "Opérateurs"
+
+#. module: smile_action_trigger
+#: field:ir.actions.server,run_once:0
+msgid "Run once for all instances"
+msgstr "Exécution groupée"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Trigger on date"
+msgstr "Déclenchement sur une date"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_date:0
+msgid "Date"
+msgstr "Date"
+
+#. module: smile_action_trigger
+#: field:ir.actions.server,user_id:0
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: smile_action_trigger
+#: model:ir.actions.act_window,name:smile_action_trigger.sartre_trigger_action
+#: model:ir.ui.menu,name:smile_action_trigger.sartre_trigger_menu
+#: view:sartre.trigger:0
+msgid "Triggers"
+msgstr "Déclencheurs"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,interval_type:0
+#: selection:sartre.trigger,on_date_range_type:0
+msgid "Months"
+msgstr "Mois"
+
+#. module: smile_action_trigger
+#: field:sartre.filter,field_id:0
+msgid "Field Builder"
+msgstr "Constructeur de champ"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,exception_message:0
+msgid "Exception Message"
+msgstr "Message d'erreur"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Filter"
+msgstr "Filtre"
+
+#. module: smile_action_trigger
+#: model:ir.model,name:smile_action_trigger.model_sartre_execution
+msgid "Action Trigger Execution"
+msgstr "Action Trigger Execution"
+
+#. module: smile_action_trigger
+#: code:addons/smile_action_trigger/sartre.py:548
+#: code:addons/smile_action_trigger/sartre.py:661
+#: code:addons/smile_action_trigger/sartre.py:667
+#: code:addons/smile_action_trigger/sartre.py:731
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,domain_force:0
+msgid "Force Domain"
+msgstr "Domaine forcé"
+
+#. module: smile_action_trigger
+#: field:sartre.operator,expression:0
+msgid "Expression"
+msgstr "Expression"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_date_range:0
+msgid "Delay"
+msgstr "Delai"
+
+#. module: smile_action_trigger
+#: help:sartre.trigger,domain_force:0
+msgid "Warning: using a Force domain makes all other filters useless"
+msgstr "Attention : l'utilisation d'un domaine forcé rend la liste de filtres inactive"
+
+#. module: smile_action_trigger
+#: help:ir.actions.server,run_once:0
+msgid "Works only from action triggers. If checked, the variable object is a browse record list"
+msgstr "Fonctionne uniquement à partir des déclencheurs d'actions. Si cochée, la variable object correspond à une liste de browse."
+
+#. module: smile_action_trigger
+#: selection:sartre.operator,value_age_filter:0
+msgid "Old"
+msgstr "Ancienne"
+
+#. module: smile_action_trigger
+#: field:sartre.filter,field_name:0
+msgid "Field"
+msgstr "Champ"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Date Format - YYYY-MM-DD"
+msgstr "Format de la date - AAAA-MM-JJ"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_date_type_display2_id:0
+msgid "Trigger Date Type 2"
+msgstr "Type de date 2"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_date_type_display1:0
+msgid "Trigger Date Type 1"
+msgstr "Type de date 1"
+
+#. module: smile_action_trigger
+#: model:ir.actions.act_window,name:smile_action_trigger.sartre_operator_action
+#: model:ir.ui.menu,name:smile_action_trigger.sartre_operator_menu
+#: view:sartre.operator:0
+msgid "Filter Operators"
+msgstr "Opérateurs"
+
+#. module: smile_action_trigger
+#: model:ir.actions.act_window,name:smile_action_trigger.sartre_category_action
+#: model:ir.ui.menu,name:smile_action_trigger.sartre_category_menu
+#: view:sartre.category:0
+msgid "Trigger Categories"
+msgstr "Catégories"
+
+#. module: smile_action_trigger
+#: code:addons/smile_action_trigger/sartre.py:248
+#, python-format
+msgid "Pid search field: please enter an integer"
+msgstr "Merci d'indiquer un entier"
+
+#. module: smile_action_trigger
+#: field:sartre.operator,value_age_filter:0
+msgid "Value Age Filter"
+msgstr "Filtre sur l'ancienneté de la valeur"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Trigger on create"
+msgstr "Déclenchement à la création"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Expression builder for field or dynamic value"
+msgstr "Constructeur d'expression pour remplir le champ ou la valeur dynamique"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_function_type:0
+msgid "updated"
+msgstr "Mis à jour"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,exception_warning:0
+msgid "Custom"
+msgstr "Personnalisée"
+
+#. module: smile_action_trigger
+#: selection:sartre.operator,value_age_filter:0
+msgid "Current"
+msgstr "Actuelle"
+
+#. module: smile_action_trigger
+#: model:ir.model,name:smile_action_trigger.model_sartre_operator
+msgid "Action Trigger Operator"
+msgstr "Opérateur de filtres de déclenchement"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "function field"
+msgstr "champ fonction"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,executions_max_number:0
+msgid "Max executions"
+msgstr "Nbre max d'éxecutions"
+
+#. module: smile_action_trigger
+#: selection:sartre.operator,native_operator:0
+msgid "in"
+msgstr "dans"
+
+#. module: smile_action_trigger
+#: field:ir.model.methods,name:0
+msgid "Method name"
+msgstr "Méthode"
+
+#. module: smile_action_trigger
+#: help:sartre.operator,opposite_symbol:0
+msgid "Opposite symbol for SQL filter"
+msgstr "Symbole de l'opposé en SQL"
+
+#. module: smile_action_trigger
+#: field:sartre.operator,opposite_symbol:0
+msgid "Opposite symbol"
+msgstr "Symbole de l'opposé"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,on_date_range_operand:0
+msgid "After"
+msgstr "Après"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Cron Execution Periodicity"
+msgstr "Périodicité d'exécution de l'action planifiée"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_date_range_operand:0
+msgid "Delay Operand"
+msgstr "Opérateur de délai"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "write"
+msgstr "Mise à jour"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "The rule is satisfied if all test are True (AND). Multiple triggers on same objects are joined using operator OR or force the domain by using the polish notation"
+msgstr "La règle est satisfaite unqiuement si tous les tests sont positifs (ET). L'utilisation de plusieurs déclencheurs permet de simuler l'opérateur OU. L'utilsation de la notation polonaise dans le domaine forcé permet de mariager directement ET et OU."
+
+#. module: smile_action_trigger
+#: field:sartre.execution,res_id:0
+msgid "Resource"
+msgstr "Ressource"
+
+#. module: smile_action_trigger
+#: field:sartre.operator,name:0
+#: field:sartre.category,name:0
+#: field:sartre.trigger,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_action_trigger
+#: model:ir.module.module,shortdesc:smile_action_trigger.module_meta_information
+msgid "Server Actions R* Trigger Rules Engine (aka Sartre)"
+msgstr "Server Actions R* Trigger Rules Engine (aka Sartre)"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,nextcall:0
+msgid "Next Call"
+msgstr "Prochain appel"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,exception_handling:0
+msgid "Ignore actions in exception"
+msgstr "Ignorer les actions en erreur"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Action Triggers"
+msgstr "Déclencheurs d'actions"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,model:0
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "unlink"
+msgstr "suppression"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_other_method_id:0
+msgid "Object method"
+msgstr "Méthode"
+
+#. module: smile_action_trigger
+#: selection:sartre.trigger,on_function_type:0
+msgid "Automatically"
+msgstr "Automatiquement"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,python_domain:0
+msgid "Python domain"
+msgstr "Domaine Python"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_create:0
+msgid "Creation"
+msgstr "Création"
+
+#. module: smile_action_trigger
+#: selection:sartre.filter,value_type:0
+msgid "Dynamic"
+msgstr "Dynamique"
+
+#. module: smile_action_trigger
+#: help:sartre.trigger,filter_ids:0
+msgid "The trigger is satisfied if all filters are True"
+msgstr "Les actions sont exécutées uniquement pour les ressources ayant validées l'ensemble des filtres"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+#: field:sartre.trigger,action_ids:0
+msgid "Actions"
+msgstr "Actions"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,on_function_field_id:0
+msgid "Function field"
+msgstr "Champ fonction"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+#: field:sartre.trigger,filter_ids:0
+msgid "Filters"
+msgstr "Filtres"
+
+#. module: smile_action_trigger
+#: view:sartre.trigger:0
+msgid "Force domain"
+msgstr "Domaine forcé"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,force_actions_execution:0
+msgid "Force actions execution when resources list is empty"
+msgstr "Forcer l'exécution des actions quand la liste des ressources est vide"
+
+#. module: smile_action_trigger
+#: field:sartre.trigger,category_id:0
+msgid "Category"
+msgstr "Catégorie"
+
+#. module: smile_action_trigger
+#: field:ir.actions.server,execution_type:0
+msgid "Execution"
+msgstr "Exécution"
+
+#. module: smile_action_trigger
+#: selection:ir.actions.server,execution_type:0
+msgid "Parallel"
+msgstr "Parallèle"
+
+#. module: smile_action_trigger
+#: selection:ir.actions.server,execution_type:0
+msgid "Sequential"
+msgstr "Séquentielle"
+
+#. module: smile_action_trigger
+#: selection:ir.actions.server,execution_type:0
+msgid "Locked"
+msgstr "Verrouillée"

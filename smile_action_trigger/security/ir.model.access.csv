@@ -1,0 +1,13 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"ir_model_access_sartre_category_group_system","Trigger Category","model_sartre_category","base.group_system",1,1,1,1
+"ir_model_access_sartre_trigger_group_system","Action Trigger","model_sartre_trigger","base.group_system",1,1,1,1
+"ir_model_access_sartre_trigger_filter_group_system","Trigger Filter","model_sartre_filter","base.group_system",1,1,1,1
+"ir_model_access_sartre_operator_group_system","Trigger Operator","model_sartre_operator","base.group_system",1,1,1,0
+"ir_model_access_sartre_execution_group_system","Trigger Execution","model_sartre_execution","base.group_system",1,1,1,1
+"ir_model_access_sartre_category_all","Trigger Category","model_sartre_category",,1,0,0,0
+"ir_model_access_sartre_trigger_all","Action Trigger","model_sartre_trigger",,1,0,0,0
+"ir_model_access_sartre_trigger_filter_all","Trigger Filter","model_sartre_filter",,1,0,0,0
+"ir_model_access_sartre_operator_all","Trigger Operator","model_sartre_operator",,1,0,0,0
+"ir_model_access_sartre_execution_all","Trigger Execution","model_sartre_execution",,1,1,1,0
+"ir_model_access_ir_model_methods_all","Model Methods","model_ir_model_methods",,1,0,1,0
+"ir_model_access_ir_actions_server_execution_all","Server Action Execution","model_ir_actions_server_execution",,1,1,1,0

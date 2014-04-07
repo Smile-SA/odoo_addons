@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="1">
+
+		<!-- Sequences for sartre.trigger -->
+		
+		<record id="seq_type_sartre_trigger" model="ir.sequence.type">
+			<field name="name">Smile Action Trigger</field>
+			<field name="code">sartre.trigger</field>
+		</record>
+
+		<record id="seq_sartre_trigger" model="ir.sequence">
+			<field name="name">Smile Action Trigger</field>
+			<field name="code">sartre.trigger</field>
+			<field name="prefix"></field>
+			<field name="padding">8</field>
+		</record>
+
+	</data>
+</openerp>
