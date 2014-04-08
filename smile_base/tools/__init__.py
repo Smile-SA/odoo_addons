@@ -20,4 +20,4 @@
 ##############################################################################
 
 import ir_model
-import web_services
+import service

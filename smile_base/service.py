@@ -25,7 +25,7 @@ import signal
 import time
 import uuid
 
-from openerp.tools import config
+from openerp.tools import config, misc
 from openerp import service
 from openerp.service import model, report
 
@@ -59,12 +59,11 @@ def smile_detective(min_delay):  # min_delay in seconds
 model.dispatch = smile_detective(config.get('log_service_object', 0.000))(model.dispatch)
 report.dispatch = smile_detective(config.get('log_service_report', 0.500))(report.dispatch)
 
-native_dumpstacks = signal.getsignal(signal.SIGQUIT)
+native_dumpstacks = misc.dumpstacks
 
 
 def smile_dumpstacks(sig, frame):
     _logger.info("\n".join(map(str, _requests.values())))
     native_dumpstacks(sig, frame)
 
-if os.name == 'posix':
-    signal.signal(signal.SIGQUIT, smile_dumpstacks)
+misc.dumpstacks = smile_dumpstacks
