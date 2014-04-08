@@ -36,14 +36,14 @@ _requests = service._requests
 
 def smile_detective(min_delay):  # min_delay in seconds
     def detective_log(dispatch_func):
-        def detective_dispatch(self, method, params):
+        def detective_dispatch(method, params):
             pid = uuid.uuid4()
             db, uid = params[0:2]
             param_str = repr(params[3:])
             start = time.time()
             _requests[pid] = (db, uid, method, param_str, start)
             try:
-                result = dispatch_func(self, method, params)
+                result = dispatch_func(method, params)
             finally:
                 del _requests[pid]
             delay = time.time() - start
