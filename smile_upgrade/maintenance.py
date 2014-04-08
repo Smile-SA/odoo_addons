@@ -21,7 +21,7 @@
 
 import logging
 
-from openerp import netsvc
+from openerp.service import model
 from openerp.addons.web.controllers.main import Home
 
 from openerp.addons.smile_upgrade.web.controllers import maintenance
@@ -42,12 +42,13 @@ class MaintenanceManager(object):
 
     def __init__(self):
         self.classic_home = Home.index
-        self.dispatch_rpc = netsvc.dispatch_rpc
+        self.model_dispatch = model.dispatch
 
     def start(self):
         Home.index = maintenance
-        netsvc.dispatch_rpc = kill_xmlrpc_services
+        model.dispatch = kill_xmlrpc_services
 
     def stop(self):
         Home.index = self.classic_home
-        netsvc.dispatch_rpc = self.dispatch_rpc
+        model.dispatch = self.model_dispatch
+
