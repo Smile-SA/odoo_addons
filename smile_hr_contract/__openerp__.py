@@ -34,6 +34,11 @@
     "website": "http://www.smile.fr",
     "category": 'Human Resources',
     "sequence": 20,
+    "data": [
+        "security/hr_contract_security.xml",
+        "security/ir.model.access.csv",
+        "view/hr_contract_view.xml",
+    ],
     "auto_install": True,
     "installable": True,
     "application": False,
