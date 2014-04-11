@@ -6,5 +6,9 @@
 			<field name="groups_id" eval="[(6, 0, [])]"/>
 		</record>
 
+		<record model="ir.ui.menu" id="hr.menu_hr_dashboard">
+			<field name="groups_id" eval="[(6, 0, [ref('base.group_hr_user')])]"/>
+		</record>
+
 	</data>
 </openerp>

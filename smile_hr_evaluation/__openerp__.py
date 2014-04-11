@@ -20,12 +20,12 @@
 ##############################################################################
 
 {
-    "name": "Contract Management",
+    "name": "Employee Appraisals",
     "version": "0.1",
-    "depends": ["hr_contract"],
+    "depends": ["hr_evaluation"],
     "author": "Smile",
     "description": """
-    This module improve employee contract management.
+    This module improve employee sppraisals.
 
     Suggestions & Feedback to: kevin.deldycke@smile.fr & corentin.pouhet-brunerie@smile.fr
     """,
@@ -33,9 +33,7 @@
     "category": 'Human Resources',
     "sequence": 20,
     "data": [
-        "security/hr_contract_security.xml",
-        "security/ir.model.access.csv",
-        "view/hr_contract_view.xml",
+        "view/hr_employee_view.xml",
     ],
     "auto_install": True,
     "installable": True,
