@@ -19,7 +19,12 @@
 #
 ##############################################################################
 
-import procurement
-import res_company
-import res_config
-import sale_stock
+from openerp.osv import fields, orm
+
+
+class ResCompany(orm.Model):
+    _inherit = 'res.company'
+
+    _columns = {
+        'picking_from_allotment_partner': fields.boolean('Generate a picking for each allotment partner'),
+    }

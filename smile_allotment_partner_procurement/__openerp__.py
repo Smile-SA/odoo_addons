@@ -44,6 +44,7 @@
     "update_xml": [
         "view/procurement_view.xml",
         "view/sale_view.xml",
+        "view/res_config_view.xml",
     ],
     'demo_xml': [],
     'test': [],

@@ -31,3 +31,15 @@ msgstr "Bénéficiaire"
 msgid "Sales Order"
 msgstr "Commande de ventes"
 
+#. module: smile_allotment_partner_procurement
+#: field:sale.order,picking_from_allotment_partner:0
+#: field:res.company,picking_from_allotment_partner:0
+#: field:sale.config.settings,picking_from_allotment_partner:0
+msgid "Generate a picking for each allotment partner"
+msgstr "Générer un bon de livraison pour chaque bénéficiaire"
+
+#. module: smile_allotment_partner_procurement
+#: view:sale.config.settings:0
+msgid "Logistic"
+msgstr "Logistique"
+

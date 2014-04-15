@@ -10,6 +10,9 @@
 	        	<field name="address_allotment_id" position="attributes">
 	            	<attribute name="groups">smile_allotment_partner_procurement.group_allotment_partner</attribute>
 	        	</field>
+                <field name="partner_shipping_id" position="after"/>
+	            	<field name="picking_from_allotment_partner" groups="smile_allotment_partner_procurement.group_allotment_partner"/>
+	        	</field>
 	        	<xpath expr="/form/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/tree/field[@name='name']" position="after">
 	            	<field name="address_allotment_id" groups="smile_allotment_partner_procurement.group_allotment_partner"/>
 	        	</xpath>

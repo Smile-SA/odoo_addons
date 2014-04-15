@@ -19,7 +19,19 @@
 #
 ##############################################################################
 
-import procurement
-import res_company
-import res_config
-import sale_stock
+from openerp.osv import fields, orm
+
+
+class SaleConfiguration(orm.TransientModel):
+    _inherit = 'sale.config.settings'
+
+    _columns = {
+        'picking_from_allotment_partner': fields.boolean('Generate a picking for each allotment partner',
+            implied_group='smile_allotment_partner_procurement.group_allotment_partner'),
+    }
+
+    def execute(self, cr, uid, ids, context=None):
+        installer = self.browse(cr, uid, ids[0], context)
+        company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
+        company.write({'picking_from_allotment_partner': installer.picking_from_allotment_partner})
+        return super(SaleConfiguration, self).execute(cr, uid, ids, context)
