@@ -27,7 +27,7 @@ class SaleConfiguration(orm.TransientModel):
 
     _columns = {
         'picking_from_allotment_partner': fields.boolean('Generate a picking for each allotment partner',
-            implied_group='smile_allotment_partner_procurement.group_allotment_partner'),
+                                                         implied_group='smile_allotment_partner_procurement.group_allotment_partner'),
     }
 
     def execute(self, cr, uid, ids, context=None):

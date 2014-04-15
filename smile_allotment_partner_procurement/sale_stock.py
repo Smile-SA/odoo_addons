@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp import netsvc
-from openerp.osv import orm
+from openerp.osv import orm, fields
 
 
 class SaleOrder(orm.Model):
