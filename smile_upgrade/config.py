@@ -57,7 +57,7 @@ class ConfigManager(object):
     def load(self):
         config_file = self.options.get('config_file')
         if not config_file:
-            pass
+            return
         config = ConfigParser.ConfigParser()
         try:
             config.readfp(open(config_file))
@@ -69,6 +69,6 @@ class ConfigManager(object):
                 if section != 'options':
                     _logger.warning("Only options section is taken into account in upgrades configuration")
         except (IOError, ConfigParser.NoSectionError):
-            pass
+            return
 
 configuration = ConfigManager()
