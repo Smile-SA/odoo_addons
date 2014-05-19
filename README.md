@@ -1,8 +1,9 @@
-Smile addons for OpenERP 8.0
+Smile addons for Odoo (formerly OpenERP)
 ========================
 
-This repository contains a collection of OpenERP modules in development.
+This repository contains a collection of Odoo modules.
 
 Requirements
+------------------------
 
-OpenERP 8.0.x
+Odoo 8.0
