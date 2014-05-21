@@ -26,6 +26,16 @@ from openerp.tools.translate import _
 class ResUsers(orm.Model):
     _inherit = 'res.users'
 
+    def _is_share(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for user in self.browse(cr, uid, ids, context):
+            res[user.id] = user.user_profile or not self.has_group(cr, user.id, 'base.group_user')
+        return res
+
+    def __init__(self, pool, cr):
+        super(ResUsers, self).__init__(pool, cr)
+        self._columns['share']._fnct = ResUsers._is_share
+
     _columns = {
         'user_profile': fields.boolean('Is User Profile'),
         'user_profile_id': fields.many2one('res.users', 'User Profile', domain=[('user_profile', '=', True)], context={'active_test': False}),
