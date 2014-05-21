@@ -10,6 +10,7 @@
 	        <field name="type">search</field>
 	        <field name="arch" type="xml">
 	            <search string="Asset Categories">
+					<field name="code"/>
 					<field name="name"/>
 					<field name="company_id" groups="base.group_multi_company"/>
 					<field name="accounting_method"/>
@@ -28,6 +29,7 @@
 	        <field name="type">tree</field>
 	        <field name="arch" type="xml">
 	            <tree string="Asset Categories">
+					<field name="code"/>
 					<field name="name"/>
 					<field name="company_id" groups="base.group_multi_company"/>
 					<field name="accounting_method"/>
@@ -43,7 +45,9 @@
 	        <field name="arch" type="xml">
 	            <form string="Asset Category">
 					<field name="name"/>
+					<field name="code"/>
 					<field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('asset_ids', '!=', False)]}"/>
+					<field name="active"/>
 					<newline/>
 					<field name="asset_class"/>
 					<field name="asset_in_progress" on_change="onchange_asset_in_progress(asset_in_progress)"/>

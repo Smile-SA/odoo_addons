@@ -105,6 +105,10 @@ class AccountAssetHistory(orm.Model):
         old_vals.update(self.pool.get('account.asset.asset').read(cr, uid, vals['asset_id'], self._get_fields_to_read(), context, '_classic_write'))
         del old_vals['id']
         new_vals = dict([(field, vals[field]) for field in self._get_fields_to_read() if field in vals])
+        for method_type in ('accounting', 'fiscal'):
+            if vals.get('%s_method' % method_type) == 'none':
+                old_vals['%s_annuities' % method_type] = 0
+                old_vals['%s_rate' % method_type] = 0.0
         return old_vals, new_vals
 
     def create(self, cr, uid, vals, context=None):

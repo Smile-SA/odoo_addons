@@ -10,7 +10,7 @@
 	        <field name="type">search</field>
 	        <field name="arch" type="xml">
 	            <search string="Assets">
- 					<filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
+ 					<filter icon="terp-document-new" name="draft" string="Draft" domain="[('state','=','draft')]"/>
                     <filter icon="terp-dolar" string="In progress" domain="[('state','=','confirm'), ('category_id.asset_in_progress', '=', True)]"/>
                     <filter icon="terp-dolar" string="Acquised" domain="[('state','=','confirm'), ('category_id.asset_in_progress', '=', False)]"/>
                     <filter icon="terp-dolar" string="Into service" domain="[('state','=','open')]"/>
@@ -33,6 +33,7 @@
                         <filter string="Asset Category" context="{'group_by':'category_id'}" icon="terp-folder-orange"/>
                         <filter string="Account" context="{'group_by':'asset_account_id'}" icon="terp-folder-violet"/>
                         <filter string="Currency" context="{'group_by':'currency_id'}" icon="terp-dolar" groups="base.group_extended"/>
+                        <filter string="Main Asset" context="{'group_by':'parent_id'}" icon="terp-folder-orange" groups="base.group_extended"/>
 					</group>
 	            </search>
 	        </field>
@@ -137,7 +138,7 @@
 							<field name="accounting_depreciation_line_ids" colspan="2" nolabel="1" mode="tree"
 								attrs="{'invisible': [('accounting_method', '=', 'none')], 'readonly': [('accounting_method', '!=', 'manual')]}"
 								context="{'default_is_manual': accounting_method == 'manual', 'default_depreciation_type': 'accounting'}">
-		                       <tree string="Accounting Depreciation Board" colors="blue:(move_id == False);black:(move_id != False)">
+		                       <tree string="Accounting Depreciation Board" colors="blue:(is_posted == False);black:(is_posted != False)">
 		                          <field name="depreciation_date"/>
 		                          <field name="base_value"/>
 		                          <field name="depreciation_value" readonly="1" string="Amortization"/>
@@ -145,6 +146,7 @@
 		                          <field name="exceptional_value"/>
 		                          <field name="book_value"/>
 		                          <field name="move_id" invisible="1"/>
+		                          <field name="is_posted" invisible="1"/>
 		                          <field name="state" invisible="1"/>
 		                          <button name="post_depreciation_line" icon="gtk-execute" string="Post" type="object" attrs="{'invisible':['|',('move_id','!=',False),('state','!=','open')]}"/>
 		                       </tree>
@@ -162,12 +164,13 @@
 							<field name="fiscal_depreciation_line_ids" colspan="2" nolabel="1" mode="tree"
 								attrs="{'invisible': [('fiscal_method', '=', 'none')], 'readonly': [('fiscal_method', '!=', 'manual')]}"
 								context="{'default_is_manual': accounting_method == 'manual', 'default_depreciation_type': 'fiscal'}">
-		                       <tree string="Fiscal Depreciation Board" colors="blue:(move_id == False);black:(move_id != False)">
+		                       <tree string="Fiscal Depreciation Board" colors="blue:(is_posted == False);black:(is_posted != False)">
 		                          <field name="depreciation_date"/>
 		                          <field name="depreciation_value" readonly="1" string="Fiscal Depreciation"/>
 		                          <field name="accounting_value"/>
 		                          <field name="accelerated_value"/>
 		                          <field name="move_id" invisible="1"/>
+		                          <field name="is_posted" invisible="1"/>
 		                          <field name="state" invisible="1"/>
 		                          <field name="benefit_accelerated_depreciation" invisible="1"/>
 		                          <button name="post_depreciation_line" icon="gtk-execute" string="Post" type="object" attrs="{'invisible':['|',('benefit_accelerated_depreciation','=',False),'|',('move_id','!=',False),('state','!=','open')]}"/>
@@ -261,6 +264,7 @@
 	        <field name="res_model">account.asset.asset</field>
 	        <field name="view_type">form</field>
 	        <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_draft': 1}</field>
 	        <field name="view_id" ref="view_account_asset_asset_tree"/>
 	        <field name="search_view_id" ref="view_account_asset_asset_search"/>
 	    </record>
@@ -289,6 +293,7 @@
 	        </field>
 	    </record>
 
+        <!--
 	    <record model="ir.actions.act_window" id="action_account_asset_asset_tree">
 	        <field name="name">Asset Hierarchy</field>
 	        <field name="res_model">account.asset.asset</field>
@@ -300,6 +305,7 @@
 
 	    <menuitem id="menu_account_asset_asset_tree" parent="menu_finance_assets"
 	    	action="action_account_asset_asset_tree" sequence="20" groups="base.group_extended"/>
+        -->
 
 		<record model="ir.actions.server" id="open_asset">
 	        <field name="name">Open Asset</field>

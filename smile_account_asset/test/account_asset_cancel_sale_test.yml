@@ -16,5 +16,8 @@
     asset = self.browse(cr, uid, ref('account_asset_asset_digitalasset0'), context)
     depreciation_end_date = asset.accounting_depreciation_line_ids[-1].depreciation_date
     import time
-    end_date = '%s-12-31' % (int(time.strftime('%Y')) + 4)
+    years = 5 if time.strftime('%m-%d') != '01-01' else 4
+    end_date = '%s-12-31' % (int(time.strftime('%Y')) + years)
+    log("Depreciation board end date = %s" % depreciation_end_date)
+    log("Logical end date = %s" % end_date)
     assert depreciation_end_date == end_date, "Depreciation End Date is wrong"

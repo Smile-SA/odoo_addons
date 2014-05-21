@@ -86,7 +86,7 @@ class DepreciationBoardTestCase(unittest.TestCase):
         self._test_depreciation_board(kwargs, result)
 
     def test_linear_depr_doesnt_start_on_1st_day(self):
-        kwargs = {'purchase_value': 5000.0, 'method_info': LINEAR_METHOD, 'annuities': 5, 'depreciation_start_date': '2012-07-02'}
+        kwargs = {'purchase_value': 5000.0, 'method_info': LINEAR_METHOD, 'annuities': 5, 'depreciation_start_date': '2012-07-01'}
         result = [
             {'book_value_wo_exceptional': 4500.0, 'depreciation_date': datetime(2012, 12, 31, 0, 0), 'depreciation_value': 500.0,
              'accumulated_value': 500.0, 'exceptional_value': 0.0, 'base_value': 5000.0, 'readonly': False, 'book_value': 4500.0,
@@ -110,7 +110,7 @@ class DepreciationBoardTestCase(unittest.TestCase):
         self._test_depreciation_board(kwargs, result)
 
     def test_degressive_depr(self):
-        kwargs = {'purchase_value': 5000.0, 'method_info': DEGRESSIVE_METHOD, 'annuities': 5, 'rate': 35.0, 'depreciation_start_date': '2012-07-02'}
+        kwargs = {'purchase_value': 5000.0, 'method_info': DEGRESSIVE_METHOD, 'annuities': 5, 'rate': 35.0, 'depreciation_start_date': '2012-07-01'}
         result = [
             {'book_value_wo_exceptional': 4125.0, 'depreciation_date': datetime(2012, 12, 31, 0, 0), 'depreciation_value': 875.0,
              'accumulated_value': 875.0, 'exceptional_value': 0.0, 'base_value': 5000.0, 'readonly': False, 'book_value': 4125.0,
@@ -131,7 +131,7 @@ class DepreciationBoardTestCase(unittest.TestCase):
         self._test_depreciation_board(kwargs, result)
 
     def test_linear_depr_with_exceptional(self):
-        kwargs = {'purchase_value': 5000.0, 'method_info': LINEAR_METHOD, 'annuities': 5, 'depreciation_start_date': '2012-07-02',
+        kwargs = {'purchase_value': 5000.0, 'method_info': LINEAR_METHOD, 'annuities': 5, 'depreciation_start_date': '2012-07-01',
                   'exceptional_values': {'2013-05': 500.0}}
         result = [
             {'book_value_wo_exceptional': 4500.0, 'depreciation_date': datetime(2012, 12, 31, 0, 0), 'depreciation_value': 500.0,
@@ -153,7 +153,7 @@ class DepreciationBoardTestCase(unittest.TestCase):
         self._test_depreciation_board(kwargs, result)
 
     def test_linear_depr_with_readonly(self):
-        kwargs = {'purchase_value': 5000.0, 'method_info': LINEAR_METHOD, 'annuities': 5, 'depreciation_start_date': '2012-07-02',
+        kwargs = {'purchase_value': 5000.0, 'method_info': LINEAR_METHOD, 'annuities': 5, 'depreciation_start_date': '2012-07-01',
                   'readonly_values': {'2012-12': {'depreciation_value': 500.0, 'base_value': 5000.0},
                                       '2013-12': {'depreciation_value': 1000.0, 'base_value': 5000.0}}}
         result = [
@@ -179,7 +179,7 @@ class DepreciationBoardTestCase(unittest.TestCase):
         self._test_depreciation_board(kwargs, result)
 
     def test_linear_depr_with_ro_and_exceptional(self):
-        kwargs = {'purchase_value': 5000.0, 'method_info': LINEAR_METHOD, 'annuities': 4, 'depreciation_start_date': '2012-07-02',
+        kwargs = {'purchase_value': 5000.0, 'method_info': LINEAR_METHOD, 'annuities': 4, 'depreciation_start_date': '2012-07-01',
                   'readonly_values': {'2012-12': {'depreciation_value': 1500.0, 'base_value': 5000.0},
                                       '2013-12': {'depreciation_value': 1500.0, 'base_value': 3500.0}}, 'exceptional_values': {'2013-05': 500.0}}
         result = [
@@ -208,9 +208,9 @@ class DepreciationBoardTestCase(unittest.TestCase):
             {'book_value_wo_exceptional': 3000.0, 'depreciation_date': datetime(2013, 12, 31, 0, 0), 'depreciation_value': 1000.0,
              'accumulated_value': 2000.0, 'exceptional_value': 0.0, 'base_value': 5000.0, 'readonly': False, 'book_value': 3000.0,
              'previous_years_accumulated_value': 1000.0, 'current_year_accumulated_value': 1000.0},
-            {'book_value_wo_exceptional': 2501.37, 'depreciation_date': datetime(2014, 7, 1, 0, 0), 'depreciation_value': 498.63,
-             'accumulated_value': 2498.63, 'exceptional_value': 0.0, 'base_value': 5000.0, 'readonly': False, 'book_value': 2501.37,
-             'previous_years_accumulated_value': 2000.0, 'current_year_accumulated_value': 498.63},
+            {'book_value_wo_exceptional': 2500.0, 'depreciation_date': datetime(2014, 7, 1, 0, 0), 'depreciation_value': 500.0,
+             'accumulated_value': 2500.0, 'exceptional_value': 0.0, 'base_value': 5000.0, 'readonly': False, 'book_value': 2500.0,
+             'previous_years_accumulated_value': 2000.0, 'current_year_accumulated_value': 500.0},
         ]
         self._test_depreciation_board(kwargs, result)
 
@@ -224,9 +224,9 @@ class DepreciationBoardTestCase(unittest.TestCase):
             {'book_value_wo_exceptional': 3000.0, 'depreciation_date': datetime(2013, 12, 31, 0, 0), 'depreciation_value': 1000.0,
              'accumulated_value': 2000.0, 'exceptional_value': 0.0, 'base_value': 5000.0, 'readonly': False, 'book_value': 3000.0,
              'previous_years_accumulated_value': 1000.0, 'current_year_accumulated_value': 1000.0},
-            {'book_value_wo_exceptional': 2501.37, 'depreciation_date': datetime(2014, 7, 1, 0, 0), 'depreciation_value': 498.63,
-             'accumulated_value': 2498.63, 'exceptional_value': 0.0, 'base_value': 5000.0, 'readonly': False, 'book_value': 2501.37,
-             'previous_years_accumulated_value': 2000.0, 'current_year_accumulated_value': 498.63},
+            {'book_value_wo_exceptional': 2500.0, 'depreciation_date': datetime(2014, 7, 1, 0, 0), 'depreciation_value': 500.0,
+             'accumulated_value': 2500.0, 'exceptional_value': 0.0, 'base_value': 5000.0, 'readonly': False, 'book_value': 2500.0,
+             'previous_years_accumulated_value': 2000.0, 'current_year_accumulated_value': 500.0},
         ]
         self._test_depreciation_board(kwargs, result)
 
@@ -278,7 +278,7 @@ class DepreciationBoardTestCase(unittest.TestCase):
         self._test_depreciation_board(kwargs, result)
 
     def test_linear_depr_doesnt_start_on_1st_day_with_6_monthly_depr(self):
-        kwargs = {'purchase_value': 2000.0, 'method_info': LINEAR_METHOD, 'annuities': 2, 'depreciation_start_date': '2012-07-02',
+        kwargs = {'purchase_value': 2000.0, 'method_info': LINEAR_METHOD, 'annuities': 2, 'depreciation_start_date': '2012-07-01',
                   'depreciation_period': 6}
         result = [
             {'book_value_wo_exceptional': 1500.0, 'depreciation_date': datetime(2012, 12, 31, 0, 0), 'depreciation_value': 500.0,
@@ -321,5 +321,94 @@ class DepreciationBoardTestCase(unittest.TestCase):
             {'book_value_wo_exceptional': 0.0, 'depreciation_date': datetime(2013, 12, 31, 0, 0), 'depreciation_value': 666.66,
              'accumulated_value': 4000.0, 'exceptional_value': 0.0, 'base_value': 4000.0, 'readonly': False, 'book_value': 0.0,
              'previous_years_accumulated_value': 2000.0, 'current_year_accumulated_value': 2000.0},
+        ]
+        self._test_depreciation_board(kwargs, result)
+
+    def test_linear_depr_monthly_start_on_1st_day(self):
+        kwargs = {'purchase_value': 12000.0, 'method_info': LINEAR_METHOD, 'annuities': 1, 'depreciation_start_date': '2012-07-01',
+                  'depreciation_period': 1, 'board_stop_date': '2013-06-30'}
+        result = [
+            {'book_value_wo_exceptional': 11000.0, 'depreciation_date': datetime(2012, 7, 31, 0, 0), 'current_year_accumulated_value': 1000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 1000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 11000.0},
+            {'book_value_wo_exceptional': 10000.0, 'depreciation_date': datetime(2012, 8, 31, 0, 0), 'current_year_accumulated_value': 2000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 2000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 10000.0},
+            {'book_value_wo_exceptional': 9000.0, 'depreciation_date': datetime(2012, 9, 30, 0, 0), 'current_year_accumulated_value': 3000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 3000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 9000.0},
+            {'book_value_wo_exceptional': 8000.0, 'depreciation_date': datetime(2012, 10, 31, 0, 0), 'current_year_accumulated_value': 4000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 4000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 8000.0},
+            {'book_value_wo_exceptional': 7000.0, 'depreciation_date': datetime(2012, 11, 30, 0, 0), 'current_year_accumulated_value': 5000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 5000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 7000.0},
+            {'book_value_wo_exceptional': 6000.0, 'depreciation_date': datetime(2012, 12, 31, 0, 0), 'current_year_accumulated_value': 6000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 6000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 6000.0},
+            {'book_value_wo_exceptional': 5000.0, 'depreciation_date': datetime(2013, 1, 31, 0, 0), 'current_year_accumulated_value': 1000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 7000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 6000.0, 'book_value': 5000.0},
+            {'book_value_wo_exceptional': 4000.0, 'depreciation_date': datetime(2013, 2, 28, 0, 0), 'current_year_accumulated_value': 2000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 8000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 6000.0, 'book_value': 4000.0},
+            {'book_value_wo_exceptional': 3000.0, 'depreciation_date': datetime(2013, 3, 31, 0, 0), 'current_year_accumulated_value': 3000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 9000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 6000.0, 'book_value': 3000.0},
+            {'book_value_wo_exceptional': 2000.0, 'depreciation_date': datetime(2013, 4, 30, 0, 0), 'current_year_accumulated_value': 4000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 10000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 6000.0, 'book_value': 2000.0},
+            {'book_value_wo_exceptional': 1000.0, 'depreciation_date': datetime(2013, 5, 31, 0, 0), 'current_year_accumulated_value': 5000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 11000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 6000.0, 'book_value': 1000.0},
+            {'book_value_wo_exceptional': 0.0, 'depreciation_date': datetime(2013, 6, 30, 0, 0), 'current_year_accumulated_value': 6000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 12000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 6000.0, 'book_value': 0.0},
+        ]
+        self._test_depreciation_board(kwargs, result)
+
+    def test_linear_depr_monthly_start_on_16th_day(self):
+        kwargs = {'purchase_value': 12000.0, 'method_info': LINEAR_METHOD, 'annuities': 1, 'depreciation_start_date': '2012-07-16',
+                  'depreciation_period': 1, 'board_stop_date': '2013-07-15'}
+        result = [
+            {'book_value_wo_exceptional': 11500.0, 'depreciation_date': datetime(2012, 7, 31, 0, 0), 'current_year_accumulated_value': 500.0,
+             'readonly': False, 'depreciation_value': 500.0, 'accumulated_value': 500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 11500.0},
+            {'book_value_wo_exceptional': 10500.0, 'depreciation_date': datetime(2012, 8, 31, 0, 0), 'current_year_accumulated_value': 1500.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 1500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 10500.0},
+            {'book_value_wo_exceptional': 9500.0, 'depreciation_date': datetime(2012, 9, 30, 0, 0), 'current_year_accumulated_value': 2500.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 2500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 9500.0},
+            {'book_value_wo_exceptional': 8500.0, 'depreciation_date': datetime(2012, 10, 31, 0, 0), 'current_year_accumulated_value': 3500.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 3500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 8500.0},
+            {'book_value_wo_exceptional': 7500.0, 'depreciation_date': datetime(2012, 11, 30, 0, 0), 'current_year_accumulated_value': 4500.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 4500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 7500.0},
+            {'book_value_wo_exceptional': 6500.0, 'depreciation_date': datetime(2012, 12, 31, 0, 0), 'current_year_accumulated_value': 5500.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 5500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 0.0, 'book_value': 6500.0},
+            {'book_value_wo_exceptional': 5500.0, 'depreciation_date': datetime(2013, 1, 31, 0, 0), 'current_year_accumulated_value': 1000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 6500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 5500.0, 'book_value': 5500.0},
+            {'book_value_wo_exceptional': 4500.0, 'depreciation_date': datetime(2013, 2, 28, 0, 0), 'current_year_accumulated_value': 2000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 7500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 5500.0, 'book_value': 4500.0},
+            {'book_value_wo_exceptional': 3500.0, 'depreciation_date': datetime(2013, 3, 31, 0, 0), 'current_year_accumulated_value': 3000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 8500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 5500.0, 'book_value': 3500.0},
+            {'book_value_wo_exceptional': 2500.0, 'depreciation_date': datetime(2013, 4, 30, 0, 0), 'current_year_accumulated_value': 4000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 9500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 5500.0, 'book_value': 2500.0},
+            {'book_value_wo_exceptional': 1500.0, 'depreciation_date': datetime(2013, 5, 31, 0, 0), 'current_year_accumulated_value': 5000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 10500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 5500.0, 'book_value': 1500.0},
+            {'book_value_wo_exceptional': 500.0, 'depreciation_date': datetime(2013, 6, 30, 0, 0), 'current_year_accumulated_value': 6000.0,
+             'readonly': False, 'depreciation_value': 1000.0, 'accumulated_value': 11500.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 5500.0, 'book_value': 500.0},
+            {'book_value_wo_exceptional': 0.0, 'depreciation_date': datetime(2013, 7, 31, 0, 0), 'current_year_accumulated_value': 6500.0,
+             'readonly': False, 'depreciation_value': 500.0, 'accumulated_value': 12000.0, 'exceptional_value': 0.0, 'base_value': 12000.0,
+             'previous_years_accumulated_value': 5500.0, 'book_value': 0.0},
         ]
         self._test_depreciation_board(kwargs, result)

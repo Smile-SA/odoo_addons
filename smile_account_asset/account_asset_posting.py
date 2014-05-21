@@ -93,6 +93,8 @@ class AccountAssetAsset(orm.Model):
     def _get_move_line_kwargs(self, cr, uid, asset, move_type, context=None, reversal=False):
         sign = reversal and -1 or 1
         if move_type == 'purchase':
+            if not asset.supplier_id.property_account_payable:
+                raise orm.except_orm(_('Error'), _('Please indicate a payable account for the supplier %s') % asset.supplier_id.name)
             return {
                 'asset': asset,
                 'journal_type': asset.asset_type,
@@ -614,7 +616,7 @@ class AccountAssetHistory(orm.Model):
         if old_vals['category_id'] != new_vals['category_id']:
             asset_obj = self.pool.get('account.asset.asset')
             category_obj = self.pool.get('account.asset.category')
-            old_values = category_obj.read(cr, uid, old_vals['category_id'], [], context)
-            new_values = category_obj.read(cr, uid, new_vals['category_id'], [], context)
+            old_values = category_obj.read(cr, uid, old_vals['category_id'], [], context, '_classic_write')
+            new_values = category_obj.read(cr, uid, new_vals['category_id'], [], context, '_classic_write')
             asset_obj.change_accounts(cr, uid, '%s,%s' % (asset_obj._name, vals['asset_id']), old_values, new_values, context)
         return old_vals, new_vals

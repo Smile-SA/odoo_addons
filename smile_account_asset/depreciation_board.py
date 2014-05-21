@@ -25,7 +25,8 @@ from dateutil.relativedelta import relativedelta
 from openerp.tools import float_round
 
 from account_asset_tools import get_date, get_fiscalyear_start_date, get_fiscalyear_stop_date, \
-    get_period_start_date, get_prorata_temporis, get_prorata_temporis_by_period
+    get_period_start_date, get_period_stop_date, get_prorata_temporis, get_prorata_temporis_by_period, \
+    get_depreciation_period_dates
 
 
 def check_and_format_method_info(method_info):
@@ -158,7 +159,7 @@ class DepreciationBoard(object):
             for month in self.readonly_values:
                 if fiscalyear_start_date.strftime('%Y-%m') <= month <= self.next_depreciation_date.strftime('%Y-%m'):
                     depreciation_value += self.readonly_values[month]['depreciation_value']
-            if self.readonly_values[last_year_month]['base_value'] != self.base_value:
+            if round(self.readonly_values[last_year_month]['base_value'], self.rounding) != round(self.base_value, self.rounding):
                 # INFO: means that method changes occured
                 self.base_value = self.readonly_values[last_year_month]['base_value']
                 self.reset_partially = True
@@ -244,22 +245,22 @@ class DepreciationBoardLine(object):
     def __str__(self):
         return str(self.__dict__)
 
-    def _get_period_value(self, board, values):
+    def _get_period_value(self, board, values, depreciation_date):
         period_value, exists = 0.0, False
-        period_start_date = get_period_start_date(self.depreciation_date, board.fiscalyear_start_day, board.depreciation_period)
+        period_start_date = get_period_start_date(depreciation_date, board.fiscalyear_start_day, board.depreciation_period)
         if period_start_date < board.depreciation_start_date:
             period_start_date = board.depreciation_start_date
         for month in values:
-            if period_start_date.strftime('%Y-%m') <= month <= self.depreciation_date.strftime('%Y-%m'):
+            if period_start_date.strftime('%Y-%m') <= month <= depreciation_date.strftime('%Y-%m'):
                 period_value += values[month]['depreciation_value'] if isinstance(values[month], dict) else values[month]
                 exists = True
         return period_value, exists
 
-    def _get_readonly_value(self, board):
-        return self._get_period_value(board, board.readonly_values)
+    def _get_readonly_value(self, board, depreciation_date):
+        return self._get_period_value(board, board.readonly_values, depreciation_date)
 
-    def _get_exceptional_value(self, board):
-        value, exists = self._get_period_value(board, board.exceptional_values)
+    def _get_exceptional_value(self, board, depreciation_date):
+        value, exists = self._get_period_value(board, board.exceptional_values, depreciation_date)
         return value
 
     def get_periodical_lines(self, board):
@@ -270,12 +271,24 @@ class DepreciationBoardLine(object):
         if period_depreciation_start_date < board.depreciation_start_date:
             period_depreciation_start_date = board.depreciation_start_date
         period_depreciation_stop_date = self.depreciation_date
-        if board.board_stop_date and period_depreciation_stop_date > board.board_stop_date:
-            period_depreciation_stop_date = board.board_stop_date
+        if board.board_stop_date and board.board_stop_date and period_depreciation_stop_date > board.board_stop_date:
+            period_depreciation_stop_date = get_period_stop_date(board.board_stop_date, board.fiscalyear_start_day, board.depreciation_period)
         prorata_temporis_by_period = get_prorata_temporis_by_period(period_depreciation_start_date, period_depreciation_stop_date,
                                                                     board.fiscalyear_start_day, board.depreciation_period)
         if not prorata_temporis_by_period:
             return []
+        if board.method_info['prorata'] and board.board_stop_date and period_depreciation_stop_date >= board.board_stop_date:
+            real_end_date = period_depreciation_stop_date + relativedelta(days=1) \
+                + relativedelta(month=board.depreciation_start_date.month, day=board.depreciation_start_date.day) \
+                - relativedelta(days=1)
+            period_end_date = get_period_stop_date(real_end_date, board.fiscalyear_start_day, board.depreciation_period)
+            period_dates = get_depreciation_period_dates(period_end_date, board.fiscalyear_start_day, board.depreciation_period)
+            if real_end_date in period_dates:
+                prorata_temporis_by_period[period_depreciation_stop_date] = 1.0
+            else:
+                prorata_temporis_by_period[period_depreciation_stop_date] = get_prorata_temporis(real_end_date + relativedelta(days=1),
+                                                                                                 board.fiscalyear_start_day,
+                                                                                                 board.depreciation_period, opposite=True)
         lines = []
         total = sum(prorata_temporis_by_period.values())
         previous_accumulated_value = accumulated_value = self.accumulated_value - self.depreciation_value
@@ -284,7 +297,7 @@ class DepreciationBoardLine(object):
         exceptional_value = gap = accumulated_value_in_period = 0.0
         depreciation_number = len(prorata_temporis_by_period)
         for depreciation_index, depreciation_date in enumerate(sorted(prorata_temporis_by_period)):
-            readonly_depreciation_value, readonly = self._get_readonly_value(board)
+            readonly_depreciation_value, readonly = self._get_readonly_value(board, depreciation_date)
             depreciation_value = float_round(self.depreciation_value * prorata_temporis_by_period[depreciation_date] / total,
                                              precision_digits=board.rounding)
             if readonly:
@@ -297,7 +310,7 @@ class DepreciationBoardLine(object):
             else:
                 accumulated_value_in_period += depreciation_value
             accumulated_value += depreciation_value
-            exceptional_value = self._get_exceptional_value(board)
+            exceptional_value = self._get_exceptional_value(board, depreciation_date)
             book_value_wo_exceptional -= depreciation_value
             book_value = book_value_wo_exceptional - exceptional_value
             vals = {

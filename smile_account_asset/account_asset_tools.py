@@ -61,16 +61,24 @@ def get_period_stop_date(date, fiscalyear_start_day, depreciation_period):
     return period_start_date + relativedelta(months=depreciation_period, days=-1)
 
 
+def get_remaining_days(day, month, fiscalyear_start_day):
+    "Compute the number of remaining days until the end of fiscal year"
+    return 30 - day + 1 + (12 - month + int(fiscalyear_start_day[:2]) - 1) * 30
+
+
 def get_prorata_temporis(date, fiscalyear_start_day, depreciation_period, opposite=False):
-    # TODO: check with Smile customers if they used exactly this computation
     date = get_date(date)
-    period_start_date = get_period_start_date(date, fiscalyear_start_day, depreciation_period)
-    period_stop_date = get_period_stop_date(date, fiscalyear_start_day, depreciation_period)
-    period_days = (period_stop_date - period_start_date).days + 1.0
-    days = (date - period_start_date).days + opposite
+    days = get_remaining_days(date.day, date.month, fiscalyear_start_day)
+    next_start_date = get_period_stop_date(date, fiscalyear_start_day, depreciation_period) + relativedelta(days=1)
+    if next_start_date.strftime('%m-%d') == fiscalyear_start_day:
+        days_after_period = 0
+    else:
+        days_after_period = get_remaining_days(next_start_date.day, next_start_date.month, fiscalyear_start_day)
+    period_days = depreciation_period * 30.0
+    prorata = (days - days_after_period) / period_days
     if opposite:
-        return days / period_days
-    return 1 - days / period_days
+        return 1 - prorata
+    return prorata
 
 
 def get_depreciation_period_dates(stop_date, fiscalyear_start_day, depreciation_period, start_date=None):
@@ -101,8 +109,7 @@ def get_prorata_temporis_by_period(year_start_date, year_stop_date, fiscalyear_s
         date, opposite = period_start_date, False
         if period_start_date < year_start_date:
             date = year_start_date
-        # INFO: if period_stop_date > year_stop_date is impossible, see get_depreciation_period_dates
-        if period_stop_date == year_stop_date:
-            date, opposite = period_stop_date, True
+        if period_stop_date >= year_stop_date:
+            date, opposite = year_stop_date, True
         prorata_temporis_by_period[period_stop_date] = get_prorata_temporis(date, fiscalyear_start_day, depreciation_period, opposite)
     return prorata_temporis_by_period

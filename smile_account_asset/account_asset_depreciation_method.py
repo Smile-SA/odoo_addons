@@ -169,7 +169,7 @@ class AccountAssetDepreciationMethod(orm.Model):
         method_info = self.get_method_info(cr, uid, code, context)
         annuities += not exceptional_values and method_info['need_additional_annuity']
         date = get_date(self.get_depreciation_start_date(cr, uid, code, purchase_date, in_service_date, context))
-        date += relativedelta(years=annuities - 1)
+        date += relativedelta(years=annuities, days=-1)
         return get_period_stop_date(date, fiscalyear_start_day, depreciation_period).strftime('%Y-%m-%d')
 
     def compute_depreciation_board(self, cr, uid, code, purchase_value, salvage_value, annuities, rate, purchase_date, in_service_date,

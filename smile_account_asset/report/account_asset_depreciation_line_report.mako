@@ -8,6 +8,7 @@
 	<body>
 	    <% setLang(lang) %>
 	    <% depreciation_infos_by_asset_id = get_depreciation_infos_by_asset_id(objects, company) %>
+        %if objects:
 	    %for group, assets in group_by(objects):
 			<h2>${group}</h2>
 			<table>
@@ -42,5 +43,6 @@
 			%endfor
 			</table>
 	    %endfor
+        %endif
 	</body>
 </html>

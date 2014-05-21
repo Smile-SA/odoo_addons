@@ -86,7 +86,7 @@ CREATE AGGREGATE public.last (
                 'benefit_accelerated_depreciation': asset.benefit_accelerated_depreciation,
                 'account_id': account_id,
                 'year': year,
-                'is_posted': bool(line.move_id),
+                'is_posted': line.is_posted or bool(line.move_id),
             }
         return res
 
@@ -164,12 +164,12 @@ CREATE AGGREGATE public.last (
             res[line.id] = getattr(line.asset_id, '%s_method' % line.depreciation_type) == 'manual'
         return res
 
-    def _set_is_posted(self, cr, uid, ids, name, value, arg, context=None):
-        cr.execute("UDPATE account_asset_depreciation_line SET is_posted = %s WHERE id IN %s", (value, tuple(ids)))
+    def _set_is_posted(self, cr, uid, line_id, name, value, arg, context=None):
+        cr.execute("UPDATE account_asset_depreciation_line SET is_posted = %s WHERE id = %s", (value, line_id))
         return True
 
     _columns = {
-        'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, ondelete='cascade'),
+        'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, ondelete='cascade', select=True),
         'depreciation_type': fields.selection([('accounting', 'Accounting'), ('fiscal', 'Fiscal'), ('exceptional', 'Exceptional')], 'Type',
                                               required=True, select=True),
         'depreciation_date': fields.date('Date', required=True),
@@ -239,7 +239,7 @@ CREATE AGGREGATE public.last (
         }, string="Account", multi="asset_info"),
         'is_posted': fields.function(_get_asset_info, fnct_inv=_set_is_posted, method=True, type='boolean', string='Posted Depreciation', store={
             'account.asset.depreciation.line': (lambda self, cr, uid, ids, context=None: ids, ['move_id'], 5),
-        }, multi="asset_info", readonly=True),
+        }, multi="asset_info", readonly=True, select=True),
         'is_manual': fields.function(_is_manual, method=True, type='boolean', string='Manual Depreciation'),
     }
 
@@ -254,7 +254,9 @@ CREATE AGGREGATE public.last (
             ids = [ids]
         for line in self.browse(cr, uid, ids, context):
             if line.depreciation_date < line.asset_id.purchase_date:
-                raise orm.except_orm(_('Error'), _('Depreciation date must be after purchase date!'))
+                raise orm.except_orm(_('Error'),
+                                     _('Depreciation date must be after purchase date! [Reference=%s,DepreciationDate=%s,PurchaseDate=%s]')
+                                     % (line.asset_id.code, line.depreciation_date, line.asset_id.purchase_date))
             if line.depreciation_type == 'exceptional':
                 cr.execute("SELECT id FROM account_period WHERE state='draft' AND date_start <= %s AND date_stop >= %s AND company_id = %s",
                            (line.depreciation_date, line.depreciation_date, line.company_id.id))
@@ -297,6 +299,11 @@ CREATE AGGREGATE public.last (
         if context.get('search_in_current_month'):
             date_start = datetime.today().strftime('%Y-%m-01')
             date_stop = (datetime.strptime(date_start, '%Y-%m-%d') + relativedelta(months=1)).strftime('%Y-%m-%d')
+            domain = ['&', ('depreciation_date', '>=', date_start), ('depreciation_date', '<', date_stop)]
+            args = args and (['&'] + domain + args) or domain
+        if context.get('search_in_three_month'):
+            date_stop = datetime.today().strftime('%Y-%m-01')
+            date_start = (datetime.strptime(date_stop, '%Y-%m-%d') - relativedelta(months=3)).strftime('%Y-%m-%d')
             domain = ['&', ('depreciation_date', '>=', date_start), ('depreciation_date', '<', date_stop)]
             args = args and (['&'] + domain + args) or domain
         return super(AccountAssetDepreciationLine, self)._search(cr, uid, args, offset, limit, order, context, count, access_rights_uid)

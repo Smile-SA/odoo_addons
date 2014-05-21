@@ -11,15 +11,17 @@
 	        <field name="arch" type="xml">
 	            <search string="Depreciation Lines">
                     <group>
-                        <filter icon="terp-dolar" string="Accounting" domain="[('depreciation_type','=','accounting')]"/>
+                        <filter icon="terp-dolar" string="Accounting" name="accounting" domain="[('depreciation_type','=','accounting')]"/>
                         <filter icon="terp-dolar_ok!" string="Fiscal" domain="[('depreciation_type','=','fiscal')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-year" string="This Year" domain="[('year','=',time.strftime('%%Y'))]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-month" string="This Month" context="{'search_in_current_month': True}"/>
                         <separator orientation="vertical"/>
-	                    <filter string="Unposted" icon="terp-document-new" domain="[('move_id','=',False)]"/>
-	                    <filter string="Posted" icon="terp-camera_test" domain="[('move_id','!=',False)]"/>
+                        <filter icon="terp-go-month" string="3 previous months" name="three_month" context="{'search_in_three_month': True}"/>
+                        <separator orientation="vertical"/>
+	                    <filter string="Unposted" icon="terp-document-new" domain="[('is_posted','=',False)]"/>
+	                    <filter string="Posted" icon="terp-camera_test" domain="[('is_posted','=',True)]"/>
                         <separator orientation="vertical"/>
 	                    <field name="depreciation_date"/>
 	                    <field name="asset_id"/>
@@ -92,9 +94,10 @@
 	                <field name="move_id" readonly="1" invisible="1"/>
 	                <field name="state" invisible="1"/>
 	                <field name="asset_type" invisible="1"/>
+	                <field name="is_posted" invisible="1"/>
 	                <field name="benefit_accelerated_depreciation" invisible="1"/>
                     <button name="post_depreciation_line" icon="gtk-execute" string="Post" type="object" colspan="4"
-                    	attrs="{'invisible':['|','|',('move_id','!=',False),('state','!=','open'), '&amp;', ('depreciation_type', '=', 'fiscal'), ('benefit_accelerated_depreciation', '=', False)]}"/>
+                    	attrs="{'invisible':['|','|',('is_posted','=',True),('state','!=','open'), '&amp;', ('depreciation_type', '=', 'fiscal'), ('benefit_accelerated_depreciation', '=', False)]}"/>
 	            </form>
 	        </field>
 	    </record>
@@ -104,6 +107,7 @@
 	        <field name="res_model">account.asset.depreciation.line</field>
 	        <field name="view_type">form</field>
 	        <field name="view_id" ref="view_account_asset_depreciation_line_tree"/>
+            <field name="context">{'search_default_three_month': 1, 'search_default_accounting': 1}</field>
 	        <field name="search_view_id" ref="view_account_asset_depreciation_line_search"/>
 	        <field name="domain">[('depreciation_type', '!=', 'exceptional')]</field>
 	    </record>

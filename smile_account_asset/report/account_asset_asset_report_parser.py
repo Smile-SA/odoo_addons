@@ -38,6 +38,7 @@ class AccountAssetAssetReport(report_sxw.rml_parse):
             'get_label': self.get_label,
             'label_header': _('Name'),
             'get_depreciation_infos_by_asset_id': self.get_depreciation_infos_by_asset_id,
+            'get_value_selection': self.get_value_selection,
         })
 
     def group_by(self, assets):
@@ -63,9 +64,12 @@ class AccountAssetAssetReport(report_sxw.rml_parse):
         year = company.get_fiscalyear()
         for asset in assets:
             start_value = current_value = end_value = 0.0
+            date_start = ''
             posted_lines = [l for l in asset.accounting_depreciation_line_ids if l.is_posted and l.year <= year]
             if posted_lines:
                 last_line = posted_lines[-1]
+                first_line = posted_lines[0]
+                date_start = first_line.depreciation_date
                 start_value = last_line.previous_years_accumulated_value
                 current_value = last_line.current_year_accumulated_value
                 if last_line.year < year:
@@ -73,8 +77,15 @@ class AccountAssetAssetReport(report_sxw.rml_parse):
                     current_value = 0.0
                 end_value = start_value + current_value
             book_value = asset.purchase_value - end_value
-            res[asset.id] = (start_value, current_value, end_value, book_value)
+            res[asset.id] = (start_value, current_value, end_value, book_value, date_start)
         return res
+
+    def get_value_selection(self,  model, value, field, context):
+        selection = self.pool.get(model).fields_get(self.cr, self.uid, [field], context=context)[field]['selection']
+        for key, v in selection:
+            if key == value:
+                return v
+        return value
 
 
 report_sxw.report_sxw('report.account_asset_asset_report',

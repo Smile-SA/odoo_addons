@@ -67,6 +67,8 @@ class AccountAssetCategory(orm.Model):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
+        'code': fields.char('Code', size=32, required=True),
+        'active': fields.boolean('Active'),
         'asset_class': fields.selection(ASSET_CLASSES, 'Asset Class', required=True),
         'asset_in_progress': fields.boolean(u'Assets in progress'),
 
@@ -142,6 +144,7 @@ class AccountAssetCategory(orm.Model):
         return self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.category', context=context)
 
     _defaults = {
+        'active': True,
         'company_id': _get_default_company_id,
         'asset_creation': 'auto',
         'accounting_annuities': 5,
@@ -152,6 +155,19 @@ class AccountAssetCategory(orm.Model):
         'tax_regularization_base': 'deducted',
         'tax_regularization_application': 'with_sale_taxes',
     }
+
+    _sql_constraints = [
+        ('uniq_code', 'unique(code, company_id)', u'Asset category code must be unique for a given company!'),
+    ]
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        result = []
+        for category in self.browse(cr, uid, ids, context):
+            name = '%s - %s' % (category.code, category.name)
+            result.append((category.id, name))
+        return result
 
     @property
     def accounting_fields(self):

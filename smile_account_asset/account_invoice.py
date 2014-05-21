@@ -66,7 +66,7 @@ class AccountInvoiceLine(orm.Model):
                 raise orm.except_orm(_('Error'),
                                      _('You cannot not create an asset from invoice lines with different %s') % field_name)
         for line in lines:
-            if line.invoice_id.type == 'in_refund' and not line.parenr_id:
+            if line.invoice_id.type == 'in_refund' and not line.parent_id:
                 raise orm.except_orm(_('Error'),
                                      _('Please indicate a parent asset in line %s') % line.name)
 
@@ -74,6 +74,11 @@ class AccountInvoiceLine(orm.Model):
         line = lines[0]
         amount = sum([l.price_subtotal * (l.invoice_id.journal_id.type == 'purchase_refund' and - 1.0 or 1.0) for l in lines], 0.0)
         quantity = sum([l.quantity * (l.invoice_id.journal_id.type == 'purchase_refund' and - 1.0 or 1.0) for l in lines], 0.0)
+        asset_type = 'purchase'
+        if amount < 0.0:
+            amount = abs(amount)
+            quantity = abs(quantity)
+            asset_type = 'purchase_refund'
         today = time.strftime('%Y-%m-%m')
         vals = {
             'name': line.name,
@@ -83,7 +88,7 @@ class AccountInvoiceLine(orm.Model):
             'purchase_account_date': line.invoice_id.date_invoice,
             'purchase_value': amount,
             'quantity': quantity,
-            'asset_type': line.invoice_id.journal_id.type,
+            'asset_type': asset_type,
             'supplier_id': line.partner_id.id,
             'company_id': line.company_id.id,
             'currency_id': line.currency_id.id,

@@ -24,6 +24,7 @@ import logging
 import time
 
 import decimal_precision as dp
+from openerp import SUPERUSER_ID
 from osv import orm, fields
 from tools.translate import _
 
@@ -402,7 +403,7 @@ class AccountAssetAsset(orm.Model):
         for line in asset.depreciation_line_ids:
             period_stop_month = get_period_stop_date(line.depreciation_date, fiscalyear_start_day,
                                                      asset.company_id.depreciation_period).strftime('%Y-%m')
-            if line.depreciation_type == depreciation_type and (line.move_id or method == 'manual'):
+            if line.depreciation_type == depreciation_type and (line.is_posted or method == 'manual'):
                 readonly_values.setdefault(period_stop_month, {'depreciation_value': 0.0, 'base_value': 0.0})
                 readonly_values[period_stop_month]['depreciation_value'] += line.depreciation_value
                 readonly_values[period_stop_month]['base_value'] = line.base_value
@@ -436,7 +437,7 @@ class AccountAssetAsset(orm.Model):
         }
 
     def _update_or_create_depreciation_lines(self, cr, uid, asset_id, line_infos, depreciation_type, context=None):
-        asset = self.browse(cr, 1, asset_id, context)
+        asset = self.browse(cr, SUPERUSER_ID, asset_id, context)
         is_manual = getattr(asset, '%s_method' % depreciation_type)
         lines_to_create = []
         for vals in line_infos:
@@ -456,7 +457,7 @@ class AccountAssetAsset(orm.Model):
                 continue
             lines_to_create.append(vals)
         if lines_to_create:
-            self.pool.get('account.asset.depreciation.line').bulk_create(cr, 1, lines_to_create, context)
+            self.pool.get('account.asset.depreciation.line').bulk_create(cr, SUPERUSER_ID, lines_to_create, context)
         return True
 
     def _compute_depreciation_lines(self, cr, uid, asset_id, depreciation_type='accounting', context=None):
@@ -466,7 +467,7 @@ class AccountAssetAsset(orm.Model):
                                                                     ('depreciation_type', '=', depreciation_type),
                                                                     ('is_posted', '=', False),
                                                                     ('asset_id.%s_method' % depreciation_type, '!=', 'manual')], context=context)
-        depreciation_line_obj.unlink(cr, uid, line_ids_to_delete, context)
+        depreciation_line_obj.unlink(cr, SUPERUSER_ID, line_ids_to_delete, context)
         # Create new lines
         kwargs = self._get_depreciation_arguments(cr, uid, asset_id, depreciation_type, context)
         line_infos = self.pool.get('account.asset.depreciation.method').compute_depreciation_board(cr, uid, **kwargs)

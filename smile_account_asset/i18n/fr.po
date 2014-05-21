@@ -1036,6 +1036,7 @@ msgstr "Compte de reprise sur amortissements"
 #. module: smile_account_asset
 #: view:account.asset.asset:0
 #: view:account.asset.category:0
+#: report:addons/smile_account_asset/report/account_asset_asset_report.mako:19
 msgid "Annuities"
 msgstr "Annuités"
 
@@ -1271,7 +1272,7 @@ msgstr "Plus value à court terme"
 #. module: smile_account_asset
 #: constraint:account.asset.asset:0
 msgid "You cannot create recursive assets!"
-msgstr "Vous ne pouvez pas créer d'immobilisations récurssives !"
+msgstr "Vous ne pouvez pas créer d'immobilisations récursives !"
 
 #. module: smile_account_asset
 #: field:res.company,exceptional_amortization_income_account_id:0
@@ -1578,6 +1579,12 @@ msgstr "Semestrielle"
 #, python-format
 msgid "Please indicate fiscal amortization accounts in company form!"
 msgstr "Merci de renseigner depuis la fiche Société les comptes d'amortissements dérogatoires !"
+
+#. module: smile_account_asset
+#: code:smile-addons/smile_account_asset/account_asset_posting.py:97
+#, python-format
+msgid "Please indicate a payable account for the supplier %s"
+msgstr "Merci de renseigner un compte fournisseur sur la fiche du fournisseur %s"
 
 #. module: smile_account_asset
 #: code:smile-addons/smile_account_asset/account_asset_posting.py:441
@@ -1898,8 +1905,8 @@ msgstr "Le code de la méthode 'existe pas"
 #. module: smile_account_asset
 #: code:smile-addons/smile_account_asset/account_asset_depreciation_line.py:257
 #, python-format
-msgid "Depreciation date must be after purchase date!"
-msgstr "La date de comptabilisation doit être postérieure à la date d'acquisition"
+msgid "Depreciation date must be after purchase date! [Reference=%s,DepreciationDate=%s,PurchaseDate=%s]"
+msgstr "La date de comptabilisation doit être postérieure à la date d'acquisition ! [Référence=%s,DateComptabilisation=%s,DateAcquisition=%s]"
 
 #. module: smile_account_asset
 #: code:smile-addons/smile_account_asset/account_asset_depreciation_line.py:263
@@ -1937,3 +1944,38 @@ msgstr "Merci de ne sélectionner que des immobilisations cédées/mises au rebu
 #: model:ir.actions.report.xml,name:smile_account_asset.report_webkit_account_asset_depreciation_line
 msgid "Account Asset Fiscal Deductions"
 msgstr "Amortissement des voitures particulières"
+
+#. module: smile_account_asset
+#: sql_constraint:account.asset.category:0
+msgid "Asset category code must be unique for a given company!"
+msgstr "Le code d'une catégorie d'immobilisation doit être unique pour une société donnée !"
+
+#. module: smile_account_asset
+#: report:addons/smile_account_asset/report/account_asset_asset_report.mako:17
+msgid "Code Asset"
+msgstr "Méthode d'amortissement"
+
+#. module: smile_account_asset
+#: report:addons/smile_account_asset/report/account_asset_asset_report.mako:18
+msgid "Date start asset"
+msgstr "Date de début de l'amortissement"
+
+#. module: smile_account_asset
+#: report:addons/smile_account_asset/report/account_asset_fiscal_deduction_report.mako:20
+msgid "CO2 Rate"
+msgstr "Taux de CO2"
+
+#. module: smile_account_asset
+#: report:addons/smile_account_asset/report/account_asset_fiscal_deduction_report.mako:21
+msgid "Value results"
+msgstr "Valeur Bilan"
+
+#. module: smile_account_asset
+#: view:account.asset.asset:0
+msgid "Main Asset"
+msgstr "Immobilisation principale"
+
+#. module: smile_account_asset
+#: view:account.asset.depreciation.line:0
+msgid "3 previous months"
+msgstr "3 mois précédents"

@@ -12,7 +12,7 @@
             <field name="use_manual_rate" eval="False"/>
             <field name="rate_formula">100.0 / length</field>
             <field name="prorata" eval="True"/>
-            <field name="need_additional_annuity">0</field>
+            <field name="need_additional_annuity" eval="True"/>
         </record>
 
         <record id="depreciation_method_accounting_softy" model="account.asset.depreciation.method">
