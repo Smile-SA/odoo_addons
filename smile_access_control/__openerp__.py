@@ -39,7 +39,7 @@ NB : to test your profile, you need to set him as « active », which will be
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & matthieu.choplin@smile.fr
 """,
-    "depends": ['base'],
+    "depends": ['share'],
     "init_xml": [],
     "update_xml": [
         "view/res_user_view.xml",

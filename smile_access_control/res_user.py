@@ -72,6 +72,8 @@ class ResUsers(orm.Model):
     def create(self, cr, uid, vals, context=None):
         if vals.get('user_profile_id'):
             vals.update(self._get_user_vals_from_profile(cr, uid, vals['user_profile_id'], context))
+        if vals.get('user_profile'):
+            vals['share'] = True
         return super(ResUsers, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -95,6 +97,8 @@ class ResUsers(orm.Model):
                 vals.update(self._get_user_vals_from_profile(cr, uid, vals['user_profile_id'], context))
                 super(ResUsers, self).write(cr, uid, new_profile_user_ids, vals, context)
         else:
+            if vals.get('user_profile'):
+                vals['share'] = True
             super(ResUsers, self).write(cr, uid, ids, vals, context)
             for user_profile in self.browse(cr, uid, ids, context):
                 if user_profile.user_profile and user_profile.user_ids and any(field.name in vals for field in user_profile.field_ids):
