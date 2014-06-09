@@ -32,11 +32,17 @@ class ResUsers(orm.Model):
             res[user.id] = user.user_profile or not self.has_group(cr, user.id, 'base.group_user')
         return res
 
-    def __init__(self, pool, cr):
-        super(ResUsers, self).__init__(pool, cr)
-        self._columns['share']._fnct = ResUsers._is_share
+    def _get_users_from_group(self, cr, uid, ids, context=None):
+        result = set()
+        for group in self.pool['res.groups'].browse(cr, uid, ids, context=context):
+            result.update(user.id for user in group.users)
+        return list(result)
 
     _columns = {
+        'share': fields.function(_is_share, string='Share User', type='boolean', store={
+            'res.users': (lambda self, cr, uid, ids, c={}: ids, None, 50),
+            'res.groups': (_get_users_from_group, None, 50),
+        }, help="External user with limited access, created only for the purpose of sharing data."),
         'user_profile': fields.boolean('Is User Profile'),
         'user_profile_id': fields.many2one('res.users', 'User Profile', domain=[('user_profile', '=', True)], context={'active_test': False}),
         'user_ids': fields.one2many('res.users', 'user_profile_id', 'Users', domain=[('user_profile', '=', False)]),
