@@ -51,4 +51,3 @@ class MaintenanceManager(object):
     def stop(self):
         Home.index = self.classic_home
         model.dispatch = self.model_dispatch
-
