@@ -54,13 +54,13 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "depends": ['smile_log'],
     "data": [
+        'view/sartre_view.xml',
         'security/sartre_security.xml',
         'security/ir.model.access.csv',
         'data/sartre_sequence.xml',
         'data/ir_cron_data.xml',
         'data/sartre_data.xml',
         'view/ir.xml',
-        'view/sartre_view.xml',
     ],
     "demo": [],
     "test": [

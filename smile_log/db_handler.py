@@ -35,7 +35,7 @@ class SmileDBHandler(logging.Handler):
     def _get_cursor(self, dbname):
         cr = self._dbname_to_cr.get(dbname)
         if not cr or (cr and cr.closed):
-            db = RegistryManager.get(dbname).db
+            db = RegistryManager.get(dbname)._db
             cr = db.cursor()
             self._dbname_to_cr[dbname] = cr
         return cr
@@ -102,7 +102,7 @@ class SmileDBLogger():
         assert isinstance(uid, (int, long)), 'uid should be an integer'
         self._logger = logging.getLogger('smile_log')
 
-        db = RegistryManager.get(dbname).db
+        db = RegistryManager.get(dbname)._db
         pid = 0
         try:
             cr = db.cursor()
