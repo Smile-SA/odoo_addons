@@ -41,7 +41,8 @@ class IrValues(orm.Model):
 
     _columns = {
         'sequence': fields.integer('Sequence'),
-        'window_action_ids': fields.many2many('ir.actions.act_window', 'ir_values_window_actions_rel', 'ir_value_id', 'window_action_id', 'Menus'),
+        'window_action_ids': fields.many2many('ir.actions.act_window', 'ir_values_window_actions_rel',
+                                              'ir_value_id', 'window_action_id', 'Menus'),
         'window_actions': fields.function(_get_visibility_options, method=True, type='char', size=128, string='Window Actions', store={
             'ir.values': (lambda self, cr, uid, ids, context=None: ids, None, 10),
         }),
@@ -109,16 +110,22 @@ class IrValues(orm.Model):
                                                          'You do not have the permission to perform this operation !!!')
                                 continue
                 # keep only the first action registered for each action name
-                # Add by Smile #
-                if action_slot == 'tree_but_open' and action_def['type'] == 'ir.actions.act_window':
-                    try:
-                        action_context = eval(action_def['context'], {'active_id': unquote("active_id"), 'uid': uid})
-                        action_context['window_action_id'] = action_def['id']
-                        action_def['context'] = unicode(action_context)
-                    except Exception as e:
-                        logging.getLogger('smile.base').warning('Error in eval: %s - %s' % (action_def['context'], repr(e)))
-                ################
                 results[action['name']] = (action['id'], action['name'], action_def)
             except orm.except_orm:
                 continue
         return sorted(results.values())
+
+
+class IrActionsActWindow(orm.Model):
+    _inherit = 'ir.actions.act_window'
+
+    def _read_flat(self, cr, uid, ids, fields_to_read, context=None, load='_classic_read'):
+        res = super(IrActionsActWindow, self)._read_flat(cr, uid, ids, fields_to_read, context, load)
+        if (not fields_to_read or 'context' in fields_to_read) and isinstance(ids, list):
+            for vals in res:
+                vals['context'] = eval(vals['context'], {'active_id': unquote("active_id"), 'active_ids': unquote("active_ids"),
+                                                         'active_model': unquote("active_model"), 'uid': uid}) or {}
+                if 'window_action_id' not in context:
+                    vals['context']['window_action_id'] = vals['id']
+                vals['context'] = unicode(vals['context'])
+        return res
