@@ -122,9 +122,13 @@ class IrActionsActWindow(orm.Model):
     def _read_flat(self, cr, uid, ids, fields_to_read, context=None, load='_classic_read'):
         res = super(IrActionsActWindow, self)._read_flat(cr, uid, ids, fields_to_read, context, load)
         if (not fields_to_read or 'context' in fields_to_read) and isinstance(ids, list):
+            eval_dict = {'active_id': unquote("active_id"), 'active_ids': unquote("active_ids"),
+                         'active_model': unquote("active_model"), 'uid': uid, 'context': context}
             for vals in res:
-                vals['context'] = eval(vals['context'], {'active_id': unquote("active_id"), 'active_ids': unquote("active_ids"),
-                                                         'active_model': unquote("active_model"), 'uid': uid}) or {}
+                try:
+                    vals['context'] = eval(vals['context'], eval_dict) or {}
+                except:
+                    continue
                 if 'window_action_id' not in context:
                     vals['context']['window_action_id'] = vals['id']
                 vals['context'] = unicode(vals['context'])
