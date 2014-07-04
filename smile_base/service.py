@@ -54,7 +54,7 @@ def smile_detective(min_delay):  # min_delay in seconds
     return detective_log
 
 
-model.dispatch = smile_detective(config.get('log_service_object', 0.000))(model.dispatch)
+model.dispatch = smile_detective(config.get('log_service_object', 0.500))(model.dispatch)
 report.dispatch = smile_detective(config.get('log_service_report', 0.500))(report.dispatch)
 
 native_dumpstacks = misc.dumpstacks
