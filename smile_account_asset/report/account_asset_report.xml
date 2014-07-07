@@ -10,7 +10,7 @@
 	        file="smile_account_asset/report/account_asset_asset_report.mako"
 	        string="Account Assets"
 	        report_type="webkit"
-	        webkit_header="smile_account_asset.ir_header_webkit_account_asset"/>
+	        webkit_header="report_webkit.ir_header_webkit_basesample0"/>
 
 		<!-- Report 1007 -->
         <report auto="False"
@@ -20,7 +20,7 @@
 	        file="smile_account_asset/report/account_asset_sale_report.mako"
 	        string="Account Asset Sales"
 	        report_type="webkit"
-	        webkit_header="smile_account_asset.ir_header_webkit_account_asset"/>
+	        webkit_header="report_webkit.ir_header_webkit_basesample0"/>
 
 		<!-- Report 1106 -->
         <report auto="False"
@@ -30,7 +30,7 @@
 	        file="smile_account_asset/report/account_asset_depreciation_line_report.mako"
 	        string="Account Asset Depreciation Lines"
 	        report_type="webkit"
-	        webkit_header="smile_account_asset.ir_header_webkit_account_asset"/>
+	        webkit_header="report_webkit.ir_header_webkit_basesample0"/>
 
 		<!-- Report 1206 -->
         <report auto="False"
@@ -40,7 +40,7 @@
 	        file="smile_account_asset/report/account_asset_fiscal_deduction_report.mako"
 	        string="Account Asset Fiscal Deductions"
 	        report_type="webkit"
-	        webkit_header="smile_account_asset.ir_header_webkit_account_asset"/>
+	        webkit_header="report_webkit.ir_header_webkit_basesample0"/>
 
     </data>
 </openerp>

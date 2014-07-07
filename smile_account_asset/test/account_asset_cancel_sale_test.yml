@@ -10,13 +10,23 @@
   !assert {model: account.asset.asset, id: account_asset_asset_digitalasset0, string: Asset is into service}:
     - state == 'open'
 -
-  I check if the cancellation is ok
+  I check if sale infos are empty
+-
+  !assert {model: account.asset.asset, id: account_asset_asset_digitalasset0, string: Asset into service with sale infos}:
+    - not sale_date
+    - not sale_value
+    - not sale_type
+    - not customer_id
+-
+  I check if depreciation board is ok
 -
   !python {model: account.asset.asset}: |
     asset = self.browse(cr, uid, ref('account_asset_asset_digitalasset0'), context)
-    depreciation_end_date = asset.accounting_depreciation_line_ids[-1].depreciation_date
+    depreciation_end_date = max([line.depreciation_date for line in asset.accounting_depreciation_line_ids])
     import time
-    years = 5 if time.strftime('%m-%d') != '01-01' else 4
+    years = asset.accounting_annuities
+    if time.strftime('%m-%d') == '01-01':
+      years -= 1
     end_date = '%s-12-31' % (int(time.strftime('%Y')) + years)
     log("Depreciation board end date = %s" % depreciation_end_date)
     log("Logical end date = %s" % end_date)

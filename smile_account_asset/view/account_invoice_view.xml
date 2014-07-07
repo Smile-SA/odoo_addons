@@ -45,6 +45,7 @@
 	            </field>
 	            <field name="account_id" position="after">
 	                <field name="asset_category_id" readonly="1"/>
+	                <field name="parent_id" attrs="{'readonly': [('asset_id', '!=', False)]}"/>
 	                <field name="asset_id" invisible="1"/>
 	                <field name="name" readonly="1"/>
 	            </field>
@@ -70,7 +71,7 @@
 					</field>
 		            <field name="account_id" position="after">
 		                <field name="asset_category_id" on_change="onchange_asset_category_id(asset_category_id, company_id)"/>
-		                <field name="parent_id"/>
+		                <field name="parent_id" attrs="{'readonly': [('asset_id', '!=', False)]}"/>
 		            </field>
 		            <field name="account_id" position="attributes">
 		                <attribute name="attrs">{'readonly': [('asset_category_id','!=',False)], 'required': [('asset_category_id','=',False)]}</attribute>
@@ -105,6 +106,7 @@
                     <field name="account_analytic_id" readonly="1" groups="analytic.group_analytic_accounting"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company"/>
 	                <field name="asset_category_id" readonly="1"/>
+	                <field name="parent_id"/>
                     <separator string="Notes" colspan="4"/>
                     <field colspan="4" name="note" nolabel="1" readonly="1"/>
                     <separator colspan="4" string="Taxes"/>

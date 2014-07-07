@@ -5,40 +5,53 @@
 	    <style type="text/css">${css}</style>
 		<title>${_('Account Asset Sales')}</title>
     </head>
+    <style>
+        .center {
+            text-align: center;
+        }
+        .table_asset td, .table_asset th {
+            border: 1px solid black;
+        }
+        .table_asset {
+            border-collapse:collapse;
+        }
+    </style>
 	<body>
+        <h1 class="center">Plus ou moins values fiscales</h1>
+        <br />
 	    <% setLang(lang) %>
         %if objects:
             %for group, assets in group_by(objects):
                 <h2>${group}</h2>
-                <table>
+                <table class="table_asset" width="100%">
                     <tr>
-                        <th rowspan="2" class="header" width="10%">${_('Reference')}</th>
-                        <th rowspan="2" class="header" width="16%">${label_header}</th>
-                        <th rowspan="2" class="header" width="8%">${_('Purchase Date')}</th>
+                        <th rowspan="2" class="header" style="max-width: 10%;width: 10%;">${_('Reference')}</th>
+                        <th rowspan="2" class="header" style="max-width: 16%;width: 16%;">${label_header}</th>
+                        <th rowspan="2" class="header" style="max-width: 8%;width: 8%;text-align: center;">${_('Purchase Date')}</th>
                         <th colspan="2">${_('Sale')}</th>
-                        <th rowspan="2" class="header" width="10%">${_('Gross Value')}</th>
-                        <th rowspan="2" class="header" width="10%">${_('Accumulated Depreciation')}</th>
-                        <th rowspan="2" class="header" width="10%">${_('Fiscal Book Value')}</th>
+                        <th rowspan="2" class="header" style="max-width: 10%;width: 10%;text-align: center;">${_('Gross Value')}</th>
+                        <th rowspan="2" class="header" style="max-width: 10%;width: 10%;text-align: center;">${_('Accumulated Depreciation')}</th>
+                        <th rowspan="2" class="header" style="max-width: 10%;width: 10%;text-align: center;">${_('Fiscal Book Value')}</th>
                         <th colspan="2">${_('Sale Results')}</th>
                     </tr>
                     <tr>
-                        <th class="header" width="8%">${_('Date')}</th>
-                        <th class="header" width="8%">${_('Type')}</th>
-                        <th class="header" width="10%">${_('Short Term')}</th>
-                        <th class="header" width="10%">${_('Long Term')}</th>
+                        <th class="header" style="max-width: 8%;width: 8%;text-align: center;">${_('Date')}</th>
+                        <th class="header" style="max-width: 8%;width: 8%;text-align: center;">${_('Type')}</th>
+                        <th class="header" style="max-width: 10%;width: 10%;text-align: center;">${_('Short Term')}</th>
+                        <th class="header" style="max-width: 10%;width: 10%;text-align: center;">${_('Long Term')}</th>
                     </tr>
                 %for asset in assets:
                     <tr>
                         <td style="text-align:left;">${asset.code}</td>
                         <td style="text-align:left;">${get_label(asset)}</td>
-                        <td style="text-align:left;">${asset.purchase_date}</td>
-                        <td style="text-align:left;">${asset.sale_date}</td>
-                        <td style="text-align:left;">${asset.sale_type or '-'}</td>
-                        <td style="text-align:right;">${formatLang(asset.purchase_value)}</td>
-                        <td style="text-align:right;">${formatLang(asset.accumulated_amortization_value)}</td>
-                        <td style="text-align:right;">${formatLang(asset.fiscal_book_value)}</td>
-                        <td style="text-align:right;">${formatLang(asset.sale_result_short_term)}</td>
-                        <td style="text-align:right;">${formatLang(asset.sale_result_long_term)}</td>
+                        <td style="text-align:center;">${asset.purchase_date}</td>
+                        <td style="text-align:center;">${asset.sale_date}</td>
+                        <td style="text-align:center;">${asset.sale_type or '-'}</td>
+                        <td style="text-align:right;">${('%.2f' % asset.purchase_value).replace('.', ',')}</td>
+                        <td style="text-align:right;">${('%.2f' % asset.accumulated_amortization_value).replace('.', ',')}</td>
+                        <td style="text-align:right;">${('%.2f' % asset.fiscal_book_value).replace('.', ',')}</td>
+                        <td style="text-align:right;">${('%.2f' % asset.sale_result_short_term).replace('.', ',')}</td>
+                        <td style="text-align:right;">${('%.2f' % asset.sale_result_long_term).replace('.', ',')}</td>
                     <tr/>
                 %endfor
                     <%
@@ -50,14 +63,21 @@
                             short_term_total += asset.sale_result_short_term
                             long_term_total += asset.sale_result_long_term
                     %>
+                    <br/>
                     <tr>
-                        <td class="footer" style="text-align:left;" colspan="5">${_('Total')}</td>
-                        <td class="footer" style="text-align:right;">${formatLang(purchase_total)}</td>
-                        <td class="footer" style="text-align:right;">${formatLang(accumulated_total)}</td>
-                        <td class="footer" style="text-align:right;">${formatLang(fiscal_book_total)}</td>
-                        <td class="footer" style="text-align:right;">${formatLang(short_term_total)}</td>
-                        <td class="footer" style="text-align:right;">${formatLang(long_term_total)}</td>
+                        <td colspan="6" height="30" style="border:none;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="footer" style="text-align:left;font-weight:bold;border:none;" colspan="5">${_('Total')}</td>
+                        <td class="footer" style="text-align:right;font-weight:bold;border:none;">${formatLang(purchase_total)}</td>
+                        <td class="footer" style="text-align:right;font-weight:bold;border:none;">${formatLang(accumulated_total)}</td>
+                        <td class="footer" style="text-align:right;font-weight:bold;border:none;">${formatLang(fiscal_book_total)}</td>
+                        <td class="footer" style="text-align:right;font-weight:bold;border:none;">${formatLang(short_term_total)}</td>
+                        <td class="footer" style="text-align:right;font-weight:bold;border:none;">${formatLang(long_term_total)}</td>
                     <tr/>
+                    <tr>
+                        <td colspan="6" height="30" style="border:none;">&nbsp;</td>
+                    </tr>
                 </table>
             %endfor
             <%
@@ -72,17 +92,17 @@
                         global_tax_to_pay += asset.regularization_tax_amount
             %>
             <h2 style="page-break-before: always;">${_('Summary')}</h2>
-            <table>
+            <table class="table_asset" width="100%">
                 <tr>
                     <th colspan="2">${_('Sale Results')}</th>
                     <th colspan="2">${_('Deductible Taxes')}</th>
-                    <th class="header" width="20%" rowspan="2">${_('Taxes to pay')}</th>
+                    <th class="header" style="max-width: 20%;width: 20%;text-align: center;" rowspan="2">${_('Taxes to pay')}</th>
                 </tr>
                 <tr>
-                    <th class="header" width="20%">${_('Short Term')}</th>
-                    <th class="header" width="20%">${_('Long Term')}</th>
-                    <th class="header" width="20%">${_('Origin')}</th>
-                    <th class="header" width="20%">${_('Additionnal')}</th>
+                    <th class="header" style="max-width: 20%;width: 20%;text-align: center;">${_('Short Term')}</th>
+                    <th class="header" style="max-width: 20%;width: 20%;text-align: center;">${_('Long Term')}</th>
+                    <th class="header" style="max-width: 20%;width: 20%;text-align: center;">${_('Origin')}</th>
+                    <th class="header" style="max-width: 20%;width: 20%;text-align: center;">${_('Additionnal')}</th>
                 </tr>
                 <tr>
                     <td style="text-align:right;">${global_short_term}</td>
@@ -92,6 +112,7 @@
                     <td style="text-align:right;">${global_tax_to_pay}</td>
                 </tr>
             </table>
+            <br />
         %endif
 	</body>
 </html>
