@@ -25,6 +25,7 @@ import inspect
 def decorate_methods(decorator):
     if not hasattr(decorator, '_decorated_methods'):
         decorator._decorated_methods = {}
+
     def meta_decorator(methods_to_decorate):
         for model, method_name in list(set(methods_to_decorate)):
             model_class = model.__class__
