@@ -27,23 +27,12 @@ import tools
 from tools.translate import _
 
 from depreciation_board import DepreciationBoard
-from account_asset_tools import get_date, get_period_stop_date
+from account_asset_tools import get_date, get_period_stop_date, get_fiscalyear_stop_date
 
 
 class AccountAssetDepreciationMethod(orm.Model):
     _name = 'account.asset.depreciation.method'
     _description = 'Asset depreciation method'
-
-    def _get_need_additional_annuity(self, cr, uid, ids, name, arg, context=None):
-        res = {}.fromkeys(ids, False)
-        for method in self.browse(cr, uid, ids, context):
-            if not method.prorata:
-                res[method.id] = False
-            else:
-                depreciation_line_vals = self.compute_depreciation_board(cr, uid, method.code, 100.0, 0.0, 2, 0.0,
-                                                                         '2013-07-01', '2013-07-01', context=context)
-                res[method.id] = bool(depreciation_line_vals[-1]['book_value'])  # Because salvage_value is null
-        return res
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
@@ -63,9 +52,8 @@ class AccountAssetDepreciationMethod(orm.Model):
                                     help="This expression is evaluated with length, annuity_number "
                                          "and rate (if depreciation rate indicated in asset) in localdict"),
         'prorata': fields.boolean('Prorata Temporis'),
-        'need_additional_annuity': fields.function(_get_need_additional_annuity, method=True, type='boolean', store={
-            'account.asset.depreciation.method': (lambda self, cr, uid, ids, context=None: ids, ['rate_formula', 'prorata'], 5),
-        }, string='Need Additional Annuity', help="If depreciation start date is different from fiscalyear start date"),
+        'need_additional_annuity': fields.boolean('Need Additional Annuity',
+                                                  help="If depreciation start date is different from fiscalyear start date"),
     }
 
     _defaults = {
@@ -166,11 +154,16 @@ class AccountAssetDepreciationMethod(orm.Model):
     def get_depreciation_stop_date(self, cr, uid, code, purchase_date, in_service_date, annuities, depreciation_period=12,
                                    fiscalyear_start_day='01-01', exceptional_values=None, context=None):
         # TODO: manage method changes history
+        if code == 'none':
+            return None
         method_info = self.get_method_info(cr, uid, code, context)
-        annuities += not exceptional_values and method_info['need_additional_annuity']
         date = get_date(self.get_depreciation_start_date(cr, uid, code, purchase_date, in_service_date, context))
-        date += relativedelta(years=annuities, days=-1)
-        return get_period_stop_date(date, fiscalyear_start_day, depreciation_period).strftime('%Y-%m-%d')
+        if not exceptional_values and method_info['need_additional_annuity']:
+            date += relativedelta(years=annuities, days=-1)
+            return get_period_stop_date(date, fiscalyear_start_day, depreciation_period).strftime('%Y-%m-%d')
+        period_stop_date = get_fiscalyear_stop_date(date, fiscalyear_start_day)
+        period_stop_date += relativedelta(years=annuities - 1)
+        return period_stop_date.strftime('%Y-%m-%d')
 
     def compute_depreciation_board(self, cr, uid, code, purchase_value, salvage_value, annuities, rate, purchase_date, in_service_date,
                                    sale_date=None, depreciation_period=12, fiscalyear_start_day='01-01', board_stop_date=None, rounding=2,

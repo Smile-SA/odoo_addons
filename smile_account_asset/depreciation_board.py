@@ -29,45 +29,6 @@ from account_asset_tools import get_date, get_fiscalyear_start_date, get_fiscaly
     get_depreciation_period_dates
 
 
-def check_and_format_method_info(method_info):
-    if not isinstance(method_info, dict):
-        raise TypeError("method_info must be a dictionnary")
-    missing_keys = []
-    for key in ('base_value', 'use_salvage_value', 'use_manual_rate', 'rate_formula', 'prorata', 'need_additional_annuity'):
-        if key not in method_info:
-            missing_keys.append(key)
-    if missing_keys:
-        raise KeyError("The following keys are missing in method_info dict: %s" % missing_keys)
-    return method_info
-
-
-def check_and_format_vals(vals, dict_name):
-    error_msg = '%s keys must be strings at format YYYY-MM' % dict_name
-    vals = vals or {}
-    for k in vals:
-        if not isinstance(k, basestring):
-            raise ValueError(error_msg)
-        else:
-            try:
-                datetime.strptime(k, '%Y-%m')
-            except ValueError:
-                raise ValueError(error_msg)
-        if dict_name == 'exceptional_values':
-            if isinstance(vals[k], (int, long)):
-                vals[k] = float(vals[k])
-            if not isinstance(vals[k], float):
-                raise ValueError('%s values must be floats' % dict_name)
-        if dict_name == 'readonly_values':
-            error_msg2 = "%s values must be dictionaries {'depreciation_value': float, 'base_value': float}" % dict_name
-            if not isinstance(vals[k], dict):
-                raise ValueError(error_msg2)
-            else:
-                for k2 in ('depreciation_value', 'base_value'):
-                    if k2 not in vals[k] or not isinstance(vals[k][k2], float):
-                        raise ValueError(error_msg2)
-    return vals
-
-
 class DepreciationBoard(object):
 
     def __init__(self, method_info, purchase_value, annuities, rate=0.0, salvage_value=0.0, depreciation_start_date=None,
@@ -75,7 +36,7 @@ class DepreciationBoard(object):
                  readonly_values=None, exceptional_values=None):
         assert depreciation_period in (1, 2, 3, 4, 6, 12), 'depreciation_period must be in (1, 2, 3, 4, 6, 12)'
         self.depreciation_period = depreciation_period
-        self.method_info = check_and_format_method_info(method_info)
+        self.method_info = DepreciationBoard.check_and_format_method_info(method_info)
         self.purchase_value = purchase_value
         self.salvage_value = method_info['use_salvage_value'] and salvage_value or 0.0
         self.rate = rate
@@ -83,8 +44,8 @@ class DepreciationBoard(object):
         self.sale_date = get_date(sale_date)
         self.fiscalyear_start_day = fiscalyear_start_day
         self.rounding = rounding
-        self.readonly_values = check_and_format_vals(readonly_values, 'readonly_values')
-        self.exceptional_values = check_and_format_vals(exceptional_values, 'exceptional_values')
+        self.readonly_values = DepreciationBoard.check_and_format_vals(readonly_values, 'readonly_values')
+        self.exceptional_values = DepreciationBoard.check_and_format_vals(exceptional_values, 'exceptional_values')
         self.initial_annuities = annuities
         self.need_additional_annuity = method_info['need_additional_annuity'] \
             and self.depreciation_start_date.strftime('%m-%d') != fiscalyear_start_day
@@ -112,6 +73,45 @@ class DepreciationBoard(object):
         self.next_depreciation_date = self.first_yearly_depreciation_date
         self.reset_partially = False
 
+    @staticmethod
+    def check_and_format_method_info(method_info):
+        if not isinstance(method_info, dict):
+            raise TypeError("method_info must be a dictionnary")
+        missing_keys = []
+        for key in ('base_value', 'use_salvage_value', 'use_manual_rate', 'rate_formula', 'prorata', 'need_additional_annuity'):
+            if key not in method_info:
+                missing_keys.append(key)
+        if missing_keys:
+            raise KeyError("The following keys are missing in method_info dict: %s" % missing_keys)
+        return method_info
+
+    @staticmethod
+    def check_and_format_vals(vals, dict_name):
+        error_msg = '%s keys must be strings at format YYYY-MM' % dict_name
+        vals = vals or {}
+        for k in vals:
+            if not isinstance(k, basestring):
+                raise ValueError(error_msg)
+            else:
+                try:
+                    datetime.strptime(k, '%Y-%m')
+                except ValueError:
+                    raise ValueError(error_msg)
+            if dict_name == 'exceptional_values':
+                if isinstance(vals[k], (int, long)):
+                    vals[k] = float(vals[k])
+                if not isinstance(vals[k], float):
+                    raise ValueError('%s values must be floats' % dict_name)
+            if dict_name == 'readonly_values':
+                error_msg2 = "%s values must be dictionaries {'depreciation_value': float, 'base_value': float}" % dict_name
+                if not isinstance(vals[k], dict):
+                    raise ValueError(error_msg2)
+                else:
+                    for k2 in ('depreciation_value', 'base_value'):
+                        if k2 not in vals[k] or not isinstance(vals[k][k2], float):
+                            raise ValueError(error_msg2)
+        return vals
+
     def compute(self):
         self.reset()
         break_loop = False  # TODO: improve me
@@ -127,7 +127,7 @@ class DepreciationBoard(object):
         return self.get_lines()
 
     def _compute_depreciation_rate(self):
-        localdict = {'length': self.annuities, 'annuity_number': self.annuity_number}
+        localdict = {'length': float(self.annuities), 'annuity_number': float(self.annuity_number)}
         if self.method_info['use_manual_rate']:
             localdict['rate'] = self.rate
         return eval(self.method_info['rate_formula'], localdict)
@@ -277,7 +277,7 @@ class DepreciationBoardLine(object):
                                                                     board.fiscalyear_start_day, board.depreciation_period)
         if not prorata_temporis_by_period:
             return []
-        if board.method_info['prorata'] and board.board_stop_date and period_depreciation_stop_date >= board.board_stop_date:
+        if board.method_info['need_additional_annuity'] and board.board_stop_date and period_depreciation_stop_date >= board.board_stop_date:
             real_end_date = period_depreciation_stop_date + relativedelta(days=1) \
                 + relativedelta(month=board.depreciation_start_date.month, day=board.depreciation_start_date.day) \
                 - relativedelta(days=1)
@@ -305,6 +305,7 @@ class DepreciationBoardLine(object):
                 depreciation_value = readonly_depreciation_value
             elif gap:
                 depreciation_value += gap
+                gap = 0.0
             if depreciation_index + 1 == depreciation_number:
                 depreciation_value = self.depreciation_value - accumulated_value_in_period
             else:

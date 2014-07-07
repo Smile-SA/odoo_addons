@@ -124,22 +124,22 @@ class AccountAssetAsset(orm.Model):
     def _get_move_vals(self, cr, uid, asset, move_type, context=None, reversal=False):
         context_copy = context and context.copy() or {}
         context_copy['company_id'] = asset.company_id.id
-        period_ids = self.pool.get('account.period').find(cr, uid, asset.purchase_date, context_copy)
         today = time.strftime('%Y-%m-%d')
-        date = asset.purchase_account_date or today
+        move_date = asset.purchase_account_date or today
         partner_id = asset.supplier_id.id
         if move_type == 'sale':
-            date = asset.sale_account_date or today
+            move_date = asset.sale_account_date or today
             partner_id = asset.customer_id.id
         if reversal:
-            date = today
+            move_date = today
         msg = move_type == 'purchase' and _('Asset Purchase: %s') or _('Asset Sale: %s')
         journal = move_type == 'sale' and asset.category_id.sale_journal_id or asset.category_id.asset_journal_id
+        period_ids = self.pool.get('account.period').find(cr, uid, move_date, context_copy)
         vals = {
             'name': self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id, context),
             'narration': msg % asset.name,
             'ref': asset.code,
-            'date': date,
+            'date': move_date,
             'period_id': period_ids and period_ids[0] or False,
             'journal_id': journal.id,
             'partner_id': partner_id,
@@ -175,13 +175,9 @@ class AccountAssetAsset(orm.Model):
         for asset in self.browse(cr, uid, ids, context):
             if not asset.invoice_line_ids and (not asset.origin_id or not asset.origin_id.invoice_line_ids):
                 self.create_move(cr, uid, asset.id, 'purchase', context)
-            elif asset.invoice_line_ids[0].account_id != asset.category_id.asset_account_id:
-                # TODO: implement me
-                pass
         return res
 
     def cancel_asset_purchase(self, cr, uid, ids, context=None):
-        # TODO: gérer l'annulation d'une immo secondaire après décomposition
         # INFO: Reverse account moves not linked to invoices because these last ones are not canceled
         res = super(AccountAssetAsset, self).cancel_asset_purchase(cr, uid, ids, context)
         depreciation_line_obj = self.pool.get('account.asset.depreciation.line')
@@ -275,15 +271,16 @@ class AccountAssetAsset(orm.Model):
         if isinstance(ids, (int, long)):
             ids = [ids]
         context_copy = context and context.copy() or {}
+        today = time.strftime('%Y-%m-%d')
         for asset in self.browse(cr, uid, ids, context):
             context_copy['company_id'] = asset.company_id.id
-            period_ids = self.pool.get('account.period').find(cr, uid, asset.sale_date, context_copy)
+            period_ids = self.pool.get('account.period').find(cr, uid, today, context_copy)
             journal = asset.category_id.asset_journal_id
             vals = {
                 'name': self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id, context),
                 'narration': _('Asset Output%s: %s') % (reversal and _(' Cancellation') or '', asset.name),
                 'ref': asset.code,
-                'date': time.strftime('%Y-%m-%d'),
+                'date': today,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': journal.id,
                 'company_id': asset.company_id.id,
@@ -400,18 +397,17 @@ class AccountAssetAsset(orm.Model):
     def _transfer_from_accounts_to_others(self, cr, uid, ids, accounts_group, old_accounts, new_accounts, context=None):
         move_ids = []
         move_obj = self.pool.get('account.move')
-        today = time.strftime('%Y-%m-%d')
         analytic_field = 'asset_analytic_account_id' if accounts_group == 'purchase' else 'sale_analytic_account_id'
+        context_copy = context and context.copy() or {}
+        context_copy['force_account_move_date'] = time.strftime('%Y-%m-%d')
         for asset in self.browse(cr, uid, ids, context):
-            vals = self._get_move_vals(cr, uid, asset, accounts_group, context)
-            vals['date'] = today
+            vals = self._get_move_vals(cr, uid, asset, accounts_group, context_copy)
             new_line_vals = []
             for i, j, line_vals in vals['line_id']:
                 for account, group in ACCOUNT_GROUPS.iteritems():
                     if group != accounts_group or account not in old_accounts or 'analytic' in account:
                         continue
                     if line_vals['account_id'] == old_accounts[account] or (analytic_field in old_accounts and analytic_field in line_vals):
-                        line_vals['date'] = today
                         transfer_vals = line_vals.copy()
                         if account in new_accounts:
                             transfer_vals['account_id'] = new_accounts[account]
@@ -516,7 +512,8 @@ class AccountAssetDepreciationLine(orm.Model):
         category = asset.category_id
         context_copy = context and context.copy() or {}
         context_copy['company_id'] = line.asset_id.company_id.id
-        period_ids = self.pool.get('account.period').find(cr, uid, line.depreciation_date, context_copy)
+        move_date = context.get('force_account_move_date') or line.depreciation_date
+        period_ids = self.pool.get('account.period').find(cr, uid, move_date, context_copy)
         msg = ''
         if line.depreciation_type == 'accounting' and not transfer:
             msg = _('Accounting Amortization')
@@ -532,7 +529,7 @@ class AccountAssetDepreciationLine(orm.Model):
             'name': self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id, context),
             'narration': '%s%s: %s' % (prefix, msg, asset.name),
             'ref': asset.code,
-            'date': context.get('force_account_move_date') or line.depreciation_date,
+            'date': move_date,
             'period_id': period_ids and period_ids[0] or False,
             'journal_id': journal.id,
             'company_id': asset.company_id.id,
@@ -585,17 +582,16 @@ class AccountAssetDepreciationLine(orm.Model):
         context_copy = context and context.copy() or {}
         for depreciation_line, amount in last_depreciation_line_by_asset.itervalues():
             context_copy['force_account_move_amount'] = amount
+            context_copy['force_account_move_date'] = today
             transfer_groups = ['']
             if accounts_group == 'exceptional_amortization':
                 transfer_groups = ['from_depreciation', 'to_exceptional_amortization']
             for transfer in transfer_groups:
                 vals = self._get_move_vals(cr, uid, depreciation_line, context_copy, transfer=transfer)
-                vals['date'] = today
                 new_line_vals = []
                 for i, j, line_vals in vals['line_id']:
                     for account, group in ACCOUNT_GROUPS.iteritems():
                         if group == accounts_group and account in old_accounts and line_vals['account_id'] == old_accounts[account]:
-                            line_vals['date'] = today
                             transfer_vals = line_vals.copy()
                             transfer_vals['account_id'] = new_accounts[account]
                             line_vals['debit'], line_vals['credit'] = line_vals['credit'], line_vals['debit']
