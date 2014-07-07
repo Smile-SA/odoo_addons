@@ -147,6 +147,7 @@ msgstr "Individuel"
 
 #. module: smile_account_voucher_group
 #: model:ir.model,name:smile_account_voucher_group.model_account_invoice
+#: field:account.voucher.line,invoice_id:0
 msgid "Invoice"
 msgstr "Facture"
 

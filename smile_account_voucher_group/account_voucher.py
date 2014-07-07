@@ -129,7 +129,8 @@ class AccountVoucher(orm.Model):
                 voucher_ids_to_reconcile.append(voucher.id)
                 for line in voucher.line_ids:
                     if line.amount:
-                        line.move_line_id.write({'amount_deduce': line.amount})
+                        amount_deduce = line.move_line_id.amount_deduce + line.amount
+                        line.move_line_id.write({'amount_deduce': amount_deduce})
                         move_line_ids_to_reconcile.append(line.move_line_id.id)
                 move_line_obj.reconcile_partial(cr, uid, move_line_ids_to_reconcile, context=context)
         wkf_service = netsvc.LocalService('workflow')
@@ -191,14 +192,15 @@ class AccountVoucher(orm.Model):
 class AccountVoucherLine(orm.Model):
     _inherit = 'account.voucher.line'
 
-    _columns = {
-        'invoice_id': fields.many2one('account.invoice', 'Facture'),
-    }
+    def _get_invoice_ids(self, cr, uid, ids, name, arg, context=None):
+        move_ids_by_line = dict([(avl.id, avl.move_line_id and avl.move_line_id.move_id.id or False) for avl in self.browse(cr, uid, ids, context)])
+        invoice_obj = self.pool.get('account.invoice')
+        invoice_ids = invoice_obj.search(cr, uid, [('move_id', 'in', move_ids_by_line.values())], context=context)
+        invoice_ids_by_move = dict([(inv.move_id.id, inv.id) for inv in invoice_obj.browse(cr, uid, invoice_ids, context)])
+        return dict([(move_line_id, invoice_ids_by_move.get(move_id, False)) for move_line_id, move_id in move_ids_by_line.iteritems()])
 
-    def create(self, cr, uid, vals, context=None):
-        if not vals.get('invoice_id') and vals.get('move_line_id'):
-            cr.execute('SELECT i.id FROM account_move_line ml LEFT JOIN account_invoice i '
-                       'ON ml.move_id = i.move_id WHERE ml.id = %s',
-                       (vals['move_line_id'],))
-            vals['invoice_id'] = [i for i in cr.fetchall()][0]
-        return super(AccountVoucherLine, self).create(cr, uid, vals, context)
+    _columns = {
+        'invoice_id': fields.function(_get_invoice_ids, method=True, type='many2one', relation='account.invoice', string="Invoice", store={
+            'account.voucher.line': (lambda self, cr, uid, ids, context=None: ids, ['move_line_id'], 5),
+        }),
+    }

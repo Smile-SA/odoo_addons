@@ -117,7 +117,7 @@ class AccountInvoice(orm.Model):
         return self.search(cr, uid, domain, context=context)
 
     def _get_unicity_key(self, cr, uid, invoice, context=None):
-        return tuple([getattr(invoice, field) for field in self._group_unicity_key])
+        return tuple([getattr(invoice, field).id for field in self._group_unicity_key])
 
     def get_invoices_to_pay(self, cr, uid, context=None):
         groups = {}
@@ -142,7 +142,7 @@ class AccountInvoice(orm.Model):
         context = context or {}
         context['force_company'] = context['company_id'] = invoices[0].company_id.id  # company_id for period, force_company for journal
         voucher_obj = self.pool.get('account.voucher')
-        partner = self.pool.get('res.partner').browse(cr, uid, invoices[0].partner_id.id, context)
+        partner = invoices[0].partner_id
         journal = partner.payment_mode_id.journal_id
         if not journal:
             raise orm.except_orm(_('Error'), _('Please indicate a journal for payment mode %s and company %s')
