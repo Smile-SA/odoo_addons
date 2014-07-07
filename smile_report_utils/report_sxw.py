@@ -28,6 +28,8 @@ def new_getObjects(self, cr, uid, ids, context):
     res = native_getObjects(self, cr, uid, ids, context)
     if hasattr(self.parser, 'check'):
         res = self.parser.check(res)
+    if hasattr(self.parser, 'check_resources'):
+        res = self.parser.check_resources(self, cr, uid, res, context)
     return res
 
 report_sxw.getObjects = new_getObjects
