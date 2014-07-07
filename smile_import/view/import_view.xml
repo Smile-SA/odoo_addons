@@ -19,7 +19,7 @@
                     <notebook colspan="4">
                         <page string="Imports">
                         	<button name="create_import" type="object" string="New Import" colspan="4"/>
-                            <field name="import_ids" colspan="4" nolabel="1"/>
+                            <field name="import_ids" colspan="4" nolabel="1" context="{'import_template_form_view': True}"/>
                         </page>
                         <page string="Logs">
                             <field name="log_ids" colspan="4" nolabel="1"/>
@@ -78,11 +78,11 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Import">
+					<field name="import_tmpl_id" colspan="4" invisible="context.get('import_template_form_view')"/>
 					<field name="name" />
-					<field name="import_tmpl_id" />
+					<field name="create_uid"/>
 					<field name="state" />
 					<field name="test_mode"/>
-                    <field name="pid"/>
 					<newline/>
 					<field name="from_date" />
 					<field name="to_date" />

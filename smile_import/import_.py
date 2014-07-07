@@ -152,6 +152,7 @@ class IrModelImport(Model):
         return result
 
     _columns = {
+        'create_uid': fields.many2one('res.users', readonly=True),
         'name': fields.char('Name', size=64, readonly=True),
         'import_tmpl_id': fields.many2one('ir.model.import.template', 'Template', readonly=True, required=True, ondelete='cascade'),
         'from_date': fields.datetime('From date', readonly=True),
