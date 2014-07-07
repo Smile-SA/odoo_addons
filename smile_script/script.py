@@ -24,7 +24,7 @@ import logging
 from StringIO import StringIO
 import time
 
-from openerp import sql_db, SUPERUSER_ID, tools
+from openerp import netsvc, sql_db, SUPERUSER_ID, tools
 from openerp.modules.registry import Registry
 from openerp.osv import fields, osv, orm
 from openerp.tools import convert_xml_import
@@ -184,6 +184,7 @@ class SmileScript(orm.Model):
             'ref': partial(self.ref, cr),
             'logger': logger,
             'time': time,
+            'netsvc': netsvc,
         }
         exec script.code in localdict
         return localdict['result'] if 'result' in localdict else 'No expected result'
