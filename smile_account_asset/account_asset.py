@@ -324,6 +324,19 @@ class AccountAssetAsset(orm.Model):
         (_check_salvage_value, 'Salvage value cannot be negative nor bigger than gross value!', ['salvage_value', 'purchase_value']),
     ]
 
+    def name_get(self, cr, uid, ids, context=None):
+        res = {}
+        for asset in self.browse(cr, uid, ids, context):
+            res[asset.id] = asset.name
+            if asset.code:
+                res[asset.id] = '[%s] %s' % (asset.code, asset.name)
+        return res.items()
+
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        domain = ['|', ('code', operator, name), ('name', operator, name)] + (args or [])
+        ids = self.search(cr, uid, domain, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context)
+
     def create(self, cr, uid, vals, context=None):
         if not vals.get('fiscal_method'):
             vals['fiscal_method'] = 'none'
