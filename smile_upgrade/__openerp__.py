@@ -33,7 +33,7 @@ Objectives
 
 Execution
 
-    Do nothing special! (Re-)Launch OpenERP server and it's done
+    openerp-server -c rcfile -d db_name --load=web,smile_upgrade
 
 Configuration
 

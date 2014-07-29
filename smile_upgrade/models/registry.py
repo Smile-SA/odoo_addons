@@ -41,7 +41,7 @@ def _get_exception_message(exception):
 
 def set_db_version(self, version):
     if version:
-        cr = self.db.cursor()
+        cr = self._db.cursor()
         try:
             cr.execute("INSERT INTO ir_config_parameter (key, value) VALUES ('code.version', %s)", (version,))
             cr.commit()
@@ -101,3 +101,4 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
 
 RegistryManager.upgrade_manager = upgrade_manager
 RegistryManager.new = new
+

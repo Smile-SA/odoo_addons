@@ -19,31 +19,6 @@
 #
 ##############################################################################
 
-import logging
-
-from openerp.osv.orm import BaseModel
-
-_logger = logging.getLogger(__package__)
-
-native_store_set_values = BaseModel._store_set_values
-
-
-def new_store_set_values(self, cr, uid, ids, fields, context):
-    context = context or {}
-    if not context.get('store_in_secure_mode'):
-        return native_store_set_values(self, cr, uid, ids, fields, context)
-    res_ids_in_error = {}
-    for res_id in ids:
-        try:
-            native_store_set_values(self, cr, uid, [res_id], fields, context)
-        except Exception, e:
-            res_ids_in_error[res_id] = e
-            continue
-    model = self.__class__.__name__
-    if res_ids_in_error:
-        _logger.error('%s._store_set_values FAILED: %s', model, repr(res_ids_in_error))
-    else:
-        _logger.debug('%s._store_set_values SUCCESS', model)
-    return True
-
-BaseModel._store_set_values = new_store_set_values
+import config
+import models
+import registry
