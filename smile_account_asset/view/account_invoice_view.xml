@@ -122,7 +122,7 @@
 	        <field name="view_mode">tree,form</field>
             <field name="view_id" ref="account.view_invoice_line_tree"/>
            	<field name="search_view_id" ref="view_account_invoice_line_search"/>
-            <field name="domain">[('invoice_id.state', 'not in', ('draft', 'proforma', 'proforma2')),('asset_category_id','!=',False),('invoice_id.journal_id.type', 'in',('purchase','purchase_refund'))]</field>
+            <field name="domain">[('invoice_id.state', 'not in', ('draft', 'proforma', 'proforma2', 'cancel')),('asset_category_id','!=',False),('invoice_id.journal_id.type', 'in',('purchase','purchase_refund'))]</field>
             <field name="context">{'search_default_asset': True}</field>
 	    </record>
         <record id="action_account_invoice_line_view1" model="ir.actions.act_window.view">
