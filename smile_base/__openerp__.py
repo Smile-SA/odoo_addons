@@ -49,8 +49,8 @@
         "security/res_users.yml",
         "data/mail_data.xml",
         "data/ir_lang.yml",
-        "view/ir_values_view.xml",
-        "view/module_view.xml",
+        "views/ir_values_view.xml",
+        "views/module_view.xml",
     ],
     "js": [
         "static/src/js/disable_openerp_online.js",

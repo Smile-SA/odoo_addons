@@ -22,12 +22,14 @@
 import logging
 
 from openerp.addons.base.ir.ir_values import ACTION_SLOTS, EXCLUDED_FIELDS
-from openerp.osv import fields, orm
+from openerp import models
+from openerp.exceptions import except_orm
+from openerp.osv import fields
 from openerp.tools.misc import unquote
 from openerp.tools.safe_eval import safe_eval as eval
 
 
-class IrValues(orm.Model):
+class IrValues(models.Model):
     _inherit = 'ir.values'
     _order = 'sequence, id'
 
@@ -106,17 +108,17 @@ class IrValues(orm.Model):
                                        (tuple(groups), uid))
                             if not cr.fetchone():
                                 if action['name'] == 'Menuitem':
-                                    raise orm.except_orm('Error !',
+                                    raise except_orm('Error !',
                                                          'You do not have the permission to perform this operation !!!')
                                 continue
                 # keep only the first action registered for each action name
                 results[action['name']] = (action['id'], action['name'], action_def)
-            except orm.except_orm:
+            except except_orm:
                 continue
         return sorted(results.values())
 
 
-class IrActionsActWindow(orm.Model):
+class IrActionsActWindow(models.Model):
     _inherit = 'ir.actions.act_window'
 
     def _read_flat(self, cr, uid, ids, fields_to_read, context=None, load='_classic_read'):

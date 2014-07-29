@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-from openerp.osv import orm
-
-
-class IrTranslation(orm.Model):
-    _inherit = "ir.translation"
-    _log_access = True
+import ir_values
+import ir_translation
+import models
+import registry
+import sql_db
+import update
+import service

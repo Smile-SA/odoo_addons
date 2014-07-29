@@ -19,22 +19,15 @@
 #
 ##############################################################################
 
+from openerp import api
 from openerp.osv import fields
-from openerp.osv.orm import BaseModel
+from openerp.models import BaseModel
 
 native_auto_init = BaseModel._auto_init
-native_validate = BaseModel._validate
+native_validate_fields = BaseModel._validate_fields
 native_import_data = BaseModel.import_data
 native_load = BaseModel.load
 native_unlink = BaseModel.unlink
-
-
-def clean_store_function(init_func):
-    def init_wrapper(self, pool, cr):
-        init_func(self, pool, cr)
-        for model in self.pool._store_function:
-            self.pool._store_function[model] = list(set(self.pool._store_function[model]))
-    return init_wrapper
 
 
 def new_auto_init(self, cr, context=None):
@@ -46,22 +39,22 @@ def new_auto_init(self, cr, context=None):
     return res
 
 
-def new_validate(self, cr, uid, ids, context=None):
-    context = context or {}
-    if context.get('no_validate'):
-        return
-    native_validate(self, cr, uid, ids, context)
+def new_validate_fields(self, fields_to_validate):
+    context = self.env.context
+    if not context.get('no_validate'):
+        native_validate_fields(self, fields_to_validate)
 
 
 # Helper function combining _store_get_values and _store_set_values
-def _compute_store_set(self, cr, uid, ids, context):
+@api.multi
+def _compute_store_set(self):
     """
     Get the list of stored function field to recompute (via _store_get_values)
     and recompute them (via _store_set_values)
     """
-    store_get_result = self._store_get_values(cr, uid, ids, self._columns.keys(), context)
+    cr, uid, context = self.env.args
+    store_get_result = self._store_get_values(self._columns.keys())
     store_get_result.sort()
-
     done = {}
     for order, model, ids_to_update, fields_to_recompute in store_get_result:
         key = (model, tuple(fields_to_recompute))
@@ -72,7 +65,7 @@ def _compute_store_set(self, cr, uid, ids, context):
             if id_to_update not in done[key]:
                 done[key][id_to_update] = True
                 todo.append(id_to_update)
-        self.pool.get(model)._store_set_values(cr, uid, todo, fields_to_recompute, context)
+        self.pool[model]._store_set_values(cr, uid, todo, fields_to_recompute, context)
 
 
 def new_load(self, cr, uid, fields, data, context=None):
@@ -83,8 +76,9 @@ def new_load(self, cr, uid, fields, data, context=None):
     res = native_load(self, cr, uid, fields, data, context_copy)
     ids = res['ids']
     if ids:
-        self._compute_store_set(cr, uid, ids, context)
-        self._validate(cr, uid, ids, context)
+        recs = self.browse(cr, uid, ids, context)
+        recs._compute_store_set()
+        recs._validate_fields(fields)
         self._parent_store_compute(cr)
     return res
 
@@ -119,8 +113,12 @@ def new_unlink(self, cr, uid, ids, context=None):
         return True
     return native_unlink(self, cr, uid, existing_ids, context)
 
-
-def bulk_create(self, cr, uid, vals_list, context=None):
+@api.model
+@api.returns('self')
+def bulk_create(self, vals_list):
+    if not vals_list:
+        return []
+    cr, uid, context = self.env.args
     context_copy = context and context.copy() or {}
     context_copy['no_store_function'] = True
     context_copy['no_validate'] = True
@@ -129,16 +127,16 @@ def bulk_create(self, cr, uid, vals_list, context=None):
     if not isinstance(vals_list, list):
         vals_list = [vals_list]
     for vals in vals_list:
-        ids.append(self.create(cr, uid, vals, context_copy))
-    self._compute_store_set(cr, uid, ids, context)
-    self._validate(cr, uid, ids, context)
-    self._parent_store_compute(cr)
-    return ids
+        ids.append(self.with_context(context_copy).create(vals).id)
+    records = self.browse(ids)
+    records._compute_store_set()
+    records._validate_fields(vals_list[0])
+    self._parent_store_compute()
+    return records
 
-BaseModel.__init__ = clean_store_function(BaseModel.__init__)
 BaseModel._auto_init = new_auto_init
 BaseModel._compute_store_set = _compute_store_set
-BaseModel._validate = new_validate
+BaseModel._validate_fields = new_validate_fields
 BaseModel.bulk_create = bulk_create
 BaseModel.import_data = new_import_data
 BaseModel.load = new_load
