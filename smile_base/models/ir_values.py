@@ -22,8 +22,8 @@
 import logging
 
 from openerp.addons.base.ir.ir_values import ACTION_SLOTS, EXCLUDED_FIELDS
-from openerp import models
-from openerp.exceptions import except_orm
+from openerp import models, _
+from openerp.exceptions import except_orm, Warning
 from openerp.osv import fields
 from openerp.tools.misc import unquote
 from openerp.tools.safe_eval import safe_eval as eval
@@ -108,12 +108,11 @@ class IrValues(models.Model):
                                        (tuple(groups), uid))
                             if not cr.fetchone():
                                 if action['name'] == 'Menuitem':
-                                    raise except_orm('Error !',
-                                                         'You do not have the permission to perform this operation !!!')
+                                    raise Warning(_('You do not have the permission to perform this operation !!!'))
                                 continue
                 # keep only the first action registered for each action name
                 results[action['name']] = (action['id'], action['name'], action_def)
-            except except_orm:
+            except (except_orm, Warning):
                 continue
         return sorted(results.values())
 
