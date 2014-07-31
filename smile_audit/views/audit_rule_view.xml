@@ -4,36 +4,19 @@
 
 		<menuitem id="menu_audit" parent="base.menu_reporting" name="Audit" sequence="110"/>
 
-        <record model="ir.ui.view" id="view_audit_rule_form">
-            <field name="name">audit.rule.form</field>
-            <field name="model">audit.rule</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Audit Rule">
-                	<sheet>
-		                <group>
-		                    <field name="name"/>
-		                    <field name="model_id"/>
-		                    <field name="log_create"/>
-		                    <field name="log_write"/>
-		                    <field name="log_unlink"/>
-		                </group>
-		            </sheet>
-                </form>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="view_audit_rule_tree">
             <field name="name">audit.rule.tree</field>
             <field name="model">audit.rule</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Audit Rules">
+                <tree string="Audit Rules" editable="top">
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="log_create"/>
                     <field name="log_write"/>
                     <field name="log_unlink"/>
+                    <field name="active"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -44,9 +27,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Audit Rules">
-                    <filter string="create" icon="terp-tools" domain="[('log_create','=',True)]"/>
-                    <filter string="write" icon="terp-tools" domain="[('log_write','=',True)]"/>
-                    <filter string="unlink" icon="terp-tools" domain="[('log_unlink','=',True)]"/>
+                    <filter name="active" string="Active Rules" domain="[('active','=',True)]"/>
+                    <separator/>
+                    <filter string="Log Creation" domain="[('log_create','=',True)]"/>
+                    <filter string="Log Update" domain="[('log_write','=',True)]"/>
+                    <filter string="Log Deletion" domain="[('log_unlink','=',True)]"/>
                     <field name="name"/>
                     <field name="model_id"/>
                 </search>
@@ -58,8 +43,9 @@
             <field name="res_model">audit.rule</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree</field>
             <field name="search_view_id" ref="view_audit_rule_search"/>
+            <field name="context">{'search_default_active': True, 'active_test': False}</field>
         </record>
 
         <menuitem id="menu_action_audit_rule_tree" action="action_audit_rule_tree" parent="menu_audit" />

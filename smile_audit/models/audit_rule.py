@@ -23,47 +23,10 @@ import logging
 
 from openerp import api, fields, models, SUPERUSER_ID, tools, _
 from openerp.modules.registry import RegistryManager
-from openerp.tools.func import wraps
+
+from audit_decorator import audit_decorator
 
 _logger = logging.getLogger(__package__)
-
-
-def _get_args(method, *args, **kwargs):
-    context = kwargs.get('context')
-    if method == 'create':
-        vals, ids = args[0], []
-    if method == 'write':
-        ids, vals = args[:2]
-    if method == 'unlink':
-        ids, vals = args[0], {}
-    if isinstance(ids, (int, long)):
-        ids = [ids]
-    return ids, vals, context
-
-
-def audit_decorator(origin):
-    @wraps(origin)
-    def audit_wrapper(obj, cr, uid, *args, **kwargs):
-        method = origin.__name__
-        ids, vals, context = _get_args(method, *args, **kwargs)
-        rule_obj = obj.pool['audit.rule']
-        rule_ids = rule_obj.search(cr, SUPERUSER_ID, [('model_id.model', '=', obj._model)], limit=1)
-        if rule_ids:
-            old_values = None
-            if method != 'create':
-                old_values = obj.read(cr, uid, ids, vals.keys(), context, load='_classic_write')
-                if method == 'unlink':
-                    rule_obj.log(cr, uid, rule_ids, method, old_values)
-        result = origin(cr, uid, *args, **kwargs)  # WARNING: do not pass obj added by api.old_api
-        if rule_ids:
-            new_values = None
-            if audit_wrapper.origin.__name__ != 'unlink':
-                if method == 'create':
-                    ids = [result]
-                new_values = obj.read(cr, uid, ids, vals.keys(), context, load='_classic_write')
-                rule_obj.log(cr, uid, rule_ids, method, old_values, new_values)
-        return result
-    return audit_wrapper
 
 
 class AuditRule(models.Model):
@@ -75,9 +38,11 @@ class AuditRule(models.Model):
     log_create = fields.Boolean('Log Creation', default=True)
     log_write = fields.Boolean('Log Update', default=True)
     log_unlink = fields.Boolean('Log Deletion', default=True)
+    state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], 'Status', default='draft', readonly=True)
     model_id = fields.Many2one('ir.model', 'Object', required=True,
                                help='Select object for which you want to generate log.',
-                               domain=[('model', 'not in', ('audit.log', 'audit.log.line'))])
+                               domain=[('model', 'not in', ('audit.log', 'audit.log.line'))],
+                               readonly=True, states={'draft': [('readonly', False)]})
     action_id = fields.Many2one('ir.actions.act_window', 'Client Action', readonly=True)
     values_id = fields.Many2one('ir.values', 'Client Action Link', readonly=True)
 
@@ -90,7 +55,7 @@ class AuditRule(models.Model):
     def _add_action(self):
         if not self.action_id:
             vals = {
-                'name': _('View logs'),
+                'name': _('View audit logs'),
                 'res_model': 'audit.log',
                 'src_model': self.model_id.model,
                 'domain': "[('model_id','=', %s), ('res_id', '=', active_id)]" % self.model_id.id,
@@ -101,10 +66,10 @@ class AuditRule(models.Model):
     def _add_values(self):
         if not self.values_id:
             self.env['ir.model.data'].ir_set('action', 'client_action_relate', 'view_log_' + self.model_id.model,
-                                             [self.model_id.model], 'ir.actions.act_window,%s' % self.action_id,
+                                             [self.model_id.model], 'ir.actions.act_window,%s' % self.action_id.id,
                                              replace=True, isobject=True, xml_id=False)
             values = self.env['ir.values'].search([('model', '=', self.model_id.model),
-                                                   ('value', '=', 'ir.actions.act_window,%s' % self.action_id)])
+                                                   ('value', '=', 'ir.actions.act_window,%s' % self.action_id.id)])
             if values:
                 self.values_id = values[0]
 
@@ -124,7 +89,26 @@ class AuditRule(models.Model):
         if self.action_id:
             self.action_id.unlink()
 
+    @api.multi
+    def update_rule(self, force_deactivation=False):
+        for rule in self:
+            if rule.active and not force_deactivation:
+                rule._activate()
+            else:
+                rule._deactivate()
+        return True
+
+    @tools.cache()
+    def _check_audit_rule(self, cr):
+        ids = self.search(cr, SUPERUSER_ID, [])
+        return {rule.model_id.model:
+                {method: rule.id
+                 for method in ('create', 'write', 'unlink')
+                 if getattr(rule, 'log_%s' % method)}
+                for rule in self.browse(cr, SUPERUSER_ID, ids)}
+
     def _register_hook(self, cr, ids=None):
+        updated = False
         if not ids:
             ids = self.search(cr, SUPERUSER_ID, [])
         for rule in self.browse(cr, SUPERUSER_ID, ids):
@@ -134,36 +118,31 @@ class AuditRule(models.Model):
                     model_obj._patch_method(method, audit_decorator(getattr(model_obj, method)))
                 model_obj.audit_rule = True
                 updated = True
+        if updated:
+            self.clear_caches()
         return updated
-
-    @api.multi
-    def update_rule(self, force_deactivation=False):
-        for rule in self:
-            if rule.active and not force_deactivation:
-                rule._activate()
-            else:
-                rule._deactivate()
-        if self._register_hook(self.env.cr, self):
-            RegistryManager.signal_registry_change(self.env.cr.dbname)
-        return True
 
     @api.model
     @api.returns('self')
     def create(self, vals):
+        vals['state'] = 'done'
         rule = super(AuditRule, self).create(vals)
         rule.update_rule()
+        if self._register_hook(rule.id):
+            RegistryManager.signal_registry_change(self.env.cr.dbname)
         return rule
 
     @api.multi
     def write(self, vals):
         res = super(AuditRule, self).write(vals)
         self.update_rule()
+        if self._register_hook(self._ids):
+            RegistryManager.signal_registry_change(self.env.cr.dbname)
         return res
 
-    @api.multi
-    def unlink(self):
-        self.update_rule(force_deactivation=True)
-        return super(AuditRule, self).unlink()
+    def unlink(self, cr, uid, ids, context=None):
+        self.update_rule(cr, uid, ids, force_deactivation=True, context=context)
+        return super(AuditRule, self).unlink(cr, uid, ids, context)
 
     @api.model
     def _get_log_lines(self, old_values, new_values):
@@ -184,8 +163,9 @@ class AuditRule(models.Model):
     def log(self, method, old_values=None, new_values=None):
         _logger.debug('Starting audit log')
         data = {}
-        old_values = old_values or []
-        new_values = new_values or []
+        update_vals = lambda vals: isinstance(vals, dict) and [vals] or vals or []
+        old_values = update_vals(old_values)
+        new_values = update_vals(new_values)
         for vals in old_values:
             data.setdefault(vals['id'], {'old': {}, 'new': {}})['old'] = vals
         for vals in new_values:

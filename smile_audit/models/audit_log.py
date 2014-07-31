@@ -86,8 +86,8 @@ class AuditLogLine(models.Model):
                 if old_value:
                     old_value_text = []
                     for old_v in old_value:
-                        old = obj.browse(old).exists()
-                        old_value_text.append(old.display_name if old else old_v)
+                        old = obj.browse(old_v).exists()
+                        old_value_text.append(old.display_name if old else str(old_v))
                     old_value_text = ', '.join(old_value_text)
                 if new_value:
                     new_value_text == ', '.join([o.display_name for o in obj.browse(new_value)])
