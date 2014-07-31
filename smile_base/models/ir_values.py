@@ -94,6 +94,8 @@ class IrValues(models.Model):
             if not action['value']:
                 continue    # skip if undefined
             action_model, id = action['value'].split(',')
+            if not eval(id):
+                continue
             fields = [field for field in self.pool.get(action_model)._all_columns
                       if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
