@@ -55,7 +55,7 @@ class SmileLog(models.Model):
         res = self.env.get(self.model_name).browse(self.res_id)
         infos = res.name_get()
         if infos:
-          self.log_res_name = infos[0][1]
+            self.log_res_name = infos[0][1]
 
     log_date = fields.Datetime('Date', readonly=True)
     log_uid = fields.Integer('User', readonly=True)
@@ -73,8 +73,8 @@ class SmileLog(models.Model):
         if archive_path:
             file_name = time.strftime("%Y%m%d_%H%M%S.log.csv")
             file_path = os.path.join(archive_path, file_name)
-            cr.execute(""" COPY (SELECT * FROM smile_log WHERE log_date + interval'%s days' < NOW())
+            self.env.cr.execute(""" COPY (SELECT * FROM smile_log WHERE log_date + interval'%s days' < NOW())
             TO %s
             WITH (FORMAT csv, ENCODING utf8)""", (nb_days, file_path,))
-        cr.execute("DELETE FROM smile_log WHERE log_date + interval '%s days' < NOW()", (nb_days,))
+        self.env.cr.execute("DELETE FROM smile_log WHERE log_date + interval '%s days' < NOW()", (nb_days,))
         return True

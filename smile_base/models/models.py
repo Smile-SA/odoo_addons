@@ -113,6 +113,7 @@ def new_unlink(self, cr, uid, ids, context=None):
         return True
     return native_unlink(self, cr, uid, existing_ids, context)
 
+
 @api.model
 @api.returns('self')
 def bulk_create(self, vals_list):

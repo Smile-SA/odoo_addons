@@ -101,4 +101,3 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
 
 RegistryManager.upgrade_manager = upgrade_manager
 RegistryManager.new = new
-

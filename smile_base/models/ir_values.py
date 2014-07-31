@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import logging
-
 from openerp.addons.base.ir.ir_values import ACTION_SLOTS, EXCLUDED_FIELDS
 from openerp import models, _
 from openerp.exceptions import except_orm, Warning
