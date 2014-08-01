@@ -19,20 +19,24 @@
 #
 ##############################################################################
 
-from openerp.modules.registry import Registry
-
-native_load = Registry.load
+from openerp.tests.common import TransactionCase
 
 
-def new_load(self, cr, module):
-    res = native_load(self, cr, module)
-    for model_obj in res:
-        for fieldname, field in model_obj._fields.iteritems():
-            if field.type == 'many2one' and field.ondelete and field.ondelete.lower() == 'cascade':
-                remote_obj = self.get(field.comodel_name)
-                if not hasattr(remote_obj, '_cascade_relations'):
-                    setattr(remote_obj, '_cascade_relations', {})
-                remote_obj._cascade_relations.setdefault(model_obj._name, set()).add(fieldname)
-    return res
+class BaseTest(TransactionCase):
 
-Registry.load = new_load
+    def setUp(self):
+        super(BaseTest, self).setUp()
+        self.model = self.env['res.partner.category']
+
+    def test_bulk_create(self):
+        self.assertTrue(self.model.bulk_create([{'name': 'Test'}]))
+
+    def test_unlink(self):
+        rec = self.model.create({'name': 'Test'})
+        self.assertTrue(rec.unlink())
+
+    def test_unlink_cascade(self):
+        parent = self.model.create({'name': 'Parent'})
+        child = self.model.create({'name': 'Child', 'parent_id': parent.id})
+        parent.unlink()
+        self.assertFalse(child.exists())

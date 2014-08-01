@@ -39,10 +39,10 @@ class IrModel(orm.Model):
         return fields_to_check
 
     @staticmethod
-    def _get_many2one_fields(obj, fields_to_read):
+    def _get_many2one_fields(model_obj, fields_to_read):
         m2o_fields = []
         for field in fields_to_read:
-            if obj._columns[field]._type == 'many2one':
+            if model_obj._columns[field]._type == 'many2one':
                 m2o_fields.append(field)
         return m2o_fields
 

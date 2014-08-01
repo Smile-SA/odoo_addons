@@ -89,29 +89,23 @@ def new_import_data(self, cr, uid, fields, datas, mode='init', current_module=''
     return native_import_data(self, cr, uid, fields, datas, mode, current_module, noupdate, context_copy, filename)
 
 
-def new_unlink(self, cr, uid, ids, context=None):
-    """Force unlink for remote fields.many2one with ondelete='cascade'"""
-    if not ids:
-        return True
-    if hasattr(self, '_cascade_relations'):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        context = context.copy() if context else {}
-        context['active_test'] = False
-        if 'unlink_in_cascade' not in context:
-            context['unlink_in_cascade'] = {self._name: ids}
-        for model, fnames in self._cascade_relations.iteritems():
-            domain = ['|'] * (len(fnames) - 1) + [(fname, 'in', ids) for fname in fnames]
-            sub_model_obj = self.pool.get(model)
-            sub_model_ids = sub_model_obj.search(cr, uid, domain, context=context)
-            sub_model_ids = list(set(sub_model_ids) - set(context['unlink_in_cascade'].get(model, [])))
+@api.multi
+def new_unlink(self):
+    if hasattr(self.pool[self._name], '_cascade_relations'):
+        self = self.with_context(active_test=False)
+        if 'unlink_in_cascade' not in self.env.context:
+            self = self.with_context(unlink_in_cascade={self._name: list(self._ids)})
+        for model, fnames in self.pool[self._name]._cascade_relations.iteritems():
+            domain = ['|'] * (len(fnames) - 1) + [(fname, 'in', self._ids) for fname in fnames]
+            sub_model_obj = self.env[model]
+            sub_models = sub_model_obj.search(domain)
+            sub_model_ids = list(set(sub_models._ids) - set(self.env.context['unlink_in_cascade'].get(model, [])))
             if sub_model_ids:
-                context['unlink_in_cascade'].setdefault(model, []).extend(sub_model_ids)
-                sub_model_obj.unlink(cr, uid, sub_model_ids, context)
-    existing_ids = self.exists(cr, uid, ids, context)
-    if not existing_ids:
+                self.env.context['unlink_in_cascade'].setdefault(model, []).extend(sub_model_ids)
+                sub_model_obj.browse(sub_model_ids).unlink()
+    if not self.exists():
         return True
-    return native_unlink(self, cr, uid, existing_ids, context)
+    return native_unlink(self)
 
 
 @api.model
