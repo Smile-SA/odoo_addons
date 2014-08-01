@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import fields, models, pooler, tools
+from openerp import api, fields, models, pooler, tools
 
 
 class DecimalPrecision(models.Model):
@@ -33,18 +33,22 @@ class DecimalPrecision(models.Model):
         res = cr.fetchone()
         return res[0] if res else 2
 
-    def create(self, cr, uid, vals, context=None):
-        record = super(DecimalPrecision, self).create(cr, uid, vals, context=None)
+    @api.model
+    @api.returns('self')
+    def create(self, vals):
+        record = super(DecimalPrecision, self).create(vals)
         self.display_precision_get.clear_cache(self)
         return record
 
-    def write(self, cr, uid, ids, vals, context=None):
-        result = super(DecimalPrecision, self).write(cr, uid, ids, vals, context=None)
+    @api.multi
+    def write(self, vals):
+        result = super(DecimalPrecision, self).write(vals)
         self.display_precision_get.clear_cache(self)
         return result
 
-    def unlink(self, cr, uid, ids, context=None):
-        result = super(DecimalPrecision, self).unlink(cr, uid, ids, context)
+    @api.multi
+    def unlink(self):
+        result = super(DecimalPrecision, self).unlink()
         self.display_precision_get.clear_cache(self)
         return result
 
