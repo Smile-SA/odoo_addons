@@ -21,7 +21,7 @@
             <field name="action" ref="action_ir_module_module"/>
         </record>
 
-        <!--delete id="base.menu_module_updates" model="ir.ui.menu"/-->
+        <delete id="base.menu_module_updates" model="ir.ui.menu"/>
 
     </data>
 </openerp>
