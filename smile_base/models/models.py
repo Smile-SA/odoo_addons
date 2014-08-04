@@ -39,6 +39,7 @@ def new_auto_init(self, cr, context=None):
     return res
 
 
+@api.multi
 def new_validate_fields(self, fields_to_validate):
     context = self.env.context
     if not context.get('no_validate'):
