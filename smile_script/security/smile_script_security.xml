@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="group_smile_script_user" model="res.groups">
+            <field name="name">Smile Script / User</field>
+        </record>
+
+    </data>
+</openerp>
+
+
+
+
