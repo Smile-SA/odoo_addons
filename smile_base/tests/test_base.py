@@ -31,12 +31,8 @@ class BaseTest(TransactionCase):
     def test_bulk_create(self):
         self.assertTrue(self.model.bulk_create([{'name': 'Test'}]))
 
-    def test_unlink(self):
-        rec = self.model.create({'name': 'Test'})
-        self.assertTrue(rec.unlink())
-
     def test_unlink_cascade(self):
         parent = self.model.create({'name': 'Parent'})
         child = self.model.create({'name': 'Child', 'parent_id': parent.id})
-        parent.unlink()
+        self.assertTrue(parent.unlink())
         self.assertFalse(child.exists())
