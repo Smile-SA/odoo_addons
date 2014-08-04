@@ -123,7 +123,7 @@ class AuditRule(models.Model):
         return updated
 
     @api.model
-    @api.returns('self')
+    @api.returns('self', lambda value: value.id)
     def create(self, vals):
         vals['state'] = 'done'
         rule = super(AuditRule, self).create(vals)

@@ -34,7 +34,7 @@ class DecimalPrecision(models.Model):
         return res[0] if res else 2
 
     @api.model
-    @api.returns('self')
+    @api.returns('self', lambda value: value.id)
     def create(self, vals):
         record = super(DecimalPrecision, self).create(vals)
         self.display_precision_get.clear_cache(self)
