@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import api, fields, models, pooler, tools
+from openerp import api, fields, models, registry, tools
 
 
 class DecimalPrecision(models.Model):
@@ -55,7 +55,7 @@ class DecimalPrecision(models.Model):
     @staticmethod
     def get_display_precision(cr, uid, application):
         res = 2
-        dp_obj = pooler.get_pool(cr.dbname).get('decimal.precision')
+        dp_obj = registry(cr.dbname)['decimal.precision']
         if hasattr(dp_obj, 'display_precision_get'):
             res = dp_obj.display_precision_get(cr, uid, application)
         return (16, res)
