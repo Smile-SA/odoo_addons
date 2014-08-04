@@ -42,7 +42,6 @@ Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@s
         "security/ir.model.access.csv",
         "views/smile_log_view.xml",
     ],
-    "demo_xml": [],
     "installable": True,
     "active": False,
 }

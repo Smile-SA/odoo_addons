@@ -28,12 +28,9 @@
     "website": "http://www.smile.fr",
     "category": "Hidden/Dependency",
     "sequence": 32,
-    "init_xml": [],
-    "update_xml": [
+    "data": [
         "views/decimal_precision_view.xml",
     ],
-    "demo_xml": [],
-    'test': [],
     "auto_install": True,
     "installable": True,
     "application": False,
