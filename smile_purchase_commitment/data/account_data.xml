@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record id="commitment_journal" model="account.analytic.journal">
+            <field name="code">PUR_COM</field>
+            <field name="name">Purchase Commitments</field>
+            <field name="type">general</field>
+        </record>
+
+	</data>
+</openerp>

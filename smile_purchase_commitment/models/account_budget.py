@@ -1,0 +1,85 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2014 Smile (<http://www.smile.fr>). All Rights Reserved
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+from openerp import api, fields, models, tools, _
+from openerp.exceptions import Warning
+
+import openerp.addons.decimal_precision as dp
+
+
+class BudgetLine(models.Model):
+    _inherit = 'crossovered.budget.lines'
+
+    @api.multi
+    def _prac_amt(self, commitment=False):
+        res = {}
+        result = 0.0
+        context = self._context or {}
+        journal_clause = " AND aj.type %s 'general'" % (commitment and '=' or '<>')
+        for line in self:
+            acc_ids = [x.id for x in line.general_budget_id.account_ids]
+            if not acc_ids:
+                raise Warning(_("The Budget '%s' has no accounts!") % tools.ustr(line.general_budget_id.name))
+            date_to = line.date_to
+            date_from = line.date_from
+            if 'wizard_date_from' in context:
+                date_from = context['wizard_date_from']
+            if 'wizard_date_to' in context:
+                date_to = context['wizard_date_to']
+            if line.analytic_account_id.id:
+                self._cr.execute("SELECT SUM(al.amount) FROM account_analytic_line al LEFT JOIN "
+                                 "account_analytic_journal aj ON al.journal_id = aj.id "
+                                 "WHERE al.account_id=%s AND (al.date between to_date(%s,'yyyy-mm-dd') "
+                                 "AND to_date(%s,'yyyy-mm-dd')) AND "
+                                 "al.general_account_id=ANY(%s)" + journal_clause,
+                                 (line.analytic_account_id.id, date_from, date_to, acc_ids))
+                result = self._cr.fetchone()[0]
+            if result is None:
+                result = 0.0
+            res[line.id] = result
+        return res
+
+    @api.one
+    def _commitment_amt(self):
+        self.commitment_amount = self._prac_amt(commitment=True)[self.id]
+
+    @api.one
+    def _available_amt(self):
+        self.available_amount = self.planned_amount - self.commitment_amount
+
+    commitment_amount = fields.Float('Commitment Amount', digits=dp.get_precision('Account'), compute="_commitment_amt")
+    available_amount = fields.Float('Available Amount', digits=dp.get_precision('Account'), compute="_available_amt")
+
+
+class BudgetPositionCommitmentLimit(models.Model):
+    _name = 'account.budget.post.commitment_limit'
+    _description = 'Budgetary Position Commitment Limit'
+    _rec_name = 'budget_pos_id'
+
+    budget_pos_id = fields.Many2one('account.budget.post', 'Budgetary Position', required=True, index=True)
+    user_id = fields.Many2one('res.users', 'User', required=True, index=True)
+    amount_limit = fields.Float('Commitment Amount Limit', digits=dp.get_precision('Account'), required=True)
+
+
+class BudgetPosition(models.Model):
+    _inherit = 'account.budget.post'
+
+    commitment_limit_ids = fields.One2many('account.budget.post.commitment_limit', 'budget_pos_id', 'Commitment Limits')
