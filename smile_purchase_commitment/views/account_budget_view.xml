@@ -68,6 +68,32 @@
             </field>
         </record>
 
+       <record id="view_crossovered_budget_line_search" model="ir.ui.view">
+            <field name="name">account.budget.line.search</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="inherit_id" ref="account_budget.view_crossovered_budget_line_search"/>
+            <field name="arch" type="xml">
+                <field name="analytic_account_id" position="attributes">
+					<attribute name="domain">[('type','!=','view')]</attribute>                	
+                </field>
+                <field name="analytic_account_id" position="after">
+                    <field name="crossovered_budget_id"/>
+                    <field name="general_budget_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Budget" context="{'group_by':'crossovered_budget_id'}"/>
+                        <filter string="Budgetary Position" context="{'group_by':'general_budget_id'}"/>
+                        <filter string="Analytic Account" context="{'group_by':'analytic_account_id'}"/>
+                        <filter string="Date from" context="{'group_by':'date_from'}"/>
+                        <filter string="Date to" context="{'group_by':'date_to'}"/>
+                    </group>
+	            </field>
+            </field>
+        </record>
+
+        <menuitem parent="account_budget.next_id_31" sequence="50"
+            id="menu_act_crossovered_budget_lines_view"
+            action="account_budget.act_crossovered_budget_lines_view" />
+
         <record model="ir.ui.view" id="view_account_analytic_account_form_inherit_budget">
             <field name="name">account.analytic.account.form</field>
             <field name="model">account.analytic.account</field>
@@ -83,6 +109,6 @@
 				</xpath>
             </field>
         </record>
-
-	</data>
+        
+    </data>
 </openerp>

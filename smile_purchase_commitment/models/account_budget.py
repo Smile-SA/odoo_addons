@@ -45,12 +45,12 @@ class BudgetLine(models.Model):
             if 'wizard_date_to' in context:
                 date_to = context['wizard_date_to']
             if line.analytic_account_id.id:
-                self._cr.execute("SELECT SUM(al.amount) FROM account_analytic_line al LEFT JOIN "
-                                 "account_analytic_journal aj ON al.journal_id = aj.id "
-                                 "WHERE al.account_id=%s AND (al.date between to_date(%s,'yyyy-mm-dd') "
-                                 "AND to_date(%s,'yyyy-mm-dd')) AND "
-                                 "al.general_account_id=ANY(%s)" + journal_clause,
-                                 (line.analytic_account_id.id, date_from, date_to, acc_ids))
+                result = self._cr.execute("SELECT SUM(al.amount) FROM account_analytic_line al LEFT JOIN "
+                                          "account_analytic_journal aj ON al.journal_id = aj.id "
+                                          "WHERE al.account_id=%s AND (al.date between to_date(%s,'yyyy-mm-dd') "
+                                          "AND to_date(%s,'yyyy-mm-dd')) AND "
+                                          "al.general_account_id=ANY(%s)" + journal_clause,
+                                          (line.analytic_account_id.id, date_from, date_to, acc_ids))
                 result = self._cr.fetchone()[0]
             if result is None:
                 result = 0.0
@@ -60,13 +60,25 @@ class BudgetLine(models.Model):
     @api.one
     def _commitment_amt(self):
         self.commitment_amount = self._prac_amt(commitment=True)[self.id]
-
-    @api.one
-    def _available_amt(self):
         self.available_amount = self.planned_amount - self.commitment_amount
 
     commitment_amount = fields.Float('Commitment Amount', digits=dp.get_precision('Account'), compute="_commitment_amt")
-    available_amount = fields.Float('Available Amount', digits=dp.get_precision('Account'), compute="_available_amt")
+    available_amount = fields.Float('Available Amount', digits=dp.get_precision('Account'), compute="_commitment_amt")
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+        fields_to_compute = []
+        for field in ('commitment_amount', 'available_amount', 'practical_amount', 'theoritical_amount'):
+            if field in fields:
+                fields.remove(field)
+                fields_to_compute.append(field)
+        res = super(BudgetLine, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby, lazy)
+        if fields_to_compute:
+            for group in res:
+                if group.get('__domain'):
+                    line_infos = self.search_read(cr, uid, group['__domain'], fields_to_compute, context=context)
+                    for field in fields_to_compute:
+                        group[field] = sum([l[field] for l in line_infos])
+        return res
 
 
 class BudgetPositionCommitmentLimit(models.Model):
