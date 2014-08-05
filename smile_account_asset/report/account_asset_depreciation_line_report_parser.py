@@ -27,7 +27,7 @@ from openerp.osv import orm
 from openerp.report import report_sxw
 from openerp.tools.translate import _
 
-from openerp.addons.smile_account_asset.account_asset_tools import get_period_stop_date
+from ..models.account_asset_tools import get_period_stop_date
 
 
 class AccountAssetDepreciationLineReport(report_sxw.rml_parse):
