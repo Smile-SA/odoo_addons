@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-	                <page string="Purchase Commitments" >
+	                <page string="Purchase Commitments">
                         <group>
                         	<field name="commitment_global_limit"/>
                         	<field name="commitment_limit_ids" nolabel="1" colspan="2"

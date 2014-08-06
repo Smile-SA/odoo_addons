@@ -22,13 +22,14 @@
 {
     "name": "Purchase Commitment",
     "version": "0.1",
-    "depends": ["purchase", "account_budget"],
+    "depends": ["purchase", "smile_account_budget_commitment"],
     "author": "Smile",
     "description": """Purchase Commitment
 
 Objectives
 
-    * Allow to follow-up purchase commitment
+    * Generate analytic lines at purchase confirmation
+    * Allow to follow-up purchase commitment per budget line
     * Define purchase commitment limit per budget position and per user
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
@@ -37,16 +38,6 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "website": "http://www.smile.fr",
     "category": 'Purchase Management',
     "sequence": 20,
-    "data": [
-        "security/ir.model.access.csv",
-        "views/account_budget_view.xml",
-        "views/res_users_view.xml",
-        "data/account_data.xml"
-    ],
-    "demo": [
-        "demo/account_demo.yml",
-        "demo/account_budget_demo.xml",
-    ],
     "auto_install": False,
     "installable": True,
     "application": False,

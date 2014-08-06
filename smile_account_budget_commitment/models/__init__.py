@@ -19,4 +19,7 @@
 #
 ##############################################################################
 
-import purchase
+import account
+import account_budget
+import analytic
+import res_users

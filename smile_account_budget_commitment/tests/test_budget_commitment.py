@@ -22,16 +22,14 @@
 from openerp.tests.common import TransactionCase
 
 
-class PurchaseCommitmentTest(TransactionCase):
+class BudgetCommitmentTest(TransactionCase):
 
     def test_check_budget_available_and_commitment_limit(self):
         import time
         analytic_account = self.env.ref('account.analytic_online')
+        analytic_journal = self.env.ref('smile_account_budget_commitment.commitment_journal')
         budget = self.env.ref('account_budget.crossovered_budget_budgetoptimistic0')
         budget_pos = self.env.ref('account_budget.account_budget_post_purchase0')
-        purchase = self.env.ref('purchase.purchase_order_3')
-        account_id = purchase.order_line[0].product_id.categ_id.property_account_expense_categ.id
-        budget_pos.write({'account_ids': [(4, account_id)]})
         budget_line = self.env['crossovered.budget.lines'].create({
             'crossovered_budget_id': budget.id,
             'analytic_account_id': analytic_account.id,
@@ -40,10 +38,18 @@ class PurchaseCommitmentTest(TransactionCase):
             'date_to': time.strftime('%Y-12-31'),
             'planned_amount': 1000.0,
         })
-        purchase.order_line.write({'account_analytic_id': analytic_account.id})
+        vals = {
+            'name': 'Commitment Test',
+            'journal_id': analytic_journal.id,
+            'account_id': analytic_account.id,
+            'general_account_id': budget_pos.account_ids[0].id,
+            'amount': 255.0,
+            'date': time.strftime('%Y-%m-%d'),
+            'user_id': self.env.uid,
+        }
         limit = self.env.ref('smile_account_budget_commitment.commitment_limit0')
         limit.amount_limit = 100.0
-        self.assertRaises(Warning, purchase.wkf_confirm_order)
+        self.assertRaises(Warning, self.env['account.analytic.line'].create, vals)
         limit.amount_limit = 1000.0
-        purchase.wkf_confirm_order()
-        self.assertTrue(budget_line.commitment_amount == 255.0)
+        self.env['account.analytic.line'].create(vals)
+        self.assertTrue(budget_line.commitment_amount)

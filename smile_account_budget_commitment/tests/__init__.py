@@ -19,13 +19,8 @@
 #
 ##############################################################################
 
-from openerp import fields, models
+import test_budget_commitment
 
-import openerp.addons.decimal_precision as dp
-
-
-class ResUsers(models.Model):
-    _inherit = 'res.users'
-
-    commitment_global_limit = fields.Float('Global Commitment Limit', digits=dp.get_precision('Account'))
-    commitment_limit_ids = fields.One2many('account.budget.post.commitment_limit', 'user_id', 'Commitment Limits')
+check = [
+    test_budget_commitment,
+]

@@ -3,4 +3,4 @@
 -
   !python {model: account.journal}: |
     ids = self.search(cr, uid, [('type', '=', 'purchase')], context=context)
-    self.write(cr, uid, ids, {'commitment_analytic_journal_id': ref('smile_purchase_commitment.commitment_journal')}, context)
+    self.write(cr, uid, ids, {'commitment_analytic_journal_id': ref('commitment_journal')}, context)
