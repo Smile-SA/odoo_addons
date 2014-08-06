@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.common.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="list_price" position="after">
+                	<group colspan="2" col="2" groups="product.group_uom">
+						<separator string="Unit Of Measure Conversions" colspan="2"/>
+	                    <field name="uom_conversion_ids" colspan="2" nolabel="1">
+							<tree string="Unit Of Measure Conversions" editable="top">
+								<field name="uom_id" domain="[('id', '!=', parent.uom_id)]"/>
+								<field name="factor"/>
+								<field name="factor_revert"/>
+							</tree>
+	                    </field>
+                	</group>
+                </field>
+            </field>
+        </record>
+        
+        <record id="product_uom_form_view" model="ir.ui.view">
+            <field name="name">product.uom.form</field>
+            <field name="model">product.uom</field>
+            <field name="inherit_id" ref="product.product_uom_form_view"/>
+            <field name="arch" type="xml">
+                <field name="rounding" position="after">
+                	<field name="display_precision"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
