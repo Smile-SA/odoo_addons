@@ -137,6 +137,17 @@
 	    <menuitem id="menu_account_invoice_line" parent="menu_finance_assets"
 	    	action="action_account_invoice_line" sequence="30"/>
 
+        <record id="invoice_supplier_form" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='invoice_line']/tree/field[@name='account_id']" position="before">
+	        		<field name="asset_category_id" groups="account.group_account_user"/>
+	        	</xpath>
+			</field>
+        </record>
+
 		<!-- Client Action -->
 
 		<record model="ir.actions.server" id="create_asset_from_invoices">

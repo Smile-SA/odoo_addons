@@ -23,10 +23,7 @@ from datetime import datetime
 
 from openerp.tests.common import TransactionCase
 
-try:
-    from ..depreciation_board import DepreciationBoard
-except (ImportError, ValueError):
-    from depreciation_board import DepreciationBoard
+from ..depreciation_board import DepreciationBoard
 
 
 LINEAR_METHOD = {

@@ -28,4 +28,5 @@ import account_asset_history
 import account_invoice
 import account_asset_posting
 import account_move_line
+import product
 import res_company

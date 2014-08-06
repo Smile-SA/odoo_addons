@@ -29,7 +29,7 @@ from openerp.osv import orm, fields
 from openerp.tools.translate import _
 
 from account_asset_category import _get_rates_visibility, _get_res_ids_from_depreciation_methods
-from account_asset_tools import get_period_stop_date
+from ..account_asset_tools import get_period_stop_date
 
 ASSET_STATES = [
     ('draft', 'Draft'),

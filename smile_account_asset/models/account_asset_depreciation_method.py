@@ -26,8 +26,8 @@ from openerp.osv import orm, fields
 from openerp import tools
 from openerp.tools.translate import _
 
-from depreciation_board import DepreciationBoard
-from account_asset_tools import get_date, get_period_stop_date, get_fiscalyear_stop_date
+from ..depreciation_board import DepreciationBoard
+from ..account_asset_tools import get_date, get_period_stop_date, get_fiscalyear_stop_date
 
 
 class AccountAssetDepreciationMethod(orm.Model):
