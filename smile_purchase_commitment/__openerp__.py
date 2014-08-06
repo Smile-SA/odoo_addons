@@ -24,9 +24,8 @@
     "version": "0.1",
     "depends": ["purchase", "smile_account_budget_commitment"],
     "author": "Smile",
-    "description": """Purchase Commitment
-
-Objectives
+    "description": """
+Features
 
     * Generate analytic lines at purchase confirmation
     * Allow to follow-up purchase commitment per budget line

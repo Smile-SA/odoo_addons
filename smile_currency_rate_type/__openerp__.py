@@ -24,9 +24,10 @@
     "version": "0.1",
     "depends": ["base"],
     "author": "Smile",
-    "description": """Currency Rate Type
+    "description": """
+Features
 
-Add res.currency.rate.type model removed by editor in Odoo 8.0
+    * Add res.currency.rate.type model removed by editor in Odoo 8.0
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,

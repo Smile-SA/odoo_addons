@@ -26,9 +26,11 @@
     "website": 'http://www.smile.fr',
     "category": "Tools",
     "description": """
-    Log scripts run on the database
+Features
 
-    Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
+    * Log scripts run on the database
+
+Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
     """,
     "depends": ['smile_log'],
     "data": [

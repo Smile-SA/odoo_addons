@@ -24,19 +24,22 @@
     "version": "0.3",
     "depends": ["account", "smile_base", "smile_report_utils"],
     "author": "Smile",
-    "description": """Financial and accounting asset management
+    "description": """
+Financial and accounting asset management
+-----------------------------------------
 
 This module allows to manage:
-* assets and categories
-* decomposable assets
-* amortizations (ie periodic depreciations) and depreciations (exceptional)
-* accounting and fiscal depreciation methods
-* assets sale/scrapping
-* out of heritage
-* asset decomposition
-* asset modification
-* reporting
-* transfer depreciation in amortization (French law)
+
+    * assets and categories
+    * decomposable assets
+    * amortizations (ie periodic depreciations) and depreciations (exceptional)
+    * accounting and fiscal depreciation methods
+    * assets sale/scrapping
+    * out of heritage
+    * asset decomposition
+    * asset modification
+    * reporting
+    * transfer depreciation in amortization (French law)
 
 WARNING: This module is not compatible with account_asset, so uninstall it before installing this one.
 
@@ -60,6 +63,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         "views/account_invoice_view.xml",
         "views/account_view.xml",
         "views/res_company_view.xml",
+        "views/product_view.xml",
         "wizard/account_asset_split_wizard_view.xml",
         "report/account_asset_report_header.xml",
         "report/account_asset_report.xml",

@@ -24,12 +24,13 @@
     "version": "0.1",
     "depends": ["report_webkit"],
     "author": "Smile",
-    "description": """Smile Report Utils
+    "description": """
+Features
 
     * Execute check function in ReportSxw.getObjects
     * Add get_report_title method to ReportHelper
 
-    Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "summary": "",
     "website": "http://www.smile.fr",

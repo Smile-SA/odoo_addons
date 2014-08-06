@@ -20,12 +20,14 @@
 ##############################################################################
 
 {
-    "name": "Smile Access Control",
+    "name": "Access Control",
     "version": "1.0",
     "author": "Smile",
     "website": 'http://www.smile.fr',
     "category": "Tools",
-    "description": """Manage users thanks to user profiles
+    "description": """
+Manage users thanks to user profiles
+------------------------------------
 
 This is a new way to manage your users' rights :
 you can manage users by functional profiles.

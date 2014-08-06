@@ -24,9 +24,8 @@
     "version": "0.1",
     "depends": ["base"],
     "author": "Smile",
-    "description": """Smile Upgrade
-
-Objectives
+    "description": """
+Features
 
     * Allow to upgrade automatically database after code update and server restarting
     * Display a maintenance page instead of home page and kill XML/RPC services during upgrades

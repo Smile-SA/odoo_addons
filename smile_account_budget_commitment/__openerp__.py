@@ -24,9 +24,8 @@
     "version": "0.1",
     "depends": ["account_budget"],
     "author": "Smile",
-    "description": """Budget Commitment
-
-Objectives
+    "description": """
+Features
 
     * Allow to follow-up commitment per budget line
     * Define commitment limit per budget position and per user

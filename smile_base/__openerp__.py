@@ -24,8 +24,7 @@
     "version": "0.2.3",
     "depends": ["mail"],
     "author": "Smile",
-    "description": """Smile Base
-
+    "description": """
 Features
 
     * Install and make French the default language
