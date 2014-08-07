@@ -25,5 +25,5 @@ from openerp import fields, models
 class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
-    commitment_analytic_journal_id = fields.Many2one('account.analytic.journal', 'Analytic Journal for purchase commitments',
+    commitment_analytic_journal_id = fields.Many2one('account.analytic.journal', 'Analytic Journal for budget commitments',
                                                      domain=[('type', '=', 'general')])

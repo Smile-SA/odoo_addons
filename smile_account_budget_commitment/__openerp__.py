@@ -38,7 +38,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "summary": "",
     "website": "http://www.smile.fr",
-    "category": 'Purchase Management',
+    "category": 'Accounting & Finance',
     "sequence": 20,
     "data": [
         "security/ir.model.access.csv",
