@@ -41,6 +41,9 @@
 	                <field name="commitment_amount"/>
 	                <field name="available_amount"/>
 				</xpath>
+				<xpath expr="//field[@name='crossovered_budget_line']/tree/field[@name='percentage']" position="after">
+                	<button name="action_open_analytic_lines" type="object" icon="STOCK_JUMP_TO" string="View details"/>
+				</xpath>
             </field>
         </record>
 
@@ -52,6 +55,9 @@
                 <field name="practical_amount" position="before">
 	                <field name="commitment_amount"/>
 	                <field name="available_amount"/>
+                </field>
+                <field name="percentage" position="after">
+                	<button name="action_open_analytic_lines" type="object" icon="STOCK_JUMP_TO" string="View details"/>
                 </field>
             </field>
         </record>
@@ -65,7 +71,14 @@
 	                <field name="commitment_amount"/>
 	                <field name="available_amount"/>
                 </field>
-            </field>
+				<field name="company_id" position="after">
+					<notebook colspan="4">
+						<page string="Details">
+							<field name="analytic_line_ids" nolabel="1"/>
+						</page>
+					</notebook>
+				</field>
+	        </field>
         </record>
 
        <record id="view_crossovered_budget_line_search" model="ir.ui.view">

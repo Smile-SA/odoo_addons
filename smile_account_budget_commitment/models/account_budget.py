@@ -62,6 +62,7 @@ class BudgetLine(models.Model):
         self.commitment_amount = self._prac_amt(commitment=True)[self.id]
         self.available_amount = self.planned_amount - self.commitment_amount
 
+    analytic_line_ids = fields.One2many('account.analytic.line', 'budget_line_id', 'Analytic Lines')
     commitment_amount = fields.Float('Commitment Amount', digits=dp.get_precision('Account'), compute="_commitment_amt")
     available_amount = fields.Float('Available Amount', digits=dp.get_precision('Account'), compute="_commitment_amt")
 
@@ -79,6 +80,20 @@ class BudgetLine(models.Model):
                     for field in fields_to_compute:
                         group[field] = sum([l[field] for l in line_infos])
         return res
+
+    @api.multi
+    def action_open_analytic_lines(self):
+        self.ensure_one()
+        return {
+            'name': _('Analytic Lines'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.analytic.line',
+            'target': 'new',
+            'domain': [('id', 'in', self[0].analytic_line_ids._ids)],
+            'context': self._context,
+        }
 
 
 class BudgetPositionCommitmentLimit(models.Model):
