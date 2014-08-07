@@ -36,8 +36,8 @@ class AccountInvoiceLine(models.Model):
 
     @api.multi
     def product_id_change(self, product_id, uom_id, qty=0, name='', type='out_invoice',
-            partner_id=False, fposition_id=False, price_unit=False, currency_id=False,
-            context=None, company_id=None):
+                          partner_id=False, fposition_id=False, price_unit=False, currency_id=False,
+                          context=None, company_id=None):
         res = super(AccountInvoiceLine, self).product_id_change(product_id, uom_id, qty, name, type,
                                                                 partner_id, fposition_id, price_unit,
                                                                 currency_id, context, company_id)
