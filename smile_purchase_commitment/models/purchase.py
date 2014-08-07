@@ -26,20 +26,21 @@ from openerp.exceptions import Warning
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    def _prepare_analytic_line(self):
+    def _prepare_analytic_line(self, reverse=False):
         general_account_id = self.pool['purchase.order']._choose_account_from_po_line(self._cr, self._uid, self, self._context)
         general_journal = self.env['account.journal'].search([('type', '=', 'purchase'), ('company_id', '=', self.company_id.id)], limit=1)
         if not general_journal:
             raise Warning(_('Define an accounting journal for purchase'))
         if not general_journal.commitment_analytic_journal_id:
             raise Warning(_("No analytic journal for commitments defined on the accounting journal '%s'") % general_journal.name)
+        sign = reverse and -1 or 1
         return {
             'name': self.name,
             'product_id': self.product_id.id,
             'account_id': self.account_analytic_id.id,
-            'unit_amount': self.product_qty,
+            'unit_amount': sign * self.product_qty,
             'product_uom_id': self.product_uom.id,
-            'amount': self.price_subtotal,
+            'amount': sign * self.price_subtotal,
             'general_account_id': general_account_id,
             'journal_id': general_journal.commitment_analytic_journal_id.id,
             'ref': self.order_id.name,
@@ -57,3 +58,9 @@ class PurchaseOrderLine(models.Model):
         res = super(PurchaseOrderLine, self).action_confirm()
         self._create_analytic_line()
         return res
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('state') == 'cancel':
+            self.filtered(lambda l: l.state not in ('draft', 'cancel'))._create_analytic_line(reverse=True)
+        return super(PurchaseOrderLine)

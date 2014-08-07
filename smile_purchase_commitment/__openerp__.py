@@ -31,6 +31,10 @@ Features
     * Allow to follow-up purchase commitment per budget line
     * Define purchase commitment limit per budget position and per user
 
+TODO
+
+    * Manage gap between purchase order(s) and supplier invoice(s)
+
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "summary": "",
