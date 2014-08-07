@@ -19,9 +19,13 @@
 #
 ##############################################################################
 
+import logging
+
 from openerp import api
 from openerp.osv import fields
 from openerp.models import BaseModel
+
+_logger = logging.getLogger(__name__)
 
 native_auto_init = BaseModel._auto_init
 native_validate_fields = BaseModel._validate_fields
@@ -67,6 +71,25 @@ def _compute_store_set(self):
                 done[key][id_to_update] = True
                 todo.append(id_to_update)
         self.pool[model]._store_set_values(cr, uid, todo, fields_to_recompute, context)
+
+
+@api.multi
+def store_set_values(self, fields_to_recompute=None):
+    # Old-style function fields
+    function_fields = [f for f in fields_to_recompute if getattr(self._columns[f], 'store', None)]
+    self.pool[self._name]._store_set_values(self._cr, self._uid, self._ids, function_fields, self._context)
+    # New-style computed fields
+    computed_fields = []
+    trigger_fields = sum([list(self._fields[f].compute._depends) for f in fields_to_recompute if self._fields[f].compute], [])
+    self.modified(set(trigger_fields))
+    for computed_field in self.env.todo.keys():
+        if computed_field.name not in fields_to_recompute:
+            del self.env.todo[computed_field]
+        else:
+            computed_fields.append(computed_field.name)
+    self.recompute()
+    _logger.info("Fields %s recomputed for the records %s", ', '.join(function_fields + computed_fields), self)
+    return True
 
 
 def new_load(self, cr, uid, fields, data, context=None):
@@ -136,5 +159,5 @@ BaseModel._validate_fields = new_validate_fields
 BaseModel.bulk_create = bulk_create
 BaseModel.import_data = new_import_data
 BaseModel.load = new_load
-BaseModel.store_set_values = BaseModel._store_set_values
+BaseModel.store_set_values = store_set_values
 BaseModel.unlink = new_unlink
