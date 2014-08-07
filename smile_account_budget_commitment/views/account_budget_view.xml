@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="Budgetary Position Commitment Limit" editable="top">
                 	<field name="budget_pos_id" invisible="context.get('budget_pos_view')"/>
-                	<field name="user_id" invisible="context.get('res_user_view')"/>
+                	<field name="user_id" invisible="context.get('res_users_view')"/>
                 	<field name="amount_limit"/>
                 </tree>
             </field>
