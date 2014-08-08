@@ -70,10 +70,13 @@ class ResCompany(orm.Model):
         return str(year)
 
     def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for company_id in ids:
-            old_vals = self.read(cr, uid, company_id, vals.keys(), context, '_classic_write')
-            del old_vals['id']
-            self.pool.get('account.asset.asset').change_accounts(cr, uid, '%s,%s' % (self._name, company_id), old_vals, vals, context)
+        for field in ResCompany._columns:
+            if field in vals:
+                if isinstance(ids, (int, long)):
+                    ids = [ids]
+                for company_id in ids:
+                    old_vals = self.read(cr, uid, company_id, vals.keys(), context, '_classic_write')
+                    del old_vals['id']
+                    self.pool.get('account.asset.asset').change_accounts(cr, uid, '%s,%s' % (self._name, company_id), old_vals, vals, context)
+                break
         return super(ResCompany, self).write(cr, uid, ids, vals, context)

@@ -338,7 +338,6 @@ class AccountAssetAsset(orm.Model):
         return res
 
     def _get_changed_accounts(self, cr, uid, old_values, new_values, context=None):
-        assert sorted(old_values.keys()) == sorted(new_values.keys()), "old_values and new_values must have the same keys!"
         accounts_by_group = {}
         for account in new_values:
             if account in ACCOUNT_GROUPS and old_values[account] and old_values[account] != new_values[account]:
