@@ -23,7 +23,7 @@ from contextlib import contextmanager
 import logging
 import os
 
-from openerp import sql_db, SUPERUSER_ID, tools
+from openerp import api, sql_db, SUPERUSER_ID, tools
 from openerp.report.interface import report_int as ReportService
 from openerp.workflow.service import WorkflowService
 
@@ -194,13 +194,14 @@ class Upgrade(object):
     def force_modules_upgrade(self, registry):
         uid = SUPERUSER_ID
         with cursor(self.db) as cr:
-            registry.get('ir.module.module').update_list(cr, uid)
-            module_obj = registry.get('ir.module.module')
-            ids_to_install = module_obj.search(cr, uid, [('name', 'in', self.modules_to_upgrade),
-                                                         ('state', 'in', ('uninstalled', 'to install'))])
-            module_obj.button_install(cr, uid, ids_to_install)
-            ids_to_upgrade = module_obj.search(cr, uid, [('name', 'in', self.modules_to_upgrade),
-                                                         ('state', 'in', ('installed', 'to upgrade'))])
-            module_obj.button_upgrade(cr, uid, ids_to_upgrade)
-            cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")
+            with api.Environment.manage():
+                module_obj = registry.get('ir.module.module')
+                module_obj.update_list(cr, uid)
+                ids_to_install = module_obj.search(cr, uid, [('name', 'in', self.modules_to_upgrade),
+                                                             ('state', 'in', ('uninstalled', 'to install'))])
+                module_obj.button_install(cr, uid, ids_to_install)
+                ids_to_upgrade = module_obj.search(cr, uid, [('name', 'in', self.modules_to_upgrade),
+                                                             ('state', 'in', ('installed', 'to upgrade'))])
+                module_obj.button_upgrade(cr, uid, ids_to_upgrade)
+                cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")
         self._reset_services()

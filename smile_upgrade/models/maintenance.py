@@ -21,33 +21,30 @@
 
 import logging
 
-from openerp.service import model
-from openerp.addons.web.controllers.main import Home
-
-from openerp.addons.smile_upgrade.web.controllers import maintenance
+from openerp import http
 
 _logger = logging.getLogger(__package__)
 
 
-def kill_xmlrpc_services(*args):
-    _logger.error("Service in maintenance. Call args: %s", args)
-    raise IOError('Connection refused. Service in maintenance')
+def rpc_down(origin):
+    def wrapper(service_name, method, params):
+        _logger.error("Service in maintenance. Call args: %s", ((service_name, method, params),))
+        raise IOError('Connection refused. Service in maintenance')
+    wrapper._origin = origin
+    return wrapper
 
 
 class MaintenanceManager(object):
     """Maintenance Manager
     * Replace classic home by maintenance page
-    * Reject xmlrpc connections
+    * Reject RPC connections
     """
 
-    def __init__(self):
-        self.classic_home = Home.index
-        self.model_dispatch = model.dispatch
-
     def start(self):
-        Home.index = maintenance
-        model.dispatch = kill_xmlrpc_services
+        http.dispatch_rpc = rpc_down(http.dispatch_rpc)
+        from ..controllers.main import Maintenance
+        self.module = Maintenance
 
     def stop(self):
-        Home.index = self.classic_home
-        model.dispatch = self.model_dispatch
+        http.dispatch_rpc = http.dispatch_rpc._origin
+        del self.module.index
