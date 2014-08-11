@@ -47,4 +47,5 @@ class MaintenanceManager(object):
 
     def stop(self):
         http.dispatch_rpc = http.dispatch_rpc._origin
-        del self.module.index
+        if 'index' in self.module.__dict__:
+            del self.module.index
