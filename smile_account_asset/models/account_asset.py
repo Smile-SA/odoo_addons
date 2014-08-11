@@ -73,7 +73,7 @@ class AccountAssetAsset(orm.Model):
         for asset in self.browse(cr, uid, ids, context):
             book_value = asset.purchase_value
             for line in asset.depreciation_line_ids:
-                if line.depreciation_type != 'fiscal' and line.is_posted:
+                if line.depreciation_type != 'fiscal' and (line.is_posted or line.move_id):
                     book_value -= line.depreciation_value
             res[asset.id] = book_value
         return res
