@@ -63,4 +63,4 @@ class PurchaseOrderLine(models.Model):
     def write(self, vals):
         if vals.get('state') == 'cancel':
             self.filtered(lambda l: l.state not in ('draft', 'cancel'))._create_analytic_line(reverse=True)
-        return super(PurchaseOrderLine)
+        return super(PurchaseOrderLine, self).write(vals)
