@@ -46,8 +46,9 @@ class AnalyticLine(models.Model):
     @api.constrains('budget_line_id', 'amount')
     def _check_budget_availability(self):
         if self.budget_line_id and self.budget_line_id.available_amount < 0.0:
-            raise Warning(_("Available amount is exceeded for the budget line '%s'")
-                          % self.display_name)
+            raise Warning(_("Available amount [%s%s] is exceeded for the budget line '%s'")
+                          % (abs(self.budget_line_id.available_amount),
+                             self.budget_line_id.company_id.currency_id.symbol, self.display_name))
 
     @api.one
     @api.constrains('user_id', 'budget_line_id', 'amount')
