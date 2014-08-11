@@ -100,8 +100,9 @@ class ResCurrency(models.Model):
                 round=True, currency_rate_type_from=False, currency_rate_type_to=False,
                 context=None):
         context = context or {}
-        context.update({'currency_rate_type_from': currency_rate_type_from, 'currency_rate_type_to': currency_rate_type_to})
-        return super(ResCurrency, self).compute(cr, uid, from_currency_id, to_currency_id, from_amount, round, context)
+        ctx = context.copy()
+        ctx.update({'currency_rate_type_from': currency_rate_type_from, 'currency_rate_type_to': currency_rate_type_to})
+        return super(ResCurrency, self).compute(cr, uid, from_currency_id, to_currency_id, from_amount, round, ctx)
 
     @api.v8
     def compute(self, from_amount, to_currency, round=True,
