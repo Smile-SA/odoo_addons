@@ -24,14 +24,19 @@ import logging
 from openerp import netsvc
 from openerp.addons.web.controllers.main import Home
 
-from openerp.addons.smile_upgrade.web.controllers import maintenance
+from ..controllers.main import maintenance
 
 _logger = logging.getLogger(__package__)
 
 
-def kill_xmlrpc_services(*args):
-    _logger.error("Service in maintenance. Call args: %s", args)
-    raise IOError('Connection refused. Service in maintenance')
+def rpc_down(origin):
+    def wrapper(service_name, method, params):
+        if service_name == 'db' and method == 'list':
+            return origin(service_name, method, params)
+        _logger.error("Service in maintenance. Call args: %s", ((service_name, method, params),))
+        raise IOError('Connection refused. Service in maintenance')
+    wrapper._origin = origin
+    return wrapper
 
 
 class MaintenanceManager(object):
@@ -42,12 +47,11 @@ class MaintenanceManager(object):
 
     def __init__(self):
         self.classic_home = Home.index
-        self.dispatch_rpc = netsvc.dispatch_rpc
 
     def start(self):
         Home.index = maintenance
-        netsvc.dispatch_rpc = kill_xmlrpc_services
+        netsvc.dispatch_rpc = rpc_down(netsvc.dispatch_rpc)
 
     def stop(self):
         Home.index = self.classic_home
-        netsvc.dispatch_rpc = self.dispatch_rpc
+        netsvc.dispatch_rpc = netsvc.dispatch_rpc._origin

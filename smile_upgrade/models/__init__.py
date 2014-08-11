@@ -19,4 +19,6 @@
 #
 ##############################################################################
 
-import controllers
+import config
+import orm
+import registry
