@@ -22,7 +22,7 @@
 from openerp import http
 from openerp.addons.web.controllers.main import Home
 
-routes = [r.rule for r in http.root.nodb_routing_map.iter_rules()]
+routes = [r.rule for r in http.root.nodb_routing_map.iter_rules() if r.endpoint.method.routing['type'] == 'http']
 
 
 class Maintenance(Home):
