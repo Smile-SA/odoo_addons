@@ -29,11 +29,11 @@ class BudgetCommitmentTest(TransactionCase):
         analytic_account = self.env.ref('account.analytic_online')
         analytic_journal = self.env.ref('smile_account_budget_commitment.commitment_journal')
         budget = self.env.ref('account_budget.crossovered_budget_budgetoptimistic0')
-        budget_pos = self.env.ref('account_budget.account_budget_post_purchase0')
+        budget_post = self.env.ref('account_budget.account_budget_post_purchase0')
         budget_line = self.env['crossovered.budget.lines'].create({
             'crossovered_budget_id': budget.id,
             'analytic_account_id': analytic_account.id,
-            'general_budget_id': budget_pos.id,
+            'general_budget_id': budget_post.id,
             'date_from': time.strftime('%Y-01-01'),
             'date_to': time.strftime('%Y-12-31'),
             'planned_amount': 1000.0,
@@ -42,7 +42,7 @@ class BudgetCommitmentTest(TransactionCase):
             'name': 'Commitment Test',
             'journal_id': analytic_journal.id,
             'account_id': analytic_account.id,
-            'general_account_id': budget_pos.account_ids[0].id,
+            'general_account_id': budget_post.account_ids[0].id,
             'amount': 255.0,
             'date': time.strftime('%Y-%m-%d'),
             'user_id': self.env.uid,
