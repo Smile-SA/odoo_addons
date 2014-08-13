@@ -99,9 +99,9 @@ class BudgetLine(models.Model):
 class BudgetPositionCommitmentLimit(models.Model):
     _name = 'account.budget.post.commitment_limit'
     _description = 'Budgetary Position Commitment Limit'
-    _rec_name = 'budget_pos_id'
+    _rec_name = 'budget_post_id'
 
-    budget_pos_id = fields.Many2one('account.budget.post', 'Budgetary Position', required=True, index=True)
+    budget_post_id = fields.Many2one('account.budget.post', 'Budgetary Position', required=True, index=True)
     user_id = fields.Many2one('res.users', 'User', required=True, index=True)
     amount_limit = fields.Float('Commitment Amount Limit', digits=dp.get_precision('Account'), required=True)
 
@@ -109,4 +109,4 @@ class BudgetPositionCommitmentLimit(models.Model):
 class BudgetPosition(models.Model):
     _inherit = 'account.budget.post'
 
-    commitment_limit_ids = fields.One2many('account.budget.post.commitment_limit', 'budget_pos_id', 'Commitment Limits')
+    commitment_limit_ids = fields.One2many('account.budget.post.commitment_limit', 'budget_post_id', 'Commitment Limits')

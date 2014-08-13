@@ -27,9 +27,10 @@
     "description": """
 Features
 
-    * Generate analytic lines at purchase confirmation
+    * Generate analytic lines at purchase confirmation / cancellation
     * Allow to follow-up purchase commitment per budget line
     * Define purchase commitment limit per budget position and per user
+    * Allow to select a purchase validator who has commitment authorizations
 
 TODO
 
@@ -41,6 +42,9 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "website": "http://www.smile.fr",
     "category": 'Purchase Management',
     "sequence": 20,
+    "data": [
+        'views/purchase_view.xml',
+    ],
     "auto_install": False,
     "installable": True,
     "application": False,

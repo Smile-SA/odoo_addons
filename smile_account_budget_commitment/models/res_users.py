@@ -31,15 +31,36 @@ class ResUsers(models.Model):
     commitment_limit_ids = fields.One2many('account.budget.post.commitment_limit', 'user_id', 'Commitment Limits')
 
     @api.one
-    def check_commitment_limit(self, budget_pos_id, amount):
-        if not budget_pos_id or not amount:
+    def check_commitment_limit(self, budget_post_id, amount):
+        if not budget_post_id or not amount:
             return True
         warning_msg = _("You are authorized to confirm this order.\nAmount for '%s' exceeds your commitment authorization")
-        limits = [limit for limit in self.commitment_limit_ids if limit.budget_pos_id.id == budget_pos_id]
+        limits = [limit for limit in self.commitment_limit_ids if limit.budget_post_id.id == budget_post_id]
         if limits:
             for limit in limits:
                 if limit.amount_limit < amount:
-                    raise Warning(warning_msg % limit.budget_pos_id.display_name)
+                    raise Warning(warning_msg % limit.budget_post_id.display_name)
         elif self.commitment_global_limit < amount:
-            raise Warning(warning_msg % limit.budget_pos_id.display_name)
+            raise Warning(warning_msg % limit.budget_post_id.display_name)
         return True
+
+    @api.model
+    def search_users_with_commitment_authorizations(self, amount_by_budget_post):
+        res = []
+        cr = self._cr
+        for budget_post_id, amount in amount_by_budget_post.iteritems():
+            if not budget_post_id:
+                continue
+            cr.execute("SELECT user_id, amount_limit FROM account_budget_post_commitment_limit "
+                       "WHERE budget_post_id = %s", (budget_post_id,))
+            result = cr.dictfetchall()
+            all_user_ids = [row['user_id'] for row in result]
+            user_ids = [row['user_id'] for row in result if amount <= row['amount_limit']]
+            if all_user_ids:
+                cr.execute("SELECT id FROM res_users WHERE commitment_global_limit >= %s AND id not in %s",
+                           (amount, tuple(all_user_ids)))
+            else:
+                cr.execute("SELECT id FROM res_users WHERE commitment_global_limit >= %s", (amount,))
+            user_ids += [row[0] for row in cr.fetchall()]
+            res.append(user_ids)
+        return res and reduce(lambda x, y: x.intersection(y), (map(set, res))) or set()

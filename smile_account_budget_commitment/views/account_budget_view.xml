@@ -7,7 +7,7 @@
             <field name="model">account.budget.post.commitment_limit</field>
             <field name="arch" type="xml">
                 <tree string="Budgetary Position Commitment Limit" editable="top">
-                	<field name="budget_pos_id" invisible="context.get('budget_pos_view')"/>
+                	<field name="budget_post_id" invisible="context.get('budget_pos_view')"/>
                 	<field name="user_id" invisible="context.get('res_users_view')"/>
                 	<field name="amount_limit"/>
                 </tree>
@@ -22,7 +22,7 @@
                 <notebook position="inside">
 	                <page string="Commitment Limits">
 	                	<field name="commitment_limit_ids"
-	                		context="{'budget_pos_view': True, 'default_budget_pos_id': active_id}"/>
+	                		context="{'budget_pos_view': True, 'default_budget_post_id': active_id}"/>
 	                </page>
                 </notebook>
 				<xpath expr="//field[@name='crossovered_budget_line']/tree/field[@name='practical_amount']" position="before">

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import api, models, _
+from openerp import api, fields, models, _
 from openerp.exceptions import Warning
 
 
@@ -64,3 +64,20 @@ class PurchaseOrderLine(models.Model):
         if vals.get('state') == 'cancel':
             self.filtered(lambda l: l.state not in ('draft', 'cancel'))._create_analytic_line(reverse=True)
         return super(PurchaseOrderLine, self).write(vals)
+
+
+class PurchaseOrder(models.Model):
+    _inherit = 'purchase.order'
+
+    validator = fields.Many2one('res.users', 'Validated by', readonly=True, copyable=False, states={'draft': [('readonly', False)]})
+
+    @api.multi
+    def get_commitments_by_budget_post(self):
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        res = {}
+        for line in self.order_line:
+            general_account_id = self.pool['purchase.order']._choose_account_from_po_line(self._cr, self._uid, line, self._context)
+            budget_post = self.env['account.budget.post'].search([('account_ids', 'in', general_account_id)], limit=1)
+            res.setdefault(budget_post.id, 0.0)
+            res[budget_post.id] += line.price_subtotal
+        return res

@@ -19,5 +19,17 @@
 #
 ##############################################################################
 
-import purchase
-import res_users
+from openerp import models
+
+
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
+        if context and context.get('filter_budget_manager_for_purchase_order'):
+            order_id = context['filter_budget_manager_for_purchase_order']
+            purchase_order = self.pool['purchase.order'].browse(cr, uid, order_id, context)
+            commitments_by_budget_post = purchase_order.get_commitments_by_budget_post()
+            ids = self.search_users_with_commitment_authorizations(cr, uid, commitments_by_budget_post, context)
+            args = (args or []) + [('id', 'in', list(ids))]
+        return super(ResUsers, self).name_search(cr, uid, name, args, operator, context, limit)

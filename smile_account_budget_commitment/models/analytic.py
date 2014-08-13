@@ -29,6 +29,8 @@ class AnalyticLine(models.Model):
     @api.one
     @api.depends('account_id', 'general_account_id', 'date')
     def _get_budget_line(self):
+        if not self.exists():
+            return
         if not self.general_account_id:
             self.budget_line_id = False
         else:

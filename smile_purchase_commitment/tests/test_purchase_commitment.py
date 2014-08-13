@@ -28,14 +28,14 @@ class PurchaseCommitmentTest(TransactionCase):
         import time
         analytic_account = self.env.ref('account.analytic_online')
         budget = self.env.ref('account_budget.crossovered_budget_budgetoptimistic0')
-        budget_pos = self.env.ref('account_budget.account_budget_post_purchase0')
+        budget_post = self.env.ref('account_budget.account_budget_post_purchase0')
         purchase = self.env.ref('purchase.purchase_order_3')
         account_id = purchase.order_line[0].product_id.categ_id.property_account_expense_categ.id
-        budget_pos.write({'account_ids': [(4, account_id)]})
+        budget_post.write({'account_ids': [(4, account_id)]})
         budget_line = self.env['crossovered.budget.lines'].create({
             'crossovered_budget_id': budget.id,
             'analytic_account_id': analytic_account.id,
-            'general_budget_id': budget_pos.id,
+            'general_budget_id': budget_post.id,
             'date_from': time.strftime('%Y-01-01'),
             'date_to': time.strftime('%Y-12-31'),
             'planned_amount': 1000.0,
