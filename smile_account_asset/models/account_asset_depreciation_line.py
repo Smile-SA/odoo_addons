@@ -274,6 +274,8 @@ CREATE AGGREGATE public.last (
         context_copy['no_validate'] = True
         res_id = super(AccountAssetDepreciationLine, self).create(cr, uid, vals, context_copy)
         self._validate_fields(cr, uid, [res_id], vals, context)
+        if vals.get('depreciation_type') == 'fiscal':
+            self._store_set_values(cr, uid, [res_id], ['accounting_value', 'accelerated_value'], context)
         return res_id
 
     def _validate_fields(self, cr, uid, ids, fields_to_validate, context=None):

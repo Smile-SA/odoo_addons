@@ -478,7 +478,9 @@ class AccountAssetAsset(orm.Model):
             lines_to_create.append(vals)
         if lines_to_create:
             depr_line_obj = self.pool.get('account.asset.depreciation.line')
-            depr_line_obj.bulk_create(cr, SUPERUSER_ID, lines_to_create, context)
+            depr_line_ids = depr_line_obj.bulk_create(cr, SUPERUSER_ID, lines_to_create, context)
+            if depreciation_type == 'fiscal':
+                depr_line_obj._store_set_values(cr, uid, depr_line_ids, ['accounting_value', 'accelerated_value'], context)
         return True
 
     def _compute_depreciation_lines(self, cr, uid, asset_id, depreciation_type='accounting', context=None):
