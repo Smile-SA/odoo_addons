@@ -51,6 +51,7 @@ def new__init__(self, pool, cr):
         self._add_field(name, field)
 
 
+@api.v7
 def new_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
     res = native_fields_view_get(self, cr, uid, view_id, view_type, context, toolbar, submenu)
     name = 'attachment_ids'
@@ -60,6 +61,19 @@ def new_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=N
         element = etree.Element('field', name='attachment_ids')
         arch_etree.insert(-1, element)
         res['arch'], res['fields'] = View.postprocess_and_fields(cr, uid, self._name, arch_etree, view_id, context=context)
+    return res
+
+
+@api.v8
+def new_fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    res = native_fields_view_get(self, view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+    name = 'attachment_ids'
+    if view_type == 'search' and (name in self._columns or name in self._fields):
+        View = self.env['ir.ui.view']
+        arch_etree = etree.fromstring(res['arch'])
+        element = etree.Element('field', name='attachment_ids')
+        arch_etree.insert(-1, element)
+        res['arch'], res['fields'] = View.postprocess_and_fields(self._name, arch_etree, view_id)
     return res
 
 models.Model.__init__ = new__init__
