@@ -544,7 +544,7 @@ class AccountAssetDepreciationLine(orm.Model):
             ids = [ids]
         context = context or {}
         for line in self.browse(cr, uid, ids, context):
-            if line.move_id and not (context.get('asset_output') or reversal):
+            if (line.move_id or line.is_posted) and not (context.get('asset_output') or reversal):
                 continue
             if line.depreciation_type == 'fiscal' and not line.asset_id.benefit_accelerated_depreciation:
                 continue
