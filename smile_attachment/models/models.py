@@ -53,7 +53,8 @@ def new__init__(self, pool, cr):
 
 def new_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
     res = native_fields_view_get(self, cr, uid, view_id, view_type, context, toolbar, submenu)
-    if view_type == 'search':
+    name = 'attachment_ids'
+    if view_type == 'search' and (name in self._columns or name in self._fields):
         View = self.pool['ir.ui.view']
         arch_etree = etree.fromstring(res['arch'])
         element = etree.Element('field', name='attachment_ids')
