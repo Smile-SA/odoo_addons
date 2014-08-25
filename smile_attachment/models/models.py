@@ -46,7 +46,7 @@ def new__init__(self, pool, cr):
     native__init__(self, pool, cr)
     name = 'attachment_ids'
     if name not in self._columns and name not in self._fields:
-        field = fields.One2many('ir.attachment', 'res_id', 'Documents', automatic=True,
+        field = fields.One2many('ir.attachment', 'res_id', 'Attachments', automatic=True,
                                 compute='_get_attachments', search='_search_attachments')
         self._add_field(name, field)
 
