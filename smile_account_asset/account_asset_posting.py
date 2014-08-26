@@ -170,11 +170,13 @@ class AccountAssetAsset(orm.Model):
 
     def confirm_asset_purchase(self, cr, uid, ids, context=None):
         res = super(AccountAssetAsset, self).confirm_asset_purchase(cr, uid, ids, context)
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for asset in self.browse(cr, uid, ids, context):
-            if not asset.invoice_line_ids and (not asset.origin_id or not asset.origin_id.invoice_line_ids):
-                self.create_move(cr, uid, asset.id, 'purchase', context)
+        context = context or {}
+        if not context.get('asset_split'):
+            if isinstance(ids, (int, long)):
+                ids = [ids]
+            for asset in self.browse(cr, uid, ids, context):
+                if not asset.invoice_line_ids and (not asset.origin_id or not asset.origin_id.invoice_line_ids):
+                    self.create_move(cr, uid, asset.id, 'purchase', context)
         return res
 
     def cancel_asset_purchase(self, cr, uid, ids, context=None):
@@ -547,7 +549,7 @@ class AccountAssetDepreciationLine(orm.Model):
             ids = [ids]
         context = context or {}
         for line in self.browse(cr, uid, ids, context):
-            if line.move_id and not (context.get('asset_output') or reversal):
+            if (line.move_id or line.is_posted) and not (context.get('asset_output') or reversal):
                 continue
             if line.depreciation_type == 'fiscal' and not line.asset_id.benefit_accelerated_depreciation:
                 continue

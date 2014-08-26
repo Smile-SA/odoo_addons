@@ -112,6 +112,8 @@ class AccountAssetSplitWizard(orm.TransientModel):
                     line.write({'move_id': move_ids_by_depreciation[key]})
 
     def _split_asset(self, cr, uid, origin_asset, vals, default, context=None):
+        context = context or {}
+        context['asset_split'] = True
         asset_obj = self.pool.get('account.asset.asset')
         depreciation_line_obj = self.pool.get('account.asset.depreciation.line')
         new_asset_id = asset_obj.copy(cr, uid, origin_asset.id, default, context)
