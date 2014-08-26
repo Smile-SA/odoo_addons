@@ -51,18 +51,23 @@ class AccountAssetFiscalDeductionReport(report_sxw.rml_parse):
         res = {}
         year = company.get_fiscalyear()
         for asset in assets:
-            year_value = accumulated_value = 0.0
-            posted_lines = [l for l in asset.accounting_depreciation_line_ids if l.is_posted and l.year <= year]
-            if posted_lines:
-                last_line = posted_lines[-1]
-                year_value = last_line.year == year and last_line.current_year_accumulated_value or 0.0
-                accumulated_value = last_line.accumulated_value
-            book_value = asset.purchase_value - accumulated_value
-            non_ded_coeff = asset.purchase_value and \
-                ((asset.purchase_value - min(asset.purchase_value, asset.category_id.fiscal_deduction_limit)) / asset.purchase_value) or 0.0
+            purchase_value = year_value = accumulated_value = 0.0
+            posted_lines = []
+            for a in asset.child_ids + [asset]:
+                sign = a.asset_type == 'purchase_refund' and -1 or 1
+                purchase_value += a.purchase_value * sign
+                plines = [l for l in a.accounting_depreciation_line_ids if l.is_posted and l.year <= year]
+                posted_lines.extend(plines)
+                if plines:
+                    last_line = plines[-1]
+                    year_value += last_line.year == year and last_line.current_year_accumulated_value * sign or 0.0
+                    accumulated_value += last_line.accumulated_value * sign
+            book_value = purchase_value - accumulated_value
+            non_ded_coeff = purchase_value and \
+                ((purchase_value - min(purchase_value, asset.category_id.fiscal_deduction_limit)) / purchase_value) or 0.0
             non_ded_year_value = year_value * non_ded_coeff
             non_ded_accumulated_value = accumulated_value * non_ded_coeff
-            res[asset.id] = (year_value, accumulated_value, non_ded_year_value, non_ded_accumulated_value, book_value)
+            res[asset.id] = (year_value, accumulated_value, non_ded_year_value, non_ded_accumulated_value, book_value, purchase_value)
         return res
 
 

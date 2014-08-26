@@ -24,9 +24,10 @@
         <br />
 	    <% setLang(lang) %>
         %if objects:
-	    <% depreciation_infos_by_asset_id = get_depreciation_infos_by_asset_id(objects, company) %>
+        <% assets = filter(lambda asset: not asset.parent_id or asset.parent_id not in objects, objects) %>
+	    <% depreciation_infos_by_asset_id = get_depreciation_infos_by_asset_id(assets, company) %>
         <% purchase_company = year_company = accumulated_company = non_ded_year_company = non_ded_accumulated_company = book_company = 0.0 %>
-        <% nb_element_company, group_establishment = group_by_establishment(objects) %>
+        <% nb_element_company, group_establishment = group_by_establishment(assets) %>
         <% cpt_company = 0 %>
         %for establishment, assets in group_establishment:
             <h2>${establishment}</h2>
@@ -60,14 +61,14 @@
                         </tr>
                     %for asset in assets:
                         <%
-                            year_value, accumulated_value, non_ded_year_value, non_ded_accumulated_value, book_value = depreciation_infos_by_asset_id[asset.id]
+                            year_value, accumulated_value, non_ded_year_value, non_ded_accumulated_value, book_value, purchase_value = depreciation_infos_by_asset_id[asset.id]
                         %>
                         <tr>
                             <td style="text-align:left;">${asset.code}</td>
                             <td style="text-align:left;">${get_label(asset)}</td>
                             <td style="text-align:center;">${('%.2f' % asset.co2_rate).replace('.', ',')}</td>
                             <td style="text-align:right;">${('%.2f' % float(book_value  - year_value)).replace('.', ',')}</td>
-                            <td style="text-align:right;">${('%.2f' % asset.purchase_value).replace('.', ',')}</td>
+                            <td style="text-align:right;">${('%.2f' % purchase_value).replace('.', ',')}</td>
                             <td style="text-align:right;">${('%.2f' % year_value).replace('.', ',')}<br/><i>${('%.2f' % non_ded_year_value).replace('.', ',')}</i></td>
                             <td style="text-align:right;">${('%.2f' % accumulated_value).replace('.', ',')}<br/><i>${('%.2f' % non_ded_accumulated_value).replace('.', ',')}</i></td>
                             <td style="text-align:right;">${('%.2f' % book_value).replace('.', ',')}</td>
@@ -76,7 +77,7 @@
                         <%
                             purchase_soustotal = year_soustotal = accumulated_soustotal = non_ded_year_soustotal = non_ded_accumulated_soustotal = book_soustotal = 0.0
                             for asset in assets:
-                                purchase_soustotal += asset.purchase_value
+                                purchase_soustotal += depreciation_infos_by_asset_id[asset.id][-1]
                                 year_soustotal += depreciation_infos_by_asset_id[asset.id][0]
                                 accumulated_soustotal += depreciation_infos_by_asset_id[asset.id][1]
                                 non_ded_year_soustotal += depreciation_infos_by_asset_id[asset.id][2]
