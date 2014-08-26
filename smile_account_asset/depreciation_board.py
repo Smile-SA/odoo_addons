@@ -114,14 +114,13 @@ class DepreciationBoard(object):
 
     def compute(self):
         self.reset()
-        break_loop = False  # TODO: improve me
-        while self.annuity_number <= self.total_annuities and (not self.sale_date or self.next_depreciation_date <= self.sale_date):
-            self.yearly_lines.append(self._get_next_yearly_line())
-            self.annuity_number += 1
-            if break_loop:
-                break
+        break_loop = False
+        while not break_loop and self.annuity_number <= self.total_annuities and \
+                (not self.sale_date or self.next_depreciation_date <= self.sale_date):
             if self.next_depreciation_date == self.sale_date:
                 break_loop = True
+            self.yearly_lines.append(self._get_next_yearly_line())
+            self.annuity_number += 1
         for yearly_line in self.yearly_lines:
             self.lines.extend(yearly_line.get_periodical_lines(self))
         return self.get_lines()
@@ -135,12 +134,15 @@ class DepreciationBoard(object):
     def _get_prorata_temporis(self):
         if self.method_info['prorata']:
             if self.annuity_number == 1 and self.next_depreciation_date == self.first_yearly_depreciation_date:
-                return get_prorata_temporis(self.depreciation_start_date, self.fiscalyear_start_day, 12)
-            elif self.annuity_number > self.annuities + self.need_additional_annuity:
+                prorata = get_prorata_temporis(self.depreciation_start_date, self.fiscalyear_start_day, 12)
+                if self.sale_date == self.next_depreciation_date:
+                    prorata += get_prorata_temporis(self.sale_date, self.fiscalyear_start_day, 12, opposite=True) - 1.0
+                return prorata
+            if self.annuity_number > self.annuities + self.need_additional_annuity:
                 return 0.0
-            elif self.sale_date and self.next_depreciation_date == self.sale_date:
+            if self.sale_date and self.next_depreciation_date == self.sale_date:
                 return get_prorata_temporis(self.sale_date, self.fiscalyear_start_day, 12, opposite=True)
-            elif self.sale_date and self.next_depreciation_date > self.sale_date:  # TODO: check if useful
+            if self.sale_date and self.next_depreciation_date > self.sale_date:  # TODO: check if useful
                 return 0.0
         return 1.0
 
