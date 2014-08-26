@@ -22,10 +22,10 @@
 -
   !python {model: account.asset.asset}: |
     asset = self.browse(cr, uid, ref('account_asset_asset_digitalasset0'), context)
-    depreciation_end_date = max([line.depreciation_date for line in asset.accounting_depreciation_line_ids])
+    depreciation_end_date = max([line.depreciation_date for line in asset.depreciation_line_ids])
     import time
     years = asset.accounting_annuities
-    if time.strftime('%m-%d') == '01-01':
+    if time.strftime('%m-%d') == '01-01' or asset.exceptional_depreciation_line_ids:
       years -= 1
     end_date = '%s-12-31' % (int(time.strftime('%Y')) + years)
     log("Depreciation board end date = %s" % depreciation_end_date)

@@ -14,3 +14,8 @@
 -
   !assert {model: account.asset.depreciation.line, id: account_asset_depreciation_line_exceptional0, string: Posted Depreciation Line}:
     - move_id
+-
+  I check the book value
+-
+  !assert {model: account.asset.asset, id: account_asset_asset_digitalasset0, string: Book value after exceptional depreciation NOK}:
+    - book_value == 63600.0
