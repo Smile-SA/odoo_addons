@@ -54,8 +54,8 @@ def _search_attachments(self, operator, value):
 def new__init__(self, pool, cr):
     native__init__(self, pool, cr)
     name = self._get_attachments_field_name()
-    if name not in self._columns and name not in self._fields:
-        field = fields.One2many('ir.attachment', 'res_id', 'Attachments', automatic=True,
+    if name not in self._fields and name not in self._columns:
+        field = fields.One2many('ir.attachment', None, 'Attachments', automatic=True,
                                 compute='_get_attachments', search='_search_attachments')
         self._add_field(name, field)
 
@@ -64,7 +64,7 @@ def new__init__(self, pool, cr):
 def new_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
     res = native_fields_view_get(self, cr, uid, view_id, view_type, context, toolbar, submenu)
     name = self._get_attachments_field_name()
-    if view_type == 'search' and (name in self._columns or name in self._fields):
+    if view_type == 'search' and (name in self._fields or name in self._columns):
         View = self.pool['ir.ui.view']
         arch_etree = etree.fromstring(res['arch'])
         element = etree.Element('field', name=name)
@@ -77,7 +77,7 @@ def new_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=N
 def new_fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
     res = native_fields_view_get(self, view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
     name = self._get_attachments_field_name()
-    if view_type == 'search' and (name in self._columns or name in self._fields):
+    if view_type == 'search' and (name in self._fields or name in self._columns):
         View = self.env['ir.ui.view']
         arch_etree = etree.fromstring(res['arch'])
         element = etree.Element('field', name=name)
@@ -85,6 +85,7 @@ def new_fields_view_get(self, view_id=None, view_type='form', toolbar=False, sub
         res['arch'], res['fields'] = View.postprocess_and_fields(self._name, arch_etree, view_id)
     return res
 
+Model._get_attachments_field_name = _get_attachments_field_name
 Model.__init__ = new__init__
 Model._get_attachments = _get_attachments
 Model._search_attachments = _search_attachments
