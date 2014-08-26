@@ -22,15 +22,24 @@
 from lxml import etree
 
 from openerp import api, fields, models
+from openerp.models import Model
 
-native__init__ = models.Model.__init__
-native_fields_view_get = models.Model.fields_view_get
+native__init__ = Model.__init__
+native_fields_view_get = Model.fields_view_get
+
+
+def _get_attachments_field_name(self):
+    name = 'attachment_ids'
+    if self._inherits:
+        name = 'attachment_%s_ids' % self._table
+    return name
 
 
 @api.one
 @api.depends()
 def _get_attachments(self):
-    self.attachment_ids = False
+    name = self._get_attachments_field_name()
+    setattr(self, name, False)
 
 
 def _search_attachments(self, operator, value):
@@ -44,9 +53,7 @@ def _search_attachments(self, operator, value):
 
 def new__init__(self, pool, cr):
     native__init__(self, pool, cr)
-    name = 'attachment_ids'
-    if self._inherits:
-        name = 'attachment_%s_ids' % self._table
+    name = self._get_attachments_field_name()
     if name not in self._columns and name not in self._fields:
         field = fields.One2many('ir.attachment', 'res_id', 'Attachments', automatic=True,
                                 compute='_get_attachments', search='_search_attachments')
@@ -56,9 +63,7 @@ def new__init__(self, pool, cr):
 @api.v7
 def new_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
     res = native_fields_view_get(self, cr, uid, view_id, view_type, context, toolbar, submenu)
-    name = 'attachment_ids'
-    if self._inherits:
-        name = 'attachment_%s_ids' % self._table
+    name = self._get_attachments_field_name()
     if view_type == 'search' and (name in self._columns or name in self._fields):
         View = self.pool['ir.ui.view']
         arch_etree = etree.fromstring(res['arch'])
@@ -71,9 +76,7 @@ def new_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=N
 @api.v8
 def new_fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
     res = native_fields_view_get(self, view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-    name = 'attachment_ids'
-    if self._inherits:
-        name = 'attachment_%s_ids' % self._table
+    name = self._get_attachments_field_name()
     if view_type == 'search' and (name in self._columns or name in self._fields):
         View = self.env['ir.ui.view']
         arch_etree = etree.fromstring(res['arch'])
@@ -82,7 +85,7 @@ def new_fields_view_get(self, view_id=None, view_type='form', toolbar=False, sub
         res['arch'], res['fields'] = View.postprocess_and_fields(self._name, arch_etree, view_id)
     return res
 
-models.Model.__init__ = new__init__
-models.Model._get_attachments = _get_attachments
-models.Model._search_attachments = _search_attachments
-models.Model.fields_view_get = new_fields_view_get
+Model.__init__ = new__init__
+Model._get_attachments = _get_attachments
+Model._search_attachments = _search_attachments
+Model.fields_view_get = new_fields_view_get
