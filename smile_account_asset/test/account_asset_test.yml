@@ -38,3 +38,8 @@
   !python {model: account.asset.asset}: |
     fiscal_depreciation_line = self.browse(cr, uid, ref("account_asset_asset_digitalasset0"), context).fiscal_depreciation_line_ids[0]
     fiscal_depreciation_line.post_depreciation_line()
+-
+  I check the book value
+-
+  !assert {model: account.asset.asset, id: account_asset_asset_digitalasset0, string: Book value after amortization NOK}:
+    - book_value == 67600.0
