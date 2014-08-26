@@ -171,11 +171,13 @@ class AccountAssetAsset(orm.Model):
 
     def confirm_asset_purchase(self, cr, uid, ids, context=None):
         res = super(AccountAssetAsset, self).confirm_asset_purchase(cr, uid, ids, context)
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for asset in self.browse(cr, uid, ids, context):
-            if not asset.invoice_line_ids and (not asset.origin_id or not asset.origin_id.invoice_line_ids):
-                self.create_move(cr, uid, asset.id, 'purchase', context)
+        context = context or {}
+        if not context.get('asset_split'):
+            if isinstance(ids, (int, long)):
+                ids = [ids]
+            for asset in self.browse(cr, uid, ids, context):
+                if not asset.invoice_line_ids and (not asset.origin_id or not asset.origin_id.invoice_line_ids):
+                    self.create_move(cr, uid, asset.id, 'purchase', context)
         return res
 
     def cancel_asset_purchase(self, cr, uid, ids, context=None):
