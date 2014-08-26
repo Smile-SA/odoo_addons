@@ -65,7 +65,7 @@ class AccountAssetAsset(orm.Model):
         for asset in self.browse(cr, uid, ids, context):
             book_value = asset.purchase_value
             for line in asset.depreciation_line_ids:
-                if line.depreciation_type != 'fiscal' and line.is_posted:
+                if line.depreciation_type != 'fiscal' and (line.is_posted or line.move_id):
                     book_value -= line.depreciation_value
             res[asset.id] = book_value
         return res
@@ -233,7 +233,7 @@ class AccountAssetAsset(orm.Model):
         'sale_result_short_term': fields.float('Sale Result - Short Term', digits_compute=dp.get_precision('Account'), readonly=True),
         'sale_result_long_term': fields.float('Sale Result - Long Term', digits_compute=dp.get_precision('Account'), readonly=True),
         'sale_tax_ids': fields.many2many('account.tax', 'account_asset_asset_account_tax_sale_rel', 'asset_id', 'tax_id', 'Sale Taxes',
-                                         domain=[('parent_id', '=', False), ('type_tax_use', '!=', 'sale')], readonly=True,
+                                         domain=[('parent_id', '=', False), ('type_tax_use', '!=', 'purchase')], readonly=True,
                                          states={'open': [('readonly', False)]}),
         'sale_tax_amount': fields.function(_get_sale_tax_amount, method=True, type='float',
                                            digits_compute=dp.get_precision('Account'), string="Tax Amount"),
