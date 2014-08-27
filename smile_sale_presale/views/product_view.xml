@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="smile_product_filter" model="ir.ui.view">
+            <field name="name">smile.product.search</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <filter name="filter_to_sell" position="after">
+                    <filter string="New products"
+                        domain="[('release_date', '&gt;', current_date )]"
+                        help="Only products not yet released"
+                        name="not_yet_released_filter"/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="smile_product_form" model="ir.ui.view">
+            <field name="name">smile.product.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+				<xpath expr="//page[@string='Information']" position="inside">
+					<label for="release_date"/>
+		            <field name="release_date"/>
+				</xpath>
+            </field>
+        </record>
+
+
+	</data>
+</openerp>
