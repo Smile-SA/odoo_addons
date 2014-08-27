@@ -1,0 +1,16 @@
+Nom du module:
+smile_sale_delivery_date
+
+Objectif du module:
+1) Le module remplace le champ Délais (delay) porté par la ligne de commande de vente (sale.order.line) par le champ "Date de livraison" (delivery_date).
+2) Le champ "Date de livraison" est calculé en fonction de la date d'aujourd'hui et le délais de livraison (sale_delay) précisé sur la fiche produit.
+Date de livraison = Date d'aujourd'hui + Délais de livraison (en jours).
+3) Cette date est propagée sur le bon de livraison sur le mouvement de stock associé à la ligne de vente 
+
+Dépendances:
+sale
+
+
+Droits:
+Aucun groupe n'est nécessaire, mais pour voir la ligne de bon de commande en vue formulaire (et non plus editable="bottom"), il faut disposer
+des droits 'product.group_uos', 'product.group_stock_packaging', ou bien 'sale.group_mrp_properties'

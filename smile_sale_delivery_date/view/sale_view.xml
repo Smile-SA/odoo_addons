@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	     <record id="view_delivery_date_sale_order_inherit_form" model="ir.ui.view">
+          	<field name="name">delivery.date.sale.order.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+            <field name="arch" type="xml">
+				<xpath expr="/form[@string='Sales Order']/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group[2]/field[@name='type']" position="before"> 
+					<field name="delivery_date"/>
+				</xpath>
+				<xpath expr="/form[@string='Sales Order']/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group[2]/label[@for='delay']" position="attributes">                  
+					<attribute name="invisible">True</attribute>
+				</xpath>
+				<xpath expr="/form[@string='Sales Order']/sheet/notebook/page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group[2]/div" position="attributes">
+					<attribute name="invisible">True</attribute>
+				</xpath>
+			</field>
+			</record>
+
+		 </data>
+</openerp>
