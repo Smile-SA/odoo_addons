@@ -21,7 +21,7 @@
 
 from lxml import etree
 
-from openerp import api, fields, models
+from openerp import api, fields
 from openerp.models import Model
 
 native__init__ = Model.__init__
