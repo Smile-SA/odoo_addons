@@ -27,9 +27,9 @@
  'author': 'Smile',
  'license': 'AGPL-3',
  'description': """
-Sur la fiche produit, le module propose les fonctionnalités suivantes:
-- Date de sortie d'un produit (release_date).
-- Un filtre permet de récupérer les produits dont la date de sortie est dans le futur.
+On the product sheet, the following functionalities are offered :
+- Release date of a product
+- A filter enables to get products whose release_date is in the future  
 """,
  'data': [
 	'views/product_view.xml'
