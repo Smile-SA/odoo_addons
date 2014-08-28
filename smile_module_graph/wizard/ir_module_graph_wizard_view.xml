@@ -15,9 +15,9 @@
                 		</group>
                 		<group colspan="2" col="2">
                 			<separator string="States" colspan="2"/>
-		                    <field name="uninstallable"/>
-		                    <field name="uninstalled"/>
 		                    <field name="installed"/>
+		                    <field name="uninstalled"/>
+		                    <field name="uninstallable"/>
                 		</group>
 	                </group>
                 	<group colspan="4" col="2" attrs="{'invisible': [('file', '=', False)]}">

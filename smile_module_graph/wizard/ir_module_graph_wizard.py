@@ -27,7 +27,7 @@ class IrModuleGraphWizard(models.TransientModel):
     _description = 'Module Graph Wizard'
     _rec_name = 'filename'
 
-    stream = fields.Selection([('down', 'Down'), ('up', 'Up'), ('up-down', 'Up & Down')], required=True, default='down')
+    stream = fields.Selection([('down', 'Down'), ('up', 'Up'), ('up-down', 'Up & Down')], required=True, default='up')
     uninstallable = fields.Boolean()
     uninstalled = fields.Boolean('Not Installed')
     installed = fields.Boolean(default=True)
@@ -62,4 +62,5 @@ class IrModuleGraphWizard(models.TransientModel):
             "view_mode": "form",
             "res_id": self._ids[0],
             "target": 'new',
+            "context": self._context,
         }
