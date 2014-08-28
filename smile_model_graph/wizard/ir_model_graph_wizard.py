@@ -49,4 +49,5 @@ class IrModelGraphWizard(models.TransientModel):
             "view_mode": "form",
             "res_id": self._ids[0],
             "target": 'new',
+            "context": self._context,
         }

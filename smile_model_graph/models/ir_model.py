@@ -73,16 +73,19 @@ class IrModel(models.Model):
         return graph
 
     @api.multi
-    def _get_linked_models(self, deep=1):
+    def _get_linked_models(self, deep=1, excluded_model_names=None):
         new_model_names = []
-        if deep > 0:
+        excluded_model_names = excluded_model_names or [m.model for m in self]
+        if deep:  # allows an infinite deep if initial value is negative
             for model in self:
                 for field in model.field_id:
-                    if field.ttype in ('many2one', 'many2many', 'one2many'):
+                    if field.ttype in ('many2one', 'many2many', 'one2many') and \
+                            (not excluded_model_names or field.relation not in excluded_model_names):
                         new_model_names.append(field.relation)
         if new_model_names:
-            new_models = self.search([('model', 'in', new_model_names)]) - self
-            return self | new_models._get_linked_models(deep - 1)
+            excluded_model_names.extend(new_model_names)
+            new_models = self.search([('model', 'in', new_model_names)])
+            return self | new_models._get_linked_models(deep - 1, excluded_model_names)
         return self
 
     @api.multi
