@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_product_product_search" model="ir.ui.view">
+            <field name="name">product.product.search</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref=""/>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <search string="Module">
+	                <field name="name"/>
+	                <field name="categ_id"/>
+	                <field name="branch_id"/>
+	                <field name="vcs_id"/>
+	                <field name="version_id"/>
+	                <field name="version"/>
+	                <field name="author"/>
+	                <field name="license"/>
+	                <field name="depends"/>
+	                <field name="description_html"/>
+                    <group expand='0' string='Group by...'>
+	                    <filter string='Category' domain="[]" context="{'group_by' : 'categ_id'}"/>
+	                    <filter string='Template' domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
+	                    <filter string='Branch' domain="[]" context="{'group_by' : 'branch_id'}"/>
+	                    <filter string='OpenERP Version' domain="[]" context="{'group_by' : 'version_id'}"/>
+	                    <filter string='Version Control System' domain="[]" context="{'group_by' : 'vcs_id'}"/>
+	                </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_product_product_tree" model="ir.ui.view">
+            <field name="name">product.product.tree</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref=""/>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <tree string="Modules">
+	                <field name="name"/>
+	                <field name="version_id"/>
+	                <field name="version"/>
+	                <field name="author"/>
+	                <field name="branch_id"/>
+	                <field name="product_tmpl_id" invisible="1"/>
+	                <field name="version_id" invisible="1"/>
+	                <field name="vcs_id" invisible="1"/>
+	            </tree>
+            </field>
+        </record>
+
+        <record id="view_product_product_form" model="ir.ui.view">
+            <field name="name">product.product.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+            	<field name="categ_id" position="after">
+	            	<field name="is_module" invisible="1"/>
+            	</field>
+                <page string="Information" position="before">
+	            	<page string="Technical Information" attrs="{'invisible': [('is_module','=',False)]}">
+	            		<group>
+	                        <group>
+			            		<field name="shortdesc"/>
+			            		<field name="author"/>
+			            		<field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
+			            		<field name="license"/>
+	                        </group>
+	                        <group>
+			            		<field name="branch_id"/>
+			            		<field name="tag_ids" widget="many2many_tags"/>
+			            		<field name="version"/>
+			            		<field name="depends"/>
+								<button name="get_zipfile" type="object" string="Generate zip" class="oe_link"/>
+	                        </group>
+	            		</group>
+	            		<field name="description_html"/>
+	            	</page>
+            	</page>
+        		<field name="description" position="attributes">
+        			<attribute name="attrs">{'invisible': [('is_module','=',True)]}</attribute>
+        		</field>
+            </field>
+        </record>
+
+        <record id="view_product_product_form2" model="ir.ui.view">
+            <field name="name">product.product.download_zip.form</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+            	<form string="Download zip" version="7.0">
+            		<field name="zipfilename" invisible="1"/>
+            		<field name="zipfile" filename="zipfilename"/>
+                    <footer>
+                        <button string="Close" special="cancel"/>
+                    </footer>
+            	</form>
+            </field>
+        </record>
+
+        <record id="product.product_normal_action_sell" model="ir.actions.act_window">
+            <field name="domain">[('is_module', '!=', True)]</field>
+        </record>
+
+        <record id="action_product_product" model="ir.actions.act_window">
+            <field name="name">Modules</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_product_tree"/>
+            <field name="search_view_id" ref="view_product_product_search"/>
+            <field name="domain">[('is_module', '=', True)]</field>
+        </record>
+
+        <menuitem action="action_product_product" id="menu_modules" parent="base.menu_product" sequence="2"/>
+
+	</data>
+</openerp>
