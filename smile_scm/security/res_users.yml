@@ -1,5 +1,0 @@
--
-  I add "Sale / User" group to admin user
--
-  !python {model: res.users}: |
-    self.write(cr, uid, [ref('base.user_root')], {'groups_id': [(4, ref('base.group_sale_salesman'))]}, context)

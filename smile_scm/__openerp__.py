@@ -34,7 +34,6 @@
     "sequence": 20,
     "data": [
         "security/ir.model.access.csv",
-        "security/res_users.yml",
         "data/scm.vcs.csv",
         "data/scm.version.csv",
         "data/scm.repository.tag.csv",
