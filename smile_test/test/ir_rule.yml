@@ -1,0 +1,25 @@
+-
+  I check all ir.rule
+-
+  !python {model: ir.rule}: |
+    ignored_models = ['hr.expense.report', 'report.stock.inventory', 'board.board',
+                     'ir.needaction_mixin', 'mail.favorite', 'mail.thread', 'mail.vote']
+    rule_ids = self.search(cr, uid, [], context)
+    rule_domains = self.read(cr, uid, rule_ids, ['name', 'domain', 'domain_force'], context)
+    errors = []
+    for rule_info in rule_domains:
+        expr_nb = 0
+        operator_nb = 0
+        for part in rule_info['domain']:
+            if part == '!':
+                continue
+            elif part in ('&', '|'):
+                operator_nb += 1
+            else:
+                expr_nb += 1
+        if rule_info and (expr_nb - operator_nb) != 1:
+            errors.append((rule_info['name'], rule_info['domain_force'], expr_nb, operator_nb))
+
+    if errors:
+        err_details = "\n".join(["%s: %s - %s/%s" % rule_infos for rule_infos in errors])
+        raise Exception('Check theses ir.rule:\n%s' % err_details)
