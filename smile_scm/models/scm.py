@@ -30,7 +30,7 @@ from openerp import api, fields, models, _
 from openerp.exceptions import Warning
 from openerp.tools import config
 
-from tools import cd
+from ..tools import cd
 
 _logger = logging.getLogger(__package__)
 

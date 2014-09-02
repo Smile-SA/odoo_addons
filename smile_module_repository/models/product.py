@@ -28,8 +28,8 @@ from zipfile import ZipFile
 from openerp import api, models, fields, _
 from openerp.addons.base.module.module import MyWriter
 
-from openerp.addons.smile_scm.models.tools import cd
-from tools import zipdir
+from openerp.addons.smile_scm.tools import cd
+from ..tools import zipdir
 
 
 class ProductCategory(models.Model):
