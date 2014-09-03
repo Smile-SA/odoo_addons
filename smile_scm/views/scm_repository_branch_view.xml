@@ -61,7 +61,7 @@
             <field name="name">scm.repository.branch.form</field>
             <field name="model">scm.repository.branch</field>
             <field name="arch" type="xml">
-            	<form string="Branch" version="7.0">
+            	<form string="Branch">
 					<header>
 						<button name="clone" states="draft" string="Clone" type="object" class="oe_highlight"/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,done"/>
@@ -77,13 +77,17 @@
 			                    <button name="pull" string="Pull" type="object"/>
 		                    </group>
                         </div>
-	                    <group>
-		            		<field name="version_id" widget="selection"/>
-		            		<field name="vcs_id" widget="selection"/>
-		            		<field name="url"/>
-		            		<field name="branch"/>
-		            		<field name="partner_id"/>
-		            	</group>
+	                    <notebook>
+	                    	<page string="Information">
+	                    		<group>
+				            		<field name="version_id" widget="selection"/>
+				            		<field name="vcs_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+				            		<field name="url" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+				            		<field name="branch"/>
+				            		<field name="partner_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                    		</group>
+		            		</page>
+		            	</notebook>
 	            	</sheet>
 	                <div class="oe_chatter">
 	                    <field name="message_follower_ids" widget="mail_followers"/>
@@ -102,7 +106,7 @@
             <field name="search_view_id" ref="view_repository_branch_search"/>
         </record>
 
-        <menuitem id="menu_repository_branch" parent="base.menu_management" action="action_repository_branch" sequence="110"/>
+        <menuitem id="menu_repository_branch" parent="smile_scm.menu_scm" action="action_repository_branch" sequence="20"/>
 
 	</data>
 </openerp>

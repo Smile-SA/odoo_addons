@@ -36,7 +36,7 @@
             <field name="name">scm.repository.form</field>
             <field name="model">scm.repository</field>
             <field name="arch" type="xml">
-            	<form string="Repository" version="7.0">
+            	<form string="Repository">
 	                <sheet string="Repository">
 	                    <div class="oe_title">
 	                        <h1><field name="name" placeholder="Name"/></h1>
@@ -70,7 +70,8 @@
             <field name="search_view_id" ref="view_repository_search"/>
         </record>
 
-        <menuitem id="menu_repository" parent="base.menu_management" action="action_repository" sequence="100"/>
+        <menuitem id="menu_scm" name="Source Code" parent="base.menu_administration" sequence="0"/>
+        <menuitem id="menu_repository" parent="menu_scm" action="action_repository" sequence="10"/>
 
 	</data>
 </openerp>
