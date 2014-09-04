@@ -24,7 +24,7 @@ from dateutil.relativedelta import relativedelta
 
 from openerp.tools import float_round
 
-from account_asset_tools import get_date, get_fiscalyear_start_date, get_fiscalyear_stop_date, \
+from tools import get_date, get_fiscalyear_start_date, get_fiscalyear_stop_date, \
     get_period_start_date, get_period_stop_date, get_prorata_temporis, get_prorata_temporis_by_period, \
     get_depreciation_period_dates
 
