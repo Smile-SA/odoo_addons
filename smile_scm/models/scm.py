@@ -20,7 +20,7 @@
 ##############################################################################
 
 import logging
-from os import path
+import os
 import re
 import shutil
 from subprocess import call
@@ -106,7 +106,7 @@ class Branch(models.Model):
             directory = '%s_%s' % (self.vcs_id.cmd, match.sub('_', self.repository_id.url.split(':')[-1]))
             if self.branch:
                 directory += '_%s' % self.branch
-            self.directory = directory
+            self.directory = os.path.join(self._parent_path, directory)
 
     repository_id = fields.Many2one('scm.repository', 'Repository', required=True, ondelete='cascade',
                                     readonly=True, states={'draft': [('readonly', False)]})
@@ -137,7 +137,7 @@ class Branch(models.Model):
     @property
     def _parent_path(self):
         parent_path = config.get('repositories_path') or tempfile.gettempdir()
-        if not path.isdir(parent_path):
+        if not os.path.isdir(parent_path):
             raise Warning(_("%s doesn't exist or is not a directory") % parent_path)
         return parent_path
 
@@ -172,7 +172,7 @@ class Branch(models.Model):
         for branch in self:
             if branch.state == 'draft':
                 raise Warning(_('You cannot pull a repository not cloned'))
-            with cd(path.join(self._parent_path, branch.directory)):
+            with cd(branch.directory):
                 vcs = branch.vcs_id
                 Branch._call([vcs.cmd, vcs.cmd_pull])
         self.write({'last_update': fields.Datetime.now()})
@@ -183,7 +183,7 @@ class Branch(models.Model):
     def unlink(self):
         for branch in self:
             try:
-                shutil.rmtree(path.join(self._parent_path, branch.directory))
+                shutil.rmtree(branch.directory)
             except:
                 pass
         return super(Branch, self).unlink()
