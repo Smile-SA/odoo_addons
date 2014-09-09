@@ -105,7 +105,10 @@ class Branch(models.Model):
         if self.repository_id.url:
             directory = '%s_%s' % (self.vcs_id.cmd, match.sub('_', self.repository_id.url.split(':')[-1]))
             if self.branch:
-                directory += '_%s' % self.branch
+                branch_name = self.branch
+                for char in '.: /':
+                    branch_name.replace(char, '_')
+                directory += '_%s' % branch_name
             self.directory = os.path.join(self._parent_path, directory)
 
     repository_id = fields.Many2one('scm.repository', 'Repository', required=True, ondelete='cascade',
@@ -172,11 +175,14 @@ class Branch(models.Model):
         for branch in self:
             if branch.state == 'draft':
                 raise Warning(_('You cannot pull a repository not cloned'))
-            with cd(branch.directory):
-                vcs = branch.vcs_id
-                Branch._call([vcs.cmd, vcs.cmd_pull])
-        self.write({'last_update': fields.Datetime.now()})
-        self.message_post(body=_("Branch updated"))
+            if not os.path.exists(branch.directory):
+                self.clone()
+            else:
+                with cd(branch.directory):
+                    vcs = branch.vcs_id
+                    Branch._call([vcs.cmd, vcs.cmd_pull])
+                branch.write({'last_update': fields.Datetime.now()})
+                branch.message_post(body=_("Branch updated"))
         return True
 
     @api.multi
