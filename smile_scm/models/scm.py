@@ -153,10 +153,10 @@ class Branch(models.Model):
         _logger.info('%s SUCCEEDED' % command)
 
     @api.multi
-    def clone(self):
+    def clone(self, force=False):
         with cd(self._parent_path):
             for branch in self:
-                if branch.state != 'draft':
+                if not force and branch.state != 'draft':
                     raise Warning(_('You cannot clone a branch already cloned'))
                 vcs = branch.vcs_id
                 localdict = {'branch': branch.branch or branch.vcs_id.default_branch,
@@ -176,7 +176,7 @@ class Branch(models.Model):
             if branch.state == 'draft':
                 raise Warning(_('You cannot pull a repository not cloned'))
             if not os.path.exists(branch.directory):
-                self.clone()
+                self.clone(force=True)
             else:
                 with cd(branch.directory):
                     vcs = branch.vcs_id
