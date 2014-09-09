@@ -7,5 +7,5 @@ scm_repository_tag_all,Repository Tag,smile_scm.model_scm_repository_tag,,1,0,0,
 scm_vcs_system,Version Control System,smile_scm.model_scm_vcs,base.group_system,1,1,1,1
 scm_version_system,Odoo Version,smile_scm.model_scm_version,base.group_system,1,1,1,1
 scm_repository_system,Repository,smile_scm.model_scm_repository,base.group_system,1,1,1,1
-scm_repository_system,Repository Branch,smile_scm.model_scm_repository_branch,base.group_system,1,1,1,1
+scm_repository_branch_system,Repository Branch,smile_scm.model_scm_repository_branch,base.group_system,1,1,1,1
 scm_repository_tag_system,Repository Tag,smile_scm.model_scm_repository_tag,base.group_system,1,1,1,1
