@@ -43,9 +43,10 @@
 	                        <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
 	                    <group>
-		            		<field name="vcs_id" widget="selection"/>
-		            		<field name="url"/>
+		            		<field name="vcs_id" widget="selection" attrs="{'readonly': [('has_branch_done', '=', True)]}"/>
+		            		<field name="url" attrs="{'readonly': [('has_branch_done', '=', True)]}"/>
 		            		<field name="partner_id"/>
+		            		<field name="has_branch_done" invisible="1"/>
 		            	</group>
 		            	<notebook colspan="4">
 		            		<page string="Branches">
