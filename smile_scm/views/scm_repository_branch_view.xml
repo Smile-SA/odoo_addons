@@ -64,18 +64,16 @@
             	<form string="Branch">
 					<header>
 						<button name="clone" states="draft" string="Clone" type="object" class="oe_highlight"/>
+	                    <button name="pull" states="done" string="Pull" type="object" class="oe_highlight"/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,done"/>
 					</header>
 	                <sheet string="Branch">
 	                    <div class="oe_title">
 	                        <h1><field name="name" placeholder="Name"/></h1>
 	                        <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
-                        </div>
-	                    <div class="oe_right">
-		                    <group attrs="{'invisible': [('state', '=', 'draft')]}">
-			            		<field name="last_update"/>
-			                    <button name="pull" string="Pull" type="object"/>
-		                    </group>
+	                        <group>
+								<field name="last_update"/>
+							</group>
                         </div>
 	                    <notebook>
 	                    	<page string="Information">

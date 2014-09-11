@@ -193,7 +193,6 @@ class Branch(models.Model):
                     vcs = branch.vcs_id
                     Branch._call([vcs.cmd, vcs.cmd_pull])
                 branch.write({'last_update': fields.Datetime.now()})
-                branch.message_post(body=_("Branch updated"))
         return True
 
     @api.multi
