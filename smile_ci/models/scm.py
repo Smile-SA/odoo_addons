@@ -371,6 +371,7 @@ class Build(models.Model):
         running = False
         try:
             self._check_quality_code()
+            self._count_lines_of_code()
             self._create_configfile()
             self._create_launcherfile()
             self._create_dockerfile()
@@ -428,6 +429,20 @@ class Build(models.Model):
                            '--exclude=%s' % exclude_files.replace(' ', ''), path]
                     try:
                         subprocess.check_output(cmd)
+                    except subprocess.CalledProcessError, e:
+                        f.write(e.output)
+
+    @api.one
+    def _count_lines_of_code(self):
+        _logger.info('Counting lines of code for build:%s...' % self.id)
+
+        with cd(self.directory):
+            for path in self.branch_id.addons_path.split(','):
+                file = '%s.cloc' % path
+                with open(file, 'a') as f:
+                    cmd = ['cloc', path]
+                    try:
+                        f.write(subprocess.check_output(cmd))
                     except subprocess.CalledProcessError, e:
                         f.write(e.output)
 
@@ -612,7 +627,8 @@ class Build(models.Model):
         if not os.path.exists(self.directory):
             return True
         with cd(self.directory):
-            for filename in (CONFIGFILE, COVERAGEFILE, LOGFILE, FLAKE8FILE, TESTFILE):
+            cloc_paths = ['%s.cloc' % path for path in self.branch_id.addons_path.split(',')]
+            for filename in [CONFIGFILE, COVERAGEFILE, LOGFILE, FLAKE8FILE, TESTFILE] + cloc_paths:
                 if not os.path.exists(filename):
                     continue
                 with open(filename) as f:
