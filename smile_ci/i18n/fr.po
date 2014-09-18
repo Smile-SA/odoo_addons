@@ -18,7 +18,7 @@ msgstr ""
 #: field:scm.repository.branch.build.coverage,branch_count:0
 #. module: smile_ci
 msgid "# conditionals"
-msgstr "# conditionnelles"
+msgstr "# conditions"
 
 #: field:scm.repository.branch.build.coverage,line_count:0
 #. module: smile_ci
@@ -108,7 +108,7 @@ msgstr "Séparé par des virgules"
 #: field:scm.repository.branch.build.coverage,branch_rate:0
 #. module: smile_ci
 msgid "Conditionals rate"
-msgstr "Taux de conditionnelles"
+msgstr "Taux de conditions"
 
 #: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #. module: smile_ci
