@@ -87,5 +87,27 @@
 
 		<menuitem id="menu_repository_branch_build_log" parent="smile_scm.menu_scm" action="action_repository_branch_build_log" sequence="40" />
 
+		<record model="ir.actions.act_window" id="action_build_quality_code">
+			<field name="name">Quality code</field>
+			<field name="res_model">scm.repository.branch.build.log</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,graph</field>
+			<field name="view_id" ref="view_repository_branch_build_log_graph" />
+			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
+			<field name="domain">[('build_id', '=', active_id)]</field>
+			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_branch': True, 'search_default_group_build': True, 'search_default_group_type': True}</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_build_failed_test">
+			<field name="name">Failed tests</field>
+			<field name="res_model">scm.repository.branch.build.log</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,graph</field>
+			<field name="view_id" ref="view_repository_branch_build_log_graph" />
+			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
+			<field name="domain">[('build_id', '=', active_id)]</field>
+			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_branch': True, 'search_default_group_build': True, 'search_default_group_type': True}</field>
+		</record>
+
 	</data>
 </openerp>

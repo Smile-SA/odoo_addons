@@ -252,6 +252,20 @@ class Build(models.Model):
         else:
             self.last_build_time_human = ''
 
+    @api.one
+    def _quality_code_count(self):
+        self.quality_code_count = len(filter(lambda log: log.type == 'quality_code', self.log_ids))
+
+    @api.one
+    def _failed_test_count(self):
+        self.failed_test_count = len(filter(lambda log: log.type == 'test' and log.result == 'error', self.log_ids))
+
+    @api.one
+    def _coverage_avg(self):
+        line_counts = sum([coverage.line_count for coverage in self.coverage_ids])
+        self.coverage_avg = line_counts and \
+            sum([coverage.line_rate * coverage.line_count for coverage in self.coverage_ids]) / line_counts or 0
+
     id = fields.Integer('Number', readonly=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True)
     revno = fields.Char('Last revision number', required=True, readonly=True)
@@ -276,6 +290,9 @@ class Build(models.Model):
     last_build_time_human = fields.Char('Last build time', compute='_get_last_build_time_human', store=False)
     log_ids = fields.One2many('scm.repository.branch.build.log', 'build_id', 'Logs', readonly=True)
     coverage_ids = fields.One2many('scm.repository.branch.build.coverage', 'build_id', 'Coverage', readonly=True)
+    quality_code_count = fields.Integer('# Quality code', compute='_quality_code_count', store=False)
+    failed_test_count = fields.Integer('# Faliled tests', compute='_failed_test_count', store=False)
+    coverage_avg = fields.Integer('Coverage average', compute='_coverage_avg', store=False)
 
     @property
     def _builds_path(self):
@@ -439,6 +456,7 @@ class Build(models.Model):
             'log_handler': "[':TEST']",
             'admin_passwd': self.env['ir.config_parameter'].get_param('ci.admin_passwd'),
             'lang': branch.lang,
+            'db_template': 'template0',
             'workers': branch.workers,
         }
 
