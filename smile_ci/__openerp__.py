@@ -32,6 +32,8 @@ WARNING: UNDER DEVELOPMENT
 Features
 
     # Update branch
+        # For SVN repositories, configure the anonymous login/password
+        # For Git repositories, add read access to the server via SSH key  
     # Check if changes
     # Create build
     # Test build (set max_testing to limit concurrent testing builds)
