@@ -350,7 +350,7 @@ msgstr "Version d'Odoo"
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_tree
 #. module: smile_ci
 msgid "Open"
-msgstr "Ouvert"
+msgstr "Ouvrir"
 
 #: code:addons/smile_ci/models/scm.py:744
 #. module: smile_ci
