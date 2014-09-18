@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<!-- Logs -->
+		<record id="view_repository_branch_build_coverage_search" model="ir.ui.view">
+			<field name="name">scm.repository.branch.build.coverage.search</field>
+			<field name="model">scm.repository.branch.build.coverage</field>
+			<field name="arch" type="xml">
+				<search string="Coverage">
+					<field name="branch_id" />
+					<field name="build_id" />
+					<field name="module" />
+					<field name="file" />
+					<field name="line_count" />
+					<field name="line_rate" />
+					<field name="branch_count" />
+					<field name="branch_rate" />
+					<group string="Group By" expand="0">
+						<filter name="group_branch" string="Branch" context="{'group_by': 'branch_id'}" />
+						<filter name="group_build" string="Build" context="{'group_by': 'build_id'}" />
+						<filter name="group_module" string="Module" context="{'group_by': 'module'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="view_repository_branch_build_coverage_tree" model="ir.ui.view">
+			<field name="name">scm.repository.branch.build.coverage.tree</field>
+			<field name="model">scm.repository.branch.build.coverage</field>
+			<field name="arch" type="xml">
+				<tree string="Coverage" colors="red:line_rate&lt;50;orange:50&lt;=line_rate&lt;70;blue:line_rate&gt;=70">
+					<field name="branch_id" />
+					<field name="build_id" />
+					<field name="module" />
+					<field name="file" />
+					<field name="line_count" />
+					<field name="line_rate" widget="progressbar" />
+					<field name="branch_count" />
+					<field name="branch_rate" widget="progressbar" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_repository_branch_build_coverage_simple_tree" model="ir.ui.view">
+			<field name="name">scm.repository.branch.build.coverage.simple_tree</field>
+			<field name="model">scm.repository.branch.build.coverage</field>
+			<field name="arch" type="xml">
+				<tree string="Coverage" colors="red:line_rate&lt;50;orange:50&lt;=line_rate&lt;70;blue:line_rate&gt;=70">
+					<field name="module" />
+					<field name="file" />
+					<field name="line_count" />
+					<field name="line_rate" widget="progressbar" />
+					<field name="branch_count" />
+					<field name="branch_rate" widget="progressbar" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_repository_branch_build_coverage_graph">
+			<field name="name">scm.repository.branch.build.coverage.graph</field>
+			<field name="model">scm.repository.branch.build.coverage</field>
+			<field name="arch" type="xml">
+				<graph string="Coverage" type="line">
+					<field name="branch_id" type="row" />
+					<field name="build_id" type="row" />
+					<field name="line_rate" type="measure" />
+					<field name="branch_rate" type="measure" />
+				</graph>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_repository_branch_build_coverage">
+			<field name="name">Coverage</field>
+			<field name="res_model">scm.repository.branch.build.coverage</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,graph</field>
+			<field name="view_id" ref="view_repository_branch_build_coverage_graph" />
+			<field name="search_view_id" ref="view_repository_branch_build_coverage_search" />
+			<field name="context">{'search_default_group_branch': True, 'search_default_group_build': True}</field>
+		</record>
+
+		<menuitem id="menu_repository_branch_build_coverage" parent="smile_scm.menu_scm" action="action_repository_branch_build_coverage"
+			sequence="50" />
+
+	</data>
+</openerp>
