@@ -196,7 +196,7 @@ def state_cleaner(method):
                     build_obj._remove_container(cr, SUPERUSER_ID, build_ids)
                     build_obj.write(cr, SUPERUSER_ID, build_ids, {'state': 'done', 'result': 'killed'})
                 # Force build creation for branch in test before server stop
-                self.get('scm.repository.branch').force_create_build(cr, SUPERUSER_ID, branch_ids, force=True)
+                self.get('scm.repository.branch').force_create_build(cr, SUPERUSER_ID, branch_ids)
         return res
     return new_load
 
