@@ -1,0 +1,532 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_ci
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0rc1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-18 08:44+0000\n"
+"PO-Revision-Date: 2014-09-18 08:44+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#: field:scm.repository.branch.build.coverage,branch_count:0
+#. module: smile_ci
+msgid "# conditionals"
+msgstr "# conditionnelles"
+
+#: field:scm.repository.branch.build.coverage,line_count:0
+#. module: smile_ci
+msgid "# lines"
+msgstr "# lignes"
+
+#: code:addons/smile_ci/models/scm.py:284
+#. module: smile_ci
+#, python-format
+msgid "%s doesn't exist or is not a directory"
+msgstr "%s n'existe pas ou n'est pas un répertoire"
+
+#: field:scm.repository.branch,addons_path:0
+#. module: smile_ci
+msgid "Addons path"
+msgstr "Addons path"
+
+#: help:scm.repository.branch,code_path:0
+#. module: smile_ci
+msgid "Addons path for which checking code quality and coverage.\nIf empty, all source code is checked."
+msgstr "Répertoires pour lesquels la couverture de code et la qualité de code est activée.\nSi vide, tout le code source est vérifié."
+
+#: field:scm.repository.branch,user_uid:0
+#. module: smile_ci
+msgid "Admin id"
+msgstr "Id de l'admin"
+
+#: field:scm.repository.branch,user_passwd:0
+#. module: smile_ci
+msgid "Admin password"
+msgstr "Mot de passe de l'admin"
+
+#: code:addons/smile_ci/models/scm.py:686
+#. module: smile_ci
+#, python-format
+msgid "Back to stable"
+msgstr "Retour à l'état stable"
+
+#: model:ir.model,name:smile_ci.model_scm_repository_branch
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_search
+#: field:scm.repository.branch.build,branch_id:0
+#: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_search
+#: field:scm.repository.branch.build.coverage,branch_id:0
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
+#: field:scm.repository.branch.build.log,branch_id:0
+#. module: smile_ci
+msgid "Branch"
+msgstr "Branche"
+
+#: model:ir.model,name:smile_ci.model_scm_repository_branch_build
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
+#: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_search
+#: field:scm.repository.branch.build.coverage,build_id:0
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
+#: field:scm.repository.branch.build.log,build_id:0
+#. module: smile_ci
+msgid "Build"
+msgstr "Build"
+
+#: model:ir.actions.act_window,name:smile_ci.action_repository_branch_build
+#: model:ir.ui.menu,name:smile_ci.menu_repository_branch_build
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
+#: field:scm.repository.branch,build_ids:0
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_graph
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_search
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_simple_tree
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_tree
+#. module: smile_ci
+msgid "Builds"
+msgstr "Builds"
+
+#: field:scm.repository.branch.build.log,code:0
+#. module: smile_ci
+msgid "Class"
+msgstr "Classe"
+
+#: model:ir.model,name:smile_ci.model_scm_repository_branch_build_coverage
+#. module: smile_ci
+msgid "Code Coverage"
+msgstr "Couverture de code"
+
+#: help:scm.repository.branch,addons_path:0
+#. module: smile_ci
+msgid "Comma-separated"
+msgstr "Séparé par des virgules"
+
+#: field:scm.repository.branch.build.coverage,branch_rate:0
+#. module: smile_ci
+msgid "Conditionals rate"
+msgstr "Taux de conditionnelles"
+
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
+#. module: smile_ci
+msgid "Configuration"
+msgstr "Configuration"
+
+#: model:ir.actions.act_window,name:smile_ci.action_repository_branch_build_coverage
+#: model:ir.ui.menu,name:smile_ci.menu_repository_branch_build_coverage
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
+#: field:scm.repository.branch.build,coverage_ids:0
+#: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_graph
+#: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_search
+#: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_simple_tree
+#: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_tree
+#. module: smile_ci
+msgid "Coverage"
+msgstr "Couverture"
+
+#: field:scm.repository.branch.build.coverage,create_uid:0
+#: field:scm.repository.branch.build.log,create_uid:0
+#. module: smile_ci
+msgid "Created by"
+msgstr "Créé par"
+
+#: field:scm.repository.branch.build.coverage,create_date:0
+#: field:scm.repository.branch.build.log,create_date:0
+#. module: smile_ci
+msgid "Created on"
+msgstr "Créé le"
+
+#: field:scm.repository.branch.build,create_date:0
+#. module: smile_ci
+msgid "Date"
+msgstr "Date"
+
+#: help:scm.repository.branch.build,message_last_post:0
+#. module: smile_ci
+msgid "Date of the last message posted on the record."
+msgstr "Date du dernier message posté sur l'enregistrement."
+
+#: field:scm.repository.branch.build.log,name:0
+#. module: smile_ci
+msgid "Description"
+msgstr "Description"
+
+#: field:scm.repository.branch.build,directory:0
+#. module: smile_ci
+msgid "Directory"
+msgstr "Répertoire"
+
+#: selection:scm.repository.branch.build,state:0
+#. module: smile_ci
+msgid "Done"
+msgstr "Terminé"
+
+#: field:scm.repository.branch,dump_file:0
+#. module: smile_ci
+msgid "Dump file"
+msgstr "Fichier de sauvegarde"
+
+#: field:scm.repository.branch.build,date_stop:0
+#. module: smile_ci
+msgid "End date"
+msgstr "Date de fin"
+
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
+#: selection:scm.repository.branch.build.log,result:0
+#. module: smile_ci
+msgid "Error"
+msgstr "Erreur"
+
+#: code:addons/smile_ci/models/scm.py:375
+#: selection:scm.repository.branch.build,result:0
+#. module: smile_ci
+#, python-format
+msgid "Failed"
+msgstr "Échec"
+
+#: field:scm.repository.branch.build.coverage,file:0
+#: field:scm.repository.branch.build.log,file:0
+#. module: smile_ci
+msgid "File"
+msgstr "Fichier"
+
+#: field:scm.repository.branch.build,message_follower_ids:0
+#. module: smile_ci
+msgid "Followers"
+msgstr "Suiveurs"
+
+#: field:scm.vcs,cmd_revno:0
+#. module: smile_ci
+msgid "Get revision number"
+msgstr "Récupérer le numéro de révision"
+
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_search
+#: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_search
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
+#. module: smile_ci
+msgid "Group By"
+msgstr "Grouper par"
+
+#: help:scm.repository.branch.build,message_summary:0
+#. module: smile_ci
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+
+#: field:scm.repository.branch.build,host:0
+#. module: smile_ci
+msgid "Host"
+msgstr "Hôte"
+
+#: field:scm.repository.branch.build,id:0
+#: field:scm.repository.branch.build.coverage,id:0
+#: field:scm.repository.branch.build.log,id:0
+#. module: smile_ci
+msgid "ID"
+msgstr "ID"
+
+#: help:scm.repository.branch.build,message_unread:0
+#. module: smile_ci
+msgid "If checked new messages require your attention."
+msgstr "If checked new messages require your attention."
+
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
+#: selection:scm.repository.branch.build.log,result:0
+#. module: smile_ci
+msgid "Ignored"
+msgstr "Ignoré"
+
+#: field:scm.repository.branch.build,message_is_follower:0
+#. module: smile_ci
+msgid "Is a Follower"
+msgstr "Est un suiveur"
+
+#: selection:scm.repository.branch.build,result:0
+#. module: smile_ci
+msgid "Killed"
+msgstr "Tué"
+
+#: field:scm.repository.branch,lang:0
+#. module: smile_ci
+msgid "Language"
+msgstr "Langue"
+
+#: field:scm.repository.branch.build,message_last_post:0
+#. module: smile_ci
+msgid "Last Message Date"
+msgstr "Dernière date de message"
+
+#: field:scm.repository.branch.build,write_uid:0
+#: field:scm.repository.branch.build.coverage,write_uid:0
+#: field:scm.repository.branch.build.log,write_uid:0
+#. module: smile_ci
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#: field:scm.repository.branch.build,write_date:0
+#: field:scm.repository.branch.build.coverage,write_date:0
+#: field:scm.repository.branch.build.log,write_date:0
+#. module: smile_ci
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#: field:scm.repository.branch.build,revno:0
+#. module: smile_ci
+msgid "Last revision number"
+msgstr "Dernier numéro de révision"
+
+#: field:scm.repository.branch.build.log,line:0
+#. module: smile_ci
+msgid "Line"
+msgstr "Ligne"
+
+#: field:scm.repository.branch.build.coverage,line_rate:0
+#. module: smile_ci
+msgid "Lines rate"
+msgstr "Taux de lignes"
+
+#: model:ir.model,name:smile_ci.model_scm_repository_branch_build_log
+#. module: smile_ci
+msgid "Log"
+msgstr "Log"
+
+#: model:ir.actions.act_window,name:smile_ci.action_repository_branch_build_log
+#: model:ir.ui.menu,name:smile_ci.menu_repository_branch_build_log
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
+#: field:scm.repository.branch.build,log_ids:0
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_graph
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_simple_tree
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_tree
+#. module: smile_ci
+msgid "Logs"
+msgstr "Logs"
+
+#: field:scm.repository.branch.build,message_ids:0
+#. module: smile_ci
+msgid "Messages"
+msgstr "Messages"
+
+#: help:scm.repository.branch.build,message_ids:0
+#. module: smile_ci
+msgid "Messages and communication history"
+msgstr "Historique des messages et des communications"
+
+#: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_search
+#: field:scm.repository.branch.build.coverage,module:0
+#: field:scm.repository.branch.build.log,module:0
+#. module: smile_ci
+msgid "Module"
+msgstr "Module"
+
+#: field:scm.repository.branch,modules_to_install:0
+#. module: smile_ci
+msgid "Modules to install"
+msgstr "Modules à installer"
+
+#: code:addons/smile_ci/models/scm.py:526
+#. module: smile_ci
+#, python-format
+msgid "No available ports"
+msgstr "Aucun port disponible"
+
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_search
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_simple_tree
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_tree
+#. module: smile_ci
+msgid "Number"
+msgstr "Numéro"
+
+#: model:ir.model,name:smile_ci.model_scm_version
+#. module: smile_ci
+msgid "Odoo Version"
+msgstr "Version d'Odoo"
+
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_simple_tree
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_tree
+#. module: smile_ci
+msgid "Open"
+msgstr "Ouvert"
+
+#: code:addons/smile_ci/models/scm.py:744
+#. module: smile_ci
+#, python-format
+msgid "Open URL"
+msgstr "Ouvrir l'URL"
+
+#: field:scm.version,optional_packages:0
+#. module: smile_ci
+msgid "Optional packages"
+msgstr "Paquets optionnels"
+
+#: selection:scm.repository.branch.build,state:0
+#. module: smile_ci
+msgid "Pending"
+msgstr "En attente"
+
+#: field:scm.repository.branch.build,port:0
+#. module: smile_ci
+msgid "Port"
+msgstr "Port"
+
+#: field:scm.repository.branch,pg_version:0
+#. module: smile_ci
+msgid "PostgreSQL Version"
+msgstr "Version de PostgreSQL"
+
+#: field:scm.repository.branch,py_version:0
+#. module: smile_ci
+msgid "Python Version"
+msgstr "Version de Python"
+
+#: selection:scm.repository.branch.build.log,type:0
+#. module: smile_ci
+msgid "Quality code"
+msgstr "Qualité de code"
+
+#: field:scm.version,required_packages:0
+#. module: smile_ci
+msgid "Required packages"
+msgstr "Paquets requis"
+
+#: field:scm.repository.branch.build,result:0
+#: field:scm.repository.branch.build.log,result:0
+#. module: smile_ci
+msgid "Result"
+msgstr "Résultat"
+
+#: selection:scm.repository.branch.build,state:0
+#. module: smile_ci
+msgid "Running"
+msgstr "En cours"
+
+#: field:scm.version,server_cmd:0
+#. module: smile_ci
+msgid "Server command"
+msgstr "Commande du serveur"
+
+#: field:scm.repository.branch,server_path:0
+#. module: smile_ci
+msgid "Server path"
+msgstr "Chemin du serveur"
+
+#: field:scm.repository.branch,code_path:0
+#. module: smile_ci
+msgid "Source code to analyse path"
+msgstr "Chemin du code source à analyser"
+
+#: selection:scm.repository.branch.build,result:0
+#. module: smile_ci
+msgid "Stable"
+msgstr "Stable"
+
+#: field:scm.repository.branch.build,date_start:0
+#. module: smile_ci
+msgid "Start date"
+msgstr "Date de début"
+
+#: field:scm.repository.branch.build,state:0
+#. module: smile_ci
+msgid "State"
+msgstr "État"
+
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_simple_tree
+#: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_tree
+#. module: smile_ci
+msgid "Stop"
+msgstr "Arrêter"
+
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
+#: selection:scm.repository.branch.build.log,result:0
+#. module: smile_ci
+msgid "Success"
+msgstr "Succès"
+
+#: field:scm.repository.branch.build,message_summary:0
+#. module: smile_ci
+msgid "Summary"
+msgstr "Résumé"
+
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
+#: view:scm.repository.branch:smile_ci.view_repository_branch_simple_tree
+#: view:scm.repository.branch:smile_ci.view_repository_branch_tree
+#: selection:scm.repository.branch.build.log,type:0
+#. module: smile_ci
+msgid "Test"
+msgstr "Test"
+
+#: selection:scm.repository.branch.build,state:0
+#. module: smile_ci
+msgid "Testing"
+msgstr "En cours de test"
+
+#: field:scm.repository.branch,ignored_tests:0
+#. module: smile_ci
+msgid "Tests to ignore"
+msgstr "Tests à ignorer"
+
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
+#: field:scm.repository.branch.build.log,type:0
+#. module: smile_ci
+msgid "Type"
+msgstr "Type"
+
+#: field:scm.repository.branch.build,message_unread:0
+#. module: smile_ci
+msgid "Unread Messages"
+msgstr "Messages non lus"
+
+#: code:addons/smile_ci/models/scm.py:689
+#: selection:scm.repository.branch.build,result:0
+#. module: smile_ci
+#, python-format
+msgid "Unstable"
+msgstr "Instable"
+
+#: field:scm.repository.branch,use_in_ci:0
+#. module: smile_ci
+msgid "Use in Continuous Integration"
+msgstr "Utiliser sur l'intégration continue"
+
+#: field:scm.repository.branch.build,create_uid:0
+#. module: smile_ci
+msgid "User"
+msgstr "Utilisateur"
+
+#: model:ir.model,name:smile_ci.model_scm_vcs
+#. module: smile_ci
+msgid "Version Control System"
+msgstr "Système de contrôle de version"
+
+#: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
+#: selection:scm.repository.branch.build.log,result:0
+#. module: smile_ci
+msgid "Warning"
+msgstr "Attention"
+
+#: field:scm.version,web_included:0
+#. module: smile_ci
+msgid "Web Included"
+msgstr "Web inclus"
+
+#: field:scm.repository.branch,workers:0
+#. module: smile_ci
+msgid "Workers"
+msgstr "Workers"
+
+#: help:scm.repository.branch,ignored_tests:0
+#. module: smile_ci
+msgid "module.filename, without extension. Comma-separated"
+msgstr "module.filename, sans extension. Séparé par des virgules"
+
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
+#: view:scm.repository.branch:smile_ci.view_repository_branch_simple_tree
+#: view:scm.repository.branch:smile_ci.view_repository_branch_tree
+#. module: smile_ci
+msgid "{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}"
+msgstr "{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}"
+
