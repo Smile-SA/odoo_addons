@@ -113,7 +113,7 @@ class Branch(models.Model):
     ignored_tests = fields.Char('Tests to ignore', help='module.filename, without extension. Comma-separated')
     server_path = fields.Char('Server path', default="server")
     addons_path = fields.Char('Addons path', default="addons", help="Comma-separated")
-    code_path = fields.Char('Source code to analyse path', help="Addons path for which checking code quality and coverage"
+    code_path = fields.Char('Source code to analyse path', help="Addons path for which checking code quality and coverage.\n"
                                                                 "If empty, all source code is checked.")
     workers = fields.Integer('Workers', default=0, required=True)
     user_uid = fields.Integer('Admin id', default=1, required=True)
