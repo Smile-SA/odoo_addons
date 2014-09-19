@@ -71,10 +71,10 @@
 	                    <div class="oe_title">
 	                        <h1><field name="name" placeholder="Name"/></h1>
 	                        <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
-	                        <group>
-								<field name="last_update"/>
-							</group>
                         </div>
+                        <group>
+							<field name="last_update"/>
+						</group>
 	                    <notebook>
 	                    	<page string="Information">
 	                    		<group>
