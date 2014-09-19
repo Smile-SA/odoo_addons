@@ -10,6 +10,10 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/
 # Update packages list
 RUN apt-get -qq update
 
+# Configure locales
+RUN locale-gen en_US.UTF-8 && update-locale
+RUN echo 'LANG="en_US.UTF-8"' > /etc/default/locale
+
 # Install PostgreSQL
 RUN apt-get -qq -y install postgresql-%(pg_version)s
 
