@@ -19,6 +19,9 @@
 #
 ##############################################################################
 
+import os
+import time
+
 from openerp.osv import orm, fields
 
 
