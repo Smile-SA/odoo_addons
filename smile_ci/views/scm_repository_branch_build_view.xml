@@ -42,24 +42,6 @@
 			</field>
 		</record>
 
-		<record id="view_repository_branch_build_simple_tree" model="ir.ui.view">
-			<field name="name">scm.repository.branch.build.simple_tree</field>
-			<field name="model">scm.repository.branch.build</field>
-			<field name="arch" type="xml">
-				<tree string="Builds" colors="blue:result=='stable';orange:result=='unstable';red:result=='failed';grey:result=='killed'">
-					<field name="id" string="Number" />
-					<field name="port" />
-					<field name="state" />
-					<field name="result" />
-					<field name="time_human" />
-					<field name="age_human" />
-					<field name="last_build_time_human" />
-					<button name="stop_container" type="object" string="Stop" icon="STOCK_STOP" attrs="{'invisible': [('state', '=', 'done')]}" />
-					<button name="open" type="object" string="Open" icon="STOCK_REDO" attrs="{'invisible': [('state', '!=', 'running')]}" />
-				</tree>
-			</field>
-		</record>
-
 		<record id="view_repository_branch_build_graph" model="ir.ui.view">
 			<field name="name">scm.repository.branch.build.graph</field>
 			<field name="model">scm.repository.branch.build</field>
@@ -90,22 +72,20 @@
 							<field name="branch_id" class="oe_inline" />
 						</div>
 						<div class="oe_right">
-							<group col="4">
-								<button class="oe_inline oe_stat_button" name="%(action_build_quality_code)d" type="action" icon="fa-code">
-									<field string="Quality code" name="quality_code_count" widget="statinfo" />
-								</button>
-								<button class="oe_inline oe_stat_button" name="%(action_build_failed_test)d" type="action" icon="fa-smile-o"
-									attrs="{'invisible': [('failed_test_count','&gt;', 0)]}">
-									<field string="Failed tests" name="failed_test_count" widget="statinfo" />
-								</button>
-								<button class="oe_inline oe_stat_button" name="%(action_build_failed_test)d" type="action" icon="fa-frown-o"
-									attrs="{'invisible': [('failed_test_count', '=', 0)]}">
-									<field string="Failed tests" name="failed_test_count" widget="statinfo" />
-								</button>
-								<button class="oe_inline oe_stat_button" name="%(action_build_coverage)d" type="action" icon="fa-file">
-									<field string="Coverage (%)" name="coverage_avg" widget="statinfo" />
-								</button>
-							</group>
+							<button class="oe_inline oe_stat_button" name="%(action_build_failed_test)d" type="action" icon="fa-smile-o"
+								attrs="{'invisible': [('failed_test_count','&gt;', 0)]}">
+								<field string="Failed tests" name="failed_test_count" widget="statinfo" />
+							</button>
+							<button class="oe_inline oe_stat_button" name="%(action_build_failed_test)d" type="action" icon="fa-frown-o"
+								attrs="{'invisible': [('failed_test_count', '=', 0)]}">
+								<field string="Failed tests" name="failed_test_count" widget="statinfo" />
+							</button>
+							<button class="oe_inline oe_stat_button" name="%(action_build_quality_code)d" type="action" icon="fa-code">
+								<field string="Quality code" name="quality_code_count" widget="statinfo" />
+							</button>
+							<button class="oe_inline oe_stat_button" name="%(action_build_coverage)d" type="action">
+								<field string="Coverage" name="coverage_avg" widget="percentpie" />
+							</button>
 						</div>
 						<group col="4">
 							<group>
@@ -137,6 +117,16 @@
 		</record>
 
 		<menuitem id="menu_repository_branch_build" parent="smile_scm.menu_scm" action="action_repository_branch_build" sequence="30" />
+
+		<record model="ir.actions.act_window" id="action_branch_builds">
+			<field name="name">Builds</field>
+			<field name="res_model">scm.repository.branch.build</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,graph</field>
+			<field name="view_id" ref="view_repository_branch_build_tree" />
+			<field name="search_view_id" ref="view_repository_branch_build_search" />
+			<field name="domain">[('branch_id', '=', active_id)]</field>
+		</record>
 
 	</data>
 </openerp>

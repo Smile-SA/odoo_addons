@@ -42,21 +42,6 @@
 			</field>
 		</record>
 
-		<record id="view_repository_branch_build_coverage_simple_tree" model="ir.ui.view">
-			<field name="name">scm.repository.branch.build.coverage.simple_tree</field>
-			<field name="model">scm.repository.branch.build.coverage</field>
-			<field name="arch" type="xml">
-				<tree string="Coverage" colors="red:line_rate&lt;50;orange:50&lt;=line_rate&lt;70;blue:line_rate&gt;=70">
-					<field name="module" />
-					<field name="file" />
-					<field name="line_count" />
-					<field name="line_rate" widget="progressbar" />
-					<field name="branch_count" />
-					<field name="branch_rate" widget="progressbar" />
-				</tree>
-			</field>
-		</record>
-
 		<record model="ir.ui.view" id="view_repository_branch_build_coverage_graph">
 			<field name="name">scm.repository.branch.build.coverage.graph</field>
 			<field name="model">scm.repository.branch.build.coverage</field>
@@ -91,7 +76,7 @@
 			<field name="view_id" ref="view_repository_branch_build_coverage_graph" />
 			<field name="search_view_id" ref="view_repository_branch_build_coverage_search" />
 			<field name="domain">[('build_id', '=', active_id)]</field>
-			<field name="context">{'search_default_group_branch': True, 'search_default_group_build': True}</field>
+			<field name="context">{}</field>
 		</record>
 
 	</data>

@@ -104,6 +104,10 @@ class Branch(models.Model):
     def _get_py_versions(self):
         return [('2.7', '2.7')]
 
+    @api.one
+    def _get_builds_count(self):
+        self.builds_count = len(self.build_ids)
+
     build_ids = fields.One2many('scm.repository.branch.build', 'branch_id', 'Builds', readonly=True)
     use_in_ci = fields.Boolean('Use in Continuous Integration')
     pg_version = fields.Selection('_get_pg_versions', 'PostgreSQL Version', required=True, default='9.3')
@@ -121,6 +125,7 @@ class Branch(models.Model):
     lang = fields.Selection('_get_lang', 'Language', default='en_US', required=True)
     last_build_result = fields.Selection(BUILD_RESULTS + [('unknown', 'Unknown')], 'Last result',
                                          compute='_get_last_build_result', store=False)
+    builds_count = fields.Integer('Builds Count', compute='_get_builds_count', store=False)
 
     @api.one
     def _update(self):
