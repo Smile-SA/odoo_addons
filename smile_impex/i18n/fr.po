@@ -1,0 +1,410 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_impex
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-23 15:34+0000\n"
+"PO-Revision-Date: 2014-09-23 15:34+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_impex
+#: help:ir.model.export.template,method:0
+#: help:ir.model.impex.template,method:0
+#: help:ir.model.import.template,method:0
+msgid "Arguments can be passed through Method args"
+msgstr "Les arguments peuvent être passés via le champ Arguments de la méthode"
+
+#. module: smile_impex
+#: help:ir.model.export.template,method_args:0
+#: help:ir.model.impex.template,method_args:0
+#: help:ir.model.import.template,method_args:0
+msgid "Arguments passed as a dictionary\n"
+"Example: {'code': '705000'}"
+msgstr "Arguments passés comme un dictionnaire\n"
+"Exemple: {'code': '705000'}"
+
+#. module: smile_impex
+#: code:addons/smile_impex/models/export.py:90
+#, python-format
+msgid "Can't find method: %s on object: %s"
+msgstr "Ne peut pas trouver la méthode: %s sur l'objet :%s"
+
+#. module: smile_impex
+#: field:ir.model.export.template,client_action_id:0
+msgid "Client Action"
+msgstr "Action client"
+
+#. module: smile_impex
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+msgid "Create Client Action"
+msgstr "Créer une action client"
+
+#. module: smile_impex
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+#: view:ir.model.import.template:smile_impex.view_import_template_form
+msgid "Create Scheduled Action"
+msgstr "Créer une action programmée"
+
+#. module: smile_impex
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+#: view:ir.model.import.template:smile_impex.view_import_template_form
+msgid "Create Server Action"
+msgstr "Créer une action serveur"
+
+#. module: smile_impex
+#: field:ir.model.export.template,create_uid:0
+#: field:ir.model.import.template,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_impex
+#: field:ir.model.export.template,create_date:0
+#: field:ir.model.import.template,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_impex
+#: field:ir.model.export,create_date:0
+#: field:ir.model.impex,create_date:0
+#: field:ir.model.import,create_date:0
+msgid "Creation Date"
+msgstr "Date de création"
+
+#. module: smile_impex
+#: field:ir.model.export,create_uid:0
+#: field:ir.model.impex,create_uid:0
+#: field:ir.model.import,create_uid:0
+msgid "Creation User"
+msgstr "Créateur"
+
+#. module: smile_impex
+#: selection:ir.model.export.template,filter_type:0
+msgid "Domain"
+msgstr "Domaine"
+
+#. module: smile_impex
+#: selection:ir.model.export,state:0
+#: selection:ir.model.impex,state:0
+#: selection:ir.model.import,state:0
+msgid "Done"
+msgstr "Terminé"
+
+#. module: smile_impex
+#: field:ir.model.export,to_date:0
+#: field:ir.model.impex,to_date:0
+#: field:ir.model.import,to_date:0
+msgid "End date"
+msgstr "Date de fin"
+
+#. module: smile_impex
+#: help:ir.model.export.template,force_execute_action:0
+msgid "Even if there are no resources to export"
+msgstr "Même s'il n'y a aucune resource à exporter"
+
+#. module: smile_impex
+#: selection:ir.model.export,state:0
+#: selection:ir.model.impex,state:0
+#: selection:ir.model.import,state:0
+msgid "Exception"
+msgstr "Exception"
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_export
+#: view:ir.model.export:smile_impex.view_export_form
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+msgid "Export"
+msgstr "Export"
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_export_template
+msgid "Export Template"
+msgstr "Modèle d'export"
+
+#. module: smile_impex
+#: model:ir.actions.act_window,name:smile_impex.action_export_template
+#: model:ir.actions.act_window,name:smile_impex.action_exports
+#: model:ir.actions.act_window,name:smile_impex.action_exports_from_template
+#: view:ir.model.export:smile_impex.view_export_tree
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+#: view:ir.model.export.template:smile_impex.view_export_template_tree
+#: field:ir.model.export.template,export_ids:0
+#: model:ir.ui.menu,name:smile_impex.menu_export_template
+msgid "Exports"
+msgstr "Exports"
+
+#. module: smile_impex
+#: field:ir.model.export.template,filter_domain:0
+msgid "Filter domain"
+msgstr "Domaine de filtre"
+
+#. module: smile_impex
+#: field:ir.model.export.template,filter_method:0
+msgid "Filter method"
+msgstr "Méthode de filtre"
+
+#. module: smile_impex
+#: field:ir.model.export.template,filter_type:0
+msgid "Filter type"
+msgstr "Type de filtre"
+
+#. module: smile_impex
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+msgid "Filters"
+msgstr "Filtres"
+
+#. module: smile_impex
+#: field:ir.model.export.template,force_execute_action:0
+msgid "Force Action Execution"
+msgstr "Force l'exécution de l'action"
+
+#. module: smile_impex
+#: field:ir.model.export,id:0
+#: field:ir.model.export.template,id:0
+#: field:ir.model.impex,id:0
+#: field:ir.model.impex.template,id:0
+#: field:ir.model.import,id:0
+#: field:ir.model.import.template,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_impex
+#: help:ir.model.export.template,unique:0
+msgid "If unique, each instance is exported only once"
+msgstr "Si coché, chaque instance est exportée une seule fois"
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_import
+#: view:ir.model.import:smile_impex.view_import_form
+#: view:ir.model.import.template:smile_impex.view_import_template_form
+msgid "Import"
+msgstr "Import"
+
+#. module: smile_impex
+#: model:ir.ui.menu,name:smile_impex.menu_impex_template
+msgid "Import / Export"
+msgstr "Importer / Exporter"
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_import_template
+msgid "Import Template"
+msgstr "Modèle d'import"
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_impex
+msgid "Import/Export"
+msgstr "Import/Export"
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_impex_template
+msgid "Import/Export Template"
+msgstr "Modèle d'import/export"
+
+#. module: smile_impex
+#: model:ir.actions.act_window,name:smile_impex.action_import_template
+#: view:ir.model.import:smile_impex.view_import_tree
+#: view:ir.model.import.template:smile_impex.view_import_template_form
+#: view:ir.model.import.template:smile_impex.view_import_template_tree
+#: field:ir.model.import.template,import_ids:0
+#: model:ir.ui.menu,name:smile_impex.menu_import_template
+msgid "Imports"
+msgstr "Imports"
+
+#. module: smile_impex
+#: field:ir.model.export,write_uid:0
+#: field:ir.model.export.template,write_uid:0
+#: field:ir.model.import,write_uid:0
+#: field:ir.model.import.template,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_impex
+#: field:ir.model.export,write_date:0
+#: field:ir.model.export.template,write_date:0
+#: field:ir.model.import,write_date:0
+#: field:ir.model.import.template,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_impex
+#: field:ir.model.export.template,limit:0
+msgid "Limit"
+msgstr "Limite"
+
+#. module: smile_impex
+#: view:ir.model.export:smile_impex.view_export_form
+#: field:ir.model.export,log_ids:0
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+#: field:ir.model.export.template,log_ids:0
+#: view:ir.model.import:smile_impex.view_import_form
+#: field:ir.model.import,log_ids:0
+#: view:ir.model.import.template:smile_impex.view_import_template_form
+#: field:ir.model.import.template,log_ids:0
+msgid "Logs"
+msgstr "Logs"
+
+#. module: smile_impex
+#: field:ir.model.export.template,max_offset:0
+msgid "Max offset"
+msgstr "Offset max"
+
+#. module: smile_impex
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+#: selection:ir.model.export.template,filter_type:0
+#: field:ir.model.export.template,method:0
+#: field:ir.model.impex.template,method:0
+#: view:ir.model.import.template:smile_impex.view_import_template_form
+#: field:ir.model.import.template,method:0
+msgid "Method"
+msgstr "Méthode"
+
+#. module: smile_impex
+#: field:ir.model.export.template,method_args:0
+#: field:ir.model.impex.template,method_args:0
+#: field:ir.model.import.template,method_args:0
+msgid "Method args"
+msgstr "Arguments de méthode"
+
+#. module: smile_impex
+#: field:ir.model.export.template,name:0
+#: field:ir.model.impex.template,name:0
+#: field:ir.model.import.template,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_impex
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+msgid "New Export"
+msgstr "Nouvel export"
+
+#. module: smile_impex
+#: view:ir.model.import.template:smile_impex.view_import_template_form
+msgid "New Import"
+msgstr "Nouvel import"
+
+#. module: smile_impex
+#: field:ir.model.export.template,model_id:0
+#: field:ir.model.impex.template,model_id:0
+#: field:ir.model.import.template,model_id:0
+msgid "Object"
+msgstr "Objet"
+
+#. module: smile_impex
+#: field:ir.model.export,offset:0
+msgid "Offset"
+msgstr "Offset"
+
+#. module: smile_impex
+#: field:ir.model.export.template,order:0
+msgid "Order by"
+msgstr "Trier par"
+
+#. module: smile_impex
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+msgid "Other"
+msgstr "Autre"
+
+#. module: smile_impex
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+msgid "Paging"
+msgstr "Pagination"
+
+#. module: smile_impex
+#: code:addons/smile_impex/models/impex.py:84
+#, python-format
+msgid "Please remove client action before removing server action"
+msgstr "Merci de supprimer l'action de client avant de supprimer l'action de serveur"
+
+#. module: smile_impex
+#: code:addons/smile_impex/models/impex.py:76
+#, python-format
+msgid "Please restart Odoo server"
+msgstr "Merci de redémarrer le serveur Odoo"
+
+#. module: smile_impex
+#: view:ir.model.export:smile_impex.view_export_form
+#: view:ir.model.export:smile_impex.view_export_tree
+msgid "Re-generate"
+msgstr "Re-générer"
+
+#. module: smile_impex
+#: field:ir.model.export,record_ids:0
+msgid "Records"
+msgstr "Records"
+
+#. module: smile_impex
+#: selection:ir.model.export,state:0
+#: selection:ir.model.impex,state:0
+#: selection:ir.model.import,state:0
+msgid "Running"
+msgstr "En cours"
+
+#. module: smile_impex
+#: field:ir.model.export.template,cron_id:0
+#: field:ir.model.impex.template,cron_id:0
+#: field:ir.model.import.template,cron_id:0
+msgid "Scheduled Action"
+msgstr "Action programmée"
+
+#. module: smile_impex
+#: view:ir.model.export.template:smile_impex.view_export_template_search
+#: view:ir.model.import.template:smile_impex.view_import_template_search
+msgid "Search"
+msgstr "Recherche"
+
+#. module: smile_impex
+#: field:ir.model.export.template,server_action_id:0
+#: field:ir.model.impex.template,server_action_id:0
+#: field:ir.model.import.template,server_action_id:0
+msgid "Server action"
+msgstr "Action de serveur"
+
+#. module: smile_impex
+#: field:ir.model.export,from_date:0
+#: field:ir.model.impex,from_date:0
+#: field:ir.model.import,from_date:0
+msgid "Start date"
+msgstr "Date de début"
+
+#. module: smile_impex
+#: field:ir.model.export,state:0
+#: field:ir.model.impex,state:0
+#: field:ir.model.import,state:0
+msgid "State"
+msgstr "État"
+
+#. module: smile_impex
+#: field:ir.model.export,export_tmpl_id:0
+#: field:ir.model.import,import_tmpl_id:0
+msgid "Template"
+msgstr "Modèle"
+
+#. module: smile_impex
+#: field:ir.model.export,test_mode:0
+#: field:ir.model.impex,test_mode:0
+#: field:ir.model.import,test_mode:0
+msgid "Test Mode"
+msgstr "Mode de test"
+
+#. module: smile_impex
+#: view:ir.model.export.template:smile_impex.view_export_template_form
+#: view:ir.model.import.template:smile_impex.view_import_template_form
+msgid "Triggers"
+msgstr "Déclencheurs"
+
+#. module: smile_impex
+#: field:ir.model.export.template,unique:0
+msgid "Unique"
+msgstr "Unique"
+
+#. module: smile_impex
+#: help:ir.model.export.template,filter_method:0
+msgid "signature: @api.model"
+msgstr "signature: @api.model"
