@@ -25,7 +25,7 @@ import csv
 from datetime import datetime
 import logging
 from lxml import etree
-from multiprocessing import Lock, Process
+from threading import Lock, Thread
 import os
 import re
 import shutil
@@ -361,13 +361,14 @@ class Build(models.Model):
                 'port': ports.pop(),
             })
             # Use a new thread in order to launch other build tests without waiting the end of the first one
-            build._test_in_new_thread()
+            args = (self._cr, self._uid, build.id, self._context)
+            new_thread = Thread(target=self.pool[self._name]._test_in_new_thread, args=args)
+            new_thread.start()
             time.sleep(0.1)  # ?!!
 
-    @api.one
-    def _test_in_new_thread(self):
-        new_thread = Process(target=self._test)
-        new_thread.start()
+    def _test_in_new_thread(self, cr, uid, build_id, context=None):
+        with api.Environment.manage():
+            return self.browse(cr, uid, build_id, context)._test()
 
     @api.one
     @with_new_cursor
@@ -770,10 +771,17 @@ class Build(models.Model):
                 vals['result'] = 'killed'
             self.write(vals)
 
-    @api.one
+    @api.multi
     def stop_container(self):
         self._remove_container()
         return True
+
+    @api.multi
+    def export_container(self):
+        assert len(self) == 1, 'ids must be a list with only one item!'
+        container = 'build_%s' % self.id
+        archive_content = subprocess.check_output(['docker', 'export', container])
+        return base64.b64encode(archive_content)
 
     @api.multi
     def open(self):
