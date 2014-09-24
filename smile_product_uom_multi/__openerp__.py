@@ -22,7 +22,7 @@
 {
     "name": "Unit of Measure Conversion",
     "version": "0.1",
-    "depends": ["product"],
+    "depends": ["purchase"],
     "author": "Smile",
     "description": """
 This module allows to convert UoMs via a conversion table, by product, between reference units of each category

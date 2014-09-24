@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012 Smile (<http://www.smile.fr>). All Rights Reserved
+#    Copyright (C) 2014 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@
 from openerp import api, fields, models, _
 from openerp.exceptions import Warning
 import openerp.addons.decimal_precision as dp
+
+import openerp.addons.product.product as native_product
 
 
 class ProductUomConversion(models.Model):
@@ -44,7 +46,7 @@ class ProductUomConversion(models.Model):
                             'the units of measurement selected does not match the one\'s of the product'))
 
     _sql_constraints = [
-        ('unique_category_conversion', 'UNIQUE(product_id, uom_id)', 'Only one conversion by UoM category!'),
+        ('unique_category_conversion', 'UNIQUE(product_tmpl_id, uom_id)', 'Only one conversion by UoM category!'),
         ('positive_factors', 'CHECK(factor>0 AND factor_revert>0)', 'factor and factor_revert  must be positive'),
     ]
 
@@ -53,6 +55,39 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     uom_conversion_ids = fields.One2many('product.uom.conversion', 'product_tmpl_id', 'Product Unit of Measure Conversion')
+
+    @api.multi
+    def _check_uom(self):
+        for product in self:
+            if product.uom_po_id.category_id.id not in [product.uom_id.category_id.id] + [conv.uom_id.category_id.id
+                                                                                          for conv in product.uom_conversion_ids]:  # Added by Smile
+                return False
+        return True
+
+    @api.multi
+    def write(self, vals):
+        if 'uom_po_id' in vals:
+            new_uom = self.env['product.uom'].browse(vals['uom_po_id'])
+            for product in self:
+                old_uom = product.uom_po_id
+                if new_uom.category_id.id not in [old_uom.category_id.id] + [conv.uom_id.category_id.id
+                                                                             for conv in product.uom_conversion_ids]:  # Added by Smile
+                    raise Warning(_("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit "
+                                    "of Measure '%s'. If you need to change the unit of measure, you may deactivate this product "
+                                    "from the 'Procurements' tab and create a new one.")
+                                  % (new_uom.name, old_uom.category_id.name, old_uom.name,))
+        if 'standard_price' in vals:
+            for product in self:
+                product._set_standard_price(vals['standard_price'])
+        res = super(native_product.product_template, self).write(vals)
+        if 'attribute_line_ids' in vals or vals.get('active'):
+            self.create_variant_ids()
+        if 'active' in vals and not vals.get('active'):
+            product_ids = []
+            for product in self.with_context(active_test=False):
+                product_ids = map(int, product.product_variant_ids)
+            self.env["product.product"].browse(product_ids).write({'active': vals.get('active')})
+        return res
 
 
 class ProductUomCategory(models.Model):
