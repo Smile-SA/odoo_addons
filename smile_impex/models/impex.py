@@ -51,7 +51,7 @@ class IrModelImpexTemplate(models.AbstractModel):
             'user_id': 1,
             'model': self._name,
             'args': '(%d, )' % self.id,
-            'numbercall':-1,
+            'numbercall': -1,
         }
 
     @api.one
