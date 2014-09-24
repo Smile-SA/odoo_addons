@@ -33,7 +33,7 @@ WARNING: This module is not compatible with audit, so uninstall it before instal
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
-    "depends": ['smile_log'],
+    "depends": [],
     "data": [
         'security/ir.model.access.csv',
         'views/audit_rule_view.xml',
