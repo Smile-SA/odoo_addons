@@ -56,7 +56,6 @@ class AuditLogLine(models.Model):
     _rec_name = 'field_name'
 
     @api.one
-    @api.depends('field_name', 'old_value', 'new_value')
     def _get_values(self):
         old_value_text = self.old_value
         new_value_text = self.new_value

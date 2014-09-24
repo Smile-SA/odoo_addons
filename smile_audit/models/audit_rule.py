@@ -140,18 +140,20 @@ class AuditRule(models.Model):
             RegistryManager.signal_registry_change(self.env.cr.dbname)
         return res
 
-    def unlink(self, cr, uid, ids, context=None):
-        self.update_rule(cr, uid, ids, force_deactivation=True, context=context)
-        return super(AuditRule, self).unlink(cr, uid, ids, context)
+    @api.multi
+    def unlink(self):
+        self.update_rule(force_deactivation=True)
+        return super(AuditRule, self).unlink()
 
     @api.model
     def _get_log_lines(self, old_values, new_values):
         line_vals = []
         keys = set(old_values) | set(new_values)
         for key in keys:
-            old_value = old_values.get(key) or ''
-            new_value = new_values.get(key) or ''
-            if old_value != new_value:
+            old_value = old_values.get(key)
+            new_value = new_values.get(key)
+            if (old_value is not None or new_value is not None) \
+                    and old_value != new_value:
                 line_vals.append({
                     'field_name': key,
                     'old_value': old_value,
