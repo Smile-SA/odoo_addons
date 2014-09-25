@@ -21,13 +21,11 @@
 
 {
     "name": "Smile Impex",
-    "version": "0.1beta1",
+    "version": "0.1",
     "depends": ['smile_log'],
     "author": "Smile",
     "description": """
 Smile Impex
-
-WARNING: UNDER DEVELOPMENT
 
 Features
 

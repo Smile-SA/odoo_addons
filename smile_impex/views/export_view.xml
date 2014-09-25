@@ -11,29 +11,17 @@
 					<sheet>
 						<div class="oe_title">
 							<h1>
-								<field name="name" class="oe_inline" />
+								<field name="name" class="oe_inline" placeholder="Name"/>
 							</h1>
 						</div>
-						<group name="method" string="Method">
-							<field name="model_id" />
-							<field name="method" />
-							<field name="method_args" />
-						</group>
-						<group>
-							<group name="filter" string="Filters">
-								<field name="filter_type" />
-								<field name="filter_domain" attrs="{'invisible': [('filter_type', '!=', 'domain')]}" />
-								<field name="filter_method" attrs="{'invisible': [('filter_type', '!=', 'method')]}" />
-							</group>
-							<group name="paging" string="Paging">
-								<field name="limit" />
-								<field name="max_offset" />
-								<field name="order" />
-							</group>
-						</group>
-						<group name="other" string="Other">
+						<group name="method" col="4">
+							<field name="model_id" colspan="4"/>
+							<field name="method"/>
+							<field name="method_args" colspan="2" nolabel="1" placeholder="{'arg1': value1, 'arg2': ...}"/>
+							<field name="filter_type" string="Filter" />
+							<field name="filter_domain" nolabel="1" attrs="{'invisible': [('filter_type', '!=', 'domain')], 'required': [('filter_type', '=', 'domain')]}" />
+							<field name="filter_method" nolabel="1" attrs="{'invisible': [('filter_type', '!=', 'method')], 'required': [('filter_type', '=', 'method')]}" />
 							<field name="unique" />
-							<field name="force_execute_action" />
 						</group>
 						<notebook colspan="4">
 							<page string="Exports">
@@ -54,6 +42,14 @@
 							</page>
 							<page string="Logs">
 								<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}" />
+							</page>
+							<page string="Advanced">
+								<group>
+									<field name="limit" />
+									<field name="max_offset" />
+									<field name="order" />
+									<field name="force_execute_action" />
+								</group>
 							</page>
 						</notebook>
 					</sheet>
@@ -125,18 +121,21 @@
 			<field name="priority">2</field>
 			<field name="arch" type="xml">
 				<form string="Export">
-					<field name="export_tmpl_id" invisible="context.get('export_template_form_view')" colspan="4" />
-					<field name="state" />
-					<field name="create_uid" />
-					<field name="from_date" />
-					<field name="create_date" />
-					<field name="to_date" />
+					<group col="4">
+						<field name="export_tmpl_id" invisible="context.get('export_template_form_view')" colspan="4" />
+						<field name="state" />
+						<field name="from_date" />
+						<field name="create_uid" />
+						<field name="time_human" />
+					</group>
 					<notebook colspan="4">
 						<page string="Logs">
 							<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}" />
 						</page>
 					</notebook>
-					<button type="object" name="process" string="Re-generate" colspan="4" />
+					<footer>
+						<button type="object" name="process" string="Re-generate" colspan="4" class="oe_highlight"/>
+					</footer>
 				</form>
 			</field>
 		</record>
