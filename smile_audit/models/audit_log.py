@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import re
+
 from openerp import api, fields, models, _
 from openerp.exceptions import Warning
 
@@ -57,11 +59,19 @@ class AuditLogLine(models.Model):
 
     @api.one
     def _get_values(self):
+        res_users_pattern = re.compile(r'(^(in_group_|sel_groups_))(\d+)')
         old_value_text = self.old_value
         new_value_text = self.new_value
-        field = self.env['ir.model.fields'].sudo().search([('model_id', '=', self.log_id.model_id.id), ('name', '=', self.field_name)], limit=1)
+        all_models = [self.log_id.model_id.model]
+        all_models += self.env[self.log_id.model_id.model]._inherits.keys()  # TODO: make recursive
+        field = self.env['ir.model.fields'].sudo().search([('model_id.model', 'in', all_models), ('name', '=', self.field_name)], limit=1)
         if not field:
             self.field_id = self.field_type = self.field_description = self.old_value_text = self.new_value_text = False
+            if res_users_pattern.match(self.field_name) \
+                    or self.new_value or self.old_value:  # Treat res users special fields
+                self.field_description = self.field_name
+                self.old_value_text = old_value_text
+                self.new_value_text = new_value_text
             return
         field = field[0]
         self.field_id = field.id
@@ -89,7 +99,7 @@ class AuditLogLine(models.Model):
                         old_value_text.append(old.display_name if old else str(old_v))
                     old_value_text = ', '.join(old_value_text)
                 if new_value:
-                    new_value_text == ', '.join([o.display_name for o in obj.browse(new_value)])
+                    new_value_text = ', '.join([o.display_name for o in obj.browse(new_value)])
         self.old_value_text = old_value_text
         self.new_value_text = new_value_text
 

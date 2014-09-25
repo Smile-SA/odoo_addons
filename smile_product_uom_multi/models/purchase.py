@@ -49,9 +49,9 @@ class PurchaseOrderLine(models.Model):
         account_tax = self.pool.get('account.tax')
 
         # - check for the presence of partner_id and pricelist_id
-        #if not partner_id:
+        # if not partner_id:
         #    raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
-        #if not pricelist_id:
+        # if not pricelist_id:
         #    raise osv.except_osv(_('No Pricelist !'), _('Select a price list in the purchase order form before choosing a product.'))
 
         # - determine name and notes based on product in partner lang.
@@ -60,7 +60,7 @@ class PurchaseOrderLine(models.Model):
             lang = res_partner.browse(cr, uid, partner_id).lang
             context_partner.update({'lang': lang, 'partner_id': partner_id})
         product = product_product.browse(cr, uid, product_id, context=context_partner)
-        #call name_get() with partner in the context to eventually match name and description in the seller_ids field
+        # call name_get() with partner in the context to eventually match name and description in the seller_ids field
         dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
         if product.description_purchase:
             name += '\n' + product.description_purchase
@@ -77,7 +77,7 @@ class PurchaseOrderLine(models.Model):
         # Changed by Smile #
         uom_categ_id = product_uom.browse(cr, uid, uom_id, context=context).category_id.id
         if uom_categ_id not in [product.uom_id.category_id.id] + [conv.uom_id.category_id.id for conv in product.uom_conversion_ids]:
-        ####################
+            ####################
             if context.get('purchase_uom_check') and self._check_product_uom_group(cr, uid, context=context):
                 res['warning'] = {'title': _('Warning!'),
                                   'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
