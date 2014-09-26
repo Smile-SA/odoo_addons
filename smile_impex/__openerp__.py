@@ -20,21 +20,22 @@
 ##############################################################################
 
 {
-    "name": "Smile Impex",
+    "name": "Import / Export",
     "version": "0.1",
     "depends": ['smile_log'],
     "author": "Smile",
     "description": """
-Smile Impex
+Import / Export
 
 Features
 
-    # Define an import/export template
-        # choose an object
-        # define a domain to filter lines to export
+    # Define an import/export template by
+        * choose a model
+        * define a method to import/export records
+        * define a domain to filter lines to export
     # Create actions to generate a new import/export
-        # a client action to generate an export on the fly
-        # a scheduled action to generate periodically a new import/export
+        * a client action to generate an export on the fly from records list
+        * a scheduled action to generate periodically a new import/export
     # Log execution exceptions
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@smile.fr
