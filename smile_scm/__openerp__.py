@@ -46,10 +46,4 @@
     "auto_install": False,
     "installable": True,
     "application": False,
-    "external_dependencies": {
-        'bin': [
-            'git',
-            'subversion',
-        ],
-    }
 }
