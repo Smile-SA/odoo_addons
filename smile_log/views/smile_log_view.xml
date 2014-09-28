@@ -52,8 +52,8 @@
         </record>
 
 		<menuitem id="menu_logging" parent="base.menu_custom" name="Logging" sequence="110"/>
-        <menuitem id="menu_smile_log" parent="menu_logging" name="Smile logs" action="act_smile_log"/>
-        
+        <menuitem id="menu_smile_log" parent="menu_logging" name="Logs" action="act_smile_log"/>
+
         <record id="smile_log_simple_tree_view" model="ir.ui.view">
             <field name="name">Smile Log - Tree</field>
             <field name="model">smile.log</field>
