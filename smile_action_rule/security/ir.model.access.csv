@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ir_model_methods,ir.model.methods,model_ir_model_methods,,1,0,0,0
+access_ir_model_methods_config,ir.model.methods config,model_ir_model_methods,base.group_system,1,1,1,1
+access_base_action_rule_category,base.action.rule.category,model_base_action_rule_category,,1,0,0,0
+access_base_action_rule_category_config,base.action.rule.category config,model_base_action_rule_category,base.group_system,1,1,1,1
+access_base_action_rule_execution,base.action.rule.execution,model_base_action_rule_execution,,1,0,0,0
+access_base_action_rule_execution_config,base.action.rule.execution config,model_base_action_rule_execution,base.group_system,1,1,1,1
