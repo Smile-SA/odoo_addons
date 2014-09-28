@@ -34,7 +34,7 @@ class IrModelGraphWizard(models.TransientModel):
 
     @api.multi
     def button_generate_file(self):
-        assert len(self) == 1, 'ids must be a list with only one item!'
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
         model_obj = self.env['ir.model']
         if self._context.get('active_ids'):
             for wizard in self:

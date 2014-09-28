@@ -135,7 +135,7 @@ class Branch(models.Model):
 
     @api.multi
     def _get_revno(self):
-        assert len(self) == 1, 'ids must be a list with only one item!'
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
         branch = self[0]
         revno = ''
         with cd(branch.directory):
@@ -148,7 +148,7 @@ class Branch(models.Model):
 
     @api.multi
     def _changes(self):
-        assert len(self) == 1, 'ids must be a list with only one item!'
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
         branch = self[0]
         if not branch.build_ids or branch._get_revno() != branch.build_ids[0].revno.encode('utf8'):  # Because builds ordered by id desc
             return True
@@ -567,7 +567,7 @@ class Build(models.Model):
 
     @api.multi
     def _connect(self, service):
-        assert len(self) == 1, 'ids must be a list with only one item!'
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
         build = self[0]
         url = 'http://%s:%s/xmlrpc/%s' % (build.host, build.port, service)
         return xmlrpclib.ServerProxy(url)
@@ -778,14 +778,14 @@ class Build(models.Model):
 
     @api.multi
     def export_container(self):
-        assert len(self) == 1, 'ids must be a list with only one item!'
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
         container = 'build_%s' % self.id
         archive_content = subprocess.check_output(['docker', 'export', container])
         return base64.b64encode(archive_content)
 
     @api.multi
     def open(self):
-        assert len(self) == 1, 'ids must be a list with only one item!'
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
         build = self[0]
         return {
             'name': _('Open URL'),
