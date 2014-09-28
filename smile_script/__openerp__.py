@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Smile Script",
+    "name": "Script Execution",
     "version": "1.0",
     "author": "Smile",
     "website": 'http://www.smile.fr',

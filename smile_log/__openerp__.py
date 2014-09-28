@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Smile Log",
+    "name": "Logging in database",
     "version": "1.0",
     "author": "Smile",
     "website": 'http://www.smile.fr',

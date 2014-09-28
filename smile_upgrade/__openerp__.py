@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Smile Upgrade",
+    "name": "Database Upgrade",
     "version": "0.1",
     "depends": ["base"],
     "author": "Smile",
