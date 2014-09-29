@@ -96,5 +96,6 @@ class ServerActionExecution(models.Model):
     def execute(self):
         executions = self.search([('state', '=', 'draft'), ('locked', '=', False)])
         for execution in executions:
-            self.pool['ir.actions.server'].run(self._cr, **execution.args)
+            args = eval(execution.args)
+            self.pool['ir.actions.server'].run(self._cr, **args)
         return True
