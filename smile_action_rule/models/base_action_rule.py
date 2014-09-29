@@ -111,6 +111,7 @@ class ActionRule(models.Model):
         return {'value': dict.fromkeys(clear_fields, False)}
 
     def _filter(self, cr, uid, rule, filter, record_ids, context=None):
+        record_ids = record_ids or []
         logger = SmileDBLogger(cr.dbname, self._name, rule.id, uid)
         pid = os.getpid()
         try:
@@ -140,6 +141,7 @@ class ActionRule(models.Model):
             raise e
 
     def _process(self, cr, uid, rule, record_ids, context=None):
+        record_ids = record_ids or []
         logger = SmileDBLogger(cr.dbname, self._name, rule.id, uid)
         pid = os.getpid()
         logger.debug('[%s] Launching action: %s - Records: %s%s'
@@ -156,7 +158,7 @@ class ActionRule(models.Model):
                 logger.time_info('[%s] Successful action: %s - Records: %s%s'
                                  % (pid, rule.name, rule.model_id.model, tuple(record_ids)))
             else:
-                super(ActionRule, self)._process(cr, uid, rule, record_ids, context)
+                super(ActionRule, self)._process(cr, uid, rule, list(record_ids), context)
                 # Update execution counters
                 if rule.max_executions:
                     rule._update_execution_counter(record_ids)
@@ -193,16 +195,9 @@ class ActionRule(models.Model):
             model_obj = self.pool[rule.model_id.model]
             for method_name in method_names:
                 method = getattr(model_obj, method_name)
-                check = True
-                while check:
-                    if method.__name__ == 'action_rule_wrapper':
-                        break
-                    if hasattr(method, 'origin'):
-                        method = method.origin
-                    else:
-                        check = False
-                else:
+                if method.__name__ != 'action_rule_wrapper':
                     decorated_method = action_rule_decorator(getattr(model_obj, method_name))
+                    print id(decorated_method)
                     model_obj._patch_method(method_name, decorated_method)
                     updated = True
         if updated:
