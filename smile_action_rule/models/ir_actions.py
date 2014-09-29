@@ -34,14 +34,14 @@ class ServerAction(models.Model):
 
     @api.multi
     def _get_execution_args(self):
-        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        self.ensure_one()
         context = (self._context or {}).copy()
         context['force_execution'] = True
         return {'uid': self._uid, 'ids': self._ids, 'context': context}
 
     @api.multi
     def _create_execution(self):
-        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        self.ensure_one()
         self.env['ir.actions.server.execution'].create({
             'action_id': self.id,
             'locked': self.execution_mode == 'locked',

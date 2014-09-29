@@ -73,7 +73,7 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def get_commitments_by_budget_post(self):
-        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        self.ensure_one()
         res = {}
         for line in self.order_line:
             general_account_id = self.pool['purchase.order']._choose_account_from_po_line(self._cr, self._uid, line, self._context)
