@@ -47,7 +47,7 @@ class IrModuleGraphWizard(models.TransientModel):
 
     @api.multi
     def button_generate_file(self):
-        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        self.ensure_one()
         module_obj = self.env['ir.module.module']
         for wizard in self:
             states = IrModuleGraphWizard._get_states(wizard)

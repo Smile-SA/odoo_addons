@@ -51,7 +51,7 @@ class ActionFilter(models.Model):
 
     @api.multi
     def _eval_domain(self, record_ids=None):
-        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        self.ensure_one()
         domain = []
         eval_domain = eval(self.domain, {'object': unquote('object')})
         for cond in eval_domain:

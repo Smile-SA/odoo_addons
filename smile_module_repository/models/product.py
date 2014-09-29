@@ -137,7 +137,7 @@ class ProductProduct(models.Model):
 
     @api.multi
     def get_zipfile(self, cr, uid, ids, context=None):
-        assert len(self) == 1, 'ids must be a list with only one item!'
+        self.ensure_one()
         zfilecontent = ''
         zfilename = '%s_%s.zip' % (self.name, uuid.uuid4())
         with cd(path.join(self.branch_id._parent_path, self.branch_id.directory)):

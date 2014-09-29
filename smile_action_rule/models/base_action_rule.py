@@ -174,7 +174,7 @@ class ActionRule(models.Model):
 
     @api.multi
     def _get_method_names(self):
-        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        self.ensure_one()
         if self.kind in ('on_time', 'on_wkf_activity'):
             return []
         if self.kind == 'on_other_method' and self.method_id:
@@ -268,7 +268,7 @@ class ActionRule(models.Model):
 
     @api.multi
     def _filter_max_executions(self, res_ids):
-        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        self.ensure_one()
         if self.max_executions:
             self._cr.execute("SELECT res_id FROM base_action_rule_execution WHERE rule_id=%s AND counter>=%s",
                              (self.id, self.max_executions))
