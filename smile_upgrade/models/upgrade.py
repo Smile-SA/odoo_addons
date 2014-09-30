@@ -22,6 +22,7 @@
 from contextlib import contextmanager
 import logging
 import os
+import re
 
 from openerp import api, sql_db, SUPERUSER_ID, tools
 from openerp.report.interface import report_int as ReportService
@@ -143,16 +144,26 @@ class Upgrade(object):
             if clean_query:
                 cr.execute(clean_query)
 
+    def _get_module_name(self, root):
+        module = 'base'
+        pattern = re.compile(r'([^:]+addons/)(?P<module>[^\/]*)(/)(?P<file>[^$]*)')
+        match = pattern.match(root)
+        if match:
+            infos = match.groupdict()
+            module = infos['module']
+        return module
+
     def _import_file(self, cr, mode, f_obj):
         root, ext = os.path.splitext(f_obj.name)
+        module = self._get_module_name(root)
         if ext == '.sql':
             self._sql_import(cr, f_obj)
         elif mode != 'pre-load' and ext == '.yml':
-            tools.convert_yaml_import(cr, 'base', f_obj, 'upgrade')
+            tools.convert_yaml_import(cr, module, f_obj, 'upgrade')
         elif mode != 'pre-load' and ext == '.csv':
-            tools.convert_csv_import(cr, 'base', f_obj.name, f_obj.read(), 'upgrade')
+            tools.convert_csv_import(cr, module, f_obj.name, f_obj.read(), 'upgrade')
         elif mode != 'pre-load' and ext == '.xml':
-            tools.convert_xml_import(cr, 'base', f_obj, 'upgrade')
+            tools.convert_xml_import(cr, module, f_obj, 'upgrade')
         else:
             _logger.error('%s extension is not supported in upgrade %sing', ext, mode)
             pass
@@ -162,10 +173,16 @@ class Upgrade(object):
         files_list = getattr(self, mode, [])
         format_files_list = lambda f: isinstance(f, tuple) and (f[0], len(f) == 2 and f[1] or 'raise') or (f, 'raise')
         for fname, error_management in map(format_files_list, files_list):
-            fp = os.path.join(self.dir_path, fname.replace('/', os.path.sep))
+            f_name = fname.replace('/', os.path.sep)
+            fp = os.path.join(self.dir_path, f_name)
             if not os.path.exists(fp):
-                _logger.error("No such file: %s", fp)
-                continue
+                for addons_path in tools.config.get('addons_path', '').split(','):
+                    fp = os.path.join(addons_path.strip(), f_name)
+                    if os.path.exists(fp):
+                        break
+                else:
+                    _logger.error("No such file: %s", fp)
+                    continue
             with open(fp) as f_obj:
                 _logger.info('importing %s file...', fname)
                 cr.execute('SAVEPOINT smile_upgrades')
