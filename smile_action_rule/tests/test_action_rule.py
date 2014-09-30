@@ -56,7 +56,8 @@ class ActionRuleTest(TransactionCase):
 
     def test_action_rule_on_other_method(self):
         self.registry('base.action.rule').onchange_model_id(self.cr, self.uid, None, self.model_id)
-        method_ids = self.env['ir.model.methods'].search([('model_id', '=', self.model_id), ('name', '=', 'preference_save')], limit=1)._ids
+        method_ids = self.env['ir.model.methods'].search([('model_id', '=', self.model_id),
+                                                          ('name', '=', 'preference_save')], limit=1)._ids
         self.create_action_rule('on_other_method', method_id=method_ids[0])
         record = self.model.create({'name': 'testOtherMethod', 'login': 'testOtherMethod'})
         record.preference_save()
