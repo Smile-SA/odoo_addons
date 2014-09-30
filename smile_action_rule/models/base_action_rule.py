@@ -196,9 +196,7 @@ class ActionRule(models.Model):
             for method_name in method_names:
                 method = getattr(model_obj, method_name)
                 if method.__name__ != 'action_rule_wrapper':
-                    decorated_method = action_rule_decorator(getattr(model_obj, method_name))
-                    print id(decorated_method)
-                    model_obj._patch_method(method_name, decorated_method)
+                    model_obj._patch_method(method_name, action_rule_decorator())
                     updated = True
         if updated:
             self.clear_caches()

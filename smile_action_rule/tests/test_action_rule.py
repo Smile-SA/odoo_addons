@@ -43,12 +43,12 @@ class ActionRuleTest(TransactionCase):
     def test_action_rule_on_create(self):
         self.create_action_rule('on_create')
         self.model.create({'name': 'testCreate', 'login': 'testCreate'})
- 
+
     def test_action_rule_on_write(self):
         self.create_action_rule('on_write')
         record = self.model.create({'name': 'testWrite', 'login': 'testWrite'})
         record.write({'login': 'test2'})
- 
+
     def test_action_rule_on_unlink(self):
         self.create_action_rule('on_unlink')
         record = self.model.create({'name': 'testUnlink', 'login': 'testUnlink'})

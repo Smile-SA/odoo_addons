@@ -21,7 +21,7 @@
 
 import inspect
 
-from openerp import api, _
+from openerp import _
 from openerp.sql_db import Cursor
 from openerp.exceptions import Warning
 
@@ -49,14 +49,15 @@ def _get_args(self, method, args, kwargs):
     return cr, uid, ids, context
 
 
-def action_rule_decorator(method):
+def action_rule_decorator():
     def action_rule_wrapper(self, *args, **kwargs):
 
-        cr, uid, ids, context = _get_args(self, action_rule_wrapper.origin, args, kwargs)
+        method = action_rule_wrapper.origin
+        cr, uid, ids, context = _get_args(self, method, args, kwargs)
 
         # Avoid loops or cascading actions
         if context and context.get('action'):
-            return action_rule_wrapper.origin(self, *args, **kwargs)
+            return method(self, *args, **kwargs)
         context = dict(context or {}, action=True)
 
         # Retrieve the action rules to possibly execute
@@ -72,7 +73,7 @@ def action_rule_decorator(method):
                     rule_obj._process(cr, uid, rule, pre_ids[rule], context=context)
 
         # Call original method
-        res = action_rule_wrapper.origin(self, *args, **kwargs)
+        res = method(self, *args, **kwargs)
 
         # Check postconditions, and execute actions on the records that satisfy them
         for rule in rules:
