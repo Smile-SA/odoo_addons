@@ -22,7 +22,6 @@
 from contextlib import contextmanager
 import logging
 import os
-import re
 
 from openerp import api, sql_db, SUPERUSER_ID, tools
 from openerp.report.interface import report_int as ReportService
@@ -144,16 +143,7 @@ class Upgrade(object):
             if clean_query:
                 cr.execute(clean_query)
 
-    def _get_module_name(self, root):
-        module = 'base'
-        pattern = re.compile(r'([^:]+addons/)(?P<module>[^\/]*)(/)(?P<file>[^$]*)')
-        match = pattern.match(root)
-        if match:
-            infos = match.groupdict()
-            module = infos['module']
-        return module
-
-    def _import_file(self, cr, mode, f_obj):
+    def _import_file(self, cr, mode, f_obj, module):
         root, ext = os.path.splitext(f_obj.name)
         module = self._get_module_name(root)
         if ext == '.sql':
@@ -175,10 +165,12 @@ class Upgrade(object):
         for fname, error_management in map(format_files_list, files_list):
             f_name = fname.replace('/', os.path.sep)
             fp = os.path.join(self.dir_path, f_name)
+            module = 'base'
             if not os.path.exists(fp):
                 for addons_path in tools.config.get('addons_path', '').split(','):
                     fp = os.path.join(addons_path.strip(), f_name)
                     if os.path.exists(fp):
+                        module = fname.split('/')[0]
                         break
                 else:
                     _logger.error("No such file: %s", fp)
@@ -187,7 +179,7 @@ class Upgrade(object):
                 _logger.info('importing %s file...', fname)
                 cr.execute('SAVEPOINT smile_upgrades')
                 try:
-                    self._import_file(cr, mode, f_obj)
+                    self._import_file(cr, mode, f_obj, module)
                     _logger.info('%s successfully imported', fname)
                 except Exception, e:
                     if error_management == 'rollback_and_continue':
