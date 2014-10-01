@@ -50,7 +50,7 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
         return vals
 
     def _get_server_action_vals(self, model_id):
-        vals = super(IrModelExportTemplate, self)._get_server_action_vals(self, model_id)
+        vals = super(IrModelExportTemplate, self)._get_server_action_vals(model_id)
         if vals:
             vals['code'] = "self.pool.get('ir.model.import.template').create_export(cr, uid, %d, context)" % (self.id,)
         return vals
