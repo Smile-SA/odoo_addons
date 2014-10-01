@@ -40,24 +40,24 @@ class ActionRuleTest(TransactionCase):
         vals = dict(kind=kind, **kwargs)
         return self.env['base.action.rule'].create(vals)
 
-    def test_action_rule_on_create(self):
+    def test_10_action_rule_on_create(self):
         self.create_action_rule('on_create')
         self.model.create({'name': 'testCreate', 'login': 'testCreate'})
 
-    def test_action_rule_on_write(self):
+    def test_20_action_rule_on_write(self):
         self.create_action_rule('on_write')
         record = self.model.create({'name': 'testWrite', 'login': 'testWrite'})
         record.write({'login': 'test2'})
 
-    def test_action_rule_on_unlink(self):
-        self.create_action_rule('on_unlink')
-        record = self.model.create({'name': 'testUnlink', 'login': 'testUnlink'})
-        record.unlink()
-
-    def test_action_rule_on_other_method(self):
+    def test_30_action_rule_on_other_method(self):
         self.registry('base.action.rule').onchange_model_id(self.cr, self.uid, None, self.model_id)
         method_ids = self.env['ir.model.methods'].search([('model_id', '=', self.model_id),
                                                           ('name', '=', 'preference_save')], limit=1)._ids
         self.create_action_rule('on_other_method', method_id=method_ids[0])
         record = self.model.create({'name': 'testOtherMethod', 'login': 'testOtherMethod'})
         record.preference_save()
+
+    def test_40_action_rule_on_unlink(self):
+        self.create_action_rule('on_unlink')
+        record = self.model.create({'name': 'testUnlink', 'login': 'testUnlink'})
+        record.unlink()
