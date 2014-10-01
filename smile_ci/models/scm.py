@@ -54,6 +54,7 @@ BUILD_RESULTS = [
 DBNAME = 'test'
 CONFIGFILE = 'server.conf'
 COVERAGEFILE = 'coverage.xml'
+DOCKERFILE = 'Dockerfile'
 FLAKE8FILE = 'flake8.log'
 LOGFILE = 'server.log'
 TESTFILE = 'scm.repository.branch.build.log.csv'
@@ -518,7 +519,7 @@ class Build(models.Model):
             'configfile': CONFIGFILE,
         }
         with cd(self.directory):
-            with open('Dockerfile', 'w') as f:
+            with open(DOCKERFILE, 'w') as f:
                 f.write(content % localdict)
 
     @api.one
@@ -634,7 +635,7 @@ class Build(models.Model):
             return True
         with cd(self.directory):
             cloc_paths = ['%s.cloc' % path for path in self.branch_id.addons_path.split(',')]
-            for filename in [CONFIGFILE, COVERAGEFILE, LOGFILE, FLAKE8FILE, TESTFILE] + cloc_paths:
+            for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE] + cloc_paths:
                 if not os.path.exists(filename):
                     continue
                 with open(filename) as f:
