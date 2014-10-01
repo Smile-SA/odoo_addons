@@ -32,7 +32,7 @@ Features
 
 Execution
 
-    openerp-server -c rcfile -d db_name --load=web,smile_upgrade
+    openerp-server -c config_file -d db_name
 
 Configuration
 
@@ -43,7 +43,9 @@ Configuration
             |   |-- __init__.py
             |   |-- __upgrade__.py
             |   |-- *.sql
-            |   `-- *.yml                   # only for post-load
+            |   |-- *.yml                   # only for post-load
+            |   |-- *.csv                   # only for post-load
+            |   `-- *.xml                   # only for post-load
             |-- 1.2
             |   |-- __init__.py
             |   |-- __upgrade__.py
@@ -65,6 +67,7 @@ Configuration
 
     * OpenERP server configuration -- rcfile=~/.openerp_serverrc
         [options]
+        server_wide_modules = web,smile_upgrade
         upgrades_path = <project_directory>
         stop_after_upgrades = True if you want to stop server after upgrades else False
 

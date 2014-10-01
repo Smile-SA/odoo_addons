@@ -19,6 +19,9 @@
 #
 ##############################################################################
 
+import jinja2
+import os
+
 from openerp import http
 from openerp.addons.web.controllers.main import Home
 
@@ -28,27 +31,8 @@ routes = [r.rule for r in http.root.nodb_routing_map.iter_rules() if r.endpoint.
 class Maintenance(Home):
 
     @http.route(routes, type='http', auth="none")
-    def index(self, **kwargs):
-        return """
-            <!DOCTYPE html>
-            <html style="height: 100%%">
-                <head>
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-                    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-                    <title>Odoo</title>
-                    <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-                    <link rel="stylesheet" href="/web/static/src/css/full.css"/>
-                    <link href="/web/static/src/css/base.css" rel="stylesheet"/>
-                    <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-                </head>
-                <body class="oe_single_form">
-                    <div class="oe_single_form_container modal-content">
-                        <center>
-                            <img src="/web/static/src/img/logo2.png">
-                            <h2>We'll back soon.</h2>
-                            <p>We are busy updating the application for you and will back soon shortly.</p>
-                        </center>
-                    </div>
-                </body>
-            </html>
-            """
+    def maintenance(self, **kwargs):
+        path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
+        loader = jinja2.FileSystemLoader(path)
+        env = jinja2.Environment(loader=loader, autoescape=True)
+        return env.get_template("maintenance.html").render()

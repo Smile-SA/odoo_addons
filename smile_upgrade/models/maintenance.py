@@ -22,6 +22,7 @@
 import logging
 
 from openerp import http
+from openerp.exceptions import AccessDenied
 
 _logger = logging.getLogger(__package__)
 
@@ -29,7 +30,7 @@ _logger = logging.getLogger(__package__)
 def rpc_down(origin):
     def wrapper(service_name, method, params):
         _logger.error("Service in maintenance. Call args: %s", ((service_name, method, params),))
-        raise IOError('Connection refused. Service in maintenance')
+        raise AccessDenied('Connection refused. Service in maintenance')
     wrapper._origin = origin
     return wrapper
 
@@ -47,5 +48,5 @@ class MaintenanceManager(object):
 
     def stop(self):
         http.dispatch_rpc = http.dispatch_rpc._origin
-        if 'index' in self.module.__dict__:
-            del self.module.index
+        if 'maintenance' in self.module.__dict__:
+            del self.module.maintenance
