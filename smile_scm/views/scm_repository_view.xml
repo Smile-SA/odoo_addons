@@ -71,7 +71,8 @@
             <field name="search_view_id" ref="view_repository_search"/>
         </record>
 
-        <menuitem id="menu_scm" name="Source Code" parent="base.menu_administration" sequence="0"/>
+        <menuitem id="menu_main_scm" name="Source Code" parent="" sequence="400"/>
+        <menuitem id="menu_scm" name="Source Code" parent="menu_main_scm" sequence="0"/>
         <menuitem id="menu_repository" parent="menu_scm" action="action_repository" sequence="10"/>
 
 	</data>

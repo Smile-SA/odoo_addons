@@ -112,7 +112,7 @@
             <field name="domain">[('is_module', '=', True)]</field>
         </record>
 
-        <menuitem action="action_product_product" id="menu_modules" parent="base.menu_product" sequence="100"/>
+        <menuitem action="action_product_product" id="menu_modules" parent="smile_scm.menu_scm" sequence="100"/>
 
 	</data>
 </openerp>
