@@ -102,7 +102,7 @@ class Branch(models.Model):
 
     @api.model
     def _get_py_versions(self):
-        return [('2.7', '2.7')]
+        return [('2.5', '2.5'), ('2.6', '2.6'), ('2.7', '2.7')]
 
     @api.one
     def _get_builds_count(self):
@@ -273,7 +273,7 @@ class Build(models.Model):
             sum([coverage.line_rate * coverage.line_count for coverage in self.coverage_ids]) / line_counts or 0
 
     id = fields.Integer('Number', readonly=True)
-    branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True)
+    branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True, index=True)
     revno = fields.Char('Last revision number', required=True, readonly=True)
     create_uid = fields.Many2one('res.users', 'User', readonly=True)
     create_date = fields.Datetime('Date', readonly=True)
@@ -801,7 +801,7 @@ class Log(models.Model):
     _description = 'Log'
     _rec_name = 'file'
 
-    build_id = fields.Many2one('scm.repository.branch.build', 'Build', readonly=True, required=True, ondelete='cascade')
+    build_id = fields.Many2one('scm.repository.branch.build', 'Build', readonly=True, required=True, ondelete='cascade', index=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', readonly=True, related='build_id.branch_id', store=True)
     type = fields.Selection([
         ('quality_code', 'Quality code'),
@@ -825,7 +825,7 @@ class Coverage(models.Model):
     _description = 'Code Coverage'
     _rec_name = 'file'
 
-    build_id = fields.Many2one('scm.repository.branch.build', 'Build', readonly=True, required=True, ondelete='cascade')
+    build_id = fields.Many2one('scm.repository.branch.build', 'Build', readonly=True, required=True, ondelete='cascade', index=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', readonly=True, related='build_id.branch_id', store=True)
     module = fields.Char(readonly=True)
     file = fields.Char(readonly=True)
