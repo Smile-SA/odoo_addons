@@ -145,7 +145,6 @@ class Upgrade(object):
 
     def _import_file(self, cr, mode, f_obj, module):
         root, ext = os.path.splitext(f_obj.name)
-        module = self._get_module_name(root)
         if ext == '.sql':
             self._sql_import(cr, f_obj)
         elif mode != 'pre-load' and ext == '.yml':
