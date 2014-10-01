@@ -26,8 +26,8 @@ from openerp.tools.func import wraps
 
 
 @contextmanager
-def cursor(cr):
-    registry = RegistryManager.get(cr.dbname)
+def cursor(dbname):
+    registry = RegistryManager.get(dbname)
     db = registry._db
     # Pass in transaction isolation level: READ COMMITTED
     new_cr = db.cursor(serialized=False)
@@ -41,6 +41,6 @@ def cursor(cr):
 def with_new_cursor(method):
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        with cursor(self._cr) as new_cr:
+        with cursor(self._cr.dbname) as new_cr:
             return method(self.with_env(self.env(cr=new_cr)), *args, **kwargs)
     return wrapper

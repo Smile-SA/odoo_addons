@@ -333,7 +333,7 @@ class Build(models.Model):
             shutil.copytree(ci_addons_path, 'ci-addons', ignore=ignore_patterns)
 
     def write_with_new_cursor(self, vals):
-        with cursor(self._cr) as new_cr:
+        with cursor(self._cr.dbname) as new_cr:
             return self.with_env(self.env(cr=new_cr)).write(vals)
 
     @api.model
