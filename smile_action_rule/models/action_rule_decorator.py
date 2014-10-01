@@ -32,10 +32,14 @@ def _get_args(self, method, args, kwargs):
         cr, uid, context = self.env.args
         ids = self._ids
     else:
-        method_arg_names = inspect.getargspec(method)[0][:len(args)]
+        while True:
+            if not hasattr(method, '_orig'):
+                break
+            method = method._orig
+        method_arg_names = inspect.getargspec(method)[0][1:len(args) + 1]
         method_args = dict(zip(method_arg_names, args))
         cr = method_args.get('cr') or method_args.get('cursor')
-        uid = method_args.get('uid') or method_args.get('user_id')
+        uid = method_args.get('uid') or method_args.get('user') or method_args.get('user_id')
         if not isinstance(cr, Cursor) or not isinstance(uid, (int, long)):
             raise Warning(_('Method not adapted for action rules'))
         ids = method_args.get('ids') or method_args.get('id')
@@ -45,14 +49,15 @@ def _get_args(self, method, args, kwargs):
     return cr, uid, ids, context
 
 
-def action_rule_decorator(method):
+def action_rule_decorator():
     def action_rule_wrapper(self, *args, **kwargs):
 
-        cr, uid, ids, context = _get_args(method, args, kwargs)
+        method = action_rule_wrapper.origin
+        cr, uid, ids, context = _get_args(self, method, args, kwargs)
 
         # Avoid loops or cascading actions
         if context and context.get('action'):
-            return method.origin(self, *args, **kwargs)
+            return method(self, *args, **kwargs)
         context = dict(context or {}, action=True)
 
         # Retrieve the action rules to possibly execute
@@ -64,18 +69,18 @@ def action_rule_decorator(method):
         for rule in rules:
             if rule.kind not in ('on_create', 'on_create_or_write'):
                 pre_ids[rule] = rule_obj._filter(cr, uid, rule, rule.filter_pre_id, ids, context=context)
+                if rule.kind == 'on_unlink' and pre_ids[rule]:
+                    rule_obj._process(cr, uid, rule, pre_ids[rule], context=context)
 
         # Call original method
-        res = method.origin(self, *args, **kwargs)
+        res = method(self, *args, **kwargs)
 
         # Check postconditions, and execute actions on the records that satisfy them
         for rule in rules:
             if rule.kind != 'on_unlink':
-                post_ids = rule_obj._filter(cr, uid, rule, rule.filter_id, pre_ids[rule], context=context)
-            else:
-                post_ids = pre_ids[rule]
-            if post_ids:
-                rule_obj._process(cr, uid, rule, post_ids, context=context)
+                post_ids = rule_obj._filter(cr, uid, rule, rule.filter_id, pre_ids.get(rule), context=context)
+                if post_ids:
+                    rule_obj._process(cr, uid, rule, post_ids, context=context)
 
         return res
     return action_rule_wrapper

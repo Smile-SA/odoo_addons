@@ -50,9 +50,9 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
         return vals
 
     def _get_server_action_vals(self, model_id):
-        vals = super(IrModelExportTemplate, self)._get_server_action_vals(self, model_id)
+        vals = super(IrModelExportTemplate, self)._get_server_action_vals(model_id)
         if vals:
-            vals['code'] = "self.pool.get('ir.model.import.template').create_export(cr, uid, %d, context)" % (self.id,)
+            vals['code'] = "self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)" % (self.id,)
         return vals
 
     def _get_client_action_vals(self):
@@ -91,7 +91,7 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
                 raise Warning(_("Can't find method: %s on object: %s") % (self.filter_method, self.model_id.model))
             res_ids = set(getattr(model_obj, self.filter_method)())
         if 'active_ids' in self._context:
-            res_ids &= self._context['active_ids']
+            res_ids &= set(self._context['active_ids'])
         if self.unique:
             res_ids -= set(sum([eval(export.record_ids) for export in self.export_ids], []))
         return list(res_ids)

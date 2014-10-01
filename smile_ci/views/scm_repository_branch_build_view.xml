@@ -71,7 +71,7 @@
 							<label for="branch_id" />
 							<field name="branch_id" class="oe_inline" />
 						</div>
-						<div class="oe_right">
+						<div class="oe_right" states="running,done">
 							<button class="oe_inline oe_stat_button" name="%(action_build_failed_test)d" type="action" icon="fa-smile-o"
 								attrs="{'invisible': [('failed_test_count','&gt;', 0)]}">
 								<field string="Failed tests" name="failed_test_count" widget="statinfo" />

@@ -31,6 +31,7 @@ class ServerAction(models.Model):
         ('asynchronous', 'Asynchronous'),
         ('locked', 'Locked'),
     ], 'Execution Mode', required=True, default='synchronous')
+    execution_ids = fields.One2many('ir.actions.server.execution', 'action_id', 'Executions', readonly=True)
 
     @api.multi
     def _get_execution_args(self):

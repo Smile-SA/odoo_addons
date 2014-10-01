@@ -24,12 +24,16 @@
 								<field name="import_ids" nolabel="1" colspan="4" readonly="1" context="{'import_template_form_view': True}" />
 							</page>
 							<page string="Triggers">
-								<group col="4">
+								<group col="6">
 									<field name="cron_id" />
-									<button type="object" name="create_cron" string="Create Scheduled Action" colspan="2" attrs="{'readonly': [('cron_id', '!=', False)]}" />
+									<button type="object" name="create_cron" string="Create Scheduled Action" colspan="2"
+										attrs="{'invisible': [('cron_id', '!=', False)]}" />
+									<newline/>
 									<field name="server_action_id" />
 									<button type="object" name="create_server_action" string="Create Server Action" colspan="2"
-										attrs="{'readonly': [('server_action_id', '!=', False)]}" />
+										attrs="{'invisible': [('server_action_id', '!=', False)]}" />
+									<button type="object" name="unlink_server_action" string="Delete Server Action" colspan="2"
+										attrs="{'invisible': [('server_action_id', '=', False)]}" />
 								</group>
 							</page>
 							<page string="Logs">
