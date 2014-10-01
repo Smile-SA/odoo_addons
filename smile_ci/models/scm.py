@@ -221,12 +221,13 @@ class Build(models.Model):
         setattr(Registry, 'load', state_cleaner(getattr(Registry, 'load')))
 
     @api.one
-    @api.depends('date_start', 'date_stop')
+    @api.depends('date_start')
     def _get_time(self):
-        if not (self.date_start and self.date_stop):
+        date_stop = self.date_stop or fields.Datetime.now()
+        if not self.date_start:
             self.time = 0
         else:
-            timedelta = fields.Datetime.from_string(self.date_stop) \
+            timedelta = fields.Datetime.from_string(date_stop) \
                 - fields.Datetime.from_string(self.date_start)
             self.time = timedelta.total_seconds()
 
