@@ -27,7 +27,6 @@ from openerp import sql_db, SUPERUSER_ID, tools
 from openerp.netsvc import Service
 
 from config import configuration as upgrade_config
-from openerp.tools import config
 
 _logger = logging.getLogger(__package__)
 
@@ -166,7 +165,7 @@ class Upgrade(object):
             fp = os.path.join(self.dir_path, f_name)
             module_name = 'base'
             if not os.path.exists(fp):
-                for each_path in config.get('addons_path').split(','):
+                for each_path in tools.config.get('addons_path').split(','):
                     fp = os.path.join(each_path, f_name)
                     if os.path.exists(fp):
                         module_name = fname.split('/')[0]
