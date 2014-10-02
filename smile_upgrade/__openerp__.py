@@ -20,20 +20,20 @@
 ##############################################################################
 
 {
-    "name": "Smile Upgrade",
+    "name": "Database Upgrade",
     "version": "0.1",
     "depends": ["base"],
     "author": "Smile",
     "description": """Smile Upgrade
 
-Objectives
+Features
 
     * Allow to upgrade automatically database after code update and server restarting
     * Display a maintenance page instead of home page and kill XML/RPC services during upgrades
 
 Execution
 
-    Do nothing special! (Re-)Launch OpenERP server and it's done
+    openerp-server -c config_file -d db_name
 
 Configuration
 
@@ -44,7 +44,9 @@ Configuration
             |   |-- __init__.py
             |   |-- __upgrade__.py
             |   |-- *.sql
-            |   `-- *.yml                   # only for post-load
+            |   |-- *.yml                   # only for post-load
+            |   |-- *.csv                   # only for post-load
+            |   `-- *.xml                   # only for post-load
             |-- 1.2
             |   |-- __init__.py
             |   |-- __upgrade__.py
@@ -62,12 +64,13 @@ Configuration
             * description
             * modules_to_upgrade: modules list to update or install
             * pre-load: list of .sql files
-            * post-load: list with .sql; .csv, .xml and .yml files
+            * post-load: list with .sql, .yml, .csv and .xml files
                          with path .../filename (depending upgrades_path)
                          or module_name/.../filename
 
     * OpenERP server configuration -- rcfile=~/.openerp_serverrc
         [options]
+        server_wide_modules = web,smile_upgrade
         upgrades_path = <project_directory>
         stop_after_upgrades = True if you want to stop server after upgrades else False
 
@@ -85,10 +88,6 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "website": "http://www.smile.fr",
     "category": 'Hidden',
     "sequence": 20,
-    "init_xml": [],
-    "update_xml": [],
-    'demo_xml': [],
-    'test': [],
     "auto_install": True,
     "installable": True,
     "application": False,
