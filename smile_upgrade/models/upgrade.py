@@ -165,8 +165,8 @@ class Upgrade(object):
             fp = os.path.join(self.dir_path, f_name)
             module = 'base'
             if not os.path.exists(fp):
-                for each_path in tools.config.get('addons_path').split(','):
-                    fp = os.path.join(each_path, f_name)
+                for addons_path in tools.config.get('addons_path').split(','):
+                    fp = os.path.join(addons_path, f_name)
                     if os.path.exists(fp):
                         module = fname.split('/')[0]
                         break
