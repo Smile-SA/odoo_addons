@@ -142,16 +142,16 @@ class Upgrade(object):
             if clean_query:
                 cr.execute(clean_query)
 
-    def _import_file(self, cr, mode, f_obj, module_name):
+    def _import_file(self, cr, mode, f_obj, module):
         root, ext = os.path.splitext(f_obj.name)
         if ext == '.sql':
             self._sql_import(cr, f_obj)
         elif mode != 'pre-load' and ext == '.yml':
-            tools.convert_yaml_import(cr, module_name, f_obj, 'upgrade')
+            tools.convert_yaml_import(cr, module, f_obj, 'upgrade')
         elif mode != 'pre-load' and ext == '.csv':
-            tools.convert_csv_import(cr, module_name, f_obj.name, f_obj.read(), 'upgrade')
+            tools.convert_csv_import(cr, module, f_obj.name, f_obj.read(), 'upgrade')
         elif mode != 'pre-load' and ext == '.xml':
-            tools.convert_xml_import(cr, module_name, f_obj, 'upgrade')
+            tools.convert_xml_import(cr, module, f_obj, 'upgrade')
         else:
             _logger.error('%s extension is not supported in upgrade %sing', ext, mode)
             pass
@@ -163,12 +163,12 @@ class Upgrade(object):
         for fname, error_management in map(format_files_list, files_list):
             f_name = fname.replace('/', os.path.sep)
             fp = os.path.join(self.dir_path, f_name)
-            module_name = 'base'
+            module = 'base'
             if not os.path.exists(fp):
                 for each_path in tools.config.get('addons_path').split(','):
                     fp = os.path.join(each_path, f_name)
                     if os.path.exists(fp):
-                        module_name = fname.split('/')[0]
+                        module = fname.split('/')[0]
                         break
                 else:
                     _logger.error("No such file: %s", fp)
@@ -177,7 +177,7 @@ class Upgrade(object):
                 _logger.info('importing %s file...', fname)
                 cr.execute('SAVEPOINT smile_upgrades')
                 try:
-                    self._import_file(cr, mode, f_obj, module_name)
+                    self._import_file(cr, mode, f_obj, module)
                     _logger.info('%s successfully imported', fname)
                 except Exception, e:
                     if error_management == 'rollback_and_continue':
