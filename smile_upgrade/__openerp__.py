@@ -62,7 +62,9 @@ Configuration
             * description
             * modules_to_upgrade: modules list to update or install
             * pre-load: list of .sql files
-            * post-load: list with .sql and .yml files
+            * post-load: list with .sql; .csv, .xml and .yml files
+                         with path .../filename (depending upgrades_path)
+                         or module_name/.../filename
 
     * OpenERP server configuration -- rcfile=~/.openerp_serverrc
         [options]
