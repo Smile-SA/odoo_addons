@@ -24,7 +24,8 @@
     "version": "0.1",
     "depends": ["base"],
     "author": "Smile",
-    "description": """
+    "description": """Smile Upgrade
+
 Features
 
     * Allow to upgrade automatically database after code update and server restarting
@@ -64,6 +65,8 @@ Configuration
             * modules_to_upgrade: modules list to update or install
             * pre-load: list of .sql files
             * post-load: list with .sql, .yml, .csv and .xml files
+                         with path .../filename (depending upgrades_path)
+                         or module_name/.../filename
 
     * OpenERP server configuration -- rcfile=~/.openerp_serverrc
         [options]
