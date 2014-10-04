@@ -26,6 +26,8 @@
     "author": "Smile",
     "description": """Smile Upgrade
 
+WARNING: Addon uncompatible with multi-workers mode
+
 Features
 
     * Allow to upgrade automatically database after code update and server restarting
@@ -33,7 +35,7 @@ Features
 
 Execution
 
-    openerp-server -c config_file -d db_name
+    openerp-server -c <config_file> -d <db_name> --workers=0
 
 Configuration
 
