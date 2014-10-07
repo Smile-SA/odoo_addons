@@ -68,6 +68,6 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
     "application": False,
     "external_dependencies": {
         'python': ['flake8'],
-        'bin': ['docker.io'],
+        'bin': ['docker'],
     }
 }
