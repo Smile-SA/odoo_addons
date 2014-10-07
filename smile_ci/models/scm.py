@@ -184,25 +184,28 @@ class Branch(models.Model):
 def state_cleaner(method):
     def new_load(self, cr, module):
         res = method(self, cr, module)
-        build_obj = self.get('scm.repository.branch.build')
-        if build_obj:
-            cr.execute("select relname from pg_class where relname='%s'" % build_obj._table)
-            if cr.rowcount:
-                # Search testing builds
-                build_ids = build_obj.search(cr, SUPERUSER_ID, [('state', '=', 'testing')])
-                branch_ids = [b['branch_id'] for b in build_obj.read(cr, SUPERUSER_ID, build_ids, ['branch_id'], load='_classic_write')]
-                # Search running builds not running anymore
-                runnning_build_ids = build_obj.search(cr, SUPERUSER_ID, [('state', '=', 'running')])
-                actual_runnning_build_ids = [int(row.split('build_')[1].replace(' ', ''))
-                                             for row in subprocess.check_output(["docker", "ps"]).split('\n')[1:]
-                                             if 'build_' in row]
-                build_ids += list(set(runnning_build_ids) - set(actual_runnning_build_ids))
-                if build_ids:
-                    # Kill invalid builds
-                    build_obj._remove_container(cr, SUPERUSER_ID, build_ids)
-                    build_obj.write(cr, SUPERUSER_ID, build_ids, {'state': 'done', 'result': 'killed'})
-                # Force build creation for branch in test before server stop
-                self.get('scm.repository.branch').force_create_build(cr, SUPERUSER_ID, branch_ids)
+        try:
+            build_obj = self.get('scm.repository.branch.build')
+            if build_obj:
+                cr.execute("select relname from pg_class where relname='%s'" % build_obj._table)
+                if cr.rowcount:
+                    # Search testing builds
+                    build_ids = build_obj.search(cr, SUPERUSER_ID, [('state', '=', 'testing')])
+                    branch_ids = [b['branch_id'] for b in build_obj.read(cr, SUPERUSER_ID, build_ids, ['branch_id'], load='_classic_write')]
+                    # Search running builds not running anymore
+                    runnning_build_ids = build_obj.search(cr, SUPERUSER_ID, [('state', '=', 'running')])
+                    actual_runnning_build_ids = [int(row.split('build_')[1].replace(' ', ''))
+                                                 for row in subprocess.check_output(["docker", "ps"]).split('\n')[1:]
+                                                 if 'build_' in row]
+                    build_ids += list(set(runnning_build_ids) - set(actual_runnning_build_ids))
+                    if build_ids:
+                        # Kill invalid builds
+                        build_obj._remove_container(cr, SUPERUSER_ID, build_ids)
+                        build_obj.write(cr, SUPERUSER_ID, build_ids, {'state': 'done', 'result': 'killed'})
+                    # Force build creation for branch in test before server stop
+                    self.get('scm.repository.branch').force_create_build(cr, SUPERUSER_ID, branch_ids)
+        except Exception, e:
+            _logger.error(repr(e))
         return res
     return new_load
 
