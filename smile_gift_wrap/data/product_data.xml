@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="smile_gift_product_0" model="product.product">
+            <field name="name">Emballage cadeau</field>
+            <!--field name="categ_id" ref="scenarios_product_category_0"/-->
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+            <field name="state">sellable</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="is_gift_ok">True</field>
+        </record>
+        
+    </data>
+</openerp> 

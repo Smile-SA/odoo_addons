@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+       
+        <record id="product_gift_inherit_form" model="ir.ui.view">
+            <field name="name">product.gift.inherit.form</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
+            <field name="arch" type="xml">
+                <div name="options" position="after">
+                    <div>
+                    <field name="is_gift_ok"/>
+                    <label for="is_gift_ok"/>
+                    </div>
+                </div>
+            </field>
+        </record>
+        
+        <record id="product_gift_inherit_stock_form" model="ir.ui.view">
+            <field name="name">product.gift.inherit.stock.form</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@string='Sale Conditions']/div[2]" position="after">
+                    <label for="can_be_wrapped_gift_ok"/>
+                        <div>
+                            <field name="can_be_wrapped_gift_ok" class="oe_inline"/>
+                        </div>
+                </xpath>
+            </field>
+        </record>
+    
+    </data>
+</openerp> 

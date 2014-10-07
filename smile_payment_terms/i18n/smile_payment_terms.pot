@@ -1,0 +1,44 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_payment_terms
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0-20131203-002409\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-04-18 14:01+0000\n"
+"PO-Revision-Date: 2014-04-18 14:01+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_payment_terms
+#: help:payment.terms.partner,property_account_journal:0
+msgid "Define the account journal associated to this payment type for the logued company"
+msgstr ""
+
+#. module: smile_payment_terms
+#: model:ir.model.fields,field_description:smile_payment_terms.field_payment_terms_partner_code
+#: field:payment.terms.partner,code:0
+msgid "Code"
+msgstr ""
+
+#. module: smile_payment_terms
+#: model:ir.model,name:smile_payment_terms.model_payment_terms_partner
+msgid "payment.terms.partner"
+msgstr ""
+
+#. module: smile_payment_terms
+#: model:ir.model,name:smile_payment_terms.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: smile_payment_terms
+#: model:ir.model.fields,field_description:smile_payment_terms.field_payment_terms_partner_property_account_journal
+#: field:payment.terms.partner,property_account_journal:0
+msgid "Account journal"
+msgstr ""
+

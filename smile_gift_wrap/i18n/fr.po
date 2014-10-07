@@ -1,0 +1,114 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_gift_wrap
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0-20131203-002409\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-04-28 12:59+0000\n"
+"PO-Revision-Date: 2014-04-28 12:59+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_gift_wrap
+#: code:addons/smile_gift_wrap/product.py:31
+#: model:ir.model.fields,field_description:smile_gift_wrap.field_product_product_can_be_wrapped_gift_ok
+#: field:product.product,can_be_wrapped_gift_ok:0
+#, python-format
+msgid "Can be wrapped ?"
+msgstr "Peut être emballé ?"
+
+#. module: smile_gift_wrap
+#: model:ir.model.fields,field_description:smile_gift_wrap.field_product_product_is_gift_ok
+#: field:product.product,is_gift_ok:0
+msgid "Is a gift wrap?"
+msgstr "Emballage cadeau"
+
+#. module: smile_gift_wrap
+#: model:ir.model,name:smile_gift_wrap.model_product_product
+msgid "Product"
+msgstr "Article"
+
+#. module: smile_gift_wrap
+#: model:ir.model,name:smile_gift_wrap.model_sale_order
+msgid "Sales Order"
+msgstr "Bon de commande"
+
+#. module: smile_gift_wrap
+#: model:ir.model,name:smile_gift_wrap.model_stock_invoice_onshipping
+msgid "Stock Invoice Onshipping"
+msgstr "Facturation du stock au moment de l'expédition"
+
+#. module: smile_gift_wrap
+#: model:ir.model.fields,field_description:smile_gift_wrap.field_sale_order_line_wrapgift_so_line_id
+#: field:sale.order.line,wrapgift_so_line_id:0
+msgid "Gift wrap price line"
+msgstr "Ligne du prix de l'emballage cadeau"
+
+#. module: smile_gift_wrap
+#: model:ir.model,name:smile_gift_wrap.model_stock_move
+msgid "Stock Move"
+msgstr "Mouvement de stock"
+
+#. module: smile_gift_wrap
+#: code:addons/smile_gift_wrap/sale_order.py:78
+#, python-format
+msgid "you can't delete a product wrap gift price line if related to a wrapped product line you need to break the relation before or delete the wrapped product line"
+msgstr "Vous ne pouvez pas supprimer l'option d'emballage cadeau, car elle est liée à un produit. Merci de supprimer cette option sur le produit concerné."
+
+#. module: smile_gift_wrap
+#: constraint:product.product:0
+msgid "The gift wrap product must be a service"
+msgstr "Le produit d'emballage doit être de type service"
+
+#. module: smile_gift_wrap
+#: model:product.product,name:smile_gift_wrap.smile_gift_product_0
+msgid "Emballage cadeau"
+msgstr "Emballage cadeau"
+
+#. module: smile_gift_wrap
+#: model:ir.model,name:smile_gift_wrap.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: smile_gift_wrap
+#: model:ir.model,name:smile_gift_wrap.model_stock_picking
+msgid "Picking List"
+msgstr "Opération de manutention"
+
+#. module: smile_gift_wrap
+#: code:addons/smile_gift_wrap/sale_order.py:77
+#, python-format
+msgid "Attention !"
+msgstr "Attention !"
+
+#. module: smile_gift_wrap
+#: model:ir.model.fields,field_description:smile_gift_wrap.field_sale_order_line_wrapped_line_id
+#: field:sale.order.line,wrapped_line_id:0
+msgid "Wrapped product line"
+msgstr "Produit emballé"
+
+#. module: smile_gift_wrap
+#: model:ir.model.fields,field_description:smile_gift_wrap.field_sale_order_line_product_giftwrap_id
+#: model:ir.model.fields,field_description:smile_gift_wrap.field_stock_move_product_giftwrap_id
+#: field:sale.order.line,product_giftwrap_id:0
+#: field:stock.move,product_giftwrap_id:0
+msgid "Gift wrap"
+msgstr "Emballage cadeau"
+
+#. module: smile_gift_wrap
+#: constraint:sale.order.line:0
+#: constraint:stock.move:0
+msgid "The selected product is a service, it cant have a gift wrap"
+msgstr "Le produit selectionné est de type service, on ne peut lui associer un emballage cadeau"
+
+#. module: smile_gift_wrap
+#: model:ir.model,name:smile_gift_wrap.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de commandes de vente"
+

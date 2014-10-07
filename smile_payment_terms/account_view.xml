@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <record model='ir.ui.view' id='smile_payment_term_partner_form'>
+        <field name='name'>smile.payment.term.partner.form</field>
+        <field name='model'>payment.terms.partner</field>
+        <field name="inherit_id" ref="payment_terms.payment_term_partner_form"/>
+        <field name='type'>form</field>
+        <field name='arch' type='xml'>
+			<xpath expr="//field[@name='name']" position="after">
+                <field name="code"/>
+                <field name="property_account_journal"/>
+			</xpath>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='smile_payment_term_partner_tree'>
+        <field name='name'>smile.payment.term.partner.tree</field>
+        <field name='model'>payment.terms.partner</field>
+        <field name="inherit_id" ref="payment_terms.payment_term_partner_tree"/>
+        <field name='arch' type='xml'>
+			<xpath expr="//field[@name='name']" position="after">
+                <field name="code"/>
+                <field name="property_account_journal"/>
+			</xpath>
+        </field>
+    </record>
+    
+    </data>
+</openerp>

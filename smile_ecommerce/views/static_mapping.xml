@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	
+    	<!-- VIEWS -->
+        
+        <record id="map_shipping_mode_form_view" model="ir.ui.view">
+        	<field name="name">shipping.mode.form</field>
+            <field name="model">ecommerce.shipping.mode</field>
+            <field name="arch" type="xml">
+            	<form string="Shipping Mode" version="7.0">
+            		<group>
+	            		<group>
+	                		<field name="product_id"/>
+	            		</group>
+	            		<group>
+	                		<field name="ecommerce_shipping_name" />
+	                		<field name="ecommerce_shipping_key" />
+	            		</group>
+            		</group>
+            	</form>
+            </field>
+        </record>
+			
+		<!-- ACTIONS -->	
+          
+        <record id="map_shipping_mode_action" model="ir.actions.act_window">
+            <field name="name">Shipping Mode Mapping</field>
+            <field name="res_model">ecommerce.shipping.mode</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Map Mode Shipping.
+              </p>
+            </field>
+        </record>  
+        
+        <!-- MENUS -->
+        
+        <menuitem id="sales_flows" name="Sales Flows" parent="connector.menu_connector_config_settings"/>
+        
+		<menuitem id="map_shipping_mode" name="Shipping Mode Mapping" parent="sales_flows" action="map_shipping_mode_action" sequence="10"/> 
+
+    </data>
+</openerp>

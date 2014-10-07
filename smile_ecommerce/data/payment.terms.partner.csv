@@ -1,0 +1,5 @@
+id,code,pay_auto,name
+ecommerce_payment_terms_partner_cheque,CHQ,False,Cheque
+ecommerce_payment_terms_partner_cb,CB,True,Carte bleue
+ecommerce_payment_terms_partner_virement,VMT,False,Virement
+ecommerce_payment_terms_partner_paypal,PAYPAL,True,Paypal

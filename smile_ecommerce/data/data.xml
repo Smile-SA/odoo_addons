@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+       <!--  Partners categories  --> 
+       
+        <record id="ecommerce_res_partner_category_0" model="res.partner.category">
+            <field name="name">Partner</field>
+        </record>
+        <record id="ecommerce_res_partner_category_1" model="res.partner.category">
+            <field name="name">Supplier</field>
+        </record>
+
+		<!-- Partners  -->
+
+        <record id="ecommerce_partner0" model="res.partner">
+            <field name="name">Ecommerce Partner 0</field>
+            <field eval="[(6, 0, [ref('ecommerce_res_partner_category_0')])]" name="category_id"/>
+            <field name="supplier">1</field>
+            <field name="customer">0</field>
+            <field name="is_company">1</field>
+            <field name="city">Paris</field>
+            <field name="zip">75000</field>
+            <field name="street">31 Hong Kong street</field>
+        </record>
+        
+        <record id="ecommerce_res_partner_1" model="res.partner">
+            <field name="name">Ecommerce Partner 1</field>
+            <field eval="[(6, 0, [ref('ecommerce_res_partner_category_1')])]" name="category_id"/>
+            <field name="is_company">0</field>
+            <field name="customer">1</field>
+            <field name="city">Paris</field>
+            <field name="zip">75000</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="email">test1@ecommercepartner.com</field>
+        </record>
+        
+        <record id="ecommerce_res_partner_la_poste" model="res.partner">
+            <field name="name">La Poste</field>
+            <field eval="[(6, 0, [ref('ecommerce_res_partner_category_1')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="customer">0</field>
+            <field name="city">Paris</field>
+            <field name="zip">75000</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="email">laposte@laposte.net</field>
+        </record>
+        
+        <!-- Product Category -->
+
+        <record id="ecommerce_product_category_0" model="product.category">
+            <field name="name">Catégorie ECommerce</field>
+            <field name="type">view</field>
+            <field name="property_account_expense_categ"></field>
+            <field name="property_account_income_categ"></field>
+        </record>
+        
+        <!-- Product Product -->
+
+        <record id="ecommerce_product_product_0" model="product.product">
+            <field name="name">Ecommerce Product 0</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">15.5</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+        
+        <record id="ecommerce_product_product_1" model="product.product">
+            <field name="name">Ecommerce Product 1</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">30</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+        
+        <record id="ecommerce_product_product_chronopost" model="product.product">
+            <field name="name">Chronopost</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">5</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+        
+        <record id="ecommerce_product_product_colissimo_access_france" model="product.product">
+            <field name="name">Colissimo Access France</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">10</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+        
+        <record id="ecommerce_product_product_colissimo_expert_france" model="product.product">
+            <field name="name">Colissimo Expert France</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">15</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+        
+        <record id="ecommerce_product_product_colissimo_expert_international" model="product.product">
+            <field name="name">Colissimo Expert International</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">20</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+        
+        <record id="ecommerce_product_product_colissimo_expert_om" model="product.product">
+            <field name="name">Colissimo Expert OM</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">25</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+                
+        <record id="ecommerce_product_product_ecopli" model="product.product">
+            <field name="name">ECOPLI</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">30</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+                
+        <record id="ecommerce_product_product_petit_paquet_international" model="product.product">
+            <field name="name">Petit Paquet International</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">35</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+                
+        <record id="ecommerce_product_product_so_colissimo_acp" model="product.product">
+            <field name="name">SO Colissimo ACP</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">40</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+                
+        <record id="ecommerce_product_product_so_colissimo_bpr" model="product.product">
+            <field name="name">SO Colissimo BPR</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">45</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+                
+        <record id="ecommerce_product_product_so_colissimo_cdi" model="product.product">
+            <field name="name">SO Colissimo CDI</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">50</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+                
+        <record id="ecommerce_product_product_so_colissimo_cityssimo" model="product.product">
+            <field name="name">SO Colissimo Cityssimo</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">55</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+                
+        <record id="ecommerce_product_product_so_colissimo_commercant_type_a" model="product.product">
+            <field name="name">SO Colissimo Commerçant type A</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">60</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+                
+        <record id="ecommerce_product_product_so_colissimo_rendez_vous" model="product.product">
+            <field name="name">SO Colissimo Rendez-Vous</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">65</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+                
+        <record id="ecommerce_product_product_so_colissimo_sans_signature" model="product.product">
+            <field name="name">SO Colissimo sans Signature</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">70</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+                
+        <record id="ecommerce_product_product_palet_system" model="product.product">
+            <field name="name">Palet System</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">75</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+                
+        <record id="ecommerce_product_product_prisme" model="product.product">
+            <field name="name">Prisme</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">80</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>        
+
+        <record id="ecommerce_product_product_exapaq" model="product.product">
+            <field name="name">Exapaq</field>
+            <field name="categ_id" ref="ecommerce_product_category_0"/>
+            <field name="standard_price">85</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_categ_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_categ_unit"/>
+            <field name="uos_id" ref="product.product_uom_categ_unit"/>
+            <field name="qty_available">20</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>      
+	</data>
+</openerp>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <record model="ir.ui.view" id="smile_pay_auto_invoice_form">
+        <field name="name">smile.pay.auto.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="payment_terms.inherited_account_invoice_payment_term_form" />
+        <field name="arch" type="xml">
+            <xpath expr='//field[@name="payment_terms_id"]' position="attributes" >
+                <attribute name="on_change">onchange_payment_terms_id(payment_terms_id)</attribute>
+                <attribute name="attrs">{'readonly': [('state','=','paid')]}</attribute>
+            </xpath>
+            <xpath expr='//field[@name="payment_terms_id"]' position="after" >
+                <field name="pay_auto" invisible="True"/>
+                <field name="reference" attrs="{'required': [('pay_auto','=',True)], 'invisible': [('pay_auto','=',False)], 'readonly': [('state','=','paid')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="smile_pay_auto_invoice_supplier_form">
+        <field name="name">smile.pay.auto.invoice.supplier.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="payment_terms.inherited_account_invoice_user_payment_term_form" />
+        <field name="arch" type="xml">
+            <xpath expr='//field[@name="payment_terms_id"]' position="attributes" >
+                <attribute name="on_change">onchange_payment_terms_id(payment_terms_id)</attribute>
+                <attribute name="attrs">{'readonly': [('state','=','paid')]}</attribute>
+            </xpath>
+            <xpath expr='//field[@name="period_id"]' position="after" >
+                <field name="pay_auto" invisible="True"/>
+                <field name="reference" attrs="{'required': [('pay_auto','=',True)], 'invisible': [('pay_auto','=',False)], 'readonly': [('state','=','paid')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    </data>
+</openerp>

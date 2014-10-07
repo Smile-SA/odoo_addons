@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_order_line_gift_wrap_form_inherit">
+            <field name="name">sale.order.line.gift.wrap.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/form//field[@name='name']" position="after">
+                    <!--field name="purchase_price" groups="base.group_user"/-->
+                    <group col="4">
+                        <field name="product_giftwrap_id" domain="[('is_gift_ok','=',True)]" widget="selection"/>
+                    </group>
+                    <group col="4">
+                        <field name="wrapgift_so_line_id" groups="base.group_no_one" domain="[('id','!=',active_id)]"/>
+                        <field name="wrapped_line_id" groups="base.group_no_one" domain="[('id','!=',active_id)]"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

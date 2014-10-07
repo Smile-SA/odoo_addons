@@ -1,0 +1,55 @@
+Le module dépend de stock_sale
+Le modèle de données associé à ce module est décrit dans le fichier uml.png
+
+Groupe :
+Aucun groupe n'est défini
+
+Modification:
+I) Produit
+1) Ajouter une case à cocher "Est un emballage cadeau ?" sur la fiche produit, après "Peut être acheté"" pour le définir comme une prestation de service.
+2) Ajouter une contrainte pour vérifier que le type du produit est positionné à "Service"
+3) Data : ajouter dans data : Un produit nommé "Emballage cadeau" de type service et cocher la case "Est un emballage cadeau ?"
+
+II) Ligne de commande de vente
+Prévoir un champ sélection (many2one) "product_giftwrap_id" vers le produit tagué comme  "Emballage cadeau"
+Ajouter une contrainte pour vérifier que product_id est de type stockable ou consommable.
+
+Les deux attributs ci-dessous sont visible que par l'admin.
+Ajouter un many2one wrapgift_so_line_id: la référence vers la ligne de commande définissant le prix de vente de la prestation
+Ajouter un many2one wrapped_line_id: la référence vers la ligne du produit emballé
+
+III) Bon de commande de vente: 
+A) Création du bon de commande
+1) Mettre à jour la méthode appelée par le bouton update du bon de commande pour que :
+    Pour chaque ligne (line_id) faisant référence à la prestation "Emballage" (ie: product_giftwrap_id != False) OpenERP 
+    génère une ligne de vente (new_line_id) sur le bon de commande. Les informations de cette ligne sont:
+    Product_id = product_giftwrap_id
+    Prix et taxe de la ligne ==> Appeler le onchange de la ligne de vente sur le produit.
+    Description = Description (new_line_id) + " / " + Description de la ligne (line_id)
+    wrapped_line_id = line_id
+    OpenERP met aussi à jour l'attribut wrapgift_so_line_id = new_line_id de la ligne  line_id.
+
+B) Validation du bon de commande:
+Le traitement ci-dessous doit être appelé à chaque validation du bon de commande.
+Si un BL est généré depuis le bon de commande, chaque mouvement de stock, associé à un produit emballé, fait référence au produit "emballage"  product_giftwrap_id de la ligne.
+
+C) Suppression d'une ligne de produit emballé:
+Si la ligne est supprimée alors la ligne référencée par wrapgift_so_line_id est aussi supprimée.
+
+D) Suppression d'une ligne de la prestation d'emballage:
+Si la ligne de prestation d'emballage fait référence à une ligne de produit emballé (wrapped_line_id!=False) alors l'utilisateur est invité positionner product_giftwrap_id à False.
+
+IV) Bon de livraison:
+Ajouter l'attribut "product_giftwrap_id" sur le mouvement de stock. Cet attribut est à afficher sous l'attribut conditionnement.
+
+Génération de la facture depuis le BL:
+Si un mouvement de stock est associé à une prestation d'emballage alors une ligne de facture liée à cette prestation est créée sur la facture.
+Le prix de la prestation est récupérée comme suit :
+Si le mouvement de stock est associé à une ligne de vente qui est elle même associée à une ligne de vente portant la prestation emballage, alors le prix de cette dernière est créée. Il est nécessaire de lier cette dernière à la ligne de facture.
+Si le mouvement de stock n'est pas issu d'un bon de commande alors le prix est récupéré depuis la fiche produit.
+
+Remarque : 
+1) Il ne faut pas générer une ligne de facture si le mouvement de stock est assoicé à une ligne de bon de commande associée à une autre ligne de bon de commande de prestation d'emballage déjà facturée.
+
+
+ 

@@ -1,0 +1,18 @@
+Ce module permet de définir les journaux de banque par défaut à associer 
+au mode de paiement qu'on peut définir grace au module extra_addons/payment_terms
+
+Ce module peut remplacer smile_partner_default_payment et smile_sale_default_payment
+
+
+Dépendance :
+extra_addons/payment_terms
+
+Modification:
+Mode de paiement (payment.terms.partner)
+ajouter un champ code.
+Ajouter un champ property many2one vers un journal de banque par défaut à utiliser.
+
+Wizard de paiement de la facture
+Le wizard doit pouvoir récupérer le journal de banque en fonction de celui par défaut associé au mode de paiement lié à la facture et de la société de la facture.
+L'utilisateur peut modifier le journal.
+
