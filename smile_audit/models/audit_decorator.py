@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-from openerp.tools.func import wraps
-
 
 def _get_args(self, method, args, kwargs):
     # avoid hasattr(self, '_ids') because __getattr__() is overridden
@@ -38,10 +36,9 @@ def _get_args(self, method, args, kwargs):
     return cr, uid, ids, vals, context
 
 
-def audit_decorator(origin):
-    @wraps(origin)
+def audit_decorator():
     def audit_wrapper(self, *args, **kwargs):
-        method = origin.__name__
+        method = audit_wrapper.origin.__name__
         cr, uid, ids, vals, context = _get_args(self, method, args, kwargs)
         rule_id = None
         if getattr(self, 'audit_rule', None):
@@ -53,10 +50,10 @@ def audit_decorator(origin):
                 old_values = self.read(cr, uid, ids, vals.keys(), context, load='_classic_write')
                 if method == 'unlink':
                     rule_obj.log(cr, uid, rule_id, method, old_values)
-        result = origin(*args, **kwargs)
+        result = audit_wrapper.origin(self, *args, **kwargs)
         if rule_id:
             new_values = None
-            if audit_wrapper.origin.__name__ != 'unlink':
+            if method != 'unlink':
                 if method == 'create':
                     ids = [result]
                 new_values = self.read(cr, uid, ids, vals.keys(), context, load='_classic_write')

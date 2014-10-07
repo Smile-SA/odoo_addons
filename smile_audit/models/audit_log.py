@@ -48,7 +48,8 @@ class AuditLog(models.Model):
     method = fields.Char('Method', size=64, readonly=True)
     line_ids = fields.One2many('audit.log.line', 'log_id', 'Log lines', readonly=True)
 
-    def unlink(self, cr, uid, ids, context=None):
+    @api.multi
+    def unlink(self):
         raise Warning(_('You cannot remove audit logs!'))
 
 
