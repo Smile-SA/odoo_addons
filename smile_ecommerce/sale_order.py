@@ -26,6 +26,7 @@ from openerp.tools.translate import _
 
 from openerp.addons.connector.unit.mapper import backend_to_m2o
 from openerp.addons.connector.unit.mapper import mapping
+from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (SaleOrderOnChange)
 from openerp.addons.magentoerpconnect.unit.mapper import normalize_datetime
 from openerp.addons.magentoerpconnect.sale import SaleOrderImport, SaleOrderImportMapper, SaleOrderLineImportMapper, SaleOrderAdapter
 from openerp.addons.magentoerpconnect.backend import magento
@@ -41,33 +42,8 @@ class ECommerceSaleOrder(orm.Model):
     _columns = {
         'write_date': fields.datetime('Last Update Date', readonly=True),
         'payment_reference': fields.char('Payment Reference', size=64),
+        'order_state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('progress', 'Progress')], string=_("Sale Order State")),
     }
-
-
-#     def create_sale_order_from_dict(self, order_data):
-#
-#         # Be sure the structure of the order_data is correct
-#
-#         order_required_fields = ['customer_id', 'shipping_address_id', 'billing_address_id',
-#                                  'created_at', 'store_id', 'magento_sale_order_ref',
-#                                  'payment_terms_id', 'payment_reference', 'lines']
-#         line_required_fields = ['quantity', 'price', 'tax_id', 'description']
-#
-#         for field in order_required_fields:
-#             if not field in order_data:
-#                 _logger.error(_('Cannot create a sale order because field {} is missing'.format(field)))
-#
-#         for field in line_required_fields:
-#             if not field in order_data['lines']:
-#                 _logger.error(_('Cannot create a sale order line because field {} is missing'.format(field)))
-
-
-    def validate_sale_orders(self, cr, uid, ids, sale_order, context=None):
-        if sale_order.payment_terms_id.id == 2 :  # CB
-            # Créer facture : Sur le bon de livraison - Politique d'expédition : Tout en une fois
-            sale_order.write({'ignore_exceptions': True}, context=context)
-            sale_order.action_button_confirm(context=context)
-
 
 @magento(replacing=SaleOrderImport)
 class ECommerceSaleOrderImport(SaleOrderImport):
@@ -81,12 +57,14 @@ class ECommerceSaleOrderImport(SaleOrderImport):
         sale_order = self.session.browse('magento.sale.order', binding_id).openerp_id
 
         # Validation
-        sale_order.validate_sale_orders(sale_order, context=self.session.context)
-#         for picking in sale_order.picking_ids:
-#             if picking.type == 'out':
-#                 picking.validate_picking_out()
+        # TODO
+        # We validate here the sale order if the field order_state is not 'draft'
 
     def _get_magento_data(self):
+
+        # Here, we should ask for magento data
+
+        # Customer_id, shipping_address_id, billing_address_id and product_id are the IDs on Magento
 
         sale_order = {
             "customer_id": 1,
@@ -100,6 +78,7 @@ class ECommerceSaleOrderImport(SaleOrderImport):
             "payment_reference": "PaymentReferenceOnMagento",
             "order_policy": "picking",
             "picking_policy": "one",
+            "order_state": "draft",
 
             "lines": [
             {
@@ -124,8 +103,32 @@ class ECommerceSaleOrderImport(SaleOrderImport):
         }
         return sale_order
 
+#         """ Return the raw Magento data for ``self.magento_id`` """
+#
+#         record = super(SaleOrderImport, self)._get_magento_data()
+#         # sometimes we don't have website_id...
+#         # we fix the record!
+#         if not record.get('website_id'):
+#             # deduce it from the storeview
+#             storeview_binder = self.get_binder_for_model('magento.storeview')
+#             # we find storeview_id in store_id!
+#             # (http://www.magentocommerce.com/bug-tracking/issue?issue=15886)
+#             oe_storeview_id = storeview_binder.to_openerp(record['store_id'])
+#             storeview = self.session.browse('magento.storeview',
+#                                             oe_storeview_id)
+#             # "fix" the record
+#             record['website_id'] = storeview.store_id.website_id.magento_id
+#         # sometimes we need to clean magento items (ex : configurable
+#         # product in a sale)
+#         record = self._clean_magento_items(record)
+#         return record
+
     def _import_dependencies(self):
         pass
+
+    def _update_special_fields(self, data):
+        """Partners and addresses already are mapped """
+        return data
 
 @magento(replacing=SaleOrderImportMapper)
 class EcommerceSaleOrderImportMapper(SaleOrderImportMapper):
@@ -166,6 +169,13 @@ class EcommerceSaleOrderImportMapper(SaleOrderImportMapper):
             raise MappingError(_('The picking policy {} does not exist'.format(picking_policy)))
         return {'picking_policy': picking_policy or 'one'}
 
+    @mapping
+    def order_state(self, record):
+        order_state = record['order_state']
+        if order_state and order_state not in ['draft', 'waiting', 'progress']:
+            raise MappingError(_('The order state {} does not exist'.format(order_state)))
+        return {'order_state': order_state or 'draft'}
+
     # We use the original shipping_method for the shipping mapping (in the module magentoerpconnect)
     # But what does "sale_order_comment" ?
 
@@ -192,7 +202,7 @@ class ECommerceSaleOrderLineImportMapper(SaleOrderLineImportMapper):
 
     direct = [
               (backend_to_m2o('product_id', binding="magento.product.product"), 'product_id'),
-              ('quantity', 'product_uom_qty'),
+              ('qty', 'product_uom_qty'),
               ('price', 'price_unit'),
               ('description', 'name'),
               ('discount', 'discount'),
@@ -201,7 +211,7 @@ class ECommerceSaleOrderLineImportMapper(SaleOrderLineImportMapper):
     @mapping
     def taxes(self, record):
         session = self.session
-        taxes_mapping = session.pool.get('account.taxes')
+        taxes_mapping = session.pool.get('account.tax')
         ecommerce_taxes = record['taxes']
         if ecommerce_taxes:
             tax_ids = taxes_mapping.search(session.cr, session.uid, [('description', 'in', ecommerce_taxes)], context=session.context)
@@ -244,6 +254,6 @@ class EcommerceSaleOrderAdapter(SaleOrderAdapter):
         record = self._call('oe_order.order_info_OE', [str(id)])
         return record
 
-    def search(self, filters=None, from_date=None, to_date=None,
-               magento_storeview_ids=None):
+    def search(self, filters=None, from_date=None, to_date=None, magento_storeview_ids=None):
+        """ We don't have any magento backend, we simulate this"""
         return [1]
