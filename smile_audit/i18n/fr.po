@@ -184,8 +184,8 @@ msgstr "Log de mise à jour"
 
 #. module: smile_audit
 #: field:audit.rule,values_id:0
-msgid "Client Action Link"
-msgstr "Lien d'action client"
+msgid "Add in the 'More' menu"
+msgstr "Ajouter au menu 'Autres options'"
 
 #. module: smile_audit
 #: field:audit.log.line,field_id:0

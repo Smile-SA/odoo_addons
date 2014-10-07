@@ -35,7 +35,7 @@ class AuditRule(models.Model):
 
     name = fields.Char(size=32, required=True)
     active = fields.Boolean(default=True)
-    log_create = fields.Boolean('Log Creation', default=True)
+    log_create = fields.Boolean('Log Creation', default=False)
     log_write = fields.Boolean('Log Update', default=True)
     log_unlink = fields.Boolean('Log Deletion', default=True)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], 'Status', default='draft', readonly=True)
@@ -44,7 +44,7 @@ class AuditRule(models.Model):
                                domain=[('model', 'not in', ('audit.log', 'audit.log.line'))],
                                readonly=True, states={'draft': [('readonly', False)]})
     action_id = fields.Many2one('ir.actions.act_window', 'Client Action', readonly=True)
-    values_id = fields.Many2one('ir.values', 'Client Action Link', readonly=True)
+    values_id = fields.Many2one('ir.values', "Add in the 'More' menu", readonly=True)
 
     _sql_constraints = [
         ('model_uniq', 'unique(model_id)', 'There is already a rule defined on this object.\n'
@@ -115,7 +115,7 @@ class AuditRule(models.Model):
             model_obj = self.pool[rule.model_id.model]
             if not hasattr(model_obj, 'audit_rule'):
                 for method in ('create', 'write', 'unlink'):
-                    model_obj._patch_method(method, audit_decorator(getattr(model_obj, method)))
+                    model_obj._patch_method(method, audit_decorator())
                 model_obj.audit_rule = True
                 updated = True
         if updated:
@@ -152,8 +152,7 @@ class AuditRule(models.Model):
         for key in keys:
             old_value = old_values.get(key)
             new_value = new_values.get(key)
-            if (old_value is not None or new_value is not None) \
-                    and old_value != new_value:
+            if (old_value or new_value) and old_value != new_value:
                 line_vals.append({
                     'field_name': key,
                     'old_value': old_value,
