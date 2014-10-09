@@ -32,6 +32,9 @@ RUN apt-get -qq update
 # Install Python version
 RUN apt-get -qq -y install python%(py_version)s
 
+# Install packages required to check quality code
+RUN apt-get -qq -y install cloc python-coverage python-flake8
+
 # Install Odoo requirements
 RUN apt-get -qq -y install %(required_packages)s
 
@@ -41,7 +44,11 @@ RUN apt-get -qq -y install %(optional_packages)s
 # Download Odoo sources
 RUN mkdir -p /usr/src/odoo
 RUN adduser odoo --disabled-password
+ADD . /usr/src/odoo
 RUN chown -R odoo:odoo /usr/src/odoo
+
+# Install cloc
+# RUN apt-get -qq -y install cloc
 
 # Expose port
 EXPOSE 8069

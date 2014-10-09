@@ -113,7 +113,7 @@ class Branch(models.Model):
     use_in_ci = fields.Boolean('Use in Continuous Integration')
     pg_version = fields.Selection('_get_pg_versions', 'PostgreSQL Version', required=True, default='9.3')
     py_version = fields.Selection('_get_py_versions', 'Python Version', required=True, default='2.7')
-    dump_file = fields.Binary('Dump file')
+    dump_id = fields.Many2one('ir.attachment', 'Dump file')
     modules_to_install = fields.Char('Modules to install')
     ignored_tests = fields.Char('Tests to ignore', help='module.filename, without extension. Comma-separated')
     server_path = fields.Char('Server path', default="server")
@@ -301,7 +301,7 @@ class Build(models.Model):
     log_ids = fields.One2many('scm.repository.branch.build.log', 'build_id', 'Logs', readonly=True)
     coverage_ids = fields.One2many('scm.repository.branch.build.coverage', 'build_id', 'Coverage', readonly=True)
     quality_code_count = fields.Integer('# Quality code', compute='_quality_code_count', store=False)
-    failed_test_count = fields.Integer('# Faliled tests', compute='_failed_test_count', store=False)
+    failed_test_count = fields.Integer('# Failed tests', compute='_failed_test_count', store=False)
     coverage_avg = fields.Integer('Coverage average', compute='_coverage_avg', store=False)
 
     @property
@@ -381,18 +381,19 @@ class Build(models.Model):
         _logger.info('Testing build %s...' % self.id)
         running = False
         try:
-            self._check_quality_code()
-            self._count_lines_of_code()
             self._create_configfile()
             self._create_launcherfile()
             self._create_dockerfile()
             self._build_container()
+            self._remove_directory()
             self._run_container()
-            if self.branch_id.dump_file:
+            if self.branch_id.dump_id:
                 self._restore_db()
             else:
                 self._create_db()
             self._install_modules(['smile_test'])
+            self._check_quality_code()
+            self._count_lines_of_code()
             self._start_coverage()
             if self.branch_id.modules_to_install:
                 modules_to_install = self.branch_id.modules_to_install.replace(' ', '').split(',')
@@ -402,20 +403,17 @@ class Build(models.Model):
             _logger.error(repr(e))
             self.write({'state': 'done', 'result': 'failed', 'date_stop': fields.Datetime.now()})
             self.branch_id.message_post(body=_('Failed'))
-            self._remove_container(remove_directory=False)
         else:
             self.write({'state': 'running', 'date_stop': fields.Datetime.now()})
             if self.branch_id.version_id.web_included:
                 # Use a new cursor to see running builds, even those started after the begin of this test
                 self._check_running()
                 running = True
-            else:
-                self._remove_container(remove_directory=False)
         finally:
             self._attach_files()
-            if not running:
-                self._remove_directory()
             self._load_logs_in_db()
+            if not running:
+                self._remove_container()
 
     @api.model
     @with_new_cursor
@@ -424,38 +422,6 @@ class Build(models.Model):
         max_running = int(self.env['ir.config_parameter'].get_param('ci.max_running'))
         if len(running) > max_running:
             running[max_running:]._remove_container()
-
-    @api.one
-    def _check_quality_code(self):
-        _logger.info('Checking quality code for build:%s...' % self.id)
-        if not self.branch_id.code_path:
-            return
-        param_obj = self.env['ir.config_parameter']
-        max_line_length = param_obj.get_param('ci.flake8.max_line_length') or 79
-        exclude_files = param_obj.get_param('ci.flake8.exclude_files') or ''
-        with cd(self.directory):
-            with open(FLAKE8FILE, 'a') as f:
-                for path in self.branch_id.code_path.replace(' ', '').split(','):
-                    cmd = ['flake8', '--max-line-length=%s' % max_line_length,
-                           '--exclude=%s' % exclude_files.replace(' ', ''), path]
-                    try:
-                        subprocess.check_output(cmd)
-                    except subprocess.CalledProcessError, e:
-                        f.write(e.output)
-
-    @api.one
-    def _count_lines_of_code(self):
-        _logger.info('Counting lines of code for build:%s...' % self.id)
-
-        with cd(self.directory):
-            for path in self.branch_id.addons_path.split(','):
-                file = '%s.cloc' % path
-                with open(file, 'a') as f:
-                    cmd = ['cloc', path]
-                    try:
-                        f.write(subprocess.check_output(cmd))
-                    except subprocess.CalledProcessError, e:
-                        f.write(e.output)
 
     def _get_options(self):
         branch = self.branch_id
@@ -472,6 +438,9 @@ class Build(models.Model):
             'db_password': 'odoo',
             'logfile': format(LOGFILE),
             'coveragefile': format(COVERAGEFILE),
+            'flake8file': format(FLAKE8FILE),
+            'flake8_exclude_files': self.env['ir.config_parameter'].get_param('ci.flake8.exclude_files'),
+            'flake8_max_line_length': self.env['ir.config_parameter'].get_param('ci.flake8.max_line_length'),
             'code_path': format(self.branch_id.code_path),
             'addons_path': format(branch.addons_path + ',ci-addons'),
             'ignored_tests': format(branch.ignored_tests),
@@ -544,7 +513,6 @@ class Build(models.Model):
         for dn in dns.split(','):
             cmd.extend(['--dns', dn])
         cmd.extend(['run', '--name', 'build_%s' % self.id, '-d',
-                    '-v', '%s:/usr/src/odoo:rw' % self.directory,
                     '-p', '%s:8069' % self.port, 'build:%s' % self.id])
         subprocess.check_call(cmd)
         # Check Odoo is running (during 1 minute max.)
@@ -596,10 +564,11 @@ class Build(models.Model):
 
     @api.one
     def _restore_db(self):
-        _logger.info('Restoring database for build:%s from file %s...' % (self.id, self.branch_id.dump_file))
+        _logger.info('Restoring database for build:%s from file %s...' % (self.id, self.branch_id.dump_id.datas_fname))
         admin_passwd = self.env['ir.config_parameter'].get_param('ci.admin_passwd')
         sock_db = self._connect('db')
-        sock_db.restore(admin_passwd, DBNAME, self.branch_id.dump_file)
+        dump_file = base64.b64decode(self.branch_id.dump_id.datas)
+        sock_db.restore(admin_passwd, DBNAME, dump_file)
 
     @api.one
     def _install_modules(self, modules_to_install):
@@ -622,6 +591,16 @@ class Build(models.Model):
             raise Exception(f.faultString)
 
     @api.one
+    def _check_quality_code(self):
+        _logger.info('Checking quality code for build:%s...' % self.id)
+        self._connect('common').check_quality_code()
+
+    @api.one
+    def _count_lines_of_code(self):
+        _logger.info('Counting lines of code for build:%s...' % self.id)
+        self._connect('common').count_lines_of_code()
+
+    @api.one
     def _start_coverage(self):
         _logger.info('Starting code coverage for build:%s...' % self.id)
         self._connect('common').coverage_start()
@@ -636,20 +615,27 @@ class Build(models.Model):
         _logger.info('Attaching files for build:%s...' % self.id)
         attach_obj = self.env['ir.attachment']
         if not os.path.exists(self.directory):
-            return True
+            os.mkdir(self.directory)
         with cd(self.directory):
-            cloc_paths = ['%s.cloc' % path for path in self.branch_id.addons_path.split(',')]
+            cloc_paths = ['%s.cloc' % path.replace('/', '_') for path in self.branch_id.addons_path.split(',')]
             for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE] + cloc_paths:
-                if not os.path.exists(filename):
-                    continue
-                with open(filename) as f:
-                    attach_obj.create({
-                        'name': filename,
-                        'datas_fname': filename,
-                        'datas': base64.b64encode(f.read()),
-                        'res_model': self._name,
-                        'res_id': self.id,
-                    })
+                cmd = ['docker', 'cp', 'build_%s:/usr/src/odoo/%s' % (self.id, filename), '.']
+                copied = False
+                try:
+                    subprocess.check_call(cmd)
+                    copied = True
+                except subprocess.CalledProcessError, e:
+                    _logger.error(repr(e))
+                if copied:
+                    with open(filename) as f:
+                        attach_obj.create({
+                            'name': filename,
+                            'datas_fname': filename,
+                            'datas': base64.b64encode(f.read()),
+                            'res_model': self._name,
+                            'res_id': self.id,
+                        })
+        shutil.rmtree(self.directory)
 
     def _get_logs(self, filename):
         attachs = self.env['ir.attachment'].search([
@@ -756,7 +742,7 @@ class Build(models.Model):
             shutil.rmtree(self.directory)
 
     @api.one
-    def _remove_container(self, remove_directory=True):
+    def _remove_container(self):
         container = 'build_%s' % self.id
         image = 'build:%s' % self.id
         _logger.info('Killing container %s...' % image)
@@ -769,8 +755,6 @@ class Build(models.Model):
         except subprocess.CalledProcessError:
             pass
         finally:
-            if remove_directory:
-                self._remove_directory()
             vals = {'state': 'done'}
             if not self.result:
                 vals['result'] = 'killed'
@@ -782,11 +766,18 @@ class Build(models.Model):
         return True
 
     @api.multi
+    @api.returns('ir.attachment', lambda value: value.id)
     def export_container(self):
         self.ensure_one()
         container = 'build_%s' % self.id
         archive_content = subprocess.check_output(['docker', 'export', container])
-        return base64.b64encode(archive_content)
+        return self.env['ir.attachment'].create({
+            'name': 'Docker Container',
+            'datas_fname': 'build_%s.tar' % self.id,
+            'datas': base64.b64encode(archive_content),
+            'res_model': self._name,
+            'res_id': self.id,
+        })
 
     @api.multi
     def open(self):

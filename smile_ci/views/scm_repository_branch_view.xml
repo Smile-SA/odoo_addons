@@ -82,7 +82,7 @@
 			        			<field name="addons_path"/>
 			        			<field name="code_path"/>
 			        			<separator colspan="2"/>
-			        			<field name="dump_file"/>
+			        			<field name="dump_id"/>
                 			</group>
                 			<group>
 			        			<field name="py_version"/>

@@ -26,6 +26,7 @@ except ImportError:
     raise ImportError('Please install coverage package')
 
 import os
+import subprocess
 
 try:
     # For Odoo 8.0
@@ -83,6 +84,36 @@ def coverage_stop():
     return False
 
 
+def check_quality_code():
+    if config.get('code_path') and config.get('flake8file'):
+        max_line_length = config.get('flake8_max_line_length') or 79
+        exclude_files = config.get('flake8_exclude_files') or '.svn,CVS,.bzr,.hg,.git,__pycache__'
+        with open(config.get('flake8file'), 'a') as f:
+            for path in config.get('code_path').replace(' ', '').split(','):
+                cmd = ['flake8', '--max-line-length=%s' % max_line_length,
+                       '--exclude=%s' % exclude_files.replace(' ', ''), path]
+                try:
+                    subprocess.check_output(cmd)
+                except subprocess.CalledProcessError, e:
+                    f.write(e.output)
+        return True
+    return False
+
+
+def count_lines_of_code():
+    if config.get('addons_path'):
+        for path in config.get('addons_path').replace(' ', '').split(','):
+            file = '%s.cloc' % path.replace('/', '_')
+            with open(file, 'a') as f:
+                cmd = ['cloc', path]
+                try:
+                    f.write(subprocess.check_output(cmd))
+                except subprocess.CalledProcessError, e:
+                    f.write(e.output)
+        return True
+    return False
+
+
 native_dispatch = common.dispatch
 
 
@@ -91,6 +122,10 @@ def new_dispatch(*args):
         return coverage_start()
     elif args[1] == 'coverage_stop':
         return coverage_stop()
+    elif args[1] == 'check_quality_code':
+        return check_quality_code()
+    elif args[1] == 'count_lines_of_code':
+        return count_lines_of_code()
     return native_dispatch(*args)
 
 common.dispatch = new_dispatch
