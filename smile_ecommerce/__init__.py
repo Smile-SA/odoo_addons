@@ -22,5 +22,6 @@
 
 import backend
 import sale_order
+import res_partner
 import static_mapping
 import connector

@@ -23,7 +23,7 @@
             <field name="zip">75000</field>
             <field name="street">31 Hong Kong street</field>
         </record>
-        
+
         <record id="ecommerce_res_partner_1" model="res.partner">
             <field name="name">Ecommerce Partner 1</field>
             <field eval="[(6, 0, [ref('ecommerce_res_partner_category_1')])]" name="category_id"/>
@@ -34,7 +34,7 @@
             <field name="country_id" ref="base.fr"/>
             <field name="email">test1@ecommercepartner.com</field>
         </record>
-        
+
         <record id="ecommerce_res_partner_la_poste" model="res.partner">
             <field name="name">La Poste</field>
             <field eval="[(6, 0, [ref('ecommerce_res_partner_category_1')])]" name="category_id"/>
@@ -45,7 +45,7 @@
             <field name="country_id" ref="base.fr"/>
             <field name="email">laposte@laposte.net</field>
         </record>
-        
+
         <!-- Product Category -->
 
         <record id="ecommerce_product_category_0" model="product.category">
@@ -54,7 +54,7 @@
             <field name="property_account_expense_categ"></field>
             <field name="property_account_income_categ"></field>
         </record>
-        
+
         <!-- Product Product -->
 
         <record id="ecommerce_product_product_0" model="product.product">

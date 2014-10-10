@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2014 Smile (<http://www.smile.fr>). All Rights Reserved
-#                       author cyril.defaria@smile.fr
+#                       author cydef@smile.fr
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -63,7 +63,6 @@ class ECommerceSaleOrderImport(SaleOrderImport):
     def _get_magento_data(self):
 
         # Here, we should ask for magento data
-
         # Customer_id, shipping_address_id, billing_address_id and product_id are the IDs on Magento
 
         sale_order = {
@@ -71,7 +70,7 @@ class ECommerceSaleOrderImport(SaleOrderImport):
             "shipping_address_id": 2,
             "billing_address_id": 3,
             "created_at": '02/10/2014',
-            "shop_id": 1,
+            "ecommerce_store_id": 1,
             "ecommerce_sale_order_ref": "IdOnMagento",
             "payment_terms": "CB",
             "shipping_method": "ecopli",
@@ -138,7 +137,7 @@ class EcommerceSaleOrderImportMapper(SaleOrderImportMapper):
               (backend_to_m2o('shipping_address_id', binding="magento.res.partner"), 'partner_shipping_id'),
               (backend_to_m2o('billing_address_id', binding="magento.res.partner"), 'partner_invoice_id'),
               (normalize_datetime('created_at'), 'date_order'),
-              (backend_to_m2o('shop_id', binding="magento.store"), 'shop_id'),
+              (backend_to_m2o('ecommerce_store_id', binding="magento.store"), 'shop_id'),
               ('ecommerce_sale_order_ref', 'client_order_ref'),
               ('payment_reference', 'payment_reference'),
              ]
@@ -247,13 +246,10 @@ class ECommerceSaleOrderLineImportMapper(SaleOrderLineImportMapper):
 
 @magento(replacing=SaleOrderAdapter)
 class EcommerceSaleOrderAdapter(SaleOrderAdapter):
-    _model_name = 'magento.sale.order'
-
-    def read(self, id, attributes=None):
-        """ Returns the information of a record """
-        record = self._call('oe_order.order_info_OE', [str(id)])
-        return record
 
     def search(self, filters=None, from_date=None, to_date=None, magento_storeview_ids=None):
-        """ We don't have any magento backend, we simulate this"""
+        """ We don't have any magento backend yet, '1' is the id returned by the API """
+        # TODO : Replace this by the API used to return the fields we need. 
+        # Keep the same name for the new ecommerce API method (search), but change the _magento_model of the adapter
+        # for the moment : sales_order.search
         return [1]
