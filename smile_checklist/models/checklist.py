@@ -108,7 +108,7 @@ class Checklist(models.Model):
     def __init__(self, pool, cr):
         super(Checklist, self).__init__(pool, cr)
         setattr(Registry, 'load', update_checklists(getattr(Registry, 'load')))
- 
+
     @api.model
     def create(self, vals):
         checklist = super(Checklist, self).create(vals)
@@ -125,7 +125,7 @@ class Checklist(models.Model):
         if 'model_id' in vals:
             self._update_models(models)
         return result
- 
+
     @api.multi
     def unlink(self):
         models = dict([(checklist.model_id, False) for checklist in self])
