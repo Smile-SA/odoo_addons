@@ -93,7 +93,7 @@ msgstr "Constructeur d'expression"
 #: view:checklist.task.instance:0
 #: field:checklist.task.instance,field_ids_to_fill:0
 msgid "Fields to fill"
-msgstr "Champs à renseigners"
+msgstr "Champs à renseigner"
 
 #. module: smile_checklist
 #: field:checklist.exception,create_date:0
