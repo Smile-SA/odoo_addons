@@ -128,10 +128,11 @@
             <field name="model">checklist.task.instance</field>
             <field name="arch" type="xml">
                 <form string="Task">
-                    <field name="name"/>
-                    <field name="active"/>
-					<field name="progress_rate" widget="progressbar"/>
-                    <field name="mandatory"/>
+                	<group>
+	                    <field name="name"/>
+						<field name="progress_rate" widget="progressbar"/>
+	                    <field name="mandatory"/>
+	               	</group>
                     <group colspan="4" col="5">
 	                    <separator string="Fields to fill" colspan="2"/>
 	                    <label string=""/>
@@ -145,7 +146,7 @@
 								<field name="expression"/>
 							</form>
 						</field>
-						<button icon="STOCK_GO_FORWARD" string=""/>
+						<button icon="STOCK_GO_FORWARD" string="" readonly="1"/>
 						<field name="field_ids_filled" nolabel="1" colspan="2">
 							<tree string="Fields">
 								<field name="name"/>
