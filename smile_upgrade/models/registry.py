@@ -23,7 +23,9 @@ from contextlib import contextmanager
 import logging
 import os
 
+import openerp
 from openerp import tools
+from openerp.exceptions import Warning
 from openerp.modules.registry import Registry, RegistryManager
 from openerp.osv import osv, orm
 from openerp.tools import config
@@ -76,6 +78,9 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
             if upgrade_manager.db_in_creation:
                 code_at_creation = upgrade_manager.code_version
             upgrades = bool(upgrade_manager.upgrades)
+            if upgrades and openerp.multi_process:
+                raise Warning('Database upgrade incompatible with multi-workers mode. '
+                              'Please start server with argument --workers=0')
             for upgrade in upgrade_manager.upgrades:
                 _logger.info('loading %s upgrade...', upgrade.version)
                 upgrade.pre_load()
@@ -88,14 +93,14 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
         registry = native_new(db_name, force_demo, status, update_module)
         registry.set_db_version(code_at_creation)
         if upgrades and config.get('stop_after_upgrades'):
-            _logger.info('Stopping OpenERP server')
+            _logger.info('Stopping Odoo server')
             os._exit(0)
         return registry
     except Exception, e:
         if upgrades and config.get('stop_after_upgrades'):
             _logger.error(_get_exception_message(e))
             _logger.critical('Upgrade FAILED')
-            _logger.info('Stopping OpenERP server')
+            _logger.info('Stopping Odoo server')
             os._exit(1)
         raise e
 

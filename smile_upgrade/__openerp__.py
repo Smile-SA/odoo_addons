@@ -26,8 +26,6 @@
     "author": "Smile",
     "description": """Smile Upgrade
 
-WARNING: Addon uncompatible with multi-workers mode
-
 Features
 
     * Allow to upgrade automatically database after code update and server restarting
