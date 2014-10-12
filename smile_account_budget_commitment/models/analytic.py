@@ -40,7 +40,7 @@ class AnalyticLine(models.Model):
                 ('date_from', '<=', self.date),
                 ('date_to', '>=', self.date),
             ], limit=1)
-            self.budget_line_id = budget_line and budget_line.id or False
+            self.budget_line_id = budget_line
 
     budget_line_id = fields.Many2one('crossovered.budget.lines', 'Budget Line', compute='_get_budget_line', store=True)
 

@@ -75,7 +75,7 @@ class AuditLogLine(models.Model):
                 self.new_value_text = new_value_text
             return
         field = field[0]
-        self.field_id = field.id
+        self.field_id = field
         self.field_type = field.ttype.capitalize()
         self.field_description = field.field_description
         if field.relation:

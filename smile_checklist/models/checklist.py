@@ -243,18 +243,16 @@ class ChecklistTaskInstance(models.Model):
         localdict = {'object': self.env[self.model_id.model].browse(self.res_id),
                      'time': time}
         self.active = self.task_id.active and eval(self.task_id.condition, localdict)
-        field_ids_to_fill = []
-        field_ids_filled = []
+        field_ids_to_fill = self.env['checklist.task.field'].browse()
+        field_ids_filled = self.env['checklist.task.field'].browse()
         for field in self.task_id.field_ids:
             try:
                 exec "result = bool(%s)" % str(field.expression) in localdict
                 if 'result' not in localdict or not localdict['result']:
-                    field_ids_to_fill.append(field.id)
+                    field_ids_to_fill |= field
                 else:
-                    field_ids_filled.append(field.id)
+                    field_ids_filled |= field
             except:
                 pass
-#         self.field_ids_to_fill = field_ids_to_fill
-#         self.field_ids_filled = field_ids_filled
-        self._cache['field_ids_to_fill'] = field_ids_to_fill
-        self._cache['field_ids_filled'] = field_ids_filled
+        self.field_ids_to_fill = field_ids_to_fill
+        self.field_ids_filled = field_ids_filled
