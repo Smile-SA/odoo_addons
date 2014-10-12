@@ -24,8 +24,6 @@ import time
 
 from openerp import api, models, fields
 
-from ..tools.db_handler import SmileDBLogger
-
 
 class SmileLog(models.Model):
     _name = 'smile.log'
@@ -33,13 +31,6 @@ class SmileLog(models.Model):
     _rec_name = 'message'
     _log_access = False
     _order = 'log_date desc'
-
-    def __init__(self, pool, cr):
-        super(SmileLog, self).__init__(pool, cr)
-        cr.execute("select relname from pg_class where relname='smile_log'")
-        if cr.rowcount:
-            logger = SmileDBLogger(cr.dbname, '', 0, 0)
-            logger.info('OpenERP server start')
 
     @api.one
     @api.depends('log_uid')
