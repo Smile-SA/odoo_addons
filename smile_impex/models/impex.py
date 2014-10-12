@@ -20,6 +20,8 @@
 ##############################################################################
 
 import logging
+import os
+import psutil
 from threading import Thread
 
 from openerp import api, fields, models, SUPERUSER_ID, _
@@ -103,9 +105,13 @@ def state_cleaner(model):
             if self.get(model._name):
                 cr.execute("select relname from pg_class where relname='%s'" % model._table)
                 if cr.rowcount:
-                    impex_ids = self.get(model._name).search(cr, 1, [('state', '=', 'running')])
+                    impex_infos = self.get(model._name).search_read(cr, SUPERUSER_ID, [('state', '=', 'running')], ['pid'])
+                    impex_ids = []
+                    for impex in impex_infos:
+                        if not psutil.pid_exists(impex['pid']):
+                            impex_ids.append(impex['id'])
                     if impex_ids:
-                        self.get(model._name).write(cr, 1, impex_ids, {'state': 'exception'})
+                        self.get(model._name).write(cr, SUPERUSER_ID, impex_ids, {'state': 'exception'})
             return res
         return wrapper
     return decorator
@@ -143,6 +149,7 @@ class IrModelImpex(models.AbstractModel):
     time_human = fields.Char('Time', compute='_convert_time_to_human', store=False)
     test_mode = fields.Boolean('Test Mode', readonly=True)
     state = fields.Selection(STATES, "State", readonly=True, required=True, default='running')
+    pid = fields.Integer("Process Id", readonly=True)
 
     @api.multi
     def write_with_new_cursor(self, vals):
@@ -162,15 +169,19 @@ class IrModelImpex(models.AbstractModel):
             with cursor(dbname) as cr:
                 context = context and context.copy() or {}
                 context['logger'] = SmileDBLogger(cr.dbname, self._name, impex_id, uid)
-                self.write_with_new_cursor(cr, uid, impex_id, {'state': 'running', 'from_date': fields.Datetime.now()}, context)
+                self.write_with_new_cursor(cr, uid, impex_id, {'state': 'running',
+                                                               'from_date': fields.Datetime.now(),
+                                                               'pid': os.getpid()}, context)
                 try:
                     self._execute(cr, uid, impex_id, context)
-                    self.write_with_new_cursor(cr, uid, impex_id, {'state': 'done', 'to_date': fields.Datetime.now()}, context)
+                    self.write_with_new_cursor(cr, uid, impex_id, {'state': 'done',
+                                                                   'to_date': fields.Datetime.now()}, context)
                     if self.browse(cr, uid, impex_id, context).test_mode:
                         cr.rollback()
                 except Exception, e:
                     context['logger'].error(repr(e))
-                    self.write_with_new_cursor(cr, uid, impex_id, {'state': 'exception', 'to_date': fields.Datetime.now()}, context)
+                    self.write_with_new_cursor(cr, uid, impex_id, {'state': 'exception',
+                                                                   'to_date': fields.Datetime.now()}, context)
 
     @api.one
     @with_new_cursor

@@ -27,6 +27,7 @@ import logging
 from lxml import etree
 from threading import Lock, Thread
 import os
+import psutil
 import re
 import shutil
 import subprocess
@@ -190,7 +191,8 @@ def state_cleaner(method):
                 cr.execute("select relname from pg_class where relname='%s'" % build_obj._table)
                 if cr.rowcount:
                     # Search testing builds
-                    build_ids = build_obj.search(cr, SUPERUSER_ID, [('state', '=', 'testing')])
+                    build_infos = build_obj.search_read(cr, SUPERUSER_ID, [('state', '=', 'testing')], ['ppid'])
+                    build_ids = [b['id'] for b in build_infos if not psutil.pid_exists(b['ppid'])]
                     branch_ids = [b['branch_id'] for b in build_obj.read(cr, SUPERUSER_ID, build_ids, ['branch_id'], load='_classic_write')]
                     # Search running builds not running anymore
                     runnning_build_ids = build_obj.search(cr, SUPERUSER_ID, [('state', '=', 'running')])
@@ -303,6 +305,7 @@ class Build(models.Model):
     quality_code_count = fields.Integer('# Quality code', compute='_quality_code_count', store=False)
     failed_test_count = fields.Integer('# Failed tests', compute='_failed_test_count', store=False)
     coverage_avg = fields.Integer('Coverage average', compute='_coverage_avg', store=False)
+    ppid = fields.Integer('Launcher Process Id', readonly=True)
 
     @property
     def _builds_path(self):
@@ -353,7 +356,8 @@ class Build(models.Model):
         max_testing = self.env['ir.config_parameter'].get_param('ci.max_testing')
         builds_to_run = self.search([('branch_id.use_in_ci', '=', True),
                                      ('state', '=', 'pending')], order='id asc')
-        ports = sorted(self._find_ports(), reverse=True)
+        if builds_to_run:
+            ports = sorted(self._find_ports(), reverse=True)
         for build in builds_to_run:
             testing += 1
             if testing > max_testing:
@@ -364,6 +368,7 @@ class Build(models.Model):
                 'result': '',
                 'date_start': fields.Datetime.now(),
                 'port': ports.pop(),
+                'ppid': os.getpid(),
             })
             # Use a new thread in order to launch other build tests without waiting the end of the first one
             args = (self._cr, self._uid, build.id, self._context)
