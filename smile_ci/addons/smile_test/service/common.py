@@ -102,9 +102,10 @@ def check_quality_code():
 
 def count_lines_of_code():
     if config.get('addons_path'):
+        odoo_dir = '/usr/src/odoo/'
         for path in config.get('addons_path').replace(' ', '').split(','):
-            file = '%s.cloc' % path.replace('/', '_')
-            with open(file, 'a') as f:
+            file = '%s.cloc' % path.replace(odoo_dir, '').replace('/', '_')
+            with open(odoo_dir + file, 'a') as f:
                 cmd = ['cloc', path]
                 try:
                     f.write(subprocess.check_output(cmd))
