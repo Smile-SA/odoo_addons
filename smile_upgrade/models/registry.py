@@ -22,6 +22,7 @@
 from contextlib import contextmanager
 import logging
 import os
+import sys
 
 import openerp
 from openerp import tools
@@ -102,7 +103,8 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
             _logger.critical('Upgrade FAILED')
             _logger.info('Stopping Odoo server')
             os._exit(1)
-        raise e
+        e.traceback = sys.exc_info()
+        raise
 
 RegistryManager.upgrade_manager = upgrade_manager
 RegistryManager.new = new
