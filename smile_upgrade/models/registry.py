@@ -22,8 +22,11 @@
 from contextlib import contextmanager
 import logging
 import os
+import sys
 
+import openerp
 from openerp import tools
+from openerp.exceptions import Warning
 from openerp.modules.registry import Registry, RegistryManager
 from openerp.osv import osv, orm
 from openerp.tools import config
@@ -76,6 +79,9 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
             if upgrade_manager.db_in_creation:
                 code_at_creation = upgrade_manager.code_version
             upgrades = bool(upgrade_manager.upgrades)
+            if upgrades and openerp.multi_process:
+                raise Warning('Database upgrade incompatible with multi-workers mode. '
+                                'Please start server with argument --workers=0')
             for upgrade in upgrade_manager.upgrades:
                 _logger.info('loading %s upgrade...', upgrade.version)
                 upgrade.pre_load()
@@ -97,7 +103,8 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
             _logger.critical('Upgrade FAILED')
             _logger.info('Stopping OpenERP server')
             os._exit(1)
-        raise e
+        e.traceback = sys.exc_info()
+        raise
 
 RegistryManager.upgrade_manager = upgrade_manager
 RegistryManager.new = new
