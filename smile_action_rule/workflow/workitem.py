@@ -27,6 +27,9 @@ native_execute = WorkflowItem._execute
 
 def new_execute(self, activity, stack):
 
+    if not registry(self.session.cr.dbname).get('base.action.rule'):
+        return native_execute(self, activity, stack)
+
     cr, uid, ids = self.session.cr, self.session.uid, [self.record.id]
 
     # Retrieve the action rules to possibly execute
