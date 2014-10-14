@@ -48,7 +48,8 @@ class BaseModuleRecord(models.TransientModel):
     filename = fields.Char(size=64, required=True, default='data_module.zip')
     filetype = fields.Selection([
         ('csv', 'CSV'),
-        ('yml', 'YAML')
+        ('xml', 'XML'),
+        ('yml', 'YAML'),
     ], required=True, default='csv')
 
     def _get_models(self):
@@ -116,6 +117,10 @@ class BaseModuleRecord(models.TransientModel):
                 row[index] = data
             writer.writerow(row)
         return s.getvalue()
+
+    @staticmethod
+    def _convert_to_xml(rows):
+        raise NotImplemented
 
     @staticmethod
     def _convert_to_yml(rows):
