@@ -16,7 +16,7 @@
 					<field name="module" />
 					<field name="file" />
 					<field name="line" />
-					<field name="name" />
+					<field name="exception" />
 					<filter name="error" string="Error" domain="[('result', '=', 'error')]" />
 					<filter name="warning" string="Warning" domain="[('result', '=', 'warning')]" />
 					<filter name="success" string="Success" domain="[('result', '=', 'success')]" />
@@ -43,7 +43,8 @@
 					<field name="module" />
 					<field name="file" />
 					<field name="line" />
-					<field name="name" />
+					<field name="duration" />
+					<field name="exception" />
 				</tree>
 			</field>
 		</record>

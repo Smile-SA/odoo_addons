@@ -22,6 +22,7 @@
 import csv
 import inspect
 import os
+import time
 
 try:
     from openerp import tools  # From Odoo v6.1
@@ -31,7 +32,7 @@ except ImportError:
 from tools.func import wraps
 
 CSV_SEPARATOR = ','
-KEYS = ['name', 'module', 'result', 'code', 'file', 'line']
+KEYS = ['module', 'result', 'code', 'file', 'line', 'exception', 'duration']
 
 
 def logger(mapping):
@@ -47,13 +48,16 @@ def logger(mapping):
                 _write_log(vals)
                 return
             try:
+                t0 = time.time()
                 res = method(*args)
             except Exception, e:
+                vals['duration'] = time.time() - t0
                 vals['result'] = 'error'
-                vals['name'] = repr(e)
+                vals['exception'] = repr(e)
                 _write_log(vals)
                 raise
             else:
+                vals['duration'] = time.time() - t0
                 vals['result'] = 'success'
                 _write_log(vals)
             return res

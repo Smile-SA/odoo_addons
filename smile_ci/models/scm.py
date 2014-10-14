@@ -817,7 +817,8 @@ class Log(models.Model):
     file = fields.Char(readonly=True)
     line = fields.Integer(readonly=True, group_operator="count")
     code = fields.Char('Class', readonly=True, required=True)
-    name = fields.Char('Description', readonly=True)
+    exception = fields.Char('Exception', readonly=True)
+    duration = fields.Float('Duration', digits=(7, 3), help='In seconds')
 
 
 class Coverage(models.Model):

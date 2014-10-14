@@ -36,8 +36,10 @@
 					<field name="file" />
 					<field name="line_count" />
 					<field name="line_rate" widget="progressbar" />
+					<field name="line_rate" string="%" />
 					<field name="branch_count" />
 					<field name="branch_rate" widget="progressbar" />
+					<field name="branch_rate" string="%" />
 				</tree>
 			</field>
 		</record>
