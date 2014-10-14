@@ -24,6 +24,7 @@ import logging
 import os
 
 from openerp import api, sql_db, SUPERUSER_ID, tools
+import openerp.modules as addons
 from openerp.report.interface import report_int as ReportService
 from openerp.workflow.service import WorkflowService
 
@@ -166,8 +167,8 @@ class Upgrade(object):
             fp = os.path.join(self.dir_path, f_name)
             module = 'base'
             if not os.path.exists(fp):
-                for addons_path in tools.config.get('addons_path', '').split(','):
-                    fp = os.path.join(addons_path.strip(), f_name)
+                for adp in addons.module.ad_paths:
+                    fp = os.path.join(adp, f_name)
                     if os.path.exists(fp):
                         module = fname.split('/')[0]
                         break
