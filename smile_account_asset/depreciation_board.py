@@ -22,6 +22,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import float_round
 
 from tools import get_date, get_fiscalyear_start_date, get_fiscalyear_stop_date, \

@@ -24,6 +24,7 @@ import time
 from openerp import api, fields, models, SUPERUSER_ID, tools, _
 from openerp.exceptions import Warning
 from openerp.modules.registry import Registry
+from openerp.tools.safe_eval import safe_eval as eval
 
 from checklist_decorators import checklist_view_decorator, checklist_create_decorator, checklist_write_decorator
 

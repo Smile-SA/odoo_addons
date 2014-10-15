@@ -24,6 +24,7 @@ import time
 
 from openerp.osv import orm, fields
 from openerp import tools
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
 from ..depreciation_board import DepreciationBoard

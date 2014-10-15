@@ -22,6 +22,7 @@
 from os import path, walk
 
 from openerp import api, models, fields
+from openerp.tools.safe_eval import safe_eval as eval
 
 
 class Branch(models.Model):

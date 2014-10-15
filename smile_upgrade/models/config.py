@@ -24,6 +24,7 @@ import logging
 import os
 
 from openerp.tools import config
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__package__)
 

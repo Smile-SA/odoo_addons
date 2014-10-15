@@ -26,6 +26,7 @@ import os
 from openerp import api, sql_db, SUPERUSER_ID, tools
 import openerp.modules as addons
 from openerp.report.interface import report_int as ReportService
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.workflow.service import WorkflowService
 
 from config import configuration as upgrade_config

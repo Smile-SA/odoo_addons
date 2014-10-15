@@ -23,6 +23,7 @@ import re
 
 from openerp import api, fields, models, _
 from openerp.exceptions import Warning
+from openerp.tools.safe_eval import safe_eval as eval
 
 
 class AuditLog(models.Model):

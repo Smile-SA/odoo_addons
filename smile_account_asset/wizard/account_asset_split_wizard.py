@@ -23,6 +23,7 @@ import logging
 
 import openerp.addons.decimal_precision as dp
 from openerp.osv import orm, fields
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import float_round
 
 _logger = logging.getLogger(__name__)
