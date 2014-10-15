@@ -67,6 +67,8 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
         "views/scm_repository_branch_build_log_view.xml",
         "views/scm_repository_branch_build_view.xml",
         "views/scm_repository_branch_view.xml",
+        "views/scm_vcs_view.xml",
+        "views/scm_version_view.xml",
     ],
     "auto_install": False,
     "installable": True,

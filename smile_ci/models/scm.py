@@ -39,6 +39,7 @@ from openerp import api, models, fields, SUPERUSER_ID, _
 from openerp.tools import config, file_open
 from openerp.modules.registry import Registry
 import openerp.modules as addons
+from openerp.exceptions import Warning
 
 from openerp.addons.smile_scm.tools import cd
 
@@ -100,7 +101,7 @@ class Branch(models.Model):
 
     @api.model
     def _get_pg_versions(self):
-        return [('8.4', '8.4'), ('9.1', '9.1'), ('9.3', '9.3')]
+        return [('8.4', '8.4'), ('9.1', '9.1'), ('9.2', '9.2'), ('9.3', '9.3')]
 
     @api.model
     def _get_py_versions(self):
@@ -116,7 +117,7 @@ class Branch(models.Model):
     py_version = fields.Selection('_get_py_versions', 'Python Version', required=True, default='2.7')
     dump_id = fields.Many2one('ir.attachment', 'Dump file')
     modules_to_install = fields.Char('Modules to install')
-    ignored_tests = fields.Char('Tests to ignore', help='module.filename, without extension. Comma-separated')
+    ignored_tests = fields.Text('Tests to ignore', help='module.filename, without extension. Comma-separated')
     server_path = fields.Char('Server path', default="server")
     addons_path = fields.Char('Addons path', default="addons", help="Comma-separated")
     code_path = fields.Char('Source code to analyse path', help="Addons path for which checking code quality and coverage.\n"

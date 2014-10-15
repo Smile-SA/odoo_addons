@@ -79,10 +79,11 @@
 			        			<field name="pg_version"/>
 			        			<separator colspan="2"/>
 			        			<field name="modules_to_install"/>
-			        			<field name="ignored_tests"/>
 			        			<field name="server_path"/>
 			        			<field name="addons_path"/>
 			        			<field name="code_path"/>
+			        			<separator colspan="2"/>
+			        			<field name="ignored_tests"/>
 			        			<separator colspan="2"/>
 			        			<field name="dump_id"/>
                 			</group>
