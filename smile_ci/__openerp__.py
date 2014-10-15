@@ -37,14 +37,19 @@ Features
     # Check if changes
     # Create build
     # Test build (set max_testing to limit concurrent testing builds)
-        # Check code quality with flake8
         # Create a Docker container with specific postgresql and python versions
         # Run daemonized Docker container which starts server in test mode
+        # Check code quality with flake8
+        # Count lines of code with cloc
         # Create new database with demo or Restore dump in XML/RPC
         # Install modules in XML/RPC
         # Let Docker container run until new builds kill it (set max_running to limit concurrent running builds)
     # Attach log / config / tests result / code coverage files to build
     # Parse build logs and store results in database
+
+Todo list
+
+    * Manage remote deployment
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@smile.fr
     """,

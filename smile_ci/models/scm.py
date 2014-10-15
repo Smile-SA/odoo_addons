@@ -42,7 +42,7 @@ import openerp.modules as addons
 
 from openerp.addons.smile_scm.tools import cd
 
-from ..tools import cursor, with_new_cursor, s2human
+from ..tools import cursor, with_new_cursor, s2human, mergetree
 
 _logger = logging.getLogger(__package__)
 
@@ -128,6 +128,8 @@ class Branch(models.Model):
     last_build_result = fields.Selection(BUILD_RESULTS + [('unknown', 'Unknown')], 'Last result',
                                          compute='_get_last_build_result', store=False)
     builds_count = fields.Integer('Builds Count', compute='_get_builds_count', store=False)
+    merge_with_branch_id = fields.Many2one('scm.repository.branch', 'Merge with')
+    merge_subfolder = fields.Char('in')
 
     @api.one
     def _update(self):
@@ -167,6 +169,7 @@ class Branch(models.Model):
         if self.use_in_ci:
             self._update()
             if self._changes() or force:
+                self.dependency_ids._update()
                 vals = {'branch_id': self.id, 'revno': self._get_revno()}
                 self.env['scm.repository.branch.build'].create(vals)
 
@@ -218,13 +221,20 @@ class Build(models.Model):
     _inherit = ['mail.thread']
     _rec_name = 'id'
     _order = 'id desc'
-    _track = {}  # Create message and trigger in status
 
     def __init__(self, pool, cr):
         cls = type(self)
         cls._scheduler_lock = Lock()
         super(Build, self).__init__(pool, cr)
         setattr(Registry, 'load', state_cleaner(getattr(Registry, 'load')))
+
+    @api.one
+    @api.depends('host')
+    def _get_domain(self):
+        if self.host == 'localhost':
+            self.domain = self.env['ir.config_parameter'].get_param('web.base.url').split(':')[0]
+        else:
+            self.domain = ''
 
     @api.one
     @api.depends('date_start')
@@ -280,7 +290,7 @@ class Build(models.Model):
 
     id = fields.Integer('Number', readonly=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True, index=True)
-    revno = fields.Char('Last revision number', required=True, readonly=True)
+    revno = fields.Char('Last revision', required=True, readonly=True)
     create_uid = fields.Many2one('res.users', 'User', readonly=True)
     create_date = fields.Datetime('Date', readonly=True)
     state = fields.Selection([
@@ -293,6 +303,7 @@ class Build(models.Model):
     directory = fields.Char(readonly=True)
     host = fields.Char(readonly=True, default='localhost')
     port = fields.Char(readonly=True)
+    domain = fields.Char(compute='_get_domain')
     date_start = fields.Datetime('Start date', readonly=True)
     date_stop = fields.Datetime('End date', readonly=True)
     time = fields.Integer(compute='_get_time')
@@ -320,12 +331,21 @@ class Build(models.Model):
         build._copy_sources()
         return build
 
+    @staticmethod
+    def _get_branches_to_merge(branch):
+        branches = []
+        while branch:
+            branches.append((branch, branch.merge_subfolder or ''))
+            branch = branch.merge_with_branch_id
+        return branches[::-1]
+
     @api.one
     def _copy_sources(self):
         _logger.info('Copying %s %s sources...' % (self.branch_id.name, self.branch_id.branch))
         self.directory = os.path.join(self._builds_path, str(self.id))
         ignore_patterns = shutil.ignore_patterns('.svn', '.git', '.bzr', '.hg', '*.pyc', '*.pyo', '*~', '~*')
-        shutil.copytree(self.branch_id.directory, self.directory, ignore=ignore_patterns)
+        for branch, subfolder in Build._get_branches_to_merge(self.branch_id):
+            mergetree(branch.directory, os.path.join(self.directory, subfolder), ignore_patterns)
         self._add_ci_addons()
 
     @api.one
@@ -407,6 +427,7 @@ class Build(models.Model):
         except Exception, e:
             _logger.error(repr(e))
             self.write({'state': 'done', 'result': 'failed', 'date_stop': fields.Datetime.now()})
+            self.message_post(body=repr(e))
             self.branch_id.message_post(body=_('Failed'))
         else:
             self.write({'state': 'running', 'date_stop': fields.Datetime.now()})
@@ -788,10 +809,12 @@ class Build(models.Model):
     def open(self):
         self.ensure_one()
         build = self[0]
+        if not build.domain:
+            raise Warning(_('Remote deployment is not yet implemented'))
         return {
             'name': _('Open URL'),
             'type': 'ir.actions.act_url',
-            'url': 'http://%s:%s/' % (build.host, build.port),
+            'url': '%s:%s/' % (build.domain, build.port),
             'target': 'new',
         }
 

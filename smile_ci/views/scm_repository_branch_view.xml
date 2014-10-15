@@ -74,6 +74,8 @@
         			<page string="Configuration" attrs="{'invisible': [('use_in_ci', '=', False)]}">
                 		<group col="4">
                 			<group>
+								<field name="merge_with_branch_id" domain="[('id', '!=', active_id)]"/>
+			        			<separator colspan="2"/>
 			        			<field name="pg_version"/>
 			        			<separator colspan="2"/>
 			        			<field name="modules_to_install"/>
@@ -85,6 +87,8 @@
 			        			<field name="dump_id"/>
                 			</group>
                 			<group>
+								<field name="merge_subfolder" placeholder="branch-addons"/>
+			        			<separator colspan="2"/>
 			        			<field name="py_version"/>
 			        			<separator colspan="2"/>
 			        			<field name="user_uid"/>

@@ -19,6 +19,28 @@
 #
 ##############################################################################
 
-from api import *
-from misc import *
-from osutil import *
+import os
+import shutil
+
+
+def mergetree(src, dst, ignore=None):
+    if not os.path.exists(dst):
+        os.mkdir(dst)
+    names = os.listdir(src)
+    if ignore is not None:
+        ignored_names = ignore(src, names)
+    else:
+        ignored_names = set()
+    for name in names:
+        if name in ignored_names:
+            continue
+        srcname = os.path.join(src, name)
+        dstname = os.path.join(dst, name)
+        if os.path.isdir(srcname):
+            if not os.path.exists(dstname):
+                os.mkdir(dstname)
+            mergetree(srcname, dstname, ignore)
+        else:
+            if os.path.exists(dstname):
+                os.remove(dstname)
+            shutil.copy2(srcname, dstname)
