@@ -23,6 +23,7 @@ import inspect
 import os
 
 from openerp import api, fields, models, SUPERUSER_ID, tools
+from openerp.exceptions import Warning
 
 from openerp.addons.smile_log.tools import SmileDBLogger
 

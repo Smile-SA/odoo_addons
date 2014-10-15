@@ -24,6 +24,7 @@ from StringIO import StringIO
 import time
 
 from openerp import api, fields, models, netsvc, sql_db, SUPERUSER_ID, tools
+from openerp.exceptions import Warning
 from openerp.modules.registry import Registry
 from openerp.osv import osv, orm
 from openerp.tools import convert_xml_import

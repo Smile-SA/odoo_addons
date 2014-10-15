@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp import api, fields, models
+from openerp.exceptions import Warning
 from openerp.modules.registry import Registry
 from openerp.tools.safe_eval import safe_eval as eval
 
