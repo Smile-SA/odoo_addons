@@ -374,11 +374,17 @@ class Build(models.Model):
     def _scheduler(self):
         testing = self.search_count([('state', '=', 'testing')])
         max_testing = self.env['ir.config_parameter'].get_param('ci.max_testing')
+        max_testing_by_branch = self.env['ir.config_parameter'].get_param('ci.max_testing_by_branch')
         builds_to_run = self.search([('branch_id.use_in_ci', '=', True),
                                      ('state', '=', 'pending')], order='id asc')
         if builds_to_run:
             ports = sorted(self._find_ports(), reverse=True)
         for build in builds_to_run:
+            # Check max_testing_by_branch
+            builds_by_branch = [b for b in builds_to_run if b.branch_id == build.branch_id]
+            if len(builds_by_branch) >= max_testing_by_branch:
+                continue
+            # Check max_testing
             testing += 1
             if testing > max_testing:
                 break
@@ -441,9 +447,15 @@ class Build(models.Model):
             if not running:
                 self._remove_container()
 
-    @api.model
+    @api.one
     @with_new_cursor
     def _check_running(self):
+        # Check max_running_by_branch
+        running = self.search([('state', '=', 'running'), ('branch_id', '=', self.branch_id.id)], order='date_start desc')
+        max_running = int(self.env['ir.config_parameter'].get_param('ci.max_running_by_branch'))
+        if len(running) > max_running:
+            running[max_running:]._remove_container()
+        # Check max_running
         running = self.search([('state', '=', 'running')], order='date_start desc')
         max_running = int(self.env['ir.config_parameter'].get_param('ci.max_running'))
         if len(running) > max_running:
