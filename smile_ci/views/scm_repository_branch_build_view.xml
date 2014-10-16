@@ -61,7 +61,7 @@
 				<form string="Build">
 					<header>
 						<button name="open" type="object" states="running" string="Open" class="oe_highlight" />
-						<label string="or" groups="smile_scm.group_scm_user"/>
+						<label string="or" states="running" groups="smile_scm.group_scm_user"/>
 						<button name="stop_container" type="object" string="Stop" class="oe_link" attrs="{'invisible': [('state', '=', 'done')]}"
 							groups="smile_scm.group_scm_user"/>
 						<field name="state" widget="statusbar" statusbar_visible="pending,testing" />

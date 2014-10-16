@@ -1,5 +1,5 @@
-.project
 .settings
+.project
 .pydevproject
 *.pyc
 *.pyo

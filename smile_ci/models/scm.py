@@ -170,7 +170,7 @@ class Branch(models.Model):
         if self.use_in_ci:
             self._update()
             if self._changes() or force:
-                self.dependency_ids._update()
+                self.merge_with_branch_id._update()
                 vals = {'branch_id': self.id, 'revno': self._get_revno()}
                 self.env['scm.repository.branch.build'].create(vals)
 
@@ -233,7 +233,7 @@ class Build(models.Model):
     @api.depends('host')
     def _get_domain(self):
         if self.host == 'localhost':
-            self.domain = self.env['ir.config_parameter'].get_param('web.base.url').split(':')[0]
+            self.domain = "".join(self.env['ir.config_parameter'].get_param('web.base.url').split(':')[:2])
         else:
             self.domain = ''
 
