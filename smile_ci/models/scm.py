@@ -538,9 +538,10 @@ class Build(models.Model):
     def _build_container(self):
         _logger.info('Building container build:%s...' % self.id)
         cmd = ['docker']
-        dns = self.env['ir.config_parameter'].get_param('ci.dns').replace(' ', '')
-        for dn in dns.split(','):
-            cmd.extend(['--dns', dn])
+        dns = self.env['ir.config_parameter'].get_param('ci.dns')
+        if dns:
+            for dn in dns.replace(' ', '').split(','):
+                cmd.extend(['--dns', dn])
         cmd.extend(['build', '-t', 'build:%s' % self.id, self.directory])
         subprocess.check_call(cmd)
 
