@@ -78,14 +78,12 @@
 			        			<separator colspan="2"/>
 			        			<field name="pg_version"/>
 			        			<separator colspan="2"/>
-			        			<field name="modules_to_install"/>
-			        			<field name="server_path"/>
-			        			<field name="addons_path"/>
-			        			<field name="code_path"/>
+			        			<field name="modules_to_install" placeholder="mrp,purchase"/>
+			        			<field name="server_path" placeholder="server"/>
+			        			<field name="addons_path" placeholder="addons,project-addons,web/addons"/>
+			        			<field name="code_path" placeholder="project-addons"/>
 			        			<separator colspan="2"/>
-			        			<field name="ignored_tests"/>
-			        			<separator colspan="2"/>
-			        			<field name="dump_id"/>
+			        			<field name="ignored_tests" placeholder="{'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"/>
                 			</group>
                 			<group>
 								<field name="merge_subfolder" placeholder="branch-addons"/>
@@ -96,6 +94,9 @@
 			        			<field name="user_passwd"/>
 			        			<field name="lang"/>
 			        			<field name="workers"/>
+			        			<separator colspan="2"/>
+			        			<field name="dump_id" domain="[('res_model', '=', 'scm.repository.branch'), ('res_id', '=', active_id)]"
+			        				widget="selection"/>
                 			</group>
                 		</group>
         			</page>

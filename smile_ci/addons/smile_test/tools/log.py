@@ -30,9 +30,16 @@ except ImportError:
     import tools
 
 from tools.func import wraps
+from tools.safe_eval import safe_eval as eval
 
 CSV_SEPARATOR = ','
 KEYS = ['module', 'result', 'code', 'file', 'line', 'exception', 'duration']
+
+
+def _get_filename(filepath, module):
+    dirname, basename = os.path.split(filepath)
+    dirname.replace(dirname.split(module)[0], '')
+    return os.path.join(dirname, basename)
 
 
 def logger(mapping):
@@ -40,13 +47,16 @@ def logger(mapping):
         @wraps(method)
         def wrapper(*args):
             vals = _get_vals(method, args, mapping)
-            ignored_tests = []
-            if tools.config.get('ignored_tests', ''):
-                ignored_tests = tools.config.get('ignored_tests', '').replace(' ', '').split(',')
-            if vals.get('file') in ignored_tests:
-                vals['result'] = 'ignored'
-                _write_log(vals)
-                return
+            if vals.get('module'):
+                try:
+                    ignore_tests = eval(tools.config.get('ignored_tests')).get(vals['module']) or []
+                except (NameError, SyntaxError):
+                    ignore_tests = []
+                if ignore_tests == 'all' or \
+                        (vals.get('file') and _get_filename(vals['file'], vals['module']) in ignore_tests):
+                    vals['result'] = 'ignored'
+                    _write_log(vals)
+                    return
             try:
                 t0 = time.time()
                 res = method(*args)
