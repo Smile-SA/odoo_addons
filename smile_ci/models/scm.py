@@ -549,9 +549,10 @@ class Build(models.Model):
     def _run_container(self):
         _logger.info('Running container build:%s and expose it in port %s...' % (self.id, self.port))
         cmd = ['docker']
-        dns = self.env['ir.config_parameter'].get_param('ci.dns').replace(' ', '')
-        for dn in dns.split(','):
-            cmd.extend(['--dns', dn])
+        dns = self.env['ir.config_parameter'].get_param('ci.dns')
+        if dns:
+            for dn in dns.replace(' ', '').split(','):
+                cmd.extend(['--dns', dn])
         cmd.extend(['run', '--name', 'build_%s' % self.id, '-d',
                     '-p', '%s:8069' % self.port, 'build:%s' % self.id])
         subprocess.check_call(cmd)
