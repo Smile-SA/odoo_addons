@@ -17,7 +17,7 @@
 				</button>
                 <button name="pull" position="after">
 	                <button name="create_build" string="Test" type="object" attrs="{'invisible': [('use_in_ci', '=', False)]}"
-	                	icon="STOCK_EXECUTE"/>
+	                	icon="STOCK_EXECUTE" groups="smile_scm.group_scm_user"/>
 				</button>
             </field>
         </record>
@@ -37,7 +37,7 @@
 				</button>
                 <button name="pull" position="after">
 	                <button name="create_build" string="Test" type="object" attrs="{'invisible': [('use_in_ci', '=', False)]}"
-	                	icon="STOCK_EXECUTE"/>
+	                	icon="STOCK_EXECUTE" groups="smile_scm.group_scm_user"/>
 				</button>
             </field>
         </record>
@@ -59,9 +59,12 @@
                 	<attribute name="attrs">{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}</attribute>
                 </button>
                 <button name="pull" position="after">
-	                <button name="create_build" string="Test" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
-	                <label string="or" attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
-	                <button name="force_create_build" string="Force test" type="object" class="oe_link" attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
+	                <button name="create_build" string="Test" type="object" class="oe_highlight" groups="smile_scm.group_scm_user"
+	                	attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
+	                <label string="or" attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"
+	                	groups="smile_scm.group_scm_user"/>
+	                <button name="force_create_build" string="Force test" type="object" class="oe_link" groups="smile_scm.group_scm_user"
+	                	attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
                 </button>
                 <div class="oe_title" position="after">
                 	<div class="oe_right">

@@ -33,6 +33,7 @@
     "category": 'Tools',
     "sequence": 20,
     "data": [
+        "security/scm_security.xml",
         "security/ir.model.access.csv",
         "data/scm.vcs.csv",
         "data/scm.version.csv",

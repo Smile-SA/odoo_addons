@@ -1,11 +1,14 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-scm_vcs_all,Version Control System,smile_scm.model_scm_vcs,,1,0,0,0
-scm_version_all,Odoo Version,smile_scm.model_scm_version,,1,0,0,0
-scm_repository_all,Repository,smile_scm.model_scm_repository,,1,1,1,0
-scm_repository_branch_all,Repository Branch,smile_scm.model_scm_repository_branch,,1,1,1,0
-scm_repository_tag_all,Repository Tag,smile_scm.model_scm_repository_tag,,1,0,0,0
-scm_vcs_system,Version Control System,smile_scm.model_scm_vcs,base.group_system,1,1,1,1
-scm_version_system,Odoo Version,smile_scm.model_scm_version,base.group_system,1,1,1,1
-scm_repository_system,Repository,smile_scm.model_scm_repository,base.group_system,1,1,1,1
-scm_repository_branch_system,Repository Branch,smile_scm.model_scm_repository_branch,base.group_system,1,1,1,1
-scm_repository_tag_system,Repository Tag,smile_scm.model_scm_repository_tag,base.group_system,1,1,1,1
+scm_vcs_reader,Version Control System,smile_scm.model_scm_vcs,group_scm_reader,1,0,0,0
+scm_version_reader,Odoo Version,smile_scm.model_scm_version,group_scm_reader,1,0,0,0
+scm_repository_reader,Repository,smile_scm.model_scm_repository,group_scm_reader,1,0,0,0
+scm_repository_branch_reader,Repository Branch,smile_scm.model_scm_repository_branch,group_scm_reader,1,0,0,0
+scm_repository_tag_reader,Repository Tag,smile_scm.model_scm_repository_tag,group_scm_reader,1,0,0,0
+scm_repository_user,Repository,smile_scm.model_scm_repository,group_scm_user,1,1,1,0
+scm_repository_branch_user,Repository Branch,smile_scm.model_scm_repository_branch,group_scm_user,1,1,1,0
+scm_repository_tag_user,Repository Tag,smile_scm.model_scm_repository_tag,group_scm_user,1,0,1,0
+scm_vcs_manager,Version Control System,smile_scm.model_scm_vcs,group_scm_manager,1,1,1,0
+scm_version_manager,Odoo Version,smile_scm.model_scm_version,group_scm_manager,1,1,1,0
+scm_repository_manager,Repository,smile_scm.model_scm_repository,group_scm_manager,1,1,1,0
+scm_repository_branch_manager,Repository Branch,smile_scm.model_scm_repository_branch,group_scm_manager,1,1,1,0
+scm_repository_tag_manager,Repository Tag,smile_scm.model_scm_repository_tag,group_scm_manager,1,1,1,1

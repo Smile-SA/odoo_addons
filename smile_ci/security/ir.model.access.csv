@@ -1,7 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-scm_repository_branch_build_all,Repository Branch Build,smile_ci.model_scm_repository_branch_build,,1,1,1,0
-scm_repository_branch_build_system,Repository Branch Build,smile_ci.model_scm_repository_branch_build,base.group_system,1,1,1,1
-scm_repository_branch_build_log_all,Repository Branch Build Log,smile_ci.model_scm_repository_branch_build_log,,1,0,1,0
-scm_repository_branch_build_log_system,Repository Branch Build Log,smile_ci.model_scm_repository_branch_build_log,base.group_system,1,0,1,1
-scm_repository_branch_build_coverage_all,Repository Branch Build Coverage,smile_ci.model_scm_repository_branch_build_coverage,,1,0,1,0
-scm_repository_branch_build_coverage_system,Repository Branch Build Coverage,smile_ci.model_scm_repository_branch_build_coverage,base.group_system,1,0,1,1
+scm_repository_branch_build_reader,Repository Branch Build,smile_ci.model_scm_repository_branch_build,smile_scm.group_scm_reader,1,0,0,0
+scm_repository_branch_build_log_reader,Repository Branch Build Log,smile_ci.model_scm_repository_branch_build_log,smile_scm.group_scm_reader,1,0,0,0
+scm_repository_branch_build_coverage_reader,Repository Branch Build Coverage,smile_ci.model_scm_repository_branch_build_coverage,smile_scm.group_scm_reader,1,0,0,0
+scm_repository_branch_build_user,Repository Branch Build,smile_ci.model_scm_repository_branch_build,smile_scm.group_scm_user,1,1,1,0
+scm_repository_branch_build_log_user,Repository Branch Build Log,smile_ci.model_scm_repository_branch_build_log,smile_scm.group_scm_user,1,0,1,0
+scm_repository_branch_build_coverage_user,Repository Branch Build Coverage,smile_ci.model_scm_repository_branch_build_coverage,smile_scm.group_scm_user,1,0,1,0
+scm_repository_branch_build_manager,Repository Branch Build,smile_ci.model_scm_repository_branch_build,smile_scm.group_scm_manager,1,1,1,1
+scm_repository_branch_build_log_manager,Repository Branch Build Log,smile_ci.model_scm_repository_branch_build_log,smile_scm.group_scm_manager,1,0,1,1
+scm_repository_branch_build_coverage_manager,Repository Branch Build Coverage,smile_ci.model_scm_repository_branch_build_coverage,smile_scm.group_scm_manager,1,0,1,1

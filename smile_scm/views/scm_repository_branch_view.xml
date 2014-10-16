@@ -37,8 +37,8 @@
             		<field name="partner_id"/>
             		<field name="state"/>
             		<field name="last_update"/>
-					<button name="clone" states="draft" string="Clone" type="object" icon="STOCK_JUMP_TO"/>
-                    <button name="pull" states="done" string="Pull" type="object" icon="STOCK_REFRESH"/>
+					<button name="clone" states="draft" string="Clone" type="object" icon="STOCK_JUMP_TO" groups="smile_scm.group_scm_user"/>
+                    <button name="pull" states="done" string="Pull" type="object" icon="STOCK_REFRESH" groups="smile_scm.group_scm_user"/>
             	</tree>
             </field>
         </record>
@@ -51,8 +51,8 @@
             		<field name="branch"/>
             		<field name="state"/>
             		<field name="last_update"/>
-					<button name="clone" states="draft" string="Clone" type="object" icon="STOCK_JUMP_TO"/>
-                    <button name="pull" states="done" string="Pull" type="object" icon="STOCK_REFRESH"/>
+					<button name="clone" states="draft" string="Clone" type="object" icon="STOCK_JUMP_TO" groups="smile_scm.group_scm_user"/>
+                    <button name="pull" states="done" string="Pull" type="object" icon="STOCK_REFRESH" groups="smile_scm.group_scm_user"/>
             	</tree>
             </field>
         </record>
@@ -63,8 +63,8 @@
             <field name="arch" type="xml">
             	<form string="Branch">
 					<header>
-						<button name="clone" states="draft" string="Clone" type="object" class="oe_highlight"/>
-	                    <button name="pull" states="done" string="Pull" type="object" class="oe_highlight"/>
+						<button name="clone" states="draft" string="Clone" type="object" class="oe_highlight" groups="smile_scm.group_scm_user"/>
+	                    <button name="pull" states="done" string="Pull" type="object" class="oe_highlight" groups="smile_scm.group_scm_user"/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,done"/>
 					</header>
 	                <sheet string="Branch">
