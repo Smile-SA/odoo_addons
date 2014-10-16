@@ -233,7 +233,7 @@ class Build(models.Model):
     @api.depends('host')
     def _get_domain(self):
         if self.host == 'localhost':
-            self.domain = "".join(self.env['ir.config_parameter'].get_param('web.base.url').split(':')[:2])
+            self.domain = ":".join(self.env['ir.config_parameter'].get_param('web.base.url').split(':')[:2])
         else:
             self.domain = ''
 
