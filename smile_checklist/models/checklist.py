@@ -91,7 +91,9 @@ class Checklist(models.Model):
                 model_obj._setup_fields()
                 model_obj._add_field('total_progress_rate', fields.Float('Progress Rate', digits=(16, 2)))
                 model_obj._add_field('total_progress_rate_mandatory', fields.Float('Mandatory Progress Rate', digits=(16, 2)))
-                self.pool[model.model]._field_create(self._cr, self._context)
+                model_pool = self.pool[model.model]
+                model_pool._field_create(self._cr, self._context)
+                model_pool._auto_init(self._cr, self._context)
             else:
                 for field in ('checklist_task_instance_ids', 'total_progress_rate', 'total_progress_rate_mandatory'):
                     if field in model_obj._columns:
