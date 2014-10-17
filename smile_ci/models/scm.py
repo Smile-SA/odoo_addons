@@ -205,9 +205,9 @@ def state_cleaner(method):
                         build_obj.write(cr, SUPERUSER_ID, build_ids, {'state': 'done', 'result': 'killed'})
                     # Search running builds not running anymore
                     runnning_build_ids = build_obj.search(cr, SUPERUSER_ID, [('state', '=', 'running')])
-                    actual_runnning_build_ids = [int(row.split('build_')[1].replace(' ', ''))
+                    actual_runnning_build_ids = [int(row.split('build:')[1].split(' ')[0])
                                                  for row in subprocess.check_output(["docker", "ps"]).split('\n')[1:]
-                                                 if 'build_' in row]
+                                                 if 'build:' in row]
                     build_ids = list(set(runnning_build_ids) - set(actual_runnning_build_ids))
                     if build_ids:
                         # Kill invalid builds
