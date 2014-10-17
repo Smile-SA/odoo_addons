@@ -236,7 +236,7 @@ class Build(models.Model):
 
     @api.one
     @api.depends('host', 'port')
-    def _get_domain(self):
+    def _get_url(self):
         if self.host == 'localhost':
             base_url = self.env['ir.config_parameter'].get_param('web.base.url')
             netloc = urlparse(base_url).netloc.split(':')[0]  # Remove port
@@ -247,11 +247,11 @@ class Build(models.Model):
                 else:
                     netloc.insert(0, 'build_%s' % self.port)
                 netloc = '.'.join(netloc)
-                self.domain = urljoin(base_url, '//%s' % netloc)
+                self.url = urljoin(base_url, '//%s' % netloc)
             else:
-                self.domain = urljoin(base_url, '//%s:%s' % (netloc, self.port))
+                self.url = urljoin(base_url, '//%s:%s' % (netloc, self.port))
         else:
-            self.domain = ''
+            self.url = ''
 
     @api.one
     @api.depends('date_start')
@@ -320,7 +320,7 @@ class Build(models.Model):
     directory = fields.Char(readonly=True)
     host = fields.Char(readonly=True, default='localhost')
     port = fields.Char(readonly=True)
-    domain = fields.Char(compute='_get_domain')
+    url = fields.Char(compute='_get_url')
     date_start = fields.Datetime('Start date', readonly=True)
     date_stop = fields.Datetime('End date', readonly=True)
     time = fields.Integer(compute='_get_time')
@@ -840,12 +840,12 @@ class Build(models.Model):
     def open(self):
         self.ensure_one()
         build = self[0]
-        if not build.domain:
+        if not build.url:
             raise Warning(_('Remote deployment is not yet implemented'))
         return {
             'name': _('Open URL'),
             'type': 'ir.actions.act_url',
-            'url': '%s:%s/' % (build.domain, build.port),
+            'url': build.url,
             'target': 'new',
         }
 
