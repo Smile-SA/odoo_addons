@@ -7,3 +7,4 @@ flake8_max_line_length,ci.flake8.max_line_length,150
 flake8_exclude_files,ci.flake8.exclude_files,__init__.py
 max_testing_by_branch,ci.max_testing_by_branch,1
 max_running_by_branch,ci.max_running_by_branch,1
+redirect_subdomain_to_port,ci.redirect_subdomain_to_port,1

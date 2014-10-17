@@ -33,6 +33,7 @@ import shutil
 import subprocess
 import tempfile
 import time
+from urlparse import urljoin, urlparse
 import xmlrpclib
 
 from openerp import api, models, fields, SUPERUSER_ID, _
@@ -230,10 +231,21 @@ class Build(models.Model):
         setattr(Registry, 'load', state_cleaner(getattr(Registry, 'load')))
 
     @api.one
-    @api.depends('host')
+    @api.depends('host', 'port')
     def _get_domain(self):
         if self.host == 'localhost':
-            self.domain = ":".join(self.env['ir.config_parameter'].get_param('web.base.url').split(':')[:2])
+            base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+            netloc = urlparse(base_url).netloc.split(':')[0]  # Remove port
+            if bool(self.env['ir.config_parameter'].get_param('ci.redirect_subdomain_to_port')):
+                netloc = netloc.split('.')
+                if netloc[0] == 'www':
+                    netloc[0] = 'build_%s' % self.port
+                else:
+                    netloc.insert(0, 'build_%s' % self.port)
+                netloc = '.'.join(netloc)
+                self.domain = urljoin(base_url, '//%s' % netloc)
+            else:
+                self.domain = urljoin(base_url, '//%s:%s' % (netloc, self.port))
         else:
             self.domain = ''
 
