@@ -146,7 +146,7 @@
 								<field name="expression"/>
 							</form>
 						</field>
-						<button icon="STOCK_GO_FORWARD" string="" readonly="1"/>
+						<button icon="STOCK_GO_FORWARD" name="dummy" string="" readonly="1"/>
 						<field name="field_ids_filled" nolabel="1" colspan="2">
 							<tree string="Fields">
 								<field name="name"/>
