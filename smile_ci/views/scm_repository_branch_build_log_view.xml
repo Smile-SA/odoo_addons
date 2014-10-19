@@ -65,7 +65,7 @@
 			<field name="res_model">scm.repository.branch.build.log</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,graph</field>
-			<field name="view_id" ref="view_repository_branch_build_log_graph" />
+			<field name="view_id" ref="view_repository_branch_build_log_tree" />
 			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
 			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_branch': True, 'search_default_group_build': True, 'search_default_group_type': True}</field>
 		</record>
@@ -77,7 +77,7 @@
 			<field name="res_model">scm.repository.branch.build.log</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,graph</field>
-			<field name="view_id" ref="view_repository_branch_build_log_graph" />
+			<field name="view_id" ref="view_repository_branch_build_log_tree" />
 			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
 			<field name="domain">[('build_id', '=', active_id), ('type', '=', 'quality_code')]</field>
 			<field name="context">{'search_default_warning': True, 'search_default_error': True}</field>
@@ -88,7 +88,7 @@
 			<field name="res_model">scm.repository.branch.build.log</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,graph</field>
-			<field name="view_id" ref="view_repository_branch_build_log_graph" />
+			<field name="view_id" ref="view_repository_branch_build_log_tree" />
 			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
 			<field name="domain">[('build_id', '=', active_id), ('type', '=', 'test')]</field>
 			<field name="context">{'search_default_warning': True, 'search_default_error': True}</field>
