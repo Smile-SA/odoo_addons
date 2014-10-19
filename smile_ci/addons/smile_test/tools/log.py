@@ -29,7 +29,6 @@ try:
 except ImportError:
     import tools
 
-from tools.func import wraps
 
 CSV_SEPARATOR = ','
 KEYS = ['module', 'result', 'code', 'file', 'line', 'exception', 'duration']
@@ -37,15 +36,17 @@ KEYS = ['module', 'result', 'code', 'file', 'line', 'exception', 'duration']
 
 def _get_filename(filepath, module):
     dirname, basename = os.path.split(filepath)
-    dirname.replace(dirname.split(module)[0], '')
+    dirname = dirname.replace(os.path.join(dirname.split(module)[0], module), '')
+    if dirname.startswith(os.path.sep):
+        dirname = dirname[len(os.path.sep):]
     return os.path.join(dirname, basename)
 
 
 def logger(mapping):
     def decorator(method):
-        @wraps(method)
-        def wrapper(*args):
-            vals = _get_vals(method, args, mapping)
+        @tools.func.wraps(method)
+        def wrapper(*args, **kwargs):
+            vals = _get_vals(method, args, kwargs, mapping)
             if tools.config.get('ignored_tests') and vals.get('module'):
                 try:
                     ignored_tests = eval(tools.config.get('ignored_tests')).get(vals['module']) or []
@@ -58,7 +59,7 @@ def logger(mapping):
                     return
             try:
                 t0 = time.time()
-                res = method(*args)
+                res = method(*args, **kwargs)
             except Exception, e:
                 vals['duration'] = time.time() - t0
                 vals['result'] = 'error'
@@ -74,17 +75,18 @@ def logger(mapping):
     return decorator
 
 
-def _get_args(method, arg_values):
+def _get_args(method, arg_values, kwarg_values):
     arg_names = inspect.getargspec(method).args
     args = {}.fromkeys(arg_names, False)
     for index, arg in enumerate(arg_names):
         if index < len(arg_values):
             args[arg] = arg_values[index]
+    args.update(kwarg_values)
     return args
 
 
-def _get_vals(method, arg_values, mapping):
-    args = _get_args(method, arg_values)
+def _get_vals(method, arg_values, kwarg_values, mapping):
+    args = _get_args(method, arg_values, kwarg_values)
     vals = {}
     for k, v in mapping.iteritems():
         vals[k] = eval(v, args)
