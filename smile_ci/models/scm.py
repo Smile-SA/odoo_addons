@@ -175,9 +175,10 @@ class Branch(models.Model):
                 vals = {'branch_id': self.id, 'revno': self._get_revno()}
                 self.env['scm.repository.branch.build'].create(vals)
 
-    @api.one
+    @api.multi
     def force_create_build(self):
-        return self.create_build(force=True)
+        self.create_build(force=True)
+        return True
 
     @api.model
     def create_builds(self):
@@ -446,6 +447,7 @@ class Build(models.Model):
             if self.branch_id.modules_to_install:
                 modules_to_install = self.branch_id.modules_to_install.replace(' ', '').split(',')
                 self._install_modules(modules_to_install)
+            self._run_tests()
             self._stop_coverage()
         except Exception, e:
             _logger.error(repr(e))
@@ -500,8 +502,8 @@ class Build(models.Model):
             'addons_path': format(branch.addons_path + ',ci-addons'),
             'ignored_tests': format(branch.ignored_tests),
             'test_logfile': format(TESTFILE),
-            'test_enable': True,
-            'test_disable': False,
+            'test_enable': False,
+            'test_disable': True,
             'log_level': 'test',
             'log_handler': "[':TEST']",
             'admin_passwd': self.env['ir.config_parameter'].get_param('ci.admin_passwd'),
@@ -666,6 +668,12 @@ class Build(models.Model):
     def _stop_coverage(self):
         _logger.info('Stopping code coverage for build:%s...' % self.id)
         self._connect('common').coverage_stop()
+
+    @api.one
+    def _run_tests(self):
+        _logger.info('Starting tests for build:%s...' % self.id)
+        admin_passwd = self.env['ir.config_parameter'].get_param('ci.admin_passwd')
+        self._connect('common').run_tests(admin_passwd, DBNAME)
 
     @api.one
     def _attach_files(self):

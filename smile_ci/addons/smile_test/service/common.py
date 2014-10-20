@@ -119,13 +119,14 @@ native_dispatch = common.dispatch
 
 
 def new_dispatch(*args):
-    if args[1] == 'coverage_start':
+    method = args[1]
+    if method == 'coverage_start':
         return coverage_start()
-    elif args[1] == 'coverage_stop':
+    elif method == 'coverage_stop':
         return coverage_stop()
-    elif args[1] == 'check_quality_code':
+    elif method == 'check_quality_code':
         return check_quality_code()
-    elif args[1] == 'count_lines_of_code':
+    elif method == 'count_lines_of_code':
         return count_lines_of_code()
     return native_dispatch(*args)
 

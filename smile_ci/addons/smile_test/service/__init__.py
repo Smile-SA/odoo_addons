@@ -20,4 +20,5 @@
 ##############################################################################
 
 import common
-import server
+# import server
+import test
