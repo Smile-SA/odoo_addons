@@ -182,9 +182,12 @@ native_dispatch = common.dispatch
 
 
 def new_dispatch(*args):
-    if args[0] == 'run_tests':
-        security.check_super(args[1])
-        return run_tests(*args[2:])
+    i = 0
+    if release.major_version <= '7.0':
+        i = 1
+    if args[i] == 'run_tests':
+        security.check_super(args[i+1])
+        return run_tests(*args[i+2:])
     return native_dispatch(*args)
 
 common.dispatch = new_dispatch

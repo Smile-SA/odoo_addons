@@ -30,16 +30,19 @@ import subprocess
 
 try:
     # For Odoo 8.0
+    from openerp import release
     from openerp.service import common
     from openerp.tools import config
 except ImportError:
     try:
         # For Odoo 6.1 and 7.0
+        from openerp import release
         from openerp.service.web_services import common
         from openerp.tools import config
     except ImportError:
         try:
             # For Odoo 5.0 and 6.0
+            import release
             from service.web_services import common
             from tools import config
         except ImportError:
@@ -119,7 +122,7 @@ native_dispatch = common.dispatch
 
 
 def new_dispatch(*args):
-    method = args[1]
+    method = release.major_version <= '7.0' and args[1] or args[0]
     if method == 'coverage_start':
         return coverage_start()
     elif method == 'coverage_stop':
