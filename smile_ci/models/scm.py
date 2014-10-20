@@ -714,7 +714,7 @@ class Build(models.Model):
         _logger.info('Parsing Flake8 logs for build:%s...' % self.id)
         data = self._get_logs(FLAKE8FILE).split('\n')
         log_obj = self.env['scm.repository.branch.build.log']
-        pattern = re.compile(r'(?P<file>[^:]+):(?P<line>\d*):(\d*): (?P<code>\w*) (?P<name>[^$]*)')
+        pattern = re.compile(r'(?P<file>[^:]+):(?P<line>\d*):(\d*): (?P<code>\w*) (?P<exception>[^$]*)')
         for line in data:
             m = pattern.match(line)
             if m:
