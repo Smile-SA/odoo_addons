@@ -500,7 +500,7 @@ class Build(models.Model):
             'flake8_max_line_length': self.env['ir.config_parameter'].get_param('ci.flake8.max_line_length'),
             'code_path': format(self.branch_id.code_path),
             'addons_path': format(branch.addons_path + ',ci-addons'),
-            'ignored_tests': format(branch.ignored_tests),
+            'ignored_tests': branch.ignored_tests,
             'test_logfile': format(TESTFILE),
             'test_enable': False,
             'test_disable': True,

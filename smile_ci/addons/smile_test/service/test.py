@@ -168,7 +168,7 @@ def _run_unit_tests(dbname, modules, ignore):
 
 
 def run_tests(dbname):
-    ignore = tools.config.get('ignored_tests') or {}
+    ignore = eval(tools.config.get('ignored_tests') or '{}')
     db = sql_db.db_connect(dbname)
     with closing(db.cursor()) as cr:
         modules = _get_modules_list(cr)
