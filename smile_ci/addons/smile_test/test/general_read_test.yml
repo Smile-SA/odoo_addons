@@ -3,7 +3,7 @@
 -
   !python {model: ir.model}: |
     try:
-      from openerp import models as orm  # Odoo 8.0
+      from openerp import models as orm  # Odoo >= 8.0
     except ImportError:
       try:
         from openerp.osv import orm  # Odoo 6.1 & 7.0
@@ -16,7 +16,7 @@
                      'base.module.upgrade', 'report.stock.move', 'stock.report.prodlots',
                      'edi.edi', 'timesheet.report', 'ir.translation', 'report.document.user',
                      'account.bank.accounts.wizard', 'wizard.multi.charts.accounts',
-                     'account.treasury.report']  # Bug #1175984 in launchpad
+                     'account.treasury.report', 'base.language.install']  # Bug #1175984 in launchpad
     model_ids = self.search(cr, uid, [], context)
     errors = []
     for model in self.browse(cr, uid, model_ids, context):
