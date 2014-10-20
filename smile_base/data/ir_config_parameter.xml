@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+    
+        <record model="ir.config_parameter" id="webkit_path_asset">
+            <field name="key">webkit_path</field>
+            <field name="value">/usr/local/bin/wkhtmltopdf</field>
+        </record>
+    
+    </data>
+</openerp>
