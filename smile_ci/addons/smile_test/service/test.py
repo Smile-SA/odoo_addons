@@ -20,31 +20,36 @@
 ##############################################################################
 
 import csv
+from contextlib import closing
 import os
 import time
 
+try:
+    # For Odoo >= 6.1
+    from openerp import release, sql_db, tools
+    from openerp.modules.module import load_information_from_description_file
+except ImportError:
+    try:
+        # For Odoo 5.0 and 6.0
+        from addons import load_information_from_description_file
+        import release
+        import sql_db
+        import tools
+    except ImportError:
+        raise ImportError("Odoo version not supported")
+
 
 try:
-    # For Odoo 8.0
-    from openerp import registry, release, tools
-    from openerp.modules.module import load_information_from_description_file
-    from openerp.service import common, security
+    # For Odoo >= 8.0
+    from openerp.service import common
 except ImportError:
     try:
         # For Odoo 6.1 and 7.0
-        from openerp import registry, release, tools
-        from openerp.modules.module import load_information_from_description_file
         from openerp.service.web_services import common
-        from openerp.service import security
     except ImportError:
         try:
             # For Odoo 5.0 and 6.0
-            from pooler import get_db as registry
-            from addons import load_information_from_description_file
-            import release
             from service.web_services import common
-            from service import security
-            import tools
         except ImportError:
             raise ImportError("Odoo version not supported")
 
@@ -107,35 +112,11 @@ def _run_test(cr, module, filename):
                 tools.convert_yaml_import(cr, module, fp, idref=None, mode='update', noupdate=False)
         elif ext == '.xml':
             tools.convert_xml_import(cr, module, fp, idref=None, mode='update', noupdate=False)
-        else:
-            pass
-    return True
-
-
-def _run_unit_tests(dbname, modules, ignore):
-    if run_unit_tests:
-        for module in modules:
-            vals = {'module': module}
-            if module in ignore:
-                vals['result'] = 'ignored'
-                _write_log(vals)
-            start = time.time()
-            try:
-                run_unit_tests(module, dbname)
-            except Exception, e:
-                vals['duration'] = time.time() - start
-                vals['result'] = 'error'
-                vals['exception'] = repr(e)
-                _write_log(vals)
-            else:
-                vals['duration'] = time.time() - start
-                vals['result'] = 'success'
-                _write_log(vals)
 
 
 def _run_other_tests(dbname, modules, ignore):
-    cr = registry(dbname).cursor()
-    try:
+    db = sql_db.db_connect(dbname)
+    with closing(db.cursor()) as cr:
         test_files_by_module = _get_test_files_by_module(modules)
         for module in test_files_by_module:
             ignored_files = ignore.get(module, [])
@@ -163,31 +144,46 @@ def _run_other_tests(dbname, modules, ignore):
                     vals['result'] = 'success'
                     _write_log(vals)
             cr.rollback()
-    finally:
-        cr.close()
+
+
+def _run_unit_tests(dbname, modules, ignore):
+    if run_unit_tests:
+        for module in modules:
+            vals = {'module': module}
+            if module in ignore:
+                vals['result'] = 'ignored'
+                _write_log(vals)
+            start = time.time()
+            try:
+                run_unit_tests(module, dbname)
+            except Exception, e:
+                vals['duration'] = time.time() - start
+                vals['result'] = 'error'
+                vals['exception'] = repr(e)
+                _write_log(vals)
+            else:
+                vals['duration'] = time.time() - start
+                vals['result'] = 'success'
+                _write_log(vals)
 
 
 def run_tests(dbname):
-    cr = registry(dbname).cursor()
-    try:
+    ignore = tools.config.get('ignored_tests') or {}
+    db = sql_db.db_connect(dbname)
+    with closing(db.cursor()) as cr:
         modules = _get_modules_list(cr)
-        ignore = tools.config.get('ignored_tests') or {}
         _run_unit_tests(dbname, modules, ignore)
         _run_other_tests(dbname, modules, ignore)
-    finally:
-        cr.close()
-
+    return True
 
 native_dispatch = common.dispatch
 
 
 def new_dispatch(*args):
-    i = 0
-    if release.major_version <= '7.0':
-        i = 1
+    i = release.major_version < '8.0' and 1 or 0
     if args[i] == 'run_tests':
-        security.check_super(args[i+1])
-        return run_tests(*args[i+2:])
+        params = args[i+1]
+        return run_tests(*params)
     return native_dispatch(*args)
 
 common.dispatch = new_dispatch

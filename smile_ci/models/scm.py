@@ -671,9 +671,8 @@ class Build(models.Model):
 
     @api.one
     def _run_tests(self):
-        _logger.info('Starting tests for build:%s...' % self.id)
-        admin_passwd = self.env['ir.config_parameter'].get_param('ci.admin_passwd')
-        self._connect('common').run_tests(admin_passwd, DBNAME)
+        _logger.info('Running tests for build:%s...' % self.id)
+        self._connect('common').run_tests(DBNAME)
 
     @api.one
     def _attach_files(self):

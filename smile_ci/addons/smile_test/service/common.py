@@ -122,7 +122,7 @@ native_dispatch = common.dispatch
 
 
 def new_dispatch(*args):
-    method = release.major_version <= '7.0' and args[1] or args[0]
+    method = release.major_version < '8.0' and args[1] or args[0]
     if method == 'coverage_start':
         return coverage_start()
     elif method == 'coverage_stop':
