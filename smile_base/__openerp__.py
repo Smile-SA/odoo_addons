@@ -37,6 +37,7 @@
     * Deduplicate pool._store_function
     * Add BaseModel.bulk_create, BaseModel.store_set_values and BaseModel._compute_store_set
     * Improve BaseModel.load method performance
+    * Add path to library wkhtmltopdf in table ir_config_parameter (necessary for module report_webkit)
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
@@ -49,6 +50,7 @@
         "security/res_users.yml",
         "data/mail_data.xml",
         "data/ir_lang.yml",
+        "data/ir_config_parameter.xml",
         "view/ir_values_view.xml",
         "view/module_view.xml",
     ],
