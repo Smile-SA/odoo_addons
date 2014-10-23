@@ -76,7 +76,13 @@ def checklist_create_decorator():
     def checklist_wrapper(self, vals):
         record = checklist_wrapper.origin(self, vals)
         if 'checklist_task_instance_ids' in self._fields:
-            record.checklist_task_instance_ids[0].checklist_id.compute_progress_rates([record.id])
+            checklist_obj = self.pool.get('checklist')
+            if checklist_obj and hasattr(checklist_obj, '_get_checklist_by_model'):
+                checklist_id = checklist_obj._get_checklist_by_model(self._cr, self._uid).get(self._name)
+                inst_obj = self.env['checklist.task.instance']
+                for task in self.env['checklist'].browse(checklist_id).task_ids:
+                    inst_obj.create({'task_id': task.id, 'res_id': record.id})
+                record.checklist_task_instance_ids[0].checklist_id.compute_progress_rates([record.id])
         return record
     return checklist_wrapper
 
