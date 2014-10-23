@@ -81,6 +81,8 @@ class Checklist(models.Model):
         if not models:
             models = dict([(checklist.model_id, checklist) for checklist in self.search([])])
         for model, checklist in models.iteritems():
+            if model.model not in self.env.registry.models:
+                continue
             model_obj = self.env[model.model]
             if checklist:
                 cls = model_obj.__class__

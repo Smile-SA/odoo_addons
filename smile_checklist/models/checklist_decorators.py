@@ -56,26 +56,16 @@ def checklist_view_decorator():
                     doc = etree.XML(fields_view['arch'])
                     snode = doc
                     has_sheet = False
-                    if doc.findall('sheet'):
-                        has_sheet = True
-                        snode = doc.find('sheet')
-                    gnode = etree.Element('group', attrib={'colspan': '1', 'col': '4'})
-                    gnode1 = etree.Element('group', attrib={'colspan': '3', 'col': '1'})
+                    gnode1 = etree.Element('div', attrib={'style': "float: left; margin: -16px; width: 80%;"})
                     for index, children in enumerate(snode.getchildren()):
                         gnode1.insert(index, children)
-                    gnode.insert(0, gnode1)
-                    gnode2 = etree.Element('group', attrib={'colspan': '1', 'col': '2'})
+                    snode.insert(0, gnode1)
+                    gnode2 = etree.Element('div', attrib={'style': "float: right; width: 20%; min-width: 70px;"})
                     gnode2.insert(0, etree.XML("""<group col="1"><separator string="Checklist"/>
                         <field name="total_progress_rate" nolabel="1" readonly="1" widget="progressbar"/>
                         <field name="checklist_task_instance_ids" nolabel="1" context="{'active_test': True}"/>
                     </group>"""))
-                    gnode.insert(1, gnode2)
-                    snode.insert(0, gnode)
-                    if has_sheet:
-                        index = 0
-                        if doc.findall('header'):
-                            index = 1
-                        doc.insert(index, snode)
+                    snode.insert(1, gnode2)
                     fields_view['arch'] = etree.tostring(doc)
         return fields_view
     return checklist_wrapper

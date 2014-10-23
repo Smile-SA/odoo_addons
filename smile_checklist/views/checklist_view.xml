@@ -37,7 +37,7 @@
 													<form string="Field">
 														<group colspan="2" col="2">				
 															<field name="name"/>
-															<field name="expression"/>
+															<field name="expression" placeholder="Ex. object.name"/>
 														</group>
 													</form>
 												</field>
