@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Form view -->
+        <!-- Show always parent_id plus add affiliates -->
+        <record id="view_partner_form_with_subsidiaries" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field eval="1" name="priority"/>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="attributes">
+                    <attribute name="attrs"></attribute>
+                </field>
+                <field name="is_company" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <label for="is_company" position="replace"/>
+                <field name="is_company" position="after">
+                    <label for="partner_type" string="Partner type"/>
+                    <field name="partner_type"  class="oe_inline"/>
+                </field>
+                <page string="Contacts" position="after">
+                    <page string="Subsidiaries" attrs="{'invisible': [('is_company','=',False)]}">
+                        <field name="subsidiary_ids" context="{'default_parent_id': active_id, 'default_is_company': True}"/>
+                    </page>
+                </page>
+            </field>
+        </record>
+        
+        <record id="product_category_tree_view" model="ir.ui.view">
+            <field name="name">product.category.tree</field>
+            <field name="model">product.category</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree toolbar="True" string="Product Categories">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="product_category_action" model="ir.actions.act_window">
+            <field name="name">Products by Category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.category</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="product_category_tree_view"/>
+            <field name="help" type="html">
+              <p>
+                Here is a list of all your products classified by category. You
+                can click a category to get the list of all products linked to
+                this category or to a child of this category.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem
+            action="product_category_action"
+            id="product.menu_products_category"
+            parent="base.menu_product"
+            sequence="30"/>
+
+    </data>
+</openerp>
