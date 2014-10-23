@@ -397,9 +397,11 @@ class Build(models.Model):
                                      ('state', '=', 'pending')], order='id asc')
         if builds_to_run:
             ports = sorted(self._find_ports(), reverse=True)
+            builds_in_test = self.search([('branch_id.use_in_ci', '=', True),
+                                          ('state', '=', 'testing')], order='id asc')
         for build in builds_to_run:
             # Check max_testing_by_branch
-            builds_by_branch = [b for b in builds_to_run if b.branch_id == build.branch_id]
+            builds_by_branch = [b for b in builds_to_run + builds_in_test if b.branch_id == build.branch_id]
             if len(builds_by_branch) >= max_testing_by_branch:
                 continue
             # Check max_testing
