@@ -480,6 +480,10 @@ class Build(models.Model):
         if len(running) > max_running:
             running[max_running:]._remove_container()
 
+    @property
+    def admin_passwd(self):
+        return self.env['ir.config_parameter'].get_param('ci.admin_passwd')
+
     def _get_options(self):
         branch = self.branch_id
 
@@ -506,7 +510,7 @@ class Build(models.Model):
             'test_disable': True,
             'log_level': 'test',
             'log_handler': "[':TEST']",
-            'admin_passwd': self.env['ir.config_parameter'].get_param('ci.admin_passwd'),
+            'admin_passwd': self.admin_passwd,
             'lang': branch.lang,
             'db_template': 'template0',
             'workers': branch.workers,
@@ -608,14 +612,13 @@ class Build(models.Model):
     def _create_db(self):
         _logger.info('Creating database for build:%s...' % self.id)
         branch = self.branch_id
-        admin_passwd = self.env['ir.config_parameter'].get_param('ci.admin_passwd')
         sock_db = self._connect('db')
         if sock_db.server_version()[:3] >= '6.1':
-            sock_db.create_database(admin_passwd, DBNAME, True, branch.lang, branch.user_passwd)
+            sock_db.create_database(self.admin_passwd, DBNAME, True, branch.lang, branch.user_passwd)
         else:
-            db_id = sock_db.create(admin_passwd, DBNAME, True, branch.lang, branch.user_passwd)
+            db_id = sock_db.create(self.admin_passwd, DBNAME, True, branch.lang, branch.user_passwd)
             while True:
-                progress = self.sock_db.get_progress(admin_passwd, db_id)[0]
+                progress = self.sock_db.get_progress(self.admin_passwd, db_id)[0]
                 if progress == 1.0:
                     break
                 else:
@@ -624,10 +627,9 @@ class Build(models.Model):
     @api.one
     def _restore_db(self):
         _logger.info('Restoring database for build:%s from file %s...' % (self.id, self.branch_id.dump_id.datas_fname))
-        admin_passwd = self.env['ir.config_parameter'].get_param('ci.admin_passwd')
         sock_db = self._connect('db')
         dump_file = base64.b64decode(self.branch_id.dump_id.datas)
-        sock_db.restore(admin_passwd, DBNAME, dump_file)
+        sock_db.restore(self.admin_passwd, DBNAME, dump_file)
 
     @api.one
     def _install_modules(self, modules_to_install):
@@ -652,27 +654,27 @@ class Build(models.Model):
     @api.one
     def _check_quality_code(self):
         _logger.info('Checking quality code for build:%s...' % self.id)
-        self._connect('common').check_quality_code()
+        self._connect('common').check_quality_code(self.admin_passwd)
 
     @api.one
     def _count_lines_of_code(self):
         _logger.info('Counting lines of code for build:%s...' % self.id)
-        self._connect('common').count_lines_of_code()
+        self._connect('common').count_lines_of_code(self.admin_passwd)
 
     @api.one
     def _start_coverage(self):
         _logger.info('Starting code coverage for build:%s...' % self.id)
-        self._connect('common').coverage_start()
+        self._connect('common').coverage_start(self.admin_passwd)
 
     @api.one
     def _stop_coverage(self):
         _logger.info('Stopping code coverage for build:%s...' % self.id)
-        self._connect('common').coverage_stop()
+        self._connect('common').coverage_stop(self.admin_passwd)
 
     @api.one
     def _run_tests(self):
         _logger.info('Running tests for build:%s...' % self.id)
-        self._connect('common').run_tests(DBNAME)
+        self._connect('common').run_tests(self.admin_passwd, DBNAME)
 
     @api.one
     def _attach_files(self):

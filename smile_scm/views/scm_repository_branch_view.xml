@@ -82,7 +82,7 @@
 				            		<field name="vcs_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 				            		<field name="url" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 				            		<field name="branch"/>
-				            		<field name="partner_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+				            		<field name="partner_id"/>
 	                    		</group>
 		            		</page>
 		            	</notebook>

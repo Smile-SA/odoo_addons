@@ -41,15 +41,17 @@ except ImportError:
 
 try:
     # For Odoo >= 8.0
-    from openerp.service import common
+    from openerp.service import common, security
 except ImportError:
     try:
         # For Odoo 6.1 and 7.0
         from openerp.service.web_services import common
+        from openerp.service import security
     except ImportError:
         try:
             # For Odoo 5.0 and 6.0
             from service.web_services import common
+            from service import security
         except ImportError:
             raise ImportError("Odoo version not supported")
 
@@ -182,7 +184,9 @@ native_dispatch = common.dispatch
 def new_dispatch(*args):
     i = release.major_version < '8.0' and 1 or 0
     if args[i] == 'run_tests':
-        params = args[i+1]
+        admin_passwd = args[i+1]
+        security.check_super(admin_passwd)
+        params = args[i+2]
         return run_tests(*params)
     return native_dispatch(*args)
 
