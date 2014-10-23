@@ -139,8 +139,8 @@ def _build_error_message():
             numbered_line_statement += "%03d>  %s\n" % (index, line)
         yaml_error = "For yaml file, check the line number indicated in the traceback against this statement:\n%s"
         yaml_error = yaml_error % numbered_line_statement
-        error_msg += '\n\n%s' % yaml_error
-    error_msg += """\n\nLocal variables in deepest are: %s """ % repr(deepest_frame.f_locals)
+        error_msg += '\n%s' % yaml_error
+    error_msg += """\nLocal variables in deepest are: %s """ % repr(deepest_frame.f_locals)
     return error_msg
 
 
@@ -168,9 +168,9 @@ def _run_other_tests(dbname, modules, ignore):
                     vals['duration'] = time.time() - start
                     vals['result'] = 'error'
                     vals['code'] = e.__class__.__name__
-                    vals['exception'] = e.value if hasattr(e, 'value') else e.message
+                    vals['exception'] = '\n'.join(e.args)
                     if filename.endswith('.yml'):
-                        vals['exception'] += '\n\n%s' % _build_error_message()
+                        vals['exception'] += '\n%s' % _build_error_message()
                     _write_log(vals)
                 else:
                     vals['duration'] = time.time() - start

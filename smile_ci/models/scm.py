@@ -867,6 +867,10 @@ class Log(models.Model):
     _rec_name = 'file'
     _order = 'id desc'
 
+    @api.one
+    def _get_exception_short(self):
+        self.exception_short = self.exception[:101]
+
     build_id = fields.Many2one('scm.repository.branch.build', 'Build', readonly=True, required=True, ondelete='cascade', index=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', readonly=True, related='build_id.branch_id', store=True)
     type = fields.Selection([
@@ -885,6 +889,7 @@ class Log(models.Model):
     code = fields.Char('Class', readonly=True, required=True)
     exception = fields.Char('Exception', readonly=True)
     duration = fields.Float('Duration', digits=(7, 3), help='In seconds')
+    exception_short = fields.Char('Exception', compute='_get_exception_short')
 
 
 class Coverage(models.Model):

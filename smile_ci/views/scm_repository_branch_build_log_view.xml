@@ -44,8 +44,32 @@
 					<field name="file" />
 					<field name="line" />
 					<field name="duration" />
-					<field name="exception" />
+					<field name="exception_short" />
 				</tree>
+			</field>
+		</record>
+
+		<record id="view_repository_branch_build_log_form" model="ir.ui.view">
+			<field name="name">scm.repository.branch.build.log.form</field>
+			<field name="model">scm.repository.branch.build.log</field>
+			<field name="arch" type="xml">
+				<form string="Log">
+					<sheet>
+						<group col="4">
+							<field name="branch_id" />
+							<field name="build_id" />
+							<field name="type" />
+							<field name="result" />
+							<field name="code" />
+							<field name="module" />
+							<field name="file" />
+							<field name="line" attrs="{'invisible': [('type', '=', 'test')]}"/>
+							<field name="duration" attrs="{'invisible': [('type', '=', 'quality_code')]}"/>
+							<separator string="Exception" colspan="4"/>
+							<field name="exception" nolabel="1" colspan="4"/>
+						</group>
+					</sheet>
+				</form>
 			</field>
 		</record>
 
@@ -64,7 +88,7 @@
 			<field name="name">Logs</field>
 			<field name="res_model">scm.repository.branch.build.log</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,graph</field>
+			<field name="view_mode">tree,form,graph</field>
 			<field name="view_id" ref="view_repository_branch_build_log_tree" />
 			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
 			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_branch': True, 'search_default_group_build': True, 'search_default_group_type': True}</field>
@@ -76,7 +100,7 @@
 			<field name="name">Quality code</field>
 			<field name="res_model">scm.repository.branch.build.log</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,graph</field>
+			<field name="view_mode">tree,form,graph</field>
 			<field name="view_id" ref="view_repository_branch_build_log_tree" />
 			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
 			<field name="domain">[('build_id', '=', active_id), ('type', '=', 'quality_code')]</field>
@@ -87,7 +111,7 @@
 			<field name="name">Failed tests</field>
 			<field name="res_model">scm.repository.branch.build.log</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,graph</field>
+			<field name="view_mode">tree,form,graph</field>
 			<field name="view_id" ref="view_repository_branch_build_log_tree" />
 			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
 			<field name="domain">[('build_id', '=', active_id), ('type', '=', 'test')]</field>
