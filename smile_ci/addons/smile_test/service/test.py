@@ -184,9 +184,10 @@ native_dispatch = common.dispatch
 def new_dispatch(*args):
     i = release.major_version < '8.0' and 1 or 0
     if args[i] == 'run_tests':
-        admin_passwd = args[i+1]
+        params = args[i+1]
+        admin_passwd = params[0]
         security.check_super(admin_passwd)
-        params = args[i+2]
+        params = args[1:]
         return run_tests(*params)
     return native_dispatch(*args)
 

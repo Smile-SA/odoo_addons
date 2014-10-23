@@ -130,7 +130,7 @@ def new_dispatch(*args):
     i = release.major_version < '8.0' and 1 or 0
     method = args[i]
     if method in ('coverage_start', 'coverage_stop', 'check_quality_code', 'count_lines_of_code'):
-        admin_passwd = args[i+1]
+        admin_passwd = args[i+1][0]
         security.check_super(admin_passwd)
         return getattr(NewServices, method)()
     return native_dispatch(*args)
