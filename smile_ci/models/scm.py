@@ -865,6 +865,7 @@ class Log(models.Model):
     _name = 'scm.repository.branch.build.log'
     _description = 'Log'
     _rec_name = 'file'
+    _order = 'id desc'
 
     build_id = fields.Many2one('scm.repository.branch.build', 'Build', readonly=True, required=True, ondelete='cascade', index=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', readonly=True, related='build_id.branch_id', store=True)
@@ -890,6 +891,7 @@ class Coverage(models.Model):
     _name = 'scm.repository.branch.build.coverage'
     _description = 'Code Coverage'
     _rec_name = 'file'
+    _order = 'id desc'
 
     build_id = fields.Many2one('scm.repository.branch.build', 'Build', readonly=True, required=True, ondelete='cascade', index=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', readonly=True, related='build_id.branch_id', store=True)
