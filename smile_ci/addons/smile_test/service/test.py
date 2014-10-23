@@ -187,7 +187,7 @@ def new_dispatch(*args):
         params = args[i+1]
         admin_passwd = params[0]
         security.check_super(admin_passwd)
-        params = args[1:]
+        params = params[1:]
         return run_tests(*params)
     return native_dispatch(*args)
 
