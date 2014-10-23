@@ -876,19 +876,19 @@ class Log(models.Model):
     type = fields.Selection([
         ('quality_code', 'Quality code'),
         ('test', 'Test')
-    ], required=True)
+    ], required=True, readonly=True)
     result = fields.Selection([
         ('error', 'Error'),
         ('warning', 'Warning'),
         ('success', 'Success'),
         ('ignored', 'Ignored')
-    ], required=True)
+    ], required=True, readonly=True)
     module = fields.Char(readonly=True)
     file = fields.Char(readonly=True)
     line = fields.Integer(readonly=True, group_operator="count")
     code = fields.Char('Class', readonly=True, required=True)
     exception = fields.Char('Exception', readonly=True)
-    duration = fields.Float('Duration', digits=(7, 3), help='In seconds')
+    duration = fields.Float('Duration', digits=(7, 3), help='In seconds', readonly=True)
     exception_short = fields.Char('Exception', compute='_get_exception_short')
 
 
