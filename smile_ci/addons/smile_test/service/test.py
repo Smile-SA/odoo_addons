@@ -21,8 +21,10 @@
 
 import csv
 from contextlib import closing
+import inspect
 import os
 import time
+import traceback
 
 try:
     # For Odoo >= 6.1
@@ -116,6 +118,32 @@ def _run_test(cr, module, filename):
             tools.convert_xml_import(cr, module, fp, idref=None, mode='update', noupdate=False)
 
 
+def _build_error_message():
+    # Yaml traceback doesn't work, certainly because of the compile clause
+    # that messes up line numbers
+    error_msg = traceback.format_exc()
+    frame_list = inspect.trace()
+    deepest_frame = frame_list[-1][0]
+    possible_yaml_statement = None
+    for frame_inf in frame_list:
+        frame = frame_inf[0]
+        for local in ('statements', 'code_context', 'model'):
+            if local not in frame.f_locals:
+                break
+        else:
+            # all locals found ! we are in process_python function
+            possible_yaml_statement = frame.f_locals['statements']
+    if possible_yaml_statement:
+        numbered_line_statement = ""
+        for index, line in enumerate(possible_yaml_statement.split('\n'), start=1):
+            numbered_line_statement += "%03d>  %s\n" % (index, line)
+        yaml_error = "For yaml file, check the line number indicated in the traceback against this statement:\n%s"
+        yaml_error = yaml_error % numbered_line_statement
+        error_msg += '\n\n%s' % yaml_error
+    error_msg += """\n\nLocal variables in deepest are: %s """ % repr(deepest_frame.f_locals)
+    return error_msg
+
+
 def _run_other_tests(dbname, modules, ignore):
     db = sql_db.db_connect(dbname)
     with closing(db.cursor()) as cr:
@@ -139,7 +167,10 @@ def _run_other_tests(dbname, modules, ignore):
                 except Exception, e:
                     vals['duration'] = time.time() - start
                     vals['result'] = 'error'
-                    vals['exception'] = repr(e)
+                    vals['code'] = e.__class__.__name__
+                    vals['exception'] = e.value if hasattr(e, 'value') else e.message
+                    if filename.endswith('.yml'):
+                        vals['exception'] += '\n\n%s' % _build_error_message()
                     _write_log(vals)
                 else:
                     vals['duration'] = time.time() - start
