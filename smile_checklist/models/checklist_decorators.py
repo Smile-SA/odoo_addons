@@ -91,7 +91,8 @@ def checklist_write_decorator():
     @api.multi
     def checklist_wrapper(self, vals):
         result = checklist_wrapper.origin(self, vals)
-        if not self._context.get('no_checklist') and 'checklist_task_instance_ids' in self._fields:
+        if not self._context.get('no_checklist') and 'checklist_task_instance_ids' in self._fields \
+                and self.checklist_task_instance_ids:
             self.with_context(no_checklist=True).checklist_task_instance_ids[0].checklist_id.compute_progress_rates(self.ids)
         return result
     return checklist_wrapper
