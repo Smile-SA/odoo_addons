@@ -168,7 +168,7 @@ def _run_other_tests(dbname, modules, ignore):
                     vals['duration'] = time.time() - start
                     vals['result'] = 'error'
                     vals['code'] = e.__class__.__name__
-                    vals['exception'] = '\n'.join(e.args)
+                    vals['exception'] = '\n'.join(map(str, e.args))
                     if filename.endswith('.yml'):
                         vals['exception'] += '\n%s' % _build_error_message()
                     _write_log(vals)
