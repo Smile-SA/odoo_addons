@@ -67,7 +67,8 @@ class Checklist(models.Model):
     @tools.cache(skiparg=3)
     def _get_checklist_by_model(self, cr, uid):
         res = {}
-        for checklist in self.browse(cr, SUPERUSER_ID, self.search(cr, SUPERUSER_ID, [])):
+        ids = self.search(cr, SUPERUSER_ID, [], context={'active_test': True})
+        for checklist in self.browse(cr, SUPERUSER_ID, ids):
             res[checklist.model] = checklist.id
         return res
 
@@ -79,7 +80,7 @@ class Checklist(models.Model):
     @api.model
     def _update_models(self, models=None):
         if not models:
-            models = dict([(checklist.model_id, checklist) for checklist in self.search([])])
+            models = dict([(checklist.model_id, checklist) for checklist in self.with_context(active_test=True).search([])])
         for model, checklist in models.iteritems():
             if model.model not in self.env.registry.models:
                 continue
@@ -122,12 +123,12 @@ class Checklist(models.Model):
 
     @api.multi
     def write(self, vals):
-        if 'model_id' in vals:
+        if 'model_id' in vals or 'active' in vals:
             models = dict([(checklist.model_id, False) for checklist in self])
-            if vals['model_id']:
+            if vals.get('model_id'):
                 models.update({self.env['ir.model'].browse(vals['model_id']): checklist})
         result = super(Checklist, self).write(vals)
-        if 'model_id' in vals:
+        if 'model_id' in vals or 'active' in vals:
             self._update_models(models)
         return result
 

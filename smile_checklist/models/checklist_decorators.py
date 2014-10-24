@@ -82,7 +82,8 @@ def checklist_create_decorator():
                 inst_obj = self.env['checklist.task.instance']
                 for task in self.env['checklist'].browse(checklist_id).task_ids:
                     inst_obj.create({'task_id': task.id, 'res_id': record.id})
-                record.checklist_task_instance_ids[0].checklist_id.compute_progress_rates([record.id])
+                if record.checklist_task_instance_ids:
+                    record.checklist_task_instance_ids[0].checklist_id.compute_progress_rates([record.id])
         return record
     return checklist_wrapper
 
