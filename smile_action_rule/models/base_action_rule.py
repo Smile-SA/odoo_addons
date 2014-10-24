@@ -72,7 +72,7 @@ class ActionRule(models.Model):
         ('native', 'Native'),
         ('none', 'None'),
     ], 'Exception Warning', required=True, default='native')
-    exception_message = fields.Char('Exception Message', size=256, translate=True, required=True)
+    exception_message = fields.Char('Exception Message', size=256, translate=True, required=False)
 
     @api.multi
     def _store_model_methods(self, model_id):
