@@ -91,7 +91,7 @@
 								<field string="Coverage" name="coverage_avg" widget="percentpie" />
 							</button>
 						</div>
-						<group col="4">
+						<group col="2">
 							<group>
 								<field name="result" />
 								<field name="time_human" />
@@ -101,9 +101,9 @@
 								<field name="host" />
 								<field name="port" />
 							</group>
-							<group>
+							<group colspan="2">
 								<field name="revno" />
-								<field name="commit_logs" />
+								<field name="commit_logs"/>
 							</group>
 						</group>
 					</sheet>

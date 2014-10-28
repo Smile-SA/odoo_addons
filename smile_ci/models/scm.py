@@ -336,7 +336,7 @@ class Build(models.Model):
 
     id = fields.Integer('Number', readonly=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True, index=True)
-    revno = fields.Char('Last revision', required=True, readonly=True)
+    revno = fields.Char('Revision', required=True, readonly=True)
     commit_logs = fields.Text('Last commits', readonly=True)
     create_uid = fields.Many2one('res.users', 'User', readonly=True)
     create_date = fields.Datetime('Date', readonly=True)
