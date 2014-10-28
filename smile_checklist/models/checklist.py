@@ -33,7 +33,9 @@ def update_checklists(load):
     def wrapper(self, cr, module):
         res = load(self, cr, module)
         if self.get('checklist'):
-            self.get('checklist')._update_models(cr, SUPERUSER_ID)
+            cr.execute("select relname from pg_class where relname='checklist'")
+            if cr.rowcount:
+                self.get('checklist')._update_models(cr, SUPERUSER_ID)
         return res
     return wrapper
 

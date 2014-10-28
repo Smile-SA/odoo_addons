@@ -40,7 +40,8 @@ def checklist_view_decorator():
                               ORDER BY priority LIMIT 1""", (self._name, view_type))
                 view_id = cr.fetchone()
                 view_id = view_id and view_id[0] or False
-            if not checklist['view_ids'] or view_id in checklist['view_ids'] or not context.get('no_checklist'):
+            if not checklist['view_ids'] or view_id in checklist['view_ids'] \
+                    or ('no_checklist' in context and not context['no_checklist']):
                 arch = fields_view['arch']
                 arch_list = []
                 fields_view['fields']['total_progress_rate'] = {'string': 'Progress Rate', 'type': 'float', 'context': {}}
@@ -92,8 +93,9 @@ def checklist_write_decorator():
     @api.multi
     def checklist_wrapper(self, vals):
         result = checklist_wrapper.origin(self, vals)
-        if not self._context.get('no_checklist') and 'checklist_task_instance_ids' in self._fields \
-                and self.checklist_task_instance_ids:
-            self.with_context(no_checklist=True).checklist_task_instance_ids[0].checklist_id.compute_progress_rates(self.ids)
+        if not self._context.get('no_checklist') and 'checklist_task_instance_ids' in self._fields:
+            for record in self.with_context(no_checklist=True):
+                if record.checklist_task_instance_ids:
+                    record.checklist_task_instance_ids[0].checklist_id.compute_progress_rates([record.id])
         return result
     return checklist_wrapper
