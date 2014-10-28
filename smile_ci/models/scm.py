@@ -118,10 +118,7 @@ class Branch(models.Model):
 
     @api.model
     def _get_default_os(self):
-        try:
-            return self.env.ref('smile_ci.ubuntu_1404', raise_if_not_found=False)
-        except:
-            return self.env['scm.os'].browse()
+        return self.env['scm.os'].search([], limit=1)
 
     @api.one
     def _get_builds_count(self):
