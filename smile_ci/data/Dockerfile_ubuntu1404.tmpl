@@ -23,7 +23,7 @@ RUN /etc/init.d/postgresql start && psql --command "CREATE USER odoo WITH SUPERU
 USER root
 
 # Install packages required to check quality code and pip installation
-RUN apt-get -qq -y install cloc python-coverage python-flake8 python-pip
+RUN apt-get -qq -y install cloc python-coverage python-flake8 python-pip wget
 
 # Install wkhtmltopdf
 RUN cd /tmp
