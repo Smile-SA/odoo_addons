@@ -22,13 +22,18 @@ USER postgres
 RUN /etc/init.d/postgresql start && psql --command "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
 USER root
 
-# Install packages required to check quality code and pip installation
-RUN apt-get -qq -y install cloc python-coverage python-flake8 python-pip
+# Install packages required to:
+# * launch multi-processes in container: supervisor
+# * check quality code: cloc python-coverage python-flake8
+# * install Python package vie PyPi: python-pip
+# * download and install wkhtmltopdf: wget fontconfig libfontconfig1 libfreetype6 libjpeg-turbo8 libx11-6 libxext6 libxrender1
+RUN apt-get -qq -y install supervisor \
+	cloc python-coverage python-flake8 \
+	python-pip \
+	wget fontconfig libfontconfig1 libfreetype6 libjpeg-turbo8 libx11-6 libxext6 libxrender1
 
 # Install wkhtmltopdf
-RUN apt-get -qq -y install wget fontconfig libfontconfig1 libfreetype6 libjpeg-turbo8 libx11-6 libxext6 libxrender1
-RUN cd /tmp
-RUN wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
+RUN cd /tmp && wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
 RUN dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
 # Install Odoo requirements
@@ -46,11 +51,12 @@ RUN pip -q install %(pip_packages)s
 # Download Odoo sources
 RUN mkdir -p /usr/src/odoo
 RUN adduser odoo --disabled-password
-ADD . /usr/src/odoo
+COPY . /usr/src/odoo
+RUN mv supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chown -R odoo:odoo /usr/src/odoo
 
 # Expose port
 EXPOSE 8069
 
 # Set the default command to run when starting the container
-CMD ["/usr/src/odoo/launcher.sh"]
+CMD ["/usr/bin/supervisord"]

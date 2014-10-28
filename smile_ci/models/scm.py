@@ -462,7 +462,7 @@ class Build(models.Model):
         running = False
         try:
             self._create_configfile()
-            self._create_launcherfile()
+            self._create_supervisordfile()
             self._create_dockerfile()
             self._build_container()
             self._remove_directory()
@@ -558,18 +558,17 @@ class Build(models.Model):
                     cfile.write('%s = %s\n' % (k, v))
 
     @api.one
-    def _create_launcherfile(self):
+    def _create_supervisordfile(self):
         _logger.info('Generating launcherfile for build:%s...' % self.id)
-        with file_open('smile_ci/data/launcher.tmpl') as f:
+        with file_open('smile_ci/data/supervisord.tmpl') as f:
             content = f.read()
         server_cmd = os.path.join(self.branch_id.server_path,
                                   self.branch_id.version_id.server_cmd)
         if server_cmd.startswith('./'):
             server_cmd = server_cmd[2:]
         with cd(self.directory):
-            with open('launcher.sh', 'w') as f:
+            with open('supervisord.conf', 'w') as f:
                 f.write(content % {'server_cmd': server_cmd})
-            os.chmod('launcher.sh', 0775)
 
     @api.one
     def _create_dockerfile(self):
