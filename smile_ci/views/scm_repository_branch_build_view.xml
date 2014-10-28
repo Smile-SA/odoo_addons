@@ -101,6 +101,10 @@
 								<field name="host" />
 								<field name="port" />
 							</group>
+							<group>
+								<field name="revno" />
+								<field name="commit_logs" />
+							</group>
 						</group>
 					</sheet>
 					<div class="oe_chatter">

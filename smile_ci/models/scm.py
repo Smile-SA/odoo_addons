@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from ast import literal_eval
 import base64
 import cStringIO
 import csv
@@ -44,7 +45,7 @@ from openerp.exceptions import Warning
 
 from openerp.addons.smile_scm.tools import cd
 
-from ..tools import cursor, with_new_cursor, s2human, mergetree
+from ..tools import cursor, with_new_cursor, s2human, mergetree, check_output_chain
 
 _logger = logging.getLogger(__package__)
 
@@ -67,6 +68,7 @@ class VersionControlSystem(models.Model):
     _inherit = 'scm.vcs'
 
     cmd_revno = fields.Char('Get revision number', required=True)
+    cmd_log = fields.Char('Get commit logs from last update', required=True)
 
 
 class OdooVersion(models.Model):
@@ -76,6 +78,16 @@ class OdooVersion(models.Model):
     required_packages = fields.Text('Required packages', required=True)
     optional_packages = fields.Text('Optional packages')
     web_included = fields.Boolean('Web Included', default=True)
+
+
+class OperatingSystem(models.Model):
+    _name = 'scm.os'
+    _description = 'Operating System'
+    _order = 'name'
+
+    name = fields.Char(required=True)
+    code = fields.Char('Docker image name', required=True)
+    active = fields.Boolean(default=True)
 
 
 class Branch(models.Model):
@@ -105,8 +117,8 @@ class Branch(models.Model):
         return [('8.4', '8.4'), ('9.1', '9.1'), ('9.2', '9.2'), ('9.3', '9.3')]
 
     @api.model
-    def _get_py_versions(self):
-        return [('2.5', '2.5'), ('2.6', '2.6'), ('2.7', '2.7')]
+    def _get_default_os(self):
+        return self.env.ref('smile_ci.ubuntu_1404', raise_if_not_found=False)
 
     @api.one
     def _get_builds_count(self):
@@ -115,7 +127,7 @@ class Branch(models.Model):
     build_ids = fields.One2many('scm.repository.branch.build', 'branch_id', 'Builds', readonly=True)
     use_in_ci = fields.Boolean('Use in Continuous Integration')
     pg_version = fields.Selection('_get_pg_versions', 'PostgreSQL Version', required=True, default='9.3')
-    py_version = fields.Selection('_get_py_versions', 'Python Version', required=True, default='2.7')
+    os_id = fields.Many2one('scm.os', 'Operating System', required=True, default=_get_default_os)
     dump_id = fields.Many2one('ir.attachment', 'Dump file')
     modules_to_install = fields.Char('Modules to install')
     ignored_tests = fields.Text('Tests to ignore', help='module.filename, without extension. Comma-separated')
@@ -132,6 +144,8 @@ class Branch(models.Model):
     builds_count = fields.Integer('Builds Count', compute='_get_builds_count', store=False)
     merge_with_branch_id = fields.Many2one('scm.repository.branch', 'Merge with')
     merge_subfolder = fields.Char('in')
+    specific_packages = fields.Text('Specific packages')
+    pip_packages = fields.Text('PIP requirements')
 
     @api.one
     def _update(self):
@@ -149,8 +163,22 @@ class Branch(models.Model):
             cmd_revno = vcs.cmd_revno % {'branch': branch.branch}
             cmd = cmd_revno.split(' ')
             cmd.insert(0, vcs.cmd)
-            revno = subprocess.check_output(cmd)
+            revno = literal_eval(check_output_chain(cmd))
         return revno
+
+    @api.multi
+    def _get_last_commits(self):
+        self.ensure_one()
+        branch = self[0]
+        last_commits = ''
+        with cd(branch.directory):
+            vcs = branch.vcs_id
+            last_revno = branch.build_ids and branch.build_ids[0].revno.encode('utf8') or branch._get_revno()
+            cmd_log = vcs.cmd_log % {'last_revno': last_revno}
+            cmd = cmd_log.split(' ')
+            cmd.insert(0, vcs.cmd)
+            last_commits = check_output_chain(cmd)
+        return last_commits
 
     @api.multi
     def _changes(self):
@@ -172,7 +200,7 @@ class Branch(models.Model):
             self._update()
             if self._changes() or force:
                 self.merge_with_branch_id._update()
-                vals = {'branch_id': self.id, 'revno': self._get_revno()}
+                vals = {'branch_id': self.id, 'revno': self._get_revno(), 'commit_logs': self._get_last_commits()}
                 self.env['scm.repository.branch.build'].create(vals)
 
     @api.multi
@@ -309,6 +337,7 @@ class Build(models.Model):
     id = fields.Integer('Number', readonly=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True, index=True)
     revno = fields.Char('Last revision', required=True, readonly=True)
+    commit_logs = fields.Text('Last commits', readonly=True)
     create_uid = fields.Many2one('res.users', 'User', readonly=True)
     create_date = fields.Datetime('Date', readonly=True)
     state = fields.Selection([
@@ -545,13 +574,15 @@ class Build(models.Model):
     @api.one
     def _create_dockerfile(self):
         _logger.info('Generating dockerfile for build:%s...' % self.id)
-        with file_open('smile_ci/data/Dockerfile.tmpl') as f:
+        template = 'smile_ci/data/Dockerfile_%s.tmpl' % self.branch_id.os_id.code.replace(':', '').replace('.', '')
+        with file_open(template) as f:
             content = f.read()
         localdict = {
             'pg_version': self.branch_id.pg_version,
-            'py_version': self.branch_id.py_version,
             'required_packages': self.branch_id.version_id.required_packages or '',
             'optional_packages': self.branch_id.version_id.optional_packages or '',
+            'specific_packages': self.branch_id.specific_packages or '',
+            'pip_packages': self.branch_id.pip_packages or '',
             'configfile': CONFIGFILE,
         }
         with cd(self.directory):

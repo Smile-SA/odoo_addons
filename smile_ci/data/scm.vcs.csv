@@ -1,5 +1,5 @@
-id,cmd_revno
-smile_scm.svn,info
-smile_scm.bzr,revno
-smile_scm.git,rev-list --branches=%(branch)s --max-count=1 HEAD
-smile_scm.hg,
+id,cmd_revno,cmd_log
+smile_scm.svn,info | grep Revision | cut -c11-,log -r BASE:HEAD
+smile_scm.bzr,revno,log -r %(last_revno)s..
+smile_scm.git,rev-list --branches=%(branch)s --max-count=1 HEAD,log origin..HEAD
+smile_scm.hg,identify --num,log --follow

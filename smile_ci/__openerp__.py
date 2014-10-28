@@ -60,6 +60,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
     "data": [
         "security/ir.model.access.csv",
         "data/ir.config_parameter.csv",
+        "data/scm.os.csv",
         "data/scm.vcs.csv",
         "data/scm.version.csv",
         "data/ir_cron.xml",

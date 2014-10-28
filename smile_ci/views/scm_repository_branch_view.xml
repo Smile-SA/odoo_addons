@@ -91,7 +91,7 @@
                 			<group>
 								<field name="merge_subfolder" placeholder="branch-addons"/>
 			        			<separator colspan="2"/>
-			        			<field name="py_version"/>
+			        			<field name="os_id"/>
 			        			<separator colspan="2"/>
 			        			<field name="user_uid"/>
 			        			<field name="user_passwd"/>
@@ -100,6 +100,9 @@
 			        			<separator colspan="2"/>
 			        			<field name="dump_id" domain="[('res_model', '=', 'scm.repository.branch'), ('res_id', '=', active_id)]"
 			        				widget="selection"/>
+			        			<separator colspan="2"/>
+			        			<field name="specific_packages"/>
+			        			<field name="pip_packages"/>
                 			</group>
                 		</group>
         			</page>
