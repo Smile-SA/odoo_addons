@@ -25,16 +25,16 @@ USER root
 # Install packages required to check quality code and pip installation
 RUN apt-get -qq -y install cloc python-coverage python-flake8 python-pip
 
+# Install wkhtmltopdf
+RUN cd /tmp
+RUN wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
+RUN dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
+
 # Install Odoo requirements
 RUN apt-get -qq -y install %(required_packages)s
 
 # Install Odoo recommandations
 RUN apt-get -qq -y install %(optional_packages)s
-
-# Install wkhtmltopdf
-RUN cd /tmp
-RUN wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
-RUN dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
 # Install specific packages
 RUN apt-get -qq -y install %(specific_packages)s
@@ -47,9 +47,6 @@ RUN mkdir -p /usr/src/odoo
 RUN adduser odoo --disabled-password
 ADD . /usr/src/odoo
 RUN chown -R odoo:odoo /usr/src/odoo
-
-# Install cloc
-# RUN apt-get -qq -y install cloc
 
 # Expose port
 EXPOSE 8069
