@@ -23,9 +23,10 @@ RUN /etc/init.d/postgresql start && psql --command "CREATE USER odoo WITH SUPERU
 USER root
 
 # Install packages required to check quality code and pip installation
-RUN apt-get -qq -y install cloc python-coverage python-flake8 python-pip wget
+RUN apt-get -qq -y install cloc python-coverage python-flake8 python-pip
 
 # Install wkhtmltopdf
+RUN apt-get -qq -y install wget fontconfig libfontconfig1 libfreetype6 libjpeg-turbo8 libx11-6 libxext6 libxrender1
 RUN cd /tmp
 RUN wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
 RUN dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
