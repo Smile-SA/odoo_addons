@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_wizard_upload">
+			<field name="name">Upload CSV file</field>
+			<field name="model">wizard.upload</field>
+			<field name="arch" type="xml">
+				<form>
+				    <group><field name="csv_file"/> </group>
+					<label string="Upload here your CSV file" />
+					<footer>
+						<button name="fillFromCsv" string="fill with csv" type="object" class="oe_highlight"/>
+						<!-- <button name="Cancel" special="cancel" class="oe_link"/> -->
+					</footer>
+				</form>
+			</field>
+		</record>
+ 
+		<record model="ir.actions.act_window" id="action_wizard_upload">
+			<field name="name">Upload CSV file</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">wizard.upload</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_wizard_upload"/>
+			<field name="context">{'record_id' : active_id}</field>
+			<field name="target">new</field>
+		</record> 
+		
+<!-- 		<act_window name="Upload CSV file"
+		    		res_model="wizard.upload"
+		    		src_model="smile.csv2xml.converter"
+		    		id="action_wizard_upload"
+		    		view_mode="form"
+		    		target="new" /> -->
+		
+	</data>
+</openerp>

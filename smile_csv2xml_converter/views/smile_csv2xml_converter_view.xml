@@ -1,0 +1,105 @@
+<?xml version ="1.0" encoding='utf-8'?>
+<openerp>
+	<data>
+
+		<!-- Search view -->
+		<record model="ir.ui.view" id="view_smile_csv2xml_converter_search>">
+			<field name="name">smile_csv2xml_converter.search</field>
+			<field name="model">smile.csv2xml.converter</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="smile_csv2xml_converter">
+					<field name="name" />
+					<group string="">
+						<filter context="{'group_by':'object'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- Tree view -->
+		<record model="ir.ui.view" id="view_smile_csv2xml_converter_tree">
+			<field name="name">smile_csv2xml_converter.tree</field>
+			<field name="model">smile.csv2xml.converter</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="smile_csv2xml_converter">
+					<field name="name" />
+					<field name="object_id" />
+					<field name="domain" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Form view -->
+		<record model='ir.ui.view' id='view_smile_csv2xml_converter_form'>
+			<field name='name'>smile_csv2xml_converter.form</field>
+			<field name='model'>smile.csv2xml.converter</field>
+			<field name="arch" type="xml">
+				<form string="smile_csv2xml_converter" version="7.0">
+					<header>
+						<field name="xml_file" />
+					</header>
+					<group colspan="4" col="4">
+						<group>
+							<field name="name" />
+							<field name="object_id" />
+						</group>
+						<group>
+							<field name="domain" />
+						</group>
+					</group>
+
+
+					<notebook position="inside">
+
+						<page string="Fields">
+							<group>
+								<group>
+									<button type="object" string="Generate fields from object"
+										name="fillFromObj" />
+									<button type="action" string="Generate fields from CSV"
+										name="%(action_wizard_upload)d" />
+								</group>
+								<field name="field_ids" />
+							</group>
+						</page>
+
+						<page string="Model generation">
+							<group>
+								<button type="object" string="Generate model from fields"
+									name="fieldGeneration" />
+							</group>
+							<group string="Modele XML">
+								<field name="model_xml" nolabel="1" />
+							</group>
+						</page>
+
+						<page string="Model filled">
+							<group>
+								<button type="object" string="Generate XML" name="createXML" />
+							</group>
+							<group string="Modele XML">
+								<field name="model_xml2" nolabel="1" />
+							</group>
+						</page>
+
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record model="ir.actions.act_window" id="action_smile_csv2xml_converter">
+			<field name="name">Csv2XML</field>
+			<field name="res_model">smile.csv2xml.converter</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_smile_csv2xml_converter_tree" />
+		</record>
+
+		<!-- Menu -->
+		<menuitem id='menu_smile_csv2xml_converter' name="Csv2xml"
+			parent="base.next_id_9" action="action_smile_csv2xml_converter" />
+	</data>
+</openerp>

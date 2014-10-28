@@ -1,0 +1,80 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_csv2xml_converter
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-10-03 15:27+0000\n"
+"PO-Revision-Date: 2014-10-03 15:27+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_csv2xml_converter
+#: model:ir.ui.menu,name:smile_csv2xml_converter.menu_smile_csv2xml_converter
+msgid "Converter"
+msgstr ""
+
+#. module: smile_csv2xml_converter
+#: field:smile_csv2xml_converter,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: smile_csv2xml_converter
+#: field:smile_csv2xml_converter,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: smile_csv2xml_converter
+#: model:ir.actions.act_window,name:smile_csv2xml_converter.action_smile_csv2xml_converter
+msgid "Csv2XML"
+msgstr ""
+
+#. module: smile_csv2xml_converter
+#: field:smile_csv2xml_converter,domain:0
+msgid "Domain"
+msgstr ""
+
+#. module: smile_csv2xml_converter
+#: field:smile_csv2xml_converter,id:0
+msgid "ID"
+msgstr ""
+
+#. module: smile_csv2xml_converter
+#: field:smile_csv2xml_converter,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: smile_csv2xml_converter
+#: field:smile_csv2xml_converter,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: smile_csv2xml_converter
+#: view:smile_csv2xml_converter:smile_csv2xml_converter.view_smile_csv2xml_converter_form
+#: field:smile_csv2xml_converter,model_xml:0
+msgid "Modele XML"
+msgstr ""
+
+#. module: smile_csv2xml_converter
+#: field:smile_csv2xml_converter,name:0
+msgid "Name"
+msgstr ""
+
+#. module: smile_csv2xml_converter
+#: field:smile_csv2xml_converter,object:0
+msgid "Object"
+msgstr ""
+
+#. module: smile_csv2xml_converter
+#: view:smile_csv2xml_converter:smile_csv2xml_converter.view_smile_csv2xml_converter_form
+#: view:smile_csv2xml_converter:smile_csv2xml_converter.view_smile_csv2xml_converter_search>
+#: view:smile_csv2xml_converter:smile_csv2xml_converter.view_smile_csv2xml_converter_tree
+msgid "smile_csv2xml_converter"
+msgstr ""
+
