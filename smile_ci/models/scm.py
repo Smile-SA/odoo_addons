@@ -116,6 +116,13 @@ class Branch(models.Model):
     def _get_pg_versions(self):
         return [('8.4', '8.4'), ('9.1', '9.1'), ('9.2', '9.2'), ('9.3', '9.3')]
 
+    @api.model
+    def _get_default_os(self):
+        try:
+            return self.env.ref('smile_ci.ubuntu_1404', raise_if_not_found=False)
+        except:
+            return self.env['scm.os'].browse()
+
     @api.one
     def _get_builds_count(self):
         self.builds_count = len(self.build_ids)
@@ -123,8 +130,7 @@ class Branch(models.Model):
     build_ids = fields.One2many('scm.repository.branch.build', 'branch_id', 'Builds', readonly=True)
     use_in_ci = fields.Boolean('Use in Continuous Integration')
     pg_version = fields.Selection('_get_pg_versions', 'PostgreSQL Version', required=True, default='9.3')
-    os_id = fields.Many2one('scm.os', 'Operating System', required=True,
-                            default=lambda self: self.env.ref('smile_ci.ubuntu_1404', raise_if_not_found=False))
+    os_id = fields.Many2one('scm.os', 'Operating System', required=True, default=_get_default_os)
     dump_id = fields.Many2one('ir.attachment', 'Dump file')
     modules_to_install = fields.Char('Modules to install')
     ignored_tests = fields.Text('Tests to ignore', help='module.filename, without extension. Comma-separated')
