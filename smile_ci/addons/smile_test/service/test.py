@@ -25,6 +25,7 @@ import inspect
 import os
 import time
 import traceback
+import unittest2
 import xmlrpclib
 
 try:
@@ -66,6 +67,8 @@ try:
     from openerp.modules.module import run_unit_tests
 except ImportError:
     run_unit_tests = None
+
+from ..tools import get_test_modules, unwrap_suite
 
 
 KEYS = ['module', 'result', 'code', 'file', 'line', 'exception', 'duration']
@@ -195,21 +198,28 @@ def _run_unit_tests(dbname, modules, ignore):
     if run_unit_tests:
         for module in modules:
             vals = {'module': module}
-            if module in ignore:
-                vals['result'] = 'ignored'
-                _write_log(vals)
-            start = time.time()
-            try:
-                run_unit_tests(module, dbname)
-            except Exception, e:
-                vals['duration'] = time.time() - start
-                vals['result'] = 'error'
-                vals['exception'] = _get_exception_message(e)
-                _write_log(vals)
-            else:
-                vals['duration'] = time.time() - start
-                vals['result'] = 'success'
-                _write_log(vals)
+            for m in get_test_modules(module):
+                filename = os.path.join('tests', '%s.py' % m.__name__.split('.')[-1])
+                vals['file'] = filename
+                if filename in ignore.get(module, []) or ignore.get(module) == 'all':
+                    vals['result'] = 'ignored'
+                    _write_log(vals)
+                    continue
+                start = time.time()
+                try:
+                    tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
+                    suite = unittest2.TestSuite(tests)
+                    if suite.countTestCases():
+                        unittest2.TextTestRunner(verbosity=2).run(suite)
+                except Exception, e:
+                    vals['duration'] = time.time() - start
+                    vals['result'] = 'error'
+                    vals['exception'] = _get_exception_message(e)
+                    _write_log(vals)
+                else:
+                    vals['duration'] = time.time() - start
+                    vals['result'] = 'success'
+                    _write_log(vals)
 
 
 def run_tests(dbname):
