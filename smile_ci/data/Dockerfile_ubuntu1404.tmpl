@@ -23,14 +23,12 @@ RUN /etc/init.d/postgresql start && psql --command "CREATE USER odoo WITH SUPERU
 USER root
 
 # Install packages required to:
-# * launch multi-processes in container: supervisor
-# * check quality code: cloc python-coverage python-flake8
 # * install Python package vi PyPi: python-pip
+# * check quality code: cloc python-coverage python-flake8
 # * install unit tests package: python-unittest2
 # * download and install wkhtmltopdf: wget fontconfig libfontconfig1 libfreetype6 libjpeg-turbo8 libx11-6 libxext6 libxrender1
-RUN apt-get -qq -y install supervisor \
+RUN apt-get -qq -y install python-pip \
 	cloc python-coverage python-flake8 \
-	python-pip \
 	python-unittest2 \
 	wget fontconfig libfontconfig1 libfreetype6 libjpeg-turbo8 libx11-6 libxext6 libxrender1
 
@@ -55,11 +53,10 @@ RUN pip -q install %(pip_packages)s
 RUN mkdir -p /usr/src/odoo
 RUN adduser odoo --disabled-password
 COPY . /usr/src/odoo
-RUN mv /usr/src/odoo/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chown -R odoo:odoo /usr/src/odoo
 
 # Expose port
 EXPOSE 8069
 
 # Set the default command to run when starting the container
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/src/odoo/launcher.sh"]

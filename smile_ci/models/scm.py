@@ -463,7 +463,7 @@ class Build(models.Model):
         running = False
         try:
             self._create_configfile()
-            self._create_supervisordfile()
+            self._create_launcherfile()
             self._create_dockerfile()
             self._build_container()
             self._remove_directory()
@@ -560,9 +560,9 @@ class Build(models.Model):
                     cfile.write('%s = %s\n' % (k, v))
 
     @api.one
-    def _create_supervisordfile(self):
-        _logger.info('Generating supervisord.conf for build:%s...' % self.id)
-        template = 'smile_ci/data/supervisord_%s.tmpl' % self.branch_id.os_id.code.replace(':', '').replace('.', '')
+    def _create_launcherfile(self):
+        _logger.info('Generating launcher.sh for build:%s...' % self.id)
+        template = 'smile_ci/data/launcher_%s.tmpl' % self.branch_id.os_id.code.replace(':', '').replace('.', '')
         with file_open(template) as f:
             content = f.read()
         server_cmd = os.path.join(self.branch_id.server_path,
@@ -570,8 +570,9 @@ class Build(models.Model):
         if server_cmd.startswith('./'):
             server_cmd = server_cmd[2:]
         with cd(self.directory):
-            with open('supervisord.conf', 'w') as f:
-                f.write(content % {'server_cmd': server_cmd, 'pg_version': self.branch_id.pg_version})
+            with open('launcher.sh', 'w') as f:
+                f.write(content % {'server_cmd': server_cmd})
+            os.chmod('launcher.sh', 0775)
 
     @api.one
     def _create_dockerfile(self):
