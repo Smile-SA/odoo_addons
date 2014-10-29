@@ -25,6 +25,7 @@ import inspect
 import os
 import time
 import traceback
+import xmlrpclib
 
 try:
     # For Odoo >= 6.1
@@ -44,16 +45,19 @@ except ImportError:
 try:
     # For Odoo >= 8.0
     from openerp.service import common, security
+    from openerp.exceptions import except_orm
 except ImportError:
     try:
         # For Odoo 6.1 and 7.0
         from openerp.service.web_services import common
         from openerp.service import security
+        from openerp.osv.orm import except_orm
     except ImportError:
         try:
             # For Odoo 5.0 and 6.0
             from service.web_services import common
             from service import security
+            from osv.osv import except_osv as except_orm
         except ImportError:
             raise ImportError("Odoo version not supported")
 
@@ -67,6 +71,14 @@ except ImportError:
 KEYS = ['module', 'result', 'code', 'file', 'line', 'exception', 'duration']
 
 
+def _get_exception_message(e):
+    if isinstance(e, except_orm):
+        return tools.ustr(e.value)
+    if isinstance(e, xmlrpclib.Fault):
+        return tools.ustr(e.faultString)
+    return tools.ustr(e.message)
+
+
 def _write_log(vals):
     filename = tools.config.get('test_logfile')
     if not filename:
@@ -77,7 +89,7 @@ def _write_log(vals):
             writer.writerow(KEYS)
     with open(filename, 'ab') as f:
         writer = csv.writer(f)
-        writer.writerow([vals.get(key, '') for key in KEYS])
+        writer.writerow([tools.ustr(vals.get(key, '')) for key in KEYS])
 
 
 def _get_modules_list(cr):
@@ -168,7 +180,7 @@ def _run_other_tests(dbname, modules, ignore):
                     vals['duration'] = time.time() - start
                     vals['result'] = 'error'
                     vals['code'] = e.__class__.__name__
-                    vals['exception'] = '\n'.join(map(str, e.args))
+                    vals['exception'] = '\n%s' % _get_exception_message(e)
                     if filename.endswith('.yml'):
                         vals['exception'] += '\n%s' % _build_error_message()
                     _write_log(vals)
@@ -192,7 +204,7 @@ def _run_unit_tests(dbname, modules, ignore):
             except Exception, e:
                 vals['duration'] = time.time() - start
                 vals['result'] = 'error'
-                vals['exception'] = repr(e)
+                vals['exception'] = _get_exception_message(e)
                 _write_log(vals)
             else:
                 vals['duration'] = time.time() - start
