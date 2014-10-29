@@ -56,7 +56,6 @@ def checklist_view_decorator():
                                                                             'readonly': True}
                     doc = etree.XML(fields_view['arch'])
                     snode = doc
-                    has_sheet = False
                     gnode1 = etree.Element('div', attrib={'style': "float: left; margin: -16px; width: 80%;"})
                     for index, children in enumerate(snode.getchildren()):
                         gnode1.insert(index, children)
