@@ -25,11 +25,13 @@ USER root
 # Install packages required to:
 # * launch multi-processes in container: supervisor
 # * check quality code: cloc python-coverage python-flake8
-# * install Python package vie PyPi: python-pip
+# * install Python package vi PyPi: python-pip
+# * install unit tests package: python-unittest2
 # * download and install wkhtmltopdf: wget fontconfig libfontconfig1 libfreetype6 libjpeg-turbo8 libx11-6 libxext6 libxrender1
 RUN apt-get -qq -y install supervisor \
 	cloc python-coverage python-flake8 \
 	python-pip \
+	python-unittest2 \
 	wget fontconfig libfontconfig1 libfreetype6 libjpeg-turbo8 libx11-6 libxext6 libxrender1
 
 # Install wkhtmltopdf
