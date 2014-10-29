@@ -19,7 +19,14 @@
 #
 ##############################################################################
 
-from api import *
-from exceptions import *
-from misc import *
-from osutil import *
+import xmlrpclib
+
+from openerp import exceptions, tools
+
+
+def get_exception_message(e):
+    if isinstance(e, exceptions.except_orm):
+        return tools.ustr(e.value)
+    if isinstance(e, xmlrpclib.Fault):
+        return tools.ustr(e.faultString)
+    return tools.ustr(e.message)

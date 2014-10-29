@@ -1,9 +1,0 @@
-[supervisord]
-nodaemon=true
-
-[program:postgresql]
-command=/etc/init.d/postgresql start
-
-[program:odoo]
-user=odoo
-command=/usr/bin/python /usr/src/odoo/%(server_cmd)s -c /usr/src/odoo/server.conf

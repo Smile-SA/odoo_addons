@@ -33,7 +33,8 @@ RUN apt-get -qq -y install supervisor \
 	wget fontconfig libfontconfig1 libfreetype6 libjpeg-turbo8 libx11-6 libxext6 libxrender1
 
 # Install wkhtmltopdf
-RUN cd /tmp && wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
+RUN cd /tmp
+RUN wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
 RUN dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
 # Install Odoo requirements
@@ -52,7 +53,7 @@ RUN pip -q install %(pip_packages)s
 RUN mkdir -p /usr/src/odoo
 RUN adduser odoo --disabled-password
 COPY . /usr/src/odoo
-RUN mv supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN mv /usr/src/odoo/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chown -R odoo:odoo /usr/src/odoo
 
 # Expose port

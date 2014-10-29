@@ -1,0 +1,12 @@
+[supervisord]
+nodaemon=true
+
+[program:postgresql]
+priority=998
+user=postgres
+command=/usr/lib/postgresql/%(pg_version)s/bin/postgres -D /var/lib/postgresql/%(pg_version)s/main -c config_file=/etc/postgresql/%(pg_version)s/main/postgresql.conf
+
+[program:odoo]
+priority=1000
+user=odoo
+command=/usr/bin/python /usr/src/odoo/%(server_cmd)s -c /usr/src/odoo/server.conf

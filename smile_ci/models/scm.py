@@ -37,7 +37,7 @@ import time
 from urlparse import urljoin, urlparse
 import xmlrpclib
 
-from openerp import api, models, fields, SUPERUSER_ID, _
+from openerp import api, models, fields, SUPERUSER_ID, tools, _
 from openerp.tools import config, file_open
 from openerp.modules.registry import Registry
 import openerp.modules as addons
@@ -45,7 +45,7 @@ from openerp.exceptions import Warning
 
 from openerp.addons.smile_scm.tools import cd
 
-from ..tools import cursor, with_new_cursor, s2human, mergetree, check_output_chain
+from ..tools import cursor, with_new_cursor, s2human, mergetree, check_output_chain, get_exception_message
 
 _logger = logging.getLogger(__package__)
 
@@ -69,6 +69,7 @@ class VersionControlSystem(models.Model):
 
     cmd_revno = fields.Char('Get revision number', required=True)
     cmd_log = fields.Char('Get commit logs from last update', required=True)
+    cmd_export = fields.Char('export remote branch')
 
 
 class OdooVersion(models.Model):
@@ -245,7 +246,7 @@ def state_cleaner(method):
                     # Force build creation for branch in test before server stop
                     self.get('scm.repository.branch').force_create_build(cr, SUPERUSER_ID, branch_ids)
         except Exception, e:
-            _logger.error(repr(e))
+            _logger.error(get_exception_message(e))
         return res
     return new_load
 
@@ -481,10 +482,11 @@ class Build(models.Model):
             self._run_tests()
             self._stop_coverage()
         except Exception, e:
-            _logger.error(repr(e))
             self.write({'state': 'done', 'result': 'failed', 'date_stop': fields.Datetime.now()})
-            self.message_post(body=repr(e))
             self.branch_id.message_post(body=_('Failed'))
+            msg = get_exception_message(e)
+            self.message_post(body=msg)
+            _logger.error(msg)
         else:
             self.write({'state': 'running', 'date_stop': fields.Datetime.now()})
             if self.branch_id.version_id.web_included:
@@ -549,7 +551,7 @@ class Build(models.Model):
 
     @api.one
     def _create_configfile(self):
-        _logger.info('Generating configfile for build:%s...' % self.id)
+        _logger.info('Generating %s for build:%s...' % (CONFIGFILE, self.id))
         options = self._get_options()
         with cd(self.directory):
             with open(CONFIGFILE, 'w') as cfile:
@@ -559,8 +561,9 @@ class Build(models.Model):
 
     @api.one
     def _create_supervisordfile(self):
-        _logger.info('Generating launcherfile for build:%s...' % self.id)
-        with file_open('smile_ci/data/supervisord.tmpl') as f:
+        _logger.info('Generating supervisord.conf for build:%s...' % self.id)
+        template = 'smile_ci/data/supervisord_%s.tmpl' % self.branch_id.os_id.code.replace(':', '').replace('.', '')
+        with file_open(template) as f:
             content = f.read()
         server_cmd = os.path.join(self.branch_id.server_path,
                                   self.branch_id.version_id.server_cmd)
@@ -568,7 +571,7 @@ class Build(models.Model):
             server_cmd = server_cmd[2:]
         with cd(self.directory):
             with open('supervisord.conf', 'w') as f:
-                f.write(content % {'server_cmd': server_cmd})
+                f.write(content % {'server_cmd': server_cmd, 'pg_version': self.branch_id.pg_version})
 
     @api.one
     def _create_dockerfile(self):
@@ -723,7 +726,7 @@ class Build(models.Model):
                     subprocess.check_call(cmd)
                     copied = True
                 except subprocess.CalledProcessError, e:
-                    _logger.error(repr(e))
+                    _logger.error(get_exception_message(e))
                 if copied:
                     with open(filename) as f:
                         attach_obj.create({
