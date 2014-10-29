@@ -185,7 +185,7 @@ class Branch(models.Model):
     def _changes(self):
         self.ensure_one()
         branch = self[0]
-        if not branch.build_ids or branch._get_revno() != branch.build_ids[0].revno.encode('utf8'):  # Because builds ordered by id desc
+        if not branch.build_ids or tools.ustr(branch._get_revno()) != tools.ustr(branch.build_ids[0].revno):  # Because builds ordered by id desc
             return True
         return False
 
@@ -199,7 +199,7 @@ class Branch(models.Model):
     def _create_build(self, force=False):
         if self.use_in_ci:
             self._update()
-            if self._changes() or force:
+            if self._changes() or force is True:
                 self.merge_with_branch_id._update()
                 vals = {'branch_id': self.id, 'revno': self._get_revno(), 'commit_logs': self._get_last_commits()}
                 self.env['scm.repository.branch.build'].create(vals)
