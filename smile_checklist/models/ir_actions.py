@@ -38,8 +38,11 @@ class IrActionsActWindow(models.Model):
                 'uid': self._uid,
                 'context': context,
             }
-            with tools.mute_logger("openerp.tools.safe_eval"):
-                eval_context = eval(res.get('context') or "{}", eval_dict) or {}
-                eval_context['act_window_id'] = self.ids[0]
-                res['context'] = str(eval_context)
+            try:
+                with tools.mute_logger("openerp.tools.safe_eval"):
+                    eval_context = eval(res.get('context') or "{}", eval_dict) or {}
+                    eval_context['act_window_id'] = self.ids[0]
+                    res['context'] = str(eval_context)
+            except:
+                pass
         return result
