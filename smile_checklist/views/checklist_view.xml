@@ -55,11 +55,15 @@
 									</tree>
 								</field>
 	                    	</page>
-	                    	<page string="Views">
+	                    	<page string="Visibility">
+			                    <field name="model" invisible="1"/>
+	                    		<group>
+									<label string="Leave blank in order to this checklist appears in all object menus" colspan="4" align="0.0"/>
+									<field name="act_window_ids" nolabel="1" colspan="4" domain="[('res_model','=',model)]"/>
+	                    		</group>
 	                    		<group>
 									<label string="Leave blank in order to this checklist appears in all object views" colspan="4" align="0.0"/>
 									<field name="view_ids" nolabel="1" colspan="4" domain="[('type','in',['form','tree']),('model','=',model)]"/>
-				                    <field name="model" invisible="1"/>
 	                    		</group>
 	                    	</page>
 	                    	<page string="Action">

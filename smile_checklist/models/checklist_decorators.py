@@ -33,15 +33,19 @@ def checklist_view_decorator():
             checklist_id = checklist_obj._get_checklist_by_model(cr, uid).get(self._name)
             if not checklist_id:
                 return fields_view
-            checklist = checklist_obj.read(cr, uid, checklist_id, ['view_ids'])
+            checklist = checklist_obj.read(cr, uid, checklist_id, ['act_window_ids', 'view_ids'], load='_classic_write')
+            if checklist['act_window_ids'] and context.get('act_window_id') and \
+                    context['act_window_id'] not in checklist['act_window_ids']:
+                return fields_view
             if not view_id:
                 cr.execute("""SELECT id FROM ir_ui_view
                               WHERE model=%s AND type=%s AND inherit_id IS NULL
                               ORDER BY priority LIMIT 1""", (self._name, view_type))
                 view_id = cr.fetchone()
                 view_id = view_id and view_id[0] or False
-            if not checklist['view_ids'] or view_id in checklist['view_ids'] \
-                    or ('no_checklist' in context and not context['no_checklist']):
+            if checklist['view_ids'] and view_id not in checklist['view_ids']:
+                return fields_view
+            if not context.get('no_checklist'):
                 arch = fields_view['arch']
                 arch_list = []
                 fields_view['fields']['total_progress_rate'] = {'string': 'Progress Rate', 'type': 'float', 'context': {}}

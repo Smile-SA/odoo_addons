@@ -50,6 +50,7 @@ class Checklist(models.Model):
     active = fields.Boolean('Active', default=True)
     active_field = fields.Boolean("Has an 'Active' field", compute='_get_active_field', default=False)
     action_id = fields.Many2one('ir.actions.server', 'Actions')
+    act_window_ids = fields.Many2many('ir.actions.act_window', 'checklist_act_window_rel', 'act_window_id', 'checklist_id', 'Menus')
     view_ids = fields.Many2many('ir.ui.view', 'checklist_view_rel', 'view_id', 'checklist_id', 'Views')
     task_ids = fields.One2many('checklist.task', 'checklist_id', 'Tasks')
 

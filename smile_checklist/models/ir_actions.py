@@ -19,5 +19,27 @@
 #
 ##############################################################################
 
-import checklist
-import ir_actions
+from openerp import api, models, tools
+
+
+class IrActionsActWindow(models.Model):
+    _inherit = 'ir.actions.act_window'
+
+    @api.multi
+    def read(self, fields=None, load='_classic_read'):
+        result = super(IrActionsActWindow, self).read(fields, load=load)
+        if len(self.ids) == 1:
+            res = isinstance(result, list) and result[0] or result
+            context = dict(self._context)
+            eval_dict = {
+                'active_model': context.get('active_model'),
+                'active_id': context.get('active_id'),
+                'active_ids': context.get('active_ids'),
+                'uid': self._uid,
+                'context': context,
+            }
+            with tools.mute_logger("openerp.tools.safe_eval"):
+                eval_context = eval(res.get('context') or "{}", eval_dict) or {}
+                eval_context['act_window_id'] = self.ids[0]
+                res['context'] = str(eval_context)
+        return result
