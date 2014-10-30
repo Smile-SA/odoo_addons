@@ -19,31 +19,15 @@
 #
 ##############################################################################
 
-{
-    "name": "Partner hierarchy (Subsidiary)",
-    "version": "1.0",
-    "author": "Smile",
-    "website": 'http://www.smile.fr',
-    "category": "Partner",
-    "description": """
-        The module offers the following functionnalities:
-            Define partner hierarchy and Subsidiary
-            Define for each subsidiary its own contacts
-            # TODO:
-                Translate the module
-                make the level definition dynamique and parametabel
-                Add the levels columns on reports diplay partner column
-            
-Suggestions & Feedback to: samir.rachedi@smile.fr
-    """,
-    "depends": ['base'],
-    "data": [
-        #'security/ir.model.access.csv',
-        'views/res_partner_view.xml',
-    ],
-    "demo": [],
-    "test": [],
-    "installable": True,
-    "active": False,
-    "certificate": '',
-}
+from openerp import api, models, fields, _
+from openerp.exceptions import Warning
+
+class AccountInvoice(models.Model):
+    
+    _inherit = 'account.invoice'
+    
+    # Field added to be abble to search invoices from analytic account 
+    # 
+    analytic_account_id = fields.Many2one('account.analytic.account',
+                                          string="Analytic account", 
+                                          related='invoice_line.account_analytic_id')   

@@ -28,11 +28,19 @@ class ResPartner(models.Model):
     child_ids = fields.One2many('res.partner', 'parent_id','Contacts', domain=[('is_company', '=', False)])
     subsidiary_ids = fields.One2many('res.partner', 'parent_id','Subsidiaries', domain=[('is_company', '=', True)])
     partner_type = fields.Selection([('groupe','Groupe'),
-                                     ('trade_name','Trade name'),
-                                     ('partner','Partner'),
-                                     ('store','Store'),
+                                     ('trade_name','Enseigne'),
+                                     ('partner','Client'),
+                                     ('store','Point de vente'),
                                      ('person','Contact'),
-                                     ])
-    @api.onchange('partner_type')
-    def _onchange_partner_type(self):
-        self.is_company = self.partner_type != 'person'
+                                     ], required=True, default='partner')
+    
+    #TODO: Update tose fields in order to compute the value autoamtically
+#     partner_groupe_id = fields.Many2one('res.partner',string='Groupe',compute='_update_hierarchy')
+#     partner_enseigne_id = fields.Many2one('res.partner',string='Enseigne')
+#     partner_client_id = fields.Many2one('res.partner',string='Client')
+#     partner_point_vente_id = fields.Many2one('res.partner',string='Point de vente')
+
+
+        
+        
+        
