@@ -222,11 +222,12 @@ def _run_unit_tests(dbname, modules, ignore):
                     _write_log(vals)
 
 
-def run_tests(dbname):
+def run_tests(dbname, modules=None):
     ignore = eval(tools.config.get('ignored_tests') or '{}')
     db = sql_db.db_connect(dbname)
     with closing(db.cursor()) as cr:
-        modules = _get_modules_list(cr)
+        if not modules:
+            modules = _get_modules_list(cr)
         _run_unit_tests(dbname, modules, ignore)
         _run_other_tests(dbname, modules, ignore)
     return True
