@@ -485,7 +485,7 @@ class Build(models.Model):
             self.write({'state': 'done', 'result': 'failed', 'date_stop': fields.Datetime.now()})
             self.branch_id.message_post(body=_('Failed'))
             msg = get_exception_message(e)
-            self.message_post(body=msg)
+            self.message_post(body=msg, content_subtype='plaintext')
             _logger.error(msg)
         else:
             self.write({'state': 'running', 'date_stop': fields.Datetime.now()})
