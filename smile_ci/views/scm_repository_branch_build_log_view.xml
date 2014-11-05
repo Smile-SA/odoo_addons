@@ -25,6 +25,7 @@
 						<filter name="group_branch" string="Branch" context="{'group_by': 'branch_id'}" />
 						<filter name="group_build" string="Build" context="{'group_by': 'build_id'}" />
 						<filter name="group_type" string="Type" context="{'group_by': 'type'}" />
+						<filter name="group_module" string="Module" context="{'group_by': 'module'}" />
 					</group>
 				</search>
 			</field>
@@ -91,7 +92,7 @@
 			<field name="view_mode">tree,form,graph</field>
 			<field name="view_id" ref="view_repository_branch_build_log_tree" />
 			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
-			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_branch': True, 'search_default_group_build': True, 'search_default_group_type': True}</field>
+			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_branch': True, 'search_default_group_build': True, 'search_default_group_type': True, 'search_default_group_module': True}</field>
 		</record>
 
 		<menuitem id="menu_repository_branch_build_log" parent="smile_scm.menu_scm" action="action_repository_branch_build_log" sequence="40" />
@@ -104,7 +105,7 @@
 			<field name="view_id" ref="view_repository_branch_build_log_tree" />
 			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
 			<field name="domain">[('build_id', '=', active_id), ('type', '=', 'quality_code')]</field>
-			<field name="context">{'search_default_warning': True, 'search_default_error': True}</field>
+			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_build': True, 'search_default_group_module': True}</field>
 		</record>
 
 		<record model="ir.actions.act_window" id="action_build_failed_test">
@@ -115,7 +116,7 @@
 			<field name="view_id" ref="view_repository_branch_build_log_tree" />
 			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
 			<field name="domain">[('build_id', '=', active_id), ('type', '=', 'test')]</field>
-			<field name="context">{'search_default_warning': True, 'search_default_error': True}</field>
+			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_build': True, 'search_default_group_module': True}</field>
 		</record>
 
 	</data>
