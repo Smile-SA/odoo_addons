@@ -105,7 +105,7 @@
 			<field name="view_id" ref="view_repository_branch_build_log_tree" />
 			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
 			<field name="domain">[('build_id', '=', active_id), ('type', '=', 'quality_code')]</field>
-			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_build': True, 'search_default_group_module': True}</field>
+			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_build': True}</field>
 		</record>
 
 		<record model="ir.actions.act_window" id="action_build_failed_test">
