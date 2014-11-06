@@ -59,6 +59,9 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "js": [
         "static/src/js/disable_openerp_online.js",
     ],
+    "qweb": [
+        "static/src/xml/base.xml",
+    ],
     "auto_install": True,
     "installable": True,
     "application": False,
