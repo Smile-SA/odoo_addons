@@ -74,7 +74,7 @@ class NewServices():
     def coverage_start():
         if not hasattr(common, 'coverage'):
             sources = NewServices.get_coverage_sources()
-            common.coverage = coverage.coverage(branch=True, source=sources)
+            common.coverage = coverage.coverage(branch=True, source=sources, data_file='/usr/src/odoo/.coverage')
             common.coverage.start()
             return True
         return False
