@@ -99,6 +99,8 @@ class IrValues(models.Model):
             # FIXME: needs cleanup
             try:
                 action_def = self.pool.get(action_model).read(cr, uid, int(id), fields, context)
+                if isinstance(action_def, list):
+                    action_def = action_def[0]
                 if action_def:
                     if action_model in ('ir.actions.report.xml', 'ir.actions.act_window',
                                         'ir.actions.wizard'):
