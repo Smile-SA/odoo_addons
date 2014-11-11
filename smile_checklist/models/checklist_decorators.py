@@ -66,11 +66,12 @@ def checklist_view_decorator():
                     snode.insert(0, gnode1)
                     gnode2 = etree.Element('div', attrib={'style': "float: right; width: 20%; min-width: 70px;"})
                     gnode2.insert(0, etree.XML("""<group col="1"><separator string="Checklist"/>
-                        <field name="total_progress_rate" nolabel="1" readonly="1" widget="progressbar"/>
-                        <field name="checklist_task_instance_ids" nolabel="1" context="{'active_test': True}"/>
+                        <field name="total_progress_rate" nolabel="1"  readonly="1" widget="progressbar"/>
+                        <field name="checklist_task_instance_ids" nolabel="1"  readonly="1" context="{'active_test': True}"/>
                     </group>"""))
                     snode.insert(1, gnode2)
-                    fields_view['arch'] = etree.tostring(doc)
+                    xarch, _ = self.pool.get('ir.ui.view').postprocess_and_fields(cr, uid, self._name, doc, view_id, context=context)
+                    fields_view['arch'] = xarch
         return fields_view
     return checklist_wrapper
 

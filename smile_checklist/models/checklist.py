@@ -144,6 +144,8 @@ class Checklist(models.Model):
 
     @api.one
     def compute_progress_rates(self, rec_ids=None):
+        if self._context.get('do_no_compute_progress_rates'):
+            return
         model_obj = self.env[self.model]
         if rec_ids:
             recs = model_obj.browse(rec_ids)
