@@ -58,7 +58,8 @@ class IrModuleModule(models.Model):
 
     @api.multi
     def _add_graph_nodes_and_edges(self, graph):
-        nodes, edges = {}, []
+        nodes = dict([(node.get_name(), node) for node in graph.get_nodes()])
+        edges = [(edge.get_source(), edge.get_destination()) for edge in graph.get_edges()]
         module_names = [m.name for m in self]
         # Add nodes
         for module in self:
