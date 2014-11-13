@@ -431,7 +431,7 @@ class Build(models.Model):
                                           ('state', '=', 'testing')], order='id asc')
         for build in builds_to_run:
             # Check max_testing_by_branch
-            builds_by_branch = [b for b in builds_to_run | builds_in_test if b.branch_id == build.branch_id]
+            builds_by_branch = [b for b in builds_in_test if b.branch_id == build.branch_id]
             if len(builds_by_branch) >= max_testing_by_branch:
                 continue
             # Check max_testing
