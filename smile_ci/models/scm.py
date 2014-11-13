@@ -421,8 +421,8 @@ class Build(models.Model):
     @api.model
     def _scheduler(self):
         testing = self.search_count([('state', '=', 'testing')])
-        max_testing = self.env['ir.config_parameter'].get_param('ci.max_testing')
-        max_testing_by_branch = self.env['ir.config_parameter'].get_param('ci.max_testing_by_branch')
+        max_testing = int(self.env['ir.config_parameter'].get_param('ci.max_testing'))
+        max_testing_by_branch = int(self.env['ir.config_parameter'].get_param('ci.max_testing_by_branch'))
         builds_to_run = self.search([('branch_id.use_in_ci', '=', True),
                                      ('state', '=', 'pending')], order='id asc')
         if builds_to_run:
