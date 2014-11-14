@@ -158,7 +158,7 @@
 					<field name="create_uid" />
 					<field name="time_human" />
 					<field name="state" readonly="1" />
-					<button type="object" name="process" icon="terp-gtk-jump-to-ltr" string="Re-generate" context="{'commit_and_new_thread':True}" />
+					<button type="object" name="process" icon="terp-gtk-jump-to-ltr" string="Re-generate" />
 				</tree>
 			</field>
 		</record>

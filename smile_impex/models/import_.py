@@ -48,20 +48,22 @@ class IrModelImportTemplate(models.Model, IrModelImpexTemplate):
 
     @api.one
     @api.returns('ir.model.import', lambda value: value.id)
-    def create_import(self):
+    def create_import(self, *args):
         try:
             import_obj = self.env['ir.model.import']
             vals = {
                 'import_tmpl_id': self.id,
-                'test_mode': self._context.get('test_mode', False),
+                'test_mode': self._context.get('test_mode'),
+                'new_thread': self.new_thread,
+                'args': repr(args),
             }
             import_rec = import_obj.create(vals)
-            import_rec.process()
-            return import_rec
         except Exception, e:
             tmpl_logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
             tmpl_logger.error(repr(e))
             raise Warning(repr(e))
+        import_rec.process()
+        return import_rec
 
 
 class IrModelImport(models.Model, IrModelImpex):
@@ -73,10 +75,11 @@ class IrModelImport(models.Model, IrModelImpex):
         setattr(Registry, 'load', state_cleaner(pool[self._name])(getattr(Registry, 'load')))
 
     import_tmpl_id = fields.Many2one('ir.model.import.template', 'Template', readonly=True, required=True, ondelete='cascade')
+    args = fields.Text('Arguments', readonly=True)
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import')], readonly=True)
 
     @api.one
     @with_new_cursor
     def _execute(self):
         model_obj = self.env[self.import_tmpl_id.model_id.model].browse()
-        getattr(model_obj, self.import_tmpl_id.method)(**eval(self.import_tmpl_id.method_args or '{}'))
+        getattr(model_obj, self.import_tmpl_id.method)(*eval(self.args or '[]'), **eval(self.import_tmpl_id.method_args or '{}'))
