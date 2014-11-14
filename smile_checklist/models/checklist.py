@@ -151,7 +151,7 @@ class Checklist(models.Model):
             recs = model_obj.browse(rec_ids)
         else:
             recs = model_obj.with_context(active_test=False).search([])
-        for rec in recs:
+        for rec in recs.with_context(active_test=True):
             ctx = {'active_id': rec.id, 'active_ids': [rec.id]}
             for task_inst in rec.checklist_task_instance_ids:
                 old_progress_rate = task_inst.progress_rate
@@ -167,14 +167,13 @@ class Checklist(models.Model):
                     / len(rec.checklist_task_instance_ids)
             vals = {'total_progress_rate': total_progress_rate}
             if self.active_field:
-                total_progress_rate_mandatory = 0.0
+                total_progress_rate_mandatory = 100.0
                 mandatory_inst = [i for i in rec.checklist_task_instance_ids if i.mandatory]
                 if mandatory_inst:
                     total_progress_rate_mandatory = sum(i.progress_rate for i in rec.checklist_task_instance_ids if i.mandatory) \
                         / len(mandatory_inst)
                 vals['total_progress_rate_mandatory'] = total_progress_rate_mandatory
-                if vals['total_progress_rate_mandatory'] == 100.0:
-                    vals['active'] = True
+                vals['active'] = total_progress_rate_mandatory == 100.0
             old_total_progress_rate = rec.total_progress_rate
             rec.write(vals)
             if self.action_id and old_total_progress_rate != rec.total_progress_rate == 100.0:
@@ -196,19 +195,29 @@ class ChecklistTask(models.Model):
     mandatory = fields.Boolean('Required to make active object')
     field_ids = fields.One2many('checklist.task.field', 'task_id', 'Fields', required=True)
 
+    @api.one
+    def _manage_task_instances(self):
+        model = self.env[self.model_id.model].with_context(active_test=False)
+        for record in model.search([]):
+            condition_checked = eval(self.condition, {'object': record, 'time': time})
+            task_inst = record.checklist_task_instance_ids.filtered(lambda i: i.task_id == self)
+            if condition_checked and not task_inst:
+                self.env['checklist.task.instance'].create({'task_id': self.id, 'res_id': record.id})
+            elif not condition_checked and task_inst:
+                task_inst.unlink()
+
     @api.model
     def create(self, vals):
         task = super(ChecklistTask, self).create(vals)
-        model = self.env[task.model_id.model].with_context(active_test=False)
-        for record in model.search([]):
-            self.env['checklist.task.instance'].create({'task_id': task.id, 'res_id': record.id})
-        task.checklist_id.compute_progress_rates()
+        self._manage_task_instances()
+        self.checklist_id.compute_progress_rates()
         return task
 
     @api.multi
     def write(self, vals):
         checklists = set([task.checklist_id for task in self])
         result = super(ChecklistTask, self).write(vals)
+        self._manage_task_instances()
         for checklist in checklists | set([task.checklist_id for task in self]):
             checklist.compute_progress_rates()
         return result
@@ -251,19 +260,22 @@ class ChecklistTaskInstance(models.Model):
     @api.one
     @api.depends()
     def _get_activity(self):
-        localdict = {'object': self.env[self.model_id.model].browse(self.res_id),
-                     'time': time}
-        self.active = self.task_id.active and eval(self.task_id.condition, localdict)
+        self.active = self.task_id.active
         field_ids_to_fill = self.env['checklist.task.field'].browse()
         field_ids_filled = self.env['checklist.task.field'].browse()
-        for field in self.task_id.field_ids:
-            try:
-                exec "result = bool(%s)" % str(field.expression) in localdict
-                if 'result' not in localdict or not localdict['result']:
-                    field_ids_to_fill |= field
-                else:
-                    field_ids_filled |= field
-            except:
-                pass
+        localdict = {'object': self.env[self.model_id.model].browse(self.res_id),
+                     'time': time}
+        if eval(self.task_id.condition, localdict):
+            for field in self.task_id.field_ids:
+                try:
+                    exec "result = bool(%s)" % str(field.expression) in localdict
+                    if 'result' not in localdict or not localdict['result']:
+                        field_ids_to_fill |= field
+                    else:
+                        field_ids_filled |= field
+                except:
+                    pass
+        else:
+            self.active = False
         self.field_ids_to_fill = field_ids_to_fill
         self.field_ids_filled = field_ids_filled
