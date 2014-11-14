@@ -46,6 +46,7 @@ class IrModelImpexTemplate(models.AbstractModel):
     method_args = fields.Char(help="Arguments passed as a dictionary\nExample: {'code': '705000'}")
     cron_id = fields.Many2one('ir.cron', 'Scheduled Action')
     server_action_id = fields.Many2one('ir.actions.server', 'Server action')
+    new_thread = fields.Boolean('New Thread', default=True)
 
     def _get_cron_vals(self):
         return {
@@ -148,6 +149,7 @@ class IrModelImpex(models.AbstractModel):
     time = fields.Integer(compute='_get_time')
     time_human = fields.Char('Time', compute='_convert_time_to_human', store=False)
     test_mode = fields.Boolean('Test Mode', readonly=True)
+    new_thread = fields.Boolean('New Thread', readonly=True)
     state = fields.Selection(STATES, "State", readonly=True, required=True, default='running')
     pid = fields.Integer("Process Id", readonly=True)
 
@@ -160,8 +162,11 @@ class IrModelImpex(models.AbstractModel):
     def process(self):
         self._cr.commit()
         for record in self:
-            thread = Thread(target=self.pool[self._name]._process, args=(self._cr.dbname, self._uid, record.id, self._context))
-            thread.start()
+            if record.new_thread:
+                thread = Thread(target=self.pool[self._name]._process, args=(self._cr.dbname, self._uid, record.id, self._context))
+                thread.start()
+            else:
+                self.pool[self._name]._process(self._cr.dbname, self._uid, record.id, self._context)
         return True
 
     def _process(self, dbname, uid, impex_id, context=None):
@@ -182,6 +187,7 @@ class IrModelImpex(models.AbstractModel):
                     context['logger'].error(repr(e))
                     self.write_with_new_cursor(cr, uid, impex_id, {'state': 'exception',
                                                                    'to_date': fields.Datetime.now()}, context)
+                    raise e
 
     @api.one
     @with_new_cursor

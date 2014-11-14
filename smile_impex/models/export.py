@@ -120,18 +120,19 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
             vals = {
                 'export_tmpl_id': self.id,
                 'test_mode': self._context.get('test_mode', False),
+                'new_thread': self.new_thread,
             }
             export_recs = export_obj.browse()
             for index, res_ids_offset in enumerate(self._get_res_ids_offset()):
                 vals['record_ids'] = res_ids_offset
                 vals['offset'] = index + 1
                 export_recs |= export_obj.create(vals)
-            export_recs.process()
-            return export_recs
         except Exception, e:
             tmpl_logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
             tmpl_logger.error(repr(e))
             raise Warning(repr(e))
+        export_recs.process()
+        return export_recs
 
 
 class IrModelExport(models.Model, IrModelImpex):

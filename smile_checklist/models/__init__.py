@@ -21,3 +21,4 @@
 
 import checklist
 import ir_actions
+import models

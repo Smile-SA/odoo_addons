@@ -80,15 +80,7 @@ def checklist_create_decorator():
     @api.model
     def checklist_wrapper(self, vals):
         record = checklist_wrapper.origin(self, vals)
-        if 'checklist_task_instance_ids' in self._fields:
-            checklist_obj = self.pool.get('checklist')
-            if checklist_obj and hasattr(checklist_obj, '_get_checklist_by_model'):
-                checklist_id = checklist_obj._get_checklist_by_model(self._cr, self._uid).get(self._name)
-                inst_obj = self.env['checklist.task.instance']
-                for task in self.env['checklist'].browse(checklist_id).task_ids:
-                    inst_obj.create({'task_id': task.id, 'res_id': record.id})
-                if record.checklist_task_instance_ids:
-                    record.checklist_task_instance_ids[0].checklist_id.compute_progress_rates([record.id])
+        record._manage_checklist_task_instances()
         return record
     return checklist_wrapper
 
@@ -97,9 +89,7 @@ def checklist_write_decorator():
     @api.multi
     def checklist_wrapper(self, vals):
         result = checklist_wrapper.origin(self, vals)
-        if not self._context.get('no_checklist') and 'checklist_task_instance_ids' in self._fields:
-            for record in self.with_context(no_checklist=True):
-                if record.checklist_task_instance_ids:
-                    record.checklist_task_instance_ids[0].checklist_id.compute_progress_rates([record.id])
+        if not self._context.get('no_checklist'):
+            self._manage_checklist_task_instances()
         return result
     return checklist_wrapper
