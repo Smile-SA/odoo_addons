@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import models, _
+from openerp import models, SUPERUSER_ID, _
 from openerp.exceptions import Warning
 from openerp.osv import fields
 
@@ -75,8 +75,8 @@ class ResUsers(models.Model):
 
     def _get_user_vals_from_profile(self, cr, uid, user_profile_id, context=None):
         vals = {}
-        user_profile = self.read(cr, uid, user_profile_id)
-        for field in self.pool.get('ir.model.fields').read(cr, uid, user_profile['field_ids'], ['name']):
+        user_profile = self.read(cr, SUPERUSER_ID, user_profile_id)
+        for field in self.pool.get('ir.model.fields').read(cr, SUPERUSER_ID, user_profile['field_ids'], ['name']):
             value = user_profile[field['name']]
             if isinstance(value, tuple):
                 value = value[0]
@@ -114,9 +114,11 @@ class ResUsers(models.Model):
         else:
             super(ResUsers, self).write(cr, uid, ids, vals, context)
             for user_profile in self.browse(cr, uid, ids, context):
-                if user_profile.user_profile and user_profile.user_ids and any(field.name in vals for field in user_profile.field_ids):
-                    profile_vals = self._get_user_vals_from_profile(cr, uid, user_profile.id, context)
-                    self.write(cr, uid, [user.id for user in user_profile['user_ids']], profile_vals, context)
+                if user_profile.user_profile and user_profile.user_ids:
+                    vals = self._remove_reified_groups(vals)
+                    if any(field.name in vals for field in user_profile.field_ids):
+                        profile_vals = self._get_user_vals_from_profile(cr, uid, user_profile.id, context)
+                        self.write(cr, uid, [user.id for user in user_profile['user_ids']], profile_vals, context)
         return True
 
     def copy_data(self, cr, uid, user_id, default=None, context=None):

@@ -19,7 +19,7 @@
 					<notebook position="inside">
 						<page string="Configuration" attrs="{'invisible': [('user_profile', '!=', True)]}">
 							<separator string="Linked users" colspan="4"/>
-							<field name="user_ids" nolabel="1" colspan="4" widget="many2many"/>
+							<field name="user_ids" nolabel="1" colspan="4" widget="many2many" context="{'form_view_ref': 'base.view_users_form'}"/>
 							<separator string="Fields to update for linked users" colspan="4"/>
 							<field name="field_ids" nolabel="1" colspan="4"/>
 						</page>
