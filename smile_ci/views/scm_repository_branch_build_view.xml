@@ -27,7 +27,7 @@
 			<field name="name">scm.repository.branch.build.tree</field>
 			<field name="model">scm.repository.branch.build</field>
 			<field name="arch" type="xml">
-				<tree string="Builds" colors="blue:result=='stable';orange:result=='unstable';red:result=='failed';grey:result=='killed'">
+				<tree string="Builds" create="false" colors="blue:result=='stable';orange:result=='unstable';red:result=='failed';grey:result=='killed'">
 					<field name="id" string="Number" />
 					<field name="branch_id" />
 					<field name="port" />

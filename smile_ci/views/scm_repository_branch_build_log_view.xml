@@ -35,7 +35,7 @@
 			<field name="name">scm.repository.branch.build.log.tree</field>
 			<field name="model">scm.repository.branch.build.log</field>
 			<field name="arch" type="xml">
-				<tree string="Logs" colors="red:result=='error';orange:result=='warning';blue:result=='success';grey:result=='ignored'">
+				<tree string="Logs" create="false" colors="red:result=='error';orange:result=='warning';blue:result=='success';grey:result=='ignored'">
 					<field name="branch_id" />
 					<field name="build_id" />
 					<field name="type" />

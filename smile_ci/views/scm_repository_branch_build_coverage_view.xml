@@ -29,7 +29,7 @@
 			<field name="name">scm.repository.branch.build.coverage.tree</field>
 			<field name="model">scm.repository.branch.build.coverage</field>
 			<field name="arch" type="xml">
-				<tree string="Coverage" colors="red:line_rate&lt;50;orange:50&lt;=line_rate&lt;70;blue:line_rate&gt;=70">
+				<tree string="Coverage" create="false" colors="red:line_rate&lt;50;orange:50&lt;=line_rate&lt;70;blue:line_rate&gt;=70">
 					<field name="branch_id" />
 					<field name="build_id" />
 					<field name="module" />
