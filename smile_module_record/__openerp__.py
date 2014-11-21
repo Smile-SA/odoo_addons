@@ -41,11 +41,10 @@
     "website": "http://www.smile.fr",
     "category": 'Tools',
     "sequence": 20,
-    "init_xml": [],
-    "update_xml": [
+    "data": [
         "wizard/base_module_record_view.xml",
     ],
-    'demo_xml': [],
+    'demo': [],
     'test': [],
     "auto_install": True,
     "installable": True,

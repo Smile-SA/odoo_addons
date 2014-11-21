@@ -32,11 +32,10 @@
     "website": "http://www.smile.fr",
     "category": "Hidden",
     "sequence": 32,
-    "init_xml": [],
-    "update_xml": [
+    "data": [
         "wizard/ir_model_graph_wizard_view.xml",
     ],
-    "demo_xml": [],
+    "demo": [],
     'test': [],
     "auto_install": True,
     "installable": True,
