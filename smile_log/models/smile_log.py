@@ -44,7 +44,7 @@ class SmileLog(models.Model):
     @api.one
     @api.depends('res_id')
     def _get_res_name(self):
-        res = self.env.get(self.model_name).browse(self.res_id)
+        res = self.env[self.model_name].browse(self.res_id)
         infos = res.name_get()
         if infos:
             self.log_res_name = infos[0][1]
