@@ -75,8 +75,8 @@ class AuditRule(models.Model):
 
     @api.one
     def _activate(self):
-        if self.env.context and \
-                self.env.context.get('activation_in_progress'):
+        if self._context and \
+                self._context.get('activation_in_progress'):
             return
         self = self.with_context(activation_in_progress=True)
         self._add_action()
@@ -175,7 +175,7 @@ class AuditRule(models.Model):
             line_vals = self._get_log_lines(data[res_id]['old'], data[res_id]['new'])
             if line_vals:
                 self.env['audit.log'].sudo().create({
-                    'user_id': self.env.uid,
+                    'user_id': self._uid,
                     'model_id': self.model_id.id,
                     'method': method,
                     'res_id': res_id,

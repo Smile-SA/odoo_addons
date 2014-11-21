@@ -104,7 +104,7 @@ class SmileScript(models.Model):
         validated_scripts = self._get_validated_scripts()
         if validated_scripts:
             raise Warning(_('You can only validate draft scripts!'))
-        return self.write({'state': 'validated', 'validation_user_id': self.env.uid,
+        return self.write({'state': 'validated', 'validation_user_id': self._uid,
                            'validation_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.one
@@ -121,7 +121,7 @@ class SmileScript(models.Model):
     def run(self):
         cr, uid, context = self.env.args
         intervention_obj = self.env['smile.script.intervention']
-        if not self.env.context.get('test_mode'):
+        if not self._context.get('test_mode'):
             if self.state != 'validated':
                 raise Warning(_('You can only run validated scripts!'))
             if self.automatic_dump:
@@ -161,9 +161,9 @@ class SmileScript(models.Model):
         localdict = {
             'self': self,
             'pool': self.pool,
-            'cr': self.env.cr,
-            'uid': self.env.uid,
-            'context': self.env.context,
+            'cr': self._cr,
+            'uid': self._uid,
+            'context': self._context,
             'ref': self.env.ref,
             'logger': logger,
             'time': time,
@@ -177,14 +177,14 @@ class SmileScript(models.Model):
 
     @api.one
     def _run_sql(self):
-        self.env.cr.execute(self.code)
+        self._cr.execute(self.code)
         if self.expect_result:
-            return tools.ustr(self.env.cr.fetchall())
+            return tools.ustr(self._cr.fetchall())
         return 'No expected result'
 
     @api.one
     def _run_xml(self):
-        convert_xml_import(self.env.cr, __package__, StringIO(self.code.encode('utf-8')))
+        convert_xml_import(self._cr, __package__, StringIO(self.code.encode('utf-8')))
         return 'No expected result'
 
     @api.cr
@@ -192,7 +192,7 @@ class SmileScript(models.Model):
         dump_path = tools.config.get('smile_script_dump_path')
         if not dump_path:
             raise ValueError('No value found for smile_script_dump_path')
-        dbname = self.env.cr.dbname
+        dbname = self._cr.dbname
         import netsvc
         import base64
         import os
