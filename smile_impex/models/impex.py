@@ -24,13 +24,12 @@ import os
 import psutil
 from threading import Thread
 
-from openerp import api, fields, models, SUPERUSER_ID, _
+from openerp import api, fields, models, registry, SUPERUSER_ID, _
 from openerp.exceptions import Warning
 from openerp.modules.registry import Registry
 
 from openerp.addons.smile_log.tools import SmileDBLogger
 
-from ..tools.api import cursor, with_new_cursor
 from ..tools.misc import s2human
 
 _logger = logging.getLogger(__package__)
@@ -155,7 +154,7 @@ class IrModelImpex(models.AbstractModel):
 
     @api.multi
     def write_with_new_cursor(self, vals):
-        with cursor(self._cr.dbname) as new_cr:
+        with registry(self._cr.dbname).cursor() as new_cr:
             return self.with_env(self.env(cr=new_cr)).write(vals)
 
     @api.multi
@@ -163,33 +162,33 @@ class IrModelImpex(models.AbstractModel):
         self._cr.commit()
         for record in self:
             if record.new_thread:
-                thread = Thread(target=self.pool[self._name]._process, args=(self._cr.dbname, self._uid, record.id, self._context))
+                cr, uid, context = self.env.args
+                thread = Thread(target=self.pool[self._name]._process, args=(cr, uid, record.id, context))
                 thread.start()
             else:
-                self.pool[self._name]._process(self._cr.dbname, self._uid, record.id, self._context)
+                record._process()
         return True
 
-    def _process(self, dbname, uid, impex_id, context=None):
-        with api.Environment.manage():
-            with cursor(dbname) as cr:
-                context = context and context.copy() or {}
-                context['logger'] = SmileDBLogger(cr.dbname, self._name, impex_id, uid)
-                self.write_with_new_cursor(cr, uid, impex_id, {'state': 'running',
-                                                               'from_date': fields.Datetime.now(),
-                                                               'pid': os.getpid()}, context)
-                try:
-                    self._execute(cr, uid, impex_id, context)
-                    self.write_with_new_cursor(cr, uid, impex_id, {'state': 'done',
-                                                                   'to_date': fields.Datetime.now()}, context)
-                    if self.browse(cr, uid, impex_id, context).test_mode:
-                        cr.rollback()
-                except Exception, e:
-                    context['logger'].error(repr(e))
-                    self.write_with_new_cursor(cr, uid, impex_id, {'state': 'exception',
-                                                                   'to_date': fields.Datetime.now()}, context)
-                    raise e
+    @api.one
+    def _process(self):
+        logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
+        self = self.with_context(logger=logger)
+        self.write_with_new_cursor({'state': 'running', 'from_date': fields.Datetime.now(),
+                                    'pid': os.getpid()})
+        try:
+            with registry(self._cr.dbname).cursor() as exec_cr:
+                self.with_env(self.env(cr=exec_cr))._execute()
+                self.write_with_new_cursor({'state': 'done', 'to_date': fields.Datetime.now()})
+                if self.test_mode:
+                    exec_cr.rollback()
+        except Exception, e:
+            logger.error(repr(e))
+            try:
+                self.write_with_new_cursor({'state': 'exception', 'to_date': fields.Datetime.now()})
+            except:
+                logger.warning("Cannot set import to exception")
+            raise e
 
     @api.one
-    @with_new_cursor
     def _execute(self):
         raise NotImplementedError

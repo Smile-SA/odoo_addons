@@ -26,7 +26,6 @@ from openerp.tools.safe_eval import safe_eval as eval
 
 from openerp.addons.smile_log.tools import SmileDBLogger
 from openerp.addons.smile_impex.models.impex import IrModelImpex, IrModelImpexTemplate, state_cleaner
-from openerp.addons.smile_impex.tools.api import with_new_cursor
 
 
 class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
@@ -155,7 +154,6 @@ class IrModelExport(models.Model, IrModelImpex):
     record_count = fields.Integer('# Records', compute='_get_record_count')
 
     @api.one
-    @with_new_cursor
     def _execute(self):
         record_ids = eval(self.record_ids)
         if record_ids or self.export_tmpl_id.force_execute_action:

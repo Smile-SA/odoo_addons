@@ -115,7 +115,7 @@
 			<field name="model">ir.model.import</field>
 			<field name="priority">2</field>
 			<field name="arch" type="xml">
-				<tree string="Imports">
+				<tree string="Imports" create="false">
 					<field name="import_tmpl_id" invisible="context.get('import_template_form_view')" />
 					<field name="create_date" />
 					<field name="create_uid" />

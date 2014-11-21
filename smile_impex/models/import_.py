@@ -26,7 +26,6 @@ from openerp.tools.safe_eval import safe_eval as eval
 
 from openerp.addons.smile_log.tools import SmileDBLogger
 from openerp.addons.smile_impex.models.impex import IrModelImpex, IrModelImpexTemplate, state_cleaner
-from openerp.addons.smile_impex.tools.api import with_new_cursor
 
 
 class IrModelImportTemplate(models.Model, IrModelImpexTemplate):
@@ -79,7 +78,6 @@ class IrModelImport(models.Model, IrModelImpex):
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import')], readonly=True)
 
     @api.one
-    @with_new_cursor
     def _execute(self):
         model_obj = self.env[self.import_tmpl_id.model_id.model].browse()
         getattr(model_obj, self.import_tmpl_id.method)(*eval(self.args or '[]'), **eval(self.import_tmpl_id.method_args or '{}'))
