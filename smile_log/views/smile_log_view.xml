@@ -60,7 +60,7 @@
             <field name="type">tree</field>
             <field name="priority">50</field>
             <field name="arch" type="xml">
-                <tree string="Logs">
+                <tree string="Logs" editable="top" create="false">
                     <field name="log_date"/>
                     <field name="pid"/>
                     <field name="level"/>
