@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import models
+from openerp import fields, models
 
 
 class IrModel(models.Model):
@@ -63,6 +63,8 @@ class IrModelAccess(models.Model):
 
 class ResGroup(models.Model):
     _inherit = 'res.groups'
+
+    active = fields.Boolean(default=True)
 
     def button_complete_access_controls(self, cr, uid, ids, context=None):
         """Create access rules for the first level relation models of access rule models not only in readonly"""
