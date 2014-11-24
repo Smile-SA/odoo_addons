@@ -25,6 +25,7 @@ try:
 except ImportError:
     raise ImportError('Please install coverage package')
 
+import logging
 import os
 import subprocess
 
@@ -50,6 +51,8 @@ except ImportError:
         except ImportError:
             raise ImportError("Odoo version not supported")
 
+_logger = logging.getLogger(__package__)
+
 OMIT_FILES = ['__odoo__.py', '__openerp__.py', '__terp__.py', '__init__.py']
 OMIT_DIRS = ['web', 'static', 'controllers', 'doc', 'test', 'tests']
 
@@ -73,6 +76,7 @@ class NewServices():
     @staticmethod
     def coverage_start():
         if not hasattr(common, 'coverage'):
+            _logger.info('Starting code coverage...')
             sources = NewServices.get_coverage_sources()
             common.coverage = coverage.coverage(branch=True, source=sources, data_file='/usr/src/odoo/.coverage')
             common.coverage.start()
@@ -82,6 +86,7 @@ class NewServices():
     @staticmethod
     def coverage_stop():
         if hasattr(common, 'coverage'):
+            _logger.info('Stopping code coverage...')
             common.coverage.stop()
             common.coverage.save()
             if config.get('coveragefile'):
@@ -93,6 +98,7 @@ class NewServices():
 
     @staticmethod
     def check_quality_code():
+        _logger.info('Checking code quality...')
         if config.get('code_path') and config.get('flake8file'):
             max_line_length = config.get('flake8_max_line_length') or 79
             exclude_files = config.get('flake8_exclude_files') or '.svn,CVS,.bzr,.hg,.git,__pycache__'
@@ -105,10 +111,12 @@ class NewServices():
                     except subprocess.CalledProcessError, e:
                         f.write(e.output)
             return True
+        _logger.warning('Incomplete config file: no code_path or no flake8file...')
         return False
 
     @staticmethod
     def count_lines_of_code():
+        _logger.info('Counting lines of code...')
         if config.get('addons_path'):
             odoo_dir = '/usr/src/odoo/'
             for path in config.get('addons_path').replace(' ', '').split(','):
@@ -120,6 +128,7 @@ class NewServices():
                     except subprocess.CalledProcessError, e:
                         f.write(e.output)
             return True
+        _logger.warning('Incomplete config file: no addons_path...')
         return False
 
 
