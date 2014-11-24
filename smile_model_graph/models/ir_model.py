@@ -73,7 +73,7 @@ class IrModel(models.Model):
         return graph
 
     @api.multi
-    def _get_linked_models(self, deep=1, excluded_model_names=None):
+    def _get_related_models(self, deep=1, excluded_model_names=None):
         new_model_names = []
         excluded_model_names = excluded_model_names or [m.model for m in self]
         if deep:  # allows an infinite deep if initial value is negative
@@ -85,10 +85,10 @@ class IrModel(models.Model):
         if new_model_names:
             excluded_model_names.extend(new_model_names)
             new_models = self.search([('model', 'in', new_model_names)])
-            return self | new_models._get_linked_models(deep - 1, excluded_model_names)
+            return self | new_models._get_related_models(deep - 1, excluded_model_names)
         return self
 
     @api.multi
     def get_graph(self, deep=1, show_relation_name=False, path='model_graph.png'):
-        graph = self._get_linked_models(deep)._get_graph(show_relation_name)
+        graph = self._get_related_models(deep)._get_graph(show_relation_name)
         return IrModel.print_graph(graph, path)
