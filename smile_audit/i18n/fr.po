@@ -21,11 +21,6 @@ msgid "Client Action"
 msgstr "Action client"
 
 #. module: smile_audit
-#: field:audit.log.line,log_id:0
-msgid "Log"
-msgstr "Log"
-
-#. module: smile_audit
 #: field:audit.log.line,new_value_text:0
 msgid "New value (text)"
 msgstr "Nouvelle valeur (texte)"
@@ -34,11 +29,6 @@ msgstr "Nouvelle valeur (texte)"
 #: field:audit.rule,log_unlink:0
 msgid "Log Deletion"
 msgstr "Log de suppression"
-
-#. module: smile_audit
-#: field:audit.log.line,field_description:0
-msgid "Field label"
-msgstr "Champ"
 
 #. module: smile_audit
 #: view:audit.log:0
@@ -56,11 +46,6 @@ msgstr "Grouper par..."
 #: model:ir.model,name:smile_audit.model_audit_rule
 msgid "Audit Rule"
 msgstr "Règles d'audit"
-
-#. module: smile_audit
-#: field:audit.log.line,old_value:0
-msgid "Old Value"
-msgstr "Ancienne valeur"
 
 #. module: smile_audit
 #: view:audit.log:0
@@ -89,7 +74,6 @@ msgid "Log Lines"
 msgstr "Logs"
 
 #. module: smile_audit
-#: field:audit.log.line,field_type:0
 #: field:audit.rule,model:0
 msgid "unknown"
 msgstr "inconnu"
@@ -109,11 +93,6 @@ msgstr "Objet"
 #: view:audit.log:0
 msgid "Update"
 msgstr "Mise à jour"
-
-#. module: smile_audit
-#: field:audit.log.line,field_name:0
-msgid "Field name"
-msgstr "Champ"
 
 #. module: smile_audit
 #: view:audit.rule:0
@@ -153,11 +132,6 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: smile_audit
-#: field:audit.log,line_ids:0
-msgid "Log lines"
-msgstr "Logs"
-
-#. module: smile_audit
 #: field:audit.rule,active:0
 msgid "Active"
 msgstr "Active"
@@ -188,16 +162,6 @@ msgid "Add in the 'More' menu"
 msgstr "Ajouter au menu 'Autres options'"
 
 #. module: smile_audit
-#: field:audit.log.line,field_id:0
-msgid "Field"
-msgstr "Champ"
-
-#. module: smile_audit
-#: field:audit.log.line,new_value:0
-msgid "New Value"
-msgstr "Nouvelle valeur"
-
-#. module: smile_audit
 #: view:audit.log:0
 #: model:ir.model,name:smile_audit.model_audit_log
 msgid "Audit Log"
@@ -215,11 +179,6 @@ msgid "Audit Rules"
 msgstr "Règles d'audit"
 
 #. module: smile_audit
-#: field:audit.log.line,old_value_text:0
-msgid "Old value (text)"
-msgstr "Ancienne valeur (texte)"
-
-#. module: smile_audit
 #: view:audit.log:0
 msgid "Log Line"
 msgstr "Ligne de log"
@@ -229,4 +188,22 @@ msgstr "Ligne de log"
 #, python-format
 msgid "View logs"
 msgstr "Pistes d'audit"
+
+#. module: smile_audit
+#: code:addons/smile_audit/audit_log.py:111
+#, python-format
+msgid "Field"
+msgstr "Champ"
+
+#. module: smile_audit
+#: code:addons/smile_audit/audit_log.py:111
+#, python-format
+msgid "Old value"
+msgstr "Ancienne valeur"
+
+#. module: smile_audit
+#: code:addons/smile_audit/audit_log.py:111
+#, python-format
+msgid "New value"
+msgstr "Nouvelle value"
 
