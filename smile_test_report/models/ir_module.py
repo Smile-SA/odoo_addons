@@ -97,7 +97,7 @@ class IrModuleModule(models.Model):
                     continue
                 if module_class.__dict__['__doc__']:
                     comments.append(module_class.__dict__['__doc__'])  # class docstring
-                for test_method in sorted(test_methods):
+                for test_method in sorted(test_methods, lambda x, y: cmp(x.__name__, y.__name__)):
                     comment = '%s:\n%s' % (test_method.__name__, test_method.__doc__ or '')  # method name and docstring
                     comments.append(comment)
                 res.append((root, module_test_file, comments))
