@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import re
-
 from openerp import api, fields, models, _
 from openerp.exceptions import Warning
 from openerp.tools.safe_eval import safe_eval as eval
@@ -31,86 +29,97 @@ class AuditLog(models.Model):
     _description = 'Audit Log'
     _order = 'create_date desc'
 
-    @api.one
-    @api.depends('model_id', 'res_id')
-    def _get_name(self):
-        if self.model_id and self.res_id:
-            res = self.env[self.model_id.model].browse(self.res_id).exists()
-            if res:
-                self.name = res.display_name
-        else:
-            self.name = ''
-
-    name = fields.Char('Resource Name', size=256, compute='_get_name', store=True)
+    name = fields.Char('Resource Name', size=256, compute='_get_name')
     create_date = fields.Datetime('Date', readonly=True)
     user_id = fields.Many2one('res.users', 'User', required=True, readonly=True)
     model_id = fields.Many2one('ir.model', 'Object', required=True, readonly=True)
     res_id = fields.Integer('Resource Id', readonly=True)
     method = fields.Char('Method', size=64, readonly=True)
-    line_ids = fields.One2many('audit.log.line', 'log_id', 'Log lines', readonly=True)
+    data = fields.Text('Data', readonly=True)
+    data_html = fields.Html('HTML Data', readonly=True, compute='_render_html')
+
+    @api.one
+    def _get_name(self):
+        if self.model_id and self.res_id:
+            record = self.env[self.model_id.model].browse(self.res_id).exists()
+            if record:
+                self.name = record.display_name
+            else:
+                data = eval(self.data or '{}')
+                rec_name = self.env[self.model_id.model]._rec_name
+                if rec_name in data['new']:
+                    self.name = data['new'][rec_name]
+                elif rec_name in data['old']:
+                    self.name = data['old'][rec_name]
+                else:
+                    self.name = 'id=%s' % self.res_id
+        else:
+            self.name = ''
+
+    @api.multi
+    def _get_fields_by_name(self):
+        self.ensure_one()
+        model = self.env[self.model_id.model]
+        fields_by_model = {}
+        for field in model._inherit_fields:
+            fields_by_model.setdefault(model._inherit_fields[field][3], []).append(field)
+        fields_by_model[model._name] = list(set(model._fields.keys()) - set(model._inherit_fields.keys()))
+        fields_by_name = {}
+        for model in fields_by_model:
+            field_recs = self.env['ir.model.fields'].sudo().search([('model_id.model', '=', model),
+                                                                    ('name', 'in', fields_by_model[model])])
+            fields_by_name.update(dict([(field.name, field) for field in field_recs]))
+        return fields_by_name
+
+    @api.model
+    def _format_value(self, field, value):
+        if not value and field.ttype not in ('boolean', 'integer', 'float'):
+            return ''
+        if field.ttype == 'selection':
+            selection = self.env[field.model]._fields[field.name].selection
+            if callable(selection):
+                selection = selection(self.env[field.model])
+            return dict(selection).get(value, value)
+        if field.ttype == 'many2one' and value:
+            return self.env[field.relation].browse(value).exists().display_name or value
+        if field.ttype == 'reference' and value:
+            res_model, res_id = value.split(',')
+            return self.env[res_model].browse(int(res_id)).exists().display_name or value
+        if field.ttype in ('one2many', 'many2many') and value:
+            return ', '.join([self.env[field.relation].browse(rec_id).exists().display_name or str(rec_id)
+                              for rec_id in value])
+        if field.ttype == 'binary' and value:
+            return '&lt;binary data&gt;'
+        return value
+
+    @api.multi
+    def _get_content(self):
+        content = []
+        data = eval(self.data or '{}')
+        fields_by_name = self._get_fields_by_name()
+        for fname in set(data['new'].keys() + data['old'].keys()):
+            if fname in fields_by_name:
+                field = fields_by_name[fname]
+                old_value = self._format_value(field, data['old'].get(fname, ''))
+                new_value = self._format_value(field, data['new'].get(fname, ''))
+                content.append((field.field_description, old_value, new_value))
+        return content
+
+    @api.one
+    def _render_html(self):
+        thead = ''
+        for head in (_('Field'), _('Old value'), _('New value')):
+            thead += '<th>%s</th>' % head
+        thead = '<thead><tr class="oe_list_header_columns">%s</tr></thead>' % thead
+        tbody = ''
+        for line in self._get_content():
+            row = ''
+            for item in line:
+                row += '<td>%s</td>' % item
+            tbody += '<tr>%s</tr>' % row
+        tbody = '<tbody>%s</tbody>' % tbody
+        self.data_html = '<table class="oe_list_content">%s%s</table>' % (thead, tbody)
 
     @api.multi
     def unlink(self):
         raise Warning(_('You cannot remove audit logs!'))
-
-
-class AuditLogLine(models.Model):
-    _name = 'audit.log.line'
-    _description = 'Audit Log Line'
-    _rec_name = 'field_name'
-
-    @api.one
-    def _get_values(self):
-        res_users_pattern = re.compile(r'(^(in_group_|sel_groups_))(\d+)')
-        old_value_text = self.old_value
-        new_value_text = self.new_value
-        all_models = [self.log_id.model_id.model]
-        all_models += self.env[self.log_id.model_id.model]._inherits.keys()  # TODO: make recursive
-        field = self.env['ir.model.fields'].sudo().search([('model_id.model', 'in', all_models), ('name', '=', self.field_name)], limit=1)
-        if not field:
-            self.field_id = self.field_type = self.field_description = self.old_value_text = self.new_value_text = False
-            if res_users_pattern.match(self.field_name) \
-                    or self.new_value or self.old_value:  # Treat res users special fields
-                self.field_description = self.field_name
-                self.old_value_text = old_value_text
-                self.new_value_text = new_value_text
-            return
-        field = field[0]
-        self.field_id = field
-        self.field_type = field.ttype.capitalize()
-        self.field_description = field.field_description
-        if field.relation:
-            obj = self.env[field.relation]
-            old_value = self.old_value and eval(self.old_value) or []
-            new_value = self.new_value and eval(self.new_value) or []
-            if field.ttype == 'many2one':
-                if old_value:
-                    if isinstance(old_value, tuple):
-                        old_value = old_value[0]
-                    old = obj.browse(old_value).exists()
-                    old_value_text = old and old.display_name or old_value
-                if new_value:
-                    if isinstance(new_value, tuple):
-                        new_value = new_value[0]
-                    new_value_text = obj.browse(new_value).display_name
-            elif field.ttype in ('one2many', 'many2many'):
-                if old_value:
-                    old_value_text = []
-                    for old_v in old_value:
-                        old = obj.browse(old_v).exists()
-                        old_value_text.append(old.display_name if old else str(old_v))
-                    old_value_text = ', '.join(old_value_text)
-                if new_value:
-                    new_value_text = ', '.join([o.display_name for o in obj.browse(new_value)])
-        self.old_value_text = old_value_text
-        self.new_value_text = new_value_text
-
-    log_id = fields.Many2one('audit.log', 'Log', required=True, readonly=True, ondelete='cascade')
-    field_name = fields.Char('Field name', size=64, required=True, readonly=True, select=True)
-    old_value = fields.Text('Old Value', readonly=True)
-    new_value = fields.Text('New Value', readonly=True)
-    old_value_text = fields.Text('Old value (text)', compute='_get_values')
-    new_value_text = fields.Text('New value (text)', compute='_get_values')
-    field_id = fields.Many2one('ir.model.fields', 'Field', compute='_get_values')
-    field_description = fields.Char('Field label', size=256, compute='_get_values')
-    field_type = fields.Char('Field type', size=64, compute='_get_values')

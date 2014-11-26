@@ -33,12 +33,17 @@ def _get_args(self, method, args, kwargs):
         context = kwargs.get('context')
     if isinstance(ids, (int, long)):
         ids = [ids]
+    if self._name == 'res.users':
+        vals = self._remove_reified_groups(vals)
     return cr, uid, ids, vals, context
 
 
 def audit_decorator():
     def audit_wrapper(self, *args, **kwargs):
-        method = audit_wrapper.origin.__name__
+        origin = audit_wrapper.origin
+        while hasattr(origin, 'origin'):
+            origin = origin.origin
+        method = origin.__name__
         cr, uid, ids, vals, context = _get_args(self, method, args, kwargs)
         rule_id = None
         if getattr(self, 'audit_rule', None):

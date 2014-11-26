@@ -113,10 +113,15 @@ class AuditRule(models.Model):
             ids = self.search(cr, SUPERUSER_ID, [])
         for rule in self.browse(cr, SUPERUSER_ID, ids):
             model_obj = self.pool[rule.model_id.model]
-            if not hasattr(model_obj, 'audit_rule'):
+            if rule.active and not hasattr(model_obj, 'audit_rule'):
                 for method in ('create', 'write', 'unlink'):
                     model_obj._patch_method(method, audit_decorator())
                 model_obj.audit_rule = True
+                updated = True
+            if not rule.active and hasattr(model_obj, 'audit_rule'):
+                for method in ('create', 'write', 'unlink'):
+                    model_obj._revert_method(method)
+                del model_obj.audit_rule
                 updated = True
         if updated:
             self.clear_caches()
@@ -168,17 +173,17 @@ class AuditRule(models.Model):
         old_values = update_vals(old_values)
         new_values = update_vals(new_values)
         for vals in old_values:
-            data.setdefault(vals['id'], {'old': {}, 'new': {}})['old'] = vals
+            res_id = vals.pop('id')
+            data.setdefault(res_id, {'old': {}, 'new': {}})['old'] = vals
         for vals in new_values:
-            data.setdefault(vals['id'], {'old': {}, 'new': {}})['new'] = vals
+            res_id = vals.pop('id')
+            data.setdefault(res_id, {'old': {}, 'new': {}})['new'] = vals
         for res_id in data:
-            line_vals = self._get_log_lines(data[res_id]['old'], data[res_id]['new'])
-            if line_vals:
-                self.env['audit.log'].sudo().create({
-                    'user_id': self._uid,
-                    'model_id': self.model_id.id,
-                    'method': method,
-                    'res_id': res_id,
-                    'line_ids': [(0, 0, vals) for vals in line_vals],
-                })
+            self.env['audit.log'].sudo().create({
+                'user_id': self._uid,
+                'model_id': self.model_id.id,
+                'method': method,
+                'res_id': res_id,
+                'data': repr(data[res_id]),
+            })
         return True
