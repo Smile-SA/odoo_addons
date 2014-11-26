@@ -94,7 +94,7 @@ class Checklist(models.Model):
                 model_obj._add_field('checklist_task_instance_ids', fields.One2many('checklist.task.instance',
                                                                                     string='Checklist Task Instances',
                                                                                     compute='_get_checklist_task_inst'))
-                model_obj._setup_fields()
+                self.pool.setup_models(self._cr, partial=(not self.pool.ready))
                 model_obj._add_field('total_progress_rate', fields.Float('Progress Rate', digits=(16, 2)))
                 model_obj._add_field('total_progress_rate_mandatory', fields.Float('Mandatory Progress Rate', digits=(16, 2)))
                 model_pool = self.pool[model.model]
@@ -252,7 +252,7 @@ class ChecklistTaskInstance(models.Model):
     name = fields.Char(size=128, related='task_id.name')
     mandatory = fields.Boolean('Required', help='Required to make active object', related='task_id.mandatory')
     res_id = fields.Integer('Resource ID', index=True, required=True)
-    active = fields.Boolean(compute='_get_activity')
+    active = fields.Boolean(compute='_get_activity', search='_search_activity')
     field_ids_to_fill = fields.One2many('checklist.task.field', string='Fields to fill', compute='_get_activity')
     field_ids_filled = fields.One2many('checklist.task.field', string='Filled fields', compute='_get_activity')
     progress_rate = fields.Float('Progress Rate', digits=(16, 2), default=0.0)
@@ -279,3 +279,7 @@ class ChecklistTaskInstance(models.Model):
             self.active = False
         self.field_ids_to_fill = field_ids_to_fill
         self.field_ids_filled = field_ids_filled
+
+    def _search_activity(self, operator, value):
+        # TODO: manage task condition
+        return [('task_id.active', operator, value)]
