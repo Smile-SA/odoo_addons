@@ -22,6 +22,7 @@
 import logging
 import os
 import psutil
+import sys
 from threading import Thread
 
 from openerp import api, fields, models, registry, SUPERUSER_ID, _
@@ -187,7 +188,8 @@ class IrModelImpex(models.AbstractModel):
                 self.write_with_new_cursor({'state': 'exception', 'to_date': fields.Datetime.now()})
             except:
                 logger.warning("Cannot set import to exception")
-            raise e
+            e.traceback = sys.exc_info()
+            raise
 
     @api.one
     def _execute(self):
