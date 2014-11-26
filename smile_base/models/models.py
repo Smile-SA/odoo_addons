@@ -73,23 +73,6 @@ def _compute_store_set(self):
         self.pool[model]._store_set_values(cr, uid, todo, fields_to_recompute, context)
 
 
-@api.multi
-def store_set_values(self, fields_to_recompute=None):
-    # Old-style function fields
-    function_fields = [f for f in fields_to_recompute if getattr(self._columns[f], 'store', None)]
-    self.pool[self._name]._store_set_values(self._cr, self._uid, self._ids, function_fields, self._context)
-    # New-style computed fields
-    trigger_fields = sum([list(self._fields[f].compute._depends) for f in fields_to_recompute if self._fields[f].compute], [])
-    with self.env.has_todo():
-        for f, recs in self.env.todo.iteritems():  # Remove old fields to recompute
-            self.env.remove_todo(f, recs)
-    for f in trigger_fields:
-        self.env.add_todo(f, self)  # Add fields to recompute
-    self.modified(set(trigger_fields))
-    self.recompute()
-    return True
-
-
 def new_load(self, cr, uid, fields, data, context=None):
     context_copy = context and context.copy() or {}
     context_copy['no_store_function'] = True
@@ -157,5 +140,5 @@ BaseModel._validate_fields = new_validate_fields
 BaseModel.bulk_create = bulk_create
 BaseModel.import_data = new_import_data
 BaseModel.load = new_load
-BaseModel.store_set_values = store_set_values
+BaseModel.store_set_values = BaseModel._store_set_values
 BaseModel.unlink = new_unlink
