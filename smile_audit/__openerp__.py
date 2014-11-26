@@ -33,7 +33,9 @@ WARNING: This module is not compatible with audit, so uninstall it before instal
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
-    "depends": [],
+    "depends": [
+        'base',
+    ],
     "data": [
         'security/ir.model.access.csv',
         'views/audit_rule_view.xml',
