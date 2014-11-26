@@ -45,11 +45,10 @@ TODO
     # Improve QWeb report
     """,
     "depends": ['report_webkit'],
-    "init_xml": [],
-    "update_xml": [
+    "data": [
         'report/report.xml',
     ],
-    "demo_xml": [],
+    "demo": [],
     "installable": True,
     "active": False,
 }
