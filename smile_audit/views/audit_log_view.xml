@@ -21,7 +21,6 @@
 			                    <field name="res_id"/>
 			                </group>
 		                </group>
-		                <field name="data" colspan="4" nolabel="1"/>
                     <field name="data_html" colspan="4" nolabel="1"/>
 	                </sheet>
                 </form>
