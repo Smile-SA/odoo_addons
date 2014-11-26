@@ -107,8 +107,9 @@ class IrModuleModule(models.Model):
     @api.multi
     def get_tests(self):
         """Returns the tests documentation of each module.
+            [(module_name, test_list), ...]
 
-        @return: dict
+        @return: list
         """
         tests_by_module = {}
         for module in self:
@@ -121,4 +122,4 @@ class IrModuleModule(models.Model):
             if tests:
                 # Add tests for this module
                 tests_by_module[module.name] = tests
-        return tests_by_module
+        return sorted([(module_name, tests_by_module[module_name]) for module_name in tests_by_module], lambda x, y: cmp(x[0], y[0]))
