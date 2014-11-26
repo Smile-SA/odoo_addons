@@ -210,20 +210,20 @@ def _run_unit_tests(dbname, modules, ignore):
                     _write_log(vals)
                     continue
                 start = time.time()
-                try:
-                    tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
-                    suite = unittest2.TestSuite(tests)
-                    if suite.countTestCases():
-                        unittest2.TextTestRunner(verbosity=2).run(suite)
-                except Exception, e:
-                    vals['duration'] = time.time() - start
-                    vals['result'] = 'error'
-                    vals['exception'] = _get_exception_message(e)
-                    _write_log(vals)
-                else:
-                    vals['duration'] = time.time() - start
-                    vals['result'] = 'success'
-                    _write_log(vals)
+                tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
+                suite = unittest2.TestSuite(tests)
+                if suite.countTestCases():
+                    result = unittest2.TextTestRunner(verbosity=2).run(suite)
+                    if not result.wasSuccessful():
+                        vals['duration'] = time.time() - start
+                        vals['result'] = 'error'
+                        vals['exception'] = "Failures: %s\nErrors: %s" \
+                            % (tools.ustr(result.failures), tools.ustr(result.errors))
+                        _write_log(vals)
+                    else:
+                        vals['duration'] = time.time() - start
+                        vals['result'] = 'success'
+                        _write_log(vals)
 
 
 def run_tests(dbname, modules=None):
