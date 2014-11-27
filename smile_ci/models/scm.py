@@ -530,6 +530,7 @@ class Build(models.Model):
         return {
             'db_user': 'odoo',
             'db_password': 'odoo',
+            'db_name': DBNAME,
             'logfile': format(LOGFILE),
             'coveragefile': format(COVERAGEFILE),
             'flake8file': format(FLAKE8FILE),
