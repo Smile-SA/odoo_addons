@@ -21,8 +21,7 @@ RUN apt-get -qq update && apt-get -qq -y install python-pip \
 	wget fontconfig libfontconfig1 libfreetype6 libjpeg-turbo8 libx11-6 libxext6 libxrender1
 
 # Install wkhtmltopdf
-RUN cd /tmp && wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
-RUN dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
+RUN cd /tmp && wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb && dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
 # Install PostgreSQL
 RUN apt-get -qq -y install postgresql-%(pg_version)s
