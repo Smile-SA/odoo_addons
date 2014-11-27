@@ -27,6 +27,8 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.addons.smile_log.tools import SmileDBLogger
 from openerp.addons.smile_impex.models.impex import IrModelImpex, IrModelImpexTemplate, state_cleaner
 
+from ..tools import with_new_cursor
+
 
 class IrModelImportTemplate(models.Model, IrModelImpexTemplate):
     _name = 'ir.model.import.template'
@@ -46,10 +48,11 @@ class IrModelImportTemplate(models.Model, IrModelImpexTemplate):
         return vals
 
     @api.one
-    @api.returns('ir.model.import', lambda value: value.id)
+    @with_new_cursor
     def create_import(self, *args):
+        import_obj = self.env['ir.model.import']
+        import_rec = import_obj.browse()
         try:
-            import_obj = self.env['ir.model.import']
             vals = {
                 'import_tmpl_id': self.id,
                 'test_mode': self._context.get('test_mode'),
@@ -62,7 +65,7 @@ class IrModelImportTemplate(models.Model, IrModelImpexTemplate):
             tmpl_logger.error(repr(e))
             raise Warning(repr(e))
         import_rec.process()
-        return import_rec
+        return import_rec.id
 
 
 class IrModelImport(models.Model, IrModelImpex):
@@ -79,5 +82,5 @@ class IrModelImport(models.Model, IrModelImpex):
 
     @api.one
     def _execute(self):
-        model_obj = self.env[self.import_tmpl_id.model_id.model].browse()
-        getattr(model_obj, self.import_tmpl_id.method)(*eval(self.args or '[]'), **eval(self.import_tmpl_id.method_args or '{}'))
+        model = self.env[self.import_tmpl_id.model_id.model].with_env(self.env(cr=self._context['original_cr'])).browse()
+        getattr(model, self.import_tmpl_id.method)(*eval(self.args or '[]'), **eval(self.import_tmpl_id.method_args or '{}'))

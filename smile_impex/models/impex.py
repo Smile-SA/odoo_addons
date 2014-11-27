@@ -31,7 +31,7 @@ from openerp.modules.registry import Registry
 
 from openerp.addons.smile_log.tools import SmileDBLogger
 
-from ..tools.misc import s2human
+from ..tools import s2human
 
 _logger = logging.getLogger(__package__)
 
@@ -160,7 +160,7 @@ class IrModelImpex(models.AbstractModel):
 
     @api.multi
     def process(self):
-        self._cr.commit()
+        self._cr.commit()  # INFO: to access to import/export record via user interface
         for record in self:
             if record.new_thread:
                 cr, uid, context = self.env.args
@@ -177,11 +177,10 @@ class IrModelImpex(models.AbstractModel):
         self.write_with_new_cursor({'state': 'running', 'from_date': fields.Datetime.now(),
                                     'pid': os.getpid()})
         try:
-            with registry(self._cr.dbname).cursor() as exec_cr:
-                self.with_env(self.env(cr=exec_cr))._execute()
-                self.write_with_new_cursor({'state': 'done', 'to_date': fields.Datetime.now()})
-                if self.test_mode:
-                    exec_cr.rollback()
+            self._execute()
+            self.write_with_new_cursor({'state': 'done', 'to_date': fields.Datetime.now()})
+            if self.test_mode:
+                self._cr.rollback()
         except Exception, e:
             logger.error(repr(e))
             try:

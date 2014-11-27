@@ -27,6 +27,8 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.addons.smile_log.tools import SmileDBLogger
 from openerp.addons.smile_impex.models.impex import IrModelImpex, IrModelImpexTemplate, state_cleaner
 
+from ..tools import with_new_cursor
+
 
 class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
     _name = 'ir.model.export.template'
@@ -112,16 +114,16 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
         return [res_ids]
 
     @api.one
-    @api.returns('ir.model.export', lambda value: value.id)
+    @with_new_cursor
     def create_export(self):
+        export_obj = self.env['ir.model.export']
+        export_recs = export_obj.browse()
         try:
-            export_obj = self.env['ir.model.export']
             vals = {
                 'export_tmpl_id': self.id,
                 'test_mode': self._context.get('test_mode', False),
                 'new_thread': self.new_thread,
             }
-            export_recs = export_obj.browse()
             for index, res_ids_offset in enumerate(self._get_res_ids_offset()):
                 vals['record_ids'] = res_ids_offset
                 vals['offset'] = index + 1
@@ -131,7 +133,7 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
             tmpl_logger.error(repr(e))
             raise Warning(repr(e))
         export_recs.process()
-        return export_recs
+        return export_recs.ids
 
 
 class IrModelExport(models.Model, IrModelImpex):
@@ -159,4 +161,5 @@ class IrModelExport(models.Model, IrModelImpex):
         if record_ids or self.export_tmpl_id.force_execute_action:
             records = self.env[self.export_tmpl_id.model_id.model].browse(record_ids)
             if self.export_tmpl_id.method:
+                records = records.with_env(self.env(cr=self._context['original_cr']))
                 getattr(records, self.export_tmpl_id.method)(**eval(self.export_tmpl_id.method_args or '{}'))
