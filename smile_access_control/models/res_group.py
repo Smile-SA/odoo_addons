@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import fields, models
+from openerp import api, fields, models
 
 
 class IrModel(models.Model):
@@ -106,6 +106,27 @@ class ResGroup(models.Model):
             if user_profile_ids:
                 user_obj.write(cr, uid, list(set(user_profile_ids)), {}, context)  # Update users linked to profiles
 
-    def write(self, cr, uid, ids, vals, context=None):
-        self._update_users(cr, uid, vals, context)
-        return super(ResGroup, self).write(cr, uid, ids, vals, context)
+    @api.multi
+    def write(self, vals):
+        group_ids_to_unlink = []
+        group_ids_to_link = []
+        if vals.get('implied_ids'):
+            for item in vals['implied_ids']:
+                if item[0] == 6:
+                    for group in self:
+                        group_ids_to_unlink.extend(list(set(group.implied_ids.ids) - set(item[2])))
+                        group_ids_to_link.extend(list(set(item[2]) - set(group.implied_ids.ids)))
+                elif item[0] == 5:
+                    group_ids_to_unlink.extend(item[1])
+                elif item[0] == 4:
+                    group_ids_to_link.append(item[1])
+                elif item[0] == 3:
+                    group_ids_to_unlink.append(item[1])
+        self._update_users(vals)
+        res = super(ResGroup, self).write(vals)
+        if vals.get('implied_ids'):
+            # Update group for all users depending of this group, in order to add new implied groups to their groups
+            for group in self:
+                group.users.write({'groups_id': [(4, subgroup_id) for subgroup_id in group_ids_to_link]
+                                   + [(3, subgroup_id) for subgroup_id in group_ids_to_unlink]})
+        return res
