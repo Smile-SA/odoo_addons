@@ -127,6 +127,6 @@ class ResGroup(models.Model):
         if vals.get('implied_ids'):
             # Update group for all users depending of this group, in order to add new implied groups to their groups
             for group in self:
-                group.users.write({'groups_id': [(4, subgroup_id) for subgroup_id in group_ids_to_link]
-                                   + [(3, subgroup_id) for subgroup_id in group_ids_to_unlink]})
+                group.with_context(active_test=False).users.write({'groups_id': [(4, subgroup_id) for subgroup_id in group_ids_to_link]
+                                                                   + [(3, subgroup_id) for subgroup_id in group_ids_to_unlink]})
         return res
