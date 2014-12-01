@@ -60,6 +60,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
     "data": [
         "security/ir.model.access.csv",
         "data/ir.config_parameter.csv",
+        "data/docker.host.csv",
         "data/scm.os.csv",
         "data/scm.vcs.csv",
         "data/scm.version.csv",
@@ -70,12 +71,13 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
         "views/scm_repository_branch_view.xml",
         "views/scm_vcs_view.xml",
         "views/scm_version_view.xml",
+        "views/scm_os_view.xml",
+        "views/docker_host_view.xml",
     ],
     "auto_install": False,
     "installable": True,
     "application": False,
     "external_dependencies": {
-        'python': ['flake8'],
-        'bin': ['docker'],
+        'python': ['docker', 'flake8'],
     }
 }

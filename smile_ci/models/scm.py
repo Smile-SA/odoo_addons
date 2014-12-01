@@ -24,6 +24,8 @@ import base64
 import cStringIO
 import csv
 from datetime import datetime
+from docker import Client
+from docker.errors import APIError
 import logging
 from lxml import etree
 from threading import Lock, Thread
@@ -31,7 +33,6 @@ import os
 import psutil
 import re
 import shutil
-import subprocess
 import tempfile
 import time
 from urlparse import urljoin, urlparse
@@ -91,6 +92,25 @@ class OperatingSystem(models.Model):
     active = fields.Boolean(default=True)
 
 
+class DockerHost(models.Model):
+    _name = 'docker.host'
+    _description = 'Docker Host'
+    _rec_name = 'docker_base_url'
+
+    @api.model
+    def _get_default_build_base_url(self):
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        netloc = urlparse(base_url).netloc.split(':')[0]  # Remove port
+        return urljoin(base_url, '//%s' % netloc)
+
+    docker_base_url = fields.Char(default='unix://var/run/docker.sock')
+    timeout = fields.Integer(default=60, help='In seconds')
+    tls = fields.Boolean()
+    active = fields.Boolean('Active', default=True)
+    redirect_subdomain_to_port = fields.Boolean()
+    build_base_url = fields.Char(default=_get_default_build_base_url)
+
+
 class Branch(models.Model):
     _inherit = 'scm.repository.branch'
 
@@ -131,7 +151,7 @@ class Branch(models.Model):
     os_id = fields.Many2one('scm.os', 'Operating System', required=True, default=_get_default_os)
     dump_id = fields.Many2one('ir.attachment', 'Dump file')
     modules_to_install = fields.Char('Modules to install')
-    ignored_tests = fields.Text('Tests to ignore', help='module.filename, without extension. Comma-separated')
+    ignored_tests = fields.Text('Tests to ignore', help="Example: {'account': ['test/account_bank_statement.yml'], 'sale': 'all'}")
     server_path = fields.Char('Server path', default="server")
     addons_path = fields.Char('Addons path', default="addons", help="Comma-separated")
     code_path = fields.Char('Source code to analyse path', help="Addons path for which checking code quality and coverage.\n"
@@ -157,11 +177,10 @@ class Branch(models.Model):
     @api.multi
     def _get_revno(self):
         self.ensure_one()
-        branch = self[0]
         revno = ''
-        with cd(branch.directory):
-            vcs = branch.vcs_id
-            cmd_revno = vcs.cmd_revno % {'branch': branch.branch}
+        with cd(self.directory):
+            vcs = self.vcs_id
+            cmd_revno = vcs.cmd_revno % {'branch': self.branch}
             cmd = cmd_revno.split(' ')
             cmd.insert(0, vcs.cmd)
             revno = literal_eval(check_output_chain(cmd))
@@ -170,11 +189,10 @@ class Branch(models.Model):
     @api.multi
     def _get_last_commits(self):
         self.ensure_one()
-        branch = self[0]
         last_commits = ''
-        with cd(branch.directory):
-            vcs = branch.vcs_id
-            last_revno = branch.build_ids and branch.build_ids[0].revno.encode('utf8') or branch._get_revno()
+        with cd(self.directory):
+            vcs = self.vcs_id
+            last_revno = self.build_ids and self.build_ids[0].revno.encode('utf8') or self._get_revno()
             cmd_log = vcs.cmd_log % {'last_revno': last_revno}
             cmd = cmd_log.split(' ')
             cmd.insert(0, vcs.cmd)
@@ -184,8 +202,7 @@ class Branch(models.Model):
     @api.multi
     def _changes(self):
         self.ensure_one()
-        branch = self[0]
-        if not branch.build_ids or tools.ustr(branch._get_revno()) != tools.ustr(branch.build_ids[0].revno):  # Because builds ordered by id desc
+        if not self.build_ids or tools.ustr(self._get_revno()) != tools.ustr(self.build_ids[0].revno):  # Because builds ordered by id desc
             return True
         return False
 
@@ -235,9 +252,9 @@ def state_cleaner(method):
                         build_obj.write(cr, SUPERUSER_ID, build_ids, {'state': 'done', 'result': 'killed'})
                     # Search running builds not running anymore
                     runnning_build_ids = build_obj.search(cr, SUPERUSER_ID, [('state', '=', 'running')])
-                    actual_runnning_build_ids = [int(row.split('build:')[1].split(' ')[0])
-                                                 for row in subprocess.check_output(["docker", "ps"]).split('\n')[1:]
-                                                 if 'build:' in row]
+                    actual_runnning_build_ids = [int(container['Names'][0].replace('build_', ''))
+                                                 for container in Client('unix:///var/run/docker.sock').containers()
+                                                 if container['Names'] and container['Names'][0].startswith('build_')]
                     build_ids = list(set(runnning_build_ids) - set(actual_runnning_build_ids))
                     if build_ids:
                         # Kill invalid builds
@@ -265,23 +282,18 @@ class Build(models.Model):
         setattr(Registry, 'load', state_cleaner(getattr(Registry, 'load')))
 
     @api.one
-    @api.depends('host', 'port')
+    @api.depends('docker_host_id', 'port')
     def _get_url(self):
-        if self.host == 'localhost':
-            base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-            netloc = urlparse(base_url).netloc.split(':')[0]  # Remove port
-            if bool(self.env['ir.config_parameter'].get_param('ci.redirect_subdomain_to_port')):
-                netloc = netloc.split('.')
-                if netloc[0] == 'www':
-                    netloc[0] = 'build_%s' % self.port
-                else:
-                    netloc.insert(0, 'build_%s' % self.port)
-                netloc = '.'.join(netloc)
-                self.url = urljoin(base_url, '//%s' % netloc)
-            else:
-                self.url = urljoin(base_url, '//%s:%s' % (netloc, self.port))
+        netloc = urlparse(self.host).netloc
+        if self.docker_host_id.redirect_subdomain_to_port:
+            # Add subdomain build_%(port)s
+            if netloc.startswith('www.'):
+                netloc.replace('www.', '')
+            self.url = urljoin(self.host, '//build_%s.%s' % (self.port, netloc))
         else:
-            self.url = ''
+            # Replace default port by build port
+            netloc = netloc.split(':')[0]
+            self.url = urljoin(self.host, '//%s:%s' % (netloc, self.port))
 
     @api.one
     @api.depends('date_start')
@@ -349,7 +361,8 @@ class Build(models.Model):
     ], 'State', readonly=True, default='pending')
     result = fields.Selection(BUILD_RESULTS, 'Result', readonly=True)
     directory = fields.Char(readonly=True)
-    host = fields.Char(readonly=True, default='localhost')
+    docker_host_id = fields.Many2one('docker.host', readonly=True)
+    host = fields.Char(related='docker_host_id.build_base_url', readonly=True)
     port = fields.Char(readonly=True)
     url = fields.Char(compute='_get_url')
     date_start = fields.Datetime('Start date', readonly=True)
@@ -367,15 +380,27 @@ class Build(models.Model):
     ppid = fields.Integer('Launcher Process Id', readonly=True)
 
     @property
+    def _docker_cli(self):
+        return Client(self.docker_host_id.docker_base_url,
+                      tls=self.docker_host_id.tls,
+                      timeout=self.docker_host_id.timeout)
+
+    @property
     def _builds_path(self):
         builds_path = config.get('builds_path') or tempfile.gettempdir()
         if not os.path.isdir(builds_path):
             raise Warning(_("%s doesn't exist or is not a directory") % builds_path)
         return builds_path
 
+    @api.one
+    def _get_docker_host(self):
+        # TODO: loads balance over each docker host
+        self.docker_host_id = self.env['docker.host'].search([], limit=1)
+
     @api.model
     def create(self, vals):
         build = super(Build, self).create(vals)
+        build._get_docker_host()
         build._copy_sources()
         return build
 
@@ -456,16 +481,17 @@ class Build(models.Model):
         with api.Environment.manage():
             return self.browse(cr, uid, build_id, context)._test()
 
-    @api.one
+    @api.multi
     @with_new_cursor
     def _test(self):
+        self.ensure_one()
         _logger.info('Testing build %s...' % self.id)
         running = False
         try:
             self._create_configfile()
             self._create_launcherfile()
             self._create_dockerfile()
-            self._build_container()
+            self._build_image()
             self._remove_directory()
             self._run_container()
             if self.branch_id.dump_id:
@@ -594,37 +620,32 @@ class Build(models.Model):
                 f.write(content % localdict)
 
     @api.one
-    def _build_container(self):
-        _logger.info('Building container build:%s...' % self.id)
-        cmd = ['docker']
-        dns = self.env['ir.config_parameter'].get_param('ci.dns')
-        if dns:
-            for dn in dns.replace(' ', '').split(','):
-                cmd.extend(['--dns', dn])
-        cmd.extend(['build', '-t', 'build:%s' % self.id, self.directory])
-        subprocess.check_call(cmd)
+    def _build_image(self):
+        _logger.info('Building image build:%s...' % self.id)
+        # TODO: copy sources in a tar archive and use it as fileobj with custom_context=True
+        response = self._docker_cli.build(path=self.directory, tag='build:%s' % self.id, rm=True)
+        for line in response:
+            _logger.debug(line)
 
     @api.one
-    def _run_container(self):
-        _logger.info('Running container build:%s and expose it in port %s...' % (self.id, self.port))
-        cmd = ['docker']
-        dns = self.env['ir.config_parameter'].get_param('ci.dns')
-        if dns:
-            for dn in dns.replace(' ', '').split(','):
-                cmd.extend(['--dns', dn])
-        cmd.extend(['run', '--name', 'build_%s' % self.id, '-d',
-                    '-p', '%s:8069' % self.port, 'build:%s' % self.id])
-        subprocess.check_call(cmd)
-        # Check Odoo is running (during 1 minute max.)
+    def _check_if_running(self):
         t0 = time.time()
         sock_db = self._connect('db')
         while True:
             try:
                 sock_db.server_version()
                 break
-            except Exception, e:
+            except:
                 if time.time() - t0 >= 60:
-                    raise e
+                    raise
+
+    @api.one
+    def _run_container(self):
+        _logger.info('Running container build_%s and expose it in port %s...' % (self.id, self.port))
+        container = self._docker_cli.create_container('build:%s' % self.id, name='build_%s' % self.id,
+                                                      detach=True, ports=[8069])
+        self._docker_cli.start(container, port_bindings={8069: int(self.port)})
+        self._check_if_running()
 
     @api.model
     def _find_ports(self):
@@ -641,13 +662,12 @@ class Build(models.Model):
     @api.multi
     def _connect(self, service):
         self.ensure_one()
-        build = self[0]
-        url = 'http://%s:%s/xmlrpc/%s' % (build.host, build.port, service)
+        url = '%s:%s/xmlrpc/2/%s' % (self.host, self.port, service)
         return xmlrpclib.ServerProxy(url)
 
     @api.one
     def _create_db(self):
-        _logger.info('Creating database for build:%s...' % self.id)
+        _logger.info('Creating database for build_%s...' % self.id)
         branch = self.branch_id
         sock_db = self._connect('db')
         if sock_db.server_version()[:3] >= '6.1':
@@ -663,14 +683,14 @@ class Build(models.Model):
 
     @api.one
     def _restore_db(self):
-        _logger.info('Restoring database for build:%s from file %s...' % (self.id, self.branch_id.dump_id.datas_fname))
+        _logger.info('Restoring database for build_%s from file %s...' % (self.id, self.branch_id.dump_id.datas_fname))
         sock_db = self._connect('db')
         dump_file = base64.b64decode(self.branch_id.dump_id.datas)
         sock_db.restore(self.admin_passwd, DBNAME, dump_file)
 
     @api.one
     def _install_modules(self, modules_to_install):
-        _logger.info('Installing modules %s for build:%s...' % (modules_to_install, self.id))
+        _logger.info('Installing modules %s for build_%s...' % (modules_to_install, self.id))
         branch = self.branch_id
         sock_object = self._connect('object')
         sock_exec = lambda *args: sock_object.execute(DBNAME, branch.user_uid, branch.user_passwd, *args)
@@ -690,55 +710,46 @@ class Build(models.Model):
 
     @api.one
     def _check_quality_code(self):
-        _logger.info('Checking quality code for build:%s...' % self.id)
+        _logger.info('Checking quality code for build_%s...' % self.id)
         self._connect('common').check_quality_code(self.admin_passwd)
 
     @api.one
     def _count_lines_of_code(self):
-        _logger.info('Counting lines of code for build:%s...' % self.id)
+        _logger.info('Counting lines of code for build_%s...' % self.id)
         self._connect('common').count_lines_of_code(self.admin_passwd)
 
     @api.one
     def _start_coverage(self):
-        _logger.info('Starting code coverage for build:%s...' % self.id)
+        _logger.info('Starting code coverage for build_%s...' % self.id)
         self._connect('common').coverage_start(self.admin_passwd)
 
     @api.one
     def _stop_coverage(self):
-        _logger.info('Stopping code coverage for build:%s...' % self.id)
+        _logger.info('Stopping code coverage for build_%s...' % self.id)
         self._connect('common').coverage_stop(self.admin_passwd)
 
     @api.one
     def _run_tests(self):
-        _logger.info('Running tests for build:%s...' % self.id)
+        _logger.info('Running tests for build_%s...' % self.id)
         self._connect('common').run_tests(self.admin_passwd, DBNAME)
 
     @api.one
     def _attach_files(self):
-        _logger.info('Attaching files for build:%s...' % self.id)
-        attach_obj = self.env['ir.attachment']
-        if not os.path.exists(self.directory):
-            os.mkdir(self.directory)
-        with cd(self.directory):
-            cloc_paths = ['%s.cloc' % path.replace('/', '_') for path in self.branch_id.addons_path.split(',')]
-            for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE] + cloc_paths:
-                cmd = ['docker', 'cp', 'build_%s:/usr/src/odoo/%s' % (self.id, filename), '.']
-                copied = False
-                try:
-                    subprocess.check_call(cmd)
-                    copied = True
-                except subprocess.CalledProcessError, e:
-                    _logger.error(get_exception_message(e))
-                if copied:
-                    with open(filename) as f:
-                        attach_obj.create({
-                            'name': filename,
-                            'datas_fname': filename,
-                            'datas': base64.b64encode(f.read()),
-                            'res_model': self._name,
-                            'res_id': self.id,
-                        })
-        shutil.rmtree(self.directory)
+        _logger.info('Attaching files for build_%s...' % self.id)
+        container = 'build_%s' % self.id
+        cloc_paths = ['%s.cloc' % path.replace('/', '_') for path in self.branch_id.addons_path.split(',')]
+        for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE] + cloc_paths:
+            try:
+                response = self._docker_cli.copy(container, resource='/usr/src/odoo/%s' % filename).read()
+                self.env['ir.attachment'].create({
+                    'name': filename,
+                    'datas_fname': filename,
+                    'datas': base64.b64encode(response),
+                    'res_model': self._name,
+                    'res_id': self.id,
+                })
+            except:
+                continue
 
     def _get_logs(self, filename):
         attachs = self.env['ir.attachment'].search([
@@ -750,7 +761,7 @@ class Build(models.Model):
 
     @api.one
     def _load_flake8_logs(self):
-        _logger.info('Parsing Flake8 logs for build:%s...' % self.id)
+        _logger.info('Parsing Flake8 logs for build_%s...' % self.id)
         data = self._get_logs(FLAKE8FILE).split('\n')
         log_obj = self.env['scm.repository.branch.build.log']
         pattern = re.compile(r'(?P<file>[^:]+):(?P<line>\d*):(\d*): (?P<code>\w*) (?P<exception>[^$]*)')
@@ -769,7 +780,7 @@ class Build(models.Model):
 
     @api.one
     def _load_test_logs(self):
-        _logger.info('Importing test logs for build:%s...' % self.id)
+        _logger.info('Importing test logs for build_%s...' % self.id)
         log_obj = self.env['scm.repository.branch.build.log']
         pattern = re.compile(r'([^:]+addons/)(?P<file>[^$]*)')
         csv_input = cStringIO.StringIO(self._get_logs(TESTFILE))
@@ -787,7 +798,7 @@ class Build(models.Model):
 
     @api.one
     def _load_coverage_logs(self):
-        _logger.info('Parsing coverage logs for build:%s...' % self.id)
+        _logger.info('Parsing coverage logs for build_%s...' % self.id)
         coverage_obj = self.env['scm.repository.branch.build.coverage']
         pattern = re.compile(r'([^:]+addons/)(?P<module>[^\/]*)(/)(?P<file>[^$]*)')
         root = etree.fromstring(self._get_logs(COVERAGEFILE))
@@ -809,7 +820,7 @@ class Build(models.Model):
 
     @api.one
     def _set_build_result(self):
-        _logger.info('Getting the result for build:%s...' % self.id)
+        _logger.info('Getting the result for build_%s...' % self.id)
         if not self.result:
             self.result = [log for log in self.log_ids if log.result == 'error'] and 'unstable' or 'stable'
             if self.result == 'stable':
@@ -846,22 +857,17 @@ class Build(models.Model):
 
     @api.one
     def _remove_container(self):
-        container = 'build_%s' % self.id
-        image = 'build:%s' % self.id
-        _logger.info('Killing container %s...' % image)
-        try:
-            running_containers = subprocess.check_output(['docker', 'ps'])
-            if container in running_containers:
-                subprocess.check_call(['docker', 'stop', container])
-            subprocess.check_call(['docker', 'rm', container])
-            subprocess.check_call(['docker', 'rmi', '-f', image])
-        except subprocess.CalledProcessError:
-            pass
-        finally:
-            vals = {'state': 'done'}
-            if not self.result:
-                vals['result'] = 'killed'
-            self.write(vals)
+        _logger.info('Removing container build_%s and its original image...' % self.id)
+        if self.state != 'pending':
+            try:
+                self._docker_cli.remove_container('build_%s' % self.id, force=True)
+                self._docker_cli.remove_image('build:%s' % self.id, force=True)
+            except APIError, e:
+                _logger.warning(e)
+        vals = {'state': 'done'}
+        if not self.result:
+            vals['result'] = 'killed'
+        self.write(vals)
 
     @api.multi
     def stop_container(self):
@@ -871,9 +877,10 @@ class Build(models.Model):
     @api.multi
     @api.returns('ir.attachment', lambda value: value.id)
     def export_container(self):
+        _logger.info('Exporting container build_%s...' % self.id)
         self.ensure_one()
         container = 'build_%s' % self.id
-        archive_content = subprocess.check_output(['docker', 'export', container])
+        archive_content = self._docker_cli.export(container)
         return self.env['ir.attachment'].create({
             'name': 'Docker Container',
             'datas_fname': 'build_%s.tar' % self.id,
@@ -885,13 +892,10 @@ class Build(models.Model):
     @api.multi
     def open(self):
         self.ensure_one()
-        build = self[0]
-        if not build.url:
-            raise Warning(_('Remote deployment is not yet implemented'))
         return {
             'name': _('Open URL'),
             'type': 'ir.actions.act_url',
-            'url': build.url,
+            'url': self.url,
             'target': 'new',
         }
 
