@@ -104,6 +104,7 @@ class DockerHost(models.Model):
         return urljoin(base_url, '//%s' % netloc)
 
     docker_base_url = fields.Char(default='unix://var/run/docker.sock')
+    version = fields.Char()
     timeout = fields.Integer(default=60, help='In seconds')
     tls = fields.Boolean()
     active = fields.Boolean('Active', default=True)
@@ -381,9 +382,14 @@ class Build(models.Model):
 
     @property
     def _docker_cli(self):
-        return Client(self.docker_host_id.docker_base_url,
-                      tls=self.docker_host_id.tls,
-                      timeout=self.docker_host_id.timeout)
+        kwargs = {
+            'base_url': self.docker_host_id.docker_base_url,
+            'tls': self.docker_host_id.tls,
+            'timeout': self.docker_host_id.timeout,
+        }
+        if self.docker_host_id.version:
+            kwargs['version'] = self.docker_host_id.version
+        return Client(**kwargs)
 
     @property
     def _builds_path(self):

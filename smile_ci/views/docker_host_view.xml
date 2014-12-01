@@ -10,6 +10,7 @@
                 <field name="docker_base_url"/>
                 <field name="tls"/>
                 <field name="timeout"/>
+                <field name="version"/>
                 <field name="build_base_url"/>
                 <field name="redirect_subdomain_to_port"/>
                 <field name="active"/>
