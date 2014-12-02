@@ -4,7 +4,7 @@
         <t t-jquery="ul.dropdown-menu" t-operation="replace">
             <ul class="dropdown-menu">
                 <li><a href="#" data-menu="settings">Preferences</a></li>
-                <li><a href="#" data-menu="about">About OpenERP</a></li>
+                <li><a href="#" data-menu="about">About Odoo</a></li>
                 <li><a href="#" data-menu="help">Help</a></li>
                 <li><a href="#" data-menu="logout">Log out</a></li>
             </ul>

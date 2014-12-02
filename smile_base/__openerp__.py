@@ -51,10 +51,12 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "data": [
         "security/base_security.xml",
         "security/res_users.yml",
-        "data/mail_data.xml",
-        "data/ir_lang.yml",
+        "data/mail_data.yml",
+        "data/template.xml",
+        # "data/ir_lang.yml",
         "views/ir_values_view.xml",
         "views/module_view.xml",
+        "views/module_view.yml",
     ],
     "js": [
         "static/src/js/disable_openerp_online.js",
