@@ -33,6 +33,8 @@ import os
 import psutil
 import re
 import shutil
+import StringIO
+import tarfile
 import tempfile
 import time
 from urlparse import urljoin, urlparse
@@ -753,11 +755,15 @@ class Build(models.Model):
         cloc_paths = ['%s.cloc' % path.replace('/', '_') for path in self.branch_id.addons_path.split(',')]
         for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE] + cloc_paths:
             try:
-                response = self._docker_cli.copy(container, resource='/usr/src/odoo/%s' % filename).read()
+                remote_path = '/usr/src/odoo/%s' % filename
+                response = self._docker_cli.copy(container, resource=remote_path).read()
+                filelike = StringIO.StringIO(response.read())
+                tar = tarfile.open(fileobj=filelike)
+                content = tar.extractfile(os.path.basename(remote_path))
                 self.env['ir.attachment'].create({
                     'name': filename,
                     'datas_fname': filename,
-                    'datas': base64.b64encode(response),
+                    'datas': base64.b64encode(content),
                     'res_model': self._name,
                     'res_id': self.id,
                 })
