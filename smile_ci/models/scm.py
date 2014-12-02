@@ -759,7 +759,7 @@ class Build(models.Model):
                 response = self._docker_cli.copy(container, resource=remote_path)
                 filelike = StringIO.StringIO(response.read())
                 tar = tarfile.open(fileobj=filelike)
-                content = tar.extractfile(os.path.basename(remote_path))
+                content = tar.extractfile(os.path.basename(remote_path)).read()
                 self.env['ir.attachment'].create({
                     'name': filename,
                     'datas_fname': filename,
