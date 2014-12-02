@@ -19,12 +19,14 @@
 #
 ##############################################################################
 
-import StringIO
 import base64
 import csv
-from openerp import api, fields, models, _
+from lxml import etree
+import StringIO
 import time
 import zipfile
+
+from openerp import api, fields, models, _
 
 
 class BaseModuleRecord(models.TransientModel):
@@ -49,7 +51,6 @@ class BaseModuleRecord(models.TransientModel):
     filetype = fields.Selection([
         ('csv', 'CSV'),
         ('xml', 'XML'),
-        ('yml', 'YAML'),
     ], required=True, default='csv')
 
     def _get_models(self):
@@ -72,13 +73,15 @@ class BaseModuleRecord(models.TransientModel):
         if 'ir.property' in (model.model for model in models):
             return []
         property_obj = self.env['ir.property']
-        property_ids = []
+        properties = property_obj.browse()
         for model in models:
             res_ids = [False] + ['%s,%s' % (model, res_id) for res_id in res_ids_by_model[model.model]]
-            property_ids.extend(property_obj.search([('fields_id.model_id', '=', model.id), ('res_id', 'in', res_ids)]))
+            properties |= property_obj.search([('fields_id.model_id', '=', model.id), ('res_id', 'in', res_ids)])
+        if not properties:
+            return []
         fields_to_export = property_obj.get_fields_to_export()
         rows = [fields_to_export]
-        rows.extend(property_obj.export_data(property_ids, fields_to_export)['datas'])
+        rows.extend(properties.export_data(fields_to_export)['datas'])
         return [('ir.property', rows)]
 
     def _export_data_by_model(self):
@@ -88,18 +91,18 @@ class BaseModuleRecord(models.TransientModel):
         res_ids_by_model = {}
         for index, (model, fields_to_export) in enumerate(datas):
             res_obj = self.env[model]
-            res_ids = [res.id for res in res_obj.search(res_obj._log_access and domain or [])]
+            recs = res_obj.search(res_obj._log_access and domain or [])
             if 'parent_left' in res_obj._columns:
-                res_ids = [res.id for res in res_obj.search([('id', 'in', res_ids)], order='parent_left')]
-            res_ids_by_model[model] = res_ids
+                recs = recs.sorted(key='parent_left')
+            res_ids_by_model[model] = recs.ids
             rows = [fields_to_export]
-            rows.extend(res_obj.browse(res_ids).export_data(fields_to_export)['datas'])
+            rows.extend(recs.export_data(fields_to_export)['datas'])
             datas[index] = (model, rows)
         datas.extend(self._export_ir_properties(models, res_ids_by_model))
         return datas
 
     @staticmethod
-    def _convert_to_csv(rows):
+    def _convert_to_csv(model, rows):
         s = StringIO.StringIO()
         writer = csv.writer(s, quoting=csv.QUOTE_NONNUMERIC)
         for row in rows:
@@ -119,17 +122,40 @@ class BaseModuleRecord(models.TransientModel):
         return s.getvalue()
 
     @staticmethod
-    def _convert_to_xml(rows):
-        raise NotImplemented
-
-    @staticmethod
-    def _convert_to_yml(rows):
-        raise NotImplemented
+    def _convert_to_xml(model, rows):
+        openerp_elem = etree.Element('openerp')
+        data_elem = etree.SubElement(openerp_elem, 'data')
+        data_elem.set('noupdate', '1')
+        fields_ = rows[0]
+        for row in rows[1:]:
+            record_elem = etree.SubElement(data_elem, 'record')
+            record_elem.set('model', model._name)
+            record_elem.set('id', row[fields_.index('id')])
+            for field_name in fields_:
+                if field_name == 'id':
+                    continue
+                field_elem = etree.SubElement(record_elem, 'field')
+                field_elem.set('name', field_name.replace(':id', ''))
+                value = row[fields_.index(field_name)]
+                field = model._fields[field_elem.get('name')]
+                if isinstance(value, bool) or field.type == 'boolean':
+                    field_elem.set('eval', '%s' % value)
+                    continue
+                if not field_name.endswith(':id'):
+                    field_elem.text = '%s' % value
+                else:
+                    if field.type == 'many2one':
+                        field_elem.set(value and 'ref' or 'eval', value or 'False')
+                    elif field.type == 'many2many':
+                        field_elem.set('eval', '[(6, 0, %s)]' % map(lambda s: "ref('%s')" % s,
+                                                                    (value or '').split(',')))
+        return etree.tostring(openerp_elem, encoding='utf-8', xml_declaration=True)
 
     def _get_data_filecontent(self):
         data_files = []
         for model, rows in self._export_data_by_model():
-            data_files.append((model, getattr(BaseModuleRecord, '_convert_to_%s' % self.filetype)(rows)))
+            args = (self.env[model], rows)
+            data_files.append((model, getattr(BaseModuleRecord, '_convert_to_%s' % self.filetype)(*args)))
         return data_files
 
     @staticmethod
@@ -197,9 +223,11 @@ class BaseModuleRecord(models.TransientModel):
         zip.close()
         self.write({'file': base64.encodestring(s.getvalue()), 'state': 'done'})
 
+    @api.multi
     def set_to_draft(self):
         return self.write({'state': 'draft', 'file': False})
 
+    @api.multi
     def open_wizard(self):
         self.ensure_one()
         return {
@@ -212,7 +240,7 @@ class BaseModuleRecord(models.TransientModel):
             'context': self._context,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'res_id': self.ids[0],
+            'res_id': self.id,
         }
 
     @api.multi

@@ -27,10 +27,10 @@
     "description": """
     This module aims to export data in a new module containing CSV files.
 
-    This module built and test on OpenERP v7.0.
+    This module built and test on OpenERP.
 
     Features
-        * Export data in CSV through a new module compatible with import (i.e. data files are ordered and splitted if necessary)
+        * Export data in CSV or XML through a new module compatible with import (i.e. data files are ordered and splitted if necessary)
         * Export automatically properties linked to selected models
 
     TODO
