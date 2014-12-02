@@ -40,7 +40,7 @@ import time
 from urlparse import urljoin, urlparse
 import xmlrpclib
 
-from openerp import api, models, fields, SUPERUSER_ID, tools, _
+from openerp import api, models, fields, registry, SUPERUSER_ID, tools, _
 from openerp.tools import config, file_open
 from openerp.modules.registry import Registry
 import openerp.modules as addons
@@ -48,7 +48,7 @@ from openerp.exceptions import Warning
 
 from openerp.addons.smile_scm.tools import cd
 
-from ..tools import cursor, with_new_cursor, s2human, mergetree, check_output_chain, get_exception_message
+from ..tools import with_new_cursor, s2human, mergetree, check_output_chain, get_exception_message
 
 _logger = logging.getLogger(__package__)
 
@@ -449,7 +449,7 @@ class Build(models.Model):
             shutil.copytree(ci_addons_path, 'ci-addons', ignore=ignore_patterns)
 
     def write_with_new_cursor(self, vals):
-        with cursor(self._cr.dbname) as new_cr:
+        with registry(self._cr.dbname).cursor() as new_cr:
             return self.with_env(self.env(cr=new_cr)).write(vals)
 
     @api.model
@@ -523,13 +523,13 @@ class Build(models.Model):
             self._run_tests()
             self._stop_coverage()
         except Exception, e:
-            self.write({'state': 'done', 'result': 'failed', 'date_stop': fields.Datetime.now()})
+            self.write_with_new_cursor({'state': 'done', 'result': 'failed', 'date_stop': fields.Datetime.now()})
             self.branch_id.message_post(body=_('Failed'))
             msg = get_exception_message(e)
             self.message_post(body=msg, content_subtype='plaintext')
             _logger.error(msg)
         else:
-            self.write({'state': 'running', 'date_stop': fields.Datetime.now()})
+            self.write_with_new_cursor({'state': 'running', 'date_stop': fields.Datetime.now()})
             if self.branch_id.version_id.web_included:
                 # Use a new cursor to see running builds, even those started after the begin of this test
                 self._check_running()
