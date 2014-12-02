@@ -768,6 +768,7 @@ class Build(models.Model):
                     'res_id': self.id,
                 })
             except Exception, e:
+                _logger.error(repr(e))
                 msg = 'Error while attaching %s: %s' % (filename, get_exception_message(e))
                 self.message_post(body=msg, content_subtype='plaintext')
 
@@ -859,6 +860,7 @@ class Build(models.Model):
             try:
                 getattr(self, '_load_%s_logs' % log_type)()
             except Exception, e:
+                _logger.error(repr(e))
                 msg = 'Error while loading %s logs: %s' % (log_type, get_exception_message(e))
                 self.message_post(body=msg, content_subtype='plaintext')
         self._set_build_result()
