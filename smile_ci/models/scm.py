@@ -767,8 +767,9 @@ class Build(models.Model):
                     'res_model': self._name,
                     'res_id': self.id,
                 })
-            except:
-                continue
+            except Exception, e:
+                msg = 'Error while attaching %s: %s' % (filename, get_exception_message(e))
+                self.message_post(body=msg, content_subtype='plaintext')
 
     def _get_logs(self, filename):
         attachs = self.env['ir.attachment'].search([
@@ -852,17 +853,15 @@ class Build(models.Model):
             elif self.result == 'unstable':
                 self.branch_id.message_post(body=_('Unstable'))
 
-    @api.multi
+    @api.one
     def _load_logs_in_db(self):
-        try:
-            self._load_test_logs()
-            self._load_flake8_logs()
-            self._load_coverage_logs()
-        except:
-            _logger.warn('Something was wrong during the loading of logs for build:%s...' % self.id)
-            self.result = 'failed'
-        else:
-            self._set_build_result()
+        for log_type in ('test', 'flake8', 'coverage'):
+            try:
+                getattr(self, '_load_%s_logs' % log_type)()
+            except Exception, e:
+                msg = 'Error while loading %s logs: %s' % (log_type, get_exception_message(e))
+                self.message_post(body=msg, content_subtype='plaintext')
+        self._set_build_result()
 
     @api.multi
     def unlink(self):
