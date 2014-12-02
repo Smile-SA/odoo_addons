@@ -756,7 +756,7 @@ class Build(models.Model):
         for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE] + cloc_paths:
             try:
                 remote_path = '/usr/src/odoo/%s' % filename
-                response = self._docker_cli.copy(container, resource=remote_path).read()
+                response = self._docker_cli.copy(container, resource=remote_path)
                 filelike = StringIO.StringIO(response.read())
                 tar = tarfile.open(fileobj=filelike)
                 content = tar.extractfile(os.path.basename(remote_path))
