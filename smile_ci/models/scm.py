@@ -111,6 +111,18 @@ class DockerHost(models.Model):
     redirect_subdomain_to_port = fields.Boolean()
     build_base_url = fields.Char(default=_get_default_build_base_url)
 
+    @api.multi
+    def get_client(self):
+        self.ensure_one()
+        kwargs = {
+            'base_url': self.docker_base_url,
+            'tls': self.tls,
+            'timeout': self.timeout,
+        }
+        if self.version:
+            kwargs['version'] = self.version
+        return Client(**kwargs)
+
 
 class Branch(models.Model):
     _inherit = 'scm.repository.branch'
@@ -253,9 +265,11 @@ def state_cleaner(method):
                         build_obj.write(cr, SUPERUSER_ID, build_ids, {'state': 'done', 'result': 'killed'})
                     # Search running builds not running anymore
                     runnning_build_ids = build_obj.search(cr, SUPERUSER_ID, [('state', '=', 'running')])
-                    actual_runnning_build_ids = [int(container['Names'][0].replace('build_', ''))
-                                                 for container in Client('unix:///var/run/docker.sock').containers()
-                                                 if container['Names'] and container['Names'][0].startswith('build_')]
+                    actual_runnning_build_ids = []
+                    for docker_host in self.env['docker.host'].search([]):
+                        actual_runnning_build_ids += [int(container['Names'][0].replace('build_', ''))
+                                                      for container in docker_host.get_client().containers()
+                                                      if container['Names'] and container['Names'][0].startswith('build_')]
                     build_ids = list(set(runnning_build_ids) - set(actual_runnning_build_ids))
                     if build_ids:
                         # Kill invalid builds
@@ -382,14 +396,7 @@ class Build(models.Model):
 
     @property
     def _docker_cli(self):
-        kwargs = {
-            'base_url': self.docker_host_id.docker_base_url,
-            'tls': self.docker_host_id.tls,
-            'timeout': self.docker_host_id.timeout,
-        }
-        if self.docker_host_id.version:
-            kwargs['version'] = self.docker_host_id.version
-        return Client(**kwargs)
+        return self.docker_host_id.get_client()
 
     @property
     def _builds_path(self):
