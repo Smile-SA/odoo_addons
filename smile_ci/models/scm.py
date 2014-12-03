@@ -40,7 +40,7 @@ import time
 from urlparse import urljoin, urlparse
 import xmlrpclib
 
-from openerp import api, models, fields, registry, SUPERUSER_ID, tools, _
+from openerp import api, models, fields, SUPERUSER_ID, tools, _
 from openerp.tools import config, file_open
 from openerp.modules.registry import Registry
 import openerp.modules as addons
@@ -48,7 +48,7 @@ from openerp.exceptions import Warning
 
 from openerp.addons.smile_scm.tools import cd
 
-from ..tools import with_new_cursor, s2human, mergetree, check_output_chain, get_exception_message
+from ..tools import cursor, with_new_cursor, s2human, mergetree, check_output_chain, get_exception_message
 
 _logger = logging.getLogger(__package__)
 
@@ -449,7 +449,7 @@ class Build(models.Model):
             shutil.copytree(ci_addons_path, 'ci-addons', ignore=ignore_patterns)
 
     def write_with_new_cursor(self, vals):
-        with registry(self._cr.dbname).cursor() as new_cr:
+        with cursor(self._cr.dbname, serialized=False) as new_cr:
             return self.with_env(self.env(cr=new_cr)).write(vals)
 
     @api.model
@@ -497,7 +497,7 @@ class Build(models.Model):
             return self.browse(cr, uid, build_id, context)._test()
 
     @api.multi
-    @with_new_cursor
+    @with_new_cursor(False)
     def _test(self):
         self.ensure_one()
         _logger.info('Testing build %s...' % self.id)
@@ -541,7 +541,7 @@ class Build(models.Model):
                 self._remove_container()
 
     @api.one
-    @with_new_cursor
+    @with_new_cursor(False)
     def _check_running(self):
         # Check max_running_by_branch
         running = self.search([('state', '=', 'running'), ('branch_id', '=', self.branch_id.id)], order='date_start desc')

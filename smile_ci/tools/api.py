@@ -19,13 +19,29 @@
 #
 ##############################################################################
 
-from openerp import registry
+from contextlib import contextmanager
+
+from openerp.modules.registry import RegistryManager
 from openerp.tools.func import wraps
 
 
-def with_new_cursor(method):
-    @wraps(method)
-    def wrapper(self, *args, **kwargs):
-        with registry(self._cr.dbname).cursor() as new_cr:
-            return method(self.with_env(self.env(cr=new_cr)), *args, **kwargs)
-    return wrapper
+@contextmanager
+def cursor(dbname, serialized=True):
+    registry = RegistryManager.get(dbname)
+    db = registry._db
+    new_cr = db.cursor(serialized=serialized)
+    try:
+        yield new_cr
+        new_cr.commit()
+    finally:
+        new_cr.close()
+
+
+def with_new_cursor(serialized=True):
+    def decorator(method):
+        @wraps(method)
+        def wrapper(self, *args, **kwargs):
+            with cursor(self._cr.dbname, serialized=serialized) as new_cr:
+                return method(self.with_env(self.env(cr=new_cr)), *args, **kwargs)
+        return wrapper
+    return decorator
