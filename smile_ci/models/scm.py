@@ -749,6 +749,7 @@ class Build(models.Model):
         self._connect('common').run_tests(self.admin_passwd, DBNAME)
 
     @api.one
+    @with_new_cursor(False)
     def _attach_files(self):
         _logger.info('Attaching files for build_%s...' % self.id)
         container = 'build_%s' % self.id
@@ -855,6 +856,7 @@ class Build(models.Model):
                 self.branch_id.message_post(body=_('Unstable'))
 
     @api.one
+    @with_new_cursor(False)
     def _load_logs_in_db(self):
         for log_type in ('test', 'flake8', 'coverage'):
             try:
