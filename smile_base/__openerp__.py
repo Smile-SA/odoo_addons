@@ -54,9 +54,10 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         "data/mail_data.yml",
         "data/template.xml",
         # "data/ir_lang.yml",
+        "data/im_odoo_support.yml",
+        "data/portal.yml",
+        "data/ir_module_menu.yml",
         "views/ir_values_view.xml",
-        "views/module_view.xml",
-        "views/module_view.yml",
     ],
     "js": [
         "static/src/js/disable_openerp_online.js",
