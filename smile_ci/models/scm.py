@@ -765,7 +765,7 @@ class Build(models.Model):
         container = 'build_%s' % self.id
         cloc_paths = ['%s.cloc' % path.replace('/', '_') for path in self.branch_id.addons_path.split(',')]
         missing_files = []
-        for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE] + cloc_paths:
+        for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE, '.coverage'] + cloc_paths:
             try:
                 remote_path = '/usr/src/odoo/%s' % filename
                 response = self._docker_cli.copy(container, resource=remote_path)
