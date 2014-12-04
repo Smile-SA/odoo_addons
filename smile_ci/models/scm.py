@@ -451,7 +451,7 @@ class Build(models.Model):
             shutil.copytree(ci_addons_path, 'ci-addons', ignore=ignore_patterns)
 
     def write_with_new_cursor(self, vals):
-        with cursor(self._cr.dbname) as new_cr:
+        with cursor(self._cr.dbname, False) as new_cr:
             return self.with_env(self.env(cr=new_cr)).write(vals)
 
     @api.model
@@ -499,7 +499,7 @@ class Build(models.Model):
             return self.browse(cr, uid, build_id, context)._test()
 
     @api.multi
-    @with_new_cursor()
+    @with_new_cursor(False)
     def _test(self):
         self.ensure_one()
         _logger.info('Testing build %s...' % self.id)
@@ -543,7 +543,6 @@ class Build(models.Model):
                 self._remove_container()
 
     @api.one
-    @with_new_cursor()
     def _check_running(self):
         # Check max_running_by_branch
         running = self.search([('state', '=', 'running'), ('branch_id', '=', self.branch_id.id)], order='date_start desc')
@@ -758,7 +757,6 @@ class Build(models.Model):
         self._connect('common').run_tests(self.admin_passwd, DBNAME)
 
     @api.one
-    @with_new_cursor()
     def _attach_files(self):
         _logger.info('Attaching files for build_%s...' % self.id)
         container = 'build_%s' % self.id
@@ -871,7 +869,6 @@ class Build(models.Model):
                 self.branch_id.message_post(body=_('Unstable'))
 
     @api.one
-    @with_new_cursor()
     def _load_logs_in_db(self):
         for log_type in ('test', 'flake8', 'coverage'):
             try:
@@ -893,7 +890,6 @@ class Build(models.Model):
             shutil.rmtree(self.directory)
 
     @api.one
-    @with_new_cursor()
     def _remove_container(self):
         _logger.info('Removing container build_%s and its original image...' % self.id)
         if self.state != 'pending':
