@@ -82,6 +82,7 @@ class OdooVersion(models.Model):
     required_packages = fields.Text('Required packages', required=True)
     optional_packages = fields.Text('Optional packages')
     web_included = fields.Boolean('Web Included', default=True)
+    standard_xmlrpc = fields.Boolean('Standard XML/RPC', default=True)
 
 
 class OperatingSystem(models.Model):
@@ -268,7 +269,9 @@ def state_cleaner(method):
                     # Search running builds not running anymore
                     runnning_build_ids = build_obj.search(cr, SUPERUSER_ID, [('state', '=', 'running')])
                     actual_runnning_build_ids = []
-                    for docker_host in self.env['docker.host'].search([]):
+                    docker_host_obj = self['docker.host']
+                    for docker_host_id in docker_host_obj.search(cr, SUPERUSER_ID, []):
+                        docker_host = docker_host_obj.browse(cr, SUPERUSER_ID, docker_host_id)
                         actual_runnning_build_ids += [int(container['Names'][0].replace('build_', ''))
                                                       for container in docker_host.get_client().containers()
                                                       if container['Names'] and container['Names'][0].startswith('build_')]
@@ -639,8 +642,12 @@ class Build(models.Model):
         _logger.info('Building image build:%s...' % self.id)
         # TODO: copy sources in a tar archive and use it as fileobj with custom_context=True
         response = self._docker_cli.build(path=self.directory, tag='build:%s' % self.id, rm=True)
+        last_line = ''
         for line in response:
+            last_line = line
             _logger.debug(line)
+        if 'Successfully built' not in last_line:
+            raise Exception(last_line)
 
     @api.one
     def _check_if_running(self):
@@ -677,7 +684,10 @@ class Build(models.Model):
     @api.multi
     def _connect(self, service):
         self.ensure_one()
-        url = '%s:%s/xmlrpc/2/%s' % (self.host, self.port, service)
+        xmlrpc = 'xmlrpc'
+        if self.branch_id.version_id.standard_xmlrpc:
+            xmlrpc = 'xmlrpc/2'
+        url = '%s:%s/%s/%s' % (self.host, self.port, xmlrpc, service)
         return xmlrpclib.ServerProxy(url)
 
     @api.one
@@ -754,6 +764,7 @@ class Build(models.Model):
         _logger.info('Attaching files for build_%s...' % self.id)
         container = 'build_%s' % self.id
         cloc_paths = ['%s.cloc' % path.replace('/', '_') for path in self.branch_id.addons_path.split(',')]
+        missing_files = []
         for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE] + cloc_paths:
             try:
                 remote_path = '/usr/src/odoo/%s' % filename
@@ -768,10 +779,15 @@ class Build(models.Model):
                     'res_model': self._name,
                     'res_id': self.id,
                 })
+            except APIError:
+                missing_files.append(filename)
             except Exception, e:
                 _logger.error(repr(e))
                 msg = 'Error while attaching %s: %s' % (filename, get_exception_message(e))
                 self.message_post(body=msg, content_subtype='plaintext')
+        if missing_files:
+            msg = "The following files are missing: %s" % missing_files
+            self.message_post(body=msg, content_subtype='plaintext')
 
     def _get_logs(self, filename):
         attachs = self.env['ir.attachment'].search([
