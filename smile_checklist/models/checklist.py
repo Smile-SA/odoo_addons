@@ -250,7 +250,7 @@ class ChecklistTaskInstance(models.Model):
     checklist_id = fields.Many2one('checklist', 'Checklist', related='task_id.checklist_id')
     model_id = fields.Many2one('ir.model', 'Model', related='checklist_id.model_id')
     name = fields.Char(size=128, related='task_id.name')
-    mandatory = fields.Boolean('Required', help='Required to make active object', related='task_id.mandatory')
+    mandatory = fields.Boolean('Required to make record active', related='task_id.mandatory')
     res_id = fields.Integer('Resource ID', index=True, required=True)
     active = fields.Boolean(compute='_get_activity', search='_search_activity')
     field_ids_to_fill = fields.One2many('checklist.task.field', string='Fields to fill', compute='_get_activity')
