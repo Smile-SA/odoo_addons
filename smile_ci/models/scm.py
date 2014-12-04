@@ -367,6 +367,11 @@ class Build(models.Model):
         self.coverage_avg = line_counts and \
             sum([coverage.line_rate * coverage.line_count for coverage in self.coverage_ids]) / line_counts or 0
 
+    @api.model
+    def _get_default_docker_host(self):
+        # TODO: loads balance over each docker host
+        return self.env['docker.host'].search([], limit=1).id
+
     id = fields.Integer('Number', readonly=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True, index=True)
     revno = fields.Char('Revision', required=True, readonly=True)
@@ -381,7 +386,7 @@ class Build(models.Model):
     ], 'State', readonly=True, default='pending')
     result = fields.Selection(BUILD_RESULTS, 'Result', readonly=True)
     directory = fields.Char(readonly=True)
-    docker_host_id = fields.Many2one('docker.host', readonly=True)
+    docker_host_id = fields.Many2one('docker.host', readonly=True, default=_get_default_docker_host)
     host = fields.Char(related='docker_host_id.build_base_url', readonly=True)
     port = fields.Char(readonly=True)
     url = fields.Char(compute='_get_url')
@@ -410,15 +415,9 @@ class Build(models.Model):
             raise Warning(_("%s doesn't exist or is not a directory") % builds_path)
         return builds_path
 
-    @api.one
-    def _get_docker_host(self):
-        # TODO: loads balance over each docker host
-        self.docker_host_id = self.env['docker.host'].search([], limit=1)
-
     @api.model
     def create(self, vals):
         build = super(Build, self).create(vals)
-        build._get_docker_host()
         build._copy_sources()
         return build
 
