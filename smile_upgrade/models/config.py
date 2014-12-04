@@ -43,7 +43,7 @@ class ConfigManager(object):
     def _get_default_options(self):
         upgrade_path = config.get('upgrades_path', '')
         if not upgrade_path:
-            _logger.warning("Unspecified 'upgrades_path' option in OpenERP configuration file")
+            _logger.warning("Unspecified 'upgrades_path' option in Odoo configuration file")
             return
         if not os.path.exists(upgrade_path) or not os.path.isdir(upgrade_path):
             _logger.error("Specified 'upgrades_path' option is not valid")
