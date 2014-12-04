@@ -21,11 +21,6 @@ msgid "Client Action"
 msgstr "Action client"
 
 #. module: smile_audit
-#: field:audit.log.line,new_value_text:0
-msgid "New value (text)"
-msgstr "Nouvelle valeur (texte)"
-
-#. module: smile_audit
 #: field:audit.rule,log_unlink:0
 msgid "Log Deletion"
 msgstr "Log de suppression"
