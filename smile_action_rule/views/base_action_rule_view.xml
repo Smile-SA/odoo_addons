@@ -11,9 +11,9 @@
                 	<field name="category_id"/>
                 </field>
                 <field name="kind" position="after">
-                	<field name="method_id" domain="[('model_id', '=', model_id)]"
+                	<field name="method_id" domain="[('model_id', '=', model_id)]" options="{'no_create': True}"
                 		attrs="{'invisible': [('kind', '!=', 'on_other_method')], 'required': [('kind', '=', 'on_other_method')]}"/>
-                	<field name="activity_id" domain="[('wkf_id.osv', '=', model)]"
+                	<field name="activity_id" domain="[('wkf_id.osv', '=', model)]" options="{'no_create': True}"
                 		attrs="{'invisible': [('kind', '!=', 'on_wkf_activity')], 'required': [('kind', '=', 'on_wkf_activity')]}"/>
                 </field>
                 <field name="filter_pre_id" position="attributes">
