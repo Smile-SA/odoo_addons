@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data noupdate="0">
-
-        <delete id="mail.ir_cron_module_update_notification" model="ir.cron"/>
-
-    </data>
-</openerp>

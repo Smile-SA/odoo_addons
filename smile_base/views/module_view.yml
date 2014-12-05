@@ -1,9 +1,0 @@
--
-  I remove the menu "Module Updates".
--
-  !python {model: ir.ui.menu}: |
-    try:
-      menu_id = ref('base.menu_module_updates')
-      self.unlink(cr, uid, menu_id)
-    except:
-      pass
