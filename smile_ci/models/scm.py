@@ -367,6 +367,11 @@ class Build(models.Model):
         self.coverage_avg = line_counts and \
             sum([coverage.line_rate * coverage.line_count for coverage in self.coverage_ids]) / line_counts or 0
 
+    @api.model
+    def _get_default_docker_host(self):
+        # TODO: loads balance over each docker host
+        return self.env['docker.host'].search([], limit=1).id
+
     id = fields.Integer('Number', readonly=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True, index=True)
     revno = fields.Char('Revision', required=True, readonly=True)
@@ -381,7 +386,7 @@ class Build(models.Model):
     ], 'State', readonly=True, default='pending')
     result = fields.Selection(BUILD_RESULTS, 'Result', readonly=True)
     directory = fields.Char(readonly=True)
-    docker_host_id = fields.Many2one('docker.host', readonly=True)
+    docker_host_id = fields.Many2one('docker.host', readonly=True, default=_get_default_docker_host)
     host = fields.Char(related='docker_host_id.build_base_url', readonly=True)
     port = fields.Char(readonly=True)
     url = fields.Char(compute='_get_url')
@@ -410,15 +415,9 @@ class Build(models.Model):
             raise Warning(_("%s doesn't exist or is not a directory") % builds_path)
         return builds_path
 
-    @api.one
-    def _get_docker_host(self):
-        # TODO: loads balance over each docker host
-        self.docker_host_id = self.env['docker.host'].search([], limit=1)
-
     @api.model
     def create(self, vals):
         build = super(Build, self).create(vals)
-        build._get_docker_host()
         build._copy_sources()
         return build
 
@@ -452,7 +451,7 @@ class Build(models.Model):
             shutil.copytree(ci_addons_path, 'ci-addons', ignore=ignore_patterns)
 
     def write_with_new_cursor(self, vals):
-        with cursor(self._cr.dbname) as new_cr:
+        with cursor(self._cr.dbname, False) as new_cr:
             return self.with_env(self.env(cr=new_cr)).write(vals)
 
     @api.model
@@ -500,7 +499,7 @@ class Build(models.Model):
             return self.browse(cr, uid, build_id, context)._test()
 
     @api.multi
-    @with_new_cursor()
+    @with_new_cursor(False)
     def _test(self):
         self.ensure_one()
         _logger.info('Testing build %s...' % self.id)
@@ -544,7 +543,6 @@ class Build(models.Model):
                 self._remove_container()
 
     @api.one
-    @with_new_cursor()
     def _check_running(self):
         # Check max_running_by_branch
         running = self.search([('state', '=', 'running'), ('branch_id', '=', self.branch_id.id)], order='date_start desc')
@@ -759,13 +757,12 @@ class Build(models.Model):
         self._connect('common').run_tests(self.admin_passwd, DBNAME)
 
     @api.one
-    @with_new_cursor()
     def _attach_files(self):
         _logger.info('Attaching files for build_%s...' % self.id)
         container = 'build_%s' % self.id
         cloc_paths = ['%s.cloc' % path.replace('/', '_') for path in self.branch_id.addons_path.split(',')]
         missing_files = []
-        for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE] + cloc_paths:
+        for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE, '.coverage'] + cloc_paths:
             try:
                 remote_path = '/usr/src/odoo/%s' % filename
                 response = self._docker_cli.copy(container, resource=remote_path)
@@ -872,7 +869,6 @@ class Build(models.Model):
                 self.branch_id.message_post(body=_('Unstable'))
 
     @api.one
-    @with_new_cursor()
     def _load_logs_in_db(self):
         for log_type in ('test', 'flake8', 'coverage'):
             try:
@@ -894,7 +890,6 @@ class Build(models.Model):
             shutil.rmtree(self.directory)
 
     @api.one
-    @with_new_cursor()
     def _remove_container(self):
         _logger.info('Removing container build_%s and its original image...' % self.id)
         if self.state != 'pending':

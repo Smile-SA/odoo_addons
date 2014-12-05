@@ -19,11 +19,17 @@
 #
 ##############################################################################
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import logging
+from operator import and_, or_, sub
+import time
 
-from openerp import api
+from openerp import api, _
 from openerp.osv import fields
 from openerp.models import BaseModel
+from openerp.osv.expression import normalize_domain
+
 
 _logger = logging.getLogger(__name__)
 
@@ -134,6 +140,80 @@ def bulk_create(self, vals_list):
     self._parent_store_compute()
     return records
 
+SET_OPERATORS = {
+    '&': and_,
+    '|': or_,
+    '!': sub,
+}
+SQL2PYTHON_OPERATORS = {
+    '=': '==',
+    '<>': '!=',
+    'like': 'in',
+    'ilike': 'in',
+    'not like': 'not in',
+    'not ilike': 'not in',
+}
+
+
+@api.multi
+def filtered_from_domain(self, domain):
+    if not domain or not self:
+        return self
+
+    localdict = {'time': time, 'datetime': datetime, 'relativedelta': relativedelta,
+                 'context': self._context, 'uid': self._uid, 'user': self.env.user}
+    try:
+        domain = normalize_domain(eval(domain, localdict))
+    except:
+        raise Warning(_('Domain not supported for %s filtering: %s') % (self._name, domain))
+
+    stack = []
+
+    def preformat(item):
+        model = self[0]
+        if item[0].split('.')[:-1]:
+            model = eval('o.%s' % '.'.join(item[0].split('.')[:-1]), {'o': self[0]})
+        field = model._fields[item[0].split('.')[-1]]
+        if field.relational:
+            if isinstance(item[2], basestring):
+                item[2] = dict(self.env[field.relation].name_search(name=item[2], operator=item[1])).keys()
+                item[1] = 'in'
+            if field.type.endswith('2many'):
+                item[0] += '.ids'
+            else:
+                item[0] += '.id'
+        return item
+
+    def compute(item):
+        item = preformat(item)
+        item[0] = 'o.%s' % item[0]
+        item[1] = SQL2PYTHON_OPERATORS.get(item[1], item[1])
+        reverse = True if item[1] in ('in', 'not in') and not isinstance(item[2], (tuple, list)) else False
+        item[2] = repr(item[2])
+        if reverse:
+            item = item[::-1]
+        expr_to_eval = ' '.join(map(str, item))
+        try:
+            return self.filtered(lambda rec: eval(expr_to_eval, dict(localdict, o=rec)))
+        except:
+            return self.browse()
+
+    def parse():
+        for item in domain[::-1]:
+            if isinstance(item, (tuple, list)):
+                stack.append(compute(item))
+            else:
+                a = stack.pop()
+                if item == '!':
+                    b = self
+                else:
+                    b = stack.pop()
+                stack.append(SET_OPERATORS[item](b, a))
+        return stack.pop()
+
+    return parse()
+
+BaseModel.filtered_from_domain = filtered_from_domain
 BaseModel._auto_init = new_auto_init
 BaseModel._compute_store_set = _compute_store_set
 BaseModel._validate_fields = new_validate_fields

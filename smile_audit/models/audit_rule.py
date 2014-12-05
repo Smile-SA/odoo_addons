@@ -41,7 +41,7 @@ class AuditRule(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], 'Status', default='draft', readonly=True)
     model_id = fields.Many2one('ir.model', 'Object', required=True,
                                help='Select object for which you want to generate log.',
-                               domain=[('model', 'not in', ('audit.log', 'audit.log.line'))],
+                               domain=[('model', '!=', 'audit.log')],
                                readonly=True, states={'draft': [('readonly', False)]})
     action_id = fields.Many2one('ir.actions.act_window', 'Client Action', readonly=True)
     values_id = fields.Many2one('ir.values', "Add in the 'More' menu", readonly=True)
