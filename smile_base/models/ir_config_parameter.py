@@ -19,13 +19,14 @@
 #
 ##############################################################################
 
-import ir_config_parameter
-import ir_model
-import ir_values
-import ir_translation
-import models
-import module
-import registry
-import service
-import sql_db
-import update
+from openerp import api, models, tools
+
+
+class IrConfigParameter(models.Model):
+    _inherit = 'ir.config_parameter'
+
+    @api.model
+    def get_param(self, key, default=False):
+        if key != 'server.environment':
+            return super(IrConfigParameter, self).get_param(key, default)
+        return tools.config.get('server.environment') or default

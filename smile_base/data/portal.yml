@@ -2,10 +2,9 @@
   I uninstall portal
 -
   !python {model: ir.module.module}: |
-    ids = self.search(cr, uid, [('name', '=', 'portal')], limit=1, context=context)
+    ids = self.search(cr, uid, [('name', 'ilike', 'portal')], limit=1, context=context)
     if ids:
-      module = self.browse(cr, uid, ids[0], context)
-      if module.state in ('installed', 'to upgrade'):
-        module.button_uninstall()
-      if module.auto_install:
-        module.write({'auto_install': False})
+      self.write(cr, uid, ids, {'auto_install': False}, context)
+      for module in self.browse(cr, uid, ids, context):
+        if module.state in ('installed', 'to upgrade'):
+          module.button_uninstall()

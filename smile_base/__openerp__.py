@@ -53,14 +53,15 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         "security/res_users.yml",
         "data/mail_data.yml",
         "data/template.xml",
-        # "data/ir_lang.yml",
+        "data/ir_lang.yml",
         "data/im_odoo_support.yml",
         "data/portal.yml",
         "data/ir_module_menu.yml",
         "views/ir_values_view.xml",
+        'views/webclient_templates.xml',
     ],
     "js": [
-        "static/src/js/disable_openerp_online.js",
+        "static/src/js/web_client.js",
     ],
     "qweb": [
         "static/src/xml/base.xml",
