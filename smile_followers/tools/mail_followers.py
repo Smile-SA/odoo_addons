@@ -19,44 +19,89 @@
 #
 ##############################################################################
 
-from openerp import api
-from openerp.tools.func import wraps
+from openerp import SUPERUSER_ID
 
 
-def AddFollowers(fields=['partner_id']):
-    def decorator(original_class):
-        original_class.create = api.model(add_followers(fields)(original_class.create))
-        original_class.write = api.multi(add_followers(fields)(original_class.write))
-        return original_class
-    return decorator
+def _get_args(self, args, kwargs):
+    if hasattr(self, 'env'):
+        cr, uid, context = self.env.args
+        ids = self.ids
+        vals = args[0]
+    else:
+        cr, uid = args[:2]
+        if isinstance(args[2], dict):
+            ids, vals = [], args[2]
+            index = 2
+        else:
+            ids, vals = args[2:4]
+            index = 3
+        context = {}
+        if index + 1 < len(args):
+            context = args[index + 1]
+        context = context or kwargs.get('context') or {}
+    return cr, uid, ids, vals, context
+
+
+def _special_wrapper(self, method, fields, *args, **kwargs):
+    # Remove followers linked to old partner
+    cr, uid, ids, vals, context = _get_args(self, args, kwargs)
+    follower_obj = self.pool['mail.followers']
+    for field in fields:
+        if vals.get(field) and ids:
+            follower_ids = follower_obj.search(cr, uid, [
+                ('res_model', '=', self._name),
+                ('res_id', 'in', ids),
+                ('partner_id.parent_id', 'in', [getattr(r, field).id for r in self])
+            ], context)
+            follower_obj.browse(cr, uid, follower_ids, context).unlink()
+    res = method(self, *args, **kwargs)
+    # Add followers linked to new partner
+    for field in fields:
+        field_to_recompute = field in self.pool.pure_function_fields
+        if not field_to_recompute:
+            for expr in self._fields[field].depends:
+                if expr.split('.')[0] in vals:
+                    field_to_recompute = True
+        if field in vals or field_to_recompute:
+            if hasattr(res, 'ids'):
+                ids = res.ids
+            records = self.pool[self._name].browse(cr, uid, ids, context)
+            notification_filter = lambda c: self._name in [m.model for m in c.notification_model_ids]
+            for record in records:
+                for contact in getattr(record, field).child_ids.filtered(notification_filter):
+                    follower_obj.create(cr, SUPERUSER_ID, {
+                        'res_model': self._name,
+                        'res_id': record.id,
+                        'partner_id': contact.id,
+                    }, context)
+    return res
 
 
 def add_followers(fields=['partner_id']):
     def decorator(create_or_write):
-        @wraps(create_or_write)
-        def wrapper(self, vals):
-            follower_obj = self.env['mail.followers']
-            for field in fields:
-                # Remove followers linked to old partner
-                if vals.get(field) and self.ids:
-                    follower_obj.search([
-                        ('res_model', '=', self._name),
-                        ('res_id', 'in', self.ids),
-                        ('partner_id.parent_id', 'in', [getattr(r, field).id for r in self])
-                    ]).unlink()
-            res = create_or_write(self, vals)
-            for field in fields:
-                # Add followers linked to new partner
-                if vals.get(field):
-                    record_ids = self.ids or [res.id]
-                    notification_filter = lambda c: self._name in [m.model for m in c.notification_model_ids]
-                    for contact in self.env['res.partner'].browse(vals[field]).child_ids.filtered(notification_filter):
-                        for record_id in record_ids:
-                            follower_obj.sudo().create({
-                                'res_model': self._name,
-                                'res_id': record_id,
-                                'partner_id': contact.id,
-                            })
-            return res
-        return wrapper
+        def add_followers_wrapper(self, *args, **kwargs):
+            return _special_wrapper(self, create_or_write, fields, *args, **kwargs)
+        return add_followers_wrapper
+    return decorator
+
+
+def _add_followers(fields=['partner_id']):
+    def add_followers_wrapper(self, *args, **kwargs):
+        return _special_wrapper(self, add_followers_wrapper.origin, fields, *args, **kwargs)
+    return add_followers_wrapper
+
+
+def AddFollowers(fields=['partner_id']):
+    def decorator(original_class):
+
+        def _register_hook(self, cr):
+            model_obj = self.pool.get(self._name)
+            for method_name in ('create', 'write'):
+                method = getattr(model_obj, method_name)
+                if method.__name__ != 'add_followers_wrapper':
+                    model_obj._patch_method(method_name, _add_followers(fields))
+            return super(original_class, self)._register_hook(cr)
+
+        original_class._register_hook = _register_hook
+        return original_class
     return decorator
