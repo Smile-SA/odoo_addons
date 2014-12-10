@@ -200,6 +200,8 @@ class Branch(models.Model):
             cmd = cmd_revno.split(' ')
             cmd.insert(0, vcs.cmd)
             revno = literal_eval(check_output_chain(cmd))
+            if vcs.name == 'Subversion':
+                revno = revno.split(' ')[0]
         return revno
 
     @api.multi
