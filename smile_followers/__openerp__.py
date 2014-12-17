@@ -29,6 +29,9 @@
 Manage models following
 ------------------------------------
 
+* Disable auto-subscribe for users 
+** activation from user preferences  
+
 TODO: add code comments
 TODO: describe usage
 
@@ -57,9 +60,11 @@ Suggestions & Feedback to: isabelle.richard@smile.fr
 """,
     "depends": [
         'base',
+        'mail',
     ],
     "data": [
         'views/res_partner_view.xml',
+        'views/res_users_view.xml',
     ],
     "demo": [],
     "installable": True,
