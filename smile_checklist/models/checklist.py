@@ -143,17 +143,14 @@ class Checklist(models.Model):
         return result
 
     @api.one
-    def compute_progress_rates(self, rec_ids=None):
+    def compute_progress_rates(self, records=None):
         if self._context.get('do_no_compute_progress_rates'):
             return
-        model_obj = self.env[self.model]
-        if rec_ids:
-            recs = model_obj.browse(rec_ids)
-        else:
-            recs = model_obj.with_context(active_test=False).search([])
-        for rec in recs.with_context(active_test=True):
-            ctx = {'active_id': rec.id, 'active_ids': [rec.id]}
-            for task_inst in rec.checklist_task_instance_ids:
+        if not records:
+            records = self.env[self.model].with_context(active_test=False).search([])
+        for record in records.with_context(active_test=True, no_checklist=True):
+            ctx = {'active_id': record.id, 'active_ids': [record.id]}
+            for task_inst in record.checklist_task_instance_ids:
                 old_progress_rate = task_inst.progress_rate
                 if task_inst.task_id.field_ids:
                     task_inst.progress_rate = 100.0 * len(task_inst.field_ids_filled) / len(task_inst.task_id.field_ids)
@@ -162,21 +159,21 @@ class Checklist(models.Model):
                 if task_inst.task_id.action_id and old_progress_rate != task_inst.progress_rate == 100.0:
                     task_inst.task_id.action_id.with_context(**ctx).run()
             total_progress_rate = 0.0
-            if rec.checklist_task_instance_ids:
-                total_progress_rate = sum(i.progress_rate for i in rec.checklist_task_instance_ids) \
-                    / len(rec.checklist_task_instance_ids)
+            if record.checklist_task_instance_ids:
+                total_progress_rate = sum(i.progress_rate for i in record.checklist_task_instance_ids) \
+                    / len(record.checklist_task_instance_ids)
             vals = {'total_progress_rate': total_progress_rate}
             if self.active_field:
                 total_progress_rate_mandatory = 100.0
-                mandatory_inst = [i for i in rec.checklist_task_instance_ids if i.mandatory]
+                mandatory_inst = [i for i in record.checklist_task_instance_ids if i.mandatory]
                 if mandatory_inst:
-                    total_progress_rate_mandatory = sum(i.progress_rate for i in rec.checklist_task_instance_ids if i.mandatory) \
+                    total_progress_rate_mandatory = sum(i.progress_rate for i in record.checklist_task_instance_ids if i.mandatory) \
                         / len(mandatory_inst)
                 vals['total_progress_rate_mandatory'] = total_progress_rate_mandatory
                 vals['active'] = total_progress_rate_mandatory == 100.0
-            old_total_progress_rate = rec.total_progress_rate
-            rec.write(vals)
-            if self.action_id and old_total_progress_rate != rec.total_progress_rate == 100.0:
+            old_total_progress_rate = record.total_progress_rate
+            record.write(vals)
+            if self.action_id and old_total_progress_rate != record.total_progress_rate == 100.0:
                 self.action_id.with_context(**ctx).run()
 
 
@@ -196,21 +193,23 @@ class ChecklistTask(models.Model):
     field_ids = fields.One2many('checklist.task.field', 'task_id', 'Fields', required=True)
 
     @api.one
-    def _manage_task_instances(self):
-        model = self.env[self.model_id.model].with_context(active_test=False)
-        for record in model.search([]):
+    def _manage_task_instances(self, records=None):
+        if not records:
+            records = self.env[self.model_id.model].with_context(active_test=False).search([])
+        for record in records:
             condition_checked = eval(self.condition, {'object': record, 'time': time})
             task_inst = record.checklist_task_instance_ids.filtered(lambda i: i.task_id == self)
             if condition_checked and not task_inst:
-                self.env['checklist.task.instance'].create({'task_id': self.id, 'res_id': record.id})
+                task_inst.sudo().create({'task_id': self.id, 'res_id': record.id})
             elif not condition_checked and task_inst:
-                task_inst.unlink()
+                task_inst.sudo().unlink()
+            if record.checklist_task_instance_ids:
+                record.checklist_task_instance_ids[0].checklist_id.with_context(no_checklist=True).compute_progress_rates(record)
 
     @api.model
     def create(self, vals):
         task = super(ChecklistTask, self).create(vals)
         self._manage_task_instances()
-        self.checklist_id.compute_progress_rates()
         return task
 
     @api.multi
@@ -218,7 +217,7 @@ class ChecklistTask(models.Model):
         checklists = set([task.checklist_id for task in self])
         result = super(ChecklistTask, self).write(vals)
         self._manage_task_instances()
-        for checklist in checklists | set([task.checklist_id for task in self]):
+        for checklist in checklists:  # Recompute only previous ones because new ones are recomputed in _manage_task_instances
             checklist.compute_progress_rates()
         return result
 
@@ -248,7 +247,7 @@ class ChecklistTaskInstance(models.Model):
     task_id = fields.Many2one('checklist.task', 'Checklist Task', required=True, ondelete='cascade')
     sequence = fields.Integer('Priority', related='task_id.sequence', store=True)
     checklist_id = fields.Many2one('checklist', 'Checklist', related='task_id.checklist_id')
-    model_id = fields.Many2one('ir.model', 'Model', related='checklist_id.model_id')
+    model_id = fields.Many2one('ir.model', 'Model', related='task_id.checklist_id.model_id')
     name = fields.Char(size=128, related='task_id.name')
     mandatory = fields.Boolean('Required to make record active', related='task_id.mandatory')
     res_id = fields.Integer('Resource ID', index=True, required=True)

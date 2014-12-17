@@ -89,7 +89,7 @@ def checklist_write_decorator():
     @api.multi
     def checklist_wrapper(self, vals):
         result = checklist_wrapper.origin(self, vals)
-        if not self._context.get('no_checklist'):
+        if self and not self._context.get('no_checklist'):
             self._manage_checklist_task_instances()
         return result
     return checklist_wrapper

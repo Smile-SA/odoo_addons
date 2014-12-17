@@ -19,34 +19,39 @@
 #
 ##############################################################################
 
-from openerp import api, models, tools
+from openerp import api, models
+from openerp.tools.misc import unquote
+from openerp.tools.safe_eval import safe_eval as eval
 
 
 class IrActionsActWindow(models.Model):
     _inherit = 'ir.actions.act_window'
 
-    @api.v7
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        return super(IrActionsActWindow, self).read(cr, uid, ids, fields, context, load)
+    @api.one
+    def _update_context(self):
+        eval_dict = {
+            'active_id': unquote("active_id"),
+            'active_ids': unquote("active_ids"),
+            'active_model': unquote("active_model"),
+            'uid': self._uid,
+            'context': self._context,
+        }
+        try:
+            context = eval(self.context or '{}', eval_dict) or {}
+            if 'act_window_id' not in context:
+                context['act_window_id'] = self.id
+                self.context = '%s' % context
+        except:
+            pass
 
-    @api.v8
-    def read(self, fields=None, load='_classic_read'):
-        result = super(IrActionsActWindow, self).read(fields, load=load)
-        if len(self.ids) == 1:
-            context = dict(self._context)
-            eval_dict = {
-                'active_model': context.get('active_model'),
-                'active_id': context.get('active_id'),
-                'active_ids': context.get('active_ids'),
-                'uid': self._uid,
-                'context': context,
-            }
-            for res in result:
-                try:
-                    with tools.mute_logger("openerp.tools.safe_eval"):
-                        eval_context = eval(res.get('context') or "{}", eval_dict) or {}
-                        eval_context['act_window_id'] = self.ids[0]
-                        res['context'] = str(eval_context)
-                except:
-                    pass
-        return result
+    @api.model
+    def create(self, vals):
+        act_window = super(IrActionsActWindow, self).create(vals)
+        act_window._update_context()
+        return act_window
+
+    @api.multi
+    def write(self, vals):
+        res = super(IrActionsActWindow, self).write(vals)
+        self._update_context()
+        return res
