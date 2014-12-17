@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<openerp>
+  <data noupdate="0">
+
+    <record id="stock_picking_wave_type_multi_company_rule" model="ir.rule">
+      <field name="name">Stock Picking Wave multi-company</field>
+      <field name="model_id" ref="model_stock_picking_wave_type"/>
+      <field name="global" eval="True"/>
+      <field name="domain_force">['|',('warehouse_id.company_id','=',False),('warehouse_id.company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+  </data>
+</openerp>

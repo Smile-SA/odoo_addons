@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <!-- Stock Picking Type -->
+
+    <record id="view_picking_type_form" model="ir.ui.view">
+      <field name="name">stock.picking.type.form</field>
+      <field name="model">stock.picking.type</field>
+      <field name="inherit_id" ref="stock.view_picking_type_form"/>
+      <field name="arch" type="xml">
+        <separator string="Locations" position="before">
+          <group>
+            <field name="propagate_picking_cancel"/>
+            <field name="propagate_move_cancel"/>
+          </group>
+        </separator>
+      </field>
+    </record>
+
+    <!-- Stock Picking Wave Type -->
+
+    <record id="view_picking_wave_type_search" model="ir.ui.view">
+      <field name="name">stock.picking.wave.type.search</field>
+      <field name="model">stock.picking.wave.type</field>
+      <field name="arch" type="xml">
+        <search string="Picking Wave Types">
+          <field name="name"/>
+          <field name="warehouse_id"/>
+          <field name="sequence_id"/>
+        </search>
+      </field>
+    </record>
+
+    <record id="view_picking_wave_type_list" model="ir.ui.view">
+      <field name="name">stock.picking.wave.type.list</field>
+      <field name="model">stock.picking.wave.type</field>
+      <field name="arch" type="xml">
+        <tree string="Picking Wave Types">
+          <field name="name"/>
+          <field name="warehouse_id"/>
+          <field name="sequence_id"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_picking_wave_type_form" model="ir.ui.view">
+      <field name="name">stock.picking.wave.type.form</field>
+      <field name="model">stock.picking.wave.type</field>
+      <field name="arch" type="xml">
+        <form string="Picking Wave Type">
+          <sheet>
+            <group>
+              <group>
+                <field name="name"/>
+                <field name="sequence_id"/>
+                <field name="warehouse_id"/>
+              </group>
+              <group>
+                <field name="code"/>
+                <field name="partner_visible"/>
+              </group>
+            </group>
+            <group>
+              <field name="propagate_wave_cancel"/>
+              <field name="propagate_picking_cancel"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_picking_wave_type_list" model="ir.actions.act_window">
+      <field name="name">Types of Operation Wave</field>
+      <field name="res_model">stock.picking.wave.type</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_picking_wave_type" name="Types of Operation Wave" parent="stock.menu_stock_configuration" action="action_picking_wave_type_list"
+      sequence="9"/>
+
+  </data>
+</openerp>
