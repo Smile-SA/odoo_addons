@@ -19,10 +19,13 @@
 #
 ##############################################################################
 
+import logging
 import os
 
 from openerp import api, models, modules, tools
 from openerp.modules.module import load_information_from_description_file
+
+_logger = logging.getLogger(__name__)
 
 
 class Module(models.Model):
@@ -56,6 +59,7 @@ class Module(models.Model):
         cr = self._cr
         info = load_information_from_description_file(module_name)
         for filename in info.get(kind, []):
+            _logger.info('loading %s/%s...' % (module_name, filename))
             _, ext = os.path.splitext(filename)
             pathname = os.path.join(module_name, filename)
             with tools.file_open(pathname) as fp:
