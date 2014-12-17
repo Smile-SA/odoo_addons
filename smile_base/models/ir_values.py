@@ -85,20 +85,20 @@ class IrValues(models.Model):
                               OR v.window_actions=', , '
                               OR v.window_actions like %s)
                     ORDER BY v.sequence, v.id"""
-        cr.execute(query, ('action', action_slot, model, res_id or None, ', %s, ' % context.get('window_action_id', '')))
+        cr.execute(query, ('action', action_slot, model, res_id or None, ', %s, ' % context.get('act_window_id', '')))
         ################
         results = {}
         for action in cr.dictfetchall():
             if not action['value']:
                 continue    # skip if undefined
-            action_model, id = action['value'].split(',')
-            if not eval(id):
+            action_model, action_id = action['value'].split(',')
+            if not eval(action_id):
                 continue
             fields = [field for field in self.pool.get(action_model)._fields
                       if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
-                action_def = self.pool.get(action_model).read(cr, uid, int(id), fields, context)
+                action_def = self.pool.get(action_model).read(cr, uid, int(action_id), fields, context)
                 if isinstance(action_def, list):
                     action_def = action_def[0]
                 if action_def:
@@ -117,22 +117,3 @@ class IrValues(models.Model):
             except (except_orm, Warning):
                 continue
         return sorted(results.values())
-
-
-class IrActionsActWindow(models.Model):
-    _inherit = 'ir.actions.act_window'
-
-    def _read_flat(self, cr, uid, ids, fields_to_read, context=None, load='_classic_read'):
-        res = super(IrActionsActWindow, self)._read_flat(cr, uid, ids, fields_to_read, context, load)
-        if (not fields_to_read or 'context' in fields_to_read) and isinstance(ids, list):
-            eval_dict = {'active_id': unquote("active_id"), 'active_ids': unquote("active_ids"),
-                         'active_model': unquote("active_model"), 'uid': uid, 'context': context}
-            for vals in res:
-                try:
-                    vals['context'] = eval(vals['context'], eval_dict) or {}
-                except:
-                    continue
-                if 'window_action_id' not in context:
-                    vals['context']['window_action_id'] = vals['id']
-                vals['context'] = unicode(vals['context'])
-        return res

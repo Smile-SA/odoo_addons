@@ -23,7 +23,7 @@ import logging
 
 from openerp.osv import orm, fields
 
-_logger = logging.getLogger(__package__)
+_logger = logging.getLogger(__name__)
 
 
 class IrModel(orm.Model):

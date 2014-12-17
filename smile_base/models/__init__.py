@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import ir_actions
 import ir_config_parameter
 import ir_model
 import ir_values
