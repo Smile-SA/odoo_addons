@@ -85,7 +85,7 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
         return True
 
     def _get_res_ids(self):
-        model_obj = self.env[self.model_id.model]
+        model_obj = self.env[self.model_id.model].with_env(self.env(cr=self._context['original_cr']))
         if self.filter_type == 'domain':
             domain = eval(self.filter_domain or '[]')
             res_ids = set(model_obj.search(domain, order=self.order or '')._ids)
