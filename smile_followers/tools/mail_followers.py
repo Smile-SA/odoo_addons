@@ -48,11 +48,12 @@ def _special_wrapper(self, method, fields, *args, **kwargs):
     follower_obj = self.pool['mail.followers']
     for field in fields:
         if vals.get(field) and ids:
+            partner_ids = [getattr(r, field).id for r in self.browse(cr, uid, ids, context)]
             follower_ids = follower_obj.search(cr, uid, [
                 ('res_model', '=', self._name),
                 ('res_id', 'in', ids),
-                ('partner_id.parent_id', 'in', [getattr(r, field).id for r in self])
-            ], context)
+                ('partner_id.parent_id', 'in', partner_ids),
+            ], context=context)
             follower_obj.browse(cr, uid, follower_ids, context).unlink()
     res = method(self, *args, **kwargs)
     # Add followers linked to new partner
@@ -66,9 +67,9 @@ def _special_wrapper(self, method, fields, *args, **kwargs):
             if hasattr(res, 'ids'):
                 ids = res.ids
             records = self.pool[self._name].browse(cr, uid, ids, context)
-            notification_filter = lambda c: self._name in [m.model for m in c.notification_model_ids]
+            filter = lambda partner: self._name in [m.model for m in partner.notification_model_ids]
             for record in records:
-                for contact in getattr(record, field).child_ids.filtered(notification_filter):
+                for contact in getattr(record, field).child_ids.filtered(filter):
                     follower_obj.create(cr, SUPERUSER_ID, {
                         'res_model': self._name,
                         'res_id': record.id,

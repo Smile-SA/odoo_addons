@@ -9,7 +9,7 @@
       <field name="inherit_id" ref="base.view_partner_form"/>
       <field name="arch" type="xml">
         <xpath expr="//field[@name='child_ids']/form/sheet/field[@name='supplier']" position="before">
-          <div attrs="{'invisible': [('type', '!=', 'contact')]}">
+          <div>
             <label for="notification_model_ids"/>
             <field name="notification_model_ids"/>
           </div>
