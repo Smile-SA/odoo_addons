@@ -1,9 +1,13 @@
 -
   I create an audit rule on partners
 -
-  !record {model: audit.rule, id: rule_partners}:
-    name: Audit rule on partners
-    model_id: base.model_res_partner
+  !python {model: audit.rule}: |
+    rule_id = self.search(cr, uid, [('model_id.model', '=', 'res.partner')], limit=1, context=context)
+    if not rule_id:
+      rule_id = self.create(cr, uid, {'name': 'Audit rule on partners', 'model_id': ref('base.model_res_partner')}, context)
+    else:
+      rule_id = rule_id[0]
+    self.pool.get('ir.model.data').create(cr, uid, {'name': 'rule_partners', 'module': 'smile_audit', 'model': 'res.partner', 'res_id': rule_id}, context)
 -
   As demo user, I create a new partner
 -
