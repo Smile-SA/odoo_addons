@@ -50,7 +50,7 @@
             test_ids = self.pool.get(model).search(cr, uid, test_domain, offset=0, limit=test_limit, order=None, context=test_context, count=False)
             self.pool.get(model).read(cr, uid, test_ids, [], test_context)
         except Exception as e:
-            err_info = (act_window.name, act_window.res_model, act_window.domain, act_window.context, repr(e))
+            err_info = (act_window.name, act_window.res_model, act_window.domain, act_window.limit, act_window.context, repr(e))
             errors.append(err_info)
             cr.execute('ROLLBACK TO general_act_window_test')
     if errors:
