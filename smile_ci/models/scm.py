@@ -536,18 +536,15 @@ class Build(models.Model):
             _logger.error(msg)
         else:
             self.write_with_new_cursor({'state': 'running', 'date_stop': fields.Datetime.now()})
-            if self.branch_id.version_id.web_included:
-                # Use a new cursor to see running builds, even those started after the begin of this test
-                self._check_running()
-                running = True
         finally:
             self._attach_files()
             self._load_logs_in_db()
-            if not running:
-                self._remove_container()
+            self._check_running()
 
     @api.one
     def _check_running(self):
+        if not self.branch_id.version_id.web_included:
+            self._remove_container()
         # Check max_running_by_branch
         running = self.search([('state', '=', 'running'), ('branch_id', '=', self.branch_id.id)], order='date_start desc')
         max_running = int(self.env['ir.config_parameter'].get_param('ci.max_running_by_branch'))
