@@ -34,7 +34,7 @@ class MailThread(models.Model):
     @api.multi
     def message_subscribe(self, partner_ids, subtype_ids=None):
         # INFO: Disable author auto following if asked
-        partner_ids_to_ignore = self.env['res.users'].search([('disable_auto_subscribe', '=', True)]).mapped('partner_id').mapped('id')
+        partner_ids_to_ignore = self.env['res.users'].search([('disable_auto_subscribe', '=', True)]).mapped('partner_id').ids
         partner_ids = [partner_id for partner_id in partner_ids if partner_id not in partner_ids_to_ignore]
         return super(MailThread, self).message_subscribe(partner_ids, subtype_ids)
 
