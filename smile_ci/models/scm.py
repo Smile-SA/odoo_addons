@@ -830,7 +830,6 @@ class Build(models.Model):
             vals['build_id'] = self.id
             vals['code'] = 'TEST'
             vals['type'] = 'test'
-            vals['exception'] = vals['exception'].replace('\n', '<br/>')
             log_obj.create(vals)
 
     @api.one
@@ -962,7 +961,7 @@ class Log(models.Model):
     file = fields.Char(readonly=True)
     line = fields.Integer(readonly=True, group_operator="count")
     code = fields.Char('Class', readonly=True, required=True)
-    exception = fields.Html('Exception', readonly=True)
+    exception = fields.Char('Exception', readonly=True)
     duration = fields.Float('Duration', digits=(7, 3), help='In seconds', readonly=True)
     exception_short = fields.Char('Exception', compute='_get_exception_short')
 
