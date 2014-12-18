@@ -943,7 +943,7 @@ class Log(models.Model):
 
     @api.one
     def _get_exception_short(self):
-        self.exception_short = self.exception[:101]
+        self.exception_short = self.exception[:101] if self.exception else ''
 
     build_id = fields.Many2one('scm.repository.branch.build', 'Build', readonly=True, required=True, ondelete='cascade', index=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', readonly=True, related='build_id.branch_id', store=True)
