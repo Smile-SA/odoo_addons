@@ -29,8 +29,8 @@
 Manage models following
 ------------------------------------
 
-* Disable auto-subscribe for users 
-** activation from user preferences  
+* Disable auto-subscribe for users
+** activation from user preferences
 
 TODO: add code comments
 TODO: describe usage
