@@ -150,10 +150,6 @@ class Branch(models.Model):
             self.last_build_result = 'unknown'
 
     @api.model
-    def _get_pg_versions(self):
-        return [('8.4', '8.4'), ('9.1', '9.1'), ('9.2', '9.2'), ('9.3', '9.3')]
-
-    @api.model
     def _get_default_os(self):
         return self.env['scm.os'].search([], limit=1)
 
@@ -163,14 +159,13 @@ class Branch(models.Model):
 
     build_ids = fields.One2many('scm.repository.branch.build', 'branch_id', 'Builds', readonly=True)
     use_in_ci = fields.Boolean('Use in Continuous Integration')
-    pg_version = fields.Selection('_get_pg_versions', 'PostgreSQL Version', required=True, default='9.3')
     os_id = fields.Many2one('scm.os', 'Operating System', required=True, default=_get_default_os)
     dump_id = fields.Many2one('ir.attachment', 'Dump file')
-    modules_to_install = fields.Char('Modules to install')
+    modules_to_install = fields.Text('Modules to install')
     ignored_tests = fields.Text('Tests to ignore', help="Example: {'account': ['test/account_bank_statement.yml'], 'sale': 'all'}")
     server_path = fields.Char('Server path', default="server")
-    addons_path = fields.Char('Addons path', default="addons", help="Comma-separated")
-    code_path = fields.Char('Source code to analyse path', help="Addons path for which checking code quality and coverage.\n"
+    addons_path = fields.Text('Addons path', default="addons", help="Comma-separated")
+    code_path = fields.Text('Source code to analyse path', help="Addons path for which checking code quality and coverage.\n"
                                                                 "If empty, all source code is checked.")
     workers = fields.Integer('Workers', default=0, required=True)
     user_uid = fields.Integer('Admin id', default=1, required=True)
@@ -625,7 +620,6 @@ class Build(models.Model):
         with file_open(template) as f:
             content = f.read()
         localdict = {
-            'pg_version': self.branch_id.pg_version,
             'required_packages': self.branch_id.version_id.required_packages or '',
             'optional_packages': self.branch_id.version_id.optional_packages or '',
             'specific_packages': self.branch_id.specific_packages or '',
@@ -830,6 +824,7 @@ class Build(models.Model):
             vals['build_id'] = self.id
             vals['code'] = 'TEST'
             vals['type'] = 'test'
+            vals['exception'] = vals['exception'].replace('\n', '<br/>')
             log_obj.create(vals)
 
     @api.one
@@ -943,7 +938,7 @@ class Log(models.Model):
 
     @api.one
     def _get_exception_short(self):
-        self.exception_short = self.exception[:101]
+        self.exception_short = self.exception and self.exception[:101] or ''
 
     build_id = fields.Many2one('scm.repository.branch.build', 'Build', readonly=True, required=True, ondelete='cascade', index=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', readonly=True, related='build_id.branch_id', store=True)
@@ -961,7 +956,7 @@ class Log(models.Model):
     file = fields.Char(readonly=True)
     line = fields.Integer(readonly=True, group_operator="count")
     code = fields.Char('Class', readonly=True, required=True)
-    exception = fields.Char('Exception', readonly=True)
+    exception = fields.Html('Exception', readonly=True)
     duration = fields.Float('Duration', digits=(7, 3), help='In seconds', readonly=True)
     exception_short = fields.Char('Exception', compute='_get_exception_short')
 

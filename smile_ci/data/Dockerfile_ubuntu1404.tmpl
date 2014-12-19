@@ -21,7 +21,7 @@ RUN apt-get -qq update && apt-get -qq -y install python-pip \
 	&& dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
 # Install PostgreSQL
-RUN apt-get -qq -y install postgresql-%(pg_version)s
+RUN apt-get -qq -y install postgresql
 
 # Setup PostgreSQL
 USER postgres

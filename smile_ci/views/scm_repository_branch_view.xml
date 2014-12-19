@@ -76,10 +76,11 @@
         		<notebook position="inside">
         			<page string="Configuration" attrs="{'invisible': [('use_in_ci', '=', False)]}">
                 		<group col="4">
+                			<group colspan="4" col="4">
+			        			<field name="os_id" colspan="4"/>
+                			</group>
                 			<group>
 								<field name="merge_with_branch_id" domain="[('id', '!=', active_id)]"/>
-			        			<separator colspan="2"/>
-			        			<field name="pg_version"/>
 			        			<separator colspan="2"/>
 			        			<field name="modules_to_install" placeholder="mrp,purchase"/>
 			        			<field name="server_path" placeholder="server"/>
@@ -90,8 +91,6 @@
                 			</group>
                 			<group>
 								<field name="merge_subfolder" placeholder="branch-addons"/>
-			        			<separator colspan="2"/>
-			        			<field name="os_id"/>
 			        			<separator colspan="2"/>
 			        			<field name="user_uid"/>
 			        			<field name="user_passwd"/>
