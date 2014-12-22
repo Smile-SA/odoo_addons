@@ -54,6 +54,6 @@
             errors.append(err_info)
             cr.execute('ROLLBACK TO general_act_window_test')
     if errors:
-        err_details = "\n".join(["(%s, %s, %s, %s): %s" % (act_window, model, test_domain, test_context, err) for act_window, model, test_domain, test_context, err in errors])
+        err_details = "\n".join(["(%s, %s, %s, %s, %s): %s" % (act_window, model, domain, limit, context, err) for act_window, model, domain, limit, context, err in errors])
         raise Exception('Error in search/read for act_window/model and error:\n%s' % err_details)
 
