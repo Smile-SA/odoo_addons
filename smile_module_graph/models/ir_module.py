@@ -89,13 +89,26 @@ class IrModuleModule(models.Model):
             return dependency_modules and dependency_modules.filtered(lambda a: a.state in states)
         return dependency_modules
 
+    @api.model
+    def _get_auto_install_modules(self, states):
+        new_modules = self.browse()
+        auto_install_modules = self.search([('auto_install', '=', True), ('state', 'in', states)])
+        for module in auto_install_modules:
+            for dependency in module.dependencies_id:
+                if dependency.module_id not in self + auto_install_modules:
+                    break
+            else:
+                new_modules |= module
+        return new_modules
+
     @api.multi
     def _get_graph_modules(self, stream='down', states=None):
-        new_modules = self.browse(self._ids)
+        new_modules = self.browse(self._ids)  # Copy self
         while new_modules:
             new_modules = new_modules._get_dependency_modules(stream, states)
             if new_modules:
-                self = self | new_modules
+                self |= new_modules
+        self |= self._get_auto_install_modules(states)
         return self
 
     @api.multi
