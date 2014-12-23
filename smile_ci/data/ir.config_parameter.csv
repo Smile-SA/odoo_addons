@@ -1,9 +1,0 @@
-id,key,value
-max_testing,ci.max_testing,3
-max_running,ci.max_running,7
-port_range,ci.port_range,"8100,8150,2"
-admin_passwd,ci.admin_passwd,superadmin
-flake8_max_line_length,ci.flake8.max_line_length,150
-flake8_exclude_files,ci.flake8.exclude_files,__init__.py
-max_testing_by_branch,ci.max_testing_by_branch,1
-max_running_by_branch,ci.max_running_by_branch,1
