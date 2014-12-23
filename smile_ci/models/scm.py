@@ -162,6 +162,7 @@ class Branch(models.Model):
     os_id = fields.Many2one('scm.os', 'Operating System', required=True, default=_get_default_os)
     dump_id = fields.Many2one('ir.attachment', 'Dump file')
     modules_to_install = fields.Text('Modules to install')
+    install_demo_data = fields.Boolean(default=True, help='If checked, demo data will be installed')
     ignored_tests = fields.Text('Tests to ignore', help="Example: {'account': ['test/account_bank_statement.yml'], 'sale': 'all'}")
     server_path = fields.Char('Server path', default="server")
     addons_path = fields.Text('Addons path', default="addons", help="Comma-separated")
@@ -689,9 +690,9 @@ class Build(models.Model):
         branch = self.branch_id
         sock_db = self._connect('db')
         if sock_db.server_version()[:3] >= '6.1':
-            sock_db.create_database(self.admin_passwd, DBNAME, True, branch.lang, branch.user_passwd)
+            sock_db.create_database(self.admin_passwd, DBNAME, self.install_demo_data, branch.lang, branch.user_passwd)
         else:
-            db_id = sock_db.create(self.admin_passwd, DBNAME, True, branch.lang, branch.user_passwd)
+            db_id = sock_db.create(self.admin_passwd, DBNAME, self.install_demo_data, branch.lang, branch.user_passwd)
             while True:
                 progress = self.sock_db.get_progress(self.admin_passwd, db_id)[0]
                 if progress == 1.0:
