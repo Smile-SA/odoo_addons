@@ -19,13 +19,20 @@
 #
 ##############################################################################
 
+import logging
+_logger = logging.getLogger(__name__)
+
+try:
+    from docker import Client
+    from docker.errors import APIError
+except ImportError:
+    _logger.warning("Please install docker package")
+
 from ast import literal_eval
 import base64
 import cStringIO
 import csv
 from datetime import datetime
-from docker import Client
-from docker.errors import APIError
 import logging
 from lxml import etree
 from threading import Lock, Thread

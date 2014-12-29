@@ -29,6 +29,12 @@ Continuous Integration
 
 WARNING: UNDER DEVELOPMENT
 
+Dependencies
+
+    # Python
+        # docker
+        # flake8
+
 Features
 
     # Update branch
@@ -77,7 +83,4 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
     "auto_install": False,
     "installable": True,
     "application": False,
-    "external_dependencies": {
-        'python': ['docker', 'flake8'],
-    }
 }
