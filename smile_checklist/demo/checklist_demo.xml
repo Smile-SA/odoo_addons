@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<openerp>
+  <data noupdate="0">
+
+    <record model="checklist" id="cron_checklist">
+      <field name="name">Cron checklist</field>
+      <field name="action_id" eval="False"/>
+      <field name="act_window_ids" eval="False"/>
+      <field name="model_id" ref="base.model_ir_cron"/>
+      <field name="active" eval="True"/>
+      <field name="view_ids" eval="False"/>
+    </record>
+    <record model="checklist.task" id="checklist_task_4">
+      <field name="mandatory" eval="True"/>
+      <field name="name">Mandatory Object</field>
+      <field name="sequence">15</field>
+      <field name="action_id" eval="False"/>
+      <field name="checklist_id" ref="cron_checklist"/>
+      <field name="active" eval="True"/>
+      <field name="condition">True</field>
+    </record>
+    <record model="checklist.task.field" id="checklist_task_field_14">
+      <field name="task_id" ref="checklist_task_4"/>
+      <field name="expression">object.model</field>
+      <field name="name">Object</field>
+    </record>
+
+  </data>
+</openerp>

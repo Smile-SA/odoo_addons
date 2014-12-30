@@ -47,7 +47,9 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         'security/ir.model.access.csv',
         'views/checklist_view.xml',
     ],
-    "demo": [],
+    "demo": [
+        'demo/checklist_demo.xml',
+    ],
     "test": [],
     "installable": True,
     "active": False,
