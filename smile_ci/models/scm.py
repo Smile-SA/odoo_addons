@@ -20,7 +20,7 @@
 ##############################################################################
 
 import logging
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__package__)
 
 try:
     from docker import Client
@@ -33,7 +33,6 @@ import base64
 import cStringIO
 import csv
 from datetime import datetime
-import logging
 from lxml import etree
 from threading import Lock, Thread
 import os
@@ -56,8 +55,6 @@ from openerp.exceptions import Warning
 from openerp.addons.smile_scm.tools import cd
 
 from ..tools import cursor, with_new_cursor, s2human, mergetree, check_output_chain, get_exception_message
-
-_logger = logging.getLogger(__package__)
 
 BUILD_RESULTS = [
     ('stable', 'Stable'),
