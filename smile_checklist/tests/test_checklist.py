@@ -26,9 +26,13 @@ class TestChecklist(TransactionCase):
 
     def test_create_cron(self):
         """
-            1. I get a cron checklist controlling that the Object is filled.
+            This test relies on demo checklist smile_checklist.cron_checklist.
+            The checklist activates crons only if their model is filled.
+            I create a cron without model.
+            I check that the cron is inactive.
+            I assign a model to the cron.
+            I check that the cron is active.
         """
-        checklist = self.env.ref('smile_checklist.cron_checklist')
         cron = self.env['ir.cron'].create({'name': 'Demo cron'})
         self.assertFalse(cron.active, 'Cron is active whereas the Object is not filled.')
         cron.model = 'some.model'
