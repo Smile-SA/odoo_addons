@@ -65,7 +65,7 @@ class Checklist(models.Model):
     def _check_unique_checklist_per_object(self):
         count = self.search_count([('model_id', '=', self.model_id.id)])
         if count > 1:
-            raise Warning(_('A checklist has already existed for this model !'))
+            raise Warning(_('A checklist already exists for this model !'))
 
     @tools.cache(skiparg=3)
     def _get_checklist_by_model(self, cr, uid):
