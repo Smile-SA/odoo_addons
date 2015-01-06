@@ -63,7 +63,7 @@ class Checklist(models.Model):
     @api.one
     @api.constrains('model_id')
     def _check_unique_checklist_per_object(self):
-        count = self.search_count([('model_id', '=', self.model_id.id)])
+        count = self.with_context(active_test=True).search_count([('model_id', '=', self.model_id.id)])
         if count > 1:
             raise Warning(_('A checklist already exists for this model !'))
 
