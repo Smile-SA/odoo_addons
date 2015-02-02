@@ -66,6 +66,7 @@ except ImportError:
 
 try:
     # For Odoo >= 7.0
+    from openerp.tests import common as tests_common
     from openerp.modules.module import run_unit_tests
 except ImportError:
     run_unit_tests = None
@@ -203,6 +204,7 @@ def _run_other_tests(dbname, modules, ignore):
 def _run_unit_tests(dbname, modules, ignore):
     if run_unit_tests:
         _logger.info('Running unit tests...')
+        tests_common.DB = dbname
         for module in modules:
             vals = {'module': module}
             for m in get_test_modules(module):
