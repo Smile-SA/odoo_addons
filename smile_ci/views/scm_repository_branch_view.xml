@@ -1,113 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
+  <data noupdate="0">
 
-        <record id="view_repository_branch_tree" model="ir.ui.view">
-            <field name="name">scm.repository.branch.tree</field>
-            <field name="model">scm.repository.branch</field>
-            <field name="inherit_id" ref="smile_scm.view_repository_branch_tree"/>
-            <field name="arch" type="xml">
-        		<field name="last_update" position="after">
-        			<field name="last_build_result"/>
-        			<field name="use_in_ci" invisible="1"/>
-            	</field>
-                <button name="pull" position="attributes">
-                	<attribute name="states"></attribute>
-                	<attribute name="attrs">{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}</attribute>
-				</button>
-                <button name="pull" position="after">
-	                <button name="create_build" string="Test" type="object" attrs="{'invisible': [('use_in_ci', '=', False)]}"
-	                	icon="STOCK_EXECUTE" groups="smile_scm.group_scm_user"/>
-				</button>
-            </field>
-        </record>
+    <record id="view_repository_branch_tree" model="ir.ui.view">
+      <field name="name">scm.repository.branch.tree</field>
+      <field name="model">scm.repository.branch</field>
+      <field name="inherit_id" ref="smile_scm.view_repository_branch_tree"/>
+      <field name="arch" type="xml">
+        <field name="last_update" position="after">
+          <field name="last_build_result"/>
+          <field name="use_in_ci" invisible="1"/>
+        </field>
+        <button name="pull" position="attributes">
+          <attribute name="states"></attribute>
+          <attribute name="attrs">{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}</attribute>
+        </button>
+        <button name="pull" position="after">
+          <button name="create_build" string="Test" type="object" attrs="{'invisible': [('use_in_ci', '=', False)]}" icon="STOCK_EXECUTE"
+            groups="smile_scm.group_scm_user"/>
+        </button>
+      </field>
+    </record>
 
-        <record id="view_repository_branch_simple_tree" model="ir.ui.view">
-            <field name="name">scm.repository.branch.simple_tree</field>
-            <field name="model">scm.repository.branch</field>
-            <field name="inherit_id" ref="smile_scm.view_repository_branch_simple_tree"/>
-            <field name="arch" type="xml">
-        		<field name="last_update" position="after">
-        			<field name="last_build_result"/>
-        			<field name="use_in_ci" invisible="1"/>
-            	</field>
-                <button name="pull" position="attributes">
-                	<attribute name="states"></attribute>
-                	<attribute name="attrs">{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}</attribute>
-				</button>
-                <button name="pull" position="after">
-	                <button name="create_build" string="Test" type="object" attrs="{'invisible': [('use_in_ci', '=', False)]}"
-	                	icon="STOCK_EXECUTE" groups="smile_scm.group_scm_user"/>
-				</button>
-            </field>
-        </record>
+    <record id="view_repository_branch_simple_tree" model="ir.ui.view">
+      <field name="name">scm.repository.branch.simple_tree</field>
+      <field name="model">scm.repository.branch</field>
+      <field name="inherit_id" ref="smile_scm.view_repository_branch_simple_tree"/>
+      <field name="arch" type="xml">
+        <field name="last_update" position="after">
+          <field name="last_build_result"/>
+          <field name="use_in_ci" invisible="1"/>
+        </field>
+        <button name="pull" position="attributes">
+          <attribute name="states"></attribute>
+          <attribute name="attrs">{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}</attribute>
+        </button>
+        <button name="pull" position="after">
+          <button name="create_build" string="Test" type="object" attrs="{'invisible': [('use_in_ci', '=', False)]}" icon="STOCK_EXECUTE"
+            groups="smile_scm.group_scm_user"/>
+        </button>
+      </field>
+    </record>
 
-        <record id="view_repository_branch_form" model="ir.ui.view">
-            <field name="name">scm.repository.branch.form</field>
-            <field name="model">scm.repository.branch</field>
-            <field name="inherit_id" ref="smile_scm.view_repository_branch_form"/>
-            <field name="arch" type="xml">
-                <field name="tag_ids" position="after">
-        			<label for="use_in_ci"/>
-                	<field name="use_in_ci"/>
-        		</field>
-        		<field name="last_update" position="after">
-            		<field name="last_build_result"  attrs="{'invisible': [('use_in_ci', '=', False)]}"/>
-        		</field>
-                <button name="pull" position="attributes">
-                	<attribute name="states"></attribute>
-                	<attribute name="attrs">{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}</attribute>
-                </button>
-                <button name="pull" position="after">
-	                <button name="create_build" string="Test" type="object" class="oe_highlight" groups="smile_scm.group_scm_user"
-	                	attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
-	                <label string="or" attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"
-	                	groups="smile_scm.group_scm_user"/>
-	                <button name="force_create_build" string="Force test" type="object" class="oe_link" groups="smile_scm.group_scm_user"
-	                	attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
-                </button>
-                <div class="oe_title" position="after">
-                	<div class="oe_right">
-						<button class="oe_inline oe_stat_button" name="%(action_branch_builds)d" type="action" icon="fa-tasks">
-							<field string="Builds" name="builds_count" widget="statinfo" />
-						</button>
-                	</div>
-                </div>
-        		<notebook position="inside">
-        			<page string="Configuration" attrs="{'invisible': [('use_in_ci', '=', False)]}">
-                		<group col="4">
-                			<group colspan="4" col="4">
-			        			<field name="os_id" colspan="4"/>
-                			</group>
-                			<group>
-								<field name="merge_with_branch_id" domain="[('id', '!=', active_id)]"/>
-			        			<separator colspan="2"/>
-			        			<field name="modules_to_install" placeholder="mrp,purchase"/>
-			        			<field name="server_path" placeholder="server"/>
-			        			<field name="addons_path" placeholder="addons,project-addons,web/addons"/>
-			        			<field name="code_path" placeholder="project-addons"/>
-			        			<separator colspan="2"/>
-			        			<field name="ignored_tests" placeholder="{'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"/>
-                			</group>
-                			<group>
-								<field name="merge_subfolder" placeholder="branch-addons"/>
-			        			<separator colspan="2"/>
-			        			<field name="user_uid"/>
-			        			<field name="user_passwd"/>
-			        			<field name="lang"/>
-			        			<field name="workers"/>
-			        			<separator colspan="2"/>
-			        			<field name="dump_id" domain="[('res_model', '=', 'scm.repository.branch'), ('res_id', '=', active_id)]"
-			        				widget="selection"/>
-			        			<separator colspan="2"/>
-			        			<field name="specific_packages"/>
-			        			<field name="pip_packages"/>
-                			</group>
-                		</group>
-        			</page>
-            	</notebook>
-            </field>
-        </record>
+    <record id="view_repository_branch_form" model="ir.ui.view">
+      <field name="name">scm.repository.branch.form</field>
+      <field name="model">scm.repository.branch</field>
+      <field name="inherit_id" ref="smile_scm.view_repository_branch_form"/>
+      <field name="arch" type="xml">
+        <field name="tag_ids" position="after">
+          <label for="use_in_ci"/>
+          <field name="use_in_ci"/>
+        </field>
+        <field name="last_update" position="after">
+          <field name="last_build_result" attrs="{'invisible': [('use_in_ci', '=', False)]}"/>
+        </field>
+        <button name="pull" position="attributes">
+          <attribute name="states"></attribute>
+          <attribute name="attrs">{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}</attribute>
+        </button>
+        <button name="pull" position="after">
+          <button name="create_build" string="Test" type="object" class="oe_highlight" groups="smile_scm.group_scm_user"
+            attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
+          <label string="or" attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}" groups="smile_scm.group_scm_user"/>
+          <button name="force_create_build" string="Force test" type="object" class="oe_link" groups="smile_scm.group_scm_user"
+            attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
+        </button>
+        <div class="oe_title" position="after">
+          <div class="oe_right">
+            <button class="oe_inline oe_stat_button" name="%(action_branch_builds)d" type="action" icon="fa-tasks">
+              <field string="Builds" name="builds_count" widget="statinfo"/>
+            </button>
+          </div>
+        </div>
+        <notebook position="inside">
+          <page string="Configuration" attrs="{'invisible': [('use_in_ci', '=', False)]}">
+            <group col="4">
+              <group colspan="4" col="4">
+                <field name="os_id" colspan="4"/>
+              </group>
+              <group>
+                <field name="merge_with_branch_id" domain="[('id', '!=', active_id)]"/>
+                <separator colspan="2"/>
+                <field name="install_demo_data"/>
+                <separator colspan="2"/>
+                <field name="modules_to_install" placeholder="mrp,purchase"/>
+                <field name="server_path" placeholder="server"/>
+                <field name="addons_path" placeholder="addons,project-addons,web/addons"/>
+                <field name="code_path" placeholder="project-addons"/>
+                <separator colspan="2"/>
+                <field name="ignored_tests" placeholder="{'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"/>
+              </group>
+              <group>
+                <field name="merge_subfolder" placeholder="branch-addons"/>
+                <separator colspan="2"/>
+                <field name="user_uid"/>
+                <field name="user_passwd"/>
+                <field name="lang"/>
+                <field name="workers"/>
+                <separator colspan="2"/>
+                <field name="dump_id" domain="[('res_model', '=', 'scm.repository.branch'), ('res_id', '=', active_id)]" widget="selection"/>
+                <separator colspan="2"/>
+                <field name="specific_packages"/>
+                <field name="pip_packages"/>
+              </group>
+            </group>
+          </page>
+        </notebook>
+      </field>
+    </record>
 
-	</data>
+  </data>
 </openerp>

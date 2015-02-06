@@ -17,10 +17,9 @@ RUN locale-gen en_US.UTF-8 && update-locale && echo 'LANG="en_US.UTF-8"' > /etc/
 RUN apt-get -qq update && apt-get -qq -y install python-pip \
 	cloc python-coverage python-flake8 \
 	python-unittest2 \
-	wget fontconfig libfontconfig1 libfreetype6 libjpeg-turbo8 libx11-6 libxext6 libxrender1 \
-	&& cd /tmp && wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb \
-	&& dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
-
+	wget fontconfig libfontconfig1 libfreetype6 libpng12-0 zlib1g libjpeg-turbo8 libssl1.0.0 libx11-6 libxext6 libxrender1 xfonts-base xfonts-75dpi libstdc++6 libc6 \
+        && cd /tmp && wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb \
+        && dpkg -i wkhtmltox-0.12.2.1_linux-trusty-amd64.deb
 # Install PostgreSQL
 RUN apt-get -qq -y install postgresql
 

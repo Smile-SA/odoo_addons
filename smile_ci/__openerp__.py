@@ -29,6 +29,12 @@ Continuous Integration
 
 WARNING: UNDER DEVELOPMENT
 
+Dependencies
+
+    # Python
+        # docker
+        # flake8
+
 Features
 
     # Update branch
@@ -59,12 +65,12 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
     "sequence": 20,
     "data": [
         "security/ir.model.access.csv",
-        "data/ir.config_parameter.csv",
+        "data/ir_config_parameter_data.xml",
         "data/docker.host.csv",
         "data/scm.os.csv",
         "data/scm.vcs.csv",
         "data/scm.version.csv",
-        "data/ir_cron.xml",
+        "data/ir_cron_data.xml",
         "views/scm_repository_branch_build_coverage_view.xml",
         "views/scm_repository_branch_build_log_view.xml",
         "views/scm_repository_branch_build_view.xml",
@@ -77,7 +83,4 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
     "auto_install": False,
     "installable": True,
     "application": False,
-    "external_dependencies": {
-        'python': ['docker', 'flake8'],
-    }
 }

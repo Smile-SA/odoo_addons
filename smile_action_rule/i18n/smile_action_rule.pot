@@ -1,0 +1,284 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_action_rule
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-09 09:25+0000\n"
+"PO-Revision-Date: 2015-01-09 09:25+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_action_rule
+#: model:ir.model,name:smile_action_rule.model_base_action_rule_category
+msgid "Action Rule Category"
+msgstr ""
+
+#. module: smile_action_rule
+#: model:ir.model,name:smile_action_rule.model_base_action_rule_execution
+msgid "Action Rule Execution"
+msgstr ""
+
+#. module: smile_action_rule
+#: model:ir.model,name:smile_action_rule.model_base_action_rule
+msgid "Action Rules"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule.execution,rule_id:0
+msgid "Action rule"
+msgstr ""
+
+#. module: smile_action_rule
+#: view:base.action.rule:smile_action_rule.view_base_action_rule_form
+msgid "Actions"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule,activity_id:0
+msgid "Activity"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:ir.actions.server.execution,args:0
+msgid "Arguments"
+msgstr ""
+
+#. module: smile_action_rule
+#: selection:ir.actions.server,execution_mode:0
+msgid "Asynchronous"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule,category_id:0
+msgid "Category"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:ir.actions.server.execution,create_date:0
+msgid "Create Date"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule.category,create_uid:0
+#: field:base.action.rule.execution,create_uid:0
+#: field:ir.actions.server.execution,create_uid:0
+#: field:ir.model.methods,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule.category,create_date:0
+#: field:base.action.rule.execution,create_date:0
+#: field:ir.model.methods,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: smile_action_rule
+#: selection:base.action.rule,exception_warning:0
+msgid "Custom"
+msgstr ""
+
+#. module: smile_action_rule
+#: selection:ir.actions.server.execution,state:0
+msgid "Done"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule,exception_handling:0
+msgid "Exception Handling"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule,exception_message:0
+msgid "Exception Message"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule,exception_warning:0
+msgid "Exception Warning"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:ir.actions.server,execution_mode:0
+msgid "Execution Mode"
+msgstr ""
+
+#. module: smile_action_rule
+#: help:ir.actions.server.execution,args:0
+msgid "Execution context"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule.execution,counter:0
+#: field:ir.actions.server,execution_ids:0
+msgid "Executions"
+msgstr ""
+
+#. module: smile_action_rule
+#: model:ir.model,name:smile_action_rule.model_ir_filters
+msgid "Filters"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule,force_actions_execution:0
+msgid "Force actions execution when resources list is empty"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule.category,id:0
+#: field:base.action.rule.execution,id:0
+#: field:ir.actions.server.execution,id:0
+#: field:ir.model.methods,id:0
+msgid "ID"
+msgstr ""
+
+#. module: smile_action_rule
+#: selection:base.action.rule,exception_handling:0
+msgid "Ignore actions in exception"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule.category,write_uid:0
+#: field:base.action.rule.execution,write_uid:0
+#: field:ir.actions.server.execution,write_uid:0
+#: field:ir.model.methods,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule.category,write_date:0
+#: field:base.action.rule.execution,write_date:0
+#: field:ir.actions.server.execution,write_date:0
+#: field:ir.model.methods,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: smile_action_rule
+#: selection:ir.actions.server,execution_mode:0
+#: field:ir.actions.server.execution,locked:0
+msgid "Locked"
+msgstr ""
+
+#. module: smile_action_rule
+#: view:base.action.rule:smile_action_rule.view_base_action_rule_form
+#: field:base.action.rule,log_ids:0
+msgid "Logs"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule,max_executions:0
+msgid "Max executions"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule,method_id:0
+msgid "Method"
+msgstr ""
+
+#. module: smile_action_rule
+#: code:addons/smile_action_rule/models/action_rule_decorator.py:44
+#, python-format
+msgid "Method not adapted for action rules"
+msgstr ""
+
+#. module: smile_action_rule
+#: model:ir.actions.act_window,name:smile_action_rule.action_ir_model_methods_tree
+#: view:ir.model.methods:smile_action_rule.view_ir_model_methods_tree
+#: model:ir.ui.menu,name:smile_action_rule.menu_ir_model_methods_tree
+msgid "Methods"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:ir.model.methods,model_id:0
+msgid "Model"
+msgstr ""
+
+#. module: smile_action_rule
+#: model:ir.model,name:smile_action_rule.model_ir_model_methods
+msgid "Model Method"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule.category,name:0
+#: field:ir.model.methods,name:0
+msgid "Name"
+msgstr ""
+
+#. module: smile_action_rule
+#: selection:base.action.rule,exception_warning:0
+msgid "Native"
+msgstr ""
+
+#. module: smile_action_rule
+#: selection:base.action.rule,exception_warning:0
+msgid "None"
+msgstr ""
+
+#. module: smile_action_rule
+#: help:base.action.rule,max_executions:0
+msgid "Number of time actions are runned"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:ir.filters,action_rule:0
+msgid "Only for action rules"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:base.action.rule.execution,res_id:0
+msgid "Resource"
+msgstr ""
+
+#. module: smile_action_rule
+#: selection:base.action.rule,exception_handling:0
+msgid "Rollback transaction"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:ir.actions.server.execution,action_id:0
+msgid "Server Action"
+msgstr ""
+
+#. module: smile_action_rule
+#: model:ir.model,name:smile_action_rule.model_ir_actions_server_execution
+msgid "Server Action Execution"
+msgstr ""
+
+#. module: smile_action_rule
+#: field:ir.actions.server.execution,state:0
+msgid "State"
+msgstr ""
+
+#. module: smile_action_rule
+#: selection:ir.actions.server,execution_mode:0
+msgid "Synchronous"
+msgstr ""
+
+#. module: smile_action_rule
+#: code:addons/smile_action_rule/models/ir_actions.py:93
+#, python-format
+msgid "This action is under execution!"
+msgstr ""
+
+#. module: smile_action_rule
+#: selection:ir.actions.server.execution,state:0
+msgid "To Do"
+msgstr ""
+
+#. module: smile_action_rule
+#: view:base.action.rule:smile_action_rule.view_base_action_rule_form
+msgid "{'invisible': [('kind', '=', 'on_unlink')]}"
+msgstr ""
+
+#. module: smile_action_rule
+#: view:base.action.rule:smile_action_rule.view_base_action_rule_form
+msgid "{'invisible': [('kind', 'not in', ('on_write', 'on_unlink', 'on_other_method'))]}"
+msgstr ""
+

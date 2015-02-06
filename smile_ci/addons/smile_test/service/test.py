@@ -24,6 +24,7 @@ from contextlib import closing
 import inspect
 import logging
 import os
+import threading
 import time
 import traceback
 import unittest2
@@ -65,6 +66,7 @@ except ImportError:
 
 try:
     # For Odoo >= 7.0
+    from openerp.tests import common as tests_common
     from openerp.modules.module import run_unit_tests
 except ImportError:
     run_unit_tests = None
@@ -97,9 +99,11 @@ def _write_log(vals):
         writer.writerow([tools.ustr(vals.get(key, '')) for key in KEYS])
 
 
-def _get_modules_list(cr):
-    cr.execute("SELECT name from ir_module_module WHERE state IN ('installed', 'to upgrade')")
-    return [name for (name,) in cr.fetchall()]
+def _get_modules_list(dbname):
+    db = sql_db.db_connect(dbname)
+    with closing(db.cursor()) as cr:
+        cr.execute("SELECT name from ir_module_module WHERE state IN ('installed', 'to upgrade')")
+        return [name for (name,) in cr.fetchall()]
 
 
 def _get_test_files_by_module(modules):
@@ -200,6 +204,7 @@ def _run_other_tests(dbname, modules, ignore):
 def _run_unit_tests(dbname, modules, ignore):
     if run_unit_tests:
         _logger.info('Running unit tests...')
+        tests_common.DB = dbname
         for module in modules:
             vals = {'module': module}
             for m in get_test_modules(module):
@@ -228,12 +233,11 @@ def _run_unit_tests(dbname, modules, ignore):
 
 def run_tests(dbname, modules=None):
     ignore = eval(tools.config.get('ignored_tests') or '{}')
-    db = sql_db.db_connect(dbname)
-    with closing(db.cursor()) as cr:
-        if not modules:
-            modules = _get_modules_list(cr)
-        _run_unit_tests(dbname, modules, ignore)
-        _run_other_tests(dbname, modules, ignore)
+    threading.currentThread().dbname = dbname
+    if not modules:
+        modules = _get_modules_list(dbname)
+    _run_unit_tests(dbname, modules, ignore)
+    _run_other_tests(dbname, modules, ignore)
     return True
 
 native_dispatch = common.dispatch
@@ -242,7 +246,7 @@ native_dispatch = common.dispatch
 def new_dispatch(*args):
     i = release.major_version < '8.0' and 1 or 0
     if args[i] == 'run_tests':
-        params = args[i+1]
+        params = args[i + 1]
         admin_passwd = params[0]
         security.check_super(admin_passwd)
         params = params[1:]
