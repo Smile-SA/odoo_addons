@@ -181,7 +181,7 @@ class AuditRule(models.Model):
         for res_id in data:
             self.env['audit.log'].sudo().create({
                 'user_id': self._uid,
-                'model_id': self.model_id.id,
+                'model_id': self.sudo().model_id.id,
                 'method': method,
                 'res_id': res_id,
                 'data': repr(data[res_id]),

@@ -57,52 +57,49 @@ class AuditLog(models.Model):
             self.name = ''
 
     @api.multi
-    def _get_fields_by_name(self):
-        self.ensure_one()
-        model = self.env[self.model_id.model]
-        fields_by_model = {}
-        for field in model._inherit_fields:
-            fields_by_model.setdefault(model._inherit_fields[field][3], []).append(field)
-        fields_by_model[model._name] = list(set(model._fields.keys()) - set(model._inherit_fields.keys()))
-        fields_by_name = {}
-        for model in fields_by_model:
-            field_recs = self.env['ir.model.fields'].sudo().search([('model_id.model', '=', model),
-                                                                    ('name', 'in', fields_by_model[model])])
-            fields_by_name.update(dict([(field.name, field) for field in field_recs]))
-        return fields_by_name
-
-    @api.model
     def _format_value(self, field, value):
-        if not value and field.ttype not in ('boolean', 'integer', 'float'):
+        self.ensure_one()
+        if not value and field.type not in ('boolean', 'integer', 'float'):
             return ''
-        if field.ttype == 'selection':
-            selection = self.env[field.model]._fields[field.name].selection
+        if field.type == 'selection':
+            selection = field.selection
             if callable(selection):
-                selection = selection(self.env[field.model])
+                selection = selection(model_obj)
             return dict(selection).get(value, value)
-        if field.ttype == 'many2one' and value:
-            return self.env[field.relation].browse(value).exists().display_name or value
-        if field.ttype == 'reference' and value:
+        if field.type == 'many2one' and value:
+            return self.env[field.comodel_name].browse(value).exists().display_name or value
+        if field.type == 'reference' and value:
             res_model, res_id = value.split(',')
             return self.env[res_model].browse(int(res_id)).exists().display_name or value
-        if field.ttype in ('one2many', 'many2many') and value:
-            return ', '.join([self.env[field.relation].browse(rec_id).exists().display_name or str(rec_id)
+        if field.type in ('one2many', 'many2many') and value:
+            return ', '.join([self.env[field.comodel_name].browse(rec_id).exists().display_name or str(rec_id)
                               for rec_id in value])
-        if field.ttype == 'binary' and value:
+        if field.type == 'binary' and value:
             return '&lt;binary data&gt;'
         return value
 
     @api.multi
+    def _get_label(self, field):
+        label = field.string
+        lang = self.env.user.lang
+        translated_label = ''
+        if lang != 'en_US':
+            params = ('%s,%s' % (field.model, field.name), 'field', lang, label)
+            translated_label = self.env['ir.translation'].sudo()._get_source(*params)
+        return translated_label or label
+
+    @api.multi
     def _get_content(self):
+        self.ensure_one()
         content = []
         data = eval(self.data or '{}')
-        fields_by_name = self._get_fields_by_name()
+        model_obj = self.env[self.model_id.model]
         for fname in set(data['new'].keys() + data['old'].keys()):
-            if fname in fields_by_name:
-                field = fields_by_name[fname]
-                old_value = self._format_value(field, data['old'].get(fname, ''))
-                new_value = self._format_value(field, data['new'].get(fname, ''))
-                content.append((field.field_description, old_value, new_value))
+            field = model_obj._fields.get(fname) or model_obj._inherit_fields.get(fname)
+            old_value = self._format_value(field, data['old'].get(fname, ''))
+            new_value = self._format_value(field, data['new'].get(fname, ''))
+            label = self._get_label(field)
+            content.append((label, old_value, new_value))
         return content
 
     @api.one

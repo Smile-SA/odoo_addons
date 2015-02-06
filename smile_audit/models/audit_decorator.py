@@ -52,7 +52,8 @@ def audit_decorator():
         if rule_id:
             old_values = None
             if method != 'create':
-                old_values = self.read(cr, uid, ids, vals.keys(), context, load='_classic_write')
+                records = self.browse(cr, uid, ids, context)
+                old_values = records.read(vals.keys(), load='_classic_write')
                 if method == 'unlink':
                     rule_obj.log(cr, uid, rule_id, method, old_values)
         result = audit_wrapper.origin(self, *args, **kwargs)
@@ -61,7 +62,9 @@ def audit_decorator():
             if method != 'unlink':
                 if method == 'create':
                     ids = [result]
-                new_values = self.read(cr, uid, ids, vals.keys(), context, load='_classic_write')
+                records = self.browse(cr, uid, ids, context)
+                records.invalidate_cache()
+                new_values = records.read(vals.keys(), load='_classic_write')
                 rule_obj.log(cr, uid, rule_id, method, old_values, new_values)
         return result
     return audit_wrapper
