@@ -42,7 +42,8 @@ class IrModelImpexTemplate(models.AbstractModel):
 
     name = fields.Char(size=64, required=True)
     model_id = fields.Many2one('ir.model', 'Object', required=True, ondelete='cascade')
-    method = fields.Char(size=64, required=True, help='Arguments can be passed through Method args')
+    method = fields.Char(size=64, required=True, help='Arguments can be passed through Method args '
+                                                      'or received at import/export creation call')
     method_args = fields.Char(help="Arguments passed as a dictionary\nExample: {'code': '705000'}")
     cron_id = fields.Many2one('ir.cron', 'Scheduled Action')
     server_action_id = fields.Many2one('ir.actions.server', 'Server action')
@@ -152,6 +153,7 @@ class IrModelImpex(models.AbstractModel):
     new_thread = fields.Boolean('New Thread', readonly=True)
     state = fields.Selection(STATES, "State", readonly=True, required=True, default='running')
     pid = fields.Integer("Process Id", readonly=True)
+    args = fields.Text('Arguments', readonly=True)
 
     @api.multi
     def write_with_new_cursor(self, vals):
@@ -161,26 +163,30 @@ class IrModelImpex(models.AbstractModel):
     @api.multi
     def process(self):
         self._cr.commit()  # INFO: to access to import/export record via user interface
+        res = []
         for record in self:
             if record.new_thread:
                 cr, uid, context = self.env.args
                 thread = Thread(target=self.pool[self._name]._process, args=(cr, uid, record.id, context))
                 thread.start()
+                res.append((record.id, True))
             else:
-                record._process()
-        return True
+                res.append((record.id, record._process()))
+        return res
 
-    @api.one
+    @api.multi
     def _process(self):
+        self.ensure_one()
         logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
         self = self.with_context(logger=logger)
         self.write_with_new_cursor({'state': 'running', 'from_date': fields.Datetime.now(),
                                     'pid': os.getpid()})
         try:
-            self._execute()
+            result = self._execute()
             self.write_with_new_cursor({'state': 'done', 'to_date': fields.Datetime.now()})
             if self.test_mode:
                 self._cr.rollback()
+            return result
         except Exception, e:
             logger.error(repr(e))
             try:
@@ -190,6 +196,6 @@ class IrModelImpex(models.AbstractModel):
             e.traceback = sys.exc_info()
             raise
 
-    @api.one
+    @api.multi
     def _execute(self):
         raise NotImplementedError

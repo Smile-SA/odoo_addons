@@ -40,7 +40,7 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
     client_action_id = fields.Many2one('ir.values', 'Client Action')
     filter_type = fields.Selection([('domain', 'Domain'), ('method', 'Method')], required=True, default='domain')
     filter_domain = fields.Char(size=256, default='[]')
-    filter_method = fields.Char(size=64, help="signature: @api.model")
+    filter_method = fields.Char(size=64, help="signature: @api.model + *args")
     limit = fields.Integer()
     max_offset = fields.Integer()
     order = fields.Char('Order by', size=64)
@@ -84,7 +84,7 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
                 self.server_action_id.unlink()
         return True
 
-    def _get_res_ids(self):
+    def _get_res_ids(self, *args):
         model_obj = self.env[self.model_id.model].with_env(self.env(cr=self._context['original_cr']))
         if self.filter_type == 'domain':
             domain = eval(self.filter_domain or '[]')
@@ -92,16 +92,16 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
         else:  # elif self.filter_type == 'method':
             if not (self.filter_method and hasattr(model_obj, self.filter_method)):
                 raise Warning(_("Can't find method: %s on object: %s") % (self.filter_method, self.model_id.model))
-            res_ids = set(getattr(model_obj, self.filter_method)())
+            res_ids = set(getattr(model_obj, self.filter_method)(*args))
         if 'active_ids' in self._context:
             res_ids &= set(self._context['active_ids'])
         if self.unique:
             res_ids -= set(sum([eval(export.record_ids) for export in self.export_ids], []))
         return list(res_ids)
 
-    def _get_res_ids_offset(self):
+    def _get_res_ids_offset(self, *args):
         """Get resources and split them in groups in function of limit and max_offset"""
-        res_ids = self._get_res_ids()
+        res_ids = self._get_res_ids(*args)
         if self.limit:
             res_ids_list = []
             i = 0
@@ -113,9 +113,10 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
             return res_ids_list
         return [res_ids]
 
-    @api.one
+    @api.multi
     @with_new_cursor
-    def create_export(self):
+    def create_export(self, *args):
+        self.ensure_one()
         export_obj = self.env['ir.model.export']
         export_recs = export_obj.browse()
         try:
@@ -123,8 +124,9 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
                 'export_tmpl_id': self.id,
                 'test_mode': self._context.get('test_mode', False),
                 'new_thread': self.new_thread,
+                'args': repr(args),
             }
-            for index, res_ids_offset in enumerate(self._get_res_ids_offset()):
+            for index, res_ids_offset in enumerate(self._get_res_ids_offset(*args)):
                 vals['record_ids'] = res_ids_offset
                 vals['offset'] = index + 1
                 export_recs |= export_obj.create(vals)
@@ -132,8 +134,7 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
             tmpl_logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
             tmpl_logger.error(repr(e))
             raise Warning(repr(e))
-        export_recs.process()
-        return export_recs.ids
+        return export_recs.process()
 
 
 class IrModelExport(models.Model, IrModelImpex):
@@ -155,11 +156,12 @@ class IrModelExport(models.Model, IrModelImpex):
     record_ids = fields.Text('Records', readonly=True, required=True, default='[]')
     record_count = fields.Integer('# Records', compute='_get_record_count')
 
-    @api.one
+    @api.multi
     def _execute(self):
+        self.ensure_one()
         record_ids = eval(self.record_ids)
         if record_ids or self.export_tmpl_id.force_execute_action:
             records = self.env[self.export_tmpl_id.model_id.model].browse(record_ids)
             if self.export_tmpl_id.method:
                 records = records.with_env(self.env(cr=self._context['original_cr']))
-                getattr(records, self.export_tmpl_id.method)(**eval(self.export_tmpl_id.method_args or '{}'))
+                return getattr(records, self.export_tmpl_id.method)(*eval(self.args or '[]'), **eval(self.export_tmpl_id.method_args or '{}'))
