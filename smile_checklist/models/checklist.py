@@ -63,9 +63,9 @@ class Checklist(models.Model):
     @api.one
     @api.constrains('model_id')
     def _check_unique_checklist_per_object(self):
-        count = self.search_count([('model_id', '=', self.model_id.id)])
+        count = self.with_context(active_test=True).search_count([('model_id', '=', self.model_id.id)])
         if count > 1:
-            raise Warning(_('A checklist has already existed for this model !'))
+            raise Warning(_('A checklist already exists for this model !'))
 
     @tools.cache(skiparg=3)
     def _get_checklist_by_model(self, cr, uid):
@@ -78,7 +78,7 @@ class Checklist(models.Model):
     @staticmethod
     def _get_checklist_task_inst(self):
         domain = [('task_id.checklist_id.model_id.model', '=', self._name), ('res_id', '=', self.id)]
-        self.checklist_task_instance_ids = self.env['checklist.task.instance'].with_context(active_test=True).search(domain)
+        self.checklist_task_instance_ids = self.env['checklist.task.instance'].search(domain)
 
     @api.model
     def _update_models(self, models=None):
@@ -94,9 +94,9 @@ class Checklist(models.Model):
                 model_obj._add_field('checklist_task_instance_ids', fields.One2many('checklist.task.instance',
                                                                                     string='Checklist Task Instances',
                                                                                     compute='_get_checklist_task_inst'))
-                self.pool.setup_models(self._cr, partial=(not self.pool.ready))
                 model_obj._add_field('total_progress_rate', fields.Float('Progress Rate', digits=(16, 2)))
                 model_obj._add_field('total_progress_rate_mandatory', fields.Float('Mandatory Progress Rate', digits=(16, 2)))
+                self.pool.setup_models(self._cr, partial=(not self.pool.ready))
                 model_pool = self.pool[model.model]
                 model_pool._field_create(self._cr, self._context)
                 model_pool._auto_init(self._cr, self._context)
@@ -194,15 +194,18 @@ class ChecklistTask(models.Model):
 
     @api.one
     def _manage_task_instances(self, records=None):
-        if not records:
-            records = self.env[self.model_id.model].with_context(active_test=False).search([])
-        for record in records:
+        if records:
+            records = records.sudo()
+        else:
+            records = self.env[self.model_id.model].sudo().with_context(active_test=False).search([])
+        for record in records.with_context(active_test=False):
             condition_checked = eval(self.condition, {'object': record, 'time': time})
             task_inst = record.checklist_task_instance_ids.filtered(lambda i: i.task_id == self)
             if condition_checked and not task_inst:
-                task_inst.sudo().create({'task_id': self.id, 'res_id': record.id})
+                task_inst.create({'task_id': self.id, 'res_id': record.id})
             elif not condition_checked and task_inst:
-                task_inst.sudo().unlink()
+                task_inst.unlink()
+            record.checklist_task_instance_ids.invalidate_cache()  # Force invalidate cache required because of a bug?
             if record.checklist_task_instance_ids:
                 record.checklist_task_instance_ids[0].checklist_id.with_context(no_checklist=True).compute_progress_rates(record)
 
