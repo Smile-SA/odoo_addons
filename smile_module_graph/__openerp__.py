@@ -34,6 +34,7 @@
     "sequence": 32,
     "data": [
         "wizard/ir_module_graph_wizard_view.xml",
+        "views/module_view.xml",
     ],
     "demo": [],
     'test': [],

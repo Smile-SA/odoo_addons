@@ -9,15 +9,21 @@
             <field name="arch" type="xml">
                 <form string="Print Modules Graph">
                 	<group colspan="4" col="4">
-                		<group colspan="2" col="1">
-                			<separator string="Stream" colspan="1"/>
+                		<group colspan="2" col="1" invisible="context.get('hide_stream')">
+                			<separator string="Tree" colspan="1"/>
 		                    <field name="stream" nolabel="1"/>
                 		</group>
                 		<group colspan="2" col="2">
                 			<separator string="States" colspan="2"/>
-		                    <field name="installed"/>
-		                    <field name="uninstalled"/>
-		                    <field name="uninstallable"/>
+                			<label string="Filter displayed modules in function of their state" colspan="2"/>
+                			<group col="4">
+			                    <field name="installed"/>
+			                    <label string="(black or blue if auto install)" colspan="2"/>
+			                    <field name="uninstalled"/>
+			                    <label string="(red)" colspan="2"/>
+			                    <field name="uninstallable"/>
+			                    <label string="(grey)" colspan="2"/>
+			                </group>
                 		</group>
 	                </group>
                 	<group colspan="4" col="2" attrs="{'invisible': [('file', '=', False)]}">

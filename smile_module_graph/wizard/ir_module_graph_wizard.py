@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import api, fields, models
+from openerp import api, fields, models, _
 
 
 class IrModuleGraphWizard(models.TransientModel):
@@ -49,18 +49,17 @@ class IrModuleGraphWizard(models.TransientModel):
     def button_generate_file(self):
         self.ensure_one()
         module_obj = self.env['ir.module.module']
-        for wizard in self:
-            states = IrModuleGraphWizard._get_states(wizard)
-            modules = module_obj.browse(self._context['active_ids'])
-            data = modules.get_graph(wizard.stream, states, None)
-            wizard.write({'file': data})
+        states = IrModuleGraphWizard._get_states(self)
+        modules = module_obj.browse(self._context['active_ids'])
+        data = modules.get_graph(self.stream, states, None)
+        self.file = data
         return {
             "type": "ir.actions.act_window",
-            "name": "Modules Graph",
+            "name": _("Modules Graph"),
             "res_model": "ir.module.module.graph_wizard",
             "view_type": "form",
             "view_mode": "form",
-            "res_id": self._ids[0],
+            "res_id": self.id,
             "target": 'new',
             "context": self._context,
         }

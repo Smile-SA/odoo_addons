@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="module_form" model="ir.ui.view">
+            <field name="name">ir.module.module.form</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_form"/>
+            <field name="arch" type="xml">
+	            <button name="button_install_cancel" position="after">
+                	<button name="open_graph_wizard" string="Print graph" type="object" class="oe_link"/>
+	            </button>
+            </field>
+        </record>
+
+        <record id="action_print_modules_graph" model="ir.actions.server">
+            <field name="name">Print Modules Graph</field>
+            <field name="condition">True</field>
+            <field name="model_id" ref="base.model_ir_module_module"/>
+            <field name="code">domain = [('state', 'in', ('installed', 'to upgrade', 'to remote'))]
+module_ids = pool['ir.module.module'].search(cr, uid, domain, context=context)
+action_id = pool['ir.model.data'].get_object_reference(cr, uid, 'smile_module_graph', 'action_ir_module_graph_wizard')[1]
+action = pool['ir.actions.act_window'].read(cr, uid, action_id, context=context)
+action['context'] = {'active_ids': module_ids, 'default_stream': 'up-down', 'hide_stream': True}</field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+        </record>
+
+		<menuitem action="action_print_modules_graph" id="menu_action_print_modules_graph"
+			parent="base.menu_management" sequence="60" />
+
+	</data>
+</openerp>

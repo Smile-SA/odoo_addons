@@ -22,7 +22,7 @@
 import base64
 import pydot
 
-from openerp import api, models
+from openerp import api, models, _
 
 
 class IrModuleModule(models.Model):
@@ -50,10 +50,13 @@ class IrModuleModule(models.Model):
 
     def _get_color(self):
         color = 'black'
+        valid_states = ('installed', 'to upgrade', 'to remove')
         if self.state in ('uninstallable', 'unknown'):
             color = 'grey'
-        elif self.state not in ('installed', 'to_upgrade', 'to_remove'):
+        elif self.state not in valid_states:
             color = 'red'
+        elif self.auto_install and self.state in valid_states:
+            color = 'blue'
         return color
 
     @api.multi
@@ -89,26 +92,13 @@ class IrModuleModule(models.Model):
             return dependency_modules and dependency_modules.filtered(lambda a: a.state in states)
         return dependency_modules
 
-    @api.model
-    def _get_auto_install_modules(self, states):
-        new_modules = self.browse()
-        auto_install_modules = self.search([('auto_install', '=', True), ('state', 'in', states)])
-        for module in auto_install_modules:
-            for dependency in module.dependencies_id:
-                if dependency.module_id not in self + auto_install_modules:
-                    break
-            else:
-                new_modules |= module
-        return new_modules
-
     @api.multi
     def _get_graph_modules(self, stream='down', states=None):
-        new_modules = self.browse(self._ids)  # Copy self
+        new_modules = self.browse(self.ids)  # Copy self
         while new_modules:
             new_modules = new_modules._get_dependency_modules(stream, states)
             if new_modules:
                 self |= new_modules
-        self |= self._get_auto_install_modules(states)
         return self
 
     @api.multi
@@ -119,3 +109,14 @@ class IrModuleModule(models.Model):
             modules = self._get_graph_modules(st, states)
             modules._add_graph_nodes_and_edges(graph)
         return IrModuleModule.print_graph(graph, path)
+
+    @api.multi
+    def open_graph_wizard(self):
+        return {
+            'name': _('Modules Graph'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'ir.module.module.graph_wizard',
+            'view_mode': 'form',
+            'context': {'active_ids': self.ids},
+            'target': 'new',
+        }
