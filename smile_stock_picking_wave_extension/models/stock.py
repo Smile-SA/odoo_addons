@@ -105,7 +105,7 @@ class StockPicking(models.Model):
         if not self:
             return True
         self = self.filtered(lambda picking: picking.state != 'cancel')
-        # Propagate cancellation to transport vouchers if this is configured
+        # Propagate cancellation to picking wave if this is configured
         waves_to_cancel = self.env['stock.picking.wave'].browse()
         for picking in self:
             if picking.wave_id.type_id.propagate_picking_cancel:
@@ -123,7 +123,7 @@ class StockPicking(models.Model):
             # Cancel waves whom all pickings are cancelled
             if not picking.wave_id.picking_ids.filtered(lambda picking: picking.state != 'cancel'):
                 waves_to_cancel |= picking.wave_id
-        waves_to_cancel.cancel_picking()  # Cancel transport vouchers
+        waves_to_cancel.cancel_picking()  # Cancel picking waves
         return res
 
 
