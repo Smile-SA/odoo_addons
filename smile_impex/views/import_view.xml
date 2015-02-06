@@ -27,13 +27,13 @@
 								<group col="6">
 									<field name="cron_id" />
 									<button type="object" name="create_cron" string="Create Scheduled Action" colspan="2"
-										attrs="{'invisible': [('cron_id', '!=', False)]}" />
+									attrs="{'invisible': [('cron_id', '!=', False)]}" />
 									<newline/>
 									<field name="server_action_id" />
 									<button type="object" name="create_server_action" string="Create Server Action" colspan="2"
-										attrs="{'invisible': [('server_action_id', '!=', False)]}" />
+									attrs="{'invisible': [('server_action_id', '!=', False)]}" />
 									<button type="object" name="unlink_server_action" string="Delete Server Action" colspan="2"
-										attrs="{'invisible': [('server_action_id', '=', False)]}" />
+									attrs="{'invisible': [('server_action_id', '=', False)]}" />
 								</group>
 							</page>
 							<page string="Logs">
@@ -44,7 +44,6 @@
 				</form>
 			</field>
 		</record>
-
 		<record id="view_import_template_tree" model="ir.ui.view">
 			<field name="name">ir.model.import.template.tree</field>
 			<field name="model">ir.model.import.template</field>
@@ -58,7 +57,6 @@
 				</tree>
 			</field>
 		</record>
-
 		<record id="view_import_template_search" model="ir.ui.view">
 			<field name="name">ir.model.import.template.search</field>
 			<field name="model">ir.model.import.template</field>
@@ -72,7 +70,6 @@
 				</search>
 			</field>
 		</record>
-
 		<record id="action_import_template" model="ir.actions.act_window">
 			<field name="name">Imports</field>
 			<field name="type">ir.actions.act_window</field>
@@ -82,7 +79,6 @@
 		</record>
 
 		<!-- Import -->
-
 		<record id="view_import_form" model="ir.ui.view">
 			<field name="name">ir.model.import.form</field>
 			<field name="model">ir.model.import</field>
@@ -99,17 +95,16 @@
 						<page string="Logs">
 							<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}" />
 						</page>
-            <page string="Arguments">
-              <field name="args" colspan="4" nolabel="1" />
-            </page>
+						<page string="Arguments">
+							<field name="args" colspan="4" nolabel="1" />
+						</page>
 					</notebook>
-          <footer>
-            <button type="object" name="process" string="Re-generate" colspan="4" class="oe_highlight"/>
-          </footer>
+					<footer>
+						<button type="object" name="process" string="Re-generate" colspan="4" class="oe_highlight"/>
+					</footer>
 				</form>
 			</field>
 		</record>
-
 		<record id="view_import_tree" model="ir.ui.view">
 			<field name="name">ir.model.import.tree</field>
 			<field name="model">ir.model.import</field>
@@ -122,7 +117,7 @@
 					<field name="time_human" />
 					<field name="test_mode" />
 					<field name="state" />
-          <button type="object" name="process" icon="terp-gtk-jump-to-ltr" string="Re-generate" />
+					<button type="object" name="process" icon="terp-gtk-jump-to-ltr" string="Re-generate" />
 				</tree>
 			</field>
 		</record>
