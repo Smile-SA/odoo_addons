@@ -28,6 +28,7 @@ from openerp.exceptions import Warning
 from openerp.addons.smile_log.tools import SmileDBLogger
 
 from action_rule_decorator import action_rule_decorator
+from copy import deepcopy
 
 
 class ActionRuleCategory(models.Model):
@@ -42,7 +43,8 @@ class ActionRule(models.Model):
 
     def __init__(self, pool, cr):
         super(ActionRule, self).__init__(pool, cr)
-        self._columns['kind'].selection = self._get_kinds(cr, SUPERUSER_ID)
+        self._fields['kind'].selection = self._get_kinds(cr, SUPERUSER_ID)
+        self._fields['last_run'].readonly = False
 
     @api.model
     def _get_kinds(self):
@@ -73,6 +75,23 @@ class ActionRule(models.Model):
         ('none', 'None'),
     ], 'Exception Warning', required=True, default='native')
     exception_message = fields.Char('Exception Message', size=256, translate=True, required=False)
+    date_base = fields.Selection([('last_run', 'Last run'), ('date_from', 'Fixed date')], 'Trigger Date Filtered From', default='last_run')
+
+    @api.multi
+    def write(self, vals):
+        if 'last_run' in vals:
+            if vals.get('date_base') == 'last_run':
+                del vals['last_run']
+            elif 'date_base' not in vals:
+                date_from_rules = self.filtered(lambda r: r.date_base == 'date_from')
+                date_from_vals = deepcopy(vals)
+                del date_from_vals['last_run']
+                if date_from_vals:
+                    super(ActionRule, date_from_rules).write(date_from_vals)
+                self -= date_from_rules
+        if vals:
+            return super(ActionRule, self).write(vals)
+        return True
 
     @api.multi
     def _store_model_methods(self, model_id):
@@ -127,7 +146,7 @@ class ActionRule(models.Model):
                 res_ids = model.search(cr, uid, domain, context=ctx)
             else:
                 res_ids = super(ActionRule, self)._filter(cr, uid, rule, filter, record_ids, context)
-            res_ids = rule._filter_max_executions(res_ids)
+            res_ids = rule.with_env(rule.env(cr=cr))._filter_max_executions(res_ids)
             logger.debug('[%s] Successful filter: %s,%s - Input records: %s%s - Output records: %s%s'
                          % (pid, rule.name, filter.name, rule.model_id.model, tuple(record_ids),
                             rule.model_id.model, tuple(res_ids)))

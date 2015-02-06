@@ -28,6 +28,13 @@
 	                	<field name="force_actions_execution"/>
 	                </group>
                 </field>
+                <field name="trg_date_calendar_id" position="after">
+                	<label for="date_base" attrs="{'invisible': [('trg_date_id','=',False)]}"/>
+                	<div attrs="{'invisible': [('trg_date_id','=',False)]}">
+	                	<field name="date_base" class="oe_inline" attrs="{'required': [('trg_date_id', '!=', 'False')]}"/>
+	                	<field name="last_run" class="oe_inline" attrs="{'invisible': [('date_base', '!=', 'date_from')], 'required': [('trg_date_id', '!=', False), ('date_base', '=', 'date_from')]}"/>
+	               	</div>
+                </field>
                 <field name="server_action_ids" position="after">
                 	<group colspan="4" col="4">
 	                	<field name="exception_handling"/>

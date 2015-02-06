@@ -21,7 +21,7 @@
 
 import inspect
 
-from openerp import _
+from openerp import api, _
 from openerp.sql_db import Cursor
 from openerp.exceptions import Warning
 
@@ -33,10 +33,19 @@ def _get_args(self, method, args, kwargs):
         ids = self._ids
     else:
         while True:
-            if not hasattr(method, '_orig'):
+            if not hasattr(method, 'origin'):
                 break
-            method = method._orig
+            method = method.origin
         method_arg_names = inspect.getargspec(method)[0][1:len(args) + 1]
+        if not method_arg_names:
+            decorator = method._api and method._api.__name__
+            if decorator in ('multi', 'one'):
+                method_arg_names = ['cr', 'uid', 'ids']
+            elif decorator == 'model':
+                method_arg_names = ['cr', 'uid']
+            else:
+                raise Warning(_('Method not adapted for action rules'))
+            method_arg_names += [None] * (len(args) - len(method_arg_names))
         method_args = dict(zip(method_arg_names, args))
         cr = method_args.get('cr') or method_args.get('cursor')
         uid = method_args.get('uid') or method_args.get('user') or method_args.get('user_id')
