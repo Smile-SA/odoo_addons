@@ -48,7 +48,7 @@ def _special_wrapper(self, method, fields, *args, **kwargs):
     follower_obj = self.pool['mail.followers']
     for field in fields:
         if vals.get(field) and ids:
-            partner_ids = [getattr(r, field).id for r in self.browse(cr, uid, ids, context)]
+            partner_ids = [getattr(r, field).id for r in self.pool[self._name].browse(cr, uid, ids, context)]
             follower_ids = follower_obj.search(cr, uid, [
                 ('res_model', '=', self._name),
                 ('res_id', 'in', ids),
