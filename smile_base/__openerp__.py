@@ -51,12 +51,13 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "data": [
         "security/base_security.xml",
         "security/res_users.yml",
+        "data/act_actions_window.yml",
         "data/mail_data.yml",
-        "data/template.xml",
-        "data/ir_lang.yml",
+        # "data/ir_lang.yml",
         "data/im_odoo_support.yml",
         "data/ir_module_menu.yml",
         "views/ir_values_view.xml",
+        "views/template.xml",
         'views/webclient_templates.xml',
     ],
     "js": [

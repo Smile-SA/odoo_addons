@@ -176,7 +176,7 @@ def filtered_from_domain(self, domain):
         field = model._fields[item[0].split('.')[-1]]
         if field.relational:
             if isinstance(item[2], basestring):
-                item[2] = dict(self.env[field.relation].name_search(name=item[2], operator=item[1])).keys()
+                item[2] = dict(self.env[field.comodel_name].name_search(name=item[2], operator=item[1])).keys()
                 item[1] = 'in'
             if field.type.endswith('2many'):
                 item[0] += '.ids'

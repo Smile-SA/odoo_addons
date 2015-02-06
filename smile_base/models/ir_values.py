@@ -23,7 +23,6 @@ from openerp.addons.base.ir.ir_values import ACTION_SLOTS, EXCLUDED_FIELDS
 from openerp import models, _
 from openerp.exceptions import except_orm, Warning
 from openerp.osv import fields
-from openerp.tools.misc import unquote
 from openerp.tools.safe_eval import safe_eval as eval
 
 
@@ -90,7 +89,7 @@ class IrValues(models.Model):
         results = {}
         for action in cr.dictfetchall():
             if not action['value']:
-                continue    # skip if undefined
+                continue  # skip if undefined
             action_model, action_id = action['value'].split(',')
             if not eval(action_id):
                 continue
