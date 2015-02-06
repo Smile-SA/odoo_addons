@@ -187,7 +187,7 @@ class SmileScript(models.Model):
         convert_xml_import(self._cr, __package__, StringIO(self.code.encode('utf-8')))
         return 'No expected result'
 
-    @api.cr
+    @api.model
     def dump_database(self):
         dump_path = tools.config.get('smile_script_dump_path')
         if not dump_path:
