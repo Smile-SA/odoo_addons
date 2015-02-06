@@ -34,22 +34,16 @@ class IrModel(models.Model):
         linked_models = {}
         for model in models:
             linked_models.setdefault(model, {})
-            for field_name, field in self.env[model]._columns.iteritems():
-                if field._type in ('many2one', 'many2many') and (not hasattr(field, 'store') or field.store) \
-                        and field._obj in models and field._obj != model and field.required == required:
-                    linked_models[model].setdefault(field._obj, []).append('%s:id' % field_name)
             for field_name, field in self.env[model]._fields.iteritems():
                 if field.type in ('many2one', 'many2many') and field.store \
-                        and field.comodel_name in models and field.comodel_name != model and field.required == required:
+                        and field.comodel_name in models and field.required == required:
                     linked_models[model].setdefault(field.comodel_name, []).append('%s:id' % field_name)
         return linked_models
 
     @api.multi
-    def get_model_graph(self, models):
-        "TODO: rename this method"
+    def get_ordered_model_graph(self, models):
         ordered_models = []
         models = [model.model for model in models if self.env[model.model]._auto and hasattr(self.env[model.model], 'get_fields_to_export')]
-
         required_linked_models = self._get_linked_models(models, required=True)
         while required_linked_models:
             level_models = []

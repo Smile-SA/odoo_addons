@@ -26,15 +26,6 @@ magic_fields = ['create_uid', 'create_date', 'write_uid', 'write_date']
 
 def get_fields_to_export(self):
     fields_to_export = ['id']
-    for column, field in self._columns.iteritems():
-        if column in magic_fields:
-            continue
-        if field._type == 'one2many' \
-                or (hasattr(field, 'store') and not field.store):
-            continue
-        if field._type in ('many2many', 'many2one'):
-            column += ':id'
-        fields_to_export.append(column)
     for column, field in self._fields.iteritems():
         if column in magic_fields:
             continue

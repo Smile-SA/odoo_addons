@@ -86,13 +86,13 @@ class BaseModuleRecord(models.TransientModel):
 
     def _export_data_by_model(self):
         models = self._get_models()
-        datas = self.env['ir.model'].get_model_graph(models)
+        datas = self.env['ir.model'].get_ordered_model_graph(models)
         domain = self._get_domain()
         res_ids_by_model = {}
         for index, (model, fields_to_export) in enumerate(datas):
             res_obj = self.env[model]
             recs = res_obj.search(res_obj._log_access and domain or [])
-            if 'parent_left' in res_obj._columns:
+            if 'parent_left' in res_obj._fields:
                 recs = recs.sorted(key='parent_left')
             res_ids_by_model[model] = recs.ids
             rows = [fields_to_export]
@@ -101,8 +101,7 @@ class BaseModuleRecord(models.TransientModel):
         datas.extend(self._export_ir_properties(models, res_ids_by_model))
         return datas
 
-    @staticmethod
-    def _convert_to_csv(model, rows):
+    def _convert_to_csv(self, model, rows):
         s = StringIO.StringIO()
         writer = csv.writer(s, quoting=csv.QUOTE_NONNUMERIC)
         for row in rows:
@@ -121,8 +120,7 @@ class BaseModuleRecord(models.TransientModel):
             writer.writerow(row)
         return s.getvalue()
 
-    @staticmethod
-    def _convert_to_xml(model, rows):
+    def _convert_to_xml(self, model, rows):
         openerp_elem = etree.Element('openerp')
         data_elem = etree.SubElement(openerp_elem, 'data')
         data_elem.set('noupdate', '1')
@@ -142,7 +140,12 @@ class BaseModuleRecord(models.TransientModel):
                     field_elem.set('eval', '%s' % value)
                     continue
                 if not field_name.endswith(':id'):
-                    field_elem.text = '%s' % value
+                    if field.type == 'selection':  # Contrary to CSV import, XML import requires key instead of value
+                        for item in field._description_selection(self.env):
+                            if item[1] == value:
+                                field_elem.text = '%s' % item[0]
+                    else:
+                        field_elem.text = '%s' % value
                 else:
                     if field.type == 'many2one':
                         field_elem.set(value and 'ref' or 'eval', value or 'False')
@@ -155,7 +158,9 @@ class BaseModuleRecord(models.TransientModel):
         data_files = []
         for model, rows in self._export_data_by_model():
             args = (self.env[model], rows)
-            data_files.append((model, getattr(BaseModuleRecord, '_convert_to_%s' % self.filetype)(*args)))
+            content = getattr(self, '_convert_to_%s' % self.filetype)(*args)
+            content = content.replace('__export__.', '')
+            data_files.append((model, content))
         return data_files
 
     @staticmethod
@@ -188,11 +193,9 @@ class BaseModuleRecord(models.TransientModel):
     "category" : "Hidden",
     "depends" : [%(dependencies)s],
     "sequence": 20,
-    "init_xml" : [ ],
-    "update_xml" : [
+    "data" : [
         %(data_files)s,
     ],
-    "demo_xml" : [],
     "test": [],
     "auto_install": False,
     "installable": True,
