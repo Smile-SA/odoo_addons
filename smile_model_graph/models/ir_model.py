@@ -29,9 +29,9 @@ class IrModel(models.Model):
     _inherit = 'ir.model'
 
     @staticmethod
-    def add_graph_node(graph, nodes, name, label=None):
+    def add_graph_node(graph, nodes, name, label=None, color='black'):
         if name not in nodes:
-            node = pydot.Node(label or name)
+            node = pydot.Node(label or name, color=color)
             nodes[name] = node
             graph.add_node(node)
 
@@ -57,7 +57,8 @@ class IrModel(models.Model):
         nodes, edges = {}, {}
         # Add nodes
         for model in self:
-            IrModel.add_graph_node(graph, nodes, model.model)
+            color = 'red' if model.id in self._context.get('selected_models', []) else 'black'
+            IrModel.add_graph_node(graph, nodes, model.model, color=color)
         # Add edges
         for model in self:
             for field in model.field_id:
@@ -90,5 +91,5 @@ class IrModel(models.Model):
 
     @api.multi
     def get_graph(self, deep=1, show_relation_name=False, path='model_graph.png'):
-        graph = self._get_related_models(deep)._get_graph(show_relation_name)
+        graph = self.with_context(selected_models=self.ids)._get_related_models(deep)._get_graph(show_relation_name)
         return IrModel.print_graph(graph, path)
