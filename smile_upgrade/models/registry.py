@@ -72,39 +72,37 @@ def upgrade_manager(cls, db_name):
 
 @classmethod
 def new(cls, db_name, force_demo=False, status=None, update_module=False):
-    upgrades = False
-    try:
-        code_at_creation = False
-        with cls.upgrade_manager(db_name) as upgrade_manager:
-            if upgrade_manager.db_in_creation:
-                code_at_creation = upgrade_manager.code_version
-            upgrades = bool(upgrade_manager.upgrades)
-            if upgrades and openerp.multi_process:
-                raise Warning('Database upgrade incompatible with multi-workers mode. '
-                              'Please start server with argument --workers=0')
-            for upgrade in upgrade_manager.upgrades:
-                _logger.info('loading %s upgrade...', upgrade.version)
-                upgrade.pre_load()
-                if upgrade.modules_to_upgrade:
-                    registry = native_new(db_name)
-                    upgrade.force_modules_upgrade(registry)
-                native_new(db_name, update_module=True)
-                upgrade.post_load()
-                _logger.info('%s upgrade successfully loaded', upgrade.version)
-        registry = native_new(db_name, force_demo, status, update_module)
-        registry.set_db_version(code_at_creation)
-        if upgrades and config.get('stop_after_upgrades'):
-            _logger.info('Stopping Odoo server')
-            os._exit(0)
-        return registry
-    except Exception, e:
-        if upgrades and config.get('stop_after_upgrades'):
-            _logger.error(_get_exception_message(e))
-            _logger.critical('Upgrade FAILED')
-            _logger.info('Stopping Odoo server')
-            os._exit(1)
-        e.traceback = sys.exc_info()
-        raise
+    with cls.lock():
+        upgrades = False
+        try:
+            code_at_creation = False
+            with cls.upgrade_manager(db_name) as upgrade_manager:
+                if upgrade_manager.db_in_creation:
+                    code_at_creation = upgrade_manager.code_version
+                upgrades = bool(upgrade_manager.upgrades)
+                for upgrade in upgrade_manager.upgrades:
+                    _logger.info('loading %s upgrade...', upgrade.version)
+                    upgrade.pre_load()
+                    if upgrade.modules_to_upgrade:
+                        registry = native_new(db_name)
+                        upgrade.force_modules_upgrade(registry)
+                    native_new(db_name, update_module=True)
+                    upgrade.post_load()
+                    _logger.info('%s upgrade successfully loaded', upgrade.version)
+            registry = native_new(db_name, force_demo, status, update_module)
+            registry.set_db_version(code_at_creation)
+            if upgrades and config.get('stop_after_upgrades'):
+                _logger.info('Stopping Odoo server')
+                os._exit(0)
+            return registry
+        except Exception, e:
+            if upgrades and config.get('stop_after_upgrades'):
+                _logger.error(_get_exception_message(e))
+                _logger.critical('Upgrade FAILED')
+                _logger.info('Stopping Odoo server')
+                os._exit(1)
+            e.traceback = sys.exc_info()
+            raise
 
 RegistryManager.upgrade_manager = upgrade_manager
 RegistryManager.new = new
