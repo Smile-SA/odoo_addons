@@ -24,7 +24,7 @@ from lxml import etree
 from openerp import api
 
 
-def checklist_view_decorator():
+def checklist_fields_view_get_decorator():
     def checklist_wrapper(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         fields_view = checklist_wrapper.origin(self, cr, uid, view_id, view_type, context, toolbar, submenu)
         context = context or {}

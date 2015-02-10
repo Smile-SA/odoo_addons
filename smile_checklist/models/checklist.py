@@ -26,7 +26,7 @@ from openerp.exceptions import Warning
 from openerp.modules.registry import Registry
 from openerp.tools.safe_eval import safe_eval as eval
 
-from checklist_decorators import checklist_view_decorator, checklist_create_decorator, checklist_write_decorator
+import checklist_decorators
 
 
 def update_checklists(load):
@@ -89,13 +89,29 @@ class Checklist(models.Model):
                 continue
             model_obj = self.env[model.model]
             if checklist:
-                cls = model_obj.__class__
+                for method_name in ('create', 'write', 'fields_view_get'):
+                    method = getattr(model_obj, method_name)
+                    while hasattr(method, 'origin'):
+                        if method.__name__ == 'checklist_wrapper':
+                            break
+                        method = method.origin
+                    else:
+                        model_obj._patch_method(method_name, getattr(checklist_decorators,
+                                                                     'checklist_%s_decorator' % method_name)())
+                if 'checklist_task_instance_ids' in model_obj._fields:
+                    continue
+                cls = type(model_obj).__base__
                 setattr(cls, '_get_checklist_task_inst', api.one(api.depends()(Checklist._get_checklist_task_inst)))
-                model_obj._add_field('checklist_task_instance_ids', fields.One2many('checklist.task.instance',
-                                                                                    string='Checklist Task Instances',
-                                                                                    compute='_get_checklist_task_inst'))
-                model_obj._add_field('total_progress_rate', fields.Float('Progress Rate', digits=(16, 2)))
-                model_obj._add_field('total_progress_rate_mandatory', fields.Float('Mandatory Progress Rate', digits=(16, 2)))
+                new_fields = {
+                    'checklist_task_instance_ids': fields.One2many('checklist.task.instance',
+                                                                   string='Checklist Task Instances',
+                                                                   compute='_get_checklist_task_inst'),
+                    'total_progress_rate': fields.Float('Progress Rate', digits=(16, 2)),
+                    'total_progress_rate_mandatory': fields.Float('Mandatory Progress Rate', digits=(16, 2)),
+                }
+                for new_field in new_fields.iteritems():
+                    setattr(cls, *new_field)
+                    model_obj._add_field(*new_field)
                 self.pool.setup_models(self._cr, partial=(not self.pool.ready))
                 model_pool = self.pool[model.model]
                 model_pool._field_create(self._cr, self._context)
@@ -106,12 +122,13 @@ class Checklist(models.Model):
                         del model_obj._columns[field]
                     if field in model_obj._fields:
                         del model_obj._fields[field]
-            if model_obj.create.__name__ != 'checklist_wrapper':
-                model_obj._patch_method('create', checklist_create_decorator())
-            if model_obj.write.__name__ != 'checklist_wrapper':
-                model_obj._patch_method('write', checklist_write_decorator())
-            if model_obj.fields_view_get.__name__ != 'checklist_wrapper':
-                model_obj._patch_method('fields_view_get', checklist_view_decorator())
+                for method_name in ('create', 'write', 'fields_view_get'):
+                    method = getattr(model_obj, method_name)
+                    while hasattr(method, 'origin'):
+                        if method.__name__ == 'checklist_wrapper':
+                            model_obj._revert_method(method_name)
+                            break
+                        method = method.origin
         self.clear_caches()
 
     def __init__(self, pool, cr):
