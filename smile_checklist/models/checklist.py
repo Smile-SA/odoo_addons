@@ -89,15 +89,6 @@ class Checklist(models.Model):
                 continue
             model_obj = self.env[model.model]
             if checklist:
-                for method_name in ('create', 'write', 'fields_view_get'):
-                    method = getattr(model_obj, method_name)
-                    while hasattr(method, 'origin'):
-                        if method.__name__ == 'checklist_wrapper':
-                            break
-                        method = method.origin
-                    else:
-                        model_obj._patch_method(method_name, getattr(checklist_decorators,
-                                                                     'checklist_%s_decorator' % method_name)())
                 if 'checklist_task_instance_ids' in model_obj._fields:
                     continue
                 cls = type(model_obj).__base__
@@ -116,6 +107,8 @@ class Checklist(models.Model):
                 model_pool = self.pool[model.model]
                 model_pool._field_create(self._cr, self._context)
                 model_pool._auto_init(self._cr, self._context)
+                for method in ('create', 'write', 'fields_view_get'):
+                    cls._patch_method(method, getattr(checklist_decorators, 'checklist_%s_decorator' % method)())
             else:
                 for field in ('checklist_task_instance_ids', 'total_progress_rate', 'total_progress_rate_mandatory'):
                     if field in model_obj._columns:
