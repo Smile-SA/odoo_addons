@@ -119,8 +119,13 @@ class AuditRule(models.Model):
                 model_obj.audit_rule = True
                 updated = True
             if not rule.active and hasattr(model_obj, 'audit_rule'):
-                for method in ('create', 'write', 'unlink'):
-                    model_obj._revert_method(method)
+                for method_name in ('create', 'write', 'unlink'):
+                    method = getattr(model_obj, method_name)
+                    while hasattr(method, 'origin'):
+                        if method.__name__ == 'audit_wrapper':
+                            model_obj._revert_method(method_name)
+                            break
+                        method = method.origin
                 del model_obj.audit_rule
                 updated = True
         if updated:
