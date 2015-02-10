@@ -90,6 +90,8 @@ class Checklist(models.Model):
             model_obj = self.env[model.model]
             if checklist:
                 cls = model_obj.__class__
+                if hasattr(cls, '_get_checklist_task_inst'):
+                    continue
                 setattr(cls, '_get_checklist_task_inst', api.one(api.depends()(Checklist._get_checklist_task_inst)))
                 model_obj._add_field('checklist_task_instance_ids', fields.One2many('checklist.task.instance',
                                                                                     string='Checklist Task Instances',
