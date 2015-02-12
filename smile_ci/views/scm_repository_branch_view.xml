@@ -13,10 +13,12 @@
         </field>
         <button name="pull" position="attributes">
           <attribute name="states"></attribute>
-          <attribute name="attrs">{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}</attribute>
+          <attribute name="attrs">{'invisible': ['|', ('use_in_ci',
+            '=', True), ('state', '=', 'draft')]}</attribute>
         </button>
         <button name="pull" position="after">
-          <button name="create_build" string="Test" type="object" attrs="{'invisible': [('use_in_ci', '=', False)]}" icon="STOCK_EXECUTE"
+          <button name="create_build" string="Test" type="object"
+            attrs="{'invisible': [('use_in_ci', '=', False)]}" icon="STOCK_EXECUTE"
             groups="smile_scm.group_scm_user"/>
         </button>
       </field>
@@ -33,10 +35,12 @@
         </field>
         <button name="pull" position="attributes">
           <attribute name="states"></attribute>
-          <attribute name="attrs">{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}</attribute>
+          <attribute name="attrs">{'invisible': ['|', ('use_in_ci',
+            '=', True), ('state', '=', 'draft')]}</attribute>
         </button>
         <button name="pull" position="after">
-          <button name="create_build" string="Test" type="object" attrs="{'invisible': [('use_in_ci', '=', False)]}" icon="STOCK_EXECUTE"
+          <button name="create_build" string="Test" type="object"
+            attrs="{'invisible': [('use_in_ci', '=', False)]}" icon="STOCK_EXECUTE"
             groups="smile_scm.group_scm_user"/>
         </button>
       </field>
@@ -56,18 +60,24 @@
         </field>
         <button name="pull" position="attributes">
           <attribute name="states"></attribute>
-          <attribute name="attrs">{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}</attribute>
+          <attribute name="attrs">{'invisible': ['|', ('use_in_ci',
+            '=', True), ('state', '=', 'draft')]}</attribute>
         </button>
         <button name="pull" position="after">
-          <button name="create_build" string="Test" type="object" class="oe_highlight" groups="smile_scm.group_scm_user"
+          <button name="create_build" string="Test" type="object"
+            class="oe_highlight" groups="smile_scm.group_scm_user"
             attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
-          <label string="or" attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}" groups="smile_scm.group_scm_user"/>
-          <button name="force_create_build" string="Force test" type="object" class="oe_link" groups="smile_scm.group_scm_user"
+          <label string="or"
+            attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"
+            groups="smile_scm.group_scm_user"/>
+          <button name="force_create_build" string="Force test"
+            type="object" class="oe_link" groups="smile_scm.group_scm_user"
             attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
         </button>
         <div class="oe_title" position="after">
           <div class="oe_right">
-            <button class="oe_inline oe_stat_button" name="%(action_branch_builds)d" type="action" icon="fa-tasks">
+            <button class="oe_inline oe_stat_button" name="%(action_branch_builds)d"
+              type="action" icon="fa-tasks">
               <field string="Builds" name="builds_count" widget="statinfo"/>
             </button>
           </div>
@@ -88,7 +98,8 @@
                 <field name="addons_path" placeholder="addons,project-addons,web/addons"/>
                 <field name="code_path" placeholder="project-addons"/>
                 <separator colspan="2"/>
-                <field name="ignored_tests" placeholder="{'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"/>
+                <field name="ignored_tests"
+                  placeholder="{'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"/>
               </group>
               <group>
                 <field name="merge_subfolder" placeholder="branch-addons"/>
@@ -98,7 +109,9 @@
                 <field name="lang"/>
                 <field name="workers"/>
                 <separator colspan="2"/>
-                <field name="dump_id" domain="[('res_model', '=', 'scm.repository.branch'), ('res_id', '=', active_id)]" widget="selection"/>
+                <field name="dump_id"
+                  domain="[('res_model', '=', 'scm.repository.branch'), ('res_id', '=', active_id)]"
+                  widget="selection"/>
                 <separator colspan="2"/>
                 <field name="specific_packages"/>
                 <field name="pip_packages"/>

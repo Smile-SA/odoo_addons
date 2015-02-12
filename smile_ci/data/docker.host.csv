@@ -1,2 +1,0 @@
-id,docker_base_url,tls,redirect_subdomain_to_port,build_base_url
-defaut_docker_host,unix://var/run/docker.sock,0,0,http://localhost

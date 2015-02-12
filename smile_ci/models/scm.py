@@ -95,7 +95,7 @@ class OperatingSystem(models.Model):
     _order = 'name'
 
     name = fields.Char(required=True)
-    code = fields.Char('Docker image name', required=True)
+    dockerfile = fields.Binary('Dockerfile template', required=True)
     active = fields.Boolean(default=True)
 
 
@@ -255,8 +255,8 @@ class Branch(models.Model):
 
 
 def state_cleaner(method):
-    def new_load(self, cr, module):
-        res = method(self, cr, module)
+    def new_load(self, cr, *args, **kwargs):
+        res = method(self, cr, *args, **kwargs)
         try:
             build_obj = self.get('scm.repository.branch.build')
             if build_obj:
@@ -303,7 +303,7 @@ class Build(models.Model):
         cls = type(self)
         cls._scheduler_lock = Lock()
         super(Build, self).__init__(pool, cr)
-        setattr(Registry, 'load', state_cleaner(getattr(Registry, 'load')))
+        setattr(Registry, 'setup_models', state_cleaner(getattr(Registry, 'setup_models')))
 
     @api.one
     @api.depends('docker_host_id', 'port')
@@ -507,10 +507,8 @@ class Build(models.Model):
     def _test(self):
         self.ensure_one()
         _logger.info('Testing build %s...' % self.id)
-        running = False
         try:
             self._create_configfile()
-            self._create_launcherfile()
             self._create_dockerfile()
             self._build_image()
             self._remove_directory()
@@ -604,24 +602,9 @@ class Build(models.Model):
                     cfile.write('%s = %s\n' % (k, v))
 
     @api.one
-    def _create_launcherfile(self):
-        _logger.info('Generating launcher.sh for build:%s...' % self.id)
-        template = 'smile_ci/data/launcher_%s.tmpl' % self.branch_id.os_id.code.replace(':', '').replace('.', '')
-        with file_open(template) as f:
-            content = f.read()
-        server_cmd = os.path.join(self.branch_id.server_path,
-                                  self.branch_id.version_id.server_cmd)
-        if server_cmd.startswith('./'):
-            server_cmd = server_cmd[2:]
-        with cd(self.directory):
-            with open('launcher.sh', 'w') as f:
-                f.write(content % {'server_cmd': server_cmd})
-            os.chmod('launcher.sh', 0775)
-
-    @api.one
     def _create_dockerfile(self):
         _logger.info('Generating dockerfile for build:%s...' % self.id)
-        template = 'smile_ci/data/Dockerfile_%s.tmpl' % self.branch_id.os_id.code.replace(':', '').replace('.', '')
+        template = base64.b64decode(self.branch_id.os_id.dockerfile)
         with file_open(template) as f:
             content = f.read()
         localdict = {
@@ -635,17 +618,63 @@ class Build(models.Model):
             with open(DOCKERFILE, 'w') as f:
                 f.write(content % localdict)
 
+    @api.multi
+    def _get_image_name(self):
+        self.ensure_one()
+        return 'build:%s' % self.id
+
+    @api.multi
+    def _get_container_name(self):
+        self.ensure_one()
+        return 'build_%s' % self.id
+
+    @api.multi
+    def _get_build_params(self):
+        self.ensure_one()
+        return {
+            'path': self.directory,
+            'tag': self._get_image_name(),
+            'rm': True,
+        }
+
+    @api.multi
+    def _get_create_container_params(self):
+        self.ensure_one()
+        return {
+            'image': self._get_image_name(),
+            'name': self._get_container_name(),
+            'detach': True,
+            'ports': [8069]
+        }
+
+    @api.multi
+    def _get_start_params(self):
+        self.ensure_one()
+        return {
+            'port_bindings': {8069: int(self.port)},
+        }
+
     @api.one
     def _build_image(self):
         _logger.info('Building image build:%s...' % self.id)
         # TODO: copy sources in a tar archive and use it as fileobj with custom_context=True
-        response = self._docker_cli.build(path=self.directory, tag='build:%s' % self.id, rm=True)
+        params = self._get_build_params()
+        generator = self._docker_cli.build(**params)
         last_line = ''
-        for line in response:
+        for line in generator:
             last_line = line
             _logger.debug(line)
         if 'Successfully built' not in last_line:
             raise Exception(last_line)
+
+    @api.one
+    def _run_container(self):
+        _logger.info('Running container build_%s and expose it in port %s...' % (self.id, self.port))
+        params = self._get_create_container_params()
+        container = self._docker_cli.create_container(**params)
+        params = self._get_start_params()
+        self._docker_cli.start(container, **params)
+        self._check_if_running()
 
     @api.one
     def _check_if_running(self):
@@ -658,14 +687,6 @@ class Build(models.Model):
             except:
                 if time.time() - t0 >= 60:
                     raise
-
-    @api.one
-    def _run_container(self):
-        _logger.info('Running container build_%s and expose it in port %s...' % (self.id, self.port))
-        container = self._docker_cli.create_container('build:%s' % self.id, name='build_%s' % self.id,
-                                                      detach=True, ports=[8069])
-        self._docker_cli.start(container, port_bindings={8069: int(self.port)})
-        self._check_if_running()
 
     @api.model
     def _find_ports(self):
@@ -759,7 +780,7 @@ class Build(models.Model):
     @api.one
     def _attach_files(self):
         _logger.info('Attaching files for build_%s...' % self.id)
-        container = 'build_%s' % self.id
+        container = self._get_container_name()
         cloc_paths = ['%s.cloc' % path.replace('/', '_') for path in self.branch_id.addons_path.split(',')]
         missing_files = []
         for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE, '.coverage'] + cloc_paths:
@@ -895,14 +916,13 @@ class Build(models.Model):
         _logger.info('Removing container build_%s and its original image...' % self.id)
         if self.state != 'pending':
             try:
-                self._docker_cli.remove_container('build_%s' % self.id, force=True)
-                self._docker_cli.remove_image('build:%s' % self.id, force=True)
+                container = self._get_container_name()
+                self._docker_cli.remove_container(container, force=True)
+                image = self._get_image_name()
+                self._docker_cli.remove_image(image, force=True)
             except APIError, e:
                 _logger.warning(e)
-        vals = {'state': 'done'}
-        if not self.result:
-            vals['result'] = 'killed'
-        self.write(vals)
+        self.write({'state': 'done', 'result': 'killed'})
 
     @api.multi
     def stop_container(self):
@@ -914,7 +934,7 @@ class Build(models.Model):
     def export_container(self):
         _logger.info('Exporting container build_%s...' % self.id)
         self.ensure_one()
-        container = 'build_%s' % self.id
+        container = self._get_container_name()
         archive_content = self._docker_cli.export(container)
         return self.env['ir.attachment'].create({
             'name': 'Docker Container',
