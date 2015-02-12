@@ -30,9 +30,10 @@ from openerp.addons.smile_impex.models.impex import IrModelImpex, IrModelImpexTe
 from ..tools import with_new_cursor
 
 
-class IrModelImportTemplate(models.Model, IrModelImpexTemplate):
+class IrModelImportTemplate(models.Model):
     _name = 'ir.model.import.template'
     _description = 'Import Template'
+    _inherit = 'ir.model.impex.template'
 
     import_ids = fields.One2many('ir.model.import', 'import_tmpl_id', 'Imports', readonly=True)
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import.template')], readonly=True)
@@ -53,11 +54,12 @@ class IrModelImportTemplate(models.Model, IrModelImpexTemplate):
         self.ensure_one()
         import_obj = self.env['ir.model.import']
         import_rec = import_obj.browse()
+        new_thread = self._context.get('new_thread') or self.new_thread
         try:
             vals = {
                 'import_tmpl_id': self.id,
                 'test_mode': self._context.get('test_mode'),
-                'new_thread': self.new_thread,
+                'new_thread': new_thread,
                 'args': repr(args),
             }
             import_rec = import_obj.create(vals)
@@ -68,13 +70,14 @@ class IrModelImportTemplate(models.Model, IrModelImpexTemplate):
         return import_rec.process()
 
 
-class IrModelImport(models.Model, IrModelImpex):
+class IrModelImport(models.Model):
     _name = 'ir.model.import'
     _description = 'Import'
+    _inherit = 'ir.model.impex'
 
     def __init__(self, pool, cr):
         super(IrModelImport, self).__init__(pool, cr)
-        setattr(Registry, 'load', state_cleaner(pool[self._name])(getattr(Registry, 'load')))
+        setattr(Registry, 'setup_models', state_cleaner(pool[self._name])(getattr(Registry, 'setup_models')))
 
     import_tmpl_id = fields.Many2one('ir.model.import.template', 'Template', readonly=True, required=True, ondelete='cascade')
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import')], readonly=True)

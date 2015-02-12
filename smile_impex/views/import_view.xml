@@ -20,7 +20,7 @@
 						</group>
 						<notebook colspan="4">
 							<page string="Imports">
-								<button type="object" name="create_import" string="New Import" colspan="4" context="{'commit_and_new_thread':True}" />
+								<button type="object" name="create_import" string="New Import" colspan="4" context="{'new_thread':True}" />
 								<field name="import_ids" nolabel="1" colspan="4" readonly="1" context="{'import_template_form_view': True}" />
 							</page>
 							<page string="Triggers">

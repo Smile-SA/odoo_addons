@@ -102,12 +102,12 @@ STATES = [
 
 def state_cleaner(model):
     def decorator(method):
-        def wrapper(self, cr, module):
-            res = method(self, cr, module)
+        def wrapper(self, cr, *args, **kwargs):
+            res = method(self, cr, *args, **kwargs)
             if self.get(model._name):
                 cr.execute("select relname from pg_class where relname='%s'" % model._table)
                 if cr.rowcount:
-                    impex_infos = self.get(model._name).search_read(cr, SUPERUSER_ID, [('state', '=', 'running')], ['pid'])
+                    impex_infos = self.get(model._name).search_read(cr, SUPERUSER_ID, [('state', '=', 'running')], ['pid'], order='id')
                     impex_ids = []
                     for impex in impex_infos:
                         if not psutil.pid_exists(impex['pid']):
@@ -124,10 +124,6 @@ class IrModelImpex(models.AbstractModel):
     _description = 'Import/Export'
     _rec_name = 'create_date'
     _order = 'create_date desc'
-
-    def __init__(self, pool, cr):
-        super(IrModelImpex, self).__init__(pool, cr)
-        setattr(Registry, 'load', state_cleaner(pool[self._name])(getattr(Registry, 'load')))
 
     @api.one
     @api.depends('from_date', 'to_date')

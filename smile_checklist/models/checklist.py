@@ -29,9 +29,9 @@ from openerp.tools.safe_eval import safe_eval as eval
 import checklist_decorators
 
 
-def update_checklists(load):
-    def wrapper(self, cr, module):
-        res = load(self, cr, module)
+def update_checklists(method):
+    def wrapper(self, cr, *args, **kwargs):
+        res = method(self, cr, *args, **kwargs)
         if self.get('checklist'):
             cr.execute("select relname from pg_class where relname='checklist'")
             if cr.rowcount:
@@ -126,7 +126,7 @@ class Checklist(models.Model):
 
     def __init__(self, pool, cr):
         super(Checklist, self).__init__(pool, cr)
-        setattr(Registry, 'load', update_checklists(getattr(Registry, 'load')))
+        setattr(Registry, 'setup_models', update_checklists(getattr(Registry, 'setup_models')))
 
     @api.model
     def create(self, vals):

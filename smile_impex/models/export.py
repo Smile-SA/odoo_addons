@@ -30,9 +30,10 @@ from openerp.addons.smile_impex.models.impex import IrModelImpex, IrModelImpexTe
 from ..tools import with_new_cursor
 
 
-class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
+class IrModelExportTemplate(models.Model):
     _name = 'ir.model.export.template'
     _description = 'Export Template'
+    _inherit = 'ir.model.impex.template'
 
     export_ids = fields.One2many('ir.model.export', 'export_tmpl_id', 'Exports', readonly=True)
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export.template')], readonly=True)
@@ -119,11 +120,12 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
         self.ensure_one()
         export_obj = self.env['ir.model.export']
         export_recs = export_obj.browse()
+        new_thread = self._context.get('new_thread') or self.new_thread
         try:
             vals = {
                 'export_tmpl_id': self.id,
                 'test_mode': self._context.get('test_mode', False),
-                'new_thread': self.new_thread,
+                'new_thread': new_thread,
                 'args': repr(args),
             }
             for index, res_ids_offset in enumerate(self._get_res_ids_offset(*args)):
@@ -137,13 +139,14 @@ class IrModelExportTemplate(models.Model, IrModelImpexTemplate):
         return export_recs.process()
 
 
-class IrModelExport(models.Model, IrModelImpex):
+class IrModelExport(models.Model):
     _name = 'ir.model.export'
     _description = 'Export'
+    _inherit = 'ir.model.impex'
 
     def __init__(self, pool, cr):
         super(IrModelExport, self).__init__(pool, cr)
-        setattr(Registry, 'load', state_cleaner(pool[self._name])(getattr(Registry, 'load')))
+        setattr(Registry, 'setup_models', state_cleaner(pool[self._name])(getattr(Registry, 'setup_models')))
 
     @api.one
     def _get_record_count(self):

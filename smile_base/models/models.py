@@ -26,69 +26,32 @@ from operator import and_, or_, sub
 import time
 
 from openerp import api, _
-from openerp.osv import fields
 from openerp.models import BaseModel
 from openerp.osv.expression import normalize_domain
 
 
 _logger = logging.getLogger(__name__)
 
-native_auto_init = BaseModel._auto_init
 native_validate_fields = BaseModel._validate_fields
 native_import_data = BaseModel.import_data
 native_load = BaseModel.load
 native_unlink = BaseModel.unlink
 
 
-def new_auto_init(self, cr, context=None):
-    '''Add foreign key with ondelete = 'set null' for stored fields.function of type many2one'''
-    res = native_auto_init(self, cr, context)
-    for fieldname, field in self._columns.iteritems():
-        if isinstance(field, fields.function) and field._type == 'many2one' and field.store:
-            self._m2o_fix_foreign_key(cr, self._table, fieldname, self.pool.get(field._obj), 'set null')
-    return res
-
-
 @api.multi
 def new_validate_fields(self, fields_to_validate):
-    context = self._context
-    if not context.get('no_validate'):
+    if not self._context.get('no_validate'):
         native_validate_fields(self, fields_to_validate)
-
-
-# Helper function combining _store_get_values and _store_set_values
-@api.multi
-def _compute_store_set(self):
-    """
-    Get the list of stored function field to recompute (via _store_get_values)
-    and recompute them (via _store_set_values)
-    """
-    cr, uid, context = self.env.args
-    store_get_result = self._store_get_values(self._columns.keys())
-    store_get_result.sort()
-    done = {}
-    for order, model, ids_to_update, fields_to_recompute in store_get_result:
-        key = (model, tuple(fields_to_recompute))
-        done.setdefault(key, {})
-        # avoid to do several times the same computation
-        todo = []
-        for id_to_update in ids_to_update:
-            if id_to_update not in done[key]:
-                done[key][id_to_update] = True
-                todo.append(id_to_update)
-        self.pool[model]._store_set_values(cr, uid, todo, fields_to_recompute, context)
 
 
 def new_load(self, cr, uid, fields, data, context=None):
     context_copy = context and context.copy() or {}
-    context_copy['no_store_function'] = True
     context_copy['no_validate'] = True
     context_copy['defer_parent_store_computation'] = True
     res = native_load(self, cr, uid, fields, data, context_copy)
     ids = res['ids']
     if ids:
         recs = self.browse(cr, uid, ids, context)
-        recs._compute_store_set()
         recs._validate_fields(fields)
         self._parent_store_compute(cr)
     return res
@@ -120,22 +83,19 @@ def new_unlink(self):
 
 
 @api.model
-@api.returns('self')
+@api.returns('self', lambda value: value.id)
 def bulk_create(self, vals_list):
     if not vals_list:
         return []
     cr, uid, context = self.env.args
     context_copy = context and context.copy() or {}
-    context_copy['no_store_function'] = True
     context_copy['no_validate'] = True
     context_copy['defer_parent_store_computation'] = True
-    ids = []
     if not isinstance(vals_list, list):
         vals_list = [vals_list]
+    records = self.browse()
     for vals in vals_list:
-        ids.append(self.with_context(context_copy).create(vals).id)
-    records = self.browse(ids)
-    records._compute_store_set()
+        records |= self.with_context(**context_copy).create(vals)
     records._validate_fields(vals_list[0])
     self._parent_store_compute()
     return records
@@ -214,8 +174,6 @@ def filtered_from_domain(self, domain):
     return parse()
 
 BaseModel.filtered_from_domain = filtered_from_domain
-BaseModel._auto_init = new_auto_init
-BaseModel._compute_store_set = _compute_store_set
 BaseModel._validate_fields = new_validate_fields
 BaseModel.bulk_create = bulk_create
 BaseModel.import_data = new_import_data

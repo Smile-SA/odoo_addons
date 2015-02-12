@@ -21,12 +21,9 @@
 
 import ir_actions
 import ir_config_parameter
-import ir_model
 import ir_values
-import ir_translation
 import models
 import module
 import registry
-import service
 import sql_db
 import update

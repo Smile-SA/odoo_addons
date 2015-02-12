@@ -19,10 +19,9 @@
 #
 ##############################################################################
 
+from openerp import api, fields, models, _
 from openerp.addons.base.ir.ir_values import ACTION_SLOTS, EXCLUDED_FIELDS
-from openerp import models, _
 from openerp.exceptions import except_orm, Warning
-from openerp.osv import fields
 from openerp.tools.safe_eval import safe_eval as eval
 
 
@@ -30,50 +29,23 @@ class IrValues(models.Model):
     _inherit = 'ir.values'
     _order = 'sequence, id'
 
-    def _get_visibility_options(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for value in self.read(cr, uid, ids, ['window_action_ids'], context):
-            res[value['id']] = ', %s, ' % ', '.join(map(str, value['window_action_ids']))
-        return res
+    @api.one
+    def _get_window_actions(self):
+        self.window_actions = ', %s, ' % ', '.join(map(str, self.window_action_ids.ids))
 
-    _columns = {
-        'sequence': fields.integer('Sequence'),
-        'window_action_ids': fields.many2many('ir.actions.act_window', 'ir_values_window_actions_rel',
-                                              'ir_value_id', 'window_action_id', 'Menus'),
-        'window_actions': fields.function(_get_visibility_options, method=True, type='char', size=128, string='Window Actions', store={
-            'ir.values': (lambda self, cr, uid, ids, context=None: ids, None, 10),
-        }),
-    }
+    sequence = fields.Integer('Sequence')
+    window_action_ids = fields.Many2many('ir.actions.act_window', 'ir_values_window_actions_rel',
+                                         'ir_value_id', 'window_action_id', 'Menus')
+    window_actions = fields.Char('Window Actions', size=128, compute='_get_window_actions',
+                                 default=', , ', store=True)
 
-    _defaults = {
-        'window_actions': ', , '
-    }
-
-    def get_actions(self, cr, uid, action_slot, model, res_id=False, context=None):
-        """Retrieves the list of actions bound to the given model's action slot.
-           See the class description for more details about the various action
-           slots: :class:`~.ir_values`.
-
-           :param string action_slot: the action slot to which the actions should be
-                                      bound to - one of ``client_action_multi``,
-                                      ``client_print_multi``, ``client_action_relate``,
-                                      ``tree_but_open``.
-           :param string model: model name
-           :param int res_id: optional record id - will bind the action only to a
-                              specific record of the model, not all records.
-           :return: list of action tuples of the form ``(id, name, action_def)``,
-                    where ``id`` is the ID of the default entry, ``name`` is the
-                    action label, and ``action_def`` is a dict containing the
-                    action definition as obtained by calling
-                    :meth:`~openerp.osv.osv.osv.read` on the action record.
-        """
+    @api.model
+    def get_actions(self, action_slot, model, res_id=False):
         assert action_slot in ACTION_SLOTS, 'Illegal action slot value: %s' % action_slot
         # use a direct SQL query for performance reasons,
         # this is called very often
         # Add by Smile #
-        context = context or {}
+        cr, uid, context = self.env.args
         query = """SELECT v.id, v.name, v.value FROM ir_values v
                    WHERE v.key = %s AND v.key2 = %s
                         AND v.model = %s
@@ -93,11 +65,11 @@ class IrValues(models.Model):
             action_model, action_id = action['value'].split(',')
             if not eval(action_id):
                 continue
-            fields = [field for field in self.pool.get(action_model)._fields
+            fields = [field for field in self.env[action_model]._fields
                       if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
-                action_def = self.pool.get(action_model).read(cr, uid, int(action_id), fields, context)
+                action_def = self.env[action_model].browse(int(action_id)).read(fields)
                 if isinstance(action_def, list):
                     action_def = action_def[0]
                 if action_def:
