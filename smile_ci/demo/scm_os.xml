@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="scm_os_demo" model="scm.os">
+            <field name="name">Ubuntu 14.04</field>
+            <field name="dockerfile" type="base64" file="smile_ci/demo/Dockerfile_demo.tmpl"/>
+        </record>
+
+    </data>
+</openerp>
