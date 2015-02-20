@@ -93,7 +93,7 @@ class BaseModuleRecord(models.TransientModel):
             res_obj = self.env[model]
             recs = res_obj.search(res_obj._log_access and domain or [])
             if 'parent_left' in res_obj._fields:
-                recs = recs.sorted(key='parent_left')
+                recs = recs.sorted(key=lambda rec: rec.parent_left)
             res_ids_by_model[model] = recs.ids
             rows = [fields_to_export]
             rows.extend(recs.export_data(fields_to_export)['datas'])
