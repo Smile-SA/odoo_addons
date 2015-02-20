@@ -1,16 +1,6 @@
 <openerp>
   <data>
 
-    <!-- Layout header view -->
-
-    <template id="external_layout_header_custom" inherit_id="report.external_layout_header">
-      <xpath expr="//div[@class='header']" position="replace">
-        <div class="header">
-          My own header
-        </div>
-      </xpath>
-    </template>
-
     <!-- Report view -->
 
     <template id="test_report_view">
@@ -59,8 +49,7 @@
 
     <!-- Report declaration -->
 
-    <report id="tests" model="ir.module.module" string="Tests Report" report_type="qweb-pdf" name="smile_test_report.test_report_view" file="Non-regression test report"
-      attachment="(object.name)"/>
+    <report id="tests" model="ir.module.module" string="Tests Report" report_type="qweb-pdf" name="smile_test_report.test_report_view" file="Non-regression test report"/>
 
   </data>
 </openerp>

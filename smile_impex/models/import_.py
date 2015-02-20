@@ -25,7 +25,7 @@ from openerp.modules.registry import Registry
 from openerp.tools.safe_eval import safe_eval as eval
 
 from openerp.addons.smile_log.tools import SmileDBLogger
-from openerp.addons.smile_impex.models.impex import IrModelImpex, IrModelImpexTemplate, state_cleaner
+from openerp.addons.smile_impex.models.impex import state_cleaner
 
 from ..tools import with_new_cursor
 

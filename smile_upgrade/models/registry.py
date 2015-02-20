@@ -24,9 +24,7 @@ import logging
 import os
 import sys
 
-import openerp
 from openerp import tools
-from openerp.exceptions import Warning
 from openerp.modules.registry import Registry, RegistryManager
 from openerp.osv import osv, orm
 from openerp.tools import config

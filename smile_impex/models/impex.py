@@ -27,7 +27,6 @@ from threading import Thread
 
 from openerp import api, fields, models, registry, SUPERUSER_ID, _
 from openerp.exceptions import Warning
-from openerp.modules.registry import Registry
 
 from openerp.addons.smile_log.tools import SmileDBLogger
 

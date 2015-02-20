@@ -21,7 +21,7 @@
 
 import inspect
 
-from openerp import api, _
+from openerp import _
 from openerp.sql_db import Cursor
 from openerp.exceptions import Warning
 

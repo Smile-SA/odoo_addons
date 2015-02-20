@@ -30,6 +30,7 @@ class IrValues(models.Model):
     _order = 'sequence, id'
 
     @api.one
+    @api.depends('window_action_ids')
     def _get_window_actions(self):
         self.window_actions = ', %s, ' % ', '.join(map(str, self.window_action_ids.ids))
 

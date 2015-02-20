@@ -21,18 +21,17 @@
 
 from openerp.modules.registry import Registry
 
-native_load = Registry.load
+native_setup_models = Registry.setup_models
 
 
-def new_load(self, cr, module):
-    res = native_load(self, cr, module)
-    for model_obj in res:
+def new_setup_models(self, cr, partial=False):
+    native_setup_models(self, cr, partial)
+    for model_obj in self.models.itervalues():
         for fieldname, field in model_obj._fields.iteritems():
             if field.type == 'many2one' and field.ondelete and field.ondelete.lower() == 'cascade':
                 remote_obj = self.get(field.comodel_name)
                 if not hasattr(remote_obj, '_cascade_relations'):
                     setattr(remote_obj, '_cascade_relations', {})
                 remote_obj._cascade_relations.setdefault(model_obj._name, set()).add(fieldname)
-    return res
 
-Registry.load = new_load
+Registry.setup_models = new_setup_models

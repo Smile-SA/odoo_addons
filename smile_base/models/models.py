@@ -100,6 +100,23 @@ def bulk_create(self, vals_list):
     self._parent_store_compute()
     return records
 
+
+@api.multi
+def open_wizard(self, **kwargs):
+    if kwargs.get('view_mode', 'form').startswith('form') and not kwargs.get('res_id'):
+        self.ensure_one()
+    action = {
+        'type': 'ir.actions.act_window',
+        'res_model': self._name,
+        'view_mode': 'form',
+        'view_id': False,
+        'res_id': self.ids and self.ids[0] or False,
+        'domain': [],
+        'target': 'new',
+    }
+    action.update(**kwargs)
+    return action
+
 SET_OPERATORS = {
     '&': and_,
     '|': or_,
@@ -178,5 +195,6 @@ BaseModel._validate_fields = new_validate_fields
 BaseModel.bulk_create = bulk_create
 BaseModel.import_data = new_import_data
 BaseModel.load = new_load
+BaseModel.open_wizard = open_wizard
 BaseModel.store_set_values = BaseModel._store_set_values
 BaseModel.unlink = new_unlink
