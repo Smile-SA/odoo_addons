@@ -103,8 +103,6 @@ def bulk_create(self, vals_list):
 
 @api.multi
 def open_wizard(self, **kwargs):
-    if kwargs.get('view_mode', 'form').startswith('form') and not kwargs.get('res_id'):
-        self.ensure_one()
     action = {
         'type': 'ir.actions.act_window',
         'res_model': self._name,
