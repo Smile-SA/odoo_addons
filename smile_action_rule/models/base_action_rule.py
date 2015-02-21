@@ -41,8 +41,8 @@ class ActionRuleCategory(models.Model):
 class ActionRule(models.Model):
     _inherit = 'base.action.rule'
 
-    def __init__(self, pool, cr):
-        super(ActionRule, self).__init__(pool, cr)
+    def _setup_models(self, cr, partial=False):
+        super(ActionRule, self)._setup_models(cr, partial)
         self._fields['kind'].selection = self._get_kinds(cr, SUPERUSER_ID)
         self._fields['last_run'].readonly = False
 
