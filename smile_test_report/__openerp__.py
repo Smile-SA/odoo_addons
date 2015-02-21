@@ -45,7 +45,7 @@ TODO
     # Improve QWeb report
     """,
     "depends": [
-        'smile_report',
+        'report',
     ],
     "data": [
         'report/report.xml',
