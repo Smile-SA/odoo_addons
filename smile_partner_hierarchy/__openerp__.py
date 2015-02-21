@@ -33,12 +33,12 @@
                 Translate the module
                 make the level definition dynamique and parametabel
                 Add the levels columns on reports diplay partner column
-            
+
 Suggestions & Feedback to: samir.rachedi@smile.fr
     """,
     "depends": ['base'],
     "data": [
-        #'security/ir.model.access.csv',
+        # 'security/ir.model.access.csv',
         'views/res_partner_view.xml',
     ],
     "demo": [],

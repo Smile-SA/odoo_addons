@@ -19,28 +19,25 @@
 #
 ##############################################################################
 
-from openerp import api, models, fields, _
+from openerp import models, fields
+
 
 class ResPartner(models.Model):
 
     _inherit = "res.partner"
 
-    child_ids = fields.One2many('res.partner', 'parent_id','Contacts', domain=[('is_company', '=', False)])
-    subsidiary_ids = fields.One2many('res.partner', 'parent_id','Subsidiaries', domain=[('is_company', '=', True)])
-    partner_type = fields.Selection([('groupe','Groupe'),
-                                     ('trade_name','Enseigne'),
-                                     ('partner','Client'),
-                                     ('store','Point de vente'),
-                                     ('person','Contact'),
-                                     ], required=True, default='partner')
-    
-    #TODO: Update tose fields in order to compute the value autoamtically
-#     partner_groupe_id = fields.Many2one('res.partner',string='Groupe',compute='_update_hierarchy')
-#     partner_enseigne_id = fields.Many2one('res.partner',string='Enseigne')
-#     partner_client_id = fields.Many2one('res.partner',string='Client')
-#     partner_point_vente_id = fields.Many2one('res.partner',string='Point de vente')
+    child_ids = fields.One2many('res.partner', 'parent_id', 'Contacts', domain=[('is_company', '=', False)])
+    subsidiary_ids = fields.One2many('res.partner', 'parent_id', 'Subsidiaries', domain=[('is_company', '=', True)])
+    partner_type = fields.Selection([
+        ('groupe', 'Groupe'),
+        ('trade_name', 'Enseigne'),
+        ('partner', 'Client'),
+        ('store', 'Point de vente'),
+        ('person', 'Contact'),
+    ], required=True, default='partner')
 
-
-        
-        
-        
+    # TODO: Update tose fields in order to compute the value autoamtically
+    # partner_groupe_id = fields.Many2one('res.partner',string='Groupe',compute='_update_hierarchy')
+    # partner_enseigne_id = fields.Many2one('res.partner',string='Enseigne')
+    # partner_client_id = fields.Many2one('res.partner',string='Client')
+    # partner_point_vente_id = fields.Many2one('res.partner',string='Point de vente')
