@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
               <tree string="Operating Systems" editable="top">
                 <field name="name"/>
-                <field name="code"/>
+                <field name="dockerfile"/>
                 <field name="active"/>
               </tree>
             </field>
