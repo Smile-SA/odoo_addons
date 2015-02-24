@@ -24,7 +24,7 @@ from lxml import etree
 from openerp import api, fields
 from openerp.models import Model
 
-native_setup_models = Model._setup_models
+native_setup_fields = Model._setup_fields
 native_fields_view_get = Model.fields_view_get
 
 
@@ -51,8 +51,9 @@ def _search_attachments(self, operator, value):
     return [('id', 'in', [rec.res_id for rec in recs])]
 
 
-def new_setup_models(self, cr, partial=False):
-    native_setup_models(self, cr, partial)
+@api.model
+def new_setup_fields(self):
+    native_setup_fields(self)
     name = self._get_attachments_field_name()
     if name not in self._fields and name not in self._columns:
         field = fields.One2many('ir.attachment', None, 'Attachments', automatic=True,
@@ -86,7 +87,7 @@ def new_fields_view_get(self, view_id=None, view_type='form', toolbar=False, sub
     return res
 
 Model._get_attachments_field_name = _get_attachments_field_name
-Model._setup_models = new_setup_models
+Model._setup_fields = new_setup_fields
 Model._get_attachments = _get_attachments
 Model._search_attachments = _search_attachments
 Model.fields_view_get = new_fields_view_get

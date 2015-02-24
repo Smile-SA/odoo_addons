@@ -214,8 +214,8 @@ STATES = [
 
 
 def state_cleaner(method):
-    def wrapper(self, cr, module):
-        res = method(self, cr, module)
+    def wrapper(self, cr, *args, **kwargs):
+        res = method(self, cr, *args, **kwargs)
         if self.get('smile.script.intervention'):
             cr.execute("select relname from pg_class where relname='smile_script_intervention'")
             if cr.rowcount:
@@ -234,7 +234,7 @@ class SmileScriptIntervention(models.Model):
 
     def __init__(self, pool, cr):
         super(SmileScriptIntervention, self).__init__(pool, cr)
-        setattr(Registry, 'load', state_cleaner(getattr(Registry, 'load')))
+        setattr(Registry, 'setup_models', state_cleaner(getattr(Registry, 'setup_models')))
 
     create_date = fields.Datetime('Intervention start', required=True, readonly=True)
     end_date = fields.Datetime('Intervention end', readonly=True)

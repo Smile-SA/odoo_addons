@@ -23,6 +23,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import logging
 from operator import and_, or_, sub
+import psycopg2
 import time
 
 from openerp import api, _
@@ -99,6 +100,18 @@ def bulk_create(self, vals_list):
     records._validate_fields(vals_list[0])
     self._parent_store_compute()
     return records
+
+
+@api.multi
+def _try_lock(self, warning=None):
+    try:
+        self._cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
+                         (tuple(self.ids),), log_exceptions=False)
+    except psycopg2.OperationalError:
+        self._cr.rollback()  # INFO: Early rollback to allow translations to work for the user feedback
+        if warning:
+            raise Warning(warning)
+        raise
 
 
 @api.multi
@@ -195,4 +208,5 @@ BaseModel.import_data = new_import_data
 BaseModel.load = new_load
 BaseModel.open_wizard = open_wizard
 BaseModel.store_set_values = BaseModel._store_set_values
+BaseModel._try_lock = _try_lock
 BaseModel.unlink = new_unlink
