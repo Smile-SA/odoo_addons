@@ -41,9 +41,10 @@ class ActionRuleCategory(models.Model):
 class ActionRule(models.Model):
     _inherit = 'base.action.rule'
 
-    def _setup_models(self, cr, partial=False):
-        super(ActionRule, self)._setup_models(cr, partial)
-        self._fields['kind'].selection = self._get_kinds(cr, SUPERUSER_ID)
+    @api.model
+    def _setup_fields(self):
+        super(ActionRule, self)._setup_fields()
+        self._fields['kind'].selection = self.sudo()._get_kinds()
         self._fields['last_run'].readonly = False
 
     @api.model

@@ -53,12 +53,12 @@ def _search_attachments(self, operator, value):
 
 @api.model
 def new_setup_fields(self):
-    native_setup_fields(self)
     name = self._get_attachments_field_name()
     if name not in self._fields and name not in self._columns:
-        field = fields.One2many('ir.attachment', None, 'Attachments', automatic=True,
+        field = fields.One2many('ir.attachment', string='Attachments', automatic=True,
                                 compute='_get_attachments', search='_search_attachments')
-        self._add_field(name, field)
+        setattr(type(self), name, field)
+    native_setup_fields(self)
 
 
 @api.v7
