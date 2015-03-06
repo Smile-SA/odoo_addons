@@ -120,7 +120,7 @@ class StockPicking(models.Model):
             # INFO: Because StockPicking.state is a function field without an inverse method
             self._cr.execute("UPDATE stock_picking SET state = 'cancel' WHERE id IN %s", (tuple(self.ids),))
         for picking in self:
-            # Cancel waves whom all pickings are cancelled
+            # Cancel waves whose all pickings are cancelled
             if not picking.wave_id.picking_ids.filtered(lambda picking: picking.state != 'cancel'):
                 waves_to_cancel |= picking.wave_id
         waves_to_cancel.cancel_picking()  # Cancel picking waves
@@ -145,5 +145,4 @@ class StockMove(models.Model):
                 moves_to_unlink |= move
         res = super(StockMove, self).action_cancel()
         pickings.action_cancel()
-        moves_to_unlink.write({'picking_id': False})
         return res
