@@ -85,7 +85,9 @@ class IrModuleModule(models.Model):
 
         module_tests = modules.module.get_test_modules(module_name)
         for module_test in module_tests:
-            module_test_file = module_test.__file__[:-1]  # convert extension from .pyc to .py
+            module_test_file = module_test.__file__
+            if module_test_file.endswith('.pyc'):
+                module_test_file = module_test_file[:-1]  # convert extension from .pyc to .py
             root, ext = os.path.splitext(os.path.basename(module_test_file))
             module_classes = [module_test.__getattribute__(attr) for attr in module_test.__dict__
                               if isinstance(module_test.__getattribute__(attr), type)]
