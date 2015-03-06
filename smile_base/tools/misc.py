@@ -25,7 +25,8 @@ _logger = logging.getLogger(__name__)
 
 
 def create_unique_index(cr, table, column, where_clause=None):
-    index_name = 'uniq_%(table)s_%(column)s' % locals()
+    column_name = column.replace(' ', '').replace(',', '_')
+    index_name = 'uniq_%(table)s_%(column_name)s' % locals()
     cr.execute("SELECT relname FROM pg_class WHERE relname=%s", (index_name,))
     if not cr.rowcount:
         _logger.debug('Creating unique index %s' % index_name)
