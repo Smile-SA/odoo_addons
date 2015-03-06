@@ -54,10 +54,11 @@ def _search_attachments(self, operator, value):
 @api.model
 def new_setup_fields(self):
     name = self._get_attachments_field_name()
-    if name not in self._fields and name not in self._columns:
-        field = fields.One2many('ir.attachment', string='Attachments', automatic=True,
-                                compute='_get_attachments', search='_search_attachments')
-        setattr(type(self), name, field)
+    if name not in self._fields:
+        new_field = fields.One2many('ir.attachment', string='Attachments',
+                                    compute='_get_attachments', search='_search_attachments')
+        setattr(type(self), name, new_field)
+        self._add_field(name, new_field)
     native_setup_fields(self)
 
 
@@ -65,7 +66,7 @@ def new_setup_fields(self):
 def new_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
     res = native_fields_view_get(self, cr, uid, view_id, view_type, context, toolbar, submenu)
     name = self._get_attachments_field_name()
-    if view_type == 'search' and (name in self._fields or name in self._columns):
+    if view_type == 'search' and (name in self._fields):
         View = self.pool['ir.ui.view']
         arch_etree = etree.fromstring(res['arch'])
         element = etree.Element('field', name=name)
@@ -78,7 +79,7 @@ def new_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=N
 def new_fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
     res = native_fields_view_get(self, view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
     name = self._get_attachments_field_name()
-    if view_type == 'search' and (name in self._fields or name in self._columns):
+    if view_type == 'search' and (name in self._fields):
         View = self.env['ir.ui.view']
         arch_etree = etree.fromstring(res['arch'])
         element = etree.Element('field', name=name)
