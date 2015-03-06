@@ -35,7 +35,6 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_ir_model_graph_wizard_form"/>
             <field name="target">new</field>
-            <field name="nodestroy" eval="True"/>
         </record>
 
         <record id="values_ir_model_graph_wizard" model="ir.values">
