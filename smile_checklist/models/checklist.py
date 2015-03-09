@@ -58,7 +58,7 @@ class Checklist(models.Model):
     def _get_active_field(self):
         if self.model_id:
             model = self.env[self.model_id.model]
-            self.active_field = 'active' in model._fields.keys() + model._columns.keys()
+            self.active_field = 'active' in model._fields.keys()
 
     @api.one
     @api.constrains('model_id')
@@ -111,8 +111,6 @@ class Checklist(models.Model):
                     cls._patch_method(method, getattr(checklist_decorators, 'checklist_%s_decorator' % method)())
             else:
                 for field in ('checklist_task_instance_ids', 'total_progress_rate', 'total_progress_rate_mandatory'):
-                    if field in model_obj._columns:
-                        del model_obj._columns[field]
                     if field in model_obj._fields:
                         del model_obj._fields[field]
                 for method_name in ('create', 'write', 'fields_view_get'):
