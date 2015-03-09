@@ -43,6 +43,8 @@ def _get_args(self, method, args, kwargs):
                 method_arg_names = ['cr', 'uid', 'ids']
             elif decorator == 'model':
                 method_arg_names = ['cr', 'uid']
+            elif decorator.startswith('cr_'):
+                method_arg_names = decorator.split('_')
             else:
                 raise Warning(_('Method not adapted for action rules'))
             method_arg_names += [None] * (len(args) - len(method_arg_names))
@@ -52,7 +54,9 @@ def _get_args(self, method, args, kwargs):
         if not isinstance(cr, Cursor) or not isinstance(uid, (int, long)):
             raise Warning(_('Method not adapted for action rules'))
         ids = method_args.get('ids') or method_args.get('id')
-        context = method_args.get('context') or kwargs.get('context')
+        context = method_args.get('context') or {}
+        if kwargs.get('context'):
+            context.update(kwargs['context'])
     if isinstance(ids, (int, long)):
         ids = [ids]
     return cr, uid, ids, context
