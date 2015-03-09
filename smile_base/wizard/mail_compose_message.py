@@ -34,7 +34,7 @@ class MailComposeMessage(models.Model):
         @param template_id: int, id of the email template
         @param res_id: int, id of the record from where the email is sent
         """
-        message = self.create({
+        message = self.with_context(active_ids=None).create({
             'model': model,
             'composition_mode': composition_mode,
             'partner_ids': [(6, 0, partner_ids or [])],
