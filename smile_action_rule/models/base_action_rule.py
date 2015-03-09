@@ -21,6 +21,7 @@
 
 import inspect
 import os
+import sys
 
 from openerp import api, fields, models, SUPERUSER_ID, tools
 from openerp.exceptions import Warning
@@ -159,7 +160,8 @@ class ActionRule(models.Model):
                 return []
             if rule.exception_warning == 'custom':
                 raise Warning(rule.exception_message)
-            raise e
+            e.traceback = sys.exc_info()
+            raise
 
     def _process(self, cr, uid, rule, record_ids, context=None):
         record_ids = record_ids or []
@@ -193,7 +195,8 @@ class ActionRule(models.Model):
                 return True
             if rule.exception_warning == 'custom':
                 raise Warning(rule.exception_message)
-            raise e
+            e.traceback = sys.exc_info()
+            raise
 
     @api.multi
     def _get_method_names(self):
@@ -239,13 +242,13 @@ class ActionRule(models.Model):
             if rule.kind == 'on_time':
                 continue
             if rule.kind in ('on_create', 'on_create_or_write'):
-                res.setdefault('create', []).append(rule)
+                res.setdefault('create', []).append(rule.id)
             if rule.kind in ('on_write', 'on_create_or_write'):
-                res.setdefault('write', []).append(rule)
+                res.setdefault('write', []).append(rule.id)
             elif rule.kind == 'on_unlink':
-                res.setdefault('unlink', []).append(rule)
+                res.setdefault('unlink', []).append(rule.id)
             elif rule.kind == 'on_other_method':
-                res.setdefault(rule.method_id.name, []).append(rule)
+                res.setdefault(rule.method_id.name, []).append(rule.id)
         return res
 
     @api.model
@@ -259,7 +262,7 @@ class ActionRule(models.Model):
         rule_ids = self.search(cr, SUPERUSER_ID, [])
         for rule in self.browse(cr, uid, rule_ids):
             if rule.kind == 'on_wkf_activity':
-                res.setdefault(rule.activity_id.id, []).append(rule)
+                res.setdefault(rule.activity_id.id, []).append(rule.id)
         return res
 
     @api.model

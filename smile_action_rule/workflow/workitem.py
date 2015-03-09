@@ -34,10 +34,10 @@ def new_execute(self, activity, stack):
 
     # Retrieve the action rules to possibly execute
     rule_obj = registry(self.session.cr.dbname)['base.action.rule']
+    rule_ids = []
     if hasattr(rule_obj, '_get_action_rules_on_wkf'):
-        rules = rule_obj._get_action_rules_on_wkf(cr, uid, activity['id'])
-    else:
-        rules = []
+        rule_ids = rule_obj._get_action_rules_on_wkf(cr, uid, activity['id'])
+    rules = self.browse(cr, uid, rule_ids)
 
     # Check preconditions
     pre_ids = {}
