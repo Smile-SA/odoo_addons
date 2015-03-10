@@ -70,11 +70,12 @@ def _special_wrapper(self, method, fields, *args, **kwargs):
             filter = lambda partner: self._name in [m.model for m in partner.notification_model_ids]
             for record in records:
                 for contact in getattr(record, field).child_ids.filtered(filter):
-                    follower_obj.create(cr, SUPERUSER_ID, {
-                        'res_model': self._name,
-                        'res_id': record.id,
-                        'partner_id': contact.id,
-                    }, context)
+                    if contact not in record.message_follower_ids:
+                        follower_obj.create(cr, SUPERUSER_ID, {
+                            'res_model': self._name,
+                            'res_id': record.id,
+                            'partner_id': contact.id,
+                        }, context)
     return res
 
 
