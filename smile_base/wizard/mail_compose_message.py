@@ -37,7 +37,7 @@ class MailComposeMessage(models.Model):
         message = self.create({
             'model': model,
             'composition_mode': composition_mode,
-            'partner_ids': [(6, 0, partner_ids or [])],
+            'partner_ids': [(6, 0, filter(None, partner_ids or []))],
             'template_id': template_id,
             'notify': True,
             'res_id': res_id,
