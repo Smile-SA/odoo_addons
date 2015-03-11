@@ -27,6 +27,7 @@ import psycopg2
 import time
 
 from openerp import api, _
+from openerp.exceptions import Warning
 from openerp.models import BaseModel
 from openerp.osv.expression import normalize_domain
 

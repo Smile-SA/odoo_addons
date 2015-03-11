@@ -22,6 +22,8 @@
 import time
 
 from openerp import api, models, fields
+from openerp.tools import ustr
+from openerp.tools.safe_eval import safe_eval as eval
 
 from ..tools import unquote
 
@@ -34,20 +36,18 @@ class ActionFilter(models.Model):
     def _get_action_rule(self):
         localdict = {'object': unquote('object'), 'time': time,
                      'active_id': unquote("active_id"), 'uid': self._uid}
-        eval_domain = eval(self.domain.replace(' ', ''), localdict)
-        self.action_rule = ',object.' in eval_domain
+        eval_domain = eval(self.domain, localdict)
+        self.action_rule = ', object.' in repr(eval_domain)
 
     action_rule = fields.Boolean('Only for action rules', compute='_get_action_rule', store=True)
 
     def get_filters(self, cr, uid, model, action_id=None):
         action_domain = self._get_action_domain(cr, uid, action_id)
-        filter_ids = self.search(cr, uid, action_domain + [
+        return self.search_read(cr, uid, action_domain + [
             ('model_id', '=', model),
             ('user_id', 'in', (uid, False)),
             ('action_rule', '=', False),
-        ])
-        my_filters = self.read(cr, uid, filter_ids, ['name', 'is_default', 'domain', 'context', 'user_id'])
-        return my_filters
+        ], ['name', 'is_default', 'domain', 'context', 'user_id'])
 
     @api.multi
     def _eval_domain(self, record_ids=None):
@@ -57,9 +57,9 @@ class ActionFilter(models.Model):
         for cond in eval_domain:
             if isinstance(cond, tuple) and 'object' in cond[2]:
                 subdomain = []
-                records = self.env[self.model_id.model].browse(record_ids)
+                records = self.env[self.model_id].browse(record_ids)
                 for record in records:
-                    new_cond = (cond[0], cond[1], eval(cond[2], {'object': record}))
+                    new_cond = (cond[0], cond[1], eval(ustr(cond[2]), {'object': record}))
                     subdomain.append(new_cond)
                 subdomain = list(set(subdomain))
                 subdomain = ['|'] * (len(subdomain) - 1) + subdomain
