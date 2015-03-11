@@ -63,8 +63,8 @@ class AuditLog(models.Model):
             return ''
         if field.type == 'selection':
             selection = field.selection
-            if callable(selection):
-                selection = selection(self.env[self.model_id.model])
+            if isinstance(selection, basestring):
+                selection = getattr(self.env[self.model_id.model], selection)()
             return dict(selection).get(value, value)
         if field.type == 'many2one' and value:
             return self.env[field.comodel_name].browse(value).exists().display_name or value
