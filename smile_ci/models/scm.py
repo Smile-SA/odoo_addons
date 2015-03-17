@@ -604,15 +604,14 @@ class Build(models.Model):
     @api.one
     def _create_dockerfile(self):
         _logger.info('Generating dockerfile for build:%s...' % self.id)
-        template = base64.b64decode(self.branch_id.os_id.dockerfile)
-        with file_open(template) as f:
-            content = f.read()
+        content = base64.b64decode(self.branch_id.os_id.dockerfile)
         localdict = {
             'required_packages': self.branch_id.version_id.required_packages or '',
             'optional_packages': self.branch_id.version_id.optional_packages or '',
             'specific_packages': self.branch_id.specific_packages or '',
             'pip_packages': self.branch_id.pip_packages or '',
             'configfile': CONFIGFILE,
+            'server_cmd': self.branch_id.version_id.server_cmd,
         }
         with cd(self.directory):
             with open(DOCKERFILE, 'w') as f:
