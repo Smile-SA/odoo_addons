@@ -22,6 +22,7 @@
 							<field name="filter_domain" nolabel="1" attrs="{'invisible': [('filter_type', '!=', 'domain')], 'required': [('filter_type', '=', 'domain')]}" />
 							<field name="filter_method" nolabel="1" attrs="{'invisible': [('filter_type', '!=', 'method')], 'required': [('filter_type', '=', 'method')]}" />
 							<field name="unique" />
+							<field name="log_returns" />
 						</group>
 						<notebook colspan="4">
 							<page string="Exports">
@@ -134,10 +135,14 @@
 						<field name="from_date" />
 						<field name="create_uid" />
 						<field name="time_human" />
+						<field name="log_returns" invisible="1"/>
 					</group>
 					<notebook colspan="4">
 						<page string="Logs">
 							<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}" />
+						</page>
+						<page string="Returns" attrs="{'invisible': [('log_returns', '=', True)]}">
+							<field name="returns" colspan="4" nolabel="1" />
 						</page>
 					</notebook>
 					<footer>

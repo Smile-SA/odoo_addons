@@ -90,13 +90,17 @@
 						<field name="from_date" />
 						<field name="create_uid" />
 						<field name="time_human" />
+						<field name="log_returns" invisible="1"/>
 					</group>
 					<notebook colspan="4">
 						<page string="Logs">
 							<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}" />
 						</page>
-						<page string="Arguments">
+						<page string="Entry Arguments">
 							<field name="args" colspan="4" nolabel="1" />
+						</page>
+						<page string="Returns" attrs="{'invisible': [('log_returns', '=', True)]}">
+							<field name="returns" colspan="4" nolabel="1" />
 						</page>
 					</notebook>
 					<footer>

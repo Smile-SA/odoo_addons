@@ -40,11 +40,11 @@ class IrModelExportTemplate(models.Model):
 
     client_action_id = fields.Many2one('ir.values', 'Client Action')
     filter_type = fields.Selection([('domain', 'Domain'), ('method', 'Method')], required=True, default='domain')
-    filter_domain = fields.Char(size=256, default='[]')
-    filter_method = fields.Char(size=64, help="signature: @api.model + *args")
+    filter_domain = fields.Char(default='[]')
+    filter_method = fields.Char(help="signature: @api.model + *args")
     limit = fields.Integer()
     max_offset = fields.Integer()
-    order = fields.Char('Order by', size=64)
+    order = fields.Char('Order by')
     unique = fields.Boolean(help="If unique, each instance is exported only once")
     force_execute_action = fields.Boolean('Force Action Execution', help="Even if there are no resources to export")
 
@@ -127,6 +127,7 @@ class IrModelExportTemplate(models.Model):
                 'test_mode': self._context.get('test_mode', False),
                 'new_thread': new_thread,
                 'args': repr(args),
+                'log_returns': self.log_returns,
             }
             for index, res_ids_offset in enumerate(self._get_res_ids_offset(*args)):
                 vals['record_ids'] = res_ids_offset

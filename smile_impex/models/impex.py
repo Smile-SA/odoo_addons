@@ -47,6 +47,8 @@ class IrModelImpexTemplate(models.AbstractModel):
     cron_id = fields.Many2one('ir.cron', 'Scheduled Action')
     server_action_id = fields.Many2one('ir.actions.server', 'Server action')
     new_thread = fields.Boolean('New Thread', default=True)
+    log_entry_args = fields.Boolean('Log entry arguments', default=True)
+    log_returns = fields.Boolean('Log returns')
 
     def _get_cron_vals(self):
         return {
@@ -149,6 +151,8 @@ class IrModelImpex(models.AbstractModel):
     state = fields.Selection(STATES, "State", readonly=True, required=True, default='running')
     pid = fields.Integer("Process Id", readonly=True)
     args = fields.Text('Arguments', readonly=True)
+    log_returns = fields.Boolean('Log returns', readonly=True)
+    returns = fields.Text('Returns', readonly=True)
 
     @api.multi
     def write_with_new_cursor(self, vals):
@@ -178,7 +182,10 @@ class IrModelImpex(models.AbstractModel):
                                     'pid': os.getpid()})
         try:
             result = self._execute()
-            self.write_with_new_cursor({'state': 'done', 'to_date': fields.Datetime.now()})
+            vals = {'state': 'done', 'to_date': fields.Datetime.now()}
+            if self.log_returns:
+                vals['returns'] = repr(result)
+            self.write_with_new_cursor(vals)
             if self.test_mode:
                 self._cr.rollback()
             return result
