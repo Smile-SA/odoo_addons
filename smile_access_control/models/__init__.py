@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import res_user
-import res_group
+import res_users
+import res_groups
