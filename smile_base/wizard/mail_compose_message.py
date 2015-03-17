@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2015 Toyota Industrial Equipment SA
+#    Copyright (C) 2015 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,7 +22,7 @@
 from openerp import models
 
 
-class MailComposeMessage(models.Model):
+class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
 
     def prepare_and_send(self, model, partner_ids, template_id, res_id, composition_mode='mass_mail'):
@@ -43,7 +43,8 @@ class MailComposeMessage(models.Model):
             'res_id': res_id,
         })
         value = message.onchange_template_id(template_id, composition_mode, model, res_id)['value']
-        if composition_mode == 'comment' and value.get('attachment_ids'):
+        template = self.env['email.template'].browse(template_id)
+        if value.get('attachment_ids') and (composition_mode == 'comment' or not template.report_template):
             value['attachment_ids'] = [(4, attachment_id) for attachment_id in value['attachment_ids']]
         message.write(value)
         message.send_mail()

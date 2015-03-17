@@ -287,9 +287,8 @@ class ActionRule(models.Model):
     def _filter_max_executions(self, res_ids):
         self.ensure_one()
         if self.max_executions:
-            self._cr.execute("SELECT res_id FROM base_action_rule_execution WHERE rule_id=%s AND counter>=%s",
-                             (self.id, self.max_executions))
-            res_ids_off = [r[0] for r in self._cr.fetchall()]
+            res_ids_off = self.env['base.action.rule.execution'].sudo().search([('rule_id', '=', self.id),
+                                                                                ('counter', '>=', self.max_executions)]).ids
             res_ids = list(set(res_ids) - set(res_ids_off))
         return res_ids
 

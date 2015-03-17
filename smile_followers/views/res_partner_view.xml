@@ -11,7 +11,7 @@
         <xpath expr="//field[@name='child_ids']/form/sheet/field[@name='supplier']" position="before">
           <div>
             <label for="notification_model_ids"/>
-            <field name="notification_model_ids"/>
+            <field name="notification_model_ids" widget="many2many_checkboxes"/>
           </div>
         </xpath>
       </field>
