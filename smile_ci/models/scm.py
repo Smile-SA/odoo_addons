@@ -47,7 +47,7 @@ from urlparse import urljoin, urlparse
 import xmlrpclib
 
 from openerp import api, models, fields, SUPERUSER_ID, tools, _
-from openerp.tools import config, file_open
+from openerp.tools import config
 from openerp.modules.registry import Registry
 import openerp.modules as addons
 from openerp.exceptions import Warning
