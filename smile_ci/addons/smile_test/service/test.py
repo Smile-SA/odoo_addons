@@ -206,8 +206,8 @@ def _run_unit_tests(dbname, modules, ignore):
         _logger.info('Running unit tests...')
         tests_common.DB = dbname
         for module in modules:
-            vals = {'module': module}
             for m in get_test_modules(module):
+                vals = {'module': module}
                 filename = os.path.join('tests', '%s.py' % m.__name__.split('.')[-1])
                 vals['file'] = filename
                 if filename in ignore.get(module, []) or ignore.get(module) == 'all':
@@ -234,8 +234,11 @@ def _run_unit_tests(dbname, modules, ignore):
 def run_tests(dbname, modules=None):
     ignore = eval(tools.config.get('ignored_tests') or '{}')
     threading.currentThread().dbname = dbname
-    if not modules:
-        modules = _get_modules_list(dbname)
+    installed_modules = _get_modules_list(dbname)
+    if modules:
+        modules = list(set(modules) - set(installed_modules))
+    else:
+        modules = installed_modules
     _run_unit_tests(dbname, modules, ignore)
     _run_other_tests(dbname, modules, ignore)
     return True
