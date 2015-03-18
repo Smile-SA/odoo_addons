@@ -236,7 +236,7 @@ def run_tests(dbname, modules=None):
     threading.currentThread().dbname = dbname
     installed_modules = _get_modules_list(dbname)
     if modules:
-        modules = list(set(modules) - set(installed_modules))
+        modules = list(set(modules) & set(installed_modules))
     else:
         modules = installed_modules
     _run_unit_tests(dbname, modules, ignore)
