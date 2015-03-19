@@ -1,0 +1,34 @@
+id,name,date,country_id:id
+fr_20150101,Jour de l'an,2015-01-01,base.fr
+fr_20150406,Lundi de Pâques,2015-04-06,base.fr
+fr_20150501,Fête du Travail,2015-05-01,base.fr
+fr_20150508,8 Mai 1945,2015-05-08,base.fr
+fr_20150514,Jeudi de l'Ascension,2015-05-14,base.fr
+fr_20150625,Lundi de Pentecôte,2015-06-25,base.fr
+fr_20150714,Fête Nationale,2015-07-14,base.fr
+fr_20150815,Assomption,2015-08-15,base.fr
+fr_20151101,La Toussaint,2015-11-01,base.fr
+fr_20151111,Armistice,2015-11-11,base.fr
+fr_20151225,Noël,2015-12-25,base.fr
+fr_20160101,Jour de l'an,2016-01-01,base.fr
+Fr_20160328,Lundi de Pâques,2016-03-28,base.fr
+fr_20160501,Fête du Travail,2016-05-01,base.fr
+fr_20160508,8 Mai 1945,2016-05-08,base.fr
+Fr_20160505,Jeudi de l'Ascension,2016-05-05,base.fr
+Fr_20160516,Lundi de Pentecôte,2016-05-16,base.fr
+fr_20160714,Fête Nationale,2016-07-14,base.fr
+fr_20160815,Assomption,2016-08-15,base.fr
+fr_20161101,La Toussaint,2016-11-01,base.fr
+fr_20161111,Armistice,2016-11-11,base.fr
+fr_20161225,Noël,2016-12-25,base.fr
+fr_20170101,Jour de l'an,2017-01-01,base.fr
+Fr_20170415,Lundi de Pâques,2017-04-15,base.fr
+fr_20170501,Fête du Travail,2017-05-01,base.fr
+fr_20170508,8 Mai 1945,2017-05-08,base.fr
+Fr_20170525,Jeudi de l'Ascension,2017-05-25,base.fr
+Fr_20170605,Lundi de Pentecôte,2017-06-05,base.fr
+fr_20170714,Fête Nationale,2017-07-14,base.fr
+fr_20170815,Assomption,2017-08-15,base.fr
+fr_20171101,La Toussaint,2017-11-01,base.fr
+fr_20171111,Armistice,2017-11-11,base.fr
+fr_20171225,Noël,2017-12-25,base.fr

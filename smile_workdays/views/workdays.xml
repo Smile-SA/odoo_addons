@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Country -->
+        <record id="workday_view_country_form" model="ir.ui.view">
+            <field name="name">workday.res.country.form</field>
+            <field name="model">res.country</field>
+            <field name="type">form</field>
+			<field name="inherit_id" ref="base.view_country_form"/>
+            <field name="arch" type="xml">
+	            <field name="address_format" position="after">
+		           	<label for="holiday_ids"/>
+		           	<field name="holiday_ids" colspan="4" mode="tree">
+			            <tree editable="top">
+				            <field name="name"/>
+				            <field name="date"/>
+			            </tree>
+		           	</field>
+	            </field>
+            </field>
+        </record>
+
+        <!-- Company -->
+        <record id="workday_view_company_form" model="ir.ui.view">
+            <field name="name">workday.res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+			<field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+				 <notebook position="inside">
+				 	<page string="Days off">
+				 		<separator string="Days Off" colspan="2"/>
+				 		<field name="inherit_dayoff" attrs="{'invisible': [('parent_id', '=', False)]}"/>
+				 		<label for="inherit_dayoff" attrs="{'invisible': [('parent_id', '=', False)]}"/>
+				 		<group col="2" colspan="2" attrs="{'invisible': [('inherit_dayoff', '=', True)]}">
+				 			<field name="mon"/>
+				 			<field name="tue"/>
+				 			<field name="wed"/>
+				 			<field name="thu"/>
+				 			<field name="fri"/>
+				 			<field name="sat"/>
+				 			<field name="sun"/>
+				 			<field name="dayoff_ids" string="Specific dates">
+				 				<tree editable="bottom">
+					 				<field name="name"/>
+					 				<field name="date"/>
+				 				</tree>
+				 			</field>
+				 		</group>
+				 	</page>
+				 </notebook>
+            </field>
+        </record>
+        
+	</data>
+</openerp>
