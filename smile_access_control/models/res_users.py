@@ -107,8 +107,7 @@ class ResUsers(models.Model):
             self._update_users_linked_to_profile(vals.keys())
         return res
 
-    @api.model
-    def copy_data(self, user_id, default=None):
+    def copy_data(self, cr, uid, user_id, default=None, context=None):
         default = default.copy() if default else {}
         default['user_ids'] = []
-        return super(ResUsers, self).copy_data(user_id, default)
+        return super(ResUsers, self).copy_data(cr, uid, user_id, default, context)
