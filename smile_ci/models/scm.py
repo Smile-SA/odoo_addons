@@ -658,6 +658,7 @@ class Build(models.Model):
         _logger.info('Building image build:%s...' % self.id)
         # TODO: copy sources in a tar archive and use it as fileobj with custom_context=True
         params = self._get_build_params()
+        _logger.debug(repr(params))
         generator = self._docker_cli.build(**params)
         last_line = ''
         for line in generator:
@@ -670,8 +671,10 @@ class Build(models.Model):
     def _run_container(self):
         _logger.info('Running container build_%s and expose it in port %s...' % (self.id, self.port))
         params = self._get_create_container_params()
+        _logger.debug(repr(params))
         container = self._docker_cli.create_container(**params)
         params = self._get_start_params()
+        _logger.debug(repr(params))
         self._docker_cli.start(container, **params)
         self._check_if_running()
 
@@ -857,7 +860,10 @@ class Build(models.Model):
         _logger.info('Parsing coverage logs for build_%s...' % self.id)
         coverage_obj = self.env['scm.repository.branch.build.coverage']
         pattern = re.compile(r'([^:]+addons/)(?P<module>[^\/]*)(/)(?P<file>[^$]*)')
-        root = etree.fromstring(self._get_logs(COVERAGEFILE))
+        logs = self._get_logs(COVERAGEFILE)
+        if not logs:
+            return
+        root = etree.fromstring(logs)
         for cls in root.xpath('//class'):
             vals = {}
             cls_info = dict(cls.items())
