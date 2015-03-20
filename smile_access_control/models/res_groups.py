@@ -86,8 +86,8 @@ class ResGroups(models.Model):
                     group_ids_to_link.append(item[1])
                 elif item[0] == 3:
                     group_ids_to_unlink.append(item[1])
-        res = super(ResGroups, self).write(vals)
         self._update_users(vals)
+        res = super(ResGroups, self).write(vals)
         if vals.get('implied_ids'):
             # Update group for all users depending of this group, in order to add new implied groups to their groups
             for group in self:

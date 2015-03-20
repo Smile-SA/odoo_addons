@@ -27,9 +27,13 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     @api.one
-    @api.depends('name', 'groups_id')
-    def _is_share(self):
-        self.share = self.user_profile or self.env.user.has_group('base.group_user')
+    def _is_share(self, name, args):
+        return (self.id, self.user_profile or self.has_group('base.group_user'))
+
+    @api.model
+    def _setup_fields(self):
+        super(ResUsers, self)._setup_fields()
+        self._fields['share'].column._fnct = ResUsers._is_share
 
     @api.model
     def _get_default_field_ids(self):
@@ -40,7 +44,6 @@ class ResUsers(models.Model):
 
     user_profile = fields.Boolean('Is User Profile')
     user_profile_id = fields.Many2one('res.users', 'User Profile', domain=[('user_profile', '=', True)], context={'active_test': False})
-    share = fields.Boolean(compute='_is_share', string='Share User', store=True)
     user_ids = fields.One2many('res.users', 'user_profile_id', 'Users', domain=[('user_profile', '=', False)])
     field_ids = fields.Many2many('ir.model.fields', 'res_users_fields_rel', 'user_id', 'field_id', 'Fields to update',
                                  domain=[('model', 'in', ('res.users', 'res.partner')),
@@ -86,7 +89,8 @@ class ResUsers(models.Model):
 
     @api.multi
     def _update_users_linked_to_profile(self, fields=None):
-        self.filtered(lambda user: user.user_profile).with_context(active_test=False).mapped('user_ids')._update_from_profile(fields)
+        for user_profile in self.filtered(lambda user: user.user_profile):
+            user_profile.with_context(active_test=False).mapped('user_ids')._update_from_profile(fields)
 
     @api.model
     def create(self, vals):
