@@ -28,7 +28,7 @@ class ResUsers(models.Model):
 
     @api.one
     def _is_share(self, name, args):
-        return (self.id, self.user_profile or self.has_group('base.group_user'))
+        return (self.id, self.user_profile or not self.has_group('base.group_user'))
 
     @api.model
     def _setup_fields(self):
@@ -58,8 +58,8 @@ class ResUsers(models.Model):
     ]
 
     @api.onchange('user_profile')
-    def onchange_user_profile(self, cr, uid, ids, user_profile):
-        if user_profile:
+    def onchange_user_profile(self):
+        if self.user_profile:
             self.active = self.id == SUPERUSER_ID
             self.user_profile_id = False
 

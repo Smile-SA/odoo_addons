@@ -43,9 +43,9 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & matthieu.choplin@
 """,
     "depends": ['share'],
     "data": [
-        "views/res_user_view.xml",
-        "data/res_user_data.xml",
-        "views/res_group_view.xml",
+        "views/res_users_view.xml",
+        "data/res_users_data.xml",
+        "views/res_groups_view.xml",
     ],
     "demo": [],
     "installable": True,
