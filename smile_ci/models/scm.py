@@ -187,6 +187,18 @@ class Branch(models.Model):
     pip_packages = fields.Text('PIP requirements')
     additional_options = fields.Text('Additional configuration options')
 
+    @api.constrains('ignored_tests')
+    def _check_ignored_tests(self):
+        if not self.ignored_tests:
+            return
+        message = "Values must be of type: str, unicode or list of str / unicode"
+        for value in eval(self.ignored_tests).values():
+            if type(value) == list:
+                if filter(lambda element: type(element) not in (str, unicode), value):
+                    raise Warning(_(message))
+            elif type(value) not in (str, unicode):
+                raise Warning(_(message))
+
     @api.one
     def _update(self):
         if self.state == 'draft':
