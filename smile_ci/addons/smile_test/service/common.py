@@ -78,7 +78,8 @@ class NewServices():
         if not hasattr(common, 'coverage'):
             _logger.info('Starting code coverage...')
             sources = NewServices.get_coverage_sources()
-            common.coverage = coverage.coverage(branch=True, source=sources, data_file='/usr/src/odoo/.coverage')
+            data_file = config.get('coverage_data_file') or '/tmp/.coverage'
+            common.coverage = coverage.coverage(branch=True, source=sources, data_file=data_file)
             common.coverage.start()
             return True
         return False
@@ -118,10 +119,9 @@ class NewServices():
     def count_lines_of_code():
         _logger.info('Counting lines of code...')
         if config.get('addons_path'):
-            odoo_dir = '/usr/src/odoo/'
             for path in config.get('addons_path').replace(' ', '').split(','):
-                file = '%s.cloc' % path.replace(odoo_dir, '').replace('/', '_')
-                with open(odoo_dir + file, 'a') as f:
+                filename = '%s.cloc' % path.split('/')[-1]
+                with open(os.path.join(path, filename), 'a') as f:
                     cmd = ['cloc', path]
                     try:
                         f.write(subprocess.check_output(cmd))

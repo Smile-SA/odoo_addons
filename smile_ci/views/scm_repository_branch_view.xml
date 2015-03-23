@@ -115,6 +115,7 @@
                 <separator colspan="2"/>
                 <field name="specific_packages"/>
                 <field name="pip_packages"/>
+                <field name="additional_options" placeholder="debug_mode = True\ntest_commit = True"/>
               </group>
             </group>
           </page>

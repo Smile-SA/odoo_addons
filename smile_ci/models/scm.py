@@ -47,10 +47,11 @@ from urlparse import urljoin, urlparse
 import xmlrpclib
 
 from openerp import api, models, fields, SUPERUSER_ID, tools, _
-from openerp.tools import config
+from openerp.exceptions import Warning
 from openerp.modules.registry import Registry
 import openerp.modules as addons
-from openerp.exceptions import Warning
+from openerp.tools import config
+from openerp.tools.safe_eval import safe_eval as eval
 
 from openerp.addons.smile_scm.tools import cd
 
@@ -96,6 +97,7 @@ class OperatingSystem(models.Model):
 
     name = fields.Char(required=True)
     dockerfile = fields.Binary('Dockerfile template', required=True)
+    odoo_dir = fields.Char('Odoo directory', required=True, default='/usr/src/odoo')
     active = fields.Boolean(default=True)
 
 
@@ -183,6 +185,7 @@ class Branch(models.Model):
     merge_subfolder = fields.Char('in')
     specific_packages = fields.Text('Specific packages')
     pip_packages = fields.Text('PIP requirements')
+    additional_options = fields.Text('Additional configuration options')
 
     @api.one
     def _update(self):
@@ -322,10 +325,10 @@ class Build(models.Model):
     @api.one
     @api.depends('date_start')
     def _get_time(self):
-        date_stop = self.date_stop or fields.Datetime.now()
-        if not self.date_start:
+        if not self.date_start or (not self.date_stop and self.state in ('running', 'done')):
             self.time = 0
         else:
+            date_stop = self.date_stop or fields.Datetime.now()
             timedelta = fields.Datetime.from_string(date_stop) \
                 - fields.Datetime.from_string(self.date_start)
             self.time = timedelta.total_seconds()
@@ -538,6 +541,8 @@ class Build(models.Model):
             self._attach_files()
             self._load_logs_in_db()
             self._check_running()
+            if self.result == 'failed':
+                self._remove_physical_container()
 
     @api.one
     def _check_running(self):
@@ -565,13 +570,13 @@ class Build(models.Model):
             if not path:
                 return path
             path = path[:]  # To avoid to update database when call replace method - A behaviour caused by new api
-            return ','.join(map(lambda p: os.path.join('/usr/src/odoo', p),
+            return ','.join(map(lambda p: os.path.join(branch.os_id.odoo_dir, p),
                                 path.replace(' ', '').split(',')))
 
         return {
             'db_user': 'odoo',
             'db_password': 'odoo',
-            'db_name': DBNAME,
+            'db_name': False,
             'logfile': format(LOGFILE),
             'coveragefile': format(COVERAGEFILE),
             'flake8file': format(FLAKE8FILE),
@@ -600,6 +605,8 @@ class Build(models.Model):
                 cfile.write('[options]\n')
                 for k, v in options.iteritems():
                     cfile.write('%s = %s\n' % (k, v))
+                if self.branch_id.additional_options:
+                    cfile.write(self.branch_id.additional_options)
 
     @api.one
     def _create_dockerfile(self):
@@ -611,7 +618,9 @@ class Build(models.Model):
             'specific_packages': self.branch_id.specific_packages or '',
             'pip_packages': self.branch_id.pip_packages or '',
             'configfile': CONFIGFILE,
-            'server_cmd': self.branch_id.version_id.server_cmd,
+            'server_cmd': os.path.join(self.branch_id.server_path,
+                                       self.branch_id.version_id.server_cmd),
+            'odoo_dir': self.branch_id.os_id.odoo_dir,
         }
         with cd(self.directory):
             with open(DOCKERFILE, 'w') as f:
@@ -662,7 +671,7 @@ class Build(models.Model):
         generator = self._docker_cli.build(**params)
         last_line = ''
         for line in generator:
-            last_line = line
+            last_line = eval(line)['stream'].replace('\n', '')
             _logger.debug(line)
         if 'Successfully built' not in last_line:
             raise Exception(last_line)
@@ -688,6 +697,7 @@ class Build(models.Model):
                 break
             except:
                 if time.time() - t0 >= 60:
+                    _logger.error('Container build_%s exposed on port %s is not answering...' % (self.id, self.port))
                     raise
 
     @api.model
@@ -783,15 +793,20 @@ class Build(models.Model):
     def _attach_files(self):
         _logger.info('Attaching files for build_%s...' % self.id)
         container = self._get_container_name()
-        cloc_paths = ['%s.cloc' % path.replace('/', '_') for path in self.branch_id.addons_path.split(',')]
+        filepaths = []
+        for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE]:
+            filepaths.append(os.path.join(self.branch_id.os_id.odoo_dir, filename))
+        for path in config.get('addons_path').replace(' ', '').split(','):
+            filename = '%s.cloc' % path.split('/')[-1]
+            filepaths.append(os.path.join(path, filename))
         missing_files = []
-        for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE, '.coverage'] + cloc_paths:
+        for filepath in filepaths:
             try:
-                remote_path = '/usr/src/odoo/%s' % filename
-                response = self._docker_cli.copy(container, resource=remote_path)
+                filename = os.path.basename(filepath)
+                response = self._docker_cli.copy(container, resource=filepath)
                 filelike = StringIO.StringIO(response.read())
                 tar = tarfile.open(fileobj=filelike)
-                content = tar.extractfile(os.path.basename(remote_path)).read()
+                content = tar.extractfile(os.path.basename(filepath)).read()
                 self.env['ir.attachment'].create({
                     'name': filename,
                     'datas_fname': filename,
@@ -916,18 +931,26 @@ class Build(models.Model):
         if os.path.exists(self.directory):
             shutil.rmtree(self.directory)
 
+    @api.multi
+    def _remove_physical_container(self):
+        self.ensure_one()
+        _logger.info('Removing container build_%s and its original image...' % self.id)
+        try:
+            container = self._get_container_name()
+            self._docker_cli.remove_container(container, force=True)
+            image = self._get_image_name()
+            self._docker_cli.remove_image(image, force=True)
+        except APIError, e:
+            _logger.warning(e)
+
     @api.one
     def _remove_container(self):
-        _logger.info('Removing container build_%s and its original image...' % self.id)
         if self.state != 'pending':
-            try:
-                container = self._get_container_name()
-                self._docker_cli.remove_container(container, force=True)
-                image = self._get_image_name()
-                self._docker_cli.remove_image(image, force=True)
-            except APIError, e:
-                _logger.warning(e)
-        self.write({'state': 'done', 'result': 'killed'})
+            self._remove_physical_container()
+        vals = {'state': 'done'}
+        if self.state != 'running':
+            vals['result'] = 'killed'
+        self.write(vals)
 
     @api.multi
     def stop_container(self):
