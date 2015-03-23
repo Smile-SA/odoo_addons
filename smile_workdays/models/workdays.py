@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from openerp import api, fields, models, tools, _
 from openerp.exceptions import Warning
@@ -105,7 +105,7 @@ class ResCompany(models.Model):
             return False
         if self.is_day_off(date_to_check):
             return False
-        if self.country_id.is_holiday(date_to_check):
+        if self.country_id and self.country_id.is_holiday(date_to_check):
             return False
         return True
 

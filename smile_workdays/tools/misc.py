@@ -36,7 +36,7 @@ def clean_date(date):
 
 def working_day_decorator():
     def working_day_wrapper(self, *args, **kwargs):
-        self.pool['res.company'].clear_working_day_cache()
+        self.pool['res.company'].clear_is_working_day_cache()
         return working_day_wrapper.origin(self, *args, **kwargs)
     return working_day_wrapper
 
