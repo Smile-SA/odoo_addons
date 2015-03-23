@@ -187,6 +187,7 @@ class Branch(models.Model):
     pip_packages = fields.Text('PIP requirements')
     additional_options = fields.Text('Additional configuration options')
 
+    @api.one
     @api.constrains('ignored_tests')
     def _check_ignored_tests(self):
         if not self.ignored_tests:
