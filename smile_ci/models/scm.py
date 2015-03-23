@@ -796,7 +796,7 @@ class Build(models.Model):
         filepaths = []
         for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE]:
             filepaths.append(os.path.join(self.branch_id.os_id.odoo_dir, filename))
-        for path in config.get('addons_path').replace(' ', '').split(','):
+        for path in self.branch_id.addons_path.replace(' ', '').split(','):
             filename = '%s.cloc' % path.split('/')[-1]
             filepaths.append(os.path.join(path, filename))
         missing_files = []
