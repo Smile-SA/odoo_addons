@@ -24,7 +24,7 @@ from openerp import api, models
 
 @api.multi
 def _manage_checklist_task_instances(self):
-    if self and not self._context.get('no_checklist') and 'checklist_task_instance_ids' in self._fields:
+    if self and not self._context.get('checklist_computation') and 'checklist_task_instance_ids' in self._fields:
         checklist_obj = self.pool.get('checklist')
         if checklist_obj and hasattr(checklist_obj, '_get_checklist_by_model'):
             checklist_id = checklist_obj._get_checklist_by_model(self._cr, self._uid).get(self._name)

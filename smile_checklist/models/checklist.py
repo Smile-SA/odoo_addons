@@ -215,7 +215,7 @@ class ChecklistTask(models.Model):
                 task_inst.unlink()
             record.checklist_task_instance_ids.invalidate_cache()  # Force invalidate cache required because of a bug?
             if record.checklist_task_instance_ids:
-                record.checklist_task_instance_ids[0].checklist_id.with_context(no_checklist=True).compute_progress_rates(record)
+                record.checklist_task_instance_ids[0].checklist_id.compute_progress_rates(record.with_context(checklist_computation=True))
 
     @api.model
     def create(self, vals):
