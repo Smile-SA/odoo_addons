@@ -22,6 +22,7 @@
 import logging
 import os
 import re
+import psycopg2
 import shutil
 from subprocess import call
 import tempfile
@@ -164,7 +165,19 @@ class Branch(models.Model):
         _logger.info('%s SUCCEEDED' % command)
 
     @api.multi
+    def _try_lock(self, warning=None):
+        try:
+            self._cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
+                             (tuple(self.ids),), log_exceptions=False)
+        except psycopg2.OperationalError:
+            self._cr.rollback()  # INFO: Early rollback to allow translations to work for the user feedback
+            if warning:
+                raise Warning(warning)
+            raise
+
+    @api.multi
     def clone(self, force=False):
+        self._try_lock(_('Cloning already in progress'))
         with cd(self._parent_path):
             for branch in self:
                 if not force and branch.state != 'draft':
