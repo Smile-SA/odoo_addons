@@ -47,7 +47,7 @@ class TestAccountFecImport(TransactionCase):
 
     def test_account_fec_import(self):
         wizard = self.env['account.fr.fec.import'].create({
-            'file': self._get_file(SAMPLE_FEC),
+            'fec_file': self._get_file(SAMPLE_FEC),
             'account_journal_ids': [(6, 0, self._journal.ids)],
             'import_reconciliation': True,
             'delimiter': '\t',

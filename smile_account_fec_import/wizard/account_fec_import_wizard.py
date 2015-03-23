@@ -35,7 +35,7 @@ class AccountFecImportWizard(models.TransientModel):
     account_journal_ids = fields.Many2many('account.journal', string='Account Journals',
                                            help="Let it empty if you want to import all account moves")
     import_reconciliation = fields.Boolean(default=True)
-    delimiter = fields.Char(required=True, default='\t')
+    delimiter = fields.Char(required=True, default='|')
 
     @api.multi
     def import_file(self):
