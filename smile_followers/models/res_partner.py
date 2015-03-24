@@ -73,3 +73,7 @@ class ResPartner(models.Model):
         if 'notification_model_ids' in vals:
             self.follow_documents()
         return res
+
+    @api.multi
+    def _get_contacts_to_notify(self):
+        return self.mapped('child_ids')
