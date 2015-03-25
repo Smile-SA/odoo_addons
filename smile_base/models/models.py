@@ -129,6 +129,54 @@ def open_wizard(self, **kwargs):
     action.update(**kwargs)
     return action
 
+
+@api.model
+def _get_comparison_fields(self):
+    return []
+
+
+@api.multi
+def _compare(self, other):
+    """
+    Compare an instance with another
+    Return {field: (previous_value, new_value)}
+    """
+    self.ensure_one()
+    other.ensure_one()
+    diff = {}
+    comparison_fields = self._get_comparison_fields()
+    current_infos = self.read(comparison_fields)[0]
+    other_infos = other.read(comparison_fields)[0]
+    for field in comparison_fields:
+        if current_infos[field] != other_infos[field]:
+            diff[field] = (other_infos[field], current_infos[field])
+    return diff
+
+
+@api.multi
+def _get_comparison_logs(self, other):
+
+    def get_values(items):
+        return map(lambda item: item[1], items)
+
+    diff = self._compare(other)
+    logs = []
+    for field_name in diff:
+        field = self._fields[field_name]
+        label = field.string
+        separator = ' -> '
+        if field.type == 'many2one':
+            diff[field_name] = get_values(diff[field_name])
+        if field.type == 'one2many':
+            diff[field_name] = get_values(self.env[field.comodel_name].browse(diff[field_name]).name_get())
+            label = _('New %s') % label
+            separator = ', '
+        if field.type == 'selection':
+            selection = dict(field.selection)
+            diff[field_name] = [selection[key] for key in diff[field_name]]
+        logs.append('<b>%s</b>: %s' % (label, separator.join(map(str, diff[field_name]))))
+    return logs
+
 SET_OPERATORS = {
     '&': and_,
     '|': or_,
@@ -152,6 +200,8 @@ def filtered_from_domain(self, domain):
     localdict = {'time': time, 'datetime': datetime, 'relativedelta': relativedelta,
                  'context': self._context, 'uid': self._uid, 'user': self.env.user}
     try:
+        if not isinstance(domain, basestring):
+            domain = repr(domain)
         domain = normalize_domain(eval(domain, localdict))
     except:
         raise Warning(_('Domain not supported for %s filtering: %s') % (self._name, domain))
@@ -175,6 +225,8 @@ def filtered_from_domain(self, domain):
 
     def compute(item):
         item = preformat(item)
+        if isinstance(item, tuple):
+            item = list(item)
         item[0] = 'o.%s' % item[0]
         item[1] = SQL2PYTHON_OPERATORS.get(item[1], item[1])
         reverse = True if item[1] in ('in', 'not in') and not isinstance(item[2], (tuple, list)) else False
@@ -207,6 +259,9 @@ BaseModel._validate_fields = new_validate_fields
 BaseModel.bulk_create = bulk_create
 BaseModel.import_data = new_import_data
 BaseModel.load = new_load
+BaseModel._get_comparison_fields = _get_comparison_fields
+BaseModel._compare = _compare
+BaseModel._get_comparison_logs = _get_comparison_logs
 BaseModel.open_wizard = open_wizard
 BaseModel.store_set_values = BaseModel._store_set_values
 BaseModel._try_lock = _try_lock

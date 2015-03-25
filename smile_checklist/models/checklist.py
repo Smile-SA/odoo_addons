@@ -23,7 +23,7 @@ import time
 
 from openerp import api, fields, models, SUPERUSER_ID, tools, _
 from openerp.exceptions import Warning
-from openerp.modules.registry import Registry
+from openerp.modules.registry import Registry, RegistryManager
 from openerp.tools.safe_eval import safe_eval as eval
 
 import checklist_decorators
@@ -82,11 +82,13 @@ class Checklist(models.Model):
 
     @api.model
     def _update_models(self, models=None):
+        update = False
         if not models:
             models = dict([(checklist.model_id, checklist) for checklist in self.with_context(active_test=True).search([])])
         for model, checklist in models.iteritems():
             if model.model not in self.env.registry.models:
                 continue
+            update = True
             model_obj = self.env[model.model]
             if checklist:
                 if 'checklist_task_instance_ids' in model_obj._fields:
@@ -103,10 +105,8 @@ class Checklist(models.Model):
                 for new_field in new_fields.iteritems():
                     setattr(cls, *new_field)
                     model_obj._add_field(*new_field)
-                self.pool.setup_models(self._cr, partial=(not self.pool.ready))
-                model_pool = self.pool[model.model]
-                model_pool._field_create(self._cr, self._context)
-                model_pool._auto_init(self._cr, self._context)
+                model_obj._model._setup_fields(self._cr, SUPERUSER_ID)
+                model_obj._model._auto_init(self._cr, self._context)
                 for method in ('create', 'write', 'fields_view_get'):
                     cls._patch_method(method, getattr(checklist_decorators, 'checklist_%s_decorator' % method)())
             else:
@@ -120,7 +120,9 @@ class Checklist(models.Model):
                             model_obj._revert_method(method_name)
                             break
                         method = method.origin
-        self.clear_caches()
+        if update:
+            RegistryManager.signal_registry_change(self._cr.dbname)
+            self.clear_caches()
 
     def __init__(self, pool, cr):
         super(Checklist, self).__init__(pool, cr)

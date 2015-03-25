@@ -46,30 +46,38 @@ def _special_wrapper(self, method, fields, *args, **kwargs):
     # Remove followers linked to old partner
     cr, uid, ids, vals, context = _get_args(self, args, kwargs)
     follower_obj = self.pool['mail.followers']
+    partner_obj = self.pool['res.partner']
     for field in fields:
-        if vals.get(field) and ids:
-            partner_ids = [getattr(r, field).id for r in self.pool[self._name].browse(cr, uid, ids, context)]
+        direct_field = field.split('.')[0]
+        if vals.get(direct_field) and ids:
+            partners = partner_obj.browse(cr, uid, None, context)
+            for r in self.pool[self._name].browse(cr, uid, ids, context):
+                partners |= r.mapped(field)
+            contacts = partners._get_contacts_to_notify()
             follower_ids = follower_obj.search(cr, uid, [
                 ('res_model', '=', self._name),
                 ('res_id', 'in', ids),
-                ('partner_id.parent_id', 'in', partner_ids),
+                ('partner_id', 'in', contacts.ids),
             ], context=context)
             follower_obj.browse(cr, uid, follower_ids, context).unlink()
     res = method(self, *args, **kwargs)
     # Add followers linked to new partner
     for field in fields:
-        field_to_recompute = field in self.pool.pure_function_fields
+        direct_field = field.split('.')[0]
+        field_to_recompute = direct_field in self.pool.pure_function_fields
         if not field_to_recompute:
-            for expr in self._fields[field].depends:
+            for expr in self._fields[direct_field].depends:
                 if expr.split('.')[0] in vals:
                     field_to_recompute = True
-        if field in vals or field_to_recompute:
+        if direct_field in vals or field_to_recompute:
             if hasattr(res, 'ids'):
                 ids = res.ids
+            if res and isinstance(res, (long, int)) and res is not True:
+                ids = [res]
             records = self.pool[self._name].browse(cr, uid, ids, context)
             filter = lambda partner: self._name in [m.model for m in partner.notification_model_ids]
             for record in records:
-                for contact in getattr(record, field).child_ids.filtered(filter):
+                for contact in record.mapped(field)._get_contacts_to_notify().filtered(filter):
                     if contact not in record.message_follower_ids:
                         follower_obj.create(cr, SUPERUSER_ID, {
                             'res_model': self._name,
