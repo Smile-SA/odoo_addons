@@ -70,7 +70,10 @@ class ResUsers(models.Model):
         if len(self.mapped('user_profile_id')) != 1:
             raise Warning(_("_update_from_profile accepts only users linked to a same profile"))
         user_profile = self[0].user_profile_id
-        fields = set(fields or []) & set(user_profile.field_ids.mapped('name'))
+        if not fields:
+            fields = user_profile.field_ids.mapped('name')
+        else:
+            fields = set(fields) & set(user_profile.field_ids.mapped('name'))
         if user_profile:
             vals = {}
             for field in fields:
