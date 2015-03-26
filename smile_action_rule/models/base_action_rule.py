@@ -25,6 +25,7 @@ import sys
 
 from openerp import api, fields, models, SUPERUSER_ID, tools
 from openerp.exceptions import Warning
+from openerp.addons.base_action_rule.base_action_rule import DATE_RANGE_FUNCTION, get_datetime
 
 from openerp.addons.smile_log.tools import SmileDBLogger
 
@@ -78,6 +79,9 @@ class ActionRule(models.Model):
     ], 'Exception Warning', required=True, default='native')
     exception_message = fields.Char('Exception Message', size=256, translate=True, required=False)
     date_base = fields.Selection([('last_run', 'Last run'), ('date_from', 'Fixed date')], 'Trigger Date Filtered From', default='last_run')
+    trg_date_range_field_id = fields.Many2one('ir.model.fields', string='Delay after trigger date field',
+                                              help="If present, will be used instead of Delay after trigger date.",
+                                              domain="[('model_id', '=', model_id), ('ttype', '=', 'integer')]")
 
     @api.multi
     def write(self, vals):
@@ -120,16 +124,29 @@ class ActionRule(models.Model):
             self.browse(cr, uid, ids, context)._store_model_methods(model_id)
         return res
 
+    def _check_delay(self, cr, uid, action, record, record_dt, context=None):
+        date_range = record[action.trg_date_range_field_id.name] if action.trg_date_range_field_id else action.trg_date_range
+        if action.trg_date_calendar_id and action.trg_date_range_type == 'day':
+            start_dt = get_datetime(record_dt)
+            action_dt = self.pool['resource.calendar'].schedule_days_get_date(
+                cr, uid, action.trg_date_calendar_id.id, date_range,
+                day_date=start_dt, compute_leaves=True, context=context
+            )
+        else:
+            delay = DATE_RANGE_FUNCTION[action.trg_date_range_type](date_range)
+            action_dt = get_datetime(record_dt) + delay
+        return action_dt
+
     def onchange_kind(self, cr, uid, ids, kind, context=None):
         clear_fields = []
         if kind in ['on_create', 'on_create_or_write']:
-            clear_fields = ['filter_pre_id', 'trg_date_id', 'trg_date_range', 'trg_date_range_type']
+            clear_fields = ['filter_pre_id', 'trg_date_id', 'trg_date_range', 'trg_date_range_field_id', 'trg_date_range_type']
         elif kind in ['on_write', 'on_other_method', 'on_wkf_activity']:
-            clear_fields = ['trg_date_id', 'trg_date_range', 'trg_date_range_type']
+            clear_fields = ['trg_date_id', 'trg_date_range', 'trg_date_range_field_id', 'trg_date_range_type']
         elif kind == 'on_time':
             clear_fields = ['filter_pre_id']
         elif kind == 'on_unlink':
-            clear_fields = ['filter_id', 'trg_date_id', 'trg_date_range', 'trg_date_range_type']
+            clear_fields = ['filter_id', 'trg_date_id', 'trg_date_range', 'trg_date_range_field_id', 'trg_date_range_type']
         return {'value': dict.fromkeys(clear_fields, False)}
 
     def _filter(self, cr, uid, rule, filter, record_ids, context=None):

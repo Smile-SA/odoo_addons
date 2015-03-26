@@ -28,6 +28,10 @@
 	                	<field name="force_actions_execution"/>
 	                </group>
                 </field>
+                <field name="trg_date_range" position="before">
+                  <field name="trg_date_range_field_id" class="oe_inline"/>
+                  <label string="or" class="oe_edit_only"/>
+                </field>
                 <field name="trg_date_calendar_id" position="after">
                 	<label for="date_base" attrs="{'invisible': [('trg_date_id','=',False)]}"/>
                 	<div attrs="{'invisible': [('trg_date_id','=',False)]}">
