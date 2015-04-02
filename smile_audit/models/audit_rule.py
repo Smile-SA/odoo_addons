@@ -112,7 +112,9 @@ class AuditRule(models.Model):
         if not ids:
             ids = self.search(cr, SUPERUSER_ID, [])
         for rule in self.browse(cr, SUPERUSER_ID, ids):
-            model_obj = self.pool[rule.model_id.model]
+            model_obj = self.pool.get(rule.model_id.model)
+            if not model_obj:
+                continue
             if rule.active and not hasattr(model_obj, 'audit_rule'):
                 for method in ('create', 'write', 'unlink'):
                     model_obj._patch_method(method, audit_decorator())
