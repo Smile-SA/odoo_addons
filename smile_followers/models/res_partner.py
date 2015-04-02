@@ -42,23 +42,41 @@ class MailThread(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    notification_model_ids = fields.Many2many('ir.model', string='Notifications on', help='Models that the partner can follow')
+    @api.model
+    def _get_notification_model_domain(self):
+        models = []
+        for model, obj in self.env.registry.models.iteritems():
+            if hasattr(obj, '_follow_partner_fields'):
+                models.append(model)
+        return [('model', 'in', models)]
+
+    notification_model_ids = fields.Many2many('ir.model', string='Notifications on', help='Models that the partner can follow',
+                                              domain=_get_notification_model_domain)
+
+    @api.multi
+    def _get_contacts_to_notify(self):
+        return self.mapped('child_ids')
+
+    @api.multi
+    def _get_contacts_parents(self):
+        return self.mapped('parent_id')
 
     @api.one
     def follow_documents(self):
-        if self.parent_id:
-            followers_obj = self.env['mail.followers']
-            # Unfollow all records of old notification models
-            followers_obj.search([('partner_id', '=', self.id)]).unlink()
+        parents = self._get_contacts_parents()
+        if parents:
             # Follow all records of new notification models
             for model in self.notification_model_ids:
                 if model.model in self.env.registry.models:
-                    for record in self.env[model.model].with_context(active_test=False).search([('partner_id', '=', self.parent_id.id)]):
-                        followers_obj.sudo().create({
-                            'res_model': model.model,
-                            'res_id': record.id,
-                            'partner_id': self.id,
-                        })
+                    model_obj = self.env[model.model]
+                    domain = []
+                    if not hasattr(model_obj, '_follow_partner_fields'):
+                        continue
+                    for field in model_obj._follow_partner_fields:
+                        domain.append((field, 'in', parents.ids))
+                    if domain:
+                        records = model_obj.with_context(active_test=False).search(domain)
+                        records.message_subscribe(partner_ids=[self.id])
 
     @api.model
     def create(self, vals):
@@ -73,7 +91,3 @@ class ResPartner(models.Model):
         if 'notification_model_ids' in vals:
             self.follow_documents()
         return res
-
-    @api.multi
-    def _get_contacts_to_notify(self):
-        return self.mapped('child_ids')

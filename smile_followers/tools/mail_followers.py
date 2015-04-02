@@ -45,21 +45,12 @@ def _get_args(self, args, kwargs):
 def _special_wrapper(self, method, fields, *args, **kwargs):
     # Remove followers linked to old partner
     cr, uid, ids, vals, context = _get_args(self, args, kwargs)
-    follower_obj = self.pool['mail.followers']
-    partner_obj = self.pool['res.partner']
     for field in fields:
         direct_field = field.split('.')[0]
         if vals.get(direct_field) and ids:
-            partners = partner_obj.browse(cr, uid, None, context)
-            for r in self.pool[self._name].browse(cr, uid, ids, context):
-                partners |= r.mapped(field)
-            contacts = partners._get_contacts_to_notify()
-            follower_ids = follower_obj.search(cr, uid, [
-                ('res_model', '=', self._name),
-                ('res_id', 'in', ids),
-                ('partner_id', 'in', contacts.ids),
-            ], context=context)
-            follower_obj.browse(cr, uid, follower_ids, context).unlink()
+            for record in self.pool[self._name].browse(cr, SUPERUSER_ID, ids, context):
+                contacts = record.mapped(field)._get_contacts_to_notify()
+                record.message_unsubscribe(contacts.ids)
     res = method(self, *args, **kwargs)
     # Add followers linked to new partner
     for field in fields:
@@ -74,23 +65,23 @@ def _special_wrapper(self, method, fields, *args, **kwargs):
                 ids = res.ids
             if res and isinstance(res, (long, int)) and res is not True:
                 ids = [res]
-            records = self.pool[self._name].browse(cr, uid, ids, context)
-            filter = lambda partner: self._name in [m.model for m in partner.notification_model_ids]
-            for record in records:
-                for contact in record.mapped(field)._get_contacts_to_notify().filtered(filter):
-                    if contact not in record.message_follower_ids:
-                        follower_obj.create(cr, SUPERUSER_ID, {
-                            'res_model': self._name,
-                            'res_id': record.id,
-                            'partner_id': contact.id,
-                        }, context)
+            _filter = lambda partner: self._name in [m.model for m in partner.notification_model_ids]
+            for record in self.pool[self._name].browse(cr, SUPERUSER_ID, ids, context):
+                contacts = record.mapped(field)._get_contacts_to_notify().filtered(_filter)
+                record.message_subscribe(contacts.ids)
     return res
 
 
 def add_followers(fields=['partner_id']):
     def decorator(create_or_write):
+        cls = create_or_write.im_class
+        if not hasattr(cls, '_follow_partner_fields'):
+            cls._follow_partner_fields = set()
+        cls._follow_partner_fields |= set(fields)
+
         def add_followers_wrapper(self, *args, **kwargs):
             return _special_wrapper(self, create_or_write, fields, *args, **kwargs)
+
         return add_followers_wrapper
     return decorator
 
@@ -112,6 +103,7 @@ def AddFollowers(fields=['partner_id']):
                     model_obj._patch_method(method_name, _add_followers(fields))
             return super(original_class, self)._register_hook(cr)
 
+        original_class._follow_partner_fields = set(fields)
         original_class._register_hook = _register_hook
         return original_class
     return decorator
