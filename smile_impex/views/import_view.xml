@@ -99,7 +99,7 @@
 						<page string="Entry Arguments">
 							<field name="args" colspan="4" nolabel="1" />
 						</page>
-						<page string="Returns" attrs="{'invisible': [('log_returns', '=', True)]}">
+						<page string="Returns" attrs="{'invisible': [('log_returns', '=', False)]}">
 							<field name="returns" colspan="4" nolabel="1" />
 						</page>
 					</notebook>

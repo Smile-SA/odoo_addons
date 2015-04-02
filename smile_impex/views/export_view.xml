@@ -141,7 +141,7 @@
 						<page string="Logs">
 							<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}" />
 						</page>
-						<page string="Returns" attrs="{'invisible': [('log_returns', '=', True)]}">
+						<page string="Returns" attrs="{'invisible': [('log_returns', '=', False)]}">
 							<field name="returns" colspan="4" nolabel="1" />
 						</page>
 					</notebook>

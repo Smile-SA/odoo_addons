@@ -86,7 +86,9 @@ class IrModelExportTemplate(models.Model):
         return True
 
     def _get_res_ids(self, *args):
-        model_obj = self.env[self.model_id.model].with_env(self.env(cr=self._context['original_cr']))
+        model_obj = self.env[self.model_id.model]
+        if self._context.get('original_cr'):
+            model_obj = model_obj.with_env(self.env(cr=self._context['original_cr']))
         if self.filter_type == 'domain':
             domain = eval(self.filter_domain or '[]')
             res_ids = set(model_obj.search(domain, order=self.order or '')._ids)
@@ -167,5 +169,6 @@ class IrModelExport(models.Model):
         if record_ids or self.export_tmpl_id.force_execute_action:
             records = self.env[self.export_tmpl_id.model_id.model].browse(record_ids)
             if self.export_tmpl_id.method:
-                records = records.with_env(self.env(cr=self._context['original_cr']))
+                if self._context.get('original_cr'):
+                    records = records.with_env(self.env(cr=self._context['original_cr']))
                 return getattr(records, self.export_tmpl_id.method)(*eval(self.args or '[]'), **eval(self.export_tmpl_id.method_args or '{}'))
