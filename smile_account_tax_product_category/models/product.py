@@ -49,6 +49,22 @@ class ProductCategory(models.Model):
     total_taxes_id = fields.Many2many('account.tax', string='Inherited Customer Taxes', compute='_get_total_taxes')
     total_supplier_taxes_id = fields.Many2many('account.tax', string='Inherited Supplier Taxes', compute='_get_total_taxes')
 
+    @api.multi
+    def write(self, vals):
+        old_taxes_to_keep = {}
+        company = self.env.user.company_id
+        for field in ('taxes_id', 'supplier_taxes_id'):
+            if field in vals:
+                for categ in self.sudo():
+                    old_taxes_to_keep.setdefault(field, {})
+                    old_taxes_to_keep[field][categ] = getattr(categ, field).filtered(lambda tax: tax.company_id != company)
+        res = super(ProductCategory, self).write(vals)
+        for field in old_taxes_to_keep:
+            for categ in old_taxes_to_keep[field]:
+                taxes = getattr(categ, field)
+                taxes |= old_taxes_to_keep[field][categ]
+        return res
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
