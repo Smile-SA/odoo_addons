@@ -27,6 +27,8 @@ class IrConfigParameter(models.Model):
 
     @api.model
     def get_param(self, key, default=False):
-        if key != 'server.environment':
-            return super(IrConfigParameter, self).get_param(key, default)
-        return tools.config.get('server.environment') or default
+        if key == 'server.environment':
+            return tools.config.get('server.environment') or default
+        if key == 'max_upload_size':
+            return tools.config.get('max_upload_size') or default
+        return super(IrConfigParameter, self).get_param(key, default)

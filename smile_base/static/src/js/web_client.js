@@ -32,4 +32,16 @@ openerp.smile_base = function(instance) {
         }
     });
 
+	// Max upload size: default 25Mo
+	instance.web.form.FieldBinary.include({
+        init: function(field_manager, node) {
+        	var self = this;
+            this._super(field_manager, node);
+            var config_parameter = new instance.web.Model('ir.config_parameter');
+            config_parameter.call('get_param', ['max_upload_size', 25]).then(function(max_upload_size) {
+            	self.max_upload_size = max_upload_size * 1024 * 1024;
+            });
+        }
+    });
+
 };
