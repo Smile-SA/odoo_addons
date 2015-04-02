@@ -81,6 +81,52 @@ class Checklist(models.Model):
         self.checklist_task_instance_ids = self.env['checklist.task.instance'].search(domain)
 
     @api.model
+    def _patch_model_decoration(self, model):
+        model_obj = self.env[model].sudo()
+        if 'checklist_task_instance_ids' in model_obj._fields:
+            return False
+        cls = type(model_obj).__base__
+        update = not hasattr(cls, '_get_checklist_task_inst')
+        setattr(cls, '_get_checklist_task_inst', api.one(Checklist._get_checklist_task_inst))
+        new_fields = {
+            'checklist_task_instance_ids': fields.One2many('checklist.task.instance',
+                                                           string='Checklist Task Instances',
+                                                           compute='_get_checklist_task_inst'),
+            'total_progress_rate': fields.Float('Progress Rate', digits=(16, 2)),
+            'total_progress_rate_mandatory': fields.Float('Mandatory Progress Rate', digits=(16, 2)),
+        }
+        for new_field in new_fields.iteritems():
+            setattr(type(model_obj), *new_field)
+            model_obj._add_field(*new_field)
+        model_obj._setup_base(partial=not self.pool.ready)
+        model_obj._setup_fields()
+        model_obj._setup_complete()
+        model_obj._auto_init()
+        model_obj._auto_end()
+        if update:
+            for method in ('create', 'write', 'fields_view_get'):
+                cls._patch_method(method, getattr(checklist_decorators, 'checklist_%s_decorator' % method)())
+        return update
+
+    @api.model
+    def _revert_model_decoration(self, model):
+        update = False
+        model_obj = self.env[model].sudo()
+        for field in ('checklist_task_instance_ids', 'total_progress_rate', 'total_progress_rate_mandatory'):
+            if field in model_obj._fields:
+                del model_obj._fields[field]
+                update = True
+        for method_name in ('create', 'write', 'fields_view_get'):
+            method = getattr(model_obj, method_name)
+            while hasattr(method, 'origin'):
+                if method.__name__ == 'checklist_wrapper':
+                    model_obj._revert_method(method_name)
+                    update = True
+                    break
+                method = method.origin
+        return update
+
+    @api.model
     def _update_models(self, models=None):
         update = False
         if not models:
@@ -88,40 +134,13 @@ class Checklist(models.Model):
         for model, checklist in models.iteritems():
             if model.model not in self.env.registry.models:
                 continue
-            update = True
-            model_obj = self.env[model.model]
             if checklist:
-                if 'checklist_task_instance_ids' in model_obj._fields:
-                    continue
-                cls = type(model_obj).__base__
-                setattr(cls, '_get_checklist_task_inst', api.one(api.depends()(Checklist._get_checklist_task_inst)))
-                new_fields = {
-                    'checklist_task_instance_ids': fields.One2many('checklist.task.instance',
-                                                                   string='Checklist Task Instances',
-                                                                   compute='_get_checklist_task_inst'),
-                    'total_progress_rate': fields.Float('Progress Rate', digits=(16, 2)),
-                    'total_progress_rate_mandatory': fields.Float('Mandatory Progress Rate', digits=(16, 2)),
-                }
-                for new_field in new_fields.iteritems():
-                    setattr(cls, *new_field)
-                    model_obj._add_field(*new_field)
-                model_obj._model._setup_fields(self._cr, SUPERUSER_ID)
-                model_obj._model._auto_init(self._cr, self._context)
-                for method in ('create', 'write', 'fields_view_get'):
-                    cls._patch_method(method, getattr(checklist_decorators, 'checklist_%s_decorator' % method)())
+                update |= self._patch_model_decoration(model.model)
             else:
-                for field in ('checklist_task_instance_ids', 'total_progress_rate', 'total_progress_rate_mandatory'):
-                    if field in model_obj._fields:
-                        del model_obj._fields[field]
-                for method_name in ('create', 'write', 'fields_view_get'):
-                    method = getattr(model_obj, method_name)
-                    while hasattr(method, 'origin'):
-                        if method.__name__ == 'checklist_wrapper':
-                            model_obj._revert_method(method_name)
-                            break
-                        method = method.origin
+                update |= self._revert_model_decoration(model.model)
         if update:
-            RegistryManager.signal_registry_change(self._cr.dbname)
+            if self.pool.ready:
+                RegistryManager.signal_registry_change(self._cr.dbname)
             self.clear_caches()
 
     def __init__(self, pool, cr):
