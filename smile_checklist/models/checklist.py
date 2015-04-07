@@ -178,7 +178,7 @@ class Checklist(models.Model):
         if not records:
             records = self.env[self.model].with_context(active_test=False).search([])
         for record in records.with_context(active_test=True, no_checklist=True):
-            ctx = {'active_id': record.id, 'active_ids': [record.id]}
+            ctx = {'active_id': record.id, 'active_ids': [record.id], 'active_model': self.model}
             for task_inst in record.checklist_task_instance_ids:
                 old_progress_rate = task_inst.progress_rate
                 if task_inst.task_id.field_ids:
