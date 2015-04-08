@@ -222,8 +222,8 @@ def _run_unit_tests(dbname, modules, ignore):
                     if not result.wasSuccessful():
                         vals['duration'] = time.time() - start
                         vals['result'] = 'error'
-                        vals['exception'] = "Failures: %s\nErrors: %s" \
-                            % (tools.ustr(result.failures), tools.ustr(result.errors))
+                        exceptions = map(lambda (test, formatted_err): formatted_err, result.failures + result.errors)
+                        vals['exception'] = 'Failed test(s):\n\n%s' % '\n\n'.join(exceptions)
                         _write_log(vals)
                     else:
                         vals['duration'] = time.time() - start

@@ -26,7 +26,7 @@ import subprocess
 
 def mergetree(src, dst, ignore=None):
     if not os.path.exists(dst):
-        os.mkdir(dst)
+        os.makedirs(dst)
     names = os.listdir(src)
     if ignore is not None:
         ignored_names = ignore(src, names)
@@ -39,7 +39,7 @@ def mergetree(src, dst, ignore=None):
         dstname = os.path.join(dst, name)
         if os.path.isdir(srcname):
             if not os.path.exists(dstname):
-                os.mkdir(dstname)
+                os.makedirs(dstname)
             mergetree(srcname, dstname, ignore)
         else:
             if os.path.exists(dstname):

@@ -33,6 +33,7 @@ import base64
 import cStringIO
 import csv
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from lxml import etree
 from threading import Lock, Thread
 import os
@@ -46,11 +47,12 @@ import time
 from urlparse import urljoin, urlparse
 import xmlrpclib
 
-from openerp import api, models, fields, SUPERUSER_ID, tools, _
+from openerp import api, models, fields, registry, SUPERUSER_ID, tools, _
 from openerp.exceptions import Warning
 from openerp.modules.registry import Registry
 import openerp.modules as addons
 from openerp.tools import config
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
 
 from openerp.addons.smile_scm.tools import cd
@@ -63,6 +65,7 @@ BUILD_RESULTS = [
     ('failed', 'Failed'),
     ('killed', 'Killed'),
 ]
+IGNORE_PATTERNS = ['.svn', '.git', '.bzr', '.hg', '*.pyc', '*.pyo', '*~', '~*']
 DBNAME = 'test'
 CONFIGFILE = 'server.conf'
 COVERAGEFILE = 'coverage.xml'
@@ -70,6 +73,14 @@ DOCKERFILE = 'Dockerfile'
 FLAKE8FILE = 'flake8.log'
 LOGFILE = 'server.log'
 TESTFILE = 'scm.repository.branch.build.log.csv'
+INTERVAL_TYPES = [
+    ('years', 'years'),
+    ('months', 'months'),
+    ('weeks', 'weeks'),
+    ('days', 'days'),
+    ('hours', 'hours'),
+    ('minutes', 'minutes'),
+]
 
 
 class VersionControlSystem(models.Model):
@@ -136,15 +147,9 @@ class DockerHost(models.Model):
 class Branch(models.Model):
     _inherit = 'scm.repository.branch'
 
-    def __init__(self, pool, cr):
-        cls = type(self)
-        cls._create_build_lock = Lock()
-        super(Branch, self).__init__(pool, cr)
-
     @api.model
     def _get_lang(self):
-        lang_infos = self.env['res.lang'].search_read([], ['code', 'name'])
-        return [(lang['code'], lang['name']) for lang in lang_infos]
+        return tools.scan_languages()
 
     @api.one
     def _get_last_build_result(self):
@@ -181,11 +186,22 @@ class Branch(models.Model):
     last_build_result = fields.Selection(BUILD_RESULTS + [('unknown', 'Unknown')], 'Last result',
                                          compute='_get_last_build_result', store=False)
     builds_count = fields.Integer('Builds Count', compute='_get_builds_count', store=False)
+    subfolder = fields.Char('Place current sources in')
     merge_with_branch_id = fields.Many2one('scm.repository.branch', 'Merge with')
-    merge_subfolder = fields.Char('in')
+    merge_subfolder = fields.Char('Place merged sources in')
     specific_packages = fields.Text('Specific packages')
     pip_packages = fields.Text('PIP requirements')
     additional_options = fields.Text('Additional configuration options')
+
+    nextcall = fields.Datetime(required=True, default=fields.Datetime.now())
+    interval_number = fields.Integer('Interval Number', help="Repeat every x.", required=True, default=15)
+    interval_type = fields.Selection(INTERVAL_TYPES, 'Interval Unit', required=True, default='minutes')
+
+    @api.onchange('merge_with_branch_id')
+    def _onchange_merge_with_branch_id(self):
+        if not self.merge_with_branch_id:
+            self.merge_subfolder = ''
+            self.subfolder = ''
 
     @api.one
     @api.constrains('ignored_tests')
@@ -203,8 +219,12 @@ class Branch(models.Model):
     @api.one
     def _update(self):
         if self.state == 'draft':
-            return self.clone()
-        return self.pull()
+            self.clone()
+        else:
+            self.pull()
+        nextcall = datetime.strptime(fields.Datetime.now(), DATETIME_FORMAT)
+        nextcall += relativedelta(**{self.interval_type: self.interval_number})
+        self.nextcall = nextcall.strftime(DATETIME_FORMAT)
 
     @api.multi
     def _get_revno(self):
@@ -218,9 +238,9 @@ class Branch(models.Model):
             revno = check_output_chain(cmd)
             if vcs.name == 'Subversion':
                 revno = revno.split(' ')[0]
-            else:
+            elif vcs.name != 'Git':
                 revno = literal_eval(revno)
-        return revno
+        return revno.replace('\n', '')
 
     @api.multi
     def _get_last_commits(self):
@@ -244,12 +264,14 @@ class Branch(models.Model):
 
     @api.one
     def create_build(self, force=False):
-        with self._create_build_lock:
-            self._create_build(force)
+        self._create_build(force)
         return True
 
-    @api.one
+    @api.multi
+    @with_new_cursor()
     def _create_build(self, force=False):
+        self.ensure_one()
+        self._try_lock(_('Build Creation already in progress'))
         if self.use_in_ci:
             self._update()
             if self._changes() or force is True:
@@ -263,11 +285,25 @@ class Branch(models.Model):
         return True
 
     @api.model
+    def _force_create_build_with_new_cursor(self, branch_ids):
+        with api.Environment.manage():
+            with registry(self._cr.dbname).cursor() as new_cr:
+                try:
+                    self.with_env(self.env(cr=new_cr)).browse(branch_ids).force_create_build()
+                except Exception, e:
+                    _logger.error(repr(e))
+                    new_cr.rollback()
+
+    @api.model
     def create_builds(self):
         """Method called by a scheduled action executed each X-minutes"""
-        branches = self.search([('use_in_ci', '=', True)])
+        branches = self.search([('use_in_ci', '=', True), ('nextcall', '<=', fields.Datetime.now())])
         branches.create_build()
         return True
+
+    @api.multi
+    def _post_result(self, body, subtype='mail.mt_comment'):
+        self.message_post(body=body, subtype=subtype)
 
 
 def state_cleaner(method):
@@ -278,6 +314,10 @@ def state_cleaner(method):
             if build_obj:
                 cr.execute("select relname from pg_class where relname='%s'" % build_obj._table)
                 if cr.rowcount:
+                    _logger.info("Cleaning testing/running builds before restarting")
+                    # Empty builds directory: sources being copied when killing the server are not deleted
+                    for dirname in os.listdir(build_obj._builds_path):
+                        Thread(target=shutil.rmtree, args=(os.path.join(build_obj._builds_path, dirname),)).start()
                     # Search testing builds
                     build_infos = build_obj.search_read(cr, SUPERUSER_ID, [('state', '=', 'testing')], ['ppid'])
                     build_ids = [b['id'] for b in build_infos if not psutil.pid_exists(b['ppid'])]
@@ -292,16 +332,19 @@ def state_cleaner(method):
                     docker_host_obj = self['docker.host']
                     for docker_host_id in docker_host_obj.search(cr, SUPERUSER_ID, []):
                         docker_host = docker_host_obj.browse(cr, SUPERUSER_ID, docker_host_id)
-                        actual_runnning_build_ids += [int(container['Names'][0].replace('build_', ''))
+                        actual_runnning_build_ids += [int(container['Names'][0].replace('/build_', ''))
                                                       for container in docker_host.get_client().containers()
-                                                      if container['Names'] and container['Names'][0].startswith('build_')]
+                                                      if container['Names'] and container['Names'][0].startswith('/build_')]
                     build_ids = list(set(runnning_build_ids) - set(actual_runnning_build_ids))
                     if build_ids:
                         # Kill invalid builds
                         build_obj._remove_container(cr, SUPERUSER_ID, build_ids)
                         build_obj.write(cr, SUPERUSER_ID, build_ids, {'state': 'done'})
                     # Force build creation for branch in test before server stop
-                    self.get('scm.repository.branch').force_create_build(cr, SUPERUSER_ID, branch_ids)
+                    if branch_ids:
+                        branch_obj = self.get('scm.repository.branch')
+                        thread = Thread(target=branch_obj._force_create_build_with_new_cursor, args=(branch_ids,))
+                        thread.start()
         except Exception, e:
             _logger.error(get_exception_message(e))
         return res
@@ -373,24 +416,17 @@ class Build(models.Model):
         else:
             self.last_build_time_human = ''
 
-    @api.one
-    def _quality_code_count(self):
-        self.quality_code_count = len(filter(lambda log: log.type == 'quality_code', self.log_ids))
-
-    @api.one
-    def _failed_test_count(self):
-        self.failed_test_count = len(filter(lambda log: log.type == 'test' and log.result == 'error', self.log_ids))
-
-    @api.one
-    def _coverage_avg(self):
-        line_counts = sum([coverage.line_count for coverage in self.coverage_ids])
-        self.coverage_avg = line_counts and \
-            sum([coverage.line_rate * coverage.line_count for coverage in self.coverage_ids]) / line_counts or 0
-
     @api.model
     def _get_default_docker_host(self):
+        docker_hosts = self.env['docker.host'].search([])
+        if not docker_hosts:
+            raise Warning(_('No docker host is configured'))
         # TODO: loads balance over each docker host
-        return self.env['docker.host'].search([], limit=1).id
+        return docker_hosts[0].id
+
+    @api.one
+    def _get_failed_test_ratio(self):
+        self.failed_test_ratio = '%s / %s' % (self.failed_test_count, self.test_count)
 
     id = fields.Integer('Number', readonly=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True, index=True)
@@ -419,10 +455,13 @@ class Build(models.Model):
     last_build_time_human = fields.Char('Last build time', compute='_get_last_build_time_human', store=False)
     log_ids = fields.One2many('scm.repository.branch.build.log', 'build_id', 'Logs', readonly=True)
     coverage_ids = fields.One2many('scm.repository.branch.build.coverage', 'build_id', 'Coverage', readonly=True)
-    quality_code_count = fields.Integer('# Quality code', compute='_quality_code_count', store=False)
-    failed_test_count = fields.Integer('# Failed tests', compute='_failed_test_count', store=False)
-    coverage_avg = fields.Integer('Coverage average', compute='_coverage_avg', store=False)
+    quality_code_count = fields.Integer('# Quality code', readonly=True)
+    failed_test_count = fields.Integer('# Failed tests', readonly=True)
+    test_count = fields.Integer('# Tests', readonly=True)
+    failed_test_ratio = fields.Char('Failed tests ratio', compute='_get_failed_test_ratio')
+    coverage_avg = fields.Float('Coverage average', readonly=True)
     ppid = fields.Integer('Launcher Process Id', readonly=True)
+    is_to_keep = fields.Boolean("Keep alive", readonly=True, help="If checked, this build will not be stopped by scheduler")
 
     @property
     def _docker_cli(self):
@@ -438,14 +477,16 @@ class Build(models.Model):
     @api.model
     def create(self, vals):
         build = super(Build, self).create(vals)
-        build._copy_sources()
+        build._copy_sources()  # TODO: run this in thread
         return build
 
     @staticmethod
     def _get_branches_to_merge(branch):
         branches = []
+        subfolder = branch.subfolder
         while branch:
-            branches.append((branch, branch.merge_subfolder or ''))
+            branches.append((branch, subfolder or ''))
+            subfolder = branch.merge_subfolder
             branch = branch.merge_with_branch_id
         return branches[::-1]
 
@@ -453,7 +494,7 @@ class Build(models.Model):
     def _copy_sources(self):
         _logger.info('Copying %s %s sources...' % (self.branch_id.name, self.branch_id.branch))
         self.directory = os.path.join(self._builds_path, str(self.id))
-        ignore_patterns = shutil.ignore_patterns('.svn', '.git', '.bzr', '.hg', '*.pyc', '*.pyo', '*~', '~*')
+        ignore_patterns = shutil.ignore_patterns(*IGNORE_PATTERNS)
         for branch, subfolder in Build._get_branches_to_merge(self.branch_id):
             mergetree(branch.directory, os.path.join(self.directory, subfolder), ignore_patterns)
         self._add_ci_addons()
@@ -466,7 +507,7 @@ class Build(models.Model):
                 break
         else:
             raise IOError("smile_ci/addons is not found")
-        ignore_patterns = shutil.ignore_patterns('.svn', '.git', '.bzr', '.hg', '*.pyc', '*.pyo', '*~', '~*')
+        ignore_patterns = shutil.ignore_patterns(*IGNORE_PATTERNS)
         with cd(self.directory):
             shutil.copytree(ci_addons_path, 'ci-addons', ignore=ignore_patterns)
 
@@ -514,6 +555,12 @@ class Build(models.Model):
             new_thread.start()
             time.sleep(0.1)  # ?!!
 
+    @api.model
+    def image_exists_in_registry(self):
+        # TODO: implements me
+        # check if self._get_image_name() exists in Docker registry
+        return False
+
     def _test_in_new_thread(self, cr, uid, build_id, context=None):
         with api.Environment.manage():
             return self.browse(cr, uid, build_id, context)._test()
@@ -524,10 +571,11 @@ class Build(models.Model):
         self.ensure_one()
         _logger.info('Testing build %s...' % self.id)
         try:
-            self._create_configfile()
-            self._create_dockerfile()
-            self._build_image()
-            self._remove_directory()
+            if not self.image_exists_in_registry():
+                self._create_configfile()
+                self._create_dockerfile()
+                self._build_image()
+                self._remove_directory()
             self._run_container()
             if self.branch_id.dump_id:
                 self._restore_db()
@@ -543,8 +591,11 @@ class Build(models.Model):
             self._run_tests()
             self._stop_coverage()
         except Exception, e:
+            self._remove_directory()
             self.write_with_new_cursor({'state': 'done', 'result': 'failed', 'date_stop': fields.Datetime.now()})
-            self.branch_id.message_post(body=_('Failed'))
+            # TODO: post the message on the build instead of on the branch
+            # and send an email instead of posting a message on the record
+            self.branch_id._post_result(body=_('Failed'))
             msg = get_exception_message(e)
             self.message_post(body=msg, content_subtype='plaintext')
             _logger.error(msg)
@@ -557,20 +608,24 @@ class Build(models.Model):
             if self.result == 'failed':
                 self._remove_physical_container()
 
+    @api.model
+    def _check_max_running(self, domain, param):
+        running = self.search(domain, order='date_start desc')
+        max_running = int(self.env['ir.config_parameter'].get_param(param))
+        if len(running) > max_running:
+            running_to_keep = running.filtered(lambda build: build.is_to_keep)
+            max_running = max(max_running - len(running_to_keep), 0)
+            running_not_to_keep = running - running_to_keep
+            running_not_to_keep[max_running:]._remove_container()
+
     @api.one
     def _check_running(self):
         if not self.branch_id.version_id.web_included:
             self._remove_container()
         # Check max_running_by_branch
-        running = self.search([('state', '=', 'running'), ('branch_id', '=', self.branch_id.id)], order='date_start desc')
-        max_running = int(self.env['ir.config_parameter'].get_param('ci.max_running_by_branch'))
-        if len(running) > max_running:
-            running[max_running:]._remove_container()
+        self._check_max_running(domain=[('state', '=', 'running'), ('branch_id', '=', self.branch_id.id)], param='ci.max_running_by_branch')
         # Check max_running
-        running = self.search([('state', '=', 'running')], order='date_start desc')
-        max_running = int(self.env['ir.config_parameter'].get_param('ci.max_running'))
-        if len(running) > max_running:
-            running[max_running:]._remove_container()
+        self._check_max_running(domain=[('state', '=', 'running')], param='ci.max_running')
 
     @property
     def admin_passwd(self):
@@ -579,7 +634,7 @@ class Build(models.Model):
     def _get_options(self):
         branch = self.branch_id
 
-        def format(path):
+        def format_str(path):
             if not path:
                 return path
             path = path[:]  # To avoid to update database when call replace method - A behaviour caused by new api
@@ -590,15 +645,15 @@ class Build(models.Model):
             'db_user': 'odoo',
             'db_password': 'odoo',
             'db_name': False,
-            'logfile': format(LOGFILE),
-            'coveragefile': format(COVERAGEFILE),
-            'flake8file': format(FLAKE8FILE),
+            'logfile': format_str(LOGFILE),
+            'coveragefile': format_str(COVERAGEFILE),
+            'flake8file': format_str(FLAKE8FILE),
             'flake8_exclude_files': self.env['ir.config_parameter'].get_param('ci.flake8.exclude_files'),
             'flake8_max_line_length': self.env['ir.config_parameter'].get_param('ci.flake8.max_line_length'),
-            'code_path': format(self.branch_id.code_path),
-            'addons_path': format(branch.addons_path + ',ci-addons'),
+            'code_path': format_str(self.branch_id.code_path),
+            'addons_path': format_str(branch.addons_path + ',ci-addons'),
             'ignored_tests': branch.ignored_tests,
-            'test_logfile': format(TESTFILE),
+            'test_logfile': format_str(TESTFILE),
             'test_enable': False,
             'test_disable': True,
             'log_level': 'test',
@@ -682,12 +737,12 @@ class Build(models.Model):
         params = self._get_build_params()
         _logger.debug(repr(params))
         generator = self._docker_cli.build(**params)
-        last_line = ''
+        all_lines = []
         for line in generator:
-            last_line = eval(line)['stream'].replace('\n', '')
+            all_lines.append(eval(line.replace('\n', '')))
             _logger.debug(line)
-        if 'Successfully built' not in last_line:
-            raise Exception(last_line)
+        if 'Successfully built' not in all_lines[-1].get('stream', ''):
+            raise Exception(repr(all_lines[-1]['error']))
 
     @api.one
     def _run_container(self):
@@ -811,7 +866,7 @@ class Build(models.Model):
             filepaths.append(os.path.join(self.branch_id.os_id.odoo_dir, filename))
         for path in self.branch_id.addons_path.replace(' ', '').split(','):
             filename = '%s.cloc' % path.split('/')[-1]
-            filepaths.append(os.path.join(path, filename))
+            filepaths.append(os.path.join(self.branch_id.os_id.odoo_dir, path, filename))
         missing_files = []
         for filepath in filepaths:
             try:
@@ -831,11 +886,9 @@ class Build(models.Model):
                 missing_files.append(filename)
             except Exception, e:
                 _logger.error(repr(e))
-                msg = 'Error while attaching %s: %s' % (filename, get_exception_message(e))
-                self.message_post(body=msg, content_subtype='plaintext')
+                _logger.error('Error while attaching %s: %s' % (filename, get_exception_message(e)))
         if missing_files:
-            msg = "The following files are missing: %s" % missing_files
-            self.message_post(body=msg, content_subtype='plaintext')
+            _logger.info("The following files are missing: %s" % missing_files)
 
     def _get_logs(self, filename):
         attachs = self.env['ir.attachment'].search([
@@ -872,15 +925,15 @@ class Build(models.Model):
         csv_input = cStringIO.StringIO(self._get_logs(TESTFILE))
         reader = csv.DictReader(csv_input)
         for vals in reader:
-            file = vals['file']
-            if file:
-                match = pattern.match(file)
+            filepath = vals['file']
+            if filepath:
+                match = pattern.match(filepath)
                 if match:
                     vals['file'] = match.groupdict()['file']
             vals['build_id'] = self.id
             vals['code'] = 'TEST'
             vals['type'] = 'test'
-            vals['exception'] = vals['exception'].replace('\n', '<br/>')
+            vals['exception'] = tools.plaintext2html(vals['exception'])
             log_obj.create(vals)
 
     @api.one
@@ -912,16 +965,24 @@ class Build(models.Model):
     def _set_build_result(self):
         _logger.info('Getting the result for build_%s...' % self.id)
         if not self.result:
-            self.result = [log for log in self.log_ids if log.result == 'error'] and 'unstable' or 'stable'
+            lines_count = sum([coverage.line_count for coverage in self.coverage_ids])
+            covered_lines_count = sum([coverage.line_rate * coverage.line_count for coverage in self.coverage_ids])
+            self.write({
+                'quality_code_count': len(self.log_ids.filtered(lambda log: log.type == 'quality_code')),
+                'failed_test_count': len(self.log_ids.filtered(lambda log: log.type == 'test' and log.result == 'error')),
+                'test_count': len(self.log_ids.filtered(lambda log: log.type == 'test' and log.result != 'ignored')),
+                'coverage_avg': lines_count and covered_lines_count / lines_count or 0.0,
+                'result': self.log_ids.filtered(lambda log: log.result == 'error') and 'unstable' or 'stable',
+            })
             if self.result == 'stable':
                 for previous_build in self.branch_id.build_ids:
                     if previous_build.id < self.id and previous_build.state in ('running', 'done') \
                             and previous_build.result != 'killed':  # Because builds ordered by id desc
                         if previous_build.result != 'stable':
-                            self.branch_id.message_post(body=_('Back to stable'))
+                            self.branch_id._post_result(body=_('Back to stable'))
                         break
             elif self.result == 'unstable':
-                self.branch_id.message_post(body=_('Unstable'))
+                self.branch_id._post_result(body=_('Unstable'))
 
     @api.one
     def _load_logs_in_db(self):
@@ -930,8 +991,7 @@ class Build(models.Model):
                 getattr(self, '_load_%s_logs' % log_type)()
             except Exception, e:
                 _logger.error(repr(e))
-                msg = 'Error while loading %s logs: %s' % (log_type, get_exception_message(e))
-                self.message_post(body=msg, content_subtype='plaintext')
+                _logger.error('Error while loading %s logs: %s' % (log_type, get_exception_message(e)))
         self._set_build_result()
 
     @api.multi
@@ -941,7 +1001,7 @@ class Build(models.Model):
 
     @api.one
     def _remove_directory(self):
-        if os.path.exists(self.directory):
+        if self.directory and os.path.exists(self.directory):
             shutil.rmtree(self.directory)
 
     @api.multi
@@ -976,7 +1036,8 @@ class Build(models.Model):
         _logger.info('Exporting container build_%s...' % self.id)
         self.ensure_one()
         container = self._get_container_name()
-        archive_content = self._docker_cli.export(container)
+        archive = self._docker_cli.export(container)
+        archive_content = archive.read()
         return self.env['ir.attachment'].create({
             'name': 'Docker Container',
             'datas_fname': 'build_%s.tar' % self.id,
@@ -984,6 +1045,12 @@ class Build(models.Model):
             'res_model': self._name,
             'res_id': self.id,
         })
+
+    @api.multi
+    def keep_alive(self):
+        "Toogle state of build"
+        self.ensure_one()
+        self.is_to_keep = not self.is_to_keep
 
     @api.multi
     def open(self):
@@ -995,6 +1062,21 @@ class Build(models.Model):
             'target': 'new',
         }
 
+    @api.model
+    def _get_purge_date(self, age_number, age_type):
+        assert isinstance(age_number, (int, long))
+        assert age_type in ('years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds')
+        date = datetime.strptime(fields.Datetime.now(), DATETIME_FORMAT) + relativedelta(**{age_type: -age_number})
+        return date.strftime(DATETIME_FORMAT)
+
+    @api.model
+    def purge_logs(self, age_number=1, age_type='months'):
+        date = self._get_purge_date(age_number, age_type)
+        _logger.info('Purging logs older created before %s for build_%s...' % (date, self.id))
+        self.env['scm.repository.branch.build.log'].purge(date)
+        self.env['scm.repository.branch.build.coverage'].purge(date)
+        return True
+
 
 class Log(models.Model):
     _name = 'scm.repository.branch.build.log'
@@ -1004,10 +1086,13 @@ class Log(models.Model):
 
     @api.one
     def _get_exception_short(self):
-        self.exception_short = self.exception and self.exception[:101] or ''
+        self.exception_short = self.exception and tools.html2plaintext(self.exception[:101]) or ''
 
+    create_date = fields.Datetime('Created on', readonly=True)
     build_id = fields.Many2one('scm.repository.branch.build', 'Build', readonly=True, required=True, ondelete='cascade', index=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', readonly=True, related='build_id.branch_id', store=True)
+    module = fields.Char(readonly=True)
+    file = fields.Char(readonly=True)
     type = fields.Selection([
         ('quality_code', 'Quality code'),
         ('test', 'Test')
@@ -1018,13 +1103,20 @@ class Log(models.Model):
         ('success', 'Success'),
         ('ignored', 'Ignored')
     ], required=True, readonly=True)
-    module = fields.Char(readonly=True)
-    file = fields.Char(readonly=True)
     line = fields.Integer(readonly=True, group_operator="count")
     code = fields.Char('Class', readonly=True, required=True)
     exception = fields.Html('Exception', readonly=True)
     duration = fields.Float('Duration', digits=(7, 3), help='In seconds', readonly=True)
     exception_short = fields.Char('Exception', compute='_get_exception_short')
+
+    @api.model
+    def _get_logs_to_purge(self, date):
+        return self.search([('create_date', '<=', date)])
+
+    @api.model
+    def purge(self, date):
+        logs = self._get_logs_to_purge(date)
+        return logs.unlink()
 
 
 class Coverage(models.Model):
@@ -1033,6 +1125,7 @@ class Coverage(models.Model):
     _rec_name = 'file'
     _order = 'id desc'
 
+    create_date = fields.Datetime('Created on', readonly=True)
     build_id = fields.Many2one('scm.repository.branch.build', 'Build', readonly=True, required=True, ondelete='cascade', index=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', readonly=True, related='build_id.branch_id', store=True)
     module = fields.Char(readonly=True)
@@ -1061,3 +1154,12 @@ class Coverage(models.Model):
                     group['branch_rate'] = branch_counts and \
                         sum([l['branch_rate'] * l['branch_count'] for l in line_infos]) / branch_counts or 0
         return res
+
+    @api.model
+    def _get_logs_to_purge(self, date):
+        return self.search([('create_date', '<=', date)])
+
+    @api.model
+    def purge(self, date):
+        logs = self._get_logs_to_purge(date)
+        return logs.unlink()

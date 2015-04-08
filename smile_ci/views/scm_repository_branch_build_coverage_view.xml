@@ -68,7 +68,7 @@
 		</record>
 
 		<menuitem id="menu_repository_branch_build_coverage" parent="smile_scm.menu_scm" action="action_repository_branch_build_coverage"
-			sequence="50" />
+			sequence="60" />
 
 		<record model="ir.actions.act_window" id="action_build_coverage">
 			<field name="name">Coverage</field>
@@ -78,7 +78,7 @@
 			<field name="view_id" ref="view_repository_branch_build_coverage_tree" />
 			<field name="search_view_id" ref="view_repository_branch_build_coverage_search" />
 			<field name="domain">[('build_id', '=', active_id)]</field>
-			<field name="context">{'search_default_group_build': True, 'search_default_group_module': True}</field>
+			<field name="context">{'search_default_group_module': True}</field>
 		</record>
 
 	</data>

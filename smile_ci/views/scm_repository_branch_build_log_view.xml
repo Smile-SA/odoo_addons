@@ -1,123 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data noupdate="0">
+  <data noupdate="0">
 
-		<!-- Logs -->
-		<record id="view_repository_branch_build_log_search" model="ir.ui.view">
-			<field name="name">scm.repository.branch.build.log.search</field>
-			<field name="model">scm.repository.branch.build.log</field>
-			<field name="arch" type="xml">
-				<search string="Logs">
-					<field name="branch_id" />
-					<field name="build_id" />
-					<field name="type" />	
-					<field name="result" />
-					<field name="code" />
-					<field name="module" />
-					<field name="file" />
-					<field name="line" />
-					<field name="exception" />
-					<filter name="error" string="Error" domain="[('result', '=', 'error')]" />
-					<filter name="warning" string="Warning" domain="[('result', '=', 'warning')]" />
-					<filter name="success" string="Success" domain="[('result', '=', 'success')]" />
-					<filter name="ignored" string="Ignored" domain="[('result', '=', 'ignored')]" />
-					<group string="Group By" expand="0">
-						<filter name="group_branch" string="Branch" context="{'group_by': 'branch_id'}" />
-						<filter name="group_build" string="Build" context="{'group_by': 'build_id'}" />
-						<filter name="group_type" string="Type" context="{'group_by': 'type'}" />
-						<filter name="group_module" string="Module" context="{'group_by': 'module'}" />
-					</group>
-				</search>
-			</field>
-		</record>
+    <!-- Logs views -->
+    <record id="view_repository_branch_build_log_search" model="ir.ui.view">
+      <field name="name">scm.repository.branch.build.log.search</field>
+      <field name="model">scm.repository.branch.build.log</field>
+      <field name="arch" type="xml">
+        <search string="Logs">
+          <field name="branch_id"/>
+          <field name="build_id"/>
+          <field name="type"/>
+          <field name="result"/>
+          <field name="code"/>
+          <field name="module"/>
+          <field name="file"/>
+          <field name="line"/>
+          <field name="exception"/>
+          <filter name="error" string="Error" domain="[('result', '=', 'error')]"/>
+          <filter name="warning" string="Warning" domain="[('result', '=', 'warning')]"/>
+          <filter name="success" string="Success" domain="[('result', '=', 'success')]"/>
+          <filter name="ignored" string="Ignored" domain="[('result', '=', 'ignored')]"/>
+          <group string="Group By" expand="0">
+            <filter name="group_branch" string="Branch" context="{'group_by': 'branch_id'}"/>
+            <filter name="group_build" string="Build" context="{'group_by': 'build_id'}"/>
+            <filter name="group_type" string="Type" context="{'group_by': 'type'}"/>
+            <filter name="group_module" string="Module" context="{'group_by': 'module'}"/>
+          </group>
+        </search>
+      </field>
+    </record>
+    <record id="view_repository_branch_build_log_tree" model="ir.ui.view">
+      <field name="name">scm.repository.branch.build.log.tree</field>
+      <field name="model">scm.repository.branch.build.log</field>
+      <field name="arch" type="xml">
+        <tree string="Logs" create="false" colors="red:result=='error';orange:result=='warning';blue:result=='success';grey:result=='ignored'">
+          <field name="branch_id"/>
+          <field name="build_id"/>
+          <field name="type"/>
+          <field name="result"/>
+          <field name="code"/>
+          <field name="module"/>
+          <field name="file"/>
+          <field name="line"/>
+          <field name="duration"/>
+          <field name="exception_short"/>
+        </tree>
+      </field>
+    </record>
+    <record id="view_repository_branch_build_log_form" model="ir.ui.view">
+      <field name="name">scm.repository.branch.build.log.form</field>
+      <field name="model">scm.repository.branch.build.log</field>
+      <field name="arch" type="xml">
+        <form string="Log">
+          <sheet>
+            <group col="4">
+              <field name="branch_id"/>
+              <field name="build_id"/>
+              <field name="type"/>
+              <field name="result"/>
+              <field name="code"/>
+              <field name="module"/>
+              <field name="file"/>
+              <field name="line" attrs="{'invisible': [('type', '=', 'test')]}"/>
+              <field name="duration" attrs="{'invisible': [('type', '=', 'quality_code')]}"/>
+              <separator string="Exception" colspan="4"/>
+              <field name="exception" nolabel="1" colspan="4"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="view_repository_branch_build_log_graph">
+      <field name="name">scm.repository.branch.build.log.graph</field>
+      <field name="model">scm.repository.branch.build.log</field>
+      <field name="arch" type="xml">
+        <graph string="Logs" type="bar" stacked="True">
+          <field name="build_id" type="row"/>
+          <field name="result" type="col"/>
+        </graph>
+      </field>
+    </record>
 
-		<record id="view_repository_branch_build_log_tree" model="ir.ui.view">
-			<field name="name">scm.repository.branch.build.log.tree</field>
-			<field name="model">scm.repository.branch.build.log</field>
-			<field name="arch" type="xml">
-				<tree string="Logs" create="false" colors="red:result=='error';orange:result=='warning';blue:result=='success';grey:result=='ignored'">
-					<field name="branch_id" />
-					<field name="build_id" />
-					<field name="type" />
-					<field name="result" />
-					<field name="code" />
-					<field name="module" />
-					<field name="file" />
-					<field name="line" />
-					<field name="duration" />
-					<field name="exception_short" />
-				</tree>
-			</field>
-		</record>
+    <!-- Actions and menus -->
+    <record model="ir.actions.act_window" id="action_repository_branch_build_test_log">
+      <field name="name">Tests logs</field>
+      <field name="res_model">scm.repository.branch.build.log</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form,graph</field>
+      <field name="view_id" ref="view_repository_branch_build_log_tree"/>
+      <field name="search_view_id" ref="view_repository_branch_build_log_search"/>
+      <field name="domain">[('type', '=', 'test')]</field>
+      <field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_branch': True,
+        'search_default_group_build': True, 'search_default_group_module': True}</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_repository_branch_build_quality_log">
+      <field name="name">Quality code logs</field>
+      <field name="res_model">scm.repository.branch.build.log</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form,graph</field>
+      <field name="view_id" ref="view_repository_branch_build_log_tree"/>
+      <field name="search_view_id" ref="view_repository_branch_build_log_search"/>
+      <field name="domain">[('type', '=', 'quality_code')]</field>
+      <field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_branch': True,
+        'search_default_group_build': True, 'search_default_group_module': True}</field>
+    </record>
+    <menuitem id="menu_repository_branch_build_test_log" parent="smile_scm.menu_scm" action="action_repository_branch_build_test_log"
+      sequence="40"/>
+    <menuitem id="menu_repository_branch_build_quality_log" parent="smile_scm.menu_scm" action="action_repository_branch_build_quality_log"
+      sequence="50"/>
 
-		<record id="view_repository_branch_build_log_form" model="ir.ui.view">
-			<field name="name">scm.repository.branch.build.log.form</field>
-			<field name="model">scm.repository.branch.build.log</field>
-			<field name="arch" type="xml">
-				<form string="Log">
-					<sheet>
-						<group col="4">
-							<field name="branch_id" />
-							<field name="build_id" />
-							<field name="type" />
-							<field name="result" />
-							<field name="code" />
-							<field name="module" />
-							<field name="file" />
-							<field name="line" attrs="{'invisible': [('type', '=', 'test')]}"/>
-							<field name="duration" attrs="{'invisible': [('type', '=', 'quality_code')]}"/>
-							<separator string="Exception" colspan="4"/>
-							<field name="exception" nolabel="1" colspan="4"/>
-						</group>
-					</sheet>
-				</form>
-			</field>
-		</record>
+    <!-- Specific actions used from build -->
+    <record model="ir.actions.act_window" id="action_build_quality_code">
+      <field name="name">Quality code</field>
+      <field name="res_model">scm.repository.branch.build.log</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form,graph</field>
+      <field name="view_id" ref="view_repository_branch_build_log_tree"/>
+      <field name="search_view_id" ref="view_repository_branch_build_log_search"/>
+      <field name="domain">[('build_id', '=', active_id), ('type', '=', 'quality_code')]</field>
+      <field name="context">{'search_default_warning': True, 'search_default_error': True}</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_build_failed_test">
+      <field name="name">Failed tests</field>
+      <field name="res_model">scm.repository.branch.build.log</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form,graph</field>
+      <field name="view_id" ref="view_repository_branch_build_log_tree"/>
+      <field name="search_view_id" ref="view_repository_branch_build_log_search"/>
+      <field name="domain">[('build_id', '=', active_id), ('type', '=', 'test')]</field>
+      <field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_module': True}</field>
+    </record>
 
-        <record model="ir.ui.view" id="view_repository_branch_build_log_graph">
-            <field name="name">scm.repository.branch.build.log.graph</field>
-            <field name="model">scm.repository.branch.build.log</field>
-            <field name="arch" type="xml">
-                <graph string="Logs" type="bar" stacked="True">
-                    <field name="build_id" type="row"/>
-                    <field name="result" type="col"/>
-                </graph>
-            </field>
-        </record>
-
-		<record model="ir.actions.act_window" id="action_repository_branch_build_log">
-			<field name="name">Logs</field>
-			<field name="res_model">scm.repository.branch.build.log</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form,graph</field>
-			<field name="view_id" ref="view_repository_branch_build_log_tree" />
-			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
-			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_branch': True, 'search_default_group_build': True, 'search_default_group_type': True, 'search_default_group_module': True}</field>
-		</record>
-
-		<menuitem id="menu_repository_branch_build_log" parent="smile_scm.menu_scm" action="action_repository_branch_build_log" sequence="40" />
-
-		<record model="ir.actions.act_window" id="action_build_quality_code">
-			<field name="name">Quality code</field>
-			<field name="res_model">scm.repository.branch.build.log</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form,graph</field>
-			<field name="view_id" ref="view_repository_branch_build_log_tree" />
-			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
-			<field name="domain">[('build_id', '=', active_id), ('type', '=', 'quality_code')]</field>
-			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_build': True}</field>
-		</record>
-
-		<record model="ir.actions.act_window" id="action_build_failed_test">
-			<field name="name">Failed tests</field>
-			<field name="res_model">scm.repository.branch.build.log</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form,graph</field>
-			<field name="view_id" ref="view_repository_branch_build_log_tree" />
-			<field name="search_view_id" ref="view_repository_branch_build_log_search" />
-			<field name="domain">[('build_id', '=', active_id), ('type', '=', 'test')]</field>
-			<field name="context">{'search_default_warning': True, 'search_default_error': True, 'search_default_group_build': True, 'search_default_group_module': True}</field>
-		</record>
-
-	</data>
+  </data>
 </openerp>

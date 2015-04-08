@@ -7,6 +7,9 @@
       <field name="model">scm.repository.branch</field>
       <field name="inherit_id" ref="smile_scm.view_repository_branch_tree"/>
       <field name="arch" type="xml">
+      	<tree position="attributes">
+      		<attribute name="colors">blue:last_build_result=='stable';orange:last_build_result=='unstable';red:last_build_result=='failed';grey:last_build_result=='killed'</attribute>
+      	</tree>
         <field name="last_update" position="after">
           <field name="last_build_result"/>
           <field name="use_in_ci" invisible="1"/>
@@ -55,8 +58,17 @@
           <label for="use_in_ci"/>
           <field name="use_in_ci"/>
         </field>
+        <xpath expr="//group" position="attributes">
+        	<attribute name="col">4</attribute>
+        </xpath>
         <field name="last_update" position="after">
+          <label for="interval_number" string="Update Frequency" attrs="{'invisible': [('use_in_ci', '=', False)]}"/>
+          <div attrs="{'invisible': [('use_in_ci', '=', False)]}">
+            <field name="interval_number" class="oe_inline"/>
+            <field name="interval_type" class="oe_inline"/>
+	      </div>
           <field name="last_build_result" attrs="{'invisible': [('use_in_ci', '=', False)]}"/>
+          <field name="nextcall" attrs="{'invisible': [('use_in_ci', '=', False)]}"/>
         </field>
         <button name="pull" position="attributes">
           <attribute name="states"></attribute>
@@ -84,41 +96,43 @@
         </div>
         <notebook position="inside">
           <page string="Configuration" attrs="{'invisible': [('use_in_ci', '=', False)]}">
-            <group col="4">
-              <group colspan="4" col="4">
-                <field name="os_id" colspan="4"/>
-              </group>
+            <group>
               <group>
-                <field name="merge_with_branch_id" domain="[('id', '!=', active_id)]"/>
-                <separator colspan="2"/>
-                <field name="install_demo_data"/>
-                <separator colspan="2"/>
                 <field name="modules_to_install" placeholder="mrp,purchase"/>
                 <field name="server_path" placeholder="server"/>
                 <field name="addons_path" placeholder="addons,project-addons,web/addons"/>
                 <field name="code_path" placeholder="project-addons"/>
-                <separator colspan="2"/>
                 <field name="ignored_tests"
                   placeholder="{'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"/>
               </group>
               <group>
-                <field name="merge_subfolder" placeholder="branch-addons"/>
-                <separator colspan="2"/>
+                <field name="install_demo_data"/>
                 <field name="user_uid"/>
                 <field name="user_passwd"/>
                 <field name="lang"/>
                 <field name="workers"/>
-                <separator colspan="2"/>
-                <field name="dump_id"
-                  domain="[('res_model', '=', 'scm.repository.branch'), ('res_id', '=', active_id)]"
-                  widget="selection"/>
-                <separator colspan="2"/>
-                <field name="specific_packages"/>
-                <field name="pip_packages"/>
-                <field name="additional_options" placeholder="debug_mode = True\ntest_commit = True"/>
               </group>
             </group>
           </page>
+          <page string="Advanced" attrs="{'invisible': [('use_in_ci', '=', False)]}">
+            <group>
+              <group>
+                <field name="os_id" options="{'no_create': True}"/>
+                <field name="specific_packages"/>
+                <field name="pip_packages"/>
+              </group>
+              <group>
+                <field name="dump_id"
+                  domain="[('res_model', '=', 'scm.repository.branch'), ('res_id', '=', active_id)]"
+                  widget="selection"/>
+                <field name="additional_options" placeholder="debug_mode = True\ntest_commit = True"/>
+				<newline/>
+	            <field name="merge_with_branch_id" domain="[('id', '!=', active_id)]" options="{'no_create': True}"/>
+	            <field name="merge_subfolder" placeholder="branch-addons" attrs="{'readonly': [('merge_with_branch_id', '=', False)]}"/>
+	            <field name="subfolder" attrs="{'readonly': [('merge_with_branch_id', '=', False)]}"/>
+	          </group>
+            </group>
+         </page>
         </notebook>
       </field>
     </record>

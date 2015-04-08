@@ -15,76 +15,76 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,failed_test_count:0
-#. module: smile_ci
 msgid "# Failed tests"
-msgstr "# Tests échoués"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,quality_code_count:0
-#. module: smile_ci
 msgid "# Quality code"
-msgstr "# Qualité de code"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,test_count:0
-#. module: smile_ci
 msgid "# Tests"
-msgstr "# Tests"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build.coverage,branch_count:0
-#. module: smile_ci
 msgid "# conditionals"
-msgstr "# conditions"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build.coverage,line_count:0
-#. module: smile_ci
 msgid "# lines"
-msgstr "# lignes"
+msgstr ""
 
-#: code:addons/smile_ci/models/scm.py:456
 #. module: smile_ci
+#: code:addons/smile_ci/models/scm.py:456
 #, python-format
 msgid "%s doesn't exist or is not a directory"
-msgstr "%s n'existe pas ou n'est pas un répertoire"
+msgstr ""
 
+#. module: smile_ci
 #: field:docker.host,active:0
 #: field:scm.os,active:0
-#. module: smile_ci
 msgid "Active"
-msgstr "Actif"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,additional_options:0
-#. module: smile_ci
 msgid "Additional configuration options"
-msgstr "Options additionnelles de configuration"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,addons_path:0
-#. module: smile_ci
 msgid "Addons path"
-msgstr "Addons path"
+msgstr ""
 
-#: help:scm.repository.branch,code_path:0
 #. module: smile_ci
+#: help:scm.repository.branch,code_path:0
 msgid "Addons path for which checking code quality and coverage.\n"
 "If empty, all source code is checked."
-msgstr "Chemins utilisés pour vérifier la qualité et la couverture de code.\n"
-"Si vide, tout le code source est analysé."
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,user_uid:0
-#. module: smile_ci
 msgid "Admin id"
-msgstr "Id de l'admin"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,user_passwd:0
-#. module: smile_ci
 msgid "Admin password"
-msgstr "Mot de passe de l'admin"
+msgstr ""
 
-#: code:addons/smile_ci/models/scm.py:951
 #. module: smile_ci
+#: code:addons/smile_ci/models/scm.py:951
 #, python-format
 msgid "Back to stable"
-msgstr "Retour à l'état stable"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.model,name:smile_ci.model_scm_repository_branch
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_search
 #: field:scm.repository.branch.build,branch_id:0
@@ -92,31 +92,31 @@ msgstr "Retour à l'état stable"
 #: field:scm.repository.branch.build.coverage,branch_id:0
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
 #: field:scm.repository.branch.build.log,branch_id:0
-#. module: smile_ci
 msgid "Branch"
-msgstr "Branche"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.model,name:smile_ci.model_scm_repository_branch_build
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
 #: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_search
 #: field:scm.repository.branch.build.coverage,build_id:0
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
 #: field:scm.repository.branch.build.log,build_id:0
-#. module: smile_ci
 msgid "Build"
-msgstr "Build"
+msgstr ""
 
-#: code:addons/smile_ci/models/scm.py:260
 #. module: smile_ci
+#: code:addons/smile_ci/models/scm.py:260
 #, python-format
 msgid "Build Creation already in progress"
-msgstr "Création de build déjà en cours"
+msgstr ""
 
-#: field:docker.host,build_base_url:0
 #. module: smile_ci
+#: field:docker.host,build_base_url:0
 msgid "Build base url"
-msgstr "Build base url"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.actions.act_window,name:smile_ci.action_branch_builds
 #: model:ir.actions.act_window,name:smile_ci.action_repository_branch_build
 #: model:ir.ui.menu,name:smile_ci.menu_repository_branch_build
@@ -125,35 +125,35 @@ msgstr "Build base url"
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_graph
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_search
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_tree
-#. module: smile_ci
 msgid "Builds"
-msgstr "Builds"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build.log,code:0
-#. module: smile_ci
 msgid "Class"
-msgstr "Classe"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.model,name:smile_ci.model_scm_repository_branch_build_coverage
-#. module: smile_ci
 msgid "Code Coverage"
-msgstr "Couverture de code"
+msgstr ""
 
+#. module: smile_ci
 #: help:scm.repository.branch,addons_path:0
-#. module: smile_ci
 msgid "Comma-separated"
-msgstr "Séparé par des virgules"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build.coverage,branch_rate:0
-#. module: smile_ci
 msgid "Conditionals rate"
-msgstr "Taux de conditions"
+msgstr ""
 
-#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #. module: smile_ci
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 msgid "Configuration"
-msgstr "Configuration"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.actions.act_window,name:smile_ci.action_build_coverage
 #: model:ir.actions.act_window,name:smile_ci.action_repository_branch_build_coverage
 #: model:ir.ui.menu,name:smile_ci.menu_repository_branch_build_coverage
@@ -161,682 +161,671 @@ msgstr "Configuration"
 #: field:scm.repository.branch.build,coverage_ids:0
 #: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_graph
 #: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_search
-#: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_simple_tree
 #: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_tree
-#. module: smile_ci
 msgid "Coverage"
-msgstr "Couverture"
+msgstr ""
 
-#: field:scm.repository.branch.build,coverage_avg:0
 #. module: smile_ci
+#: field:scm.repository.branch.build,coverage_avg:0
 msgid "Coverage average"
-msgstr "Pourcentage de couverture de code"
+msgstr ""
 
+#. module: smile_ci
 #: field:docker.host,create_uid:0
 #: field:scm.os,create_uid:0
 #: field:scm.repository.branch.build.coverage,create_uid:0
 #: field:scm.repository.branch.build.log,create_uid:0
-#. module: smile_ci
 msgid "Created by"
-msgstr "Créé par"
+msgstr ""
 
+#. module: smile_ci
 #: field:docker.host,create_date:0
 #: field:scm.os,create_date:0
 #: field:scm.repository.branch.build.coverage,create_date:0
 #: field:scm.repository.branch.build.log,create_date:0
-#. module: smile_ci
 msgid "Created on"
-msgstr "Créé le"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,create_date:0
-#. module: smile_ci
 msgid "Date"
-msgstr "Date"
+msgstr ""
 
+#. module: smile_ci
 #: help:scm.repository.branch.build,message_last_post:0
-#. module: smile_ci
 msgid "Date of the last message posted on the record."
-msgstr "Date du dernier message posté sur le record."
+msgstr ""
 
+#. module: smile_ci
 #: selection:scm.repository.branch,interval_type:0
-#. module: smile_ci
 msgid "Days"
-msgstr "Jours"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,directory:0
-#. module: smile_ci
 msgid "Directory"
-msgstr "Répertoire"
+msgstr ""
 
-#: model:ir.model,name:smile_ci.model_docker_host
 #. module: smile_ci
+#: model:ir.model,name:smile_ci.model_docker_host
 msgid "Docker Host"
-msgstr "Docker Host"
+msgstr ""
 
+#. module: smile_ci
 #: view:docker.host:smile_ci.view_docker_host_tree
 #: model:ir.actions.act_window,name:smile_ci.action_docker_host
 #: model:ir.ui.menu,name:smile_ci.menu_docker_host
-#. module: smile_ci
 msgid "Docker Hosts"
-msgstr "Docker Hosts"
+msgstr ""
 
+#. module: smile_ci
 #: field:docker.host,docker_base_url:0
-#. module: smile_ci
 msgid "Docker base url"
-msgstr "URL de base de Docker"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,docker_host_id:0
-#. module: smile_ci
 msgid "Docker host id"
-msgstr "Id du docker host"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.os,dockerfile:0
-#. module: smile_ci
 msgid "Dockerfile template"
-msgstr "Modèle de Dockerfile"
+msgstr ""
 
+#. module: smile_ci
 #: selection:scm.repository.branch.build,state:0
-#. module: smile_ci
 msgid "Done"
-msgstr "Terminé"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,dump_id:0
-#. module: smile_ci
 msgid "Dump file"
-msgstr "Dump"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build.log,duration:0
-#. module: smile_ci
 msgid "Duration"
-msgstr "Durée"
+msgstr ""
 
-#: field:scm.repository.branch.build,date_stop:0
 #. module: smile_ci
+#: field:scm.repository.branch.build,date_stop:0
 msgid "End date"
-msgstr "Date de fin"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
 #: selection:scm.repository.branch.build.log,result:0
-#. module: smile_ci
 msgid "Error"
-msgstr "Erreur"
+msgstr ""
 
-#: help:scm.repository.branch,ignored_tests:0
 #. module: smile_ci
+#: help:scm.repository.branch,ignored_tests:0
 msgid "Example: {'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"
-msgstr "Exemple: {'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_form
 #: field:scm.repository.branch.build.log,exception:0
-#. module: smile_ci
 msgid "Exception"
-msgstr "Exception"
+msgstr ""
 
+#. module: smile_ci
 #: code:addons/smile_ci/models/scm.py:569
 #: selection:scm.repository.branch.build,result:0
-#. module: smile_ci
 #, python-format
 msgid "Failed"
-msgstr "Échoué"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.actions.act_window,name:smile_ci.action_build_failed_test
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
-#. module: smile_ci
 msgid "Failed tests"
-msgstr "Tests échoués"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build.coverage,file:0
 #: field:scm.repository.branch.build.log,file:0
-#. module: smile_ci
 msgid "File"
-msgstr "Fichier"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,message_follower_ids:0
-#. module: smile_ci
 msgid "Followers"
-msgstr "Suiveurs"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch:smile_ci.view_repository_branch_form
-#. module: smile_ci
 msgid "Force test"
-msgstr "Forcer le test"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.vcs,cmd_log:0
-#. module: smile_ci
 msgid "Get commit logs from last update"
-msgstr "Récupérer le message de commit depuis la dernière mise à jour"
+msgstr ""
 
-#: field:scm.vcs,cmd_revno:0
 #. module: smile_ci
+#: field:scm.vcs,cmd_revno:0
 msgid "Get revision number"
-msgstr "Récupérer le numéro de révision"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_search
 #: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_search
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
-#. module: smile_ci
 msgid "Group By"
-msgstr "Regrouper par"
+msgstr ""
 
+#. module: smile_ci
 #: help:scm.repository.branch.build,message_summary:0
-#. module: smile_ci
 msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
-msgstr "Contient le résumé de la discussion (nombre de messages, ...). Ce résumé est "
-"au format HTML pour permettre son utilisation dans les vues kanban."
+msgstr ""
 
-#: selection:scm.repository.branch,interval_type:0
 #. module: smile_ci
+#: selection:scm.repository.branch,interval_type:0
 msgid "Hours"
-msgstr "Heures"
+msgstr ""
 
+#. module: smile_ci
 #: field:docker.host,id:0
 #: field:scm.os,id:0
 #: field:scm.repository.branch.build,id:0
 #: field:scm.repository.branch.build.coverage,id:0
 #: field:scm.repository.branch.build.log,id:0
-#. module: smile_ci
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
+#. module: smile_ci
 #: help:scm.repository.branch.build,message_unread:0
-#. module: smile_ci
 msgid "If checked new messages require your attention."
-msgstr "Si coché les nouveaux messages requièrent votre attention."
+msgstr ""
 
-#: help:scm.repository.branch,install_demo_data:0
 #. module: smile_ci
+#: help:scm.repository.branch,install_demo_data:0
 msgid "If checked, demo data will be installed"
-msgstr "Si coché, les données de démo seront installées"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
 #: selection:scm.repository.branch.build.log,result:0
-#. module: smile_ci
 msgid "Ignored"
-msgstr "Ignoré"
+msgstr ""
 
+#. module: smile_ci
 #: help:docker.host,timeout:0
 #: help:scm.repository.branch.build.log,duration:0
-#. module: smile_ci
 msgid "In seconds"
-msgstr "En secondes"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,install_demo_data:0
-#. module: smile_ci
 msgid "Install demo data"
-msgstr "Installer les données de démo"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,interval_number:0
-#. module: smile_ci
 msgid "Interval Number"
-msgstr "Nombre d'intervalle"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,interval_type:0
-#. module: smile_ci
 msgid "Interval Unit"
-msgstr "Unité d'intervalle"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,message_is_follower:0
-#. module: smile_ci
 msgid "Is a Follower"
-msgstr "Est un suiveur"
+msgstr ""
 
+#. module: smile_ci
 #: selection:scm.repository.branch.build,result:0
-#. module: smile_ci
 msgid "Killed"
-msgstr "Tué"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,lang:0
-#. module: smile_ci
 msgid "Language"
-msgstr "Langage"
+msgstr ""
 
-#: field:scm.repository.branch.build,message_last_post:0
 #. module: smile_ci
+#: field:scm.repository.branch.build,message_last_post:0
 msgid "Last Message Date"
-msgstr "Date du dernier message"
+msgstr ""
 
+#. module: smile_ci
 #: field:docker.host,write_uid:0
 #: field:scm.os,write_uid:0
 #: field:scm.repository.branch.build,write_uid:0
 #: field:scm.repository.branch.build.coverage,write_uid:0
 #: field:scm.repository.branch.build.log,write_uid:0
-#. module: smile_ci
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr ""
 
+#. module: smile_ci
 #: field:docker.host,write_date:0
 #: field:scm.os,write_date:0
 #: field:scm.repository.branch.build,write_date:0
 #: field:scm.repository.branch.build.coverage,write_date:0
 #: field:scm.repository.branch.build.log,write_date:0
-#. module: smile_ci
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,commit_logs:0
-#. module: smile_ci
 msgid "Last commits"
-msgstr "Derniers commits"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,ppid:0
-#. module: smile_ci
 msgid "Launcher Process Id"
-msgstr "Id du processus de lancement"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build.log,line:0
-#. module: smile_ci
 msgid "Line"
-msgstr "Ligne"
+msgstr ""
 
-#: field:scm.repository.branch.build.coverage,line_rate:0
 #. module: smile_ci
+#: field:scm.repository.branch.build.coverage,line_rate:0
 msgid "Lines rate"
-msgstr "Taux de lignes"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.model,name:smile_ci.model_scm_repository_branch_build_log
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_form
-#. module: smile_ci
 msgid "Log"
-msgstr "Log"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,log_ids:0
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_graph
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_tree
-#. module: smile_ci
 msgid "Logs"
-msgstr "Logs"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,merge_with_branch_id:0
-#. module: smile_ci
 msgid "Merge with"
-msgstr "Fusionner avec"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,message_ids:0
-#. module: smile_ci
 msgid "Messages"
-msgstr "Messages"
+msgstr ""
 
+#. module: smile_ci
 #: help:scm.repository.branch.build,message_ids:0
-#. module: smile_ci
 msgid "Messages and communication history"
-msgstr "Historique des messages et communication"
+msgstr ""
 
-#: selection:scm.repository.branch,interval_type:0
 #. module: smile_ci
+#: selection:scm.repository.branch,interval_type:0
 msgid "Minutes"
-msgstr "Minutes"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch.build.coverage:smile_ci.view_repository_branch_build_coverage_search
 #: field:scm.repository.branch.build.coverage,module:0
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
 #: field:scm.repository.branch.build.log,module:0
-#. module: smile_ci
 msgid "Module"
-msgstr "Module"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,modules_to_install:0
-#. module: smile_ci
 msgid "Modules to install"
-msgstr "Modules à installer"
+msgstr ""
 
+#. module: smile_ci
 #: selection:scm.repository.branch,interval_type:0
-#. module: smile_ci
 msgid "Months"
-msgstr "Mois"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.os,name:0
-#. module: smile_ci
 msgid "Name"
-msgstr "Nom"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,nextcall:0
-#. module: smile_ci
 msgid "Nextcall"
-msgstr "Prochain appel"
+msgstr ""
 
-#: code:addons/smile_ci/models/scm.py:747
 #. module: smile_ci
+#: code:addons/smile_ci/models/scm.py:747
 #, python-format
 msgid "No available ports"
-msgstr "Aucun port disponible"
+msgstr ""
 
-#: code:addons/smile_ci/models/scm.py:411
 #. module: smile_ci
+#: code:addons/smile_ci/models/scm.py:411
 #, python-format
 msgid "No docker host is configured"
-msgstr "Aucun docker host n'est configuré"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_search
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_tree
-#. module: smile_ci
 msgid "Number"
-msgstr "Nombre"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.model,name:smile_ci.model_scm_version
-#. module: smile_ci
 msgid "Odoo Version"
-msgstr "Version d'Odoo"
+msgstr ""
 
-#: field:scm.os,odoo_dir:0
 #. module: smile_ci
+#: field:scm.os,odoo_dir:0
 msgid "Odoo directory"
-msgstr "Répertoire d'Odoo"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_tree
-#. module: smile_ci
 msgid "Open"
-msgstr "Ouvert"
+msgstr ""
 
-#: code:addons/smile_ci/models/scm.py:1023
 #. module: smile_ci
+#: code:addons/smile_ci/models/scm.py:1023
 #, python-format
 msgid "Open URL"
-msgstr "Ouvrir l'URL"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.model,name:smile_ci.model_scm_os
 #: field:scm.repository.branch,os_id:0
-#. module: smile_ci
 msgid "Operating System"
-msgstr "Système d'exploitation"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.actions.act_window,name:smile_ci.action_scm_os
 #: model:ir.ui.menu,name:smile_ci.menu_scm_os
 #: view:scm.os:smile_ci.view_scm_os_tree
-#. module: smile_ci
 msgid "Operating Systems"
-msgstr "Système d'exploitation"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.version,optional_packages:0
-#. module: smile_ci
 msgid "Optional packages"
-msgstr "Librairies optionnelles"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,pip_packages:0
-#. module: smile_ci
 msgid "PIP requirements"
-msgstr "Librairies Python à installer"
+msgstr ""
 
+#. module: smile_ci
 #: selection:scm.repository.branch.build,state:0
-#. module: smile_ci
 msgid "Pending"
-msgstr "En attente"
+msgstr ""
 
-#: field:scm.repository.branch.build,port:0
 #. module: smile_ci
+#: field:scm.repository.branch.build,port:0
 msgid "Port"
-msgstr "Port"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.actions.act_window,name:smile_ci.action_build_quality_code
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
 #: selection:scm.repository.branch.build.log,type:0
-#. module: smile_ci
 msgid "Quality code"
-msgstr "Qualité de code"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.actions.act_window,name:smile_ci.action_repository_branch_build_quality_log
 #: model:ir.ui.menu,name:smile_ci.menu_repository_branch_build_quality_log
-#. module: smile_ci
 msgid "Quality code logs"
-msgstr "Logs de qualité de code"
+msgstr ""
 
+#. module: smile_ci
 #: field:docker.host,redirect_subdomain_to_port:0
-#. module: smile_ci
 msgid "Redirect subdomain to port"
-msgstr "Rediriger le sous-domaine vers le port"
+msgstr ""
 
+#. module: smile_ci
 #: help:scm.repository.branch,interval_number:0
-#. module: smile_ci
 msgid "Repeat every x."
-msgstr "Répéter tous les x."
+msgstr ""
 
-#: field:scm.version,required_packages:0
 #. module: smile_ci
+#: field:scm.version,required_packages:0
 msgid "Required packages"
-msgstr "Librairies à installer"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,result:0
 #: field:scm.repository.branch.build.log,result:0
-#. module: smile_ci
 msgid "Result"
-msgstr "Résultat"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,revno:0
-#. module: smile_ci
 msgid "Revision"
-msgstr "Révision"
+msgstr ""
 
+#. module: smile_ci
 #: selection:scm.repository.branch.build,state:0
-#. module: smile_ci
 msgid "Running"
-msgstr "En cours"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.version,server_cmd:0
-#. module: smile_ci
 msgid "Server command"
-msgstr "Commande du serveur"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,server_path:0
-#. module: smile_ci
 msgid "Server path"
-msgstr "Chemin du serveur"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,code_path:0
-#. module: smile_ci
 msgid "Source code to analyse path"
-msgstr "Chemin du code source à analyser"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,specific_packages:0
-#. module: smile_ci
 msgid "Specific packages"
-msgstr "Librairies spécifiques"
+msgstr ""
 
+#. module: smile_ci
 #: selection:scm.repository.branch.build,result:0
-#. module: smile_ci
 msgid "Stable"
-msgstr "Stable"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.version,standard_xmlrpc:0
-#. module: smile_ci
 msgid "Standard XML/RPC"
-msgstr "XML/RPC standard"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch.build,date_start:0
-#. module: smile_ci
 msgid "Start date"
-msgstr "Date de début"
+msgstr ""
 
-#: field:scm.repository.branch.build,state:0
 #. module: smile_ci
+#: field:scm.repository.branch.build,state:0
 msgid "State"
-msgstr "État"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_tree
-#. module: smile_ci
 msgid "Stop"
-msgstr "Arrêter"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
 #: selection:scm.repository.branch.build.log,result:0
-#. module: smile_ci
 msgid "Success"
-msgstr "Réussite"
+msgstr ""
 
-#: field:scm.repository.branch.build,message_summary:0
 #. module: smile_ci
+#: field:scm.repository.branch.build,message_summary:0
 msgid "Summary"
-msgstr "Résumé"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #: view:scm.repository.branch:smile_ci.view_repository_branch_simple_tree
 #: view:scm.repository.branch:smile_ci.view_repository_branch_tree
 #: selection:scm.repository.branch.build.log,type:0
-#. module: smile_ci
 msgid "Test"
-msgstr "Test"
+msgstr ""
 
-#: selection:scm.repository.branch.build,state:0
 #. module: smile_ci
+#: selection:scm.repository.branch.build,state:0
 msgid "Testing"
-msgstr "En cours de test"
+msgstr ""
 
+#. module: smile_ci
 #: model:ir.actions.act_window,name:smile_ci.action_repository_branch_build_test_log
 #: model:ir.ui.menu,name:smile_ci.menu_repository_branch_build_test_log
-#. module: smile_ci
 msgid "Tests logs"
-msgstr "Logs de tests"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,ignored_tests:0
-#. module: smile_ci
 msgid "Tests to ignore"
-msgstr "Tests à ignorer"
+msgstr ""
 
+#. module: smile_ci
 #: field:docker.host,timeout:0
-#. module: smile_ci
 msgid "Timeout"
-msgstr "Délai avant expiration"
+msgstr ""
 
-#: field:docker.host,tls:0
 #. module: smile_ci
+#: field:docker.host,tls:0
 msgid "Tls"
-msgstr "Tls"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
 #: field:scm.repository.branch.build.log,type:0
-#. module: smile_ci
 msgid "Type"
-msgstr "Type"
+msgstr ""
 
-#: field:scm.repository.branch.build,message_unread:0
 #. module: smile_ci
+#: field:scm.repository.branch.build,message_unread:0
 msgid "Unread Messages"
-msgstr "Messages non lus"
+msgstr ""
 
+#. module: smile_ci
 #: code:addons/smile_ci/models/scm.py:954
 #: selection:scm.repository.branch.build,result:0
-#. module: smile_ci
 #, python-format
 msgid "Unstable"
-msgstr "Instable"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch:smile_ci.view_repository_branch_form
-#. module: smile_ci
 msgid "Update Frequency"
-msgstr "Fréquence de mise à jour"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,use_in_ci:0
-#. module: smile_ci
 msgid "Use in Continuous Integration"
-msgstr "Utiliser sur la plateforme d'intégration continue"
+msgstr ""
 
-#: field:scm.repository.branch,last_build_result:0
 #. module: smile_ci
-msgid "Last result"
-msgstr "Dernier résultat"
-
 #: field:scm.repository.branch.build,create_uid:0
-#. module: smile_ci
 msgid "User"
-msgstr "Utilisateur"
+msgstr ""
 
+#. module: smile_ci
 #: field:docker.host,version:0
-#. module: smile_ci
 msgid "Version"
-msgstr "Version"
+msgstr ""
 
-#: model:ir.model,name:smile_ci.model_scm_vcs
 #. module: smile_ci
+#: model:ir.model,name:smile_ci.model_scm_vcs
 msgid "Version Control System"
-msgstr "Logiciel de gestion de versions"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch.build.log:smile_ci.view_repository_branch_build_log_search
 #: selection:scm.repository.branch.build.log,result:0
-#. module: smile_ci
 msgid "Warning"
-msgstr "Attention"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.version,web_included:0
-#. module: smile_ci
 msgid "Web Included"
-msgstr "Web inclus"
+msgstr ""
 
-#: selection:scm.repository.branch,interval_type:0
 #. module: smile_ci
+#: selection:scm.repository.branch,interval_type:0
 msgid "Weeks"
-msgstr "Semaines"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,workers:0
-#. module: smile_ci
 msgid "Workers"
-msgstr "Workers"
+msgstr ""
 
+#. module: smile_ci
 #: selection:scm.repository.branch,interval_type:0
-#. module: smile_ci
 msgid "Years"
-msgstr "Années"
+msgstr ""
 
-#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #. module: smile_ci
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 msgid "addons,project-addons,web/addons"
-msgstr "addons,project-addons,web/addons"
+msgstr ""
 
-#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #. module: smile_ci
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 msgid "branch-addons"
-msgstr "branch-addons"
+msgstr ""
 
-#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #. module: smile_ci
-msgid "debug_mode = True"
-"test_commit = True"
-msgstr "debug_mode = True"
-"test_commit = True"
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
+msgid "debug_mode = Truetest_commit = True"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.vcs,cmd_export:0
-#. module: smile_ci
 msgid "export remote branch"
-msgstr "export de la branche"
+msgstr ""
 
+#. module: smile_ci
 #: field:scm.repository.branch,merge_subfolder:0
-#. module: smile_ci
 msgid "in"
-msgstr "dans"
+msgstr ""
 
-#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #. module: smile_ci
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 msgid "mrp,purchase"
-msgstr "mrp,purchase"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #: view:scm.repository.branch.build:smile_ci.view_repository_branch_build_form
-#. module: smile_ci
 msgid "or"
-msgstr "ou"
+msgstr ""
 
-#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #. module: smile_ci
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 msgid "project-addons"
-msgstr "project-addons"
+msgstr ""
 
-#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #. module: smile_ci
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 msgid "server"
-msgstr "serveur"
+msgstr ""
 
-#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #. module: smile_ci
+#: view:scm.repository.branch:smile_ci.view_repository_branch_form
 msgid "{'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"
-msgstr "{'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"
+msgstr ""
 
+#. module: smile_ci
 #: view:scm.repository.branch:smile_ci.view_repository_branch_form
 #: view:scm.repository.branch:smile_ci.view_repository_branch_simple_tree
 #: view:scm.repository.branch:smile_ci.view_repository_branch_tree
-#. module: smile_ci
 msgid "{'invisible': ['|', ('use_in_ci',\n"
 "            '=', True), ('state', '=', 'draft')]}"
-msgstr "{'invisible': ['|', ('use_in_ci',\n"
-"            '=', True), ('state', '=', 'draft')]}"
+msgstr ""
 
