@@ -25,7 +25,7 @@ from openerp import api, fields, models
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    disable_auto_subscribe = fields.Boolean(default=False, help='If checked, this partner will not receive notifications on instances he created')
+    disable_auto_subscribe = fields.Boolean(default=False, help='If checked, this user will not receive notifications on instances he created')
 
 
 class MailThread(models.Model):

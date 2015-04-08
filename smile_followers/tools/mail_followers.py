@@ -47,7 +47,7 @@ def _special_wrapper(self, method, fields, *args, **kwargs):
     cr, uid, ids, vals, context = _get_args(self, args, kwargs)
     for field in fields:
         direct_field = field.split('.')[0]
-        if vals.get(direct_field) and ids:
+        if direct_field in vals and ids:
             for record in self.pool[self._name].browse(cr, SUPERUSER_ID, ids, context):
                 contacts = record.mapped(field)._get_contacts_to_notify()
                 record.message_unsubscribe(contacts.ids)
