@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-from openerp import api, models, tools
+from openerp import api, models, SUPERUSER_ID, tools
 from openerp.tools.safe_eval import safe_eval as eval
-from openerp.addons.base.ir.ir_actions import ir_actions_act_window
 
 from ..tools import unquote
 
@@ -59,45 +58,25 @@ class IrActionsActWindow(models.Model):
         self._update_context()
         return res
 
-
-@api.multi
-def read(self, fields=None, load='_classic_read'):
-    results = super(ir_actions_act_window, self).read(fields, load)
-    # Evaluate context value with user
-    localdict = {
-        'active_model': unquote('active_model'),
-        'active_id': unquote('active_id'),
-        'active_ids': unquote('active_ids'),
-        'uid': unquote('uid'),
-        'context': unquote('context'),
-        'user': self.env.user,
-    }
-    for res in results:
-        if 'context' in res:
-            try:
-                with tools.mute_logger("openerp.tools.safe_eval"):
-                    res['context'] = tools.ustr(eval(res['context'], localdict))
-            except:
-                continue
-    # Evaluate help
-    if not fields or 'help' in fields:
-        cr, uid, context = self.env.args
-        eval_dict = {
-            'active_model': context.get('active_model'),
-            'active_id': context.get('active_id'),
-            'active_ids': context.get('active_ids'),
-            'uid': uid,
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        ids_int = isinstance(ids, (int, long))
+        if ids_int:
+            ids = [ids]
+        results = super(IrActionsActWindow, self).read(cr, uid, ids, fields, context, load)
+        # Evaluate context value with user
+        localdict = {
+            'active_model': unquote('active_model'),
+            'active_id': unquote('active_id'),
+            'active_ids': unquote('active_ids'),
+            'uid': unquote('uid'),
+            'context': unquote('context'),
+            'user': self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context),
         }
         for res in results:
-            model = res.get('res_model')
-            if model and self.pool.get(model):
+            if 'context' in res:
                 try:
                     with tools.mute_logger("openerp.tools.safe_eval"):
-                        eval_context = eval(res['context'] or "{}", eval_dict) or {}
+                        res['context'] = tools.ustr(eval(res['context'], localdict))
                 except:
                     continue
-                custom_context = dict(context, **eval_context)
-                res['help'] = self.pool[model].get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
-    return results
-
-ir_actions_act_window.read = read
+        return results[0] if ids_int else results
