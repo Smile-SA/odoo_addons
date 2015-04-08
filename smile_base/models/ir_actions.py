@@ -35,6 +35,7 @@ class IrActionsActWindow(models.Model):
             'active_ids': unquote("active_ids"),
             'active_model': unquote("active_model"),
             'uid': unquote("uid"),
+            'user': unquote("user"),
             'context': self._context,
         }
         try:
