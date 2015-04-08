@@ -20,9 +20,10 @@
 ##############################################################################
 
 from openerp import api, models, tools
-from openerp.tools.misc import unquote
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.addons.base.ir.ir_actions import ir_actions_act_window
+
+from ..tools import unquote
 
 
 class IrActionsActWindow(models.Model):
@@ -39,10 +40,10 @@ class IrActionsActWindow(models.Model):
             'context': self._context,
         }
         try:
-            context = eval(self._context or '{}', eval_dict) or {}
+            context = eval(self.context or '{}', eval_dict) or {}
             if 'act_window_id' not in context:
                 context['act_window_id'] = self.id
-                self.context = '%s' % context
+                self.context = tools.ustr(context)
         except:
             pass
 
@@ -62,16 +63,23 @@ class IrActionsActWindow(models.Model):
 @api.multi
 def read(self, fields=None, load='_classic_read'):
     results = super(ir_actions_act_window, self).read(fields, load)
+    # Evaluate context value with user
     localdict = {
         'active_model': unquote('active_model'),
         'active_id': unquote('active_id'),
         'active_ids': unquote('active_ids'),
         'uid': unquote('uid'),
+        'context': unquote('context'),
         'user': self.env.user,
     }
     for res in results:
         if 'context' in res:
-            res['context'] = eval(res['context'], localdict)
+            try:
+                with tools.mute_logger("openerp.tools.safe_eval"):
+                    res['context'] = tools.ustr(eval(res['context'], localdict))
+            except:
+                continue
+    # Evaluate help
     if not fields or 'help' in fields:
         cr, uid, context = self.env.args
         eval_dict = {
@@ -86,7 +94,7 @@ def read(self, fields=None, load='_classic_read'):
                 try:
                     with tools.mute_logger("openerp.tools.safe_eval"):
                         eval_context = eval(res['context'] or "{}", eval_dict) or {}
-                except Exception:
+                except:
                     continue
                 custom_context = dict(context, **eval_context)
                 res['help'] = self.pool[model].get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)

@@ -34,3 +34,22 @@ def create_unique_index(cr, table, column, where_clause=None):
         query += " WHERE %s" % (where_clause or "%(column)s IS NOT NULL")
         query = query % locals()
         cr.execute(query)
+
+
+class unquote(str):
+
+    def __getitem__(self, key):
+        return unquote('%s[%s]' % (self, key))
+
+    def __getattribute__(self, attr):
+        return unquote('%s.%s' % (self, attr))
+
+    def __call__(self, *args, **kwargs):
+        format_args = lambda k: isinstance(k, basestring) and '"%s"' % k or k
+        format_kwargs = lambda (k, v): '%s=%s' % (k, isinstance(v, basestring) and '"%s"' % v or v)
+        params = [', '.join(map(format_args, args)),
+                  ', '.join(map(format_kwargs, kwargs.iteritems()))]
+        return unquote('%s(%s)' % (self, ', '.join(params)))
+
+    def __repr__(self):
+        return self
