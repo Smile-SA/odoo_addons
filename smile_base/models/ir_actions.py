@@ -39,7 +39,7 @@ class IrActionsActWindow(models.Model):
             'context': self._context,
         }
         try:
-            context = eval(self.context or '{}', eval_dict) or {}
+            context = eval(self._context or '{}', eval_dict) or {}
             if 'act_window_id' not in context:
                 context['act_window_id'] = self.id
                 self.context = '%s' % context
