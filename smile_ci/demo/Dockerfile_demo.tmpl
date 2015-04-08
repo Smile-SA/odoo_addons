@@ -14,7 +14,7 @@ RUN locale-gen en_US.UTF-8 && update-locale && echo 'LANG="en_US.UTF-8"' > /etc/
 # * check quality code: cloc python-coverage python-flake8
 # * install unit tests package: python-unittest2
 # * download and install wkhtmltopdf: wget fontconfig, libfontconfig1, libfreetype6, libpng12-0, zlib1g, libjpeg-turbo8, libssl1.0.0, libx11-6, libxext6, libxrender1, xfonts-base, xfonts-75dpi, libstdc++6, libc6
-RUN apt-get -qq update && apt-get -qq -y install python-pip \
+RUN apt-get update && apt-get -y install python-pip \
 	cloc python-coverage python-flake8 \
 	python-unittest2 \
 	wget fontconfig libfontconfig1 libfreetype6 libpng12-0 zlib1g libjpeg-turbo8 libssl1.0.0 libx11-6 libxext6 libxrender1 xfonts-base xfonts-75dpi libstdc++6 libc6 \
@@ -22,7 +22,7 @@ RUN apt-get -qq update && apt-get -qq -y install python-pip \
 	&& dpkg -i wkhtmltox-0.12.2.1_linux-trusty-amd64.deb
 
 # Install PostgreSQL
-RUN apt-get -qq -y install postgresql
+RUN apt-get -y install postgresql
 
 # Setup PostgreSQL
 USER postgres
@@ -30,7 +30,7 @@ RUN /etc/init.d/postgresql start && psql --command "CREATE USER odoo WITH SUPERU
 USER root
 
 # Install Odoo requirements, recommandations and specific packages
-RUN apt-get -qq -y install %(required_packages)s %(optional_packages)s %(specific_packages)s
+RUN apt-get -y install %(required_packages)s %(optional_packages)s %(specific_packages)s
 
 # Install PIP requirements
 RUN pip -q install %(pip_packages)s
@@ -40,6 +40,11 @@ RUN mkdir -p %(odoo_dir)s
 RUN adduser odoo --disabled-password
 COPY . %(odoo_dir)s
 RUN chown -R odoo:odoo %(odoo_dir)s
+
+# Check existance of server command and server conf
+RUN [ -f "/usr/bin/python" ]
+RUN [ -f "/usr/src/odoo/%(server_cmd)s" ]
+RUN [ -f "/usr/src/odoo/server.conf" ]
 
 # Expose port
 EXPOSE 8069
