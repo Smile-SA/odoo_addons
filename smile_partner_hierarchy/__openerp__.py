@@ -36,7 +36,7 @@
 
 Suggestions & Feedback to: samir.rachedi@smile.fr
     """,
-    "depends": ['base'],
+    "depends": ['product'],
     "data": [
         # 'security/ir.model.access.csv',
         'views/res_partner_view.xml',
