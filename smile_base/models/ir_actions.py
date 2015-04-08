@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-from openerp import api, models
+from openerp import api, models, tools
 from openerp.tools.misc import unquote
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.addons.base.ir.ir_actions import ir_actions_act_window
 
 
 class IrActionsActWindow(models.Model):
@@ -33,7 +34,7 @@ class IrActionsActWindow(models.Model):
             'active_id': unquote("active_id"),
             'active_ids': unquote("active_ids"),
             'active_model': unquote("active_model"),
-            'uid': self._uid,
+            'uid': unquote("uid"),
             'context': self._context,
         }
         try:
@@ -55,3 +56,39 @@ class IrActionsActWindow(models.Model):
         res = super(IrActionsActWindow, self).write(vals)
         self._update_context()
         return res
+
+
+@api.multi
+def read(self, fields=None, load='_classic_read'):
+    results = super(ir_actions_act_window, self).read(fields, load)
+    localdict = {
+        'active_model': unquote('active_model'),
+        'active_id': unquote('active_id'),
+        'active_ids': unquote('active_ids'),
+        'uid': unquote('uid'),
+        'user': self.env.user,
+    }
+    for res in results:
+        if 'context' in res:
+            res['context'] = eval(res['context'], localdict)
+    if not fields or 'help' in fields:
+        cr, uid, context = self.env.args
+        eval_dict = {
+            'active_model': context.get('active_model'),
+            'active_id': context.get('active_id'),
+            'active_ids': context.get('active_ids'),
+            'uid': uid,
+        }
+        for res in results:
+            model = res.get('res_model')
+            if model and self.pool.get(model):
+                try:
+                    with tools.mute_logger("openerp.tools.safe_eval"):
+                        eval_context = eval(res['context'] or "{}", eval_dict) or {}
+                except Exception:
+                    continue
+                custom_context = dict(context, **eval_context)
+                res['help'] = self.pool[model].get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
+    return results
+
+ir_actions_act_window.read = read
