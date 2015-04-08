@@ -82,11 +82,7 @@ class Repository(models.Model):
 
     @api.one
     def _has_branch_done(self):
-        if self.branch_ids and \
-                self.branch_ids.filtered(lambda b: b.state == 'done'):
-            self.has_branch_done = True
-        else:
-            self.has_branch_done = False
+        self.has_branch_done = self.branch_ids.filtered(lambda branch: branch.state == 'done')
 
     name = fields.Char(required=True)
     vcs_id = fields.Many2one('scm.vcs', 'Version Control System',
@@ -118,14 +114,14 @@ class Branch(models.Model):
             directory = '%s_%s' % (self.vcs_id.cmd, match.sub('_', self.repository_id.url.split(':')[-1]))
             if self.branch:
                 branch_name = self.branch
-                for char in '.: /':
-                    branch_name.replace(char, '_')
+                for char in ': /':
+                    branch_name = branch_name.replace(char, '_')
                 directory += '_%s' % branch_name
             self.directory = os.path.join(self._parent_path, directory)
 
     repository_id = fields.Many2one('scm.repository', 'Repository', required=True, ondelete='cascade',
                                     readonly=True, states={'draft': [('readonly', False)]})
-    branch = fields.Char(help="Technical branch name", readonly=True, states={'draft': [('readonly', False)]})
+    branch = fields.Char(help="Technical branch name", required=True, readonly=True, states={'draft': [('readonly', False)]})
     version_id = fields.Many2one('scm.version', 'Odoo Version', required=True, ondelete="restrict",
                                  readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([

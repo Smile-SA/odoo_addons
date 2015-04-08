@@ -1,110 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
+  <data noupdate="0">
 
-        <record id="view_repository_branch_search" model="ir.ui.view">
-            <field name="name">scm.repository.branch.search</field>
-            <field name="model">scm.repository.branch</field>
-            <field name="arch" type="xml">
-            	<search string="Branches">
-            		<field name="repository_id"/>
-            		<field name="name"/>
-            		<field name="vcs_id"/>
-            		<field name="url"/>
-            		<field name="branch"/>
-            		<field name="partner_id"/>
-            		<field name="version_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Repository" domain="[]" context="{'group_by':'repository_id'}"/>
-                        <filter string="Version Control System" domain="[]" context="{'group_by':'vcs_id'}"/>
-                        <filter string="Odoo Version" domain="[]" context="{'group_by':'version_id'}"/>
-                        <filter string="Owner" domain="[]" context="{'group_by':'partner_id'}"/>
-					</group>
-            	</search>
-            </field>
-        </record>
+    <record id="view_repository_branch_search" model="ir.ui.view">
+      <field name="name">scm.repository.branch.search</field>
+      <field name="model">scm.repository.branch</field>
+      <field name="arch" type="xml">
+        <search string="Branches">
+          <field name="repository_id"/>
+          <field name="name"/>
+          <field name="vcs_id"/>
+          <field name="url"/>
+          <field name="branch"/>
+          <field name="partner_id"/>
+          <field name="version_id"/>
+          <group expand="0" string="Group By...">
+            <filter string="Repository" domain="[]" context="{'group_by':'repository_id'}"/>
+            <filter string="Version Control System" domain="[]" context="{'group_by':'vcs_id'}"/>
+            <filter string="Odoo Version" domain="[]" context="{'group_by':'version_id'}"/>
+            <filter string="Owner" domain="[]" context="{'group_by':'partner_id'}"/>
+          </group>
+        </search>
+      </field>
+    </record>
 
-        <record id="view_repository_branch_tree" model="ir.ui.view">
-            <field name="name">scm.repository.branch.tree</field>
-            <field name="model">scm.repository.branch</field>
-            <field name="arch" type="xml">
-            	<tree string="Branches">
-            		<field name="repository_id" invisible="1"/>
-            		<field name="name"/>
-            		<field name="branch"/>
-            		<field name="version_id"/>
-            		<field name="vcs_id"/>
-            		<field name="partner_id"/>
-            		<field name="state"/>
-            		<field name="last_update"/>
-					<button name="clone" states="draft" string="Clone" type="object" icon="STOCK_JUMP_TO" groups="smile_scm.group_scm_user"/>
-                    <button name="pull" states="done" string="Pull" type="object" icon="STOCK_REFRESH" groups="smile_scm.group_scm_user"/>
-            	</tree>
-            </field>
-        </record>
+    <record id="view_repository_branch_tree" model="ir.ui.view">
+      <field name="name">scm.repository.branch.tree</field>
+      <field name="model">scm.repository.branch</field>
+      <field name="arch" type="xml">
+        <tree string="Branches">
+          <field name="repository_id" invisible="1"/>
+          <field name="name"/>
+          <field name="branch"/>
+          <field name="version_id"/>
+          <field name="vcs_id"/>
+          <field name="partner_id"/>
+          <field name="state"/>
+          <field name="last_update"/>
+          <button name="clone" states="draft" string="Clone" type="object" icon="STOCK_JUMP_TO" groups="smile_scm.group_scm_user"/>
+          <button name="pull" states="done" string="Pull" type="object" icon="STOCK_REFRESH" groups="smile_scm.group_scm_user"/>
+        </tree>
+      </field>
+    </record>
 
-        <record id="view_repository_branch_simple_tree" model="ir.ui.view">
-            <field name="name">scm.repository.branch.simple_tree</field>
-            <field name="model">scm.repository.branch</field>
-            <field name="arch" type="xml">
-            	<tree string="Branches">
-            		<field name="branch"/>
-            		<field name="state"/>
-            		<field name="last_update"/>
-					<button name="clone" states="draft" string="Clone" type="object" icon="STOCK_JUMP_TO" groups="smile_scm.group_scm_user"/>
-                    <button name="pull" states="done" string="Pull" type="object" icon="STOCK_REFRESH" groups="smile_scm.group_scm_user"/>
-            	</tree>
-            </field>
-        </record>
+    <record id="view_repository_branch_simple_tree" model="ir.ui.view">
+      <field name="name">scm.repository.branch.simple_tree</field>
+      <field name="model">scm.repository.branch</field>
+      <field name="arch" type="xml">
+        <tree string="Branches" editable="top">
+          <field name="branch"/>
+          <field name="version_id" options="{'no_create': True}"/>
+          <field name="state"/>
+          <field name="last_update"/>
+          <button name="clone" states="draft" string="Clone" type="object" icon="STOCK_JUMP_TO" groups="smile_scm.group_scm_user"/>
+          <button name="pull" states="done" string="Pull" type="object" icon="STOCK_REFRESH" groups="smile_scm.group_scm_user"/>
+        </tree>
+      </field>
+    </record>
 
-        <record id="view_repository_branch_form" model="ir.ui.view">
-            <field name="name">scm.repository.branch.form</field>
-            <field name="model">scm.repository.branch</field>
-            <field name="arch" type="xml">
-            	<form string="Branch">
-					<header>
-						<button name="clone" states="draft" string="Clone" type="object" class="oe_highlight" groups="smile_scm.group_scm_user"/>
-	                    <button name="pull" states="done" string="Pull" type="object" class="oe_highlight" groups="smile_scm.group_scm_user"/>
-						<field name="state" widget="statusbar" statusbar_visible="draft,done"/>
-					</header>
-	                <sheet string="Branch">
-	                    <div class="oe_title">
-	                        <h1><field name="name" placeholder="Name"/></h1>
-	                        <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
-                        </div>
-                        <group>
-							<field name="last_update"/>
-						</group>
-	                    <notebook>
-	                    	<page string="Information">
-	                    		<group>
-				            		<field name="version_id" widget="selection"/>
-				            		<field name="vcs_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-				            		<field name="url" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-				            		<field name="branch"/>
-				            		<field name="partner_id"/>
-	                    		</group>
-		            		</page>
-		            	</notebook>
-	            	</sheet>
-	                <div class="oe_chatter">
-	                    <field name="message_follower_ids" widget="mail_followers"/>
-	                    <field name="message_ids" widget="mail_thread"/>
-	                </div>
-            	</form>
-            </field>
-        </record>
+    <record id="view_repository_branch_form" model="ir.ui.view">
+      <field name="name">scm.repository.branch.form</field>
+      <field name="model">scm.repository.branch</field>
+      <field name="arch" type="xml">
+        <form string="Branch">
+          <header>
+            <button name="clone" states="draft" string="Clone" type="object" class="oe_highlight" groups="smile_scm.group_scm_user"/>
+            <button name="pull" states="done" string="Pull" type="object" class="oe_highlight" groups="smile_scm.group_scm_user"/>
+            <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+          </header>
+          <sheet string="Branch">
+            <div class="oe_title">
+              <h1>
+                <field name="name" placeholder="Name"/>
+              </h1>
+              <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
+            </div>
+            <group>
+              <field name="last_update"/>
+            </group>
+            <notebook>
+              <page string="Information">
+                <group>
+                  <field name="version_id" options="{'no_create': True}"/>
+                  <field name="vcs_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>
+                  <field name="url" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                  <field name="branch"/>
+                  <field name="partner_id"/>
+                </group>
+              </page>
+            </notebook>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers"/>
+            <field name="message_ids" widget="mail_thread"/>
+          </div>
+        </form>
+      </field>
+    </record>
 
-        <record model="ir.actions.act_window" id="action_repository_branch">
-            <field name="name">Branches</field>
-            <field name="res_model">scm.repository.branch</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_repository_branch_tree"/>
-            <field name="search_view_id" ref="view_repository_branch_search"/>
-        </record>
+    <record model="ir.actions.act_window" id="action_repository_branch">
+      <field name="name">Branches</field>
+      <field name="res_model">scm.repository.branch</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="search_view_id" ref="view_repository_branch_search"/>
+    </record>
+    <record id="action_repository_branch_tree_view" model="ir.actions.act_window.view">
+      <field eval="1" name="sequence"/>
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="view_repository_branch_tree"/>
+      <field name="act_window_id" ref="action_repository_branch"/>
+    </record>
+    <record id="action_repository_branch_form_view" model="ir.actions.act_window.view">
+      <field eval="2" name="sequence"/>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="view_repository_branch_form"/>
+      <field name="act_window_id" ref="action_repository_branch"/>
+    </record>
 
-        <menuitem id="menu_repository_branch" parent="smile_scm.menu_scm" action="action_repository_branch" sequence="20"/>
+    <menuitem id="menu_repository_branch" parent="smile_scm.menu_scm" action="action_repository_branch" sequence="20"/>
 
-	</data>
+  </data>
 </openerp>
