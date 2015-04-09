@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 Smile (<http://www.smile.fr>). All Rights Reserved
+#    Copyright (C) 2011 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,12 +19,16 @@
 #
 ##############################################################################
 
-import ir_actions
-import ir_config_parameter
-import ir_values
-import mail_mail
-import models
-import module
-import registry
-import sql_db
-import update
+from openerp import api, models, tools
+from openerp.addons.mail.mail_mail import _logger
+
+
+class MailMail(models.Model):
+    _inherit = 'mail.mail'
+
+    @api.cr_uid
+    def process_email_queue(self, cr, uid, ids=None, context=None):
+        if tools.config.get('disable_email_sending'):
+            _logger.warning('Email sending disable')
+            return True
+        return super(MailMail, self).process_email_queue(cr, uid, ids, context)
