@@ -37,7 +37,7 @@ def new_execute(self, activity, stack):
     rule_ids = []
     if hasattr(rule_obj, '_get_action_rules_on_wkf'):
         rule_ids = rule_obj._get_action_rules_on_wkf(cr, uid, activity['id'])
-    rules = self.browse(cr, uid, rule_ids)
+    rules = rule_obj.browse(cr, uid, rule_ids)
 
     # Check preconditions
     pre_ids = {}
