@@ -23,6 +23,7 @@
     'name': 'Workdays',
     'version': '0.1',
     'category': 'Tools',
+    "license": 'AGPL-3',
     'description': """Defines objects that differenciates workdays from non-workdays
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr

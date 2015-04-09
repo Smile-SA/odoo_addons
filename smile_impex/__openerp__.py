@@ -24,6 +24,7 @@
     "version": "0.1",
     "depends": ['smile_log'],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """
 Import / Export
 

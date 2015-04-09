@@ -24,6 +24,7 @@
     "version": "0.1",
     "depends": ["base"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """
     Generate Modules Graph
 

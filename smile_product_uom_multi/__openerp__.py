@@ -24,6 +24,7 @@
     "version": "0.1",
     "depends": ["purchase"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """
 This module allows to convert UoMs via a conversion table, by product, between reference units of each category
 

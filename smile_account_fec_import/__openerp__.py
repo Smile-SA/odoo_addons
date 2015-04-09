@@ -24,6 +24,7 @@
     "version": "0.1",
     "depends": ["account"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """
 This module allows to import account moves from FEC file
 

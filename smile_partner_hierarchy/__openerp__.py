@@ -24,6 +24,7 @@
     "version": "1.0",
     "author": "Smile",
     "website": 'http://www.smile.fr',
+    "license": 'AGPL-3',
     "category": "Partner",
     "description": """
         The module offers the following functionnalities:

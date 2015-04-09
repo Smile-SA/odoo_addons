@@ -24,6 +24,7 @@
     "version": "0.3",
     "depends": ["account", "smile_base", "smile_report_utils"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """
 Financial and accounting asset management
 -----------------------------------------

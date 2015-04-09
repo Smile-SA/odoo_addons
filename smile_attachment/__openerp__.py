@@ -25,6 +25,7 @@
     "sequence": 100,
     "category": "Tools",
     "author": "Smile",
+    "license": 'AGPL-3',
     "website": 'http://www.smile.fr',
     "description": """
 Features

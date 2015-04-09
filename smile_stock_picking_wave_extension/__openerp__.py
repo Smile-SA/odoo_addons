@@ -25,6 +25,7 @@
     "author": "Smile",
     "website": 'http://www.smile.fr',
     'category': 'Stock Management',
+    "license": 'AGPL-3',
     'summary': 'Wave Type, Cancellation Propagation',
     "description": """
 Features

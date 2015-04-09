@@ -24,6 +24,7 @@
     "version": "0.1",
     "depends": ["decimal_precision"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": "This module allows to distinguish computation digits and display digits in decimal precision",
     "website": "http://www.smile.fr",
     "category": "Hidden/Dependency",

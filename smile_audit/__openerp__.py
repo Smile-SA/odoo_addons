@@ -25,6 +25,7 @@
     "sequence": 100,
     "category": "Tools",
     "author": "Smile",
+    "license": 'AGPL-3',
     "website": 'http://www.smile.fr',
     "description": """
 This module lets administrator track every user operation on all the objects of the system (for the moment, only create, write and unlink methods).

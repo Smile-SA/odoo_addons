@@ -24,6 +24,7 @@
     "version": "0.2",
     "depends": ["smile_scm", "product"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """Modules Repositories
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr

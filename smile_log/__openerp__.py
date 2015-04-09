@@ -25,6 +25,7 @@
     "author": "Smile",
     "website": 'http://www.smile.fr',
     "category": "Tools",
+    "license": 'AGPL-3',
     "description": """
 Logs handler writing to database
 

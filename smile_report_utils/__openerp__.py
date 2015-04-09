@@ -24,6 +24,7 @@
     "version": "0.1",
     "depends": ["report_webkit"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """
 Features
 

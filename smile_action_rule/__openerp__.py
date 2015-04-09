@@ -24,6 +24,7 @@
     "version": "0.1beta1",
     "depends": ["base_action_rule", "email_template", "smile_log"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """
 This module extends base_action_rule.
 

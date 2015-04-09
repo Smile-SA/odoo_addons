@@ -24,6 +24,7 @@
     "version": "0.1",
     "depends": ["base"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """
     This module aims to export data in a new module containing CSV files.
 

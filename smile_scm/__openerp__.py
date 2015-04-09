@@ -24,6 +24,7 @@
     "version": "0.1",
     "depends": ["mail"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """Source Code Management
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr

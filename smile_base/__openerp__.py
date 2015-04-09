@@ -24,6 +24,7 @@
     "version": "0.2.3",
     "depends": ["mail"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """
 Features
 

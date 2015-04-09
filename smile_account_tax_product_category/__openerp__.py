@@ -23,6 +23,7 @@
     "name": "Account taxes by product category",
     "version": "1.0",
     "author": "Smile",
+    "license": 'AGPL-3',
     "website": 'http://www.smile.fr',
     "category": "Accounting",
     "description": """

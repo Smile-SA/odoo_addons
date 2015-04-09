@@ -24,6 +24,7 @@
     "version": "0.1",
     "depends": ["purchase", "smile_account_budget_commitment"],
     "author": "Smile",
+    "license": 'AGPL-3',
     "description": """
 Features
 
