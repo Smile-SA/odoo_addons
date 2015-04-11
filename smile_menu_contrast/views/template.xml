@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+      <template id="smile_menu_contrast_css" name="smile_menu_contrast_css" inherit_id="web.assets_backend">
+          <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/smile_menu_contrast/static/src/css/menu_contrast.css"/>
+          </xpath>
+      </template>
+    </data>
+</openerp>
