@@ -20,13 +20,13 @@
 ##############################################################################
 
 {
-    "name": "Objects Graph",
+    "name": "Models Graph",
     "version": "0.1",
     "depends": ["base"],
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """
-    Generate Objects Graph
+    Generate Models Graph
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
