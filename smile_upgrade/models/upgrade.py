@@ -150,7 +150,8 @@ class Upgrade(object):
         if ext == '.sql':
             self._sql_import(cr, f_obj)
         elif mode != 'pre-load' and ext == '.yml':
-            tools.convert_yaml_import(cr, module, f_obj, 'upgrade')
+            with api.Environment.manage():
+                tools.convert_yaml_import(cr, module, f_obj, 'upgrade')
         elif mode != 'pre-load' and ext == '.csv':
             tools.convert_csv_import(cr, module, f_obj.name, f_obj.read(), 'upgrade')
         elif mode != 'pre-load' and ext == '.xml':
