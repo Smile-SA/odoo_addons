@@ -94,12 +94,12 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                 os._exit(0)
             return registry
         except Exception, e:
+            e.traceback = sys.exc_info()
             if upgrades and config.get('stop_after_upgrades'):
-                _logger.error(_get_exception_message(e))
+                _logger.error(_get_exception_message(e), exc_info=e.traceback)
                 _logger.critical('Upgrade FAILED')
                 _logger.info('Stopping Odoo server')
                 os._exit(1)
-            e.traceback = sys.exc_info()
             raise
 
 RegistryManager.upgrade_manager = upgrade_manager
