@@ -75,6 +75,13 @@ class ProductTemplate(models.Model):
             self.taxes_id = self.categ_id.total_taxes_id
             self.supplier_taxes_id = self.categ_id.total_supplier_taxes_id
 
+    @api.model
+    def create(self, vals):
+        product_tmpl = super(ProductTemplate, self).create(vals)
+        if vals.get('categ_id') and 'taxes_id' not in vals and 'supplier_taxes_id' not in vals:
+            product_tmpl._onchange_categ_id()
+        return product_tmpl
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
