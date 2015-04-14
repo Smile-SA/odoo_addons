@@ -1,0 +1,8 @@
+.navbar-inverse .navbar-nav > li > a {
+  color: #aaa;
+}
+
+.navbar-inverse .navbar-nav > .active > a {
+  text-shadow : 0 0 0 #bbb;
+  border-radius: 5px;
+}
