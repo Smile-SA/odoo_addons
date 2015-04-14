@@ -5,3 +5,4 @@ access_base_action_rule_category,base.action.rule.category,model_base_action_rul
 access_base_action_rule_category_config,base.action.rule.category config,model_base_action_rule_category,base.group_system,1,1,1,1
 access_base_action_rule_execution,base.action.rule.execution,model_base_action_rule_execution,,1,0,0,0
 access_base_action_rule_execution_config,base.action.rule.execution config,model_base_action_rule_execution,base.group_system,1,1,1,1
+access_ir_actions_server_execution,ir.actions.server.execution,model_ir_actions_server_execution,,1,0,0,0
