@@ -23,7 +23,7 @@
             <field name="use_salvage_value" eval="True"/>
             <field name="depreciation_start_date">in_service_date</field>
             <field name="use_manual_rate" eval="False"/>
-            <field name="rate_formula">2 * (length - annuity_number + 1) / (pow(length, 2) + length) * 100</field>
+            <field name="rate_formula">2 * (length - annuity_number + 1) / (length * length + length) * 100</field>
             <field name="prorata" eval="False"/>
             <field name="need_additional_annuity" eval="False"/>
         </record>
