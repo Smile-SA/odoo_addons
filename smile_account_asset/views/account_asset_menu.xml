@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<openerp>
-	<data>
-
-	    <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance"/>
-	    <menuitem id="menu_finance_config_assets" name="Assets" sequence="21" parent="account.menu_finance_configuration"/>
-
-	</data>
-</openerp>
