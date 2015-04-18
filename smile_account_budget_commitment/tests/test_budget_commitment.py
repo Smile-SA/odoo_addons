@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.tests.common import TransactionCase
-from openerp.exceptions import Warning
+from openerp.exceptions import ValidationError, Warning
 
 
 class BudgetCommitmentTest(TransactionCase):
@@ -50,7 +50,7 @@ class BudgetCommitmentTest(TransactionCase):
         }
         limit = self.env.ref('smile_account_budget_commitment.commitment_limit0')
         limit.amount_limit = 100.0
-        self.assertRaises(Warning, self.env['account.analytic.line'].create, vals)
+        self.assertRaises(ValidationError, self.env['account.analytic.line'].create, vals)
         limit.amount_limit = 1000.0
         self.env['account.analytic.line'].create(vals)
         self.assertTrue(budget_line.commitment_amount)
