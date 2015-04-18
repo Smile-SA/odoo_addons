@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.tests.common import TransactionCase
+from openerp.exceptions import ValidationError
 
 
 class PurchaseCommitmentTest(TransactionCase):
@@ -43,7 +44,7 @@ class PurchaseCommitmentTest(TransactionCase):
         purchase.order_line.write({'account_analytic_id': analytic_account.id})
         limit = self.env.ref('smile_account_budget_commitment.commitment_limit0')
         limit.amount_limit = 100.0
-        self.assertRaises(Warning, purchase.wkf_confirm_order)
+        self.assertRaises(ValidationError, purchase.wkf_confirm_order)
         limit.amount_limit = 1000.0
         purchase.wkf_confirm_order()
         self.assertTrue(budget_line.commitment_amount == 255.0)
