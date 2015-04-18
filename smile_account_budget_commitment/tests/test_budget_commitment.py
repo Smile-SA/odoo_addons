@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.tests.common import TransactionCase
+from openerp.exceptions import Warning
 
 
 class BudgetCommitmentTest(TransactionCase):
