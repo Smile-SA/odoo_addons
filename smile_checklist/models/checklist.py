@@ -112,10 +112,6 @@ class Checklist(models.Model):
     def _revert_model_decoration(self, model):
         update = False
         model_obj = self.env[model].sudo()
-        for field in ('checklist_task_instance_ids', 'total_progress_rate', 'total_progress_rate_mandatory'):
-            if field in model_obj._fields:
-                del model_obj._fields[field]
-                update = True
         for method_name in ('create', 'write', 'fields_view_get'):
             method = getattr(model_obj, method_name)
             while hasattr(method, 'origin'):
