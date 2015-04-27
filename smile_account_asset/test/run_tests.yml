@@ -1,5 +1,0 @@
--
-  I launch tests suite
--
-  !python {model: account.asset.asset}: |
-    self.run_tests()
