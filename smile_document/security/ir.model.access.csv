@@ -1,0 +1,18 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+
+"base.access_ir_attachment_group_user","ir.attachment read","base.model_ir_attachment","base.group_user",1,0,0,0
+
+"access_read_ir_attachment","ir.attachment read","document.model_ir_attachment","group_read_document",1,0,0,0
+"access_read_ir_attachment_type","ir.attachment.type read","smile_document.model_ir_attachment_type","group_read_document",1,0,0,0
+
+"access_read_ir_attachment_create","ir.attachment create","document.model_ir_attachment","group_manage_document",1,1,1,1
+"access_read_ir_attachment_type_create","ir.attachment.type create","smile_document.model_ir_attachment_type","group_manage_document",1,1,1,1
+
+"access_create_document_directory","document.directory create","document.model_document_directory","group_manage_document",1,1,1,1
+
+"access_report_document_user_reader","report.document.user reader","document.model_report_document_user","group_read_document",1,0,0,0
+"access_report_document_file_reader","report.document.file reader","document.model_report_document_file","group_read_document",1,0,0,0
+"access_res_partner_reader","res.partner reader","base.model_res_partner","group_read_document",1,0,0,0
+
+
+
