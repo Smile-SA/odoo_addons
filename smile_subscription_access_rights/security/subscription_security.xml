@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <!-- 
+           Manage subscription
+        -->
+        <record id="group_manage_subscription" model="res.groups">
+            <field name="name">Manage subscription</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="menu_access" eval="[(4, ref('base.menu_purchase_root'))]"/>
+        </record>
+        
+        <!-- 
+            Set group purchase user for empty menu 
+        
+        
+        <record id="purchase.group_purchase_user" model="res.groups">
+             <field name="implied_ids" eval="[(4, ref('group_manage_subscription'))]"/>
+        </record>
+        -->
+    </data>
+</openerp>
