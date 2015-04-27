@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record id="view_account_invoice_button_validate_access" model="ir.ui.view">
+            <field name="name">account.invoice.button.validate.access</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='invoice_open']" position="replace">
+                    <button name="invoice_open" 
+                            states="draft,proforma2"
+                            string="Validate"
+                            class="oe_highlight"
+                            groups="account.group_account_invoice,smile_purchase_access_rights.group_accounting_supplier_invoices"/>
+                </xpath>
+                <xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="replace">
+                    <button name="%(account.action_account_invoice_refund)d" 
+                            type='action' string='Ask Refund' 
+                            states='open,paid' 
+                            groups="account.group_account_invoice,smile_purchase_access_rights.group_manage_suppliers_refunds"/>
+                </xpath>
+
+<!--                <xpath expr="//button[@name='invoice_open']" position="attributes">-->
+<!--                    <attribute name="groups" eval="[(6, 0, [ref('account.group_account_invoice'), ref('smile_purchase_access_rights.group_accounting_supplier_invoices')])]" />-->
+<!--                </xpath>-->
+            </field>
+        </record>
+    </data>
+</openerp>

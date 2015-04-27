@@ -1,0 +1,68 @@
+- |
+
+
+  ================================================================================================
+                                   Check Access Rights for Module Smile Purchase access Rights
+  ================================================================================================
+- |
+
+  =========================================================
+    Check CRUD product category: user (create product)
+  =========================================================
+      
+- 
+  Create a  product category
+-    
+    !python {model: 'product.category'}: |
+        import logging
+        LOGGER = logging.getLogger('Test')
+        LOGGER.info("==========================================================================================")
+        LOGGER.info("-----------------------------------Create Data---------------------------------------------")
+        LOGGER.info("==========================================================================================")
+        company_id = ref('base.main_company')
+        group_create_product = ref('smile_purchase_access_rights.group_create_product')
+        group_user = ref('base.group_user')
+        category_id = self.create(cr, uid, {'name':'Catgeory X'}, {})
+        LOGGER.info("===============>-Create User Create product")
+        user_id = False
+        try:
+            vals = {
+                'company_id': company_id,
+                'name': 'Product Create',
+                'login': 'create_product@company.com',
+                'groups_id' : [(6, 0, [group_create_product, group_user])]
+            }
+            user_id = self.pool.get('res.users').create(cr, uid, vals, {})
+            LOGGER.info("------->Create User Create product  Succeed")
+        except:
+            LOGGER.info("------->Create User Create product & All tests Failed")
+        LOGGER.info("==========================================================================================")
+        LOGGER.info("-----------------------------------Check CRUD---------------------------------------------")
+        LOGGER.info("==========================================================================================")
+        LOGGER.info("===============>1)°-Create product category")
+        try:
+            self.create(cr, user_id, {name:'Catgeory 1'}, {})
+            LOGGER.info("------->Create product category  Succeed")
+        except:
+            LOGGER.info("------->Create product category  Failed")
+
+        LOGGER.info("===============>2)°-Read product category")
+        try:
+            self.read(cr, user_id, category_id, ['name'], {})
+            LOGGER.info("------->Read product category  Succeed")
+        except:
+            LOGGER.info("------->Read partner  Failed")
+
+        LOGGER.info("===============>3)°-Write product category")
+        try:
+            self.write(cr, user_id, category_id, {'name': 'New Supplier'}, {})
+            LOGGER.info("------->Write product category  Succeed")
+        except:
+            LOGGER.info("------->Write product category  Failed")
+
+        LOGGER.info("===============>4)°-Unlink a partner")
+        try:
+            self.unlink(cr, user_id, category_id, {})
+            LOGGER.info("------->Unlink product category  Succeed")
+        except:
+            LOGGER.info("------->Unlink product category  Failed")
