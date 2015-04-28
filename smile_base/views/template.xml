@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
+  <data noupdate="0">
 
-      <template id="smile_base_css" name="smile_base_css" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
+    <template id="smile_base_css" name="smile_base_css" inherit_id="web.assets_backend">
+      <xpath expr="." position="inside">
         <link rel="stylesheet" href="/smile_base/static/src/css/base.css"/>
         <link rel="stylesheet" href="/smile_base/static/src/css/bootstrap.css"/>
-        </xpath>
-      </template>
+      </xpath>
+    </template>
 
-    </data>
+    <template id="smile_base.login" inherit_id="web.login" name="Login window">
+      <xpath expr="//label[@for='login']" position="replace">
+        <label for="login" class="control-label">Login</label>
+      </xpath>
+    </template>
+
+  </data>
 </openerp>
