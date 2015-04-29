@@ -20,6 +20,7 @@
 ##############################################################################
 
 from contextlib import contextmanager
+from distutils.version import LooseVersion
 import logging
 import os
 
@@ -71,7 +72,7 @@ class UpgradeManager(object):
         if not version:
             _logger.warning('Unspecified version in upgrades configuration file')
         _logger.debug('code version: %s', version)
-        return version
+        return LooseVersion(version)
 
     def _get_db_version(self):
         if self.db_in_creation:
@@ -85,7 +86,7 @@ class UpgradeManager(object):
             _logger.warning('Unspecified version in database')
             return ''
         _logger.debug('database version: %s', param[0])
-        return param[0]
+        return LooseVersion(param[0])
 
     def _get_upgrades(self):
         upgrades_path = upgrade_config.get('upgrades_path')
@@ -124,6 +125,8 @@ class Upgrade(object):
         self.db = db
         self.dir_path = dir_path
         for k, v in infos.iteritems():
+            if k == 'version':
+                v = LooseVersion(v)
             setattr(self, k, v)
 
     def __getattr__(self, key):
@@ -136,7 +139,7 @@ class Upgrade(object):
     def _set_db_version(self):
         with cursor(self.db) as cr:
             cr.execute("""UPDATE ir_config_parameter SET (write_date, write_uid, value) = (now() at time zone 'UTC', %s, %s)
-                       WHERE key = 'code.version'""", (SUPERUSER_ID, self.version))
+                       WHERE key = 'code.version'""", (SUPERUSER_ID, str(self.version)))
         _logger.debug('database version updated to %s', self.version)
 
     def _sql_import(self, cr, f_obj):
