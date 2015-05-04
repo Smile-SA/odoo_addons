@@ -96,7 +96,7 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False, pooljo
             _logger.error(_get_exception_message(e))
             _logger.critical('Upgrade FAILED')
             _logger.info('Stopping OpenERP server')
-            os._exit(1)
+            os._exit(os.EX_SOFTWARE)
         raise e
 
 RegistryManager.upgrade_manager = upgrade_manager
