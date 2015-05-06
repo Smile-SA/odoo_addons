@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.tests.common import TransactionCase
+from openerp.exceptions import ValidationError
 
 
 class TestAccessControl(TransactionCase):
@@ -67,3 +68,16 @@ class TestAccessControl(TransactionCase):
         self.user.user_profile_id = self.user_profile2
         for group in self.user_profile2.groups_id:
             self.assertIn(group, self.user.groups_id, 'The user has not the new dependence!')
+
+    def test_using_admin_as_profile_should_fail(self):
+        """
+            I try to create a user with Administrator as user profile
+            I check that it failed
+        """
+        with self.assertRaisesRegexp(ValidationError, "You can't use (.*) as user profile !"):
+            self.env['res.users'].create({
+                'name': 'toto',
+                'login': 'toto',
+                'password': 'toto',
+                'user_profile_id': self.env.ref('base.user_root').id
+            })
