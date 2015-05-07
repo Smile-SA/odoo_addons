@@ -20,6 +20,7 @@
 ##############################################################################
 
 from contextlib import contextmanager
+from distutils.version import LooseVersion
 import logging
 import os
 
@@ -70,8 +71,9 @@ class UpgradeManager(object):
         version = upgrade_config.get('version')
         if not version:
             _logger.warning('Unspecified version in upgrades configuration file')
+            version = '0'
         _logger.debug('code version: %s', version)
-        return version
+        return LooseVersion(version)
 
     def _get_db_version(self):
         if self.db_in_creation:
@@ -83,9 +85,9 @@ class UpgradeManager(object):
                 cr.execute("""INSERT INTO ir_config_parameter (create_date, create_uid, key, value)
                            VALUES (now() at time zone 'UTC', %s, 'code.version', '')""", (SUPERUSER_ID,))
             _logger.warning('Unspecified version in database')
-            return ''
-        _logger.debug('database version: %s', param[0])
-        return param[0]
+        version = param and param[0] or '0'
+        _logger.debug('database version: %s', version)
+        return LooseVersion(version)
 
     def _get_upgrades(self):
         upgrades_path = upgrade_config.get('upgrades_path')
@@ -109,8 +111,8 @@ class UpgradeManager(object):
                         if (not upgrade.databases or self.db_name in upgrade.databases) \
                                 and self.db_version < upgrade.version <= self.code_version:
                             upgrades.append(upgrade)
-                    except:
-                        _logger.error('%s is not valid', file_path)
+                    except Exception, e:
+                        _logger.error('%s is not valid: %s', file_path, repr(e))
         return sorted(upgrades, key=lambda upgrade: upgrade.version)
 
 
@@ -124,6 +126,8 @@ class Upgrade(object):
         self.db = db
         self.dir_path = dir_path
         for k, v in infos.iteritems():
+            if k == 'version':
+                v = LooseVersion(v or '0')
             setattr(self, k, v)
 
     def __getattr__(self, key):
@@ -136,7 +140,7 @@ class Upgrade(object):
     def _set_db_version(self):
         with cursor(self.db) as cr:
             cr.execute("""UPDATE ir_config_parameter SET (write_date, write_uid, value) = (now() at time zone 'UTC', %s, %s)
-                       WHERE key = 'code.version'""", (SUPERUSER_ID, self.version))
+                       WHERE key = 'code.version'""", (SUPERUSER_ID, str(self.version)))
         _logger.debug('database version updated to %s', self.version)
 
     def _sql_import(self, cr, f_obj):
