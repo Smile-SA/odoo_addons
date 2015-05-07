@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <!-- 
+            Read Documents
+        -->
+        <record id="group_read_document" model="res.groups">
+            <field name="name">Read Document</field>
+            <field name="category_id" ref="base.module_category_knowledge_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="menu_access" eval="[(6,0, [ref('smile_document.menu_document_type'),
+                                                    ref('document.menu_document_management_configuration'),
+                                                    ref('knowledge.menu_document_configuration'),
+                                                    ref('knowledge.menu_document'),
+                                                    ref('smile_document.menu_document_management_documents'),
+                                                    ref('smile_document.menu_document_management_config')])]"/>
+        </record>
+
+        <!-- 
+            Manage Documents
+        -->
+        <record id="group_manage_document" model="res.groups">
+            <field name="name">Manage Document</field>
+            <field name="category_id" ref="base.module_category_knowledge_management"/>
+            <field name="implied_ids" eval="[(4, ref('group_read_document'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+        <!-- 
+             Documents
+        -->
+
+    <record id="base.group_document_user" model="res.groups">
+        <field name="menu_access" eval="[(6,0, [ref('smile_document.menu_document_type'),
+                                                    ref('document.menu_document_management_configuration'),
+                                                    ref('knowledge.menu_document_configuration'),
+                                                    ref('knowledge.menu_document'),
+                                                    ref('smile_document.menu_document_management_documents'),
+                                                    ref('document.menu_document_directories_tree'),
+                                                    ref('document.menu_document_directories'),
+                                                    ref('smile_document.menu_document_management_config')])]"/>
+    </record>
+
+    </data>
+</openerp>

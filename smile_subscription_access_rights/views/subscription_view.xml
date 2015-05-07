@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+    
+    <menuitem   id="smile_subscription_menu"
+    			name="Subscription"
+        		parent="base.menu_purchase_root"
+        		sequence="99"/>
+        		
+     <menuitem  id="smile_subscription_subscription_menu"
+    			name="Subscription"
+        		parent="smile_subscription_menu"
+        		action="subscription.action_subscription_form"
+        		sequence="1"/>
+     
+     <menuitem  id="smile_subscription_document_menu"
+    			name="Subscription documents"
+        		parent="smile_subscription_menu"
+        		action="subscription.action_document_form"
+        		sequence="2"/>
+    
+    
+    </data>
+</openerp>

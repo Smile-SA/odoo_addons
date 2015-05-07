@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record id="view_stock_move_access" model="ir.ui.view">
+            <field name="name">stock.move.access</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='destination_grp']" position="attributes">
+                    <attribute name="groups" eval="[(6, 0, [ref('stock.group_locations'), ref('group_manage_incoming_products')])]" />
+                </xpath>
+                <xpath expr="//group[@name='quants_grp']" position="attributes">
+                    <attribute name="groups" eval="[(6, 0, [ref('base.group_no_one'), ref('group_manage_incoming_products')])]" />
+                </xpath>
+            </field>
+        </record>
+        
+        
+        <record id="action_picking_tree" model="ir.actions.act_window">
+            <field name="name">Receipts</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain" eval="[('picking_type_id','=', ref('stock.picking_type_in'))]" />
+            <field name="context" 
+            eval="{'default_picking_type_id': ref('stock.picking_type_in'),'contact_display': 'partner_address',
+           'search_default_available': '1', 'search_default_waiting': 1}"/>
+
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a stock operation. 
+              </p><p>
+                Most operations are prepared automatically by Odoo according
+                to your preconfigured logistics rules, but you can also record
+                manual stock movements.
+              </p>
+            </field>
+        </record>
+         <menuitem   id="smile_partner_picking_tree"
+        		parent="purchase.menu_procurement_management_inventory"
+        		action="action_picking_tree"
+        		sequence="20"
+        		groups="smile_purchase_access_rights.group_manage_stock_picking"/>
+       
+       <record id="view_stock_picking_access" model="ir.ui.view">
+            <field name="name">stock.picking.suppliers.returns.access</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <button name="action_confirm" position="replace">
+                        <button name="action_confirm"
+                            states="draft"
+                            string="Mark as Todo" 
+                            type="object" 
+                            class="oe_highlight" 
+                            groups="smile_purchase_access_rights.group_manage_stock_picking"/>
+                     </button>
+                    <button name="do_unreserve" position="replace">
+                        <button name="do_unreserve" 
+                            string="Unreserve" 
+                            groups="smile_purchase_access_rights.group_manage_stock_picking" 
+                            type="object" 
+                            attrs="{'invisible': [('quant_reserved_exist', '=', False)]}"/>
+                    </button>
+                    <button name="action_cancel" position="replace">
+                        <button name="action_cancel" 
+                            states="assigned,confirmed,partially_available,draft" 
+                            string="Cancel Transfer" 
+                            groups="smile_purchase_access_rights.group_manage_suppliers_returns" 
+                            type="object"/>
+                    </button>
+                    <button name="%(stock.act_stock_return_picking)d" position="replace">
+                        <button name="%(stock.act_stock_return_picking)d"
+                            string="Reverse Transfer" 
+                            states="done" 
+                            type="action" 
+                            groups="smile_purchase_access_rights.group_manage_stock_picking"/>
+                    </button>
+                    <button name="do_print_picking" position="replace">
+                        <button name="do_print_picking" 
+                            string="Print Picking List" 
+                            groups="stock.group_stock_user,smile_purchase_access_rights.group_manage_stock_picking" 
+                            type="object" 
+                            attrs="{'invisible': ['|', ('picking_type_code', '=', 'outgoing'), ('state', '!=', 'assigned')]}"/>
+                    </button>
+                    <button name="do_enter_transfer_details" position="replace">
+                        <button name="do_enter_transfer_details" 
+                            states="assigned,partially_available" 
+                            string="Transfer" 
+                            groups="stock.group_stock_user,smile_purchase_access_rights.group_manage_stock_picking" 
+                            type="object" 
+                            class="oe_highlight"/>
+                    </button>
+                    <button name="force_assign" position="replace">
+                        <button name="force_assign" 
+                            states="confirmed,waiting,partially_available" 
+                            string="Force Availability" 
+                            type="object" 
+                            groups="smile_purchase_access_rights.group_manage_stock_picking"/>
+                    </button>
+                    <button name="rereserve_pick" position="replace">
+                        <button name="rereserve_pick"
+                            states="partially_available" 
+                            string="Recheck Availability" 
+                            type="object" 
+                            class="oe_highlight" 
+                            groups="smile_purchase_access_rights.group_manage_stock_picking"/>
+                    </button>
+                    <button name="action_assign" position="replace">
+                        <button name="action_assign"
+                            states="confirmed" 
+                            string="Check Availability" 
+                            type="object" 
+                            class="oe_highlight" 
+                            groups="smile_purchase_access_rights.group_manage_stock_picking"/>
+                    </button>
+                 </data>
+            </field>
+        </record>
+    </data>
+</openerp>

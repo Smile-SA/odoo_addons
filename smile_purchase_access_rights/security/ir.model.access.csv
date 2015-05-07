@@ -1,0 +1,90 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+
+"access_product_product_all","product.product all","stock.model_product_product","",1,0,0,0
+"access_read_res_partner_all","res.partner all","base.model_res_partner","",1,0,0,0
+"access_account_move_line_all","account.move.line all","account.model_account_move_line","",1,0,0,0
+"access_stock_move_all","stock.move read","stock.model_stock_move","",1,0,0,0
+
+"access_red_supplier_account_invoice","account.invoice read","account.model_account_invoice","group_read_supplier",1,1,0,0
+"access_read_account_move_line","account.move.line read","account.model_account_move_line","group_read_supplier",1,0,0,0
+
+"access_create_res_partner","res.partner create","base.model_res_partner","group_create_supplier",1,1,1,1
+"access_create_ir_property","ir.property create","base.model_ir_property","group_create_supplier",1,1,1,1
+
+"access_manage_partner_category","res.partner.category manage","base.model_res_partner_category","group_manage_partner_category",1,1,1,1
+
+"access_group_invoices_based_deliveries_stock_picking","stock.picking write","stock.model_stock_picking","group_invoices_based_deliveries",1,1,0,0
+"access_group_invoices_based_deliveries_stock_move","stock.move write","stock.model_stock_move","group_invoices_based_deliveries",1,1,1,0
+
+
+"access_group_draft_invoices_control_account_invoice","account.invoice write","account.model_account_invoice","group_draft_invoices_control",1,1,0,0
+"access_group_draft_invoices_control_account_invoice_line","account.invoice.line write","account.model_account_invoice_line","group_draft_invoices_control",1,1,1,0
+"access_group_draft_invoices_control_account_invoice_tax","account.invoice.tax read","account.model_account_invoice_tax","group_draft_invoices_control",1,0,0,0
+"access_group_draft_invoices_control_account_move","account.move write","account.model_account_move","group_draft_invoices_control",1,1,0,0
+"access_group_draft_invoices_control_account_move_reconcile","account.move.reconcile write","account.model_account_move_reconcile","group_draft_invoices_control",1,1,0,0
+
+"access_group_invoices_based_order_line_pol","purchase.order.line write","purchase.model_purchase_order_line","group_invoices_based_order_line",1,1,0,0
+"access_group_invoices_based_order_line_po","purchase.order read","purchase.model_purchase_order","group_invoices_based_order_line",1,0,0,0
+"access_group_invoices_based_order_line_account_tax","account.tax read","account.model_account_tax","group_invoices_based_order_line",1,0,0,0
+"access_group_invoices_based_order_line_account_invoice_line","account.invoice.line read","account.model_account_invoice_line","group_invoices_based_order_line",1,0,0,0
+"access_group_invoices_based_order_line_stock_picking","stock.picking read","stock.model_stock_picking","group_invoices_based_order_line",1,0,0,0
+
+"access_group_accounting_supplier_invoices_account_journal","account.journal read","account.model_account_journal","group_accounting_supplier_invoices",1,0,0,0
+"access_group_accounting_supplier_invoices_account_period","account.period read","account.model_account_period","group_accounting_supplier_invoices",1,0,0,0
+"access_group_accounting_supplier_invoices_account_move","account.move create","account.model_account_move","group_accounting_supplier_invoices",1,1,1,0
+"access_group_accounting_supplier_invoices_account_journal_period","account.journal.period create","account.model_account_journal_period","group_accounting_supplier_invoices",1,1,1,0
+"access_group_accounting_supplier_invoices_account_move_line","account.move.line create","account.model_account_move_line","group_accounting_supplier_invoices",1,1,1,0
+"access_group_accounting_supplier_invoices_account_analytic_line","account.analytic.line read","account.model_account_analytic_line","group_accounting_supplier_invoices",1,0,0,0
+
+
+"access_group_manage_incoming_products_stock_picking","stock.picking read","stock.model_stock_picking","group_manage_incoming_products",1,0,0,0
+"access_group_manage_incoming_products_stock_move","stock.move write","stock.model_stock_move","group_manage_incoming_products",1,1,0,0
+"access_group_manage_incoming_products_purchase_order_line","purchase.order.line read","purchase.model_purchase_order_line","group_manage_incoming_products",1,0,0,0
+"access_group_manage_incoming_products_purchase_order","purchase.order read","purchase.model_purchase_order","group_manage_incoming_products",1,0,0,0
+
+"access_group_manage_stock_picking_stock_picking","stock.picking create","stock.model_stock_picking","group_manage_stock_picking",1,1,1,0
+"access_group_manage_stock_picking_stock_pack_operation","stock.pack.operation create","stock.model_stock_pack_operation","group_manage_stock_picking",1,1,1,0
+"access_group_manage_stock_picking_stock_stock_move_operation_link","stock.move.operation.link create","stock.model_stock_move_operation_link","group_manage_stock_picking",1,1,1,1
+"access_group_manage_stock_picking_stock_move","stock.picking write","stock.model_stock_move","group_manage_stock_picking",1,1,1,0
+
+"access_group_purchasing_analysis_purchase_report","purchase.report read","purchase.model_purchase_report","group_purchasing_analysis",1,0,0,0
+
+"access_group_read_product_product_product","product.product read","product.model_product_product","group_read_product",1,0,0,0
+"access_group_read_product_product_category","product.category read","product.model_product_category","group_read_product",1,0,0,0
+"access_group_read_product_stock_warehouse_orderpoint","stock.warehouse.orderpoint read","stock.model_stock_warehouse_orderpoint","group_read_product",1,0,0,0
+"access_group_create_product_product_product","product.product create","product.model_product_product","group_create_product",1,1,1,1
+"access_group_create_product_product_template","product.template create","product.model_product_template","group_create_product",1,1,1,1
+"access_group_create_product_ product_price_history","product.price.history create","product.model_product_price_history","group_create_product",1,1,1,1
+"access_group_create_product_account_journal","account.journal read","account.model_account_journal","group_create_product",1,0,0,0
+"access_group_create_product_account_journal_cashbox_line","account.journal.cashbox.line read","account.model_account_journal_cashbox_line","group_create_product",1,0,0,0
+"access_group_create_product_ir_property","ir.property create","base.model_ir_property","group_create_product",1,1,1,0
+"access_group_accounting_product_product_category","product.category create","product.model_product_category","group_accounting_product",1,1,1,1
+
+
+
+"access_group_manage_suppliers_refunds_account_journal","account.journal create","account.model_account_journal","group_manage_suppliers_refunds",1,0,0,0
+"access_group_manage_suppliers_refunds_account_invoice","account.invoice create","account.model_account_invoice","group_manage_suppliers_refunds",1,1,1,0
+
+
+"access_group_create_order_purchase_order","purchase.order create","purchase.model_purchase_order","group_create_order",1,1,1,1
+"access_group_create_order_purchase_order_line","purchase.order.line create","purchase.model_purchase_order_line","group_create_order",1,1,1,1
+"access_group_create_order_stock_picking","stock.picking create","stock.model_stock_picking","group_create_order",1,1,1,0
+"access_group_create_order_stock_move","stock.move create","stock.model_stock_move","group_create_order",1,1,1,0
+
+"access_group_create_order_account_invoice","account.invoice create","account.model_account_invoice","group_create_order",1,1,1,0
+"access_group_create_order_account_invoice_line","account.invoice.line create","account.model_account_invoice_line","group_create_order",1,1,1,0
+"access_group_create_order_account_journal","account.journal create","account.model_account_journal","group_create_order",1,0,0,0
+"access_group_create_order_account_invoice_tax","account.invoice.tax create","account.model_account_invoice_tax","group_create_order",1,1,1,0
+
+"access_group_account_user_purchase_order_line","purchase.order.line accountant","purchase.model_purchase_order_line","account.group_account_user",1,1,0,0
+
+"access_baper_account_invoice","account.invoice write","account.model_account_invoice","group_baper_invoices_control",1,1,0,0
+"access_baper_account_invoice_line","account.invoice.line write","account.model_account_invoice_line","group_baper_invoices_control",1,1,0,0
+"access_baper_account_tax","account.invoice.tax read","account.model_account_invoice_tax","group_baper_invoices_control",1,0,0,0
+"access_baper_account_acc_move","account.move write","account.model_account_move","group_baper_invoices_control",1,1,0,0
+"access_baper_account_acc_reconcile","account.move.reconcile write","account.model_account_move_reconcile","group_baper_invoices_control",1,1,0,0
+"access_baper_account_period","account.period read","account.model_account_period","group_baper_invoices_control",1,0,0,0
+
+
+
+

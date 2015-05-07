@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record id="view_purchase_order_button_validate_access" model="ir.ui.view">
+            <field name="name">purchase.order.button.receipt.access</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='view_picking']" position="replace">
+                <button name="view_picking"
+                        string="Receive Products" 
+                        type="object" 
+                        attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}"
+                        groups="smile_purchase_access_rights.group_manage_stock_picking"
+                        class="oe_highlight"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

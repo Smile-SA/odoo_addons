@@ -22,7 +22,10 @@
 {
     "name": "Smile Base",
     "version": "0.2.3",
-    "depends": ["mail"],
+    "depends": [
+        'mail',
+        'web',
+    ],
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """

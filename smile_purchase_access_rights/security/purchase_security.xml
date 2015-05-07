@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <!-- 
+            Read Suppliers
+        -->
+        <record id="group_read_supplier" model="res.groups">
+            <field name="name">Read Supplier</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="menu_access" eval="[(4, ref('base.menu_purchase_root')),
+                                             (4, ref('purchase.menu_procurement_management')),
+                                             (4, ref('base.menu_procurement_management_supplier_name'))]"/>
+        </record>
+        
+        <!-- 
+            Create Suppliers
+        -->
+        <record id="group_create_supplier" model="res.groups">
+            <field name="name">Create Supplier</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_read_supplier'))]"/>
+        </record>
+        <!-- 
+            Accounting Suppliers
+        -->
+        <record id="group_accounting_supplier" model="res.groups">
+            <field name="name">Accounting Supplier</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_create_supplier'))]"/>
+        </record>
+        
+        <record id="view_res_partner_accounting_access" model="ir.ui.view">
+            <field name="name">res.partner.accounting.access</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+               <xpath expr="//page[@name='accounting']" position="attributes">
+                    <attribute name="groups">smile_purchase_access_rights.group_accounting_supplier</attribute>
+                </xpath>
+            </field>
+        </record>
+       <!-- 
+            Create Order
+        -->
+        <record id="group_create_order" model="res.groups">
+            <field name="name">Create order</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_read_supplier')),
+                                             (4, ref('purchase.group_analytic_accounting')),]"/>
+            <field name="menu_access" eval="[(4, ref('purchase.menu_purchase_rfq')),
+                                             (4, ref('purchase.menu_purchase_form_action'))]"/>
+        </record>
+        <!-- 
+            Create res.partner.category
+        -->
+        <record id="group_manage_partner_category" model="res.groups">
+            <field name="name">Manage Partner Catgeory</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="menu_access" eval="[(4, ref('purchase.menu_partner_categories_in_form')),
+                                             (4, ref('purchase.menu_purchase_config_purchase')),
+                                             (4, ref('base.menu_purchase_root'))]"/>
+        </record>
+
+        
+        <record id="view_res_partner_category_access" model="ir.ui.view">
+            <field name="name">res.partner.category.access</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="view_res_partner_category_readonly"/>
+            <field name="groups_id" eval="[(4, ref('smile_purchase_access_rights.group_manage_partner_category')),
+                                           (4, ref('base.group_user'))]"/>
+            <field name="arch" type="xml">
+                <field name='category_id' position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </field>
+            </field>
+        </record>
+
+        <!-- 
+            Invoices based on deliveries
+        -->
+        <record id="group_invoices_based_deliveries" model="res.groups">
+            <field name="name">Invoices Based On Deliveries</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="menu_access" eval="[(4, ref('purchase.menu_action_picking_tree_picking_to_invoice')),
+                                             (4, ref('purchase.menu_procurement_management_invoice')),
+                                             (4, ref('base.menu_purchase_root'))]"/>
+        </record>
+
+        <!-- 
+            BAPER Invoices control
+        -->
+        <record id="group_baper_invoices_control" model="res.groups">
+            <field name="name">BAPER Invoices control</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="menu_access" eval="[(4, ref('purchase.menu_procurement_management_invoice')),
+                                             (4, ref('base.menu_purchase_root'))]"/>
+        </record>
+
+        <!-- 
+            Draft Invoices control
+        -->
+        <record id="group_draft_invoices_control" model="res.groups">
+            <field name="name">Draft Invoices control</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="menu_access" eval="[(4, ref('purchase.menu_procurement_management_pending_invoice')),
+                                             (4, ref('purchase.menu_procurement_management_invoice')),
+                                             (4, ref('base.menu_purchase_root'))]"/>
+        </record>
+
+        <!-- 
+            Invoices based in Order Line
+        -->
+        <record id="group_invoices_based_order_line" model="res.groups">
+            <field name="name">Invoices Based On Order Line</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="menu_access" eval="[(4, ref('purchase.menu_purchase_line_order_draft')),
+                                             (4, ref('purchase.menu_procurement_management_invoice')),
+                                             (4, ref('base.menu_purchase_root'))]"/>
+        </record>
+        <!-- 
+            Accounting supplier invoices
+            Not in group_purchase_user
+        -->
+        <record id="group_accounting_supplier_invoices" model="res.groups">
+            <field name="name"> Accounting supplier invoices</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="implied_ids" eval="[(4, ref('group_draft_invoices_control'))]"/>
+            <field name="menu_access" eval="[(4, ref('purchase.menu_purchase_line_order_draft')),
+                                             (4, ref('purchase.menu_procurement_management_invoice')),
+                                             (4, ref('base.menu_purchase_root'))]"/>
+        </record>
+       <!-- 
+            Manage incoming products
+        -->
+        <record id="group_manage_incoming_products" model="res.groups">
+            <field name="name">Manage incoming products</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="menu_access" eval="[(4, ref('base.menu_purchase_root')),
+                                             (4, ref('purchase.menu_procurement_management_inventory')),
+                                             (4, ref('purchase.menu_action_picking_tree_in_move'))]"/>
+        </record>
+
+      <!-- 
+            Manage stock picking
+        -->
+        <record id="group_manage_stock_picking" model="res.groups">
+            <field name="name">Manage stock picking</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="menu_access" eval="[(4, ref('base.menu_purchase_root')),
+                                             (4, ref('purchase.menu_procurement_management_inventory'))]"/>
+        </record>
+        
+        <!-- 
+            Manage suppliers Returns
+        -->
+        <record id="group_manage_suppliers_returns" model="res.groups">
+            <field name="name">Manage suppliers Returns</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_manage_stock_picking'))]"/>
+        </record>
+        <!-- 
+            Manage suppliers refunds
+        -->
+        <record id="group_manage_suppliers_refunds" model="res.groups">
+            <field name="name">Manage suppliers refunds</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+         <!-- 
+            Purchasing Analysis
+        -->
+        <record id="group_purchasing_analysis" model="res.groups">
+            <field name="name">Purchasing Analysis</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="menu_access" eval="[(4, ref('base.menu_reporting')),
+                                             (4, ref('base.next_id_73')),
+                                             (4, ref('purchase.menu_action_purchase_order_report_all'))]"/>
+        </record>
+         <!-- 
+            Read product
+        -->
+        <record id="group_read_product" model="res.groups">
+            <field name="name">Read product</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="menu_access" eval="[(4, ref('base.menu_purchase_root')),
+                                             (4, ref('purchase.menu_procurement_management_product')),
+                                             (4, ref('purchase.menu_procurement_partner_contact_form'))]"/>
+        </record>
+        <!-- 
+            Create product
+        -->
+        <record id="group_create_product" model="res.groups">
+            <field name="name">Create product</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_read_product'))]"/>
+            <field name="menu_access" eval="[(4, ref('purchase.menu_purchase_config_purchase')),
+                                             (4, ref('purchase.menu_product_in_config_purchase')),
+                                             (4, ref('purchase.menu_procurement_partner_contact_form'))]"/>
+                                                    
+        </record>
+        <!-- 
+            Accounting parameters articles
+        -->
+        <record id="group_accounting_product" model="res.groups">
+            <field name="name">Accounting parameters product</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_create_product'))]"/>
+        </record>
+        <!-- 
+            Set group purchase user for empty menu 
+        -->
+        
+        <record id="purchase.group_purchase_user" model="res.groups">
+            <field name="menu_access" eval="[(4, ref('purchase.menu_procurement_management_product')),
+                                             (4, ref('base.menu_purchase_root')),
+                                             (4, ref('purchase.menu_purchase_rfq')),
+                                             (4, ref('purchase.menu_purchase_form_action')),
+                                             (4, ref('purchase.menu_procurement_management')),
+                                             (4, ref('purchase.menu_procurement_management_inventory')),
+                                             (4, ref('purchase.menu_purchase_unit_measure_purchase')),
+                                             (4, ref('purchase.menu_purchase_uom_form_action')),
+                                             (4, ref('purchase.menu_purchase_uom_categ_form_action')),
+                                             (4, ref('base.menu_procurement_management_supplier_name'))]"/>
+             <field name="implied_ids" eval="[(4, ref('group_read_supplier')),
+                                              (4, ref('group_create_supplier')),
+                                              (4, ref('group_manage_partner_category')),
+                                              (4, ref('group_invoices_based_deliveries')),
+                                              (4, ref('group_invoices_based_order_line')),
+                                              (4, ref('group_draft_invoices_control')),
+                                              (4, ref('group_manage_incoming_products')),
+                                              (4, ref('group_purchasing_analysis')),
+                                              (4, ref('group_read_product'))]"/>
+        </record>
+    </data>
+</openerp>

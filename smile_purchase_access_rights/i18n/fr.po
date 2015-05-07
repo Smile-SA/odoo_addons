@@ -1,0 +1,207 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_purchase_access_rights
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-22 14:58+0000\n"
+"PO-Revision-Date: 2015-04-22 14:58+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_accounting_supplier_invoices
+msgid " Accounting supplier invoices"
+msgstr "Comptabiliser les factures fournisseurs"
+
+#. module: smile_purchase_access_rights
+#: model:ir.actions.act_window,help:smile_purchase_access_rights.action_picking_tree
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a stock operation. \n"
+"              </p><p>\n"
+"                Most operations are prepared automatically by Odoo according\n"
+"                to your preconfigured logistics rules, but you can also record\n"
+"                manual stock movements.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a stock operation. \n"
+"              </p><p>\n"
+"                Most operations are prepared automatically by Odoo according\n"
+"                to your preconfigured logistics rules, but you can also record\n"
+"                manual stock movements.\n"
+"              </p>\n"
+"            "
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_accounting_supplier
+msgid "Accounting Supplier"
+msgstr "Paramétrage comptable des fournisseurs"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_accounting_product
+msgid "Accounting parameters product"
+msgstr "Paramétrage comptable des articles"
+
+#. module: smile_purchase_access_rights
+#: view:account.invoice:smile_purchase_access_rights.view_account_invoice_button_validate_access
+msgid "Ask Refund"
+msgstr "Demander un avoir"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_baper_invoices_control
+msgid "BAPER Invoices control"
+msgstr "Factures à BAPER"
+
+#. module: smile_purchase_access_rights
+#: view:stock.picking:smile_purchase_access_rights.view_stock_picking_access
+msgid "Cancel Transfer"
+msgstr "Annuler le transfert"
+
+#. module: smile_purchase_access_rights
+#: view:stock.picking:smile_purchase_access_rights.view_stock_picking_access
+msgid "Check Availability"
+msgstr "Vérifier la disponibilité"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_create_supplier
+msgid "Create Supplier"
+msgstr "Créer des fournisseurs"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_create_order
+msgid "Create order"
+msgstr "Créer des commandes"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_create_product
+msgid "Create product"
+msgstr "Créer les articles"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_draft_invoices_control
+msgid "Draft Invoices control"
+msgstr "Pointage des factures brouillon "
+
+#. module: smile_purchase_access_rights
+#: view:stock.picking:smile_purchase_access_rights.view_stock_picking_access
+msgid "Force Availability"
+msgstr "Forcer la disponibilité"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_invoices_based_deliveries
+msgid "Invoices Based On Deliveries"
+msgstr "Factures sur la base des livraisons"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_invoices_based_order_line
+msgid "Invoices Based On Order Line"
+msgstr "Factures sur la base des lignes de commandes"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_manage_partner_category
+msgid "Manage Partner Catgeory"
+msgstr "Gérer les étiquettes"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_manage_incoming_products
+msgid "Manage incoming products"
+msgstr "Gérer les articles entrants"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_manage_stock_picking
+msgid "Manage stock picking"
+msgstr "Gérer les réceptions"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_manage_suppliers_returns
+msgid "Manage suppliers Returns"
+msgstr "Gérer les retours fournisseurs "
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_manage_suppliers_refunds
+msgid "Manage suppliers refunds"
+msgstr "Gérer les avoirs fournisseurs"
+
+#. module: smile_purchase_access_rights
+#: view:stock.picking:smile_purchase_access_rights.view_stock_picking_access
+msgid "Mark as Todo"
+msgstr "Mark as Todo"
+
+#. module: smile_purchase_access_rights
+#: view:stock.picking:smile_purchase_access_rights.view_stock_picking_access
+msgid "Print Picking List"
+msgstr "Print Picking List"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_purchasing_analysis
+msgid "Purchasing Analysis"
+msgstr "Analyse des achats"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_read_supplier
+msgid "Read Supplier"
+msgstr "Voir les fournisseurs"
+
+#. module: smile_purchase_access_rights
+#: model:res.groups,name:smile_purchase_access_rights.group_read_product
+msgid "Read product"
+msgstr "Voir les articles"
+
+#. module: smile_purchase_access_rights
+#: model:ir.actions.act_window,name:smile_purchase_access_rights.action_picking_tree
+#: model:ir.ui.menu,name:smile_purchase_access_rights.smile_partner_picking_tree
+msgid "Receipts"
+msgstr "Réception"
+
+#. module: smile_purchase_access_rights
+#: view:purchase.order:smile_purchase_access_rights.view_purchase_order_button_validate_access
+msgid "Receive Products"
+msgstr "Réception par article"
+
+#. module: smile_purchase_access_rights
+#: view:stock.picking:smile_purchase_access_rights.view_stock_picking_access
+msgid "Recheck Availability"
+msgstr "Recheck Availability"
+
+#. module: smile_purchase_access_rights
+#: view:stock.picking:smile_purchase_access_rights.view_stock_picking_access
+msgid "Reverse Transfer"
+msgstr "Annuler le transfert"
+
+#. module: smile_purchase_access_rights
+#: view:res.partner:smile_purchase_access_rights.view_res_partner_category_readonly
+msgid "Tags..."
+msgstr "Étiquettes..."
+
+#. module: smile_purchase_access_rights
+#: view:stock.picking:smile_purchase_access_rights.view_stock_picking_access
+msgid "Transfer"
+msgstr "Transfer"
+
+#. module: smile_purchase_access_rights
+#: view:stock.picking:smile_purchase_access_rights.view_stock_picking_access
+msgid "Unreserve"
+msgstr "Unreserve"
+
+#. module: smile_purchase_access_rights
+#: view:account.invoice:smile_purchase_access_rights.view_account_invoice_button_validate_access
+msgid "Validate"
+msgstr "Valider"
+
+#. module: smile_purchase_access_rights
+#: view:product.template:smile_purchase_access_rights.product_template_form_view
+msgid "smile_purchase_access_rights.group_accounting_product"
+msgstr "smile_purchase_access_rights.group_accounting_product"
+
+#. module: smile_purchase_access_rights
+#: view:res.partner:smile_purchase_access_rights.view_res_partner_accounting_access
+msgid "smile_purchase_access_rights.group_accounting_supplier"
+msgstr "smile_purchase_access_rights.group_accounting_supplier"
+
