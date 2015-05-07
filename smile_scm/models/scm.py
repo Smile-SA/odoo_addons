@@ -196,7 +196,7 @@ class Branch(models.Model):
             if branch.state == 'draft':
                 raise Warning(_('You cannot pull a repository not cloned'))
             if not os.path.exists(branch.directory):
-                self.clone(force=True)
+                branch.clone(force=True)
             else:
                 with cd(branch.directory):
                     vcs = branch.vcs_id
