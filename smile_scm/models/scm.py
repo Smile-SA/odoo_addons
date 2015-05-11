@@ -176,17 +176,23 @@ class Branch(models.Model):
         self._try_lock(_('Cloning already in progress'))
         with cd(self._parent_path):
             for branch in self:
+                if not branch.branch:
+                    raise Warning(_('Please define a branch before cloning'))
                 if not force and branch.state != 'draft':
                     raise Warning(_('You cannot clone a branch already cloned'))
-                vcs = branch.vcs_id
-                localdict = {'branch': branch.branch or branch.vcs_id.default_branch,
-                             'url': branch.url}
-                cmd_clone = vcs.cmd_clone % localdict
-                cmd = cmd_clone.split(' ')
-                cmd.insert(0, vcs.cmd)
-                cmd.append(branch.directory)
-                Branch._call(cmd)
-        self.write({'state': 'done', 'last_update': fields.Datetime.now()})
+                if os.path.exists(branch.directory):
+                    branch.state = 'done'
+                    branch.pull()
+                else:
+                    vcs = branch.vcs_id
+                    localdict = {'branch': branch.branch or branch.vcs_id.default_branch,
+                                 'url': branch.url}
+                    cmd_clone = vcs.cmd_clone % localdict
+                    cmd = cmd_clone.split(' ')
+                    cmd.insert(0, vcs.cmd)
+                    cmd.append(branch.directory)
+                    Branch._call(cmd)
+        branch.write({'state': 'done', 'last_update': fields.Datetime.now()})
         self.message_post(body=_("Branch cloned"))
         return True
 
@@ -196,7 +202,7 @@ class Branch(models.Model):
             if branch.state == 'draft':
                 raise Warning(_('You cannot pull a repository not cloned'))
             if not os.path.exists(branch.directory):
-                self.clone(force=True)
+                branch.clone(force=True)
             else:
                 with cd(branch.directory):
                     vcs = branch.vcs_id
