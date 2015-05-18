@@ -1,6 +1,6 @@
-.openerp .oe_form_sheet_width {
+/* .openerp .oe_form_sheet_width {
   max-width: 1100px;
-}
+} */
 .openerp .oe_form .oe_form_field_text .oe_form_text_content {
   word-break: break-all;
 }
