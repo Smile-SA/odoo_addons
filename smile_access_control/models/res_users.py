@@ -106,7 +106,7 @@ class ResUsers(models.Model):
     @api.model
     def create(self, vals):
         record = super(ResUsers, self).create(vals)
-        if vals.get('user_profile_id'):
+        if record.user_profile_id:
             record._update_from_profile()
         return record
 
