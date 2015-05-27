@@ -19,16 +19,19 @@
 #
 ##############################################################################
 
-from openerp import api, models, tools
-from openerp.addons.mail.mail_mail import _logger
+from openerp import models, tools
+from openerp.addons.base.ir.ir_mail_server import _logger
 
 
-class MailMail(models.Model):
-    _inherit = 'mail.mail'
+class IrMailServer(models.Model):
+    _inherit = "ir.mail_server"
 
-    @api.cr_uid
-    def process_email_queue(self, cr, uid, ids=None, context=None):
+    def send_email(self, cr, uid, message, mail_server_id=None, smtp_server=None, smtp_port=None,
+                   smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
+                   context=None):
         if not tools.config.get('enable_email_sending'):
             _logger.warning('Email sending not enable')
             return True
-        return super(MailMail, self).process_email_queue(cr, uid, ids, context)
+        return super(IrMailServer, self).send_email(cr, uid, message, mail_server_id, smtp_server,
+                                                    smtp_port, smtp_user, smtp_password, smtp_encryption,
+                                                    smtp_debug, context)

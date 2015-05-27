@@ -29,6 +29,8 @@ def new_setup_models(self, cr, partial=False):
     for model_obj in self.models.itervalues():
         for fieldname, field in model_obj._fields.iteritems():
             if field.type == 'many2one' and field.ondelete and field.ondelete.lower() == 'cascade':
+                if field.comodel_name.startswith('mail.'):
+                    continue
                 remote_obj = self.get(field.comodel_name)
                 if not hasattr(remote_obj, '_cascade_relations'):
                     setattr(remote_obj, '_cascade_relations', {})
