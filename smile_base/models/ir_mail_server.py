@@ -31,7 +31,7 @@ class IrMailServer(models.Model):
                    context=None):
         if not tools.config.get('enable_email_sending'):
             _logger.warning('Email sending not enable')
-            return True
+            return False
         return super(IrMailServer, self).send_email(cr, uid, message, mail_server_id, smtp_server,
                                                     smtp_port, smtp_user, smtp_password, smtp_encryption,
                                                     smtp_debug, context)
