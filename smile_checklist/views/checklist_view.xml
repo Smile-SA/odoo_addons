@@ -172,10 +172,11 @@
       <field name="model">checklist.task.instance</field>
       <field name="arch" type="xml">
         <tree string="Tasks"
-          colors="red:progress_rate == 0;orange:progress_rate &gt; 0 and progress_rate &lt; 100;green:progress_rate == 100">
+          colors="red:progress_rate == 0 and mandatory;orange:progress_rate &lt; 100;green:progress_rate == 100">
           <field name="name"/>
           <field name="mandatory"/>
           <field name="progress_rate" widget="progressbar"/>
+          <field name="mandatory" invisible="1"/>
         </tree>
       </field>
     </record>
