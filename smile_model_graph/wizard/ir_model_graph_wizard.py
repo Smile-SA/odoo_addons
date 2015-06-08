@@ -24,7 +24,7 @@ from openerp import api, fields, models
 
 class IrModelGraphWizard(models.TransientModel):
     _name = 'ir.model.graph_wizard'
-    _description = 'Model Graph Wizard'
+    _description = 'Models Graph Wizard'
     _rec_name = 'filename'
 
     deep = fields.Integer(required=True, default=True)
