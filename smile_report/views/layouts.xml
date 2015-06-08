@@ -1,0 +1,31 @@
+<openerp>
+  <data noupdate="0">
+
+    <!-- Override native layout to insert image if configured on company -->
+
+    <template id="report.external_layout">
+      <!-- Multicompany -->
+      <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+      </t>
+      <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+      </t>
+
+      <!-- Native header -->
+      <t t-if="not company.custom_header">
+        <t t-call="report.external_layout_header"/>
+      </t>
+      <!-- else image as a header -->
+      <t t-if="company.custom_header">
+        <div class="header">
+          <img t-att-src="'data:image/png;base64,%s' % company.header_image"/>
+        </div>
+      </t>
+      <t t-raw="0"/>
+      <!-- Native footer -->
+      <t t-call="report.external_layout_footer"/>
+    </template>
+
+  </data>
+</openerp>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <!-- Company view -->
+
+    <record id="view_company_form" model="ir.ui.view">
+      <field name="name">res.company.form</field>
+      <field name="model">res.company</field>
+      <field name="inherit_id" ref="base.view_company_form"/>
+      <field name="arch" type="xml">
+        <page string="Report Configuration" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </page>
+        <page string="Report Configuration" position="after">
+          <page string="Report Configuration">
+            <div class="oe_right oe_button_box">
+              <button name="preview_report" type="object" string="PDF" context="{'report_type': 'pdf'}" class="oe_highlight"/>
+              <button name="preview_report" type="object" string="HTML" context="{'report_type': 'html'}" class="oe_highlight"/>
+            </div>
+            <group name="group_header" string="Header">
+              <field name="custom_header"/>
+              <field name="header_image" widget="image" options="{'size': [400, 400]}" attrs="{'invisible': [('custom_header', '=', False)]}"/>
+            </group>
+            <group name="group_footer" string="Footer">
+              <field name="custom_footer"/>
+              <field name="rml_footer" widget="html"/>
+            </group>
+          </page>
+        </page>
+      </field>
+    </record>
+
+  </data>
+</openerp>

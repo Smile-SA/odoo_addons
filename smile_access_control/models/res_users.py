@@ -43,7 +43,8 @@ class ResUsers(models.Model):
         ]).ids
 
     user_profile = fields.Boolean('Is User Profile')
-    user_profile_id = fields.Many2one('res.users', 'User Profile', domain=[('user_profile', '=', True)], context={'active_test': False})
+    user_profile_id = fields.Many2one('res.users', 'User Profile', domain=[('id', '!=', SUPERUSER_ID), ('user_profile', '=', True)],
+                                      context={'active_test': False})
     user_ids = fields.One2many('res.users', 'user_profile_id', 'Users', domain=[('user_profile', '=', False)])
     field_ids = fields.Many2many('ir.model.fields', 'res_users_fields_rel', 'user_id', 'field_id', 'Fields to update',
                                  domain=[('model', 'in', ('res.users', 'res.partner')),
@@ -56,6 +57,13 @@ class ResUsers(models.Model):
         ('profile_without_profile_id', 'CHECK( (user_profile = TRUE AND user_profile_id IS NULL) OR user_profile = FALSE )',
          'Profile users cannot be linked to a profile!'),
     ]
+
+    @api.one
+    @api.constrains('user_profile_id')
+    def _check_user_profile_id(self):
+        admin = self.env.ref('base.user_root')
+        if self.user_profile_id == admin:
+            raise Warning(_("You can't use %s as user profile !") % admin.name)
 
     @api.onchange('user_profile')
     def onchange_user_profile(self):
@@ -98,7 +106,7 @@ class ResUsers(models.Model):
     @api.model
     def create(self, vals):
         record = super(ResUsers, self).create(vals)
-        if vals.get('user_profile_id'):
+        if record.user_profile_id:
             record._update_from_profile()
         return record
 
