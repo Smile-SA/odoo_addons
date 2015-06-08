@@ -41,4 +41,4 @@ def smile_sql_detective(min_delay):
     return detective_log
 
 
-Cursor.execute = smile_sql_detective(config.get('log_sql_request', -1.0))(Cursor.execute)
+Cursor.execute = smile_sql_detective(config.get('log_sql_request', 0.150))(Cursor.execute)

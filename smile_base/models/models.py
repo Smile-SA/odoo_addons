@@ -41,12 +41,12 @@ native_unlink = BaseModel.unlink
 
 
 @api.multi
-def new_validate_fields(self, fields_to_validate):
+def _validate_fields(self, fields_to_validate):
     if not self._context.get('no_validate'):
         native_validate_fields(self, fields_to_validate)
 
 
-def new_load(self, cr, uid, fields, data, context=None):
+def load(self, cr, uid, fields, data, context=None):
     context_copy = context and context.copy() or {}
     context_copy['no_validate'] = True
     context_copy['defer_parent_store_computation'] = True
@@ -59,14 +59,14 @@ def new_load(self, cr, uid, fields, data, context=None):
     return res
 
 
-def new_import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
+def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
     context_copy = context and context.copy() or {}
     context_copy['defer_parent_store_computation'] = True
     return native_import_data(self, cr, uid, fields, datas, mode, current_module, noupdate, context_copy, filename)
 
 
 @api.multi
-def new_unlink(self):
+def unlink(self):
     if hasattr(self.pool[self._name], '_cascade_relations'):
         self = self.with_context(active_test=False)
         if 'unlink_in_cascade' not in self._context:
@@ -255,14 +255,14 @@ def filtered_from_domain(self, domain):
     return parse()
 
 BaseModel.filtered_from_domain = filtered_from_domain
-BaseModel._validate_fields = new_validate_fields
+BaseModel._validate_fields = _validate_fields
 BaseModel.bulk_create = bulk_create
-BaseModel.import_data = new_import_data
-BaseModel.load = new_load
+BaseModel.import_data = import_data
+BaseModel.load = load
 BaseModel._get_comparison_fields = _get_comparison_fields
 BaseModel._compare = _compare
 BaseModel._get_comparison_logs = _get_comparison_logs
 BaseModel.open_wizard = open_wizard
 BaseModel.store_set_values = BaseModel._store_set_values
 BaseModel._try_lock = _try_lock
-BaseModel.unlink = new_unlink
+BaseModel.unlink = unlink

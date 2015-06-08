@@ -28,7 +28,7 @@ class MailMail(models.Model):
 
     @api.cr_uid
     def process_email_queue(self, cr, uid, ids=None, context=None):
-        if tools.config.get('disable_email_sending'):
-            _logger.warning('Email sending disable')
+        if not tools.config.get('enable_email_sending'):
+            _logger.warning('Email sending not enable')
             return True
         return super(MailMail, self).process_email_queue(cr, uid, ids, context)

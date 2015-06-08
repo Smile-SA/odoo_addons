@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-extend="UserMenu" >
+    <t t-extend="UserMenu">
         <t t-jquery="ul.dropdown-menu" t-operation="replace">
             <ul class="dropdown-menu">
                 <li><a href="#" data-menu="settings">Preferences</a></li>
@@ -10,8 +10,19 @@
             </ul>
         </t>
     </t>
-    <t t-extend="WebClient.announcement_bar" >
+    <t t-extend="WebClient.announcement_bar">
         <t t-jquery="table.oe_webclient" t-operation="replace">
         </t>
     </t>
+	<t t-extend="FieldChar">
+        <t t-jquery="span input" t-operation="replace">
+            <input t-att-type="widget.password ? 'password' : 'text'"
+                t-att-id="widget.id_for_label"
+                t-att-tabindex="widget.node.attrs.tabindex"
+                t-att-autofocus="widget.node.attrs.autofocus"
+                t-att-placeholder="widget.node.attrs.placeholder"
+                t-att-maxlength="widget.field.size or widget.node.attrs.size"
+            />
+	    </t>
+	</t>
 </templates>

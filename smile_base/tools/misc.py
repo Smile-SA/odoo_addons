@@ -25,6 +25,8 @@ _logger = logging.getLogger(__name__)
 
 
 def create_unique_index(cr, table, column, where_clause=None):
+    if type(column) == list:
+        column = ','.join(column)
     column_name = column.replace(' ', '').replace(',', '_')
     index_name = 'uniq_%(table)s_%(column_name)s' % locals()
     cr.execute("SELECT relname FROM pg_class WHERE relname=%s", (index_name,))
