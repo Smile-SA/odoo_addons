@@ -137,12 +137,9 @@ class StockMove(models.Model):
             return True
         self = self.filtered(lambda move: move.state != 'cancel')
         pickings = self.env['stock.picking'].browse()
-        moves_to_unlink = self.browse()
         for move in self:
             if move.picking_id.picking_type_id.propagate_move_cancel:
                 pickings |= move.picking_id
-            else:
-                moves_to_unlink |= move
         res = super(StockMove, self).action_cancel()
         pickings.action_cancel()
         return res
