@@ -75,7 +75,7 @@ def action_rule_decorator():
 
         # Retrieve the action rules to possibly execute
         rule_obj = self.pool.get('base.action.rule')
-        rule_ids = rule_obj._get_action_rules(cr, uid, method, context)
+        rule_ids = rule_obj._get_action_rules(cr, uid, self._name, method, context)
         rules = rule_obj.browse(cr, uid, rule_ids, context)
 
         # Check preconditions

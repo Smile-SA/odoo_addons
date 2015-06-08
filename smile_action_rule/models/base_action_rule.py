@@ -258,20 +258,21 @@ class ActionRule(models.Model):
         for rule in self.browse(cr, uid, rule_ids):
             if rule.kind == 'on_time':
                 continue
+            res.setdefault(rule.model, {})
             if rule.kind in ('on_create', 'on_create_or_write'):
-                res.setdefault('create', []).append(rule.id)
+                res[rule.model].setdefault('create', []).append(rule.id)
             if rule.kind in ('on_write', 'on_create_or_write'):
-                res.setdefault('write', []).append(rule.id)
+                res[rule.model].setdefault('write', []).append(rule.id)
             elif rule.kind == 'on_unlink':
-                res.setdefault('unlink', []).append(rule.id)
+                res[rule.model].setdefault('unlink', []).append(rule.id)
             elif rule.kind == 'on_other_method':
-                res.setdefault(rule.method_id.name, []).append(rule.id)
+                res[rule.model].setdefault(rule.method_id.name, []).append(rule.id)
         return res
 
     @api.model
-    def _get_action_rules(self, method):
+    def _get_action_rules(self, model, method):
         method_name = ActionRule._get_method_name(method)
-        return self.sudo()._get_action_rules_by_method().get(method_name, [])
+        return self.sudo()._get_action_rules_by_method().get(model, {}).get(method_name, [])
 
     @tools.cache(skiparg=3)
     def _get_action_rules_by_activity(self, cr, uid):
