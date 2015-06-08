@@ -23,6 +23,7 @@ from contextlib import contextmanager
 import logging
 import os
 import sys
+import time
 
 from openerp import SUPERUSER_ID, tools
 from openerp.modules.registry import Registry, RegistryManager
@@ -44,10 +45,8 @@ def set_db_version(self, version):
     if version:
         cr = self._db.cursor()
         try:
-            cr.execute("""
-                INSERT INTO ir_config_parameter (create_date, create_uid, key, value)
-                VALUES (now() at time zone 'UTC', %s, 'code.version', %s)
-            """, (SUPERUSER_ID, str(version)))
+            cr.execute("INSERT INTO ir_config_parameter (create_date, create_uid, key, value) VALUES (now() at time zone 'UTC', %s, 'code.version', %s)",
+                       (SUPERUSER_ID, str(version)))
             cr.commit()
         finally:
             cr.close()
@@ -82,6 +81,7 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                     code_at_creation = upgrade_manager.code_version
                 upgrades = bool(upgrade_manager.upgrades)
                 for upgrade in upgrade_manager.upgrades:
+                    t0 = time.time()
                     _logger.info('loading %s upgrade...', upgrade.version)
                     upgrade.pre_load()
                     if upgrade.modules_to_upgrade:
@@ -89,7 +89,7 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                         upgrade.force_modules_upgrade(registry)
                     native_new(db_name, update_module=True)
                     upgrade.post_load()
-                    _logger.info('%s upgrade successfully loaded', upgrade.version)
+                    _logger.info('%s upgrade successfully loaded in %ss', upgrade.version, time.time() - t0)
             registry = native_new(db_name, force_demo, status, update_module)
             registry.set_db_version(code_at_creation)
             if upgrades and config.get('stop_after_upgrades'):
