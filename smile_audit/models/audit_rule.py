@@ -157,21 +157,6 @@ class AuditRule(models.Model):
         self.update_rule(force_deactivation=True)
         return super(AuditRule, self).unlink()
 
-    @api.model
-    def _get_log_lines(self, old_values, new_values):
-        line_vals = []
-        keys = set(old_values) | set(new_values)
-        for key in keys:
-            old_value = old_values.get(key)
-            new_value = new_values.get(key)
-            if (old_value or new_value) and old_value != new_value:
-                line_vals.append({
-                    'field_name': key,
-                    'old_value': old_value,
-                    'new_value': new_value,
-                })
-        return line_vals
-
     @api.one
     def log(self, method, old_values=None, new_values=None):
         _logger.debug('Starting audit log')

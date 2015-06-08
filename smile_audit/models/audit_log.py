@@ -84,7 +84,7 @@ class AuditLog(models.Model):
         lang = self.env.user.lang
         translated_label = ''
         if lang != 'en_US':
-            params = ('%s,%s' % (field.model, field.name), 'field', lang, label)
+            params = ('%s,%s' % (field.model_name, field.name), 'field', lang, label)
             translated_label = self.env['ir.translation'].sudo()._get_source(*params)
         return translated_label or label
 
