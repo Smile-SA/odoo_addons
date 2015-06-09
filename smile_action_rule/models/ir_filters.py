@@ -55,7 +55,7 @@ class ActionFilter(models.Model):
         domain = []
         eval_domain = eval(self.domain, {'object': unquote('object')})
         for cond in eval_domain:
-            if isinstance(cond, tuple) and 'object' in cond[2]:
+            if isinstance(cond, tuple) and isinstance(cond[2], basestring) and 'object' in cond[2]:
                 subdomain = []
                 records = self.env[self.model_id].browse(record_ids)
                 for record in records:
