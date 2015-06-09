@@ -19,5 +19,26 @@
 #
 ##############################################################################
 
-import models
-import report
+from openerp.report.report_sxw import rml_parse
+
+
+def get_digits(self, obj=None, f=None, dp=None):
+    d = DEFAULT_DIGITS = 2
+    if dp:
+        decimal_precision_obj = self.pool.get('decimal.precision')
+        ids = decimal_precision_obj.search(self.cr, self.uid, [('name', '=', dp)])
+        if ids:
+            d = decimal_precision_obj.browse(self.cr, self.uid, ids)[0].display_digits
+    elif obj and f:
+        res_digits = getattr(obj._columns[f], 'digits', lambda x: ((16, DEFAULT_DIGITS)))
+        if isinstance(res_digits, tuple):
+            d = res_digits[1]
+        else:
+            d = res_digits(self.cr)[1]
+    elif (hasattr(obj, '_field') and\
+            isinstance(obj._field, (float_field, function_field)) and\
+            obj._field.digits):
+            d = obj._field.digits[1] or DEFAULT_DIGITS
+    return d
+
+rml_parse.get_digits = get_digits
