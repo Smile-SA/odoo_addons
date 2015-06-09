@@ -63,10 +63,10 @@ def _get_args(self, method, args, kwargs):
 
 
 def _get_origin_method(method):
-    if hasattr(origin, '_orig'):
-        return origin._orig
-    elif hasattr(origin, 'origin'):
-        return origin.origin
+    if hasattr(method, '_orig'):
+        return method._orig
+    elif hasattr(method, 'origin'):
+        return method.origin
 
 
 def action_rule_decorator():
