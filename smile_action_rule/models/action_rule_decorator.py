@@ -62,6 +62,13 @@ def _get_args(self, method, args, kwargs):
     return cr, uid, ids, context
 
 
+def _get_origin_method(method):
+    if hasattr(origin, '_orig'):
+        return origin._orig
+    elif hasattr(origin, 'origin'):
+        return origin.origin
+
+
 def action_rule_decorator():
     def action_rule_wrapper(self, *args, **kwargs):
 
@@ -88,6 +95,14 @@ def action_rule_decorator():
 
         # Call original method
         res = method(self, *args, **kwargs)
+
+        # Manage create method
+        origin = method
+        while origin:
+            if origin.__name__ == 'create':
+                pre_ids = pre_ids.fromkeys(rules, [res.id] if hasattr(res, 'id') else [res])
+                break
+            origin = _get_origin_method(origin)
 
         # Check postconditions, and execute actions on the records that satisfy them
         for rule in rules:
