@@ -77,7 +77,6 @@
 					<field name="filter_type" />
 					<field name="method" />
 					<field name="server_action_id" />
-					<field name="export_ids" />
 				</tree>
 			</field>
 		</record>

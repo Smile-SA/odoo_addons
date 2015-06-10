@@ -53,7 +53,6 @@
 					<field name="name" />
 					<field name="model_id" />
 					<field name="method" />
-					<field name="import_ids" />
 				</tree>
 			</field>
 		</record>
