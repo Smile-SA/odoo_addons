@@ -38,6 +38,7 @@ native_validate_fields = BaseModel._validate_fields
 native_import_data = BaseModel.import_data
 native_load = BaseModel.load
 native_unlink = BaseModel.unlink
+native_store_get_values = BaseModel._store_get_values
 
 
 @api.multi
@@ -84,13 +85,47 @@ def unlink(self):
     return native_unlink(self)
 
 
+@api.multi
+def _store_get_values(self, fields):
+    if self._context.get('no_store_function'):
+        return []
+    return native_store_get_values(fields)
+
+
+@api.multi
+def _compute_store_set(self):
+    """
+    Get the list of stored function fields to recompute (via _store_get_values)
+    and recompute them (via _store_set_values)
+    """
+    store_get_result = self._store_get_values(self._columns.keys())
+    store_get_result.sort()
+
+    done = {}
+    cr, uid, context = self.env.args
+    for order, model, ids_to_update, fields_to_recompute in store_get_result:
+        key = (model, tuple(fields_to_recompute))
+        done.setdefault(key, {})
+        # avoid to do several times the same computation
+        ids_to_recompute = []
+        for id_to_update in ids_to_update:
+            if id_to_update not in done[key]:
+                done[key][id_to_update] = True
+                ids_to_recompute.append(id_to_update)
+        self.pool[model]._store_set_values(cr, uid, ids_to_recompute, fields_to_recompute, context)
+
+
 @api.model
-@api.returns('self', lambda value: value.id)
+@api.returns('self', lambda records: records.ids)
 def bulk_create(self, vals_list):
     if not vals_list:
         return []
-    cr, uid, context = self.env.args
-    context_copy = context and context.copy() or {}
+    context_copy = dict(self._context)
+    if not self._context.get('force_store_function'):
+        # 'force_store_function' useful if model has workflow with transition condition
+        # based on function/compute fields
+        context_copy['no_store_function'] = True
+        context_copy['recompute'] = False
     context_copy['no_validate'] = True
     context_copy['defer_parent_store_computation'] = True
     if not isinstance(vals_list, list):
@@ -98,6 +133,9 @@ def bulk_create(self, vals_list):
     records = self.browse()
     for vals in vals_list:
         records |= self.with_context(**context_copy).create(vals)
+    if not self._context.get('force_store_function'):
+        records._compute_store_set()
+        self.recompute()
     records._validate_fields(vals_list[0])
     self._parent_store_compute()
     return records
@@ -254,6 +292,23 @@ def filtered_from_domain(self, domain):
 
     return parse()
 
+
+@api.multi
+def recompute_fields(self, fnames):
+    old_fnames = []
+    for fname in fnames:
+        field = self._fields[fname]
+        if getattr(field.column, 'store', None):
+            old_fnames.append(fname)
+        elif getattr(field, 'store') and getattr(field, 'compute'):
+            self._recompute_todo(field)
+        else:
+            raise Warning(_('%s is not a stored compute/function field') % fname)
+    self._model._store_set_values(self._cr, self._uid, self.ids, old_fnames, self._context)
+    self.recompute()
+    return True
+
+
 BaseModel.filtered_from_domain = filtered_from_domain
 BaseModel._validate_fields = _validate_fields
 BaseModel.bulk_create = bulk_create
@@ -263,6 +318,7 @@ BaseModel._get_comparison_fields = _get_comparison_fields
 BaseModel._compare = _compare
 BaseModel._get_comparison_logs = _get_comparison_logs
 BaseModel.open_wizard = open_wizard
-BaseModel.store_set_values = BaseModel._store_set_values
+BaseModel._compute_store_set = _compute_store_set
+BaseModel.recompute_fields = recompute_fields
 BaseModel._try_lock = _try_lock
 BaseModel.unlink = unlink
