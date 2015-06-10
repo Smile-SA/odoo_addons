@@ -45,7 +45,8 @@ def set_db_version(self, version):
     if version:
         cr = self._db.cursor()
         try:
-            cr.execute("INSERT INTO ir_config_parameter (create_date, create_uid, key, value) VALUES (now() at time zone 'UTC', %s, 'code.version', %s)",
+            cr.execute("""INSERT INTO ir_config_parameter (create_date, create_uid, key, value)
+                       VALUES (now() at time zone 'UTC', %s, 'code.version', %s)""",
                        (SUPERUSER_ID, str(version)))
             cr.commit()
         finally:

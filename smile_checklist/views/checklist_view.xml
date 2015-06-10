@@ -24,6 +24,7 @@
                       <field name="active"/>
                       <field name="condition" groups="base.group_no_one"/>
                       <field name="sequence"/>
+                      <field name="model_id" invisible="1"/>
                       <field name="active_field" invisible="1"/>
                       <field name="mandatory"
                         attrs="{'invisible':[('active_field','!=',True)]}"/>
