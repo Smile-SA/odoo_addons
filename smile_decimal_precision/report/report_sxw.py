@@ -31,7 +31,7 @@ def get_digits(self, obj=None, f=None, dp=None):
         if ids:
             d = decimal_precision_obj.browse(self.cr, self.uid, ids)[0].display_digits
     elif obj and f:
-        res_digits = getattr(obj._columns[f], 'digits', lambda x: ((16, DEFAULT_DIGITS)))
+        res_digits = getattr(obj._columns[f], 'digits', lambda x: 16, DEFAULT_DIGITS)
         if isinstance(res_digits, tuple):
             d = res_digits[1]
         else:

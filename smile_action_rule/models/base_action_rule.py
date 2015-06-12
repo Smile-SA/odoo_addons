@@ -221,10 +221,10 @@ class ActionRule(models.Model):
         if self.kind in ('on_time', 'on_wkf_activity'):
             return []
         if self.kind == 'on_other_method' and self.method_id:
-            return (self.method_id.name,)
+            return self.method_id.name,
         elif self.kind == 'on_create_or_write':
-            return ('create', 'write')
-        return (self.kind.replace('on_', ''),)
+            return 'create', 'write'
+        return self.kind.replace('on_', ''),
 
     def _register_hook(self, cr, ids=None):
         # Trigger on any method

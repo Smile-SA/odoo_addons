@@ -72,7 +72,9 @@ def _special_wrapper(self, method, fields, *args, **kwargs):
     return res
 
 
-def add_followers(fields=['partner_id']):
+def add_followers(fields=None):
+    fields = fields or ['partner_id']
+
     def decorator(create_or_write):
         cls = create_or_write.im_class
         if not hasattr(cls, '_follow_partner_fields'):
@@ -86,15 +88,18 @@ def add_followers(fields=['partner_id']):
     return decorator
 
 
-def _add_followers(fields=['partner_id']):
+def _add_followers(fields=None):
+    fields = fields or ['partner_id']
+
     def add_followers_wrapper(self, *args, **kwargs):
         return _special_wrapper(self, add_followers_wrapper.origin, fields, *args, **kwargs)
     return add_followers_wrapper
 
 
-def AddFollowers(fields=['partner_id']):
-    def decorator(original_class):
+def AddFollowers(fields=None):
+    fields = fields or ['partner_id']
 
+    def decorator(original_class):
         def _register_hook(self, cr):
             model_obj = self.pool.get(self._name)
             for method_name in ('create', 'write'):
