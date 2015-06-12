@@ -61,6 +61,7 @@ class IrModelImportTemplate(models.Model):
                 'test_mode': self._context.get('test_mode'),
                 'new_thread': new_thread,
                 'args': repr(args),
+                'log_level': self.log_level,
                 'log_returns': self.log_returns,
             }
             import_rec = import_obj.create(vals)

@@ -32,6 +32,15 @@ from openerp.addons.smile_log.tools import SmileDBLogger
 
 from ..tools import s2human
 
+LOG_LEVELS = [
+    (0, 'NOTSET'),
+    (10, 'DEBUG'),
+    (20, 'INFO'),
+    (30, 'WARNING'),
+    (40, 'ERROR'),
+    (50, 'CRITICAL'),
+]
+
 _logger = logging.getLogger(__package__)
 
 
@@ -47,6 +56,7 @@ class IrModelImpexTemplate(models.AbstractModel):
     cron_id = fields.Many2one('ir.cron', 'Scheduled Action')
     server_action_id = fields.Many2one('ir.actions.server', 'Server action')
     new_thread = fields.Boolean('New Thread', default=True)
+    log_level = fields.Selection(LOG_LEVELS, default=20, required=True)
     log_entry_args = fields.Boolean('Log entry arguments', default=True)
     log_returns = fields.Boolean('Log returns')
 
@@ -151,6 +161,7 @@ class IrModelImpex(models.AbstractModel):
     state = fields.Selection(STATES, "State", readonly=True, required=True, default='running')
     pid = fields.Integer("Process Id", readonly=True)
     args = fields.Text('Arguments', readonly=True)
+    log_level = fields.Selection(LOG_LEVELS)
     log_returns = fields.Boolean('Log returns', readonly=True)
     returns = fields.Text('Returns', readonly=True)
 
@@ -177,6 +188,7 @@ class IrModelImpex(models.AbstractModel):
     def _process(self):
         self.ensure_one()
         logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
+        logger.setLevel(self.log_level)
         self = self.with_context(logger=logger)
         self.write_with_new_cursor({'state': 'running', 'from_date': fields.Datetime.now(),
                                     'pid': os.getpid()})

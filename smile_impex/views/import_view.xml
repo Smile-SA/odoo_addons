@@ -37,6 +37,9 @@
 								</group>
 							</page>
 							<page string="Logs">
+								<group col="4">
+									<field name="log_level" />
+								</group>
 								<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}" />
 							</page>
 						</notebook>

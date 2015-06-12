@@ -58,7 +58,7 @@ class SmileDBHandler(logging.Handler):
 
         try:
             cr.execute(request, params)
-        except Exception:
+        except:
             # retry
             cr = self._get_cursor(dbname)
             cr.execute(request, params)
@@ -121,6 +121,12 @@ class SmileDBLogger():
     @property
     def pid(self):
         return self._logger_args['pid']
+
+    def setLevel(self, level):
+        self._logger.setLevel(level)
+
+    def getEffectiveLevel(self):
+        return self._logger.getEffectiveLevel()
 
     def debug(self, msg):
         self._logger.debug(msg, self._logger_args)

@@ -108,7 +108,7 @@ class IrModelExportTemplate(models.Model):
         if self.limit:
             res_ids_list = []
             i = 0
-            while(res_ids[i: i + self.limit]):
+            while res_ids[i: i + self.limit]:
                 if self.max_offset and i == self.max_offset * self.limit:
                     break
                 res_ids_list.append(res_ids[i: i + self.limit])
@@ -129,6 +129,7 @@ class IrModelExportTemplate(models.Model):
                 'test_mode': self._context.get('test_mode', False),
                 'new_thread': new_thread,
                 'args': repr(args),
+                'log_level': self.log_level,
                 'log_returns': self.log_returns,
             }
             for index, res_ids_offset in enumerate(self._get_res_ids_offset(*args)):
