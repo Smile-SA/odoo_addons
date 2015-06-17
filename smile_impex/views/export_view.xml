@@ -26,6 +26,7 @@
 						<notebook colspan="4">
 							<page string="Exports">
 								<button type="object" name="create_export" string="New Export" colspan="4" context="{'new_thread':True}" />
+								<button type="object" name="create_export" string="Test Export" colspan="4" context="{'test_mode':True}" />
 								<field name="export_ids" nolabel="1" colspan="4" readonly="1" context="{'export_template_form_view': True}" />
 							</page>
 							<page string="Triggers">
@@ -56,10 +57,16 @@
 							</page>
 							<page string="Advanced">
 								<group>
-									<field name="limit" />
-									<field name="max_offset" />
-									<field name="order" />
-									<field name="force_execute_action" />
+									<group>
+										<field name="limit" />
+										<field name="max_offset" />
+										<field name="order" />
+										<field name="force_execute_action" />
+									</group>
+									<group>
+										<field name="new_thread" />
+										<field name="one_at_a_time" />
+									</group>
 								</group>
 							</page>
 						</notebook>

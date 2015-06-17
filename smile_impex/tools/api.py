@@ -19,14 +19,18 @@
 #
 ##############################################################################
 
-from openerp import registry
+from openerp import api, registry
 from openerp.tools.func import wraps
 
 
-def with_new_cursor(method):
+def with_impex_cursor(method):
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        with registry(self._cr.dbname).cursor() as new_cr:
-            self = self.with_env(self.env(cr=new_cr)).with_context(original_cr=self._cr)
-            return method(self, *args, **kwargs)
+        with api.Environment.manage():
+            with registry(self._cr.dbname).cursor() as new_cr:
+                # autocommit: each insert/update request will be performed atomically.
+                # Thus everyone (with another cursor) can access to a running impex record
+                new_cr.autocommit(True)
+                self = self.with_env(self.env(cr=new_cr)).with_context(original_cr=self._cr)
+                return method(self, *args, **kwargs)
     return wrapper

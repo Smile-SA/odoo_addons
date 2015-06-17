@@ -106,8 +106,8 @@ msgstr "Date de fin"
 
 #. module: smile_impex
 #: help:ir.model.export.template,force_execute_action:0
-msgid "Even if there are no resources to export"
-msgstr "Même s'il n'y a aucune resource à exporter"
+msgid "Even if there are no record to export"
+msgstr "Même s'il n'y a aucun enregistrement à exporter"
 
 #. module: smile_impex
 #: selection:ir.model.export,state:0
@@ -177,8 +177,18 @@ msgstr "ID"
 
 #. module: smile_impex
 #: help:ir.model.export.template,unique:0
-msgid "If unique, each instance is exported only once"
-msgstr "Si coché, chaque instance est exportée une seule fois"
+msgid "If unique, each record is exported only once"
+msgstr "Si coché, chaque enregistrement est exporté une seule fois"
+
+#. module: smile_impex
+#: field:ir.model.export.template,do_not_store_record_ids:0
+msgid "Do not store exported records"
+msgstr "Ne pas conserver les enregistrements exportés"
+
+#. module: smile_impex
+#: help:ir.model.export.template,do_not_store_record_ids:0
+msgid "If checked, export regeneration will not be possible"
+msgstr "Si coché, la regénération de l'export ne sera pas possible"
 
 #. module: smile_impex
 #: model:ir.model,name:smile_impex.model_ir_model_import

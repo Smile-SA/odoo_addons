@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import api, fields, models
+from openerp import api, fields, models, _
 from openerp.exceptions import Warning
 from openerp.modules.registry import Registry
 from openerp.tools.safe_eval import safe_eval as eval
@@ -27,7 +27,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.addons.smile_log.tools import SmileDBLogger
 from openerp.addons.smile_impex.models.impex import state_cleaner
 
-from ..tools import with_new_cursor
+from ..tools import with_impex_cursor
 
 
 class IrModelImportTemplate(models.Model):
@@ -35,8 +35,9 @@ class IrModelImportTemplate(models.Model):
     _description = 'Import Template'
     _inherit = 'ir.model.impex.template'
 
-    import_ids = fields.One2many('ir.model.import', 'import_tmpl_id', 'Imports', readonly=True)
-    log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import.template')], readonly=True)
+    import_ids = fields.One2many('ir.model.import', 'import_tmpl_id', 'Imports', readonly=True, copy=False)
+    log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import.template')],
+                              readonly=True, copy=False)
 
     def _get_cron_vals(self):
         vals = super(IrModelImportTemplate, self)._get_cron_vals()
@@ -49,9 +50,10 @@ class IrModelImportTemplate(models.Model):
         return vals
 
     @api.multi
-    @with_new_cursor
+    @with_impex_cursor
     def create_import(self, *args):
         self.ensure_one()
+        self._try_lock(_('Import already in progress'))
         import_obj = self.env['ir.model.import']
         import_rec = import_obj.browse()
         new_thread = self._context.get('new_thread') or self.new_thread
@@ -87,7 +89,8 @@ class IrModelImport(models.Model):
     @api.multi
     def _execute(self):
         self.ensure_one()
-        model = self.env[self.import_tmpl_id.model_id.model].browse()
-        if self._context.get('original_cr'):
-            model = model.with_env(self.env(cr=self._context['original_cr']))
-        return getattr(model, self.import_tmpl_id.method)(*eval(self.args or '[]'), **eval(self.import_tmpl_id.method_args or '{}'))
+        new_env = self.env(cr=self._context['original_cr'])
+        model_obj = self.env[self.import_tmpl_id.model_id.model].with_env(new_env)
+        args = eval(self.args or '[]')
+        kwargs = eval(self.import_tmpl_id.method_args or '{}')
+        return getattr(model_obj, self.import_tmpl_id.method)(*args, **kwargs)

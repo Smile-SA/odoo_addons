@@ -27,7 +27,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.addons.smile_log.tools import SmileDBLogger
 from openerp.addons.smile_impex.models.impex import state_cleaner
 
-from ..tools import with_new_cursor
+from ..tools import with_impex_cursor
 
 
 class IrModelExportTemplate(models.Model):
@@ -35,18 +35,27 @@ class IrModelExportTemplate(models.Model):
     _description = 'Export Template'
     _inherit = 'ir.model.impex.template'
 
-    export_ids = fields.One2many('ir.model.export', 'export_tmpl_id', 'Exports', readonly=True)
-    log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export.template')], readonly=True)
+    export_ids = fields.One2many('ir.model.export', 'export_tmpl_id', 'Exports', readonly=True, copy=False)
+    log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export.template')],
+                              readonly=True, copy=False)
 
-    client_action_id = fields.Many2one('ir.values', 'Client Action')
+    client_action_id = fields.Many2one('ir.values', 'Client Action', copy=False)
     filter_type = fields.Selection([('domain', 'Domain'), ('method', 'Method')], required=True, default='domain')
     filter_domain = fields.Char(default='[]')
     filter_method = fields.Char(help="signature: @api.model + *args")
     limit = fields.Integer()
     max_offset = fields.Integer()
     order = fields.Char('Order by')
-    unique = fields.Boolean(help="If unique, each instance is exported only once")
-    force_execute_action = fields.Boolean('Force Action Execution', help="Even if there are no resources to export")
+    unique = fields.Boolean(help="If unique, each record is exported only once")
+    force_execute_action = fields.Boolean('Force Action Execution', help="Even if there are no record to export")
+    do_not_store_record_ids = fields.Boolean('Do not store exported records',
+                                             help="If checked, export regeneration will not be possible")
+
+    @api.one
+    @api.constrains('unique', 'do_not_store_record_ids')
+    def _check_export_template_config(self):
+        if self.unique and self.do_not_store_record_ids:
+            raise Warning(_('Exported records storing is required if export must be unique'))
 
     def _get_cron_vals(self):
         vals = super(IrModelExportTemplate, self)._get_cron_vals()
@@ -103,7 +112,7 @@ class IrModelExportTemplate(models.Model):
         return list(res_ids)
 
     def _get_res_ids_offset(self, *args):
-        """Get resources and split them in groups in function of limit and max_offset"""
+        """Get records and split them in groups in function of limit and max_offset"""
         res_ids = self._get_res_ids(*args)
         if self.limit:
             res_ids_list = []
@@ -117,16 +126,17 @@ class IrModelExportTemplate(models.Model):
         return [res_ids]
 
     @api.multi
-    @with_new_cursor
+    @with_impex_cursor
     def create_export(self, *args):
         self.ensure_one()
+        self._try_lock(_('Export already in progress'))
         export_obj = self.env['ir.model.export']
         export_recs = export_obj.browse()
         new_thread = self._context.get('new_thread') or self.new_thread
         try:
             vals = {
                 'export_tmpl_id': self.id,
-                'test_mode': self._context.get('test_mode', False),
+                'test_mode': self._context.get('test_mode'),
                 'new_thread': new_thread,
                 'args': repr(args),
                 'log_level': self.log_level,
@@ -134,13 +144,17 @@ class IrModelExportTemplate(models.Model):
             }
             for index, res_ids_offset in enumerate(self._get_res_ids_offset(*args)):
                 vals['record_ids'] = res_ids_offset
+                vals['record_count'] = len(res_ids_offset)
                 vals['offset'] = index + 1
                 export_recs |= export_obj.create(vals)
         except Exception, e:
             tmpl_logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
             tmpl_logger.error(repr(e))
             raise Warning(repr(e))
-        return export_recs.process()
+        res = export_recs.process()
+        if self.do_not_store_record_ids:
+            export_recs.write({'record_ids': ''})
+        return res
 
 
 class IrModelExport(models.Model):
@@ -152,16 +166,12 @@ class IrModelExport(models.Model):
         super(IrModelExport, self).__init__(pool, cr)
         setattr(Registry, 'setup_models', state_cleaner(pool[self._name])(getattr(Registry, 'setup_models')))
 
-    @api.one
-    def _get_record_count(self):
-        self.record_count = len(eval(self.record_ids))
-
     export_tmpl_id = fields.Many2one('ir.model.export.template', 'Template', readonly=True, required=True, ondelete='cascade')
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export')], readonly=True)
 
     offset = fields.Integer()
     record_ids = fields.Text('Records', readonly=True, required=True, default='[]')
-    record_count = fields.Integer('# Records', compute='_get_record_count')
+    record_count = fields.Integer('# Records')
 
     @api.multi
     def _execute(self):
@@ -170,6 +180,8 @@ class IrModelExport(models.Model):
         if record_ids or self.export_tmpl_id.force_execute_action:
             records = self.env[self.export_tmpl_id.model_id.model].browse(record_ids)
             if self.export_tmpl_id.method:
-                if self._context.get('original_cr'):
-                    records = records.with_env(self.env(cr=self._context['original_cr']))
-                return getattr(records, self.export_tmpl_id.method)(*eval(self.args or '[]'), **eval(self.export_tmpl_id.method_args or '{}'))
+                new_env = self.env(cr=self._context['original_cr'])
+                records = records.with_env(new_env)
+                args = eval(self.args or '[]')
+                kwargs = eval(self.export_tmpl_id.method_args or '{}')
+                return getattr(records, self.export_tmpl_id.method)(*args, **kwargs)

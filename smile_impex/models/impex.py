@@ -22,15 +22,17 @@
 import logging
 import os
 import psutil
+import psycopg2
 import sys
 from threading import Thread
 
-from openerp import api, fields, models, registry, SUPERUSER_ID, _
+from openerp import api, fields, models, SUPERUSER_ID, _
 from openerp.exceptions import Warning
+from openerp.tools.func import wraps
 
 from openerp.addons.smile_log.tools import SmileDBLogger
 
-from ..tools import s2human
+from ..tools import s2human, with_impex_cursor
 
 LOG_LEVELS = [
     (0, 'NOTSET'),
@@ -53,12 +55,27 @@ class IrModelImpexTemplate(models.AbstractModel):
     method = fields.Char(size=64, required=True, help='Arguments can be passed through Method args '
                                                       'or received at import/export creation call')
     method_args = fields.Char(help="Arguments passed as a dictionary\nExample: {'code': '705000'}")
-    cron_id = fields.Many2one('ir.cron', 'Scheduled Action')
-    server_action_id = fields.Many2one('ir.actions.server', 'Server action')
-    new_thread = fields.Boolean('New Thread', default=True)
+    cron_id = fields.Many2one('ir.cron', 'Scheduled Action', copy=False)
+    server_action_id = fields.Many2one('ir.actions.server', 'Server action', copy=False)
+    new_thread = fields.Boolean(default=True)
     log_level = fields.Selection(LOG_LEVELS, default=20, required=True)
     log_entry_args = fields.Boolean('Log entry arguments', default=True)
     log_returns = fields.Boolean('Log returns')
+    one_at_a_time = fields.Boolean()
+
+    @api.multi
+    def _try_lock(self, warning=None):
+        self = self.filtered(lambda tmpl: tmpl.one_at_a_time)
+        if not self:
+            return
+        try:
+            self._cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
+                             (tuple(self.ids),), log_exceptions=False)
+        except psycopg2.OperationalError:
+            self._cr.rollback()  # INFO: Early rollback to allow translations to work for the user feedback
+            if warning:
+                raise Warning(warning)
+            raise
 
     def _get_cron_vals(self):
         return {
@@ -108,23 +125,26 @@ STATES = [
     ('running', 'Running'),
     ('done', 'Done'),
     ('exception', 'Exception'),
+    ('killed', 'Killed'),
 ]
 
 
 def state_cleaner(model):
     def decorator(method):
+        @wraps(method)
         def wrapper(self, cr, *args, **kwargs):
             res = method(self, cr, *args, **kwargs)
-            if self.get(model._name):
+            model_obj = self.get(model._name)
+            if model_obj:
                 cr.execute("select relname from pg_class where relname='%s'" % model._table)
                 if cr.rowcount:
-                    impex_infos = self.get(model._name).search_read(cr, SUPERUSER_ID, [('state', '=', 'running')], ['pid'], order='id')
+                    impex_infos = model_obj.search_read(cr, SUPERUSER_ID, [('state', '=', 'running')], ['pid'], order='id')
                     impex_ids = []
                     for impex in impex_infos:
                         if not psutil.pid_exists(impex['pid']):
                             impex_ids.append(impex['id'])
                     if impex_ids:
-                        self.get(model._name).write(cr, SUPERUSER_ID, impex_ids, {'state': 'exception'})
+                        model_obj.write(cr, SUPERUSER_ID, impex_ids, {'state': 'killed'})
             return res
         return wrapper
     return decorator
@@ -158,26 +178,19 @@ class IrModelImpex(models.AbstractModel):
     time_human = fields.Char('Time', compute='_convert_time_to_human', store=False)
     test_mode = fields.Boolean('Test Mode', readonly=True)
     new_thread = fields.Boolean('New Thread', readonly=True)
-    state = fields.Selection(STATES, "State", readonly=True, required=True, default='running')
-    pid = fields.Integer("Process Id", readonly=True)
+    state = fields.Selection(STATES, 'State', readonly=True, required=True, default='running')
+    pid = fields.Integer('Process Id', readonly=True)
     args = fields.Text('Arguments', readonly=True)
     log_level = fields.Selection(LOG_LEVELS)
     log_returns = fields.Boolean('Log returns', readonly=True)
     returns = fields.Text('Returns', readonly=True)
 
     @api.multi
-    def write_with_new_cursor(self, vals):
-        with registry(self._cr.dbname).cursor() as new_cr:
-            return self.with_env(self.env(cr=new_cr)).write(vals)
-
-    @api.multi
     def process(self):
-        self._cr.commit()  # INFO: to access to import/export record via user interface
         res = []
         for record in self:
             if record.new_thread:
-                cr, uid, context = self.env.args
-                thread = Thread(target=self.pool[self._name]._process, args=(cr, uid, record.id, context))
+                thread = Thread(target=with_impex_cursor(IrModelImpex._process), args=(self,))
                 thread.start()
                 res.append((record.id, True))
             else:
@@ -190,21 +203,21 @@ class IrModelImpex(models.AbstractModel):
         logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
         logger.setLevel(self.log_level)
         self = self.with_context(logger=logger)
-        self.write_with_new_cursor({'state': 'running', 'from_date': fields.Datetime.now(),
-                                    'pid': os.getpid()})
+        self.write({'state': 'running', 'from_date': fields.Datetime.now(),
+                    'pid': os.getpid()})
         try:
             result = self._execute()
             vals = {'state': 'done', 'to_date': fields.Datetime.now()}
             if self.log_returns:
                 vals['returns'] = repr(result)
-            self.write_with_new_cursor(vals)
+            self.write(vals)
             if self.test_mode:
-                self._cr.rollback()
+                self._context['original_cr'].rollback()
             return result
         except Exception, e:
             logger.error(repr(e))
             try:
-                self.write_with_new_cursor({'state': 'exception', 'to_date': fields.Datetime.now()})
+                self.write({'state': 'exception', 'to_date': fields.Datetime.now()})
             except:
                 logger.warning("Cannot set import to exception")
             e.traceback = sys.exc_info()

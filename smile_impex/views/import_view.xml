@@ -21,6 +21,7 @@
 						<notebook colspan="4">
 							<page string="Imports">
 								<button type="object" name="create_import" string="New Import" colspan="4" context="{'new_thread':True}" />
+								<button type="object" name="create_import" string="Test Import" colspan="4" context="{'test_mode':True}" />
 								<field name="import_ids" nolabel="1" colspan="4" readonly="1" context="{'import_template_form_view': True}" />
 							</page>
 							<page string="Triggers">
@@ -41,6 +42,12 @@
 									<field name="log_level" />
 								</group>
 								<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}" />
+							</page>
+							<page string="Advanced">
+								<group>
+									<field name="new_thread" />
+									<field name="one_at_a_time" />
+								</group>
 							</page>
 						</notebook>
 					</sheet>
