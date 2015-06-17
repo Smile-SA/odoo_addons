@@ -21,43 +21,41 @@
 
 {
     "name": "Followers",
-    "version": "1.0",
+    "version": "1.1",
     "author": "Smile",
     "website": 'http://www.smile.fr',
     "category": "Tools",
     "license": 'AGPL-3',
     "description": """
-Manage models following
+Features
 ------------------------------------
 
 * Disable auto-subscribe for users
-** activation from user preferences
+* Activation from user preferences
 
-TODO: add code comments
-TODO: describe usage
-
-
-Code sample
+Usage
+------------------------------------
 
 from openerp.addons.smile_followers.tools import AddFollowers, add_followers
 
 
-@AddFollowers()
+@AddFollowers(fields=['restrict_partner_id'])  # by default fields=['partner_id']
 class StockMove(models.Model):
     _name = 'stock.move'
     _inherit = ['stock.move', 'mail.thread']
 
-    @add_followers()
-    @api.model
-    def create(self, vals):
-        return super(StockMove, self).create(vals)
 
-    @add_followers()
+class AccountMove(models.Model):
+    _name = 'account.move'
+    _inherit = ['account.move', 'mail.thread']
+
     @api.multi
-    def write(self, vals):
-        return super(StockMove, self).write(vals)
+    @add_followers(fields=['partner_id'])  # by default fields=['partner_id']. In my sample, fields arg is not useful
+    def post(self):
+        return super(AccountMove, self).post()
 
-Suggestions & Feedback to: isabelle.richard@smile.fr
+
+Suggestions & Feedback to: isabelle.richard@smile.fr & corentin.pouhet-brunerie@smile.fr
 """,
     "depends": [
         'base',

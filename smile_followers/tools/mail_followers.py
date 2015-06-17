@@ -76,15 +76,16 @@ def add_followers(fields=None):
     fields = fields or ['partner_id']
 
     def decorator(create_or_write):
-        cls = create_or_write.im_class
-        if not hasattr(cls, '_follow_partner_fields'):
-            cls._follow_partner_fields = set()
-        cls._follow_partner_fields |= set(fields)
 
         def add_followers_wrapper(self, *args, **kwargs):
+            cls = self.__class__
+            if not hasattr(cls, '_follow_partner_fields'):
+                cls._follow_partner_fields = set()
+            cls._follow_partner_fields |= set(fields)
             return _special_wrapper(self, create_or_write, fields, *args, **kwargs)
 
         return add_followers_wrapper
+
     return decorator
 
 
@@ -93,6 +94,7 @@ def _add_followers(fields=None):
 
     def add_followers_wrapper(self, *args, **kwargs):
         return _special_wrapper(self, add_followers_wrapper.origin, fields, *args, **kwargs)
+
     return add_followers_wrapper
 
 
