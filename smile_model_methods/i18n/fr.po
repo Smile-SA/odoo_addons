@@ -1,0 +1,136 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_model_methods
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-23 10:39+0000\n"
+"PO-Revision-Date: 2015-06-23 10:39+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_model_methods
+#: view:ir.model.methods:smile_model_methods.view_ir_model_methods_search
+#: field:ir.model.methods,mapi:0
+msgid "API"
+msgstr "API"
+
+#. module: smile_model_methods
+#: field:ir.model.methods,active:0
+msgid "Active"
+msgstr "Active"
+
+#. module: smile_model_methods
+#: view:wizard.ir.model.methods:smile_model_methods.wizard_ir_model_methods_view
+msgid "Call"
+msgstr "Lancer"
+
+#. module: smile_model_methods
+#: view:wizard.ir.model.methods:smile_model_methods.wizard_ir_model_methods_view
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_model_methods
+#: field:ir.model.methods,docstring:0
+msgid "Description"
+msgstr "Description"
+
+#. module: smile_model_methods
+#: view:ir.model.methods:smile_model_methods.view_ir_model_methods_search
+msgid "Group By..."
+msgstr "Groupé par..."
+
+#. module: smile_model_methods
+#: model:ir.actions.act_window,name:smile_model_methods.action_ir_model_methods_tree
+#: view:ir.model.methods:smile_model_methods.view_ir_model_methods_search
+#: view:ir.model.methods:smile_model_methods.view_ir_model_methods_tree
+#: model:ir.ui.menu,name:smile_model_methods.menu_ir_model_methods_tree
+msgid "Methods"
+msgstr "Méthodes"
+
+#. module: smile_model_methods
+#: view:ir.model.methods:smile_model_methods.view_ir_model_methods_search
+#: field:ir.model.methods,model_id:0
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_model_methods
+#: model:ir.model,name:smile_model_methods.model_ir_model_methods
+msgid "Model Method"
+msgstr "Méthodes de modèles"
+
+#. module: smile_model_methods
+#: field:wizard.ir.model.methods,models_id:0
+msgid "Model list"
+msgstr "Liste des modèles"
+
+#. module: smile_model_methods
+#: view:ir.model.methods:smile_model_methods.view_ir_model_methods_search
+#: field:ir.model.methods,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_model_methods
+#: selection:ir.model.methods,mtype:0
+msgid "Private"
+msgstr "Privée"
+
+#. module: smile_model_methods
+#: selection:ir.model.methods,mtype:0
+msgid "Protected"
+msgstr "Protégée"
+
+#. module: smile_model_methods
+#: selection:ir.model.methods,mtype:0
+msgid "Public"
+msgstr "Publique"
+
+#. module: smile_model_methods
+#: field:ir.model.methods,signature:0
+msgid "Signature"
+msgstr "Signature"
+
+#. module: smile_model_methods
+#: selection:ir.model.methods,mtype:0
+msgid "Special"
+msgstr "Spéciale"
+
+#. module: smile_model_methods
+#: field:ir.model.methods,model:0
+msgid "Technical Name"
+msgstr "Nom technique"
+
+#. module: smile_model_methods
+#: view:ir.model.methods:smile_model_methods.view_ir_model_methods_search
+#: field:ir.model.methods,mtype:0
+msgid "Type"
+msgstr "Type"
+
+#. module: smile_model_methods
+#: field:wizard.ir.model.methods,to_update:0
+msgid "Update lines ?"
+msgstr "Mettre à jour ?"
+
+#. module: smile_model_methods
+#: view:ir.model.methods:smile_model_methods.view_ir_model_methods_search
+msgid "WS compatible"
+msgstr "WS compatible"
+
+#. module: smile_model_methods
+#: model:ir.actions.act_window,name:smile_model_methods.action_open_wizard_ir_model_methods_view
+#: model:ir.ui.menu,name:smile_model_methods.menu_open_wizard_ir_model_methods
+#: view:wizard.ir.model.methods:smile_model_methods.wizard_ir_model_methods_view
+msgid "Wizard Methods"
+msgstr "Wizard Méthodes"
+
+#. module: smile_model_methods
+#: model:ir.model,name:smile_model_methods.model_wizard_ir_model_methods
+msgid "Wizard Model Method"
+msgstr "Wizard méthodes de modèles"
+

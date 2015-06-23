@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record model="ir.ui.view" id="view_ir_model_methods_search">
+            <field name="name">ir.model.methods.search</field>
+            <field name="model">ir.model.methods</field>
+            <field name="arch" type="xml">
+                <search string="Methods">
+                    <filter name="ws_compatible" string="WS compatible" domain="[('mtype', '=', 'public'), ('signature', 'like', 'self, cr, uid')]"/>
+                    <field name="model_id"/>
+                    <field name="name"/>
+                    <field name="signature"/>
+                    <field name="mapi"/>
+                    <field name="mtype"/>
+                    <field name="docstring"/>
+                    <group string="Group By...">
+                        <filter string="Model" domain="[]" context="{'group_by': 'model_id'}"/>
+                        <filter string="Name" domain="[]" context="{'group_by': 'name'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by': 'mtype'}"/>
+                        <filter string="API" domain="[]" context="{'group_by': 'mapi'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_ir_model_methods_tree">
+            <field name="name">ir.model.methods.tree</field>
+            <field name="model">ir.model.methods</field>
+            <field name="arch" type="xml">
+                <tree string="Methods" editable="top" create="false">
+                    <field name="model_id"/>
+                    <field name="name"/>
+                    <field name="mtype" invisible="1"/>
+                    <field name="signature"/>
+                    <field name="mapi" invisible="1"/>
+                    <field name="docstring"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_ir_model_methods_tree">
+            <field name="name">Methods</field>
+            <field name="res_model">ir.model.methods</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ir_model_methods_tree"/>
+        </record>
+
+        <menuitem id="menu_ir_model_methods_tree" parent="base.next_id_9"
+            action="action_ir_model_methods_tree" sequence="10" string="Methods"/>
+
+    </data>
+</openerp>

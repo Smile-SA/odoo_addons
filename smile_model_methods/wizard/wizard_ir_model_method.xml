@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        
+        <record id="wizard_ir_model_methods_view" model="ir.ui.view">
+            <field name="name">wizard.ir.model.methods.view</field>
+            <field name="model">wizard.ir.model.methods</field>
+            <field name="arch" type="xml">
+                <form string="Wizard Methods" >
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <group>
+                                <field name="models_id" widget='many2many_tags'/>
+                             </group>
+                             <group>
+                                <field name="to_update"/>
+                             </group>
+                         </group>
+                    </sheet>
+                    <footer>
+                        <button name="button_call" type='object' string="Call" class="oe_highlight" />
+                        <button string="Cancel" class="oe_link" special="cancel"  />
+                    </footer>
+                </form>
+            </field>
+        </record>
+            
+        <record id="action_open_wizard_ir_model_methods_view" model="ir.actions.act_window">
+            <field name="name">Wizard Methods</field>
+            <field name="res_model">wizard.ir.model.methods</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_ir_model_methods_view"/>
+            <field name="type">ir.actions.act_window</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_open_wizard_ir_model_methods" parent="base.next_id_9"
+            action="action_open_wizard_ir_model_methods_view" sequence="20" string="Wizard Methods"/>
+        
+    </data>
+</openerp>
