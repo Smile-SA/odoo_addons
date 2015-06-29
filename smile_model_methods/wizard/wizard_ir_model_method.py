@@ -29,7 +29,6 @@ class WizardIrModelMethods(models.TransientModel):
 
     models_id = fields.Many2many('ir.model', 'ir_model_methotds_rel', 'wizard_model_id', 'model_id', string="Model list")
     to_update = fields.Boolean("Update lines ?")
-    
 
     @api.multi
     def button_call(self):

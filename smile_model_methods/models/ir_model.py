@@ -64,7 +64,7 @@ class IrModelMethods(models.Model):
             self.mapi = False
             self.signature = False
             return
-        method_name =  self.name
+        method_name = self.name
         method = getattr(self.env[self.model], self.name)
         while hasattr(method, 'origin'):  # _patch_method
             method = method.origin

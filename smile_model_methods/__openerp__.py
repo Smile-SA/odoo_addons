@@ -28,7 +28,7 @@
     "website": 'http://www.smile.fr',
     "description": """
 This module logs model methods and their signatures.
-Open the 'wizard method' menu in concfiguration/database structure, 
+Open the 'wizard method' menu in concfiguration/database structure,
 and choose one or multiple models, if no model is defined, all models will be used.
 To update records, check update lines field
 
