@@ -26,7 +26,8 @@
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """
-    Generate Modules Graph
+    Generate Modules Graph from Odoo's user interface with upward, downward tree view or both.
+    You need to install Graphviz to print graph. More infos on http://www.graphviz.org
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
@@ -39,7 +40,7 @@
     ],
     "demo": [],
     'test': [],
-    "auto_install": True,
+    "auto_install": False,
     "installable": True,
     "application": False,
 }
