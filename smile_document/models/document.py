@@ -48,7 +48,7 @@ class IrAttachement(models.Model):
     _inherit = 'ir.attachment'
 
     document_type_id = fields.Many2one('ir.attachment.type', string="Document Type")
-    document_date = fields.Date(default=lambda x: fields.Date.today())
+    document_date = fields.Date(default=lambda self: fields.Date.today())
     expiry_date = fields.Date()
     archived = fields.Boolean()
     status = fields.Selection(STATUS, readonly=True, default='valid')
