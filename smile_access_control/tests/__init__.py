@@ -20,3 +20,5 @@
 ##############################################################################
 
 import test_access_control
+import test_users
+import test_groups

@@ -78,6 +78,16 @@ class TestAccessControl(TransactionCase):
             self.env['res.users'].create({
                 'name': 'toto',
                 'login': 'toto',
-                'password': 'toto',
                 'user_profile_id': self.env.ref('base.user_root').id
             })
+
+    def test_update_users_of_a_group(self):
+        """
+            I create a user U and a profile P
+            I update group Group 1 to add it user U
+            I check that
+        """
+        profile = self.env['res.users'].create({'name': 'P', 'login': 'p_login', 'user_profile': True})
+        user = self.env['res.users'].create({'name': 'U', 'login': 'u_login', 'user_profile_id': profile.id})
+        self.group1.with_context(use_pdb=True).users |= profile
+        self.assertIn(self.group1, user.groups_id, 'User U should have Group 1 in dependencies!')

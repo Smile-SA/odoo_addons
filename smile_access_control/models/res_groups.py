@@ -86,13 +86,14 @@ class ResGroups(models.Model):
                     group_ids_to_link.append(item[1])
                 elif item[0] == 3:
                     group_ids_to_unlink.append(item[1])
-        self._update_users(vals)
         res = super(ResGroups, self).write(vals)
+        self._update_users(vals)
         if vals.get('implied_ids'):
             # Update group for all users depending of this group, in order to add new implied groups to their groups
             for group in self:
-                group.with_context(active_test=False).users.write({'groups_id': [(4, subgroup_id) for subgroup_id in group_ids_to_link]
-                                                                   + [(3, subgroup_id) for subgroup_id in group_ids_to_unlink]})
+                groups_id = [(4, subgroup_id) for subgroup_id in group_ids_to_link] + \
+                    [(3, subgroup_id) for subgroup_id in group_ids_to_unlink]
+                group.with_context(active_test=False).users.write({'groups_id': groups_id})
         return res
 
     @api.multi
