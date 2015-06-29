@@ -72,7 +72,7 @@ class ProductProduct(models.Model):
     @api.one
     @api.depends('branch_id.repository_id', 'branch_id.tag_ids')
     def _get_tags(self):
-        self.tag_ids = self.branch_id and self.branch_id.tag_ids
+        self.tag_ids = self.branch_id.tag_ids
 
     branch_id = fields.Many2one('scm.repository.branch', "Branch", readonly=True, ondelete="cascade")
     shortdesc = fields.Char('Module Name', size=64, readonly=True, translate=True)
