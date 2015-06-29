@@ -50,7 +50,7 @@ class IrAttachement(models.Model):
     _inherit = 'ir.attachment'
 
     document_type_id = fields.Many2one('ir.attachment.type', string="Document Type")
-    document_date = fields.Date(default=fields.datetime.now())
+    document_date = fields.Date(default=lambda x: fields.Date.today())
     expiry_date = fields.Date()
     archived = fields.Boolean()
     status = fields.Selection(STATUS, readonly=True, default='valid')
@@ -59,16 +59,15 @@ class IrAttachement(models.Model):
     def _compute_document_status(self):
         for doc in self:
             status = 'valid'
-            today = datetime.now().date()
+            today = fields.Date.today()
             if doc.expiry_date:
-                expiry_date = datetime.strptime(doc.expiry_date, "%Y-%m-%d").date()
-                if expiry_date >= today and not doc.archived:
+                if doc.expiry_date >= today and not doc.archived:
                     status = 'valid'
-                elif expiry_date < today and not doc.archived:
+                elif doc.expiry_date < today and not doc.archived:
                     status = 'expired'
             if doc.archived:
                 status = 'archived'
-                if doc.expiry_date and datetime.strptime(doc.expiry_date, "%Y-%m-%d").date() > today:
+                if doc.expiry_date > today:
                     doc.expiry_date = today
             if doc.status != status:
                 doc.status = status
