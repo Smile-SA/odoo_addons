@@ -69,10 +69,6 @@ class TestGroups(TransactionCase):
             Test write method
         """
         res_update = self.groups_obj.browse(self.group1.id).write({'name': 'Group 1 EDITED'})
-#         print " USERS ", self.group1.users[0]
-        for i in self.group1.users:
-            print "USERS INDICE 0 ", i[0]
-            print " NAME ", i.name
         self.assertTrue(res_update)
 
     def test_update_users(self):
@@ -91,12 +87,13 @@ class TestGroups(TransactionCase):
         expected_list_after_completion = ['Models', 'ir.model.access', 'Fields', 'ir.ui.view', 'Users']
         list_after_completion = []
         check_right = True
-        res_complete = self.group_completion.button_complete_access_controls()
+        self.group_completion.button_complete_access_controls()
         grp_completed = self.groups_obj.browse(self.group_completion.id)
         for i in grp_completed.model_access:
             list_after_completion.append(i.model_id.name)
             if i.model_id.name != "Models":
                 if not i.perm_read or i.perm_write or i.perm_create or i.perm_unlink:
                     check_right = False
-        self.assertEqual(list_after_completion, expected_list_after_completion)
+        for model in expected_list_after_completion:
+            self.assertIn(model, list_after_completion, '%s should have been added!' % model)
         self.assertTrue(check_right)
