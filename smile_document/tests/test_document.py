@@ -56,6 +56,6 @@ class test_document(common.TransactionCase):
             I check that I can force to unlink document type.
         """
         document_type = self.ir_attachment_type.create({'name': 'Doc Type Test 1'})
-        with self.assertRaisesRegex(Warning, 'Attention : You cannot unlink document type!'):
+        with self.assertRaisesRegexp(Warning, 'Attention : You cannot unlink document type!'):
             document_type.unlink()
         document_type.with_context(force_unlink_doc_type=True).unlink()
