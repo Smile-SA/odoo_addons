@@ -21,8 +21,8 @@
 
 from datetime import datetime
 
-from openerp import models, fields, api, exceptions
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 
 
 STATUS = [('valid', 'Valid'),
@@ -43,7 +43,7 @@ class IrAttachementType(models.Model):
     def unlink(self):
         if self._context.get('force_unlink_doc_type'):
             return super(IrAttachementType, self).unlink()
-        raise exceptions.Warning(_('Attention : You cannot unlink document type!'))
+        raise Warning(_('Attention : You cannot unlink document type!'))
 
 
 class IrAttachement(models.Model):

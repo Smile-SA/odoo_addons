@@ -20,3 +20,4 @@
 ##############################################################################
 
 import test_document
+import test_document_access

@@ -22,6 +22,7 @@
 from datetime import datetime
 
 import openerp.tests.common as common
+from openerp.exceptions import Warning
 
 
 class test_document(common.TransactionCase):
@@ -29,23 +30,32 @@ class test_document(common.TransactionCase):
     def setUp(self):
         super(test_document, self).setUp()
         self.ir_attachment = self.env['ir.attachment']
+        self.ir_attachment_type = self.env['ir.attachment.type']
 
     def test_create_document(self):
-        doc_type_kbis = self.env.ref('adc_document.doc_type_kbis')
+        docType1 = self.ir_attachment_type.create({'name': 'Doc Type Test 1'})
         today = datetime.now().date()
         # Create Valid Doc
-        print "==================> Create Document Successfully!"
-        d1 = today.replace(month=today.month+2)
-        vals1 = {'name': 'Demo1', 'document_type_id': doc_type_kbis.id, 'expiry_date': d1}
+        d1 = today.replace(month=today.month + 2)
+        vals1 = {'name': 'Demo1', 'document_type_id': docType1.id, 'expiry_date': d1}
         doc1 = self.ir_attachment.create(vals1)
-        self.assertTrue(doc1.status == 'valid')
+        self.assertEquals('valid', doc1.status)
         # Archive Doc
         doc1.write({'archived': True})
-        self.assertTrue(doc1.status == 'archived')
-        print "==================> Archive Document Successfully!"
+        self.assertEquals('archived', doc1.status)
         # Create Expired Doc
-        d2 = today.replace(day=today.day-1)
-        vals2 = {'name': 'Demo2', 'document_type_id': doc_type_kbis.id, 'expiry_date': d2}
+        d2 = today.replace(day=today.day - 1)
+        vals2 = {'name': 'Demo2', 'document_type_id': docType1.id, 'expiry_date': d2}
         doc2 = self.ir_attachment.create(vals2)
-        self.assertTrue(doc2.status == 'expired')
-        print "==================> Expire Document Successfully!"
+        self.assertEquals('expired', doc2.status)
+
+    def test_unlink_document_type(self):
+        """
+            I create a document type.
+            I check that I can't unlink document type.
+            I check that I can force to unlink document type.
+        """
+        document_type = self.ir_attachment_type.create({'name': 'Doc Type Test 1'})
+        with self.assertRaisesRegex(Warning, 'Attention : You cannot unlink document type!'):
+            document_type.unlink()
+        document_type.with_context(force_unlink_doc_type=True).unlink()
