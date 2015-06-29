@@ -26,7 +26,9 @@
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """
-    Generate Models Graph
+    Generate Models Graph from Odoo's user interface with depth and relatio names between models.
+    You need to install Graphviz to print graph. More infos on http://www.graphviz.org
+    You can install it with pip: pip install pydot
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
@@ -38,7 +40,10 @@
     ],
     "demo": [],
     'test': [],
-    "auto_install": True,
+    "auto_install": False,
     "installable": True,
     "application": False,
+    'external_dependencies': {
+        'python': ['pydot'],
+    }
 }

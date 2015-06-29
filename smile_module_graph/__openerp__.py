@@ -28,6 +28,7 @@
     "description": """
     Generate Modules Graph from Odoo's user interface with upward, downward tree view or both.
     You need to install Graphviz to print graph. More infos on http://www.graphviz.org
+    You can install it with pip: pip install pydot
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
@@ -43,4 +44,7 @@
     "auto_install": False,
     "installable": True,
     "application": False,
+    'external_dependencies': {
+        'python': ['pydot'],
+    }
 }
