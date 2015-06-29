@@ -29,7 +29,12 @@ class BaseTest(TransactionCase):
         self.model = self.env['res.partner.category']
 
     def test_bulk_create(self):
-        self.assertTrue(self.model.bulk_create([{'name': 'Test'}]))
+        names = ['t1', 't2', 't3']
+        vals_list = [{'name': name} for name in names]
+        categories = self.model.bulk_create(vals_list)
+        self.assertEquals(3, len(categories), 'Three categories shoudl have been created!')
+        self.assertListEqual(names, sorted(categories.mapped('name')),
+                             'Names of the created categories are wrong!')
 
     def test_unlink_cascade(self):
         parent = self.model.create({'name': 'Parent'})
