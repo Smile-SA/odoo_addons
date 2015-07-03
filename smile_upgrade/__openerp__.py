@@ -34,7 +34,7 @@ Features
 
 Execution
 
-    openerp-server -c <config_file> -d <db_name> --workers=0
+    openerp-server -c <config_file> -d <db_name> --load=web,smile_upgrade
 
 Configuration
 
