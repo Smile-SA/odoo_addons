@@ -157,19 +157,27 @@ class AuditRule(models.Model):
         self.update_rule(force_deactivation=True)
         return super(AuditRule, self).unlink()
 
+    _ignored_fields = ['message_ids', 'message_last_post']
+
+    @classmethod
+    def _format_data_to_log(cls, old_values, new_values):
+        data = {}
+        for age in ('old', 'new'):
+            vals_list = old_values if age == 'old' else new_values
+            if isinstance(vals_list, dict):
+                vals_list = [vals_list]
+            for vals in vals_list or []:
+                for field in cls._ignored_fields:
+                    vals.pop(field, None)
+                res_id = vals.pop('id')
+                if vals:
+                    data.setdefault(res_id, {'old': {}, 'new': {}})[age] = vals
+        return data
+
     @api.one
     def log(self, method, old_values=None, new_values=None):
         _logger.debug('Starting audit log')
-        data = {}
-        update_vals = lambda vals: isinstance(vals, dict) and [vals] or vals or []
-        old_values = update_vals(old_values)
-        new_values = update_vals(new_values)
-        for vals in old_values:
-            res_id = vals.pop('id')
-            data.setdefault(res_id, {'old': {}, 'new': {}})['old'] = vals
-        for vals in new_values:
-            res_id = vals.pop('id')
-            data.setdefault(res_id, {'old': {}, 'new': {}})['new'] = vals
+        data = self._format_data_to_log(old_values, new_values)
         for res_id in data:
             self.env['audit.log'].sudo().create({
                 'user_id': self._uid,
