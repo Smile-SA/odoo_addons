@@ -26,7 +26,7 @@ native_where_calc = BaseModel._where_calc
 
 def _where_calc(self, cr, uid, domain, active_test=True, context=None):
     new_domain = []
-    for cond in domain:
+    for cond in domain or []:
         if isinstance(cond, (tuple, list)) and cond[1] == '><':
             field = cond[0]
             values = cond[2]

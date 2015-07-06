@@ -41,7 +41,7 @@ native_where_calc = BaseModel._where_calc
 def _where_calc(self, cr, uid, domain, active_test=True, context=None):
     match_pattern = re.compile('^[+-]{0,1}[0-9]*[YmdHM]$')
     group_pattern = re.compile(r'(?P<value>^[+-]{0,1}[0-9]*)(?P<type>[YmWdHM]$)')
-    for cond in domain:
+    for cond in domain or []:
         if isinstance(cond, (tuple, list)) and isinstance(cond[2], basestring) and match_pattern.match(cond[2]):
             value_format = None
             model = self._name
