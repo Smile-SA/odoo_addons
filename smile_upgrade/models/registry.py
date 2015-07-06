@@ -19,56 +19,21 @@
 #
 ##############################################################################
 
-from contextlib import contextmanager
 import logging
 import os
 import sys
 import time
 
-from openerp import SUPERUSER_ID, tools
-from openerp.modules.registry import Registry, RegistryManager
+from openerp import tools
+from openerp.modules.registry import RegistryManager
 from openerp.osv import osv, orm
 from openerp.tools import config
 
-from maintenance import MaintenanceManager
-from upgrade import UpgradeManager
+from .upgrade import UpgradeManager
 
-_logger = logging.getLogger(__package__)
-
-
-def _get_exception_message(exception):
-    msg = isinstance(exception, (osv.except_osv, orm.except_orm)) and exception.value or exception
-    return tools.ustr(msg)
-
-
-def set_db_version(self, version):
-    if version:
-        cr = self._db.cursor()
-        try:
-            cr.execute("""INSERT INTO ir_config_parameter (create_date, create_uid, key, value)
-                       VALUES (now() at time zone 'UTC', %s, 'code.version', %s)""",
-                       (SUPERUSER_ID, str(version)))
-            cr.commit()
-        finally:
-            cr.close()
-
-Registry.set_db_version = set_db_version
+_logger = logging.getLogger(__name__)
 
 native_new = RegistryManager.new
-
-
-@classmethod
-@contextmanager
-def upgrade_manager(cls, db_name):
-    upgrade_manager = UpgradeManager(db_name)
-    maintenance = MaintenanceManager()
-    try:
-        maintenance.start()
-        yield upgrade_manager
-    finally:
-        upgrade_manager.cr.commit()
-        upgrade_manager.cr.close()
-        maintenance.stop()
 
 
 @classmethod
@@ -76,23 +41,27 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
     with cls.lock():
         upgrades = False
         try:
-            code_at_creation = False
-            with cls.upgrade_manager(db_name) as upgrade_manager:
-                if upgrade_manager.db_in_creation:
-                    code_at_creation = upgrade_manager.code_version
+            with UpgradeManager(db_name) as upgrade_manager:
                 upgrades = bool(upgrade_manager.upgrades)
+                if upgrades:
+                    cls.signal_registry_change(db_name)
                 for upgrade in upgrade_manager.upgrades:
                     t0 = time.time()
                     _logger.info('loading %s upgrade...', upgrade.version)
-                    upgrade.pre_load()
-                    if upgrade.modules_to_upgrade:
+                    if not upgrade_manager.db_in_creation:
+                        upgrade.pre_load()
+                        modules_to_upgrade = upgrade.modules_to_upgrade
+                    else:
+                        modules_to_upgrade = upgrade.modules_to_install_at_creation
+                    if modules_to_upgrade:
                         registry = native_new(db_name)
-                        upgrade.force_modules_upgrade(registry)
+                        upgrade.force_modules_upgrade(registry, modules_to_upgrade)
                     native_new(db_name, update_module=True)
-                    upgrade.post_load()
+                    if not upgrade_manager.db_in_creation:
+                        upgrade.post_load()
+                    upgrade.set_db_version()
                     _logger.info('%s upgrade successfully loaded in %ss', upgrade.version, time.time() - t0)
             registry = native_new(db_name, force_demo, status, update_module)
-            registry.set_db_version(code_at_creation)
             if upgrades and config.get('stop_after_upgrades'):
                 _logger.info('Stopping Odoo server')
                 os._exit(0)
@@ -100,11 +69,11 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
         except Exception, e:
             e.traceback = sys.exc_info()
             if upgrades and config.get('stop_after_upgrades'):
-                _logger.error(_get_exception_message(e), exc_info=e.traceback)
+                msg = isinstance(e, (osv.except_osv, orm.except_orm)) and e.value or e
+                _logger.error(tools.ustr(msg), exc_info=e.traceback)
                 _logger.critical('Upgrade FAILED')
                 _logger.info('Stopping Odoo server')
                 os._exit(1)
             raise
 
-RegistryManager.upgrade_manager = upgrade_manager
 RegistryManager.new = new

@@ -19,12 +19,15 @@
 #
 ##############################################################################
 
+import psycopg2
+
 from contextlib import contextmanager
 from distutils.version import LooseVersion
 import logging
 import os
 
 from openerp import api, sql_db, SUPERUSER_ID, tools
+from openerp.exceptions import Warning
 import openerp.modules as addons
 from openerp.report.interface import report_int as ReportService
 from openerp.tools.safe_eval import safe_eval as eval
@@ -56,6 +59,7 @@ class UpgradeManager(object):
         self.db_name = db_name
         self.db = sql_db.db_connect(db_name)
         self.cr = self.db.cursor()
+        self.cr.autocommit(True)
         self.db_in_creation = self._get_db_in_creation()
         self.code_version = self._get_code_version()
         self.db_version = self._get_db_version()
@@ -77,22 +81,30 @@ class UpgradeManager(object):
 
     def _get_db_version(self):
         if self.db_in_creation:
-            return ''
+            return '0'
         self.cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'code.version' LIMIT 1")
-        param = self.cr.fetchone()
-        if not param:
-            with cursor(self.db) as cr:
-                cr.execute("""INSERT INTO ir_config_parameter (create_date, create_uid, key, value)
-                           VALUES (now() at time zone 'UTC', %s, 'code.version', '')""", (SUPERUSER_ID,))
+        version = self.cr.fetchone()
+        if not version:
             _logger.warning('Unspecified version in database')
-        version = param and param[0] or '0'
+        version = version and version[0] or '0'
         _logger.debug('database version: %s', version)
         return LooseVersion(version)
 
+    def _try_lock(self, warning=None):
+        try:
+            self.cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'code.version'", log_exceptions=False)
+        except psycopg2.OperationalError:
+            self.cr.rollback()  # INFO: Early rollback to allow translations to work for the user feedback
+            if warning:
+                raise Warning(warning)
+            raise
+
     def _get_upgrades(self):
         upgrades_path = upgrade_config.get('upgrades_path')
-        if self.db_in_creation or not upgrades_path:
+        if not upgrades_path:
             return []
+        if not self.db_in_creation:
+            self._try_lock('Upgrade in progress')
         upgrades = []
         for dir in os.listdir(upgrades_path):
             dir_path = os.path.join(upgrades_path, dir)
@@ -107,13 +119,24 @@ class UpgradeManager(object):
                 with open(file_path) as f:
                     try:
                         upgrade_infos = eval(f.read())
-                        upgrade = Upgrade(self.db, dir_path, upgrade_infos)
+                        upgrade = Upgrade(self.cr, self.db, dir_path, upgrade_infos)
                         if (not upgrade.databases or self.db_name in upgrade.databases) \
                                 and self.db_version < upgrade.version <= self.code_version:
                             upgrades.append(upgrade)
                     except Exception, e:
                         _logger.error('%s is not valid: %s', file_path, repr(e))
-        return sorted(upgrades, key=lambda upgrade: upgrade.version)
+        upgrades.sort(key=lambda upgrade: upgrade.version)
+        if upgrades and self.db_in_creation:
+            upgrades = upgrades[-1:]
+        return upgrades
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is None:
+            self.cr.commit()
+        self.cr.close()
 
 
 class Upgrade(object):
@@ -122,7 +145,8 @@ class Upgrade(object):
     * Post-load: accept .sql and .yml files
     """
 
-    def __init__(self, db, dir_path, infos):
+    def __init__(self, cr, db, dir_path, infos):
+        self.cr = cr
         self.db = db
         self.dir_path = dir_path
         for k, v in infos.iteritems():
@@ -132,15 +156,22 @@ class Upgrade(object):
 
     def __getattr__(self, key):
         default_values = {'version': '', 'databases': [], 'modules_to_upgrade': [],
-                          'pre-load': [], 'post-load': []}
+                          'modules_to_install_at_creation': [], 'pre-load': [], 'post-load': []}
         if key not in self.__dict__ and key not in default_values:
             raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, key))
         return self.__dict__.get(key) or default_values.get(key)
 
-    def _set_db_version(self):
-        with cursor(self.db) as cr:
-            cr.execute("""UPDATE ir_config_parameter SET (write_date, write_uid, value) = (now() at time zone 'UTC', %s, %s)
-                       WHERE key = 'code.version'""", (SUPERUSER_ID, str(self.version)))
+    def set_db_version(self):
+        params = (SUPERUSER_ID, str(self.version))
+        self.cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'code.version' LIMIT 1")
+        if not self.cr.rowcount:
+            query = """INSERT INTO ir_config_parameter (create_date, create_uid, key, value)
+               VALUES (now() at time zone 'UTC', %s, 'code.version', %s)"""
+        else:
+            query = """UPDATE ir_config_parameter
+                SET (write_date, write_uid, value) = (now() at time zone 'UTC', %s, %s)
+                WHERE key = 'code.version'"""
+        self.cr.execute(query, params)
         _logger.debug('database version updated to %s', self.version)
 
     def _sql_import(self, cr, f_obj):
@@ -207,19 +238,18 @@ class Upgrade(object):
     def post_load(self):
         with cursor(self.db) as cr:
             self._load_files(cr, 'post-load')
-        self._set_db_version()
         self._reset_services()
 
-    def force_modules_upgrade(self, registry):
+    def force_modules_upgrade(self, registry, modules_to_upgrade):
         uid = SUPERUSER_ID
         with cursor(self.db) as cr:
             with api.Environment.manage():
                 module_obj = registry.get('ir.module.module')
                 module_obj.update_list(cr, uid)
-                ids_to_install = module_obj.search(cr, uid, [('name', 'in', self.modules_to_upgrade),
+                ids_to_install = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
                                                              ('state', 'in', ('uninstalled', 'to install'))])
                 module_obj.button_install(cr, uid, ids_to_install)
-                ids_to_upgrade = module_obj.search(cr, uid, [('name', 'in', self.modules_to_upgrade),
+                ids_to_upgrade = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
                                                              ('state', 'in', ('installed', 'to upgrade'))])
                 module_obj.button_upgrade(cr, uid, ids_to_upgrade)
                 cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")

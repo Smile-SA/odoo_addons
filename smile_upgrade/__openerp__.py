@@ -30,7 +30,6 @@
 Features
 
     * Allow to upgrade automatically database after code update and server restarting
-    * Display a maintenance page instead of home page and kill XML/RPC services during upgrades
 
 Execution
 
@@ -63,6 +62,7 @@ Configuration
             * version
             * databases: let's empty if valid for all databases
             * description
+            * modules_to_install_at_creation: modules list to install at database creation
             * modules_to_upgrade: modules list to update or install
             * pre-load: list of .sql files
             * post-load: list with .sql, .yml, .csv and .xml files
