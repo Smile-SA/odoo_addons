@@ -172,7 +172,7 @@
       <field name="model">checklist.task.instance</field>
       <field name="arch" type="xml">
         <tree string="Tasks"
-          colors="red:progress_rate == 0 and mandatory;orange:progress_rate &lt; 100;green:progress_rate == 100">
+          colors="lawngreen:progress_rate == 100 and not mandatory;green:progress_rate == 100 and mandatory;red:progress_rate == 0 and mandatory;orange:progress_rate &lt; 100 or not mandatory;">
           <field name="name"/>
           <field name="mandatory"/>
           <field name="progress_rate" widget="progressbar"/>

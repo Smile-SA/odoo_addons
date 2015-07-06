@@ -60,12 +60,14 @@ def checklist_fields_view_get_decorator():
                                                                             'readonly': True}
                     doc = etree.XML(fields_view['arch'])
                     snode = doc
-                    gnode1 = etree.Element('div', attrib={'style': "float: left; margin: -16px; width: 80%;"})
+                    gnode1 = etree.Element('div', attrib={'style': "float: left; margin: -16px; min-width: 80%;"})
                     for index, children in enumerate(snode.getchildren()):
                         gnode1.insert(index, children)
                     snode.insert(0, gnode1)
-                    gnode2 = etree.Element('div', attrib={'style': "float: right; width: 20%; min-width: 70px;"})
-                    gnode2.insert(0, etree.XML("""<group col="1"><separator string="Checklist"/>
+                    gnode2 = etree.Element('div', attrib={'style': "float: right; max-width: 20%;",
+                                                          'attrs': "{'invisible': [('checklist_task_instance_ids', '=', [])]}"})
+                    gnode2.insert(0, etree.XML("""<group col="1">
+                        <separator string="Checklist"/>
                         <field name="total_progress_rate" nolabel="1"  readonly="1" widget="progressbar"/>
                         <field name="checklist_task_instance_ids" nolabel="1"  readonly="1" context="{'active_test': True}"/>
                     </group>"""))

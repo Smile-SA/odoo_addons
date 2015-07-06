@@ -83,14 +83,17 @@ class IrModelImport(models.Model):
         super(IrModelImport, self).__init__(pool, cr)
         setattr(Registry, 'setup_models', state_cleaner(pool[self._name])(getattr(Registry, 'setup_models')))
 
-    import_tmpl_id = fields.Many2one('ir.model.import.template', 'Template', readonly=True, required=True, ondelete='cascade')
+    import_tmpl_id = fields.Many2one('ir.model.import.template', 'Template', readonly=True, required=True,
+                                     ondelete='cascade', index=True)
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import')], readonly=True)
 
     @api.multi
     def _execute(self):
         self.ensure_one()
-        new_env = self.env(cr=self._context['original_cr'])
-        model_obj = self.env[self.import_tmpl_id.model_id.model].with_env(new_env)
+        model_obj = self.env[self.import_tmpl_id.model_id.model]
+        if self._context.get('original_cr'):
+            new_env = self.env(cr=self._context['original_cr'])
+            model_obj = model_obj.with_env(new_env)
         args = eval(self.args or '[]')
         kwargs = eval(self.import_tmpl_id.method_args or '{}')
         return getattr(model_obj, self.import_tmpl_id.method)(*args, **kwargs)

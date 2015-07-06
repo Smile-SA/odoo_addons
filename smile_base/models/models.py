@@ -26,7 +26,7 @@ from operator import and_, or_, sub
 import psycopg2
 import time
 
-from openerp import api, _
+from openerp import api, tools, _
 from openerp.exceptions import Warning
 from openerp.models import BaseModel
 from openerp.osv.expression import normalize_domain
@@ -37,6 +37,7 @@ _logger = logging.getLogger(__name__)
 native_validate_fields = BaseModel._validate_fields
 native_import_data = BaseModel.import_data
 native_load = BaseModel.load
+native_modified = BaseModel.modified
 native_unlink = BaseModel.unlink
 native_store_get_values = BaseModel._store_get_values
 
@@ -115,6 +116,12 @@ def _compute_store_set(self):
         self.pool[model]._store_set_values(cr, uid, ids_to_recompute, fields_to_recompute, context)
 
 
+@api.multi
+def modified(self, fnames):
+    if self._context.get('recompute', True):
+        native_modified(self, fnames)
+
+
 @api.model
 @api.returns('self', lambda records: records.ids)
 def bulk_create(self, vals_list):
@@ -135,6 +142,7 @@ def bulk_create(self, vals_list):
         records |= self.with_context(**context_copy).create(vals)
     if not self._context.get('force_store_function'):
         records._compute_store_set()
+        records.modified(self._fields)
         self.recompute()
     records._validate_fields(vals_list[0])
     self._parent_store_compute()
@@ -212,7 +220,8 @@ def _get_comparison_logs(self, other):
         if field.type == 'selection':
             selection = dict(field.selection)
             diff[field_name] = [selection[key] for key in diff[field_name]]
-        logs.append('<b>%s</b>: %s' % (label, separator.join(map(str, diff[field_name]))))
+        log = separator.join(map(tools.ustr, diff[field_name]))
+        logs.append('<b>%s</b>: %s' % (label, log))
     return logs
 
 SET_OPERATORS = {
@@ -318,6 +327,7 @@ BaseModel._get_comparison_fields = _get_comparison_fields
 BaseModel._compare = _compare
 BaseModel._get_comparison_logs = _get_comparison_logs
 BaseModel.open_wizard = open_wizard
+BaseModel.modified = modified
 BaseModel._compute_store_set = _compute_store_set
 BaseModel.recompute_fields = recompute_fields
 BaseModel._try_lock = _try_lock

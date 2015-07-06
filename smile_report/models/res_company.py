@@ -39,7 +39,7 @@ class ResCompany(models.Model):
 
     @api.multi
     def preview_report(self):
-        "Print a demo report based on the current company"
+        """Print a demo report based on the current company"""
         self.ensure_one()
         report_type = self._context.get('report_type', 'pdf')
         if report_type not in ('html', 'pdf'):

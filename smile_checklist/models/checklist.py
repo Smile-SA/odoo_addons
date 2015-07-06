@@ -152,9 +152,9 @@ class Checklist(models.Model):
     @api.multi
     def write(self, vals):
         if 'model_id' in vals or 'active' in vals:
-            models = dict([(checklist.model_id, False) for checklist in self])
+            models = {}.fromkeys(self.mapped('model_id'), False)
             if vals.get('model_id'):
-                models.update({self.env['ir.model'].browse(vals['model_id']): checklist})
+                models.update({self.env['ir.model'].browse(vals['model_id']): self})
         result = super(Checklist, self).write(vals)
         if 'model_id' in vals or 'active' in vals:
             self._update_models(models)

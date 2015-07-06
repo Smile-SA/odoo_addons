@@ -166,7 +166,8 @@ class IrModelExport(models.Model):
         super(IrModelExport, self).__init__(pool, cr)
         setattr(Registry, 'setup_models', state_cleaner(pool[self._name])(getattr(Registry, 'setup_models')))
 
-    export_tmpl_id = fields.Many2one('ir.model.export.template', 'Template', readonly=True, required=True, ondelete='cascade')
+    export_tmpl_id = fields.Many2one('ir.model.export.template', 'Template', readonly=True, required=True,
+                                     ondelete='cascade', index=True)
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export')], readonly=True)
 
     offset = fields.Integer()
@@ -176,12 +177,15 @@ class IrModelExport(models.Model):
     @api.multi
     def _execute(self):
         self.ensure_one()
+        if not self.record_ids:
+            raise Warning(_("You cannot re-generate this export because records to export didn't store"))
         record_ids = eval(self.record_ids)
         if record_ids or self.export_tmpl_id.force_execute_action:
             records = self.env[self.export_tmpl_id.model_id.model].browse(record_ids)
             if self.export_tmpl_id.method:
-                new_env = self.env(cr=self._context['original_cr'])
-                records = records.with_env(new_env)
+                if self._context.get('original_cr'):
+                    new_env = self.env(cr=self._context['original_cr'])
+                    records = records.with_env(new_env)
                 args = eval(self.args or '[]')
                 kwargs = eval(self.export_tmpl_id.method_args or '{}')
                 return getattr(records, self.export_tmpl_id.method)(*args, **kwargs)
