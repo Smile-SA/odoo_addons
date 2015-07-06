@@ -19,9 +19,7 @@
 #
 ##############################################################################
 
-import datetime
 import logging
-import traceback
 
 from openerp.modules.registry import RegistryManager
 
@@ -37,6 +35,7 @@ class SmileDBHandler(logging.Handler):
         if not cr or (cr and cr.closed):
             db = RegistryManager.get(dbname)._db
             cr = db.cursor()
+            cr.autocommit(True)
             self._dbname_to_cr[dbname] = cr
         return cr
 
@@ -62,9 +61,6 @@ class SmileDBHandler(logging.Handler):
             # retry
             cr = self._get_cursor(dbname)
             cr.execute(request, params)
-
-        cr.commit()
-
         return True
 
     def close(self):
@@ -73,91 +69,8 @@ class SmileDBHandler(logging.Handler):
             try:
                 cr.execute("INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message) "
                            "VALUES (now(), 0, '', 0, 0, 'INFO', 'OpenERP server stopped')")
-                cr.commit()
             finally:
                 cr.close()
         self._dbname_to_cr = {}
-
-
-def add_timing(original_method):
-    def new_method(self, msg):
-        delay = datetime.datetime.now() - self._logger_start
-        msg += " after %sh %smin %ss" % tuple(str(delay).split(':'))
-        return original_method(self, msg)
-    return new_method
-
-
-def add_trace(original_method):
-    def new_method(self, msg):
-        stack = traceback.format_exc()
-        stack = stack.replace('%', '%%')
-        msg += '\n%s' % stack.decode('utf-8')
-        return original_method(self, msg)
-    return new_method
-
-
-class SmileDBLogger():
-
-    def __init__(self, dbname, model_name, res_id, uid=0):
-        assert isinstance(uid, (int, long)), 'uid should be an integer'
-        self._logger = logging.getLogger('smile_log')
-
-        db = RegistryManager.get(dbname)._db
-        pid = 0
-        try:
-            cr = db.cursor()
-            cr.execute("select relname from pg_class where relname='smile_log_seq'")
-            if not cr.rowcount:
-                cr.execute("create sequence smile_log_seq")
-            cr.execute("select nextval('smile_log_seq')")
-            res = cr.fetchone()
-            pid = res and res[0] or 0
-        finally:
-            cr.close()
-
-        self._logger_start = datetime.datetime.now()
-        self._logger_args = {'dbname': dbname, 'model_name': model_name, 'res_id': res_id, 'uid': uid, 'pid': pid}
-
-    @property
-    def pid(self):
-        return self._logger_args['pid']
-
-    def setLevel(self, level):
-        self._logger.setLevel(level)
-
-    def getEffectiveLevel(self):
-        return self._logger.getEffectiveLevel()
-
-    def debug(self, msg):
-        self._logger.debug(msg, self._logger_args)
-
-    def info(self, msg):
-        self._logger.info(msg, self._logger_args)
-
-    def warning(self, msg):
-        self._logger.warning(msg, self._logger_args)
-
-    def log(self, msg):
-        self._logger.log(msg, self._logger_args)
-
-    @add_trace
-    def error(self, msg):
-        self._logger.error(msg, self._logger_args)
-
-    @add_trace
-    def critical(self, msg):
-        self._logger.critical(msg, self._logger_args)
-
-    @add_trace
-    def exception(self, msg):
-        self._logger.exception(msg, self._logger_args)
-
-    @add_timing
-    def time_info(self, msg):
-        self._logger.info(msg, self._logger_args)
-
-    @add_timing
-    def time_debug(self, msg):
-        self._logger.debug(msg, self._logger_args)
 
 logging.getLogger('smile_log').addHandler(SmileDBHandler())

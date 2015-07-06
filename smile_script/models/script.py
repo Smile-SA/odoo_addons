@@ -30,7 +30,7 @@ from openerp.osv import osv, orm
 from openerp.tools import convert_xml_import
 from openerp.tools.translate import _
 
-from openerp.addons.smile_log.tools.db_handler import SmileDBLogger
+from openerp.addons.smile_log.tools import SmileDBLogger
 
 _logger = logging.getLogger(__name__)
 
