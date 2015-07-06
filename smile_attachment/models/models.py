@@ -57,7 +57,7 @@ def _search_attachments(self, operator, value):
 
 
 @api.model
-def new_setup_fields(self):
+def _setup_fields(self):
     name = self._get_attachments_field_name()
     if name not in self._fields:
         new_field = fields.One2many('ir.attachment', string='Attachments',
@@ -68,7 +68,7 @@ def new_setup_fields(self):
 
 
 @api.v7
-def new_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
     res = native_fields_view_get(self, cr, uid, view_id, view_type, context, toolbar, submenu)
     name = self._get_attachments_field_name()
     if view_type == 'search' and (name in self._fields):
@@ -81,7 +81,7 @@ def new_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=N
 
 
 @api.v8
-def new_fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
     res = native_fields_view_get(self, view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
     name = self._get_attachments_field_name()
     if view_type == 'search' and (name in self._fields):
@@ -93,7 +93,7 @@ def new_fields_view_get(self, view_id=None, view_type='form', toolbar=False, sub
     return res
 
 Model._get_attachments_field_name = _get_attachments_field_name
-Model._setup_fields = new_setup_fields
+Model._setup_fields = _setup_fields
 Model._get_attachments = _get_attachments
 Model._search_attachments = _search_attachments
-Model.fields_view_get = new_fields_view_get
+Model.fields_view_get = fields_view_get
