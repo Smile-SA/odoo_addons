@@ -127,25 +127,25 @@ def modified(self, fnames):
 def bulk_create(self, vals_list):
     if not vals_list:
         return []
-    context_copy = dict(self._context)
+    context = dict(self._context)
     if not self._context.get('force_store_function'):
         # 'force_store_function' useful if model has workflow with transition condition
         # based on function/compute fields
-        context_copy['no_store_function'] = True
-        context_copy['recompute'] = False
-    context_copy['no_validate'] = True
-    context_copy['defer_parent_store_computation'] = True
+        context['no_store_function'] = True
+        context['recompute'] = False
+    context['no_validate'] = True
+    context['defer_parent_store_computation'] = True
     if not isinstance(vals_list, list):
         vals_list = [vals_list]
     records = self.browse()
     for vals in vals_list:
-        records |= self.with_context(**context_copy).create(vals)
+        records |= self.with_context(**context).create(vals)
     if not self._context.get('force_store_function'):
         records._compute_store_set()
         records.modified(self._fields)
         self.recompute()
-    records._validate_fields(vals_list[0])
     self._parent_store_compute()
+    records._validate_fields(vals_list[0])
     return records
 
 
@@ -244,45 +244,63 @@ def filtered_from_domain(self, domain):
     if not domain or not self:
         return self
 
+    def get_records(item):
+        records = self
+        remote_field = item[0].split('.')[:-1]
+        if remote_field:
+            records = eval("rec.mapped('%s')" % '.'.join(remote_field), {'rec': self})
+        return records
+
+    def get_field(item):
+        return get_records(item)._fields[item[0].split('.')[-1]]
+
+    def extend(domain):
+        for index, item in enumerate(domain):
+            if isinstance(item, list):
+                field = get_field(item)
+                if field.search and not field.related:
+                    extension = field.search(get_records(item), *item[1:])
+                    domain = domain[:index] + normalize_domain(extension) + domain[index + 1:]
+        return domain
+
     localdict = {'time': time, 'datetime': datetime, 'relativedelta': relativedelta,
                  'context': self._context, 'uid': self._uid, 'user': self.env.user}
     try:
         if not isinstance(domain, basestring):
             domain = repr(domain)
-        domain = normalize_domain(eval(domain, localdict))
+        domain = extend(normalize_domain(eval(domain, localdict)))
     except:
         raise Warning(_('Domain not supported for %s filtering: %s') % (self._name, domain))
 
     stack = []
 
     def preformat(item):
-        model = self[0]
-        if item[0].split('.')[:-1]:
-            model = eval('o.%s' % '.'.join(item[0].split('.')[:-1]), {'o': self[0]})
-        field = model._fields[item[0].split('.')[-1]]
-        if field.relational:
-            if isinstance(item[2], basestring):
-                item[2] = dict(self.env[field.comodel_name].name_search(name=item[2], operator=item[1])).keys()
-                item[1] = 'in'
-            if field.type.endswith('2many'):
-                item[0] += '.ids'
-            else:
-                item[0] += '.id'
-        return item
-
-    def compute(item):
-        item = preformat(item)
         if isinstance(item, tuple):
             item = list(item)
-        item[0] = 'o.%s' % item[0]
+        field = get_field(item)
+        if field.relational:
+            if isinstance(item[2], basestring):
+                item[2] = dict(self.env[field.comodel_name].name_search(name=item[2], operator=item[1], limit=0)).keys()
+                item[1] = 'in'
+            item[0] = 'rec.%s' % item[0]
+            if field.type.endswith('2many'):
+                item[0] += '.ids'
+                py_operator = SQL2PYTHON_OPERATORS.get(item[1], item[1])
+                if py_operator in ('in', 'not in'):
+                    item[0] = '%sset(%s)' % (py_operator.startswith('not') and 'not ' or '', item[0])
+                    item[1] = '&'
+                    item[2] = set(item[2])
+            else:
+                item[0] += '.id'
+        else:
+            item[0] = 'rec.%s' % item[0]
         item[1] = SQL2PYTHON_OPERATORS.get(item[1], item[1])
-        reverse = True if item[1] in ('in', 'not in') and not isinstance(item[2], (tuple, list)) else False
         item[2] = repr(item[2])
-        if reverse:
-            item = item[::-1]
-        expr_to_eval = ' '.join(map(str, item))
+        return ' '.join(map(str, item))
+
+    def compute(item):
         try:
-            return self.filtered(lambda rec: eval(expr_to_eval, dict(localdict, o=rec)))
+            return self.filtered(lambda rec: eval(preformat(item), dict(localdict, rec=rec)))
         except:
             return self.browse()
 
