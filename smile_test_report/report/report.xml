@@ -31,7 +31,13 @@
                   <span t-esc="test[1]"/>
                 </p>
                 <t t-foreach="test[2]" t-as="comment">
+                  <t t-if="':\n\n' not in comment and '\n' in comment">
+                    <!-- Class docstring -->
+                    <h4 style="font-size: medium; margin-top: 30px" t-raw="comment.split('\n')[0]"/>
+                    <span style="font-size: large" t-raw="comment.replace('\n', '&lt;br&gt;')"/>
+                  </t>
                   <t t-if="':\n\n' in comment">
+                    <!-- Methods docstring -->
                     <h4 style="font-size: medium; margin-top: 30px" t-raw="comment.split(':\n\n')[0]"/>
                     <span style="font-size: large" t-raw="comment.split(':\n\n')[1].replace('\n', '&lt;br&gt;')"/>
                   </t>
