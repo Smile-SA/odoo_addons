@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="t8bis" model="workflow.transition">
+            <field name="act_from" ref="account.act_open"/>
+            <field name="act_to" ref="account.act_paid"/>
+			<field name="signal">force_invoice_paid</field>
+        </record>
+
+        <record id="open_test_to_paid_bis" model="workflow.transition">
+            <field name="act_from" ref="account.act_open_test"/>
+            <field name="act_to" ref="account.act_paid"/>
+			<field name="signal">force_invoice_paid</field>
+        </record>
+
+    </data>
+</openerp>

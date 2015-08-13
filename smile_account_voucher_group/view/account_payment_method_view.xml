@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+	    
+	    <record model="ir.ui.view" id="account_payment_method_form_update">
+	        <field name="name">account.payment.method.form</field>
+	        <field name="model">account.payment.method</field>
+	        <field name="inherit_id" ref="smile_payment_method.account_payment_method_form"/>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+                <field name="journal_id" position="after">
+	                <field name="partner_bank_necessary"/>
+ 	            </field>
+	        </field>
+	    </record>
+
+
+	</data>
+</openerp>
