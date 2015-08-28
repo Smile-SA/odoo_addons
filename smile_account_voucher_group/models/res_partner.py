@@ -19,14 +19,13 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api
+from openerp import models, fields
 
 PAYMENT_TYPES = [('I', 'Individual'), ('G', 'Grouped')]
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
-    
 
     payment_type = fields.Selection(PAYMENT_TYPES, string="Payment Type", required=True, default='I')
     has_grouped_payments_in_progress = fields.Boolean(string="Payment Mode")

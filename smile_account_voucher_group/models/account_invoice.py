@@ -50,8 +50,9 @@ class AccountInvoice(models.Model):
                                             compute='_get_payment_setting', store=True, copy=False)
 
     @api.multi
-    @api.depends('partner_id', 'partner_id.payment_type', 'partner_id.payment_method_suppliers_id', 'partner_id.payment_method_suppliers_id.partner_bank_necessary', \
-                 'partner_id.payment_method_customer_id', 'partner_id.payment_method_customer_id.partner_bank_necessary')
+    @api.depends('partner_id', 'partner_id.payment_type', 'partner_id.payment_method_suppliers_id',
+                 'partner_id.payment_method_suppliers_id.partner_bank_necessary', 'partner_id.payment_method_customer_id',
+                 'partner_id.payment_method_customer_id.partner_bank_necessary')
     def _get_payment_setting(self):
         for invoice in self:
             if invoice.type in ('out_invoice', 'out_refund'):
@@ -59,7 +60,6 @@ class AccountInvoice(models.Model):
             elif invoice.type in ('in_invoice', 'in_refund'):
                 invoice.partner_bank_necessary = invoice.partner_id.payment_method_suppliers_id.partner_bank_necessary
             invoice.payment_type = invoice.partner_id.payment_type
-            
 
     @api.multi
     @api.depends('move_id')
@@ -90,7 +90,7 @@ class AccountInvoice(models.Model):
                 res.setdefault('value', {})['partner_bank_necessary'] = partner.payment_method_customer_id.partner_bank_necessary
             elif self.type in ('in_invoice', 'in_refund'):
                 res.setdefault('value', {})['partner_bank_necessary'] = partner.payment_method_suppliers_id.partner_bank_necessary
-            
+
         return res
 
     @api.model
@@ -151,7 +151,7 @@ class AccountInvoice(models.Model):
         elif invoices[0].type in ('in_invoice', 'in_refund'):
             journal = partner.payment_method_suppliers_id.journal_id
             payment_method_id = partner.payment_method_suppliers_id
-        
+
         if not journal:
             raise exceptions.Warning(_('Error'),
                                      _('Please indicate a journal for payment mode %s and company %s') % (payment_method_id.name,
@@ -168,8 +168,7 @@ class AccountInvoice(models.Model):
             'partner_bank_necessary': payment_method_id.partner_bank_necessary,
             'partner_bank_id': invoices[0].partner_bank_id.id,
         }
-        
-        
+
         line_vals = self.env['account.voucher']._get_line_vals_from_invoices(invoices, vals)
         if not line_vals:
             return {}
