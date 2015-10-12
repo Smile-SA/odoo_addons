@@ -71,9 +71,9 @@ class IrValues(models.Model):
             # FIXME: needs cleanup
             try:
                 action_def = self.env[action_model].browse(int(action_id)).read(fields)
-                if isinstance(action_def, list):
-                    action_def = action_def[0]
                 if action_def:
+                    if isinstance(action_def, list):
+                        action_def = action_def[0]
                     if action_model in ('ir.actions.report.xml', 'ir.actions.act_window',
                                         'ir.actions.wizard'):
                         groups = action_def.get('groups_id')
