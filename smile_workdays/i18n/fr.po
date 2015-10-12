@@ -65,7 +65,7 @@ msgstr "Société"
 #. module: smile_workdays
 #: field:res.company,fri:0
 msgid "Friday"
-msgstr "Samedi"
+msgstr "Vendredi"
 
 #. module: smile_workdays
 #: sql_constraint:res.country:0
