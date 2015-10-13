@@ -91,7 +91,7 @@ class ResCompany(models.Model):
 
     @api.multi
     def _is_working_day(self, date_to_check):
-        """Returns True if the day is off, False otherwise.
+        """Returns True if the day is a working day, False otherwise.
         A working day is:
             A weekday that is not off,
             A date that is not closed for the company
