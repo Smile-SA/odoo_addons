@@ -97,3 +97,13 @@ msgstr "Attention !"
 #, python-format
 msgid "You cannot change the profile of a user which is itself a profile!"
 msgstr "Vous ne pouvez pas modifier le profil d'un utilisateur qui est lui-même un profil!"
+
+#. module: smile_access_control
+#: field:res.users,is_update_users:0
+msgid "Update users"
+msgstr "Mettre à jour les utilisateurs"
+
+#. module: smile_access_control
+#: help:res.users,is_update_users:0
+msgid "If false, users associated to this profile will be not updated after creation"
+msgstr "Si faux, les utilisateurs associés au profil ne seront pas mis à jour après création"

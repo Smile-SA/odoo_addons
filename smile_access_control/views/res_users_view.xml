@@ -37,6 +37,10 @@
       <field name="priority">10</field>
       <field name="arch" type="xml">
         <data>
+          <field name="active" position="before">
+            <field name="user_profile" invisible="True"/>
+            <field name="is_update_users" attrs="{'invisible': [('user_profile', '=', False)]}"/>
+          </field>
           <field name="name" position="attributes">
             <attribute name="placeholder">Profile ...</attribute>
           </field>

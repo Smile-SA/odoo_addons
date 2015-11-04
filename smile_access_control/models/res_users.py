@@ -51,6 +51,8 @@ class ResUsers(models.Model):
                                          ('ttype', 'not in', ('one2many',)),
                                          ('name', 'not in', ('user_profile', 'user_profile_id', 'user_ids', 'field_ids', 'view'))],
                                  default=_get_default_field_ids)
+    is_update_users = fields.Boolean(string="Update users", default=lambda *a: True,
+                                     help="If false, users associated to this profile will be not updated after creation")
 
     _sql_constraints = [
         ('active_admin_check', 'CHECK (id = 1 AND active = TRUE OR id <> 1)', 'The user with id = 1 must be always active!'),
@@ -100,7 +102,7 @@ class ResUsers(models.Model):
 
     @api.multi
     def _update_users_linked_to_profile(self, fields=None):
-        for user_profile in self.filtered(lambda user: user.user_profile):
+        for user_profile in self.filtered(lambda user: user.user_profile and user.is_update_users):
             user_profile.with_context(active_test=False).mapped('user_ids')._update_from_profile(fields)
 
     @api.model
