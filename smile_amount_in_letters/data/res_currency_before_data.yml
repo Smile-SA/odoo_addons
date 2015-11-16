@@ -1,0 +1,6 @@
+-
+  I allow to update currencies
+-    
+  !python {model: ir.model.data}: |
+    data_id = self.search(cr, uid, [('model', '=', 'res.currency'), ('module', '=', 'base')], context=context)
+    self.write(cr, uid, data_id, {'noupdate': False}, context=context)

@@ -1,0 +1,186 @@
+id,in_letters_singular,in_letters_plural
+base.AED,UAE Dirham,UAE Dirham
+base.AFN,Afghani,Afghani
+base.ALL,Lek,Lek
+base.AMD,Armenian Dram,Armenian Dram
+base.ANG,Netherlands Antillean Guilder,Netherlands Antillean Guilder
+base.ANG,Netherlands Antillean Guilder,Netherlands Antillean Guilder
+base.AOA,Kwanza,Kwanza
+base.ARS,Argentine Peso,Argentine Peso
+base.AUD,Australian Dollar,Australian Dollar
+base.AWG,Aruban Florin,Aruban Florin
+base.AZN,Azerbaijanian Manat,Azerbaijanian Manat
+base.BAM,Convertible Mark,Convertible Mark
+base.BBD,Barbados Dollar,Barbados Dollar
+base.BDT,Taka,Taka
+base.BGN,Bulgarian Lev,Bulgarian Lev
+base.BHD,Bahraini Dinar,Bahraini Dinar
+base.BIF,Burundi Franc,Burundi Franc
+base.BMD,Bermudian Dollar,Bermudian Dollar
+base.BND,Brunei Dollar,Brunei Dollar
+base.BOB,Boliviano,Boliviano
+base.BRL,Brazilian Real,Brazilian Real
+base.BSD,Bahamian Dollar,Bahamian Dollar
+base.BTN,Ngultrum,Ngultrum
+base.BWP,Pula,Pula
+base.BYR,Belarussian Ruble,Belarussian Ruble
+base.BZD,Belize Dollar,Belize Dollar
+base.CAD,Canadian Dollar,Canadian Dollar
+base.CDF,Congolese Franc,Congolese Franc
+base.CHF,Franc suisse,Francs suisses
+base.CLP,Chilean Peso,Chilean Peso
+base.CNY,Yuan Renminbi,Yuan Renminbi
+base.COP,Colombian Peso,Colombian Peso
+base.CRC,Costa Rican Colon,Costa Rican Colon
+base.CUP,Cuban Peso,Cuban Peso
+base.CVE,Cabo Verde Escudo,Cabo Verde Escudo
+base.CYP,,
+base.CZK,Czech Koruna,Czech Koruna
+base.DJF,Djibouti Franc,Djibouti Franc
+base.DKK,Danish Krone,Danish Krone
+base.DOP,Dominican Peso,Dominican Peso
+base.DZD,Algerian Dinar,Algerian Dinar
+base.ECS,,
+base.EGP,Egyptian Pound,Egyptian Pound
+base.ERN,Nakfa,Nakfa
+base.ETB,Ethiopian Birr,Ethiopian Birr
+base.EUR,euro,euros
+base.FJD,Fiji Dollar,Fiji Dollar
+base.FKP,Falkland Islands Pound,Falkland Islands Pound
+base.GBP,Pound Sterling,Pound Sterling
+base.GBP,Pound Sterling,Pound Sterling
+base.GBP,Pound Sterling,Pound Sterling
+base.GBP,Pound Sterling,Pound Sterling
+base.GEL,Lari,Lari
+base.GHS,Ghana Cedi,Ghana Cedi
+base.GIP,Gibraltar Pound,Gibraltar Pound
+base.GMD,Dalasi,Dalasi
+base.GNF,Guinea Franc,Guinea Franc
+base.GTQ,Quetzal,Quetzal
+base.GWP,,
+base.GYD,Guyana Dollar,Guyana Dollar
+base.HKD,Hong Kong Dollar,Hong Kong Dollar
+base.HNL,Lempira,Lempira
+base.HRK,Kuna,Kuna
+base.HTG,Gourde,Gourde
+base.HUF,Forint,Forint
+base.IDR,Rupiah,Rupiah
+base.ILS,New Israeli Sheqel,New Israeli Sheqel
+base.INR,Indian Rupee,Indian Rupee
+base.INR,Indian Rupee,Indian Rupee
+base.IQD,Iraqi Dinar,Iraqi Dinar
+base.IRR,Iranian Rial,Iranian Rial
+base.ISK,Iceland Krona,Iceland Krona
+base.ITL,,
+base.JMD,Jamaican Dollar,Jamaican Dollar
+base.JOD,Jordanian Dinar,Jordanian Dinar
+base.JPY,Yen,Yen
+base.KES,Kenyan Shilling,Kenyan Shilling
+base.KGS,Som,Som
+base.KHR,Riel,Riel
+base.KMF,Comoro Franc,Comoro Franc
+base.KPW,North Korean Won,North Korean Won
+base.KRW,Won,Won
+base.KWD,Kuwaiti Dinar,Kuwaiti Dinar
+base.KYD,Cayman Islands Dollar,Cayman Islands Dollar
+base.KZT,Tenge,Tenge
+base.LAK,Kip,Kip
+base.LBP,Lebanese Pound,Lebanese Pound
+base.LKR,Sri Lanka Rupee,Sri Lanka Rupee
+base.LRD,Liberian Dollar,Liberian Dollar
+base.LSL,Loti,Loti
+base.LTL,,
+base.LVL,,
+base.LYD,Libyan Dinar,Libyan Dinar
+base.MAD,Moroccan Dirham,Moroccan Dirham
+base.MAD,Moroccan Dirham,Moroccan Dirham
+base.MDL,Moldovan Leu,Moldovan Leu
+base.MGA,Malagasy Ariary,Malagasy Ariary
+base.MKD,Denar,Denar
+base.MMK,Kyat,Kyat
+base.MNT,Tugrik,Tugrik
+base.MOP,Pataca,Pataca
+base.MRO,Ouguiya,Ouguiya
+base.MUR,Mauritius Rupee,Mauritius Rupee
+base.MVR,Rufiyaa,Rufiyaa
+base.MWK,Kwacha,Kwacha
+base.MXN,Mexican Peso,Mexican Peso
+base.MYR,Malaysian Ringgit,Malaysian Ringgit
+base.MZN,Mozambique Metical,Mozambique Metical
+base.NAD,Namibia Dollar,Namibia Dollar
+base.NGN,Naira,Naira
+base.NIO,Cordoba Oro,Cordoba Oro
+base.NOK,Norwegian Krone,Norwegian Krone
+base.NOK,Norwegian Krone,Norwegian Krone
+base.NOK,Norwegian Krone,Norwegian Krone
+base.NPR,Nepalese Rupee,Nepalese Rupee
+base.NZD,New Zealand Dollar,New Zealand Dollar
+base.NZD,New Zealand Dollar,New Zealand Dollar
+base.NZD,New Zealand Dollar,New Zealand Dollar
+base.NZD,New Zealand Dollar,New Zealand Dollar
+base.NZD,New Zealand Dollar,New Zealand Dollar
+base.OMR,Rial Omani,Rial Omani
+base.PAB,Balboa,Balboa
+base.PEN,Nuevo Sol,Nuevo Sol
+base.PGK,Kina,Kina
+base.PHP,Philippine Peso,Philippine Peso
+base.PKR,Pakistan Rupee,Pakistan Rupee
+base.PLN,Zloty,Zloty
+base.PLZ,,
+base.PYG,Guarani,Guarani
+base.QAR,Qatari Rial,Qatari Rial
+base.QTQ,,
+base.RON,Romanian Leu,Romanian Leu
+base.RSD,Serbian Dinar,Serbian Dinar
+base.RUB,Russian Ruble,Russian Ruble
+base.RUR,,
+base.RWF,Rwanda Franc,Rwanda Franc
+base.SAR,Saudi Riyal,Saudi Riyal
+base.SBD,Solomon Islands Dollar,Solomon Islands Dollar
+base.SCR,Seychelles Rupee,Seychelles Rupee
+base.SDD,,
+base.SEK,Swedish Krona,Swedish Krona
+base.SGD,Singapore Dollar,Singapore Dollar
+base.SHP,Saint Helena Pound,Saint Helena Pound
+base.SIT,,
+base.SKK,,
+base.SLL,Leone,Leone
+base.SOD,,
+base.SRG,,
+base.SSP,South Sudanese Pound,South Sudanese Pound
+base.STD,Dobra,Dobra
+base.SVC,El Salvador Colon,El Salvador Colon
+base.SYP,Syrian Pound,Syrian Pound
+base.SZL,Lilangeni,Lilangeni
+base.THB,Baht,Baht
+base.TJR,,
+base.TMM,,
+base.TND,Tunisian Dinar,Tunisian Dinar
+base.TOP,Pa’anga,Pa’anga
+base.TPE,,
+base.TRL,,
+base.TRY,Turkish Lira,Turkish Lira
+base.TTD,Trinidad and Tobago Dollar,Trinidad and Tobago Dollar
+base.TWD,New Taiwan Dollar,New Taiwan Dollar
+base.TZS,Tanzanian Shilling,Tanzanian Shilling
+base.UAG,,
+base.UAH,Hryvnia,Hryvnia
+base.UGX,Uganda Shilling,Uganda Shilling
+base.USD,US Dollar,US Dollars
+base.UYU,Peso Uruguayo,Peso Uruguayo
+base.UZS,Uzbekistan Sum,Uzbekistan Sum
+base.VEF,Bolivar,Bolivar
+base.VND,Dong,Dong
+base.VUB,,
+base.VUV,Vatu,Vatu
+base.WST,Tala,Tala
+base.XAF,CFA Franc BEAC,CFA Franc BEAC
+base.XCD,East Caribbean Dollar,East Caribbean Dollar
+base.XOF,CFA Franc BCEAO,CFA Franc BCEAO
+base.XPF,CFP Franc,CFP Franc
+base.YER,Yemeni Rial,Yemeni Rial
+base.YUM,,
+base.ZAR,Rand,Rand
+base.ZMK,,
+base.ZRZ,,
+base.ZWD,,
