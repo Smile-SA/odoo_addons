@@ -1,0 +1,7 @@
+id,name,model_id/id,group_id/id,perm_create,perm_read,perm_write,perm_unlink
+access_res_holidays_area_user,res.holidays.area.user,model_res_holidays_area,group_res_holidays_user,0,1,0,0
+access_res_holidays_area_admin,res.holidays.area.admin,model_res_holidays_area,group_res_holidays_technical_admin,1,1,1,1
+access_res_holidays_date_user,res.holidays.date.user,model_res_holidays_date,group_res_holidays_user,0,1,0,0
+access_res_holidays_date_admin,res.holidays.date.admin,model_res_holidays_date,group_res_holidays_technical_admin,1,1,1,1
+access_res_holidays_attribution_user,res.holidays.attribution.user,model_res_holidays_attribution,group_res_holidays_user,0,1,0,0
+access_res_holidays_attribution_admin,res.holidays.attribution.admin,model_res_holidays_attribution,group_res_holidays_technical_admin,1,1,1,1

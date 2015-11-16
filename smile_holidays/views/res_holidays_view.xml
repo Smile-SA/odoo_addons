@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <!-- Department -->
+
+    <record id="view_country_department_form" model="ir.ui.view">
+      <field name="name">res.country.department.form</field>
+      <field name="model">res.country.department</field>
+      <field name="inherit_id" ref="l10n_fr_department.view_country_department_form"/>
+      <field name="arch" type="xml">
+        <field name="country_id" position="after">
+          <field name="attribution_ids" context="{'default_department_id': active_id}">
+            <tree string="Effective areas" editable="top">
+              <field name="area_id"/>
+              <field name="effective_date"/>
+            </tree>
+          </field>
+        </field>
+      </field>
+    </record>
+
+    <!-- Holidays Date -->
+
+    <record id="view_holidays_date_tree" model="ir.ui.view">
+      <field name="name">res.holidays.date.tree</field>
+      <field name="model">res.holidays.date</field>
+      <field name="arch" type="xml">
+        <tree string="Holidays Dates">
+          <field name="name"/>
+          <field name="start_date"/>
+          <field name="end_date"/>
+          <field name="area_ids" widget="many2many_tags"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_holidays_date_form" model="ir.ui.view">
+      <field name="name">res.holidays.date.form</field>
+      <field name="model">res.holidays.date</field>
+      <field name="arch" type="xml">
+        <form string="Holidays Dates">
+          <sheet>
+            <h1>
+              <field name="name" class="oe_inline" placeholder="Christmas Holidays..."/>
+            </h1>
+            <group id="group_dates">
+              <field name="start_date"/>
+              <field name="end_date"/>
+              <field name="area_ids" invisible="context.get('default_area_ids')" widget="many2many_tags" context="{'name_with_date': True}"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_view_holidays_date_tree" model="ir.actions.act_window">
+      <field name="name">Holidays Dates</field>
+      <field name="res_model">res.holidays.date</field>
+      <field name="view_mode">tree,form</field>
+      <field name="help">Display and manage the list of all holidays dates.</field>
+    </record>
+
+    <menuitem id="menu_res_holidays_date" parent="base.menu_localisation" action="action_view_holidays_date_tree" sequence="10"/>
+
+    <!-- Holidays Area -->
+
+    <record id="view_holidays_area_tree" model="ir.ui.view">
+      <field name="name">res.holidays.area.tree</field>
+      <field name="model">res.holidays.area</field>
+      <field name="arch" type="xml">
+        <tree string="Holidays Areas">
+          <field name="name"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_holidays_area_form" model="ir.ui.view">
+      <field name="name">res.holidays.area.form</field>
+      <field name="model">res.holidays.area</field>
+      <field name="arch" type="xml">
+        <form string="Holidays Areas">
+          <sheet>
+            <h1>
+              <field name="name" class="oe_inline" placeholder="Area..."/>
+            </h1>
+            <group id="group_area">
+              <field name="holiday_date_ids" context="{'default_area_ids': [(4, active_id)]}">
+                <tree>
+                  <field name="name"/>
+                  <field name="start_date"/>
+                  <field name="end_date"/>
+                </tree>
+              </field>
+            </group>
+            <notebook>
+                <page string="Departments">
+                    <field name="attribution_ids">
+                        <tree>
+                            <field name="department_id"/>
+                            <field name="effective_date"/>
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_view_holidays_area_tree" model="ir.actions.act_window">
+      <field name="name">Holidays Areas</field>
+      <field name="res_model">res.holidays.area</field>
+      <field name="view_mode">tree,form</field>
+      <field name="help">Display and manage the list of all holidays areas.</field>
+    </record>
+
+    <menuitem id="menu_res_holidays_area" parent="base.menu_localisation" action="action_view_holidays_area_tree" sequence="9"/>
+
+
+  </data>
+</openerp>
