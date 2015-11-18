@@ -25,17 +25,30 @@ from openerp import api, fields, models
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    disable_auto_subscribe = fields.Boolean(default=False, help='If checked, this user will not receive notifications on instances he created')
+    disable_auto_subscribe = fields.Boolean(default=False,
+                                            help='If checked, this user will not receive notifications on instances he created')
 
 
 class MailThread(models.Model):
     _inherit = 'mail.thread'
 
+    @api.model
+    def _disable_auto_subscribe(self):
+        return self.env.user.disable_auto_subscribe
+
+    @api.model
+    def create(self, vals):
+        # INFO: Disable author auto following if asked
+        if self._disable_auto_subscribe():
+            self = self.with_context(mail_create_nosubscribe=True)
+        return super(MailThread, self).create(vals)
+
     @api.multi
     def message_subscribe(self, partner_ids, subtype_ids=None):
         # INFO: Disable author auto following if asked
-        partner_ids_to_ignore = self.env['res.users'].search([('disable_auto_subscribe', '=', True)]).mapped('partner_id').ids
-        partner_ids = [partner_id for partner_id in partner_ids if partner_id not in partner_ids_to_ignore]
+        if self._context.get('mail_create_nosubscribe'):
+            partner_to_ignore_id = self.env.user.partner_id.id
+            partner_ids = filter(lambda partner_id: partner_id != partner_to_ignore_id, partner_ids)
         return super(MailThread, self).message_subscribe(partner_ids, subtype_ids)
 
 
