@@ -75,7 +75,7 @@ class Download(http.Controller):
         """
         Model = request.registry[model]
         cr, uid, context = request.cr, request.uid, request.context
-        datas = getattr(Model, method)(cr, uid, record_id, context)
+        datas = getattr(Model, method)(cr, uid, int(record_id), context)
         if not datas:
             return request.not_found()
         filecontent = datas[0]
