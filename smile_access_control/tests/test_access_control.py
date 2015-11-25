@@ -98,5 +98,5 @@ class TestAccessControl(TransactionCase):
         """
         profile = self.env['res.users'].create({'name': 'P', 'login': 'p_login', 'user_profile': True})
         user = self.env['res.users'].create({'name': 'U', 'login': 'u_login', 'user_profile_id': profile.id})
-        self.group1.with_context(use_pdb=True).users |= profile
+        self.group1.users |= profile
         self.assertIn(self.group1, user.groups_id, 'User U should have Group 1 in dependencies!')
