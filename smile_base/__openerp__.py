@@ -25,6 +25,7 @@
     "depends": [
         'mail',
         'web_planner',
+        'web_editor',
     ],
     "author": "Smile",
     "license": 'AGPL-3',

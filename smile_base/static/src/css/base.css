@@ -1,0 +1,7 @@
+.openerp .oe_form_sheet_width {
+  max-width: 1000px;
+}
+
+.oe_form_field_html_text .note-editable {
+  font: inherit !important;
+}

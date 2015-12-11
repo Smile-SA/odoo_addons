@@ -2,6 +2,12 @@
 <openerp>
   <data noupdate="0">
 
+    <template id="smile_base_css" name="smile_base_css" inherit_id="web_editor.assets_backend">
+      <xpath expr="." position="inside">
+        <link rel="stylesheet" href="/smile_base/static/src/css/base.css"/>
+      </xpath>
+    </template>
+
     <template id="smile_base.login" inherit_id="web.login" name="Login window">
       <xpath expr="//label[@for='login']" position="replace">
         <label for="login" class="control-label">Login</label>
