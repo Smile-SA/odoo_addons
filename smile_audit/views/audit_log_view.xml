@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_audit_log_form">
+            <field name="name">audit.log.form</field>
+            <field name="model">audit.log</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Audit Log">
+                	<sheet>
+	                	<group col="4">
+		                	<group>
+			                    <field name="name"/>
+			                    <field name="user_id"/>
+			                    <field name="create_date"/>
+			                </group>
+		                	<group>
+			                    <field name="model_id"/>
+			                    <field name="method"/>
+			                    <field name="res_id"/>
+			                </group>
+		                </group>
+                    <field name="data_html" colspan="4" nolabel="1"/>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_audit_log_tree">
+            <field name="name">audit.log.tree</field>
+            <field name="model">audit.log</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Audit Logs">
+                    <field name="create_date"/>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="method"/>
+                    <field name="user_id"/>
+                    <button name="display_history_revision" type="object" string="Display history revision"
+                      icon="../../../../../smile_audit/static/src/img/icons/history"/>
+                </tree>
+            </field>
+        </record>
+        
+       <record id="view_audit_log_search" model="ir.ui.view">
+            <field name="name">audit.log.search</field>
+            <field name="model">audit.log</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Audit Logs">
+                    <filter string="Creation" icon="terp-tools" domain="[('method','=','create')]"/>
+                    <filter string="Update" icon="terp-tools" domain="[('method','=','write')]"/>
+                    <filter string="Deletion" icon="terp-tools" domain="[('method','=','unlink')]"/>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="user_id"/>
+	                <newline/>
+    	            <group expand="0" string="Group By...">
+                    	<filter string="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                    	<filter string="Model" icon="terp-stock_align_left_24" context="{'group_by':'model_id'}"/>
+						<filter string="Date" icon="terp-go-month" context="{'group_by':'create_date'}"/>
+                	</group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_audit_log_tree">
+            <field name="name">Logs</field>
+            <field name="res_model">audit.log</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_audit_log_search"/>
+            <field name="view_id" ref="view_audit_log_tree"/>
+        </record>
+
+        <menuitem id="menu_action_audit_log_tree" action="action_audit_log_tree" parent="menu_audit"/>
+
+    </data>
+</openerp>

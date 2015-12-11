@@ -1,0 +1,9 @@
+-
+  I remove the cron of module update notification. 
+-
+  !python {model: ir.cron}: |
+    try:
+      cron_id = ref('mail.ir_cron_module_update_notification')
+      self.unlink(cr, uid, cron_id)
+    except:
+      pass

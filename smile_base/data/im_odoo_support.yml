@@ -1,0 +1,15 @@
+-
+  I uninstall im_odoo_support
+-
+  !python {model: ir.module.module}: |
+    ids = self.search(cr, uid, [('name', '=', 'im_odoo_support')], limit=1, context=context)
+    if ids:
+      module = self.browse(cr, uid, ids[0], context)
+      if module.state in ('installed', 'to upgrade'):
+        module.button_uninstall()
+      if module.state != 'uninstallable':
+        module.write({'state': 'uninstallable'})
+    view_obj = self.pool.get('ir.ui.view')
+    view_ids = view_obj.search(cr, uid, [('name', '=', 'im_odoo_support assets')], context=context)
+    if view_ids:
+      view_obj.unlink(cr, uid, view_ids, context)

@@ -1,0 +1,55 @@
+<openerp>
+  <data>
+
+    <!-- Report view -->
+
+    <template id="test_report_view">
+      <t t-call="report.html_container">
+        <t t-call="report.external_layout">
+          <div class="page" style="margin-left: 3em">
+
+            <!-- Title page -->
+            <h1 align="center">Non-regression Tests</h1>
+            <hr/>
+            <p>
+              This document provides a detailed description of non-regression tests.
+            </p>
+
+            <t t-foreach="docs.get_tests()" t-as="module_tests">
+              <!-- h2 style="page-break-before: always"/ -->
+              <h2 style="color:#FF6600">
+                Module:
+                <span t-esc="module_tests[0]"/>
+              </h2>
+              <t t-foreach="module_tests[1]" t-as="test">
+                <h3>
+                  Test:
+                  <span t-esc="test[0]"/>
+                </h3>
+                <p style="font-style: italic">
+                  File:
+                  <span t-esc="test[1]"/>
+                </p>
+                <t t-foreach="test[2]" t-as="comment">
+                  <t t-if="':\n\n' in comment">
+                    <h4 style="font-size: medium; margin-top: 30px" t-raw="comment.split(':\n\n')[0]"/>
+                    <span style="font-size: large" t-raw="comment.split(':\n\n')[1].replace('\n', '&lt;br&gt;')"/>
+                  </t>
+                </t>
+                <hr/>
+              </t>
+            </t>
+
+            <!-- End of the document -->
+          </div>
+
+        </t>
+      </t>
+    </template>
+
+    <!-- Report declaration -->
+
+    <report id="tests" model="ir.module.module" string="Tests Report" report_type="qweb-pdf" name="smile_test_report.test_report_view" file="Non-regression test report"/>
+
+  </data>
+</openerp>

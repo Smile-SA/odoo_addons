@@ -1,0 +1,55 @@
+-
+  I create an audit rule on partners
+-
+  !python {model: audit.rule}: |
+    rule_id = self.search(cr, uid, [('model_id.model', '=', 'res.partner')], limit=1, context=context)
+    if not rule_id:
+      rule_id = self.create(cr, uid, {'name': 'Audit rule on partners', 'model_id': ref('base.model_res_partner')}, context)
+    else:
+      rule_id = rule_id[0]
+    self.pool.get('ir.model.data').create(cr, uid, {'name': 'rule_partners', 'module': 'smile_audit', 'model': 'res.partner', 'res_id': rule_id}, context)
+-
+  As demo user, I create a new partner
+-
+  !record {model: res.partner, id: res_partner_test, view: False}:
+    name: Test
+-
+  I check if an audit log is created after creation
+-
+  !python {model: audit.log}: |
+    domain = [
+      ('model_id', '=', ref('base.model_res_partner')),
+      ('method', '=', 'create'),
+      ('res_id', '=', ref('res_partner_test')),
+    ]
+    assert self.search(cr, uid, domain, limit=1, context=context), 'No audit log after user creation'
+-
+  As demo user, I update contact name
+-
+  !record {model: res.partner, id: res_partner_test, view: False}:
+    name: Test 2
+-
+  I check if an audit log is created after update
+-
+  !python {model: audit.log}: |
+    domain = [
+      ('model_id', '=', ref('base.model_res_partner')),
+      ('method', '=', 'write'),
+      ('res_id', '=', ref('res_partner_test')),
+    ]
+    assert self.search(cr, uid, domain, limit=1, context=context), 'No audit log after user update'
+-
+  As demo user, I delete this address
+-
+  !python {model: res.partner}: |
+    self.unlink(cr, uid, [ref('res_partner_test')], context)
+-
+  I check if an audit log is created after deletion
+-
+  !python {model: audit.log}: |
+    domain = [
+      ('model_id', '=', ref('base.model_res_partner')),
+      ('method', '=', 'unlink'),
+      ('res_id', '=', ref('res_partner_test')),
+    ]
+    assert self.search(cr, uid, domain, limit=1, context=context), 'No audit log after user deletion'

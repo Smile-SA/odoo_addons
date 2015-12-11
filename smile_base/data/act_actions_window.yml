@@ -1,0 +1,6 @@
+-
+  I add act_window_id in context for each window action
+-
+  !python {model: ir.actions.act_window}: |
+    ids = self.search(cr, uid, [], context={'active_test': False})
+    self.browse(cr, uid, ids, context)._update_context()

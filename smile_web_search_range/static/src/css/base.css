@@ -1,0 +1,19 @@
+.openerp .oe-search-options .searchview_extended_prop_value2 {
+  width: -webkit-calc(100% - 20px);
+  width: calc(100% - 20px);
+}
+.openerp .oe-search-options .searchview_extended_prop_value2 > select, .openerp .oe-search-options .searchview_extended_prop_value2 > input {
+  width: -webkit-calc(100% - 20px);
+  width: calc(100% - 20px);
+}
+.openerp .oe-search-options .searchview_extended_prop_value2 .o_datepicker {
+  width: -webkit-calc(100% - 20px);
+  width: calc(100% - 20px);
+}
+.openerp .oe-search-options .searchview_extended_prop_value2 .o_datepicker .o_datepicker_input {
+  width: 100%;
+}
+.openerp .oe-search-options .searchview_extended_prop_value2 .o_datepicker .o_datepicker_button {
+  margin-left: -21px;
+  cursor: pointer;
+}
