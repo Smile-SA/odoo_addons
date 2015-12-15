@@ -19,5 +19,17 @@
 #
 ##############################################################################
 
-import report
-import res_company
+from openerp import api, models
+
+
+class Report(models.Model):
+    _inherit = "report"
+
+    @api.model
+    def _get_report_from_name(self, report_name):
+        """Get the first record of ir.actions.report.xml having the ``report_name`` as value for
+        the field report_name.
+        """
+        qwebtypes = ['qweb-pdf', 'qweb-html']
+        conditions = [('report_type', 'in', qwebtypes), ('report_name', '=', report_name)]
+        return self.env['ir.actions.report.xml'].search(conditions, limit=1)
