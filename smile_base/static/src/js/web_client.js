@@ -22,7 +22,11 @@ openerp.smile_base = function(instance) {
             this._super();
             var config_parameter = new instance.web.Model('ir.config_parameter');
             config_parameter.call('get_param', ['server.environment', 'prod']).then(function(server_env) {
-                if (server_env != 'prod') {
+            	if (server_env == 'dev') {
+			        $(".navbar-inverse").css({'background-color': '#7c7bad', 'border-color': '#7c7bad'});
+			        $(".navbar-inverse .navbar-nav > li > a").css({'color': '#edd', 'background-color': '#7c7bad'});
+			        $(".navbar-inverse .navbar-nav > .active > a").css({'color': '#fff', 'background-color': '#606087'});
+				} else if (server_env != 'prod') {
 			        $(".navbar-inverse").css({'background-color': '#DA0303', 'border-color': '#DA0303'});
 			        $(".navbar-inverse .navbar-nav > li > a").css({'color': '#edd', 'background-color': '#DA0303'});
 			        $(".navbar-inverse .navbar-nav > .active > a").css({'color': '#fff', 'background-color': '#CF0202'});
