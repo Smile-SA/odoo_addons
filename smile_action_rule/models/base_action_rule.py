@@ -29,7 +29,7 @@ from openerp.addons.base_action_rule.base_action_rule import DATE_RANGE_FUNCTION
 
 from openerp.addons.smile_log.tools import SmileDBLogger
 
-from action_rule_decorator import action_rule_decorator
+from ..tools import action_rule_decorator
 from copy import deepcopy
 
 
@@ -91,8 +91,8 @@ class ActionRule(models.Model):
             return super(ActionRule, self).write(vals)
         return True
 
-    @api.multi
-    def _store_model_methods(self, model_id):
+    @api.model
+    def store_model_methods(self, model_id):
         obj = self.env[self.env['ir.model'].sudo().browse(model_id).model]
         method_names = [attr for attr in dir(obj) if inspect.ismethod(getattr(obj, attr))]
         method_obj = self.env['ir.model.methods'].sudo()
@@ -115,7 +115,7 @@ class ActionRule(models.Model):
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
         res = super(ActionRule, self).onchange_model_id(cr, uid, ids, model_id, context)
         if model_id:
-            self.browse(cr, uid, ids, context)._store_model_methods(model_id)
+            self.browse(cr, uid, ids, context).store_model_methods(model_id)
         return res
 
     def _check_delay(self, cr, uid, action, record, record_dt, context=None):
@@ -133,19 +133,11 @@ class ActionRule(models.Model):
         return action_dt
 
     def onchange_kind(self, cr, uid, ids, kind, context=None):
-        clear_fields = []
-        if kind in ['on_create', 'on_create_or_write']:
-            clear_fields = ['filter_pre_id', 'trg_date_id', 'trg_date_range',
-                            'trg_date_range_field_id', 'trg_date_range_type']
-        elif kind in ['on_write', 'on_other_method', 'on_wkf_activity']:
-            clear_fields = ['trg_date_id', 'trg_date_range', 'trg_date_range_field_id',
-                            'trg_date_range_type']
-        elif kind == 'on_time':
-            clear_fields = ['filter_pre_id']
-        elif kind == 'on_unlink':
-            clear_fields = ['filter_id', 'trg_date_id', 'trg_date_range',
-                            'trg_date_range_field_id', 'trg_date_range_type']
-        return {'value': dict.fromkeys(clear_fields, False)}
+        res = super(ActionRule, self).onchange_kind(cr, uid, ids, kind, context)
+        if kind in ['on_create', 'on_create_or_write', 'on_unlink',
+                    'on_write', 'on_other_method', 'on_wkf_activity']:
+            res['value']['trg_date_range_field_id'] = False
+        return res
 
     @api.multi
     def _filter_pre(self, records):
@@ -214,6 +206,9 @@ class ActionRule(models.Model):
         params = [pid, self.name, self.model_id.model, tuple(records.ids)]
         logger.debug('[%s] Launching action: %s - Records: %s%s' % tuple(params))
         try:
+            # Check if __action_done is in context
+            if '__action_done' not in self._context:
+                self = self.with_context(__action_done={})
             # Force action execution even if records list is empty
             if not records and self.server_action_ids and self.force_actions_execution:
                 ctx = {'active_model': records._name, 'active_ids': [], 'active_id': False}

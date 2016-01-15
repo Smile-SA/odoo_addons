@@ -29,37 +29,33 @@ from openerp.exceptions import Warning
 def _get_args(self, method, args, kwargs):
     # avoid hasattr(self, '_ids') because __getattr__() is overridden
     if '_ids' in self.__dict__:
-        cr, uid, context = self.env.args
-        ids = self._ids
-    else:
-        while True:
-            if not hasattr(method, 'origin'):
-                break
-            method = method.origin
-        method_arg_names = inspect.getargspec(method)[0][1:len(args) + 1]
-        if not method_arg_names:
-            decorator = method._api and method._api.__name__
-            if decorator in ('multi', 'one'):
-                method_arg_names = ['cr', 'uid', 'ids']
-            elif decorator == 'model':
-                method_arg_names = ['cr', 'uid']
-            elif decorator.startswith('cr_'):
-                method_arg_names = decorator.split('_')
-            else:
-                raise Warning(_('Method not adapted for action rules'))
-            method_arg_names += [None] * (len(args) - len(method_arg_names))
-        method_args = dict(zip(method_arg_names, args))
-        cr = method_args.get('cr') or method_args.get('cursor')
-        uid = method_args.get('uid') or method_args.get('user') or method_args.get('user_id')
-        if not isinstance(cr, Cursor) or not isinstance(uid, (int, long)):
+        return self
+    while True:
+        if not hasattr(method, 'origin'):
+            break
+        method = method.origin
+    method_arg_names = inspect.getargspec(method)[0][1:len(args) + 1]
+    if not method_arg_names:
+        decorator = method._api and method._api.__name__
+        if decorator in ('multi', 'one'):
+            method_arg_names = ['cr', 'uid', 'ids']
+        elif decorator == 'model':
+            method_arg_names = ['cr', 'uid']
+        elif decorator.startswith('cr_'):
+            method_arg_names = decorator.split('_')
+        else:
             raise Warning(_('Method not adapted for action rules'))
-        ids = method_args.get('ids') or method_args.get('id')
-        context = method_args.get('context') or {}
-        if kwargs.get('context'):
-            context.update(kwargs['context'])
-    if isinstance(ids, (int, long)):
-        ids = [ids]
-    return cr, uid, ids, context
+        method_arg_names += [None] * (len(args) - len(method_arg_names))
+    method_args = dict(zip(method_arg_names, args))
+    cr = method_args.get('cr') or method_args.get('cursor')
+    uid = method_args.get('uid') or method_args.get('user') or method_args.get('user_id')
+    if not isinstance(cr, Cursor) or not isinstance(uid, (int, long)):
+        raise Warning(_('Method not adapted for action rules'))
+    ids = method_args.get('ids') or method_args.get('id')
+    context = method_args.get('context') or {}
+    if kwargs.get('context'):
+        context.update(kwargs['context'])
+    return self.browse(cr, uid, ids, context)
 
 
 def _get_origin_method(method):
@@ -73,19 +69,16 @@ def action_rule_decorator():
     def action_rule_wrapper(self, *args, **kwargs):
 
         method = action_rule_wrapper.origin
-        cr, uid, ids, context = _get_args(self, method, args, kwargs)
+        records = _get_args(self, method, args, kwargs)
 
         # Avoid loops or cascading actions
-        if context and context.get('action'):
-            return method(self, *args, **kwargs)
-        context = dict(context or {}, action=True)
+        if '__action_done' not in records._context:
+            records = records.with_context(__action_done={})
 
         # Retrieve the action rules to possibly execute
-        rule_obj = self.pool.get('base.action.rule')
-        rule_ids = rule_obj._get_action_rules(cr, uid, self._name, method, context)
-        rules = rule_obj.browse(cr, uid, rule_ids, context)
-
-        records = self._model.browse(cr, uid, ids, context)
+        rule_obj = records.env['base.action.rule']
+        rule_ids = rule_obj._get_action_rules(self._name, method)
+        rules = rule_obj.browse(rule_ids)
 
         # Check preconditions
         pre = {}
@@ -109,7 +102,7 @@ def action_rule_decorator():
             if origin.__name__ == 'create':
                 record = res
                 if isinstance(res, (int, long)):
-                    record = self._model.browse(cr, uid, res, context)
+                    record = records.browse(res)
                 pre = pre.fromkeys(rules, record)
                 break
             origin = _get_origin_method(origin)

@@ -16,12 +16,12 @@
                 	<field name="activity_id" domain="[('wkf_id.osv', '=', model)]" options="{'no_create': True}"
                 		attrs="{'invisible': [('kind', '!=', 'on_wkf_activity')], 'required': [('kind', '=', 'on_wkf_activity')]}"/>
                 </field>
-                <field name="filter_pre_id" position="attributes">
-                	<attribute name="attrs">{'invisible': [('kind', 'not in', ('on_write', 'on_unlink', 'on_other_method'))]}</attribute>
-                </field>
-                <field name="filter_id" position="attributes">
-                	<attribute name="attrs">{'invisible': [('kind', '=', 'on_unlink')]}</attribute>
-                </field>
+                <xpath expr="//notebook/page[1]/group[2]/div[1]" position="attributes">
+                	<attribute name="attrs">{'invisible': [('kind', 'not in', ('on_write', 'on_other_method'))]}</attribute>
+                </xpath>
+                <xpath expr="//label[@for='filter_pre_id']" position="attributes">
+                	<attribute name="attrs">{'invisible': [('kind', 'not in', ('on_write', 'on_other_method'))]}</attribute>
+                </xpath>
                 <field name="server_action_ids" position="before">
                 	<group colspan="4" col="4">
 	                	<field name="max_executions"/>

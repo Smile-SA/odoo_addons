@@ -19,4 +19,5 @@
 #
 ##############################################################################
 
+from decorator import action_rule_decorator
 from misc import *
