@@ -56,7 +56,7 @@ class IrModelImportTemplate(models.Model):
         self._try_lock(_('Import already in progress'))
         import_obj = self.env['ir.model.import']
         import_rec = import_obj.browse()
-        new_thread = self._context.get('new_thread') or self.new_thread
+        new_thread = self._context.get('new_thread', self.new_thread)
         try:
             vals = {
                 'import_tmpl_id': self.id,

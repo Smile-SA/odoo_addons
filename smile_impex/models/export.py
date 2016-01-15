@@ -132,7 +132,7 @@ class IrModelExportTemplate(models.Model):
         self._try_lock(_('Export already in progress'))
         export_obj = self.env['ir.model.export']
         export_recs = export_obj.browse()
-        new_thread = self._context.get('new_thread') or self.new_thread
+        new_thread = self._context.get('new_thread', self.new_thread)
         try:
             vals = {
                 'export_tmpl_id': self.id,
@@ -178,7 +178,7 @@ class IrModelExport(models.Model):
     def _execute(self):
         self.ensure_one()
         if not self.record_ids:
-            raise Warning(_("You cannot re-generate this export because records to export didn't store"))
+            raise Warning(_("You cannot regenerate this export because records to export didn't store"))
         record_ids = eval(self.record_ids)
         if record_ids or self.export_tmpl_id.force_execute_action:
             records = self.env[self.export_tmpl_id.model_id.model].browse(record_ids)

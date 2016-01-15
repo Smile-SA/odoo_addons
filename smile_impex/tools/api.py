@@ -34,3 +34,13 @@ def with_impex_cursor(method):
                 self = self.with_env(self.env(cr=new_cr)).with_context(original_cr=self._cr)
                 return method(self, *args, **kwargs)
     return wrapper
+
+
+def with_new_cursor(method):
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        with api.Environment.manage():
+            with registry(self._cr.dbname).cursor() as new_cr:
+                self = self.with_env(self.env(cr=new_cr))
+                return method(self, *args, **kwargs)
+    return wrapper

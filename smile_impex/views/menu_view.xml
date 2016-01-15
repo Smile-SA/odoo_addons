@@ -3,7 +3,7 @@
 	<data noupdate="0">
 
 		<!-- Parent -->
-		<menuitem id="menu_impex_template" name="Import / Export" parent="base.menu_custom" sequence="100"/>
+		<menuitem id="menu_impex_template" name="Import / Export" parent="base.menu_administration"/>
 
 		<!-- Children -->
 		<menuitem id="menu_import_template" action="action_import_template" parent="menu_impex_template"/>

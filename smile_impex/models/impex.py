@@ -32,7 +32,7 @@ from openerp.tools.func import wraps
 
 from openerp.addons.smile_log.tools import SmileDBLogger
 
-from ..tools import s2human, with_impex_cursor
+from ..tools import s2human, with_new_cursor
 
 LOG_LEVELS = [
     (0, 'NOTSET'),
@@ -191,12 +191,17 @@ class IrModelImpex(models.AbstractModel):
         res = []
         for record in self:
             if record.new_thread:
-                thread = Thread(target=with_impex_cursor(IrModelImpex._process), args=(self,))
+                thread = Thread(target=IrModelImpex._process_with_new_cursor, args=(self,))
                 thread.start()
                 res.append((record.id, True))
             else:
                 res.append((record.id, record._process()))
         return res
+
+    @api.multi
+    @with_new_cursor
+    def _process_with_new_cursor(self):
+        self._process()
 
     @api.multi
     def _process(self):
@@ -205,7 +210,7 @@ class IrModelImpex(models.AbstractModel):
         logger.setLevel(self.log_level)
         self = self.with_context(logger=logger)
         self.write({'state': 'running', 'from_date': fields.Datetime.now(),
-                    'pid': os.getpid()})
+                    'pid': os.getpid(), 'to_date': False})
         try:
             result = self._execute()
             vals = {'state': 'done', 'to_date': fields.Datetime.now()}

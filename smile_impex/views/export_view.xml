@@ -25,27 +25,28 @@
 						</group>
 						<notebook colspan="4">
 							<page string="Exports">
-								<button type="object" name="create_export" string="New Export" colspan="4" context="{'new_thread':True}" />
-								<button type="object" name="create_export" string="Test Export" colspan="4" context="{'test_mode':True}" />
+								<br/>
+								<button type="object" name="create_export" string="New Export" colspan="4" context="{'new_thread':True}" class="oe_highlight"/>
+								<button type="object" name="create_export" string="Test Export" colspan="4" context="{'test_mode':True}" class="oe_link"/>
 								<field name="export_ids" nolabel="1" colspan="4" readonly="1" context="{'export_template_form_view': True}" />
 							</page>
 							<page string="Triggers">
 								<group col="6">
 									<field name="cron_id" />
 									<button type="object" name="create_cron" string="Create Scheduled Action" colspan="2"
-										attrs="{'invisible': [('cron_id', '!=', False)]}" />
+										attrs="{'invisible': [('cron_id', '!=', False)]}" class="oe_link"/>
 									<newline/>
 									<field name="client_action_id" />
 									<button type="object" name="create_client_action" string="Create Client Action" colspan="2"
-										attrs="{'invisible': [('client_action_id', '!=', False)]}" />
+										attrs="{'invisible': [('client_action_id', '!=', False)]}" class="oe_link"/>
 									<button type="object" name="unlink_client_action" string="Delete Client Action" colspan="2"
-										attrs="{'invisible': [('client_action_id', '=', False)]}" />
+										attrs="{'invisible': [('client_action_id', '=', False)]}" class="oe_link"/>
 									<newline/>
 									<field name="server_action_id" />
 									<button type="object" name="create_server_action" string="Create Server Action" colspan="2"
-										attrs="{'invisible': [('server_action_id', '!=', False)]}" />
+										attrs="{'invisible': [('server_action_id', '!=', False)]}" class="oe_link"/>
 									<button type="object" name="unlink_server_action" string="Delete Server Action" colspan="2"
-										attrs="{'invisible': [('server_action_id', '=', False)]}" />
+										attrs="{'invisible': [('server_action_id', '=', False)]}" class="oe_link"/>
 								</group>
 							</page>
 							<page string="Logs">
@@ -128,7 +129,7 @@
 			<field name="key">action</field>
 			<field name="key2">client_action_relate</field>
 			<field name="model">ir.model.export.template</field>
-			<field name="value" eval="'ir.actions.act_window,' +str(ref('smile_impex.action_exports_from_template'))" />
+			<field name="value" eval="'ir.actions.act_window,' + str(ref('smile_impex.action_exports_from_template'))" />
 		</record>
 
 		<!-- Export -->
@@ -148,15 +149,14 @@
 					</group>
 					<notebook colspan="4">
 						<page string="Logs">
+							<br/>
+							<button type="object" name="process" string="Regenerate" colspan="4" class="oe_highlight"/>
 							<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}" />
 						</page>
 						<page string="Returns" attrs="{'invisible': [('log_returns', '=', False)]}">
 							<field name="returns" colspan="4" nolabel="1" />
 						</page>
 					</notebook>
-					<footer>
-						<button type="object" name="process" string="Re-generate" colspan="4" class="oe_highlight"/>
-					</footer>
 				</form>
 			</field>
 		</record>
@@ -172,7 +172,7 @@
 					<field name="create_uid" />
 					<field name="time_human" />
 					<field name="state" readonly="1" />
-					<button type="object" name="process" icon="terp-gtk-jump-to-ltr" string="Re-generate" />
+					<button type="object" name="process" string="Regenerate" class="oe_link"/>
 				</tree>
 			</field>
 		</record>
