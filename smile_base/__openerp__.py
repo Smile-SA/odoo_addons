@@ -24,6 +24,7 @@
     "version": "0.2.3",
     "depends": [
         'mail',
+        'web_tip',
         'web_planner',
         'web_editor',
     ],

@@ -19,14 +19,11 @@
 #
 ##############################################################################
 
-import ir_actions
-import ir_config_parameter
-import ir_mail_server
-import ir_values
-import mail_mail
-import models
-import module
-import registry
-import sql_db
-import update
-import web_tip
+from openerp import models, fields
+
+
+class WebTip(models.Model):
+    _inherit = 'web.tip'
+
+    title = fields.Char(translate=True)
+    description = fields.Html(translate=True)
