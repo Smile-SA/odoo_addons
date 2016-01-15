@@ -200,5 +200,5 @@ msgstr "Ancienne valeur"
 #: code:addons/smile_audit/audit_log.py:111
 #, python-format
 msgid "New value"
-msgstr "Nouvelle value"
+msgstr "Nouvelle valeur"
 
