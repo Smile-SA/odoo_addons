@@ -22,7 +22,7 @@
 {
     "name": "Search in dates/numbers range",
     "version": "0.1",
-    "depends": ['base'],
+    "depends": ['web'],
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """
@@ -41,7 +41,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "qweb": [
         'static/src/xml/base.xml',
     ],
-    "auto_install": False,
+    "auto_install": True,
     "installable": True,
     "application": False,
 }
