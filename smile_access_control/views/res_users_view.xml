@@ -13,14 +13,14 @@
       <field name="priority">10</field>
       <field name="arch" type="xml">
         <data>
-          <field name="active" position="after">
+          <field name="partner_id" position="after">
             <field name="user_profile_id" widget="selection" attrs="{'required': True}"/>
           </field>
         </data>
       </field>
     </record>
     <record id="base.action_res_users" model="ir.actions.act_window">
-      <field name="domain">[('user_profile', '=', False)]</field>
+      <field name="domain" eval="[('id', '!=', ref('base.user_root')), ('user_profile', '=', False)]"/>
     </record>
     <record id="base.action_res_users_view2" model="ir.actions.act_window.view">
       <field name="view_id" ref="view_res_user_form"/>
