@@ -80,16 +80,6 @@ class AuditLog(models.Model):
         return value
 
     @api.multi
-    def _get_label(self, field):
-        label = field.string
-        lang = self.env.user.lang
-        translated_label = ''
-        if lang != 'en_US':
-            params = ('%s,%s' % (field.model_name, field.name), 'field', lang, label)
-            translated_label = self.env['ir.translation'].sudo()._get_source(*params)
-        return translated_label or label
-
-    @api.multi
     def _get_content(self):
         self.ensure_one()
         content = []
@@ -100,7 +90,7 @@ class AuditLog(models.Model):
             old_value = self._format_value(field, data['old'].get(fname, ''))
             new_value = self._format_value(field, data['new'].get(fname, ''))
             if old_value != new_value:
-                label = self._get_label(field)
+                label = field.get_description(self.env)['string']
                 content.append((label, old_value, new_value))
         return content
 

@@ -23,19 +23,16 @@
 def _get_args(self, method, args, kwargs):
     # avoid hasattr(self, '_ids') because __getattr__() is overridden
     if '_ids' in self.__dict__:
-        cr, uid, context = self.env.args
-        ids = self._ids
         vals = method in ('create', 'write') and args[0] or {}
     else:
         cr, uid = args[:2]
         ids = method in ('write', 'unlink') and args[2] or []
-        vals = (method == 'create' and args[2]) or (method == 'write' and args[3]) or {}
         context = kwargs.get('context')
-    if isinstance(ids, (int, long)):
-        ids = [ids]
+        self = self.browse(cr, uid, ids, context)
+        vals = (method == 'create' and args[2]) or (method == 'write' and args[3]) or {}
     if self._name == 'res.users':
         vals = self._remove_reified_groups(vals)
-    return cr, uid, ids, vals, context
+    return self, vals
 
 
 def audit_decorator():
@@ -44,24 +41,22 @@ def audit_decorator():
         while hasattr(origin, 'origin'):
             origin = origin.origin
         method = origin.__name__
-        cr, uid, ids, vals, context = _get_args(self, method, args, kwargs)
-        rule_obj = self.pool['audit.rule']
-        rule_id = rule_obj._check_audit_rule(cr).get(self._name, {}).get(method)
+        records, vals = _get_args(self, method, args, kwargs)
+        rule_obj = records.env['audit.rule']
+        rule_id = rule_obj._model._check_audit_rule(records._cr).get(records._name, {}).get(method)
         if rule_id:
+            rule = rule_obj.browse(rule_id)
             fields = vals.keys()
             old_values = None
             if method != 'create':
-                records = self._model.browse(cr, uid, ids, context)
                 old_values = records.read(fields, load='_classic_write')
                 if method == 'unlink':
-                    rule_obj.log(cr, uid, rule_id, method, old_values)
+                    rule.log(method, old_values)
         result = audit_wrapper.origin(self, *args, **kwargs)
         if rule_id and method != 'unlink':
             if method == 'create':
-                ids = [result]
-            records = self._model.browse(cr, uid, ids, context)
-            records.invalidate_cache()
+                records = result
             new_values = records.read(fields, load='_classic_write')
-            rule_obj.log(cr, uid, rule_id, method, old_values, new_values)
+            rule.log(method, old_values, new_values)
         return result
     return audit_wrapper

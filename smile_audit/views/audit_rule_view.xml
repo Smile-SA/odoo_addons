@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-		<menuitem id="menu_audit" parent="base.menu_custom" name="Audit" sequence="100"/>
+		<menuitem id="menu_audit" parent="base.menu_administration" name="Audit" sequence="100"/>
 
         <record model="ir.ui.view" id="view_audit_rule_tree">
             <field name="name">audit.rule.tree</field>

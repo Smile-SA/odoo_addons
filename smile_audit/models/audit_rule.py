@@ -24,7 +24,7 @@ import logging
 from openerp import api, fields, models, SUPERUSER_ID, tools, _
 from openerp.modules.registry import RegistryManager
 
-from audit_decorator import audit_decorator
+from ..tools import audit_decorator
 
 _logger = logging.getLogger(__package__)
 
