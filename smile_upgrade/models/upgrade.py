@@ -67,6 +67,14 @@ class UpgradeManager(object):
         self.modules_to_upgrade = list(set(sum([upgrade.modules_to_upgrade for upgrade in self.upgrades], [])))
         self.modules_to_install_at_creation = self.upgrades and self.upgrades[-1].modules_to_install_at_creation or []
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is None:
+            self.cr.commit()
+        self.cr.close()
+
     def _get_db_in_creation(self):
         self.cr.execute("SELECT relname FROM pg_class WHERE relname='ir_config_parameter'")
         if self.cr.rowcount:
@@ -91,6 +99,19 @@ class UpgradeManager(object):
         version = version and version[0] or '0'
         _logger.debug('database version: %s', version)
         return LooseVersion(version)
+
+    def set_db_version(self):
+        params = (SUPERUSER_ID, str(self.code_version))
+        self.cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'code.version' LIMIT 1")
+        if not self.cr.rowcount:
+            query = """INSERT INTO ir_config_parameter (create_date, create_uid, key, value)
+               VALUES (now() at time zone 'UTC', %s, 'code.version', %s)"""
+        else:
+            query = """UPDATE ir_config_parameter
+                SET (write_date, write_uid, value) = (now() at time zone 'UTC', %s, %s)
+                WHERE key = 'code.version'"""
+        self.cr.execute(query, params)
+        _logger.debug('database version updated to %s', self.code_version)
 
     def _try_lock(self, warning=None):
         try:
@@ -121,7 +142,7 @@ class UpgradeManager(object):
                 with open(file_path) as f:
                     try:
                         upgrade_infos = eval(f.read())
-                        upgrade = Upgrade(self.cr, self.db, dir_path, upgrade_infos)
+                        upgrade = Upgrade(dir_path, upgrade_infos)
                         if (not upgrade.databases or self.db_name in upgrade.databases) \
                                 and self.db_version < upgrade.version <= self.code_version:
                             upgrades.append(upgrade)
@@ -131,14 +152,6 @@ class UpgradeManager(object):
         if upgrades and self.db_in_creation:
             upgrades = upgrades[-1:]
         return upgrades
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        if exc_type is None:
-            self.cr.commit()
-        self.cr.close()
 
     def _reset_services(self):
         ReportService._reports = {}
@@ -177,9 +190,7 @@ class Upgrade(object):
     * Post-load: accept .sql and .yml files
     """
 
-    def __init__(self, cr, db, dir_path, infos):
-        self.cr = cr
-        self.db = db
+    def __init__(self, dir_path, infos):
         self.dir_path = dir_path
         for k, v in infos.iteritems():
             if k == 'version':
@@ -192,19 +203,6 @@ class Upgrade(object):
         if key not in self.__dict__ and key not in default_values:
             raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, key))
         return self.__dict__.get(key) or default_values.get(key)
-
-    def set_db_version(self):
-        params = (SUPERUSER_ID, str(self.version))
-        self.cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'code.version' LIMIT 1")
-        if not self.cr.rowcount:
-            query = """INSERT INTO ir_config_parameter (create_date, create_uid, key, value)
-               VALUES (now() at time zone 'UTC', %s, 'code.version', %s)"""
-        else:
-            query = """UPDATE ir_config_parameter
-                SET (write_date, write_uid, value) = (now() at time zone 'UTC', %s, %s)
-                WHERE key = 'code.version'"""
-        self.cr.execute(query, params)
-        _logger.debug('database version updated to %s', self.version)
 
     def _sql_import(self, cr, f_obj):
         for query in f_obj.read().split(';'):
