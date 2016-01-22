@@ -7,7 +7,7 @@ odoo.define('translate_progress_bar_title', function (require) {
 
     ProgressBar.include({
         init: function (parent, options) {
-            this._super(parent);
+            this._super(parent, options);
             this.title = _t(options.title);
         },
     });

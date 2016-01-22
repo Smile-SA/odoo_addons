@@ -23,7 +23,7 @@
     "name": "Smile Base",
     "version": "0.2.3",
     "depends": [
-        'mail',
+        'fetchmail',
         'web_tip',
         'web_planner',
         'web_editor',
@@ -68,6 +68,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     ],
     "qweb": [
         "static/src/xml/base.xml",
+        "static/src/xml/env_ribbon.xml",
     ],
     "auto_install": True,
     "installable": True,
