@@ -61,7 +61,12 @@ def audit_decorator():
             new_values = None
             if method != 'unlink':
                 if method == 'create':
-                    ids = [result]
+                    if isinstance(result, models.Model):
+                        ids = result.ids
+                    elif isinstance(result, int):
+                        ids = [result]
+                    else:
+                        ids = []
                 records = self.browse(cr, uid, ids, context)
                 records.invalidate_cache()
                 new_values = records.read(vals.keys(), load='_classic_write')
