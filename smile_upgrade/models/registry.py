@@ -42,25 +42,25 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
         upgrades = False
         try:
             with UpgradeManager(db_name) as upgrade_manager:
-                upgrades = bool(upgrade_manager.upgrades)
+                upgrades = upgrade_manager.upgrades
                 if upgrades:
                     cls.signal_registry_change(db_name)
-                for upgrade in upgrade_manager.upgrades[upgrade_manager.db_in_creation * -1:]:
                     t0 = time.time()
-                    _logger.info('loading %s upgrade...', upgrade.version)
+                    _logger.info('loading %s upgrade...', upgrade_manager.code_version)
                     if not upgrade_manager.db_in_creation:
-                        upgrade.pre_load()
-                        modules_to_upgrade = upgrade.modules_to_upgrade
+                        upgrade_manager.pre_load()
+                        modules = upgrade_manager.modules_to_upgrade
                     else:
-                        modules_to_upgrade = upgrade.modules_to_install_at_creation
-                    if modules_to_upgrade:
+                        modules = upgrade_manager.modules_to_install_at_creation
+                    if modules:
                         registry = native_new(db_name, force_demo)
-                        upgrade.force_modules_upgrade(registry, modules_to_upgrade)
+                        upgrade_manager.force_modules_upgrade(registry, modules)
                     native_new(db_name, force_demo, update_module=True)
                     if not upgrade_manager.db_in_creation:
-                        upgrade.post_load()
-                    upgrade.set_db_version()
-                    _logger.info('%s upgrade successfully loaded in %ss', upgrade.version, time.time() - t0)
+                        upgrade_manager.post_load()
+                    upgrade_manager.set_db_version()
+                    _logger.info('%s upgrade successfully loaded in %ss',
+                                 upgrade_manager.code_version, time.time() - t0)
             registry = native_new(db_name, force_demo, update_module=update_module)
             if upgrades and config.get('stop_after_upgrades'):
                 _logger.info('Stopping Odoo server')

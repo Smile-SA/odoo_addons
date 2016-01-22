@@ -64,6 +64,8 @@ class UpgradeManager(object):
         self.code_version = self._get_code_version()
         self.db_version = self._get_db_version()
         self.upgrades = self._get_upgrades()
+        self.modules_to_upgrade = list(set(sum([upgrade.modules_to_upgrade for upgrade in self.upgrades], [])))
+        self.modules_to_install_at_creation = self.upgrades and self.upgrades[-1].modules_to_install_at_creation or []
 
     def _get_db_in_creation(self):
         self.cr.execute("SELECT relname FROM pg_class WHERE relname='ir_config_parameter'")
@@ -138,6 +140,36 @@ class UpgradeManager(object):
             self.cr.commit()
         self.cr.close()
 
+    def _reset_services(self):
+        ReportService._reports = {}
+        WorkflowService.CACHE = {}
+
+    def pre_load(self):
+        with cursor(self.db) as cr:
+            for upgrade in self.upgrades:
+                upgrade.load_files(cr, 'pre-load')
+
+    def post_load(self):
+        with cursor(self.db) as cr:
+            for upgrade in self.upgrades:
+                upgrade.load_files(cr, 'post-load')
+        self._reset_services()
+
+    def force_modules_upgrade(self, registry, modules_to_upgrade):
+        uid = SUPERUSER_ID
+        with cursor(self.db) as cr:
+            with api.Environment.manage():
+                module_obj = registry.get('ir.module.module')
+                module_obj.update_list(cr, uid)
+                ids_to_install = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
+                                                             ('state', 'in', ('uninstalled', 'to install'))])
+                module_obj.button_install(cr, uid, ids_to_install)
+                ids_to_upgrade = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
+                                                             ('state', 'in', ('installed', 'to upgrade'))])
+                module_obj.button_upgrade(cr, uid, ids_to_upgrade)
+                cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")
+        self._reset_services()
+
 
 class Upgrade(object):
     """Upgrade
@@ -195,7 +227,7 @@ class Upgrade(object):
             _logger.error('%s extension is not supported in upgrade %sing', ext, mode)
             pass
 
-    def _load_files(self, cr, mode):
+    def load_files(self, cr, mode):
         _logger.debug('%sing %s upgrade...', mode, self.version)
         files_list = getattr(self, mode, [])
         format_files_list = lambda f: isinstance(f, tuple) and (f[0], len(f) == 2 and f[1] or 'raise') or (f, 'raise')
@@ -226,31 +258,3 @@ class Upgrade(object):
                         raise e
                     elif error_management != 'not_rollback_and_continue':
                         _logger.error('%s value not supported in error management', error_management)
-
-    def _reset_services(self):
-        ReportService._reports = {}
-        WorkflowService.CACHE = {}
-
-    def pre_load(self):
-        with cursor(self.db) as cr:
-            self._load_files(cr, 'pre-load')
-
-    def post_load(self):
-        with cursor(self.db) as cr:
-            self._load_files(cr, 'post-load')
-        self._reset_services()
-
-    def force_modules_upgrade(self, registry, modules_to_upgrade):
-        uid = SUPERUSER_ID
-        with cursor(self.db) as cr:
-            with api.Environment.manage():
-                module_obj = registry.get('ir.module.module')
-                module_obj.update_list(cr, uid)
-                ids_to_install = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
-                                                             ('state', 'in', ('uninstalled', 'to install'))])
-                module_obj.button_install(cr, uid, ids_to_install)
-                ids_to_upgrade = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
-                                                             ('state', 'in', ('installed', 'to upgrade'))])
-                module_obj.button_upgrade(cr, uid, ids_to_upgrade)
-                cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")
-        self._reset_services()
