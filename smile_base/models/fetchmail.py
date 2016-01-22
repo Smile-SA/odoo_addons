@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 Smile (<http://www.smile.fr>). All Rights Reserved
+#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-import fetchmail
-import ir_actions
-import ir_config_parameter
-import ir_mail_server
-import ir_values
-import mail_mail
-import models
-import module
-import registry
-import sql_db
-import update
-import web_tip
+from openerp import api, models, tools
+from openerp.addons.fetchmail.fetchmail import _logger
+
+
+class FetchmailServer(models.Model):
+    _inherit = "fetchmail.server"
+
+    @api.multi
+    def fetch_mail(self):
+        if not tools.config.get('enable_email_fetching'):
+            _logger.warning('Email fetching not enabled')
+            return False
+        return super(FetchmailServer, self).fetch_mail()
