@@ -65,7 +65,7 @@ class ResGroups(models.Model):
                 elif item[0] == 4:
                     user_ids = [item[1]]
                 users = user_obj.browse(user_ids)
-                user_profiles |= users.filtered(lambda user: user.user_profile)
+                user_profiles |= users.filtered(lambda user: user.is_user_profile)
                 user_profiles |= users.mapped('user_profile_id')
             if user_profiles:
                 user_profiles._update_users_linked_to_profile()

@@ -67,7 +67,7 @@ msgid "Fields to update"
 msgstr "Champs à mettre à jour"
 
 #. module: smile_access_control
-#: field:res.users,user_profile:0
+#: field:res.users,is_user_profile:0
 msgid "Is User Profile"
 msgstr "Correspond à un profil utilisateur"
 

@@ -35,13 +35,13 @@ class TestAccessControl(TransactionCase):
         self.user_profile1 = users_obj.create({
             'name': 'Profile 1',
             'login': 'profile1',
-            'user_profile': True,
+            'is_user_profile': True,
             'groups_id': [(4, self.group1.id)],
         })
         self.user_profile2 = users_obj.create({
             'name': 'Profile 2',
             'login': 'profile2',
-            'user_profile': True,
+            'is_user_profile': True,
             'groups_id': [(6, 0, (self.group1 | self.group2).ids)],
         })
         # Create users
@@ -87,7 +87,7 @@ class TestAccessControl(TransactionCase):
             I update group Group 1 to add it user U
             I check that
         """
-        profile = self.env['res.users'].create({'name': 'P', 'login': 'p_login', 'user_profile': True})
+        profile = self.env['res.users'].create({'name': 'P', 'login': 'p_login', 'is_user_profile': True})
         user = self.env['res.users'].create({'name': 'U', 'login': 'u_login', 'user_profile_id': profile.id})
         self.group1.with_context(use_pdb=True).users |= profile
         self.assertIn(self.group1, user.groups_id, 'User U should have Group 1 in dependencies!')

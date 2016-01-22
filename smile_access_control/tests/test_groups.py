@@ -48,13 +48,13 @@ class TestGroups(TransactionCase):
         self.user_profile1 = self.users_obj.create({
             'name': 'Profile 1',
             'login': 'profile1',
-            'user_profile': True,
+            'is_user_profile': True,
             'groups_id': [(4, self.group1.id)],
         })
         self.user_profile2 = self.users_obj.create({
             'name': 'Profile 2',
             'login': 'profile2',
-            'user_profile': True,
+            'is_user_profile': True,
             'groups_id': [(6, 0, (self.group1 | self.group2).ids)],
         })
         # Create users

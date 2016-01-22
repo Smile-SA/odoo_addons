@@ -20,10 +20,20 @@
       </field>
     </record>
     <record id="base.action_res_users" model="ir.actions.act_window">
-      <field name="domain" eval="[('id', '!=', ref('base.user_root')), ('user_profile', '=', False)]"/>
+      <field name="domain" eval="[('id', '!=', ref('base.user_root')), ('is_user_profile', '=', False)]"/>
     </record>
     <record id="base.action_res_users_view2" model="ir.actions.act_window.view">
       <field name="view_id" ref="view_res_user_form"/>
+    </record>
+    <record id="view_users_tree" model="ir.ui.view">
+      <field name="name">res.users.tree</field>
+      <field name="model">res.users</field>
+      <field name="inherit_id" ref="base.view_users_tree"/>
+      <field name="arch" type="xml">
+        <field name="login" position="after">
+          <field name="user_profile_id" invisible="context.get('is_user_profile')"/>
+        </field>
+      </field>
     </record>
 
     <!-- Profiles -->
@@ -59,8 +69,8 @@
       <field name="view_id" ref="base.view_users_tree"/>
       <field name="search_view_id" ref="base.view_users_search"/>
       <field name="domain">[('user_profile', '=', True)]</field>
-      <field name="domain" eval="[('id', '!=', ref('base.user_root')), ('user_profile', '=', True)]"/>
-      <field name="context">{'active_test': False, 'default_user_profile': True}</field>
+      <field name="domain" eval="[('id', '!=', ref('base.user_root')), ('is_user_profile', '=', True)]"/>
+      <field name="context">{'active_test': False, 'default_active': False, 'default_is_user_profile': True, 'is_user_profile': True}</field>
       <field name="help"></field>
     </record>
     <record id="action_res_user_profiles_tree_view" model="ir.actions.act_window.view">

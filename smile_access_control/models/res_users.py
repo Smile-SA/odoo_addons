@@ -28,7 +28,7 @@ class ResUsers(models.Model):
 
     @api.one
     def _is_share(self, name, args):
-        return (self.id, self.user_profile or not self.has_group('base.group_user'))
+        return (self.id, self.is_user_profile or not self.has_group('base.group_user'))
 
     @api.model
     def _setup_fields(self):
@@ -42,16 +42,16 @@ class ResUsers(models.Model):
             ('name', 'in', ('action_id', 'menu_id', 'groups_id')),
         ]).ids
 
-    user_profile = fields.Boolean('Is User Profile')
+    is_user_profile = fields.Boolean('Is User Profile', oldname='user_profile')
     user_profile_id = fields.Many2one('res.users', 'User Profile',
-                                      domain=[('id', '!=', SUPERUSER_ID), ('user_profile', '=', True)],
+                                      domain=[('id', '!=', SUPERUSER_ID), ('is_user_profile', '=', True)],
                                       context={'active_test': False})
-    user_ids = fields.One2many('res.users', 'user_profile_id', 'Users', domain=[('user_profile', '=', False)])
+    user_ids = fields.One2many('res.users', 'user_profile_id', 'Users', domain=[('is_user_profile', '=', False)])
     field_ids = fields.Many2many('ir.model.fields', 'res_users_fields_rel', 'user_id', 'field_id', 'Fields to update',
                                  domain=[
                                      ('model', 'in', ('res.users', 'res.partner')),
                                      ('ttype', 'not in', ('one2many',)),
-                                     ('name', 'not in', ('user_profile', 'user_profile_id',
+                                     ('name', 'not in', ('is_user_profile', 'user_profile_id',
                                                          'user_ids', 'field_ids', 'view'))],
                                  default=_get_default_field_ids)
 
@@ -59,7 +59,7 @@ class ResUsers(models.Model):
         ('active_admin_check', 'CHECK (id = 1 AND active = TRUE OR id <> 1)',
          'The user with id = 1 must be always active!'),
         ('profile_without_profile_id',
-         'CHECK( (user_profile = TRUE AND user_profile_id IS NULL) OR user_profile = FALSE )',
+         'CHECK( (is_user_profile = TRUE AND user_profile_id IS NULL) OR is_user_profile = FALSE )',
          'Profile users cannot be linked to a profile!'),
     ]
 
@@ -70,9 +70,9 @@ class ResUsers(models.Model):
         if self.user_profile_id == admin:
             raise Warning(_("You can't use %s as user profile !") % admin.name)
 
-    @api.onchange('user_profile')
+    @api.onchange('is_user_profile')
     def onchange_user_profile(self):
-        if self.user_profile:
+        if self.is_user_profile:
             self.active = self.id == SUPERUSER_ID
             self.user_profile_id = False
 
@@ -105,7 +105,7 @@ class ResUsers(models.Model):
 
     @api.multi
     def _update_users_linked_to_profile(self, fields=None):
-        for user_profile in self.filtered(lambda user: user.user_profile):
+        for user_profile in self.filtered(lambda user: user.is_user_profile):
             user_profile.with_context(active_test=False).mapped('user_ids')._update_from_profile(fields)
 
     @api.model
