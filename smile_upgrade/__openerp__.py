@@ -22,7 +22,7 @@
 {
     "name": "Database Upgrade",
     "version": "0.1",
-    "depends": ["base"],
+    "depends": ["web"],
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """Smile Upgrade
@@ -89,6 +89,12 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "website": "http://www.smile.fr",
     "category": 'Hidden',
     "sequence": 20,
+    "data": [
+        "views/webclient_templates.xml",
+    ],
+    "qweb": [
+        "static/src/xml/code_version.xml",
+    ],
     "auto_install": True,
     "installable": True,
     "application": False,
