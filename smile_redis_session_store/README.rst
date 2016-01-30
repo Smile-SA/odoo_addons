@@ -13,6 +13,7 @@ Requirements
 
 You need to install and to start a Redis server to use this module.
 Documentation is available on `Redis website`_.
+
 You need to install package `python-redis`::
 
     apt-get install python-redis
