@@ -77,38 +77,42 @@ class IrModelImpexTemplate(models.AbstractModel):
                 raise Warning(warning)
             raise
 
-    def _get_cron_vals(self):
-        return {
+    def _get_cron_vals(self, **kwargs):
+        vals = {
             'name': self.name,
             'user_id': 1,
             'model': self._name,
             'args': '(%d, )' % self.id,
             'numbercall': -1,
         }
+        vals.update(kwargs)
+        return vals
 
     @api.one
-    def create_cron(self):
+    def create_cron(self, **kwargs):
         if not self.cron_id:
-            vals = self._get_cron_vals()
+            vals = self._get_cron_vals(**kwargs)
             cron_id = self.env['ir.cron'].create(vals)
             self.write({'cron_id': cron_id.id})
         return True
 
-    def _get_server_action_vals(self, model_id):
-        return {
+    def _get_server_action_vals(self, model_id, **kwargs):
+        vals = {
             'name': self.name,
             'user_id': SUPERUSER_ID,
             'model_id': model_id,
             'state': 'code',
         }
+        vals.update(kwargs)
+        return vals
 
     @api.one
-    def create_server_action(self):
+    def create_server_action(self, **kwargs):
         if not self.server_action_id:
             model = self.env['ir.model'].search([('model', '=', self._name)], limit=1)
             if not model:  # Normally should not happen
                 raise Warning(_('Please restart Odoo server'))
-            vals = self._get_server_action_vals(model.id)
+            vals = self._get_server_action_vals(model.id, **kwargs)
             self.server_action_id = self.env['ir.actions.server'].create(vals)
         return True
 

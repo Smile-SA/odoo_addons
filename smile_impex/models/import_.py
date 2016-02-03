@@ -39,39 +39,45 @@ class IrModelImportTemplate(models.Model):
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import.template')],
                               readonly=True, copy=False)
 
-    def _get_cron_vals(self):
-        vals = super(IrModelImportTemplate, self)._get_cron_vals()
+    def _get_cron_vals(self, **kwargs):
+        vals = super(IrModelImportTemplate, self)._get_cron_vals(**kwargs)
         vals['function'] = 'create_import'
         return vals
 
-    def _get_server_action_vals(self, model_id):
-        vals = super(IrModelImportTemplate, self)._get_server_action_vals(model_id)
+    def _get_server_action_vals(self, model_id, **kwargs):
+        vals = super(IrModelImportTemplate, self)._get_server_action_vals(model_id, **kwargs)
         vals['code'] = "self.pool.get('ir.model.import.template').create_import(cr, uid, %d, context)" % (self.id,)
         return vals
 
     @api.multi
     @with_impex_cursor
     def create_import(self, *args):
-        self.ensure_one()
         self._try_lock(_('Import already in progress'))
-        import_obj = self.env['ir.model.import']
-        import_rec = import_obj.browse()
-        new_thread = self._context.get('new_thread', self.new_thread)
         try:
-            vals = {
-                'import_tmpl_id': self.id,
-                'test_mode': self._context.get('test_mode'),
-                'new_thread': new_thread,
-                'args': repr(args),
-                'log_level': self.log_level,
-                'log_returns': self.log_returns,
-            }
-            import_rec = import_obj.create(vals)
+            import_rec = self._create_import(*args)
         except Exception, e:
             tmpl_logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
             tmpl_logger.error(repr(e))
             raise Warning(repr(e))
-        return import_rec.process()
+        else:
+            return import_rec.process()
+
+    @api.multi
+    def _create_import(self, *args):
+        vals = self._get_import_vals(*args)
+        return self.env['ir.model.import'].create(vals)
+
+    @api.multi
+    def _get_import_vals(self, *args):
+        self.ensure_one()
+        return {
+            'import_tmpl_id': self.id,
+            'test_mode': self._context.get('test_mode'),
+            'new_thread': self._context.get('new_thread', self.new_thread),
+            'args': repr(args),
+            'log_level': self.log_level,
+            'log_returns': self.log_returns,
+        }
 
 
 class IrModelImport(models.Model):

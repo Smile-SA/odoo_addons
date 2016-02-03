@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import time
+
 from openerp import api, fields, models, _
 from openerp.exceptions import Warning
 from openerp.modules.registry import Registry
@@ -41,7 +43,7 @@ class IrModelExportTemplate(models.Model):
 
     client_action_id = fields.Many2one('ir.values', 'Client Action', copy=False)
     filter_type = fields.Selection([('domain', 'Domain'), ('method', 'Method')], required=True, default='domain')
-    filter_domain = fields.Char(default='[]')
+    filter_domain = fields.Text(default='[]', help="Available variables: context, time, user")
     filter_method = fields.Char(help="signature: @api.model + *args")
     limit = fields.Integer()
     max_offset = fields.Integer()
@@ -57,32 +59,34 @@ class IrModelExportTemplate(models.Model):
         if self.unique and self.do_not_store_record_ids:
             raise Warning(_('Exported records storing is required if export must be unique'))
 
-    def _get_cron_vals(self):
-        vals = super(IrModelExportTemplate, self)._get_cron_vals()
+    def _get_cron_vals(self, **kwargs):
+        vals = super(IrModelExportTemplate, self)._get_cron_vals(**kwargs)
         vals['function'] = 'create_export'
         return vals
 
-    def _get_server_action_vals(self, model_id):
-        vals = super(IrModelExportTemplate, self)._get_server_action_vals(model_id)
+    def _get_server_action_vals(self, model_id, **kwargs):
+        vals = super(IrModelExportTemplate, self)._get_server_action_vals(model_id, **kwargs)
         if vals:
             vals['code'] = "self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)" % (self.id,)
         return vals
 
-    def _get_client_action_vals(self):
-        return {
+    def _get_client_action_vals(self, **kwargs):
+        vals = {
             'name': self.name,
             'model_id': self.model_id.id,
             'model': self.model_id.model,
             'key2': 'client_action_multi',
             'value': 'ir.actions.server,%d' % self.server_action_id.id,
         }
+        vals.update(kwargs)
+        return vals
 
     @api.one
-    def create_client_action(self):
+    def create_client_action(self, **kwargs):
         if not self.client_action_id:
             if not self.server_action_id:
                 self.create_server_action()
-            vals = self._get_client_action_vals()
+            vals = self._get_client_action_vals(**kwargs)
             self.client_action_id = self.env['ir.values'].create(vals)
         return True
 
@@ -94,12 +98,15 @@ class IrModelExportTemplate(models.Model):
                 self.server_action_id.unlink()
         return True
 
+    def _get_eval_context(self):
+        return {'context': self._context, 'time': time, 'user': self.env.user}
+
     def _get_res_ids(self, *args):
         model_obj = self.env[self.model_id.model]
         if self._context.get('original_cr'):
             model_obj = model_obj.with_env(self.env(cr=self._context['original_cr']))
         if self.filter_type == 'domain':
-            domain = eval(self.filter_domain or '[]')
+            domain = eval(self.filter_domain or '[]', self._get_eval_context())
             res_ids = set(model_obj.search(domain, order=self.order or '')._ids)
         else:  # elif self.filter_type == 'method':
             if not (self.filter_method and hasattr(model_obj, self.filter_method)):
@@ -128,33 +135,41 @@ class IrModelExportTemplate(models.Model):
     @api.multi
     @with_impex_cursor
     def create_export(self, *args):
-        self.ensure_one()
         self._try_lock(_('Export already in progress'))
-        export_obj = self.env['ir.model.export']
-        export_recs = export_obj.browse()
-        new_thread = self._context.get('new_thread', self.new_thread)
         try:
-            vals = {
-                'export_tmpl_id': self.id,
-                'test_mode': self._context.get('test_mode'),
-                'new_thread': new_thread,
-                'args': repr(args),
-                'log_level': self.log_level,
-                'log_returns': self.log_returns,
-            }
-            for index, res_ids_offset in enumerate(self._get_res_ids_offset(*args)):
-                vals['record_ids'] = res_ids_offset
-                vals['record_count'] = len(res_ids_offset)
-                vals['offset'] = index + 1
-                export_recs |= export_obj.create(vals)
+            export_recs = self._create_export(*args)
         except Exception, e:
             tmpl_logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
             tmpl_logger.error(repr(e))
             raise Warning(repr(e))
-        res = export_recs.process()
-        if self.do_not_store_record_ids:
-            export_recs.write({'record_ids': ''})
-        return res
+        else:
+            res = export_recs.process()
+            if self.do_not_store_record_ids:
+                export_recs.write({'record_ids': ''})
+            return res
+
+    @api.multi
+    def _create_export(self, *args):
+        export_recs = self.env['ir.model.export'].browse()
+        vals = self._get_export_vals(*args)
+        for index, res_ids_offset in enumerate(self._get_res_ids_offset(*args)):
+            vals['record_ids'] = res_ids_offset
+            vals['record_count'] = len(res_ids_offset)
+            vals['offset'] = index + 1
+            export_recs |= export_recs.create(vals)
+        return export_recs
+
+    @api.multi
+    def _get_export_vals(self, *args):
+        self.ensure_one()
+        return {
+            'export_tmpl_id': self.id,
+            'test_mode': self._context.get('test_mode'),
+            'new_thread': self._context.get('new_thread', self.new_thread),
+            'args': repr(args),
+            'log_level': self.log_level,
+            'log_returns': self.log_returns,
+        }
 
 
 class IrModelExport(models.Model):
