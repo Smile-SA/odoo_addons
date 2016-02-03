@@ -19,6 +19,15 @@
 #
 ##############################################################################
 
-import ir_ui_menu
-import res_users
-import res_groups
+from openerp import api, fields, models, SUPERUSER_ID
+
+
+class IrUiMenu(models.Model):
+    _inherit = 'ir.ui.menu'
+
+    def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        if uid != SUPERUSER_ID:
+            xml_id = 'smile_access_control.menu_action_superadmin'
+            menu_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id)
+            args = [('id', '!=', menu_id)] + (args or [])
+        return super(IrUiMenu, self)._search(cr, uid, args, offset, limit, order, context, count, access_rights_uid)
