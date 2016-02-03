@@ -23,7 +23,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import re
 
-from openerp.models import BaseModel
+from openerp import api, models
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 
 RELATIVEDELTA_TYPES = {
@@ -35,9 +35,10 @@ RELATIVEDELTA_TYPES = {
     'M': 'minutes',
 }
 
-native_where_calc = BaseModel._where_calc
+native_where_calc = models.BaseModel._where_calc
 
 
+@api.cr_uid_context
 def _where_calc(self, cr, uid, domain, active_test=True, context=None):
     match_pattern = re.compile('^[+-]{0,1}[0-9]*[YmdHM]$')
     group_pattern = re.compile(r'(?P<value>^[+-]{0,1}[0-9]*)(?P<type>[%s]$)' % ''.join(RELATIVEDELTA_TYPES.keys()))
@@ -56,4 +57,4 @@ def _where_calc(self, cr, uid, domain, active_test=True, context=None):
                 cond[2] = (datetime.now() - relativedelta(**args)).strftime(value_format)
     return native_where_calc(self, cr, uid, domain, active_test, context)
 
-BaseModel._where_calc = _where_calc
+models.BaseModel._where_calc = _where_calc
