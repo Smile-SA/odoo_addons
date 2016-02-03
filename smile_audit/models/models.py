@@ -47,6 +47,7 @@ def _read_from_database(self, field_names, inherited_field_names=[]):
             record._cache.update(record._convert_to_cache(vals, validate=False))
 
 
+@api.cr_uid_context
 def fields_get(self, cr, user, allfields=None, context=None, write_access=True, attributes=None):
     res = native_fields_get(self, cr, user, allfields, context, write_access, attributes)
     if context.get('history_revision'):
