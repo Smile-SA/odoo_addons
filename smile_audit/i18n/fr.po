@@ -257,7 +257,7 @@ msgstr "Utilisateur"
 #: code:addons/smile_audit/models/audit_rule.py:58
 #, python-format
 msgid "View audit logs"
-msgstr "Visualiser les listes d'audit"
+msgstr "Visualiser les pistes d'audit"
 
 #. module: smile_audit
 #: code:addons/smile_audit/models/audit_log.py:124
