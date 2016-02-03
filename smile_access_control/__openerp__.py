@@ -47,6 +47,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & matthieu.choplin@
         "views/res_users_view.xml",
         "data/res_users_data.xml",
         "views/res_groups_view.xml",
+        'views/res_company_view.xml',
     ],
     "demo": [],
     "installable": True,
