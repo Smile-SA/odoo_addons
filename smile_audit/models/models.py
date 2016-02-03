@@ -22,6 +22,7 @@
 from openerp import api, models
 
 native_read_from_database = models.BaseModel._read_from_database
+native_fields_get = models.BaseModel.fields_get
 
 
 @api.multi
@@ -45,4 +46,14 @@ def _read_from_database(self, field_names, inherited_field_names=[]):
                 vals['message_ids'] = record.message_ids.filtered(lambda msg: msg.date <= history_date)
             record._cache.update(record._convert_to_cache(vals, validate=False))
 
+
+def fields_get(self, cr, user, allfields=None, context=None, write_access=True, attributes=None):
+    res = native_fields_get(self, cr, user, allfields, context, write_access, attributes)
+    if context.get('history_revision'):
+        for field in res:
+            res[field]['readonly'] = True
+    return res
+
+
 models.BaseModel._read_from_database = _read_from_database
+models.BaseModel.fields_get = fields_get
