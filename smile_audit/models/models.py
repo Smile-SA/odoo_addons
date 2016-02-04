@@ -50,6 +50,7 @@ def _read_from_database(self, field_names, inherited_field_names=[]):
 @api.cr_uid_context
 def fields_get(self, cr, user, allfields=None, context=None, write_access=True, attributes=None):
     res = native_fields_get(self, cr, user, allfields, context, write_access, attributes)
+    context = context or {}
     if context.get('history_revision'):
         for field in res:
             res[field]['readonly'] = True
