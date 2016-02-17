@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from openerp import models
+
 
 def _get_args(self, method, args, kwargs):
     # avoid hasattr(self, '_ids') because __getattr__() is overridden
