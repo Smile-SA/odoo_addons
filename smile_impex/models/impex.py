@@ -164,10 +164,11 @@ class IrModelImpex(models.AbstractModel):
     @api.one
     @api.depends('from_date', 'to_date')
     def _get_time(self):
-        if not (self.from_date and self.to_date):
+        if not self.from_date:
             self.time = 0
         else:
-            timedelta = fields.Datetime.from_string(self.to_date) \
+            to_date = self.to_date or fields.Datetime.now()
+            timedelta = fields.Datetime.from_string(to_date) \
                 - fields.Datetime.from_string(self.from_date)
             self.time = timedelta.total_seconds()
 
