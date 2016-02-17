@@ -68,7 +68,7 @@ class SmileDBHandler(logging.Handler):
         for cr in self._dbname_to_cr.values():
             try:
                 cr.execute("INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message) "
-                           "VALUES (now(), 0, '', 0, 0, 'INFO', 'OpenERP server stopped')")
+                           "VALUES (now() at time zone 'UTC', 0, '', 0, 0, 'INFO', 'OpenERP server stopped')")
             finally:
                 cr.close()
         self._dbname_to_cr = {}

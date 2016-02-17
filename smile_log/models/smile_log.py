@@ -65,8 +65,8 @@ class SmileLog(models.Model):
         if archive_path:
             file_name = time.strftime("%Y%m%d_%H%M%S.log.csv")
             file_path = os.path.join(archive_path, file_name)
-            self.env.cr.execute(""" COPY (SELECT * FROM smile_log WHERE log_date + interval'%s days' < NOW())
+            self.env.cr.execute(""" COPY (SELECT * FROM smile_log WHERE log_date + interval'%s days' < NOW() at time zone 'UTC')
             TO %s
             WITH (FORMAT csv, ENCODING utf8)""", (nb_days, file_path,))
-        self.env.cr.execute("DELETE FROM smile_log WHERE log_date + interval '%s days' < NOW()", (nb_days,))
+        self.env.cr.execute("DELETE FROM smile_log WHERE log_date + interval '%s days' < NOW() at time zone 'UTC'", (nb_days,))
         return True
