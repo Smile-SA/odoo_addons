@@ -127,7 +127,7 @@ class ProductUom(models.Model):
                 unit = product.uom_id
         return qty, unit
 
-    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, round=True, context=None):
+    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, round=True, rounding_method='UP', context=None):
         if from_unit.category_id.id != to_unit.category_id.id:
             context = context or {}
             product = context.get('uom_product')
@@ -136,4 +136,4 @@ class ProductUom(models.Model):
             if product:
                 qty, from_unit = self._convert_qty(cr, uid, qty, from_unit, product, True)
                 qty, to_unit = self._convert_qty(cr, uid, qty, to_unit, product, False)
-        return super(ProductUom, self)._compute_qty_obj(cr, uid, from_unit, qty, to_unit, round, context)
+        return super(ProductUom, self)._compute_qty_obj(cr, uid, from_unit, qty, to_unit, round, rounding_method, context)
