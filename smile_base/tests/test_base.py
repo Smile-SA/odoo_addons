@@ -93,6 +93,5 @@ class BaseTest(TransactionCase):
         self.env['ir.mail_server'].search([]).unlink()
         email = self._get_email()
         with config_to_enable_email_sending(True):
-            # TODO: see why exception is not catched
             with self.assertRaises(MailDeliveryException):
-                email.send()
+                email.send(raise_exception=True)
