@@ -32,7 +32,7 @@ SESSION_TIMEOUT = 60 * 60 * 24 * 7  # 1 weeks in seconds
 
 
 def is_redis_session_store_activated():
-    return tools.config.get('redis_host')
+    return tools.config.get('enable_redis')
 
 
 try:
