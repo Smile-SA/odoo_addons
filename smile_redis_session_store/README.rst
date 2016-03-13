@@ -24,7 +24,7 @@ You need to install package `python-redis`::
 Usage
 =====
 
-To use Redis, please add at least `redis_host` option in configuration file. 
+To use Redis, please add `enable_redis = True` option in configuration file. 
 
 Available options
 -----------------
