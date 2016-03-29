@@ -58,7 +58,8 @@ class AuditRule(models.Model):
                 'name': _('View audit logs'),
                 'res_model': 'audit.log',
                 'src_model': self.model_id.model,
-                'domain': "[('model_id','=', %s), ('res_id', '=', active_id)]" % self.model_id.id,
+                'domain': "[('model_id','=', %s), ('res_id', '=', active_id), ('method', 'in', %s)]"
+                          % (self.model_id.id, [method for method in self._methods if not method.startswith("_")])
             }
             self.action_id = self.env['ir.actions.act_window'].create(vals)
 
@@ -98,7 +99,7 @@ class AuditRule(models.Model):
                 rule._deactivate()
         return True
 
-    _methods = ['create', 'write', 'unlink']
+    _methods = ['create', 'write', 'unlink', '_write']
 
     @tools.cache()
     def _check_audit_rule(self, cr):
@@ -106,7 +107,7 @@ class AuditRule(models.Model):
         return {rule.model_id.model:
                 {method: rule.id
                  for method in self._methods
-                 if getattr(rule, 'log_%s' % method)}
+                 if getattr(rule, 'log_%s' % method.replace('_', ''))}
                 for rule in self.browse(cr, SUPERUSER_ID, ids)}
 
     def _register_hook(self, cr, ids=None):
@@ -181,7 +182,6 @@ class AuditRule(models.Model):
 
     @api.one
     def log(self, method, old_values=None, new_values=None):
-        _logger.debug('Starting audit log')
         if old_values or new_values:
             data = self._format_data_to_log(old_values, new_values)
             for res_id in data:

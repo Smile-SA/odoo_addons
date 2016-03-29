@@ -27,7 +27,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 class AuditLog(models.Model):
     _name = 'audit.log'
     _description = 'Audit Log'
-    _order = 'create_date desc'
+    _order = 'create_date desc, id desc'
 
     name = fields.Char('Resource Name', size=256, compute='_get_name')
     create_date = fields.Datetime('Date', readonly=True)

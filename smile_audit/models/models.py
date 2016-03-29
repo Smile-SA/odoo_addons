@@ -31,8 +31,8 @@ def _read_from_database(self, field_names, inherited_field_names=[]):
     # Store history revision in cache
     if self._context.get('history_revision') and getattr(self._model, 'audit_rule', None):
         history_date = self._context.get('history_revision')
-        audit_rule = self.pool['audit.rule']._check_audit_rule(self._cr).get(self._name, {}).get('create')
-        date_operator = audit_rule and '>' or '>='
+        create_rule = self.pool['audit.rule']._check_audit_rule(self._cr).get(self._name, {}).get('create')
+        date_operator = create_rule and '>' or '>='
         domain = [('model', '=', self._name), ('res_id', 'in', self.ids),
                   ('create_date', date_operator, history_date)]
         logs = self.env['audit.log'].sudo().search(domain, order='create_date desc')

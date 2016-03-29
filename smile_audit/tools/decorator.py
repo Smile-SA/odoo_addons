@@ -23,16 +23,22 @@
 def _get_args(self, method, args, kwargs):
     # avoid hasattr(self, '_ids') because __getattr__() is overridden
     if '_ids' in self.__dict__:
-        vals = method in ('create', 'write') and args[0] or {}
+        vals = method in ('create', 'write', '_create', '_write') and args[0] or {}
     else:
         cr, uid = args[:2]
         ids = method in ('write', 'unlink') and args[2] or []
         context = kwargs.get('context')
         self = self.browse(cr, uid, ids, context)
-        vals = (method == 'create' and args[2]) or (method == 'write' and args[3]) or {}
+        vals = ('create' in method and args[2]) or ('write' in method and args[3]) or {}
     if self._name == 'res.users':
         vals = self._remove_reified_groups(vals)
-    return self, vals
+    fields_to_read = vals.keys()
+    if method in ('_create', '_write'):
+        for index, fname in enumerate(fields_to_read):
+            field = self._fields[fname]
+            if not field.compute:
+                del fields_to_read[index]
+    return self, fields_to_read
 
 
 def audit_decorator():
@@ -41,22 +47,22 @@ def audit_decorator():
         while hasattr(origin, 'origin'):
             origin = origin.origin
         method = origin.__name__
-        records, vals = _get_args(self, method, args, kwargs)
+        records, fields_to_read = _get_args(self, method, args, kwargs)
         rule_obj = records.env['audit.rule']
         rule_id = rule_obj._model._check_audit_rule(records._cr).get(records._name, {}).get(method)
         if rule_id:
             rule = rule_obj.browse(rule_id)
-            fields = vals.keys()
             old_values = None
             if method != 'create':
-                old_values = records.read(fields, load='_classic_write')
+                if fields_to_read or method == 'unlink':
+                    old_values = records.read(fields_to_read, load='_classic_write')
                 if method == 'unlink':
                     rule.log(method, old_values)
         result = audit_wrapper.origin(self, *args, **kwargs)
-        if rule_id and method != 'unlink':
+        if rule_id and method != 'unlink' and fields_to_read:
             if method == 'create':
-                records = result
-            new_values = records.read(fields, load='_classic_write')
+                records = records.browse(result) if isinstance(result, (int, long)) else result
+            new_values = records.read(fields_to_read, load='_classic_write')
             rule.log(method, old_values, new_values)
         return result
     return audit_wrapper
