@@ -56,8 +56,7 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                         registry = native_new(db_name, force_demo)
                         upgrade_manager.force_modules_upgrade(registry, modules)
                     native_new(db_name, force_demo, update_module=True)
-                    if not upgrade_manager.db_in_creation:
-                        upgrade_manager.post_load()
+                    upgrade_manager.post_load()
                     upgrade_manager.set_db_version()
                     _logger.info('%s upgrade successfully loaded in %ss',
                                  upgrade_manager.code_version, time.time() - t0)
