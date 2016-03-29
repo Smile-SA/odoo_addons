@@ -133,7 +133,7 @@ class IrModelExportTemplate(models.Model):
         return [res_ids]
 
     @api.multi
-    @with_impex_cursor
+    @with_impex_cursor()
     def create_export(self, *args):
         self._try_lock(_('Export already in progress'))
         try:

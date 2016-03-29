@@ -50,7 +50,7 @@ class IrModelImportTemplate(models.Model):
         return vals
 
     @api.multi
-    @with_impex_cursor
+    @with_impex_cursor()
     def create_import(self, *args):
         self._try_lock(_('Import already in progress'))
         try:
