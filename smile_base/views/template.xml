@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="/smile_base/static/src/css/env_ribbon.css"/>
         <script type="text/javascript" src="/smile_base/static/src/js/env_ribbon.js"></script>
         <script type="text/javascript" src="/smile_base/static/src/js/progress_bar.js"></script>
+        <script type="text/javascript" src="/smile_base/static/src/js/kanban_column.js"></script>
       </xpath>
     </template>
 

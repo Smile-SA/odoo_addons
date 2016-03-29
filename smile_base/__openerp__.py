@@ -24,6 +24,7 @@
     "version": "0.2.3",
     "depends": [
         'fetchmail',
+        'web_kanban',
         'web_tip',
         'web_planner',
         'web_editor',
