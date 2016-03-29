@@ -71,3 +71,24 @@ class IrModel(models.Model):
                     ordered_models.append((model, ['id'] + link_fields))
 
         return ordered_models
+
+
+class IrModelData(models.Model):
+    _inherit = 'ir.model.data'
+
+    def import_data(self, cr, uid, fields_to_import, datas, mode='init', current_module='',
+                    noupdate=False, context=None, filename=None):
+        if 'id' not in fields_to_import and 'complete_name' in fields_to_import:
+            position = 0
+            for data in datas:
+                module, name = data[fields_to_import.index('complete_name')].split('.')
+                ids = self.search(cr, uid, [('module', '=', module), ('name', '=', name)], limit=1)
+                vals = dict(zip(fields_to_import, data))
+                if ids:
+                    self.write(cr, uid, ids, vals, context)
+                else:
+                    self.create(cr, uid, vals, context)
+                position += 1
+            return position, 0, 0, 0
+        return super(IrModelData, self).import_data(cr, uid, fields_to_import, datas, mode,
+                                                    current_module, noupdate, context, filename)

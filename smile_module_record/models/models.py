@@ -25,7 +25,7 @@ magic_fields = ['create_uid', 'create_date', 'write_uid', 'write_date']
 
 
 def get_fields_to_export(self):
-    fields_to_export = ['id']
+    fields_to_export = []
     for column, field in self._fields.iteritems():
         if column in magic_fields:
             continue
@@ -35,6 +35,8 @@ def get_fields_to_export(self):
         if field.type in ('many2many', 'many2one'):
             column += ':id'
         fields_to_export.append(column)
+    if 'id' not in fields_to_export:
+        fields_to_export.append('id')
     return fields_to_export
 
 models.Model.get_fields_to_export = get_fields_to_export

@@ -77,12 +77,12 @@ class BaseModuleImport(models.TransientModel):
         filecontent = self._get_file_content()
         module_path = self._get_module_path()
         zipfile.ZipFile(StringIO(filecontent)).extractall(module_path)
-        return self.env['ir.module.module'].update_list()
+        return self.env['ir.module.module'].sudo().update_list()
 
     @api.multi
     def install(self):
         self.ensure_one()
-        modules = self.env['ir.module.module'].search([('name', '=', self.module_name)])
+        modules = self.env['ir.module.module'].sudo().search([('name', '=', self.module_name)])
         return modules.button_immediate_install()
 
     @api.multi

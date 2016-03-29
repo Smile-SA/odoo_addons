@@ -85,6 +85,26 @@ class BaseModuleExport(models.TransientModel):
         rows.extend(properties.export_data(fields_to_export)['datas'])
         return [('ir.property', rows)]
 
+    def _export_ir_model_data(self, models, res_ids_by_model, noupdate):
+        if 'ir.model.data' in (model.model for model in models):
+            return []
+        model_data_obj = self.env['ir.model.data']
+        model_data = model_data_obj.browse()
+        for model in models:
+            domain = [('model', '=', model.model), ('res_id', 'in', res_ids_by_model[model.model])]
+            model_data |= model_data_obj.search(domain)
+        if not model_data:
+            return []
+        fields_to_export = model_data_obj.get_fields_to_export() + ['complete_name']
+        for field in ('id', 'noupdate'):
+            del fields_to_export[fields_to_export.index(field)]
+        rows = [fields_to_export + ['noupdate']]
+        datas = model_data.export_data(fields_to_export)['datas']
+        for data in datas:
+            data.append(str(noupdate))
+        rows.extend(datas)
+        return [('ir.model.data', rows)]
+
     def _export_data_by_model(self):
         models = self._get_models()
         datas = self.env['ir.model'].get_ordered_model_graph(models)
@@ -100,6 +120,8 @@ class BaseModuleExport(models.TransientModel):
             rows.extend(recs.export_data(fields_to_export)['datas'])
             datas[index] = (model, rows)
         datas.extend(self._export_ir_properties(models, res_ids_by_model))
+        datas = self._export_ir_model_data(models, res_ids_by_model, False) + datas
+        datas += self._export_ir_model_data(models, res_ids_by_model, True)
         return datas
 
     def _convert_to_csv(self, model, rows):
@@ -163,7 +185,8 @@ class BaseModuleExport(models.TransientModel):
         for model, rows in self._export_data_by_model():
             args = (self.env[model], rows)
             content = getattr(self, '_convert_to_%s' % self.filetype)(*args)
-            content = content.replace('__export__.', '')
+            # Force module='base' in order to allow multiple export->import for a same data
+            content = content.replace('__export__.', 'base.')
             data_files.append((model, content))
         return data_files
 
