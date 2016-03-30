@@ -44,7 +44,9 @@ class IrMailServer(models.Model):
                                                     attachments, message_id, references, object_id, subtype, headers,
                                                     body_alternative, subtype_alternative)
         if tools.config.get('email_to'):
-            msg['To'] = encode_rfc2822_address_header(COMMASPACE.join(email_to))
-            msg['Cc'] = encode_rfc2822_address_header('')
-            msg['Bcc'] = encode_rfc2822_address_header('')
+            msg.replace_header('To', encode_rfc2822_address_header(COMMASPACE.join([tools.config['email_to']])))
+            if 'Cc' in msg:
+                msg.replace_header('Cc', None)
+            if 'Bcc' in msg:
+                msg.replace_header('Bcc', None)
         return msg
