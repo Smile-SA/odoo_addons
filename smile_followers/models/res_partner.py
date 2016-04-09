@@ -33,12 +33,12 @@ class MailThread(models.Model):
     _inherit = 'mail.thread'
 
     @api.multi
-    def message_subscribe(self, partner_ids, subtype_ids=None):
+    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
         # INFO: Disable author auto following if asked
         domain = [('disable_auto_subscribe', '=', True)]
         partner_ids_to_ignore = self.env['res.users'].search(domain).mapped('partner_id').ids
         partner_ids = [partner_id for partner_id in partner_ids if partner_id not in partner_ids_to_ignore]
-        return super(MailThread, self).message_subscribe(partner_ids, subtype_ids)
+        return super(MailThread, self).message_subscribe(partner_ids, channel_ids, subtype_ids, force)
 
 
 class ResPartner(models.Model):
