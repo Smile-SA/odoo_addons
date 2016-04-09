@@ -75,25 +75,27 @@ class ResGroups(models.Model):
         group_ids_to_unlink = []
         group_ids_to_link = []
         if vals.get('implied_ids'):
-            for item in vals['implied_ids']:
-                if item[0] == 6:
-                    for group in self:
+            vals2 = dict(vals)
+            for group in self:
+                for item in vals2['implied_ids']:
+                    if item[0] == 6:
                         group_ids_to_unlink.extend(list(set(group.implied_ids.ids) - set(item[2])))
                         group_ids_to_link.extend(list(set(item[2]) - set(group.implied_ids.ids)))
-                elif item[0] == 5:
-                    group_ids_to_unlink.extend(item[1])
-                elif item[0] == 4:
-                    group_ids_to_link.append(item[1])
-                elif item[0] == 3:
-                    group_ids_to_unlink.append(item[1])
-        res = super(ResGroups, self).write(vals)
-        self._update_users(vals)
-        if vals.get('implied_ids'):
-            # Update group for all users depending of this group, in order to add new implied groups to their groups
-            for group in self:
+                    elif item[0] == 5:
+                        group_ids_to_unlink.extend(list(set(group.implied_ids.ids)))
+                    elif item[0] == 4:
+                        group_ids_to_link.append(item[1])
+                    elif item[0] == 3:
+                        group_ids_to_unlink.append(item[1])
+                res = super(ResGroups, group).write(vals2)
+                group._update_users(vals2)
+                # Update group for all users depending of this group, in order to add new implied groups to their groups
                 groups_id = [(4, subgroup_id) for subgroup_id in group_ids_to_link] + \
                     [(3, subgroup_id) for subgroup_id in group_ids_to_unlink]
                 group.with_context(active_test=False).users.write({'groups_id': groups_id})
+        else:
+            res = super(ResGroups, self).write(vals)
+            self._update_users(vals)
         return res
 
     @api.multi

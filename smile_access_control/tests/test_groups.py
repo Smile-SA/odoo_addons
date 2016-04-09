@@ -68,13 +68,14 @@ class TestGroups(TransactionCase):
         """
             Test write method
         """
-        res_update = self.groups_obj.browse(self.group1.id).write({'name': 'Group 1 EDITED'})
-        self.assertTrue(res_update)
-
-    def test_update_users(self):
-        """
-            Test test_update_users method
-        """
+        self.assertTrue(self.group1.write({'name': 'Group 1 EDITED'}))
+        self.assertEquals('Group 1 EDITED', self.group1.name)
+        self.assertTrue((self.group1 | self.group2).write({'implied_ids': [(5,)]}))
+        self.assertEquals(self.env['res.groups'].browse(), self.group1.implied_ids)
+        self.assertEquals(self.env['res.groups'].browse(), self.group2.implied_ids)
+        self.assertTrue((self.group1 | self.group2).write({'implied_ids': [(4, self.group_completion.id)]}))
+        self.assertEquals(self.group_completion, self.group1.implied_ids)
+        self.assertEquals(self.group_completion, self.group2.implied_ids)
 
     def test_button_complete_access_controls(self):
         """
@@ -88,8 +89,7 @@ class TestGroups(TransactionCase):
         list_after_completion = []
         check_right = True
         self.group_completion.button_complete_access_controls()
-        grp_completed = self.groups_obj.browse(self.group_completion.id)
-        for i in grp_completed.model_access:
+        for i in self.group_completion.model_access:
             list_after_completion.append(i.model_id.name)
             if i.model_id.name != "Models":
                 if not i.perm_read or i.perm_write or i.perm_create or i.perm_unlink:
