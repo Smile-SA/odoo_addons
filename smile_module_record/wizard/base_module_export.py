@@ -151,7 +151,8 @@ class BaseModuleExport(models.TransientModel):
         for row in rows[1:]:
             record_elem = etree.SubElement(data_elem, 'record')
             record_elem.set('model', model._name)
-            record_elem.set('id', row[fields_.index('id')])
+            if 'id' in fields_:
+                record_elem.set('id', row[fields_.index('id')])
             for field_name in fields_:
                 if field_name == 'id':
                     continue
