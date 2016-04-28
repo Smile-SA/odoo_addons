@@ -44,8 +44,8 @@ class ActionRule(models.Model):
     _inherit = 'base.action.rule'
 
     @api.model
-    def _setup_fields(self):
-        super(ActionRule, self)._setup_fields()
+    def _setup_fields(self, partial):
+        super(ActionRule, self)._setup_fields(partial)
         self._fields['last_run'].readonly = False
 
     kind = fields.Selection(selection_add=[

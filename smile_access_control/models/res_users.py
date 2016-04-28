@@ -31,8 +31,8 @@ class ResUsers(models.Model):
         return (self.id, self.is_user_profile or not self.has_group('base.group_user'))
 
     @api.model
-    def _setup_fields(self):
-        super(ResUsers, self)._setup_fields()
+    def _setup_fields(self, partial):
+        super(ResUsers, self)._setup_fields(partial)
         self._fields['share'].column._fnct = ResUsers._is_share
 
     @api.model
