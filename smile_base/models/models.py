@@ -27,7 +27,7 @@ import psycopg2
 import time
 
 from openerp import api, tools, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 from openerp.models import BaseModel
 from openerp.osv.expression import normalize_domain
 
@@ -159,7 +159,7 @@ def _try_lock(self, warning=None):
     except psycopg2.OperationalError:
         self._cr.rollback()  # INFO: Early rollback to allow translations to work for the user feedback
         if warning:
-            raise Warning(warning)
+            raise UserError(warning)
         raise
 
 
@@ -272,7 +272,7 @@ def filtered_from_domain(self, domain):
             domain = repr(domain)
         domain = extend(normalize_domain(eval(domain, localdict)))
     except:
-        raise Warning(_('Domain not supported for %s filtering: %s') % (self._name, domain))
+        raise UserError(_('Domain not supported for %s filtering: %s') % (self._name, domain))
 
     stack = []
 
@@ -332,7 +332,7 @@ def recompute_fields(self, fnames):
         elif getattr(field, 'store') and getattr(field, 'compute'):
             self._recompute_todo(field)
         else:
-            raise Warning(_('%s is not a stored compute/function field') % fname)
+            raise UserError(_('%s is not a stored compute/function field') % fname)
     self._model._store_set_values(self._cr, self._uid, self.ids, old_fnames, self._context)
     self.recompute()
     return True

@@ -23,7 +23,7 @@ import inspect
 
 from openerp import _
 from openerp.sql_db import Cursor
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 def _get_args(self, method, args, kwargs):
@@ -44,13 +44,13 @@ def _get_args(self, method, args, kwargs):
         elif decorator.startswith('cr_'):
             method_arg_names = decorator.split('_')
         else:
-            raise Warning(_('Method not adapted for action rules'))
+            raise UserError(_('Method not adapted for action rules'))
         method_arg_names += [None] * (len(args) - len(method_arg_names))
     method_args = dict(zip(method_arg_names, args))
     cr = method_args.get('cr') or method_args.get('cursor')
     uid = method_args.get('uid') or method_args.get('user') or method_args.get('user_id')
     if not isinstance(cr, Cursor) or not isinstance(uid, (int, long)):
-        raise Warning(_('Method not adapted for action rules'))
+        raise UserError(_('Method not adapted for action rules'))
     ids = method_args.get('ids') or method_args.get('id')
     context = method_args.get('context') or {}
     if kwargs.get('context'):

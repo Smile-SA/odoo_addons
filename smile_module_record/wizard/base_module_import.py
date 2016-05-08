@@ -31,7 +31,7 @@ import re
 import zipfile
 
 from openerp import api, fields, models, modules, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__package__)
 
@@ -48,9 +48,9 @@ class BaseModuleImport(models.TransientModel):
     def _check_module_name(self):
         invalid_characters = re.findall(r'[^A-Za-z0-9_\-]', self.module_name)
         if invalid_characters:
-            raise Warning(_("Invalid characters in module name: '%s'") % "', '".join(invalid_characters))
+            raise UserError(_("Invalid characters in module name: '%s'") % "', '".join(invalid_characters))
         if self.env['ir.module.module'].search_count([('name', '=', self.module_name)]):
-            raise Warning(_("The module '%s' already exists") % self.module_name)
+            raise UserError(_("The module '%s' already exists") % self.module_name)
 
     @api.one
     @api.constrains('file')
@@ -59,7 +59,7 @@ class BaseModuleImport(models.TransientModel):
         module_file = BytesIO()
         module_file.write(filecontent)
         if not zipfile.is_zipfile(module_file):
-            raise Warning(_('File is not a zip file!'))
+            raise UserError(_('File is not a zip file!'))
 
     @api.multi
     def _get_file_content(self):

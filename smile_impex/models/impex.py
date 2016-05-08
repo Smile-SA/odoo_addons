@@ -27,7 +27,7 @@ import sys
 from threading import Thread
 
 from openerp import api, fields, models, SUPERUSER_ID, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 from openerp.tools.func import wraps
 
 from openerp.addons.smile_log.tools import SmileDBLogger
@@ -74,7 +74,7 @@ class IrModelImpexTemplate(models.AbstractModel):
         except psycopg2.OperationalError:
             self._cr.rollback()  # INFO: Early rollback to allow translations to work for the user feedback
             if warning:
-                raise Warning(warning)
+                raise UserError(warning)
             raise
 
     def _get_cron_vals(self, **kwargs):
@@ -111,7 +111,7 @@ class IrModelImpexTemplate(models.AbstractModel):
         if not self.server_action_id:
             model = self.env['ir.model'].search([('model', '=', self._name)], limit=1)
             if not model:  # Normally should not happen
-                raise Warning(_('Please restart Odoo server'))
+                raise UserError(_('Please restart Odoo server'))
             vals = self._get_server_action_vals(model.id, **kwargs)
             self.server_action_id = self.env['ir.actions.server'].create(vals)
         return True
@@ -119,7 +119,7 @@ class IrModelImpexTemplate(models.AbstractModel):
     @api.one
     def unlink_server_action(self):
         if self.client_action_id:
-            raise Warning(_('Please remove client action before removing server action'))
+            raise UserError(_('Please remove client action before removing server action'))
         if self.server_action_id:
             self.server_action_id.unlink()
         return True

@@ -27,7 +27,7 @@ import logging
 import os
 
 from openerp import api, sql_db, SUPERUSER_ID, tools
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 import openerp.modules as addons
 from openerp.report.interface import report_int as ReportService
 from openerp.tools.safe_eval import safe_eval as eval
@@ -119,7 +119,7 @@ class UpgradeManager(object):
         except psycopg2.OperationalError:
             self.cr.rollback()  # INFO: Early rollback to allow translations to work for the user feedback
             if warning:
-                raise Warning(warning)
+                raise UserError(warning)
             raise
 
     def _get_upgrades(self):

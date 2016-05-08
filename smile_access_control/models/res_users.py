@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp import api, fields, models, SUPERUSER_ID, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class ResUsers(models.Model):
@@ -68,7 +68,7 @@ class ResUsers(models.Model):
     def _check_user_profile_id(self):
         admin = self.env.ref('base.user_root')
         if self.user_profile_id == admin:
-            raise Warning(_("You can't use %s as user profile !") % admin.name)
+            raise UserError(_("You can't use %s as user profile !") % admin.name)
 
     @api.onchange('is_user_profile')
     def onchange_user_profile(self):
@@ -81,7 +81,7 @@ class ResUsers(models.Model):
         if not self:
             return
         if len(self.mapped('user_profile_id')) != 1:
-            raise Warning(_("_update_from_profile accepts only users linked to a same profile"))
+            raise UserError(_("_update_from_profile accepts only users linked to a same profile"))
         user_profile = self[0].user_profile_id
         if not fields:
             fields = user_profile.field_ids.mapped('name')
@@ -97,7 +97,7 @@ class ResUsers(models.Model):
                 elif field_type == 'many2many':
                     vals[field] = [(6, 0, value.ids)]
                 elif field_type == 'one2many':
-                    raise Warning(_("_update_from_profile doesn't manage fields.One2many"))
+                    raise UserError(_("_update_from_profile doesn't manage fields.One2many"))
                 else:
                     vals[field] = value
             if vals:

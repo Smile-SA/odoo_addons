@@ -24,7 +24,7 @@ import os
 import sys
 
 from openerp import api, fields, models, SUPERUSER_ID, tools
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 from openerp.addons.base_action_rule.base_action_rule import DATE_RANGE_FUNCTION, get_datetime
 
 from openerp.addons.smile_log.tools import SmileDBLogger
@@ -165,7 +165,7 @@ class ActionRule(models.Model):
             if self.exception_handling == 'continue' or self.exception_warning == 'none':
                 return []
             if self.exception_warning == 'custom':
-                raise Warning(self.exception_message)
+                raise UserError(self.exception_message)
             e.traceback = sys.exc_info()
             raise
 
@@ -194,7 +194,7 @@ class ActionRule(models.Model):
             if self.exception_handling == 'continue' or self.exception_warning == 'none':
                 return []
             if self.exception_warning == 'custom':
-                raise Warning(self.exception_message)
+                raise UserError(self.exception_message)
             e.traceback = sys.exc_info()
             raise
 
@@ -226,7 +226,7 @@ class ActionRule(models.Model):
             if self.exception_handling == 'continue' or self.exception_warning == 'none':
                 return True
             if self.exception_warning == 'custom':
-                raise Warning(self.exception_message)
+                raise UserError(self.exception_message)
             e.traceback = sys.exc_info()
             raise
 

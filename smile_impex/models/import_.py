@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp import api, fields, models, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 from openerp.modules.registry import Registry
 from openerp.tools.safe_eval import safe_eval as eval
 
@@ -58,7 +58,7 @@ class IrModelImportTemplate(models.Model):
         except Exception, e:
             tmpl_logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
             tmpl_logger.error(repr(e))
-            raise Warning(repr(e))
+            raise UserError(repr(e))
         else:
             return import_rec.process()
 

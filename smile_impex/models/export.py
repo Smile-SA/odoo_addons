@@ -22,7 +22,7 @@
 import time
 
 from openerp import api, fields, models, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 from openerp.modules.registry import Registry
 from openerp.tools.safe_eval import safe_eval as eval
 
@@ -57,7 +57,7 @@ class IrModelExportTemplate(models.Model):
     @api.constrains('unique', 'do_not_store_record_ids')
     def _check_export_template_config(self):
         if self.unique and self.do_not_store_record_ids:
-            raise Warning(_('Exported records storing is required if export must be unique'))
+            raise UserError(_('Exported records storing is required if export must be unique'))
 
     def _get_cron_vals(self, **kwargs):
         vals = super(IrModelExportTemplate, self)._get_cron_vals(**kwargs)
@@ -110,7 +110,7 @@ class IrModelExportTemplate(models.Model):
             res_ids = set(model_obj.search(domain, order=self.order or '')._ids)
         else:  # elif self.filter_type == 'method':
             if not (self.filter_method and hasattr(model_obj, self.filter_method)):
-                raise Warning(_("Can't find method: %s on object: %s") % (self.filter_method, self.model_id.model))
+                raise UserError(_("Can't find method: %s on object: %s") % (self.filter_method, self.model_id.model))
             res_ids = set(getattr(model_obj, self.filter_method)(*args))
         if 'active_ids' in self._context:
             res_ids &= set(self._context['active_ids'])
@@ -141,7 +141,7 @@ class IrModelExportTemplate(models.Model):
         except Exception, e:
             tmpl_logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
             tmpl_logger.error(repr(e))
-            raise Warning(repr(e))
+            raise UserError(repr(e))
         else:
             res = export_recs.process()
             if self.do_not_store_record_ids:
@@ -193,7 +193,7 @@ class IrModelExport(models.Model):
     def _execute(self):
         self.ensure_one()
         if not self.record_ids:
-            raise Warning(_("You cannot regenerate this export because records to export didn't store"))
+            raise UserError(_("You cannot regenerate this export because records to export didn't store"))
         record_ids = eval(self.record_ids)
         if record_ids or self.export_tmpl_id.force_execute_action:
             records = self.env[self.export_tmpl_id.model_id.model].browse(record_ids)

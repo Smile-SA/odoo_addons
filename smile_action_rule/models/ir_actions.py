@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp import api, fields, models, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class ServerAction(models.Model):
@@ -90,7 +90,7 @@ class ServerActionExecution(models.Model):
             ('locked', '=', True),
         ]
         if self.search_count(domain):
-            raise Warning(_('This action is under execution!'))
+            raise UserError(_('This action is under execution!'))
         return True
 
     @api.model
