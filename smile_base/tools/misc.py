@@ -19,6 +19,29 @@
 #
 ##############################################################################
 
+import math
+
+
+def float_time_convert(float_val):
+    """
+    Converts a float in time (hour, minute).
+
+    @param float_val: float, obtained via widget float_time in Odoo interface
+    @return: (int, int), a tuple hours and minutes
+    """
+    factor = float_val < 0 and -1 or 1
+    val = abs(float_val)
+    return factor * int(math.floor(val)), int(round((val % 1) * 60))
+
+
+def float_to_strtime(float_time):
+    """
+    :param hour: float
+    :param minute: float
+    :return: str
+    """
+    return '{:02d}:{:02d}'.format(*float_time_convert(float_time))
+
 
 class unquote(str):
 
