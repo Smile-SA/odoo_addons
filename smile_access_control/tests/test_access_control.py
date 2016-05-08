@@ -69,6 +69,15 @@ class TestAccessControl(TransactionCase):
         for group in self.user_profile2.groups_id:
             self.assertIn(group, self.user.groups_id, 'The user has not the new dependence!')
 
+    def test_change_profile_with_no_update_users_do_not_change_users(self):
+        """
+            Change Profile 2 to not update users
+            Remove Group 1 in Profile 2.
+            Check that user has again Group 1.
+        """
+        self.user.user_profile_id.is_update_users = False
+        self.assertIn(self.group1, self.user.groups_id, 'The user has not the Group 1 in dependencies !')
+
     def test_using_admin_as_profile_should_fail(self):
         """
             I try to create a user with Administrator as user profile

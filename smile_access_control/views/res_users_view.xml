@@ -52,6 +52,10 @@
           </field>
           <notebook position="inside">
             <page string="Configuration">
+              <separator string="Options" colspan="4"/>
+              <field name="is_user_profile" invisible="1"/>
+              <field name="is_update_users" attrs="{'invisible': [('is_user_profile', '=', False)]}"/>
+              <label for="is_update_users"/>
               <separator string="Linked users" colspan="4"/>
               <field name="user_ids" nolabel="1" colspan="4" widget="many2many" context="{'form_view_ref': 'base.view_users_form'}"/>
               <separator string="Fields to update for linked users" colspan="4"/>

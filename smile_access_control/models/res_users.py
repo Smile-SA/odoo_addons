@@ -54,10 +54,12 @@ class ResUsers(models.Model):
                                      ('name', 'not in', ('is_user_profile', 'user_profile_id',
                                                          'user_ids', 'field_ids', 'view'))],
                                  default=_get_default_field_ids)
+    is_update_users = fields.Boolean(string="Update users after creation", default=lambda *a: True,
+                                     help="If non checked, users associated to this profile will not be updated after creation")
 
     _sql_constraints = [
         ('active_admin_check', 'CHECK (id = 1 AND active = TRUE OR id <> 1)',
-         'The user with id = 1 must be always active!'),
+         'The user with id = 1 must always be active!'),
         ('profile_without_profile_id',
          'CHECK( (is_user_profile = TRUE AND user_profile_id IS NULL) OR is_user_profile = FALSE )',
          'Profile users cannot be linked to a profile!'),
@@ -105,7 +107,7 @@ class ResUsers(models.Model):
 
     @api.multi
     def _update_users_linked_to_profile(self, fields=None):
-        for user_profile in self.filtered(lambda user: user.is_user_profile):
+        for user_profile in self.filtered(lambda user: user.is_user_profile and user.is_update_users):
             user_profile.with_context(active_test=False).mapped('user_ids')._update_from_profile(fields)
 
     @api.model
