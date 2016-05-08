@@ -75,8 +75,8 @@ class ResGroups(models.Model):
         group_ids_to_unlink = []
         group_ids_to_link = []
         if vals.get('implied_ids'):
-            vals2 = dict(vals)
             for group in self:
+                vals2 = dict(vals)
                 for item in vals2['implied_ids']:
                     if item[0] == 6:
                         group_ids_to_unlink.extend(list(set(group.implied_ids.ids) - set(item[2])))
