@@ -24,6 +24,7 @@ import ir_actions
 import ir_config_parameter
 import ir_mail_server
 import ir_values
+import language
 import mail_mail
 import mail_template
 import models
