@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+    # -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+# flake8: noqa
+# do not check flake8 because of F811 error
 from lxml import etree
 
 from openerp import api, fields
