@@ -20,20 +20,28 @@
 ##############################################################################
 {
     "name": "Smile Menu Icon",
-    "version": "0.2",
+    "version": "0.3",
     "depends": ['mail'],
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """
-Feature
-    * Add Font-Awesome icon in menu.
+Features
+    * Add Font-Awesome icon in menu (or submenu).
+    * Add Font-Awesome icon in page/tab of a Form View.
 
 How-to add icon next to a menu title
-    1. Go to the Font-Awesome website, select your icon (e.g.: 'fa fa-eye')
+    1. Go to the Font-Awesome website, select your icon (e.g.: 'fa-eye')
     2. Go to Settings > Technical > User Interface > Menu Items
     3. Select the menu you want to add / change the icon
-    4. Paste the fa code (e.g.: 'fa fa-eye') in fa ico
+    4. Paste the fa code (e.g.: 'fa-eye') in Font Awesome Icon
     5. And... voilà !
+
+How-to add icon next to a menu title in page/tab of a Form View
+    1. Go to the Font-Awesome website, select your icon (e.g.: 'fa-eye')
+    2. In your form view add icon attribute on page element (e.g. : '<page string="Information" icon="fa-eye">'
+    3. And... voilà !
+
+TODO : Old API => New API
 
     """,
     "summary": "",
@@ -43,6 +51,9 @@ How-to add icon next to a menu title
     "data": [
         "views/template.xml",
         "views/edit_menu_access.xml",
+    ],
+    "qweb": [
+        "static/src/xml/base.xml",
     ],
     "auto_install": False,
     "installable": True,
