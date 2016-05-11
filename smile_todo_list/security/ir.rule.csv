@@ -1,0 +1,2 @@
+id,name,model_id:id,groups:id,perm_read,perm_create,perm_write,perm_unlink,domain_force
+if_filters_rule,Read access on user filters,base.model_ir_filters,,1,0,0,0,"['|',('group_ids','in',[g.id for g in user.groups_id]),('group_ids','=',False)]"

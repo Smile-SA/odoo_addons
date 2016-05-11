@@ -1,0 +1,143 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_todo_list
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0-20150902\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-05 22:10+0000\n"
+"PO-Revision-Date: 2015-10-05 22:10+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_todo_list
+#: field:ir.filters,color:0
+msgid "Color Index"
+msgstr "Couleur"
+
+#. module: smile_todo_list
+#: field:ir.filters.category,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_todo_list
+#: field:ir.filters.category,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_todo_list
+#: model:ir.filters.category,name:smile_todo_list.ir_filters_categ_3
+msgid "Delegate"
+msgstr "Déléguer"
+
+#. module: smile_todo_list
+#: view:ir.filters:smile_todo_list.ir_filters_view_kanban
+msgid "Delete"
+msgstr "Supprimer"
+
+#. module: smile_todo_list
+#: model:ir.filters.category,name:smile_todo_list.ir_filters_categ_1
+msgid "Do First"
+msgstr "Faire en premier"
+
+#. module: smile_todo_list
+#: model:ir.filters.category,name:smile_todo_list.ir_filters_categ_4
+msgid "Don't"
+msgstr "Ne pas faire"
+
+#. module: smile_todo_list
+#: view:ir.filters:smile_todo_list.ir_filters_view_kanban
+msgid "Edit..."
+msgstr "Editer..."
+
+#. module: smile_todo_list
+#. openerp-web
+#: code:addons/smile_todo_list/static/src/js/search.js:46
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_todo_list
+#. openerp-web
+#: code:addons/smile_todo_list/static/src/js/search.js:46
+#, python-format
+msgid "Filter name is required."
+msgstr "Un libellé est obligatoire"
+
+#. module: smile_todo_list
+#: model:ir.model,name:smile_todo_list.model_ir_filters
+msgid "Filters"
+msgstr "Filtres"
+
+#. module: smile_todo_list
+#: model:ir.model,name:smile_todo_list.model_ir_filters_category
+msgid "Filters Category"
+msgstr "Catégorie de filtres"
+
+#. module: smile_todo_list
+#: field:ir.filters.category,fold:0
+msgid "Folded by Default"
+msgstr "Replié par défaut"
+
+#. module: smile_todo_list
+#: field:ir.filters,group_ids:0
+msgid "Groups"
+msgstr "Groupes"
+
+#. module: smile_todo_list
+#: field:ir.filters.category,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_todo_list
+#: field:ir.filters.category,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_todo_list
+#: field:ir.filters.category,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_todo_list
+#: field:ir.filters.category,name:0
+msgid "Name"
+msgstr "Libellé"
+
+#. module: smile_todo_list
+#: model:ir.filters.category,name:smile_todo_list.ir_filters_categ_2
+msgid "Schedule"
+msgstr "Planifier"
+
+#. module: smile_todo_list
+#: field:ir.filters.category,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: smile_todo_list
+#: model:ir.actions.act_window,name:smile_todo_list.action_todo_list
+#: model:ir.ui.menu,name:smile_todo_list.menu_todo_list
+msgid "To-do"
+msgstr "Todo list"
+
+#. module: smile_todo_list
+#: model:ir.actions.act_window,name:smile_todo_list.ir_filters_category_action
+#: view:ir.filters.category:smile_todo_list.ir_filters_category_view_tree
+#: model:ir.ui.menu,name:smile_todo_list.ir_filters_category_menu
+msgid "To-do Categories"
+msgstr "Catégories de Todo"
+
+#. module: smile_todo_list
+#: field:ir.filters,category_id:0
+msgid "Todo category"
+msgstr "Catégorie de Todo"
+
+#. module: smile_todo_list
+#: field:ir.filters,todo_list:0
+msgid "Todo list"
+msgstr "Todo list"
