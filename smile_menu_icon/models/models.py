@@ -19,82 +19,32 @@
 #
 ##############################################################################
 
-import operator
-
-from openerp import api, tools
-from openerp.osv import fields, osv
+from openerp import api, tools, models, fields
 
 
-class ir_ui_menu(osv.osv):
+class IrUiMenu(models.Model):
     _inherit = 'ir.ui.menu'
 
-    # TODO : Change this, find another way to add fa_icon in fields
-    # TODO : Old api -> New api
+    fa_icon = fields.Char('Font Awesome Icon', help='Given icon must appear on the left of menu label.')
 
-    @api.cr_uid_context
-    @tools.ormcache_context('uid', keys=('lang',))
-    def load_menus_root(self, cr, uid, context=None):
-        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data', 'fa_icon']
-        menu_root_ids = self.get_user_roots(cr, uid, context=context)
-        menu_roots = self.read(cr, uid, menu_root_ids, fields, context=context) if menu_root_ids else []
-        return {
-            'id': False,
-            'name': 'root',
-            'parent_id': [-1, ''],
-            'children': menu_roots,
-            'all_menu_ids': menu_root_ids,
-        }
+    @api.multi
+    def read(self, fields=None, load='_classic_read'):
+        fields = fields or []
+        fields += self._context.get('new_menu_fields_to_read', [])
+        return super(IrUiMenu, self).read(fields, load)
 
-    @api.cr_uid_context
-    @tools.ormcache_context('uid', 'debug', keys=('lang',))
-    def load_menus(self, cr, uid, debug, context=None):
-        """ Loads all menu items (all applications and their sub-menus).
+    @api.model
+    @tools.ormcache_context(keys=('lang',))
+    def load_menus_root(self):
+        self = self.with_context(new_menu_fields_to_read=['fa_icon'])
+        res = super(IrUiMenu, self).load_menus_root()
+        self = self.with_context(new_menu_fields_to_read=[])
+        return res
 
-        :return: the menu root
-        :rtype: dict('children': menu_nodes)
-        """
-        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data', 'fa_icon']
-        menu_root_ids = self.get_user_roots(cr, uid, context=context)
-        menu_roots = self.read(cr, uid, menu_root_ids, fields, context=context) if menu_root_ids else []
-        menu_root = {
-            'id': False,
-            'name': 'root',
-            'parent_id': [-1, ''],
-            'children': menu_roots,
-            'all_menu_ids': menu_root_ids,
-        }
-        if not menu_roots:
-            return menu_root
-
-        # menus are loaded fully unlike a regular tree view, cause there are a
-        # limited number of items (752 when all 6.1 addons are installed)
-        menu_ids = self.search(cr, uid, [('id', 'child_of', menu_root_ids)], 0, False, False, context=context)
-        menu_items = self.read(cr, uid, menu_ids, fields, context=context)
-        # adds roots at the end of the sequence, so that they will overwrite
-        # equivalent menu items from full menu read when put into id:item
-        # mapping, resulting in children being correctly set on the roots.
-        menu_items.extend(menu_roots)
-        menu_root['all_menu_ids'] = menu_ids  # includes menu_root_ids!
-
-        # make a tree using parent_id
-        menu_items_map = dict(
-            (menu_item["id"], menu_item) for menu_item in menu_items)
-        for menu_item in menu_items:
-            if menu_item['parent_id']:
-                parent = menu_item['parent_id'][0]
-            else:
-                parent = False
-            if parent in menu_items_map:
-                menu_items_map[parent].setdefault(
-                    'children', []).append(menu_item)
-
-        # sort by sequence a tree using parent_id
-        for menu_item in menu_items:
-            menu_item.setdefault('children', []).sort(
-                key=operator.itemgetter('sequence'))
-
-        return menu_root
-
-    _columns = {
-        'fa_icon': fields.char('Font Awesome Icon'),
-    }
+    @api.model
+    @tools.ormcache_context('debug', keys=('lang',))
+    def load_menus(self, debug):
+        self = self.with_context(new_menu_fields_to_read=['fa_icon'])
+        res = super(IrUiMenu, self).load_menus(debug)
+        self = self.with_context(new_menu_fields_to_read=[])
+        return res
