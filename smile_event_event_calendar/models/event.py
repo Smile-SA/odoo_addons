@@ -25,8 +25,6 @@ from openerp import models, fields, api
 class EventEvent(models.Model):
     _inherit = 'event.event'
 
-    calendar_event_id = fields.Many2one('calendar.event', 'Calendar Event', ondelete='restrict', readonly=True)
-
     @api.model
     def create(self, vals):
         event = super(EventEvent, self).create(vals)
@@ -42,15 +40,12 @@ class EventEvent(models.Model):
                                'partner_ids': [(6, 0, [])],
                                'event_event_id': event.id, }
         ce_id = self.env['calendar.event'].create(calendar_event_vals)
-        event.calendar_event_id = ce_id
         return event
 
     @api.multi
     def write(self, vals):
         calendar_event_vals = {}
         onchange_date = []
-        if 'caldendar_event_id' in vals:
-            del vals['calendar_event_id']
         if vals.get('name'):
             calendar_event_vals['name'] = vals.get('name')
         if vals.get('date_begin'):
@@ -63,11 +58,13 @@ class EventEvent(models.Model):
             calendar_event_vals['location'] = self.env['res.partner'].sudo().browse(vals.get('address_id')).name
         res = super(EventEvent, self).write(vals)
         if calendar_event_vals and not self._context.get('from_calendar'):
-            self.calendar_event_id.write(calendar_event_vals)
-            allday = self.calendar_event_id.allday
-            for fromtype in onchange_date:
-                start = calendar_event_vals.get('start_datetime', False)
-                end = calendar_event_vals.get('stop_datetime', False)
-                self.calendar_event_id.with_context(from_event=True).onchange_dates(fromtype, start, end, allday,
-                                                                                    allday)
+            calendar_event_ids = self.env['calendar.event'].search([('event_event_id', 'in', self.ids)])
+            calendar_event_ids.write(calendar_event_vals)
+            for calendar_event_id in calendar_event_ids:
+                allday = calendar_event_id.allday
+                for fromtype in onchange_date:
+                    start = calendar_event_vals.get('start_datetime', False)
+                    end = calendar_event_vals.get('stop_datetime', False)
+                    calendar_event_id.with_context(from_event=True).onchange_dates(fromtype, start, end, allday,
+                                                                                   allday)
         return res
