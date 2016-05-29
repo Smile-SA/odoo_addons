@@ -26,11 +26,13 @@ from openerp.exceptions import Warning
 class CalendarEvent(models.Model):
     _inherit = 'calendar.event'
 
-    event_event_id = fields.Many2one('event.event', string='Event', ondelete='restrict', readonly=True)
+    event_event_id = fields.Many2one('event.event', string='Event', ondelete='cascade', readonly=True)
 
     @api.multi
     def write(self, vals):
         event_ids = self.mapped('event_event_id')
+        if event_ids and 'event_event_id' in vals and not vals.get('event_event_id'):
+            raise Warning(_('You cannot change event value if is already assign'))
         event_vals = {}
         if 'start_datetime' in vals:
             event_vals['date_begin'] = vals.get('start_datetime')
