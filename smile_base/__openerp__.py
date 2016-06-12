@@ -60,6 +60,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         "data/ir_lang.yml",
         "data/im_odoo_support.yml",
         "data/ir_module_menu.yml",
+        "data/warning_data.xml",
         "views/ir_values_view.xml",
         "views/template.xml",
         'views/webclient_templates.xml',
