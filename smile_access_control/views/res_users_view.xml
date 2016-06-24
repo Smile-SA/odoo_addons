@@ -26,6 +26,21 @@
       <field name="view_id" ref="view_res_user_form"/>
     </record>
 
+    <!--Add information on profile of the users in tree view-->
+    <record id="view_users_tree" model="ir.ui.view">
+      <field name="name">esg.res.users.tree</field>
+      <field name="model">res.users</field>
+      <field name="inherit_id" ref="base.view_users_tree"/>
+      <field name="priority">10</field>
+      <field name="arch" type="xml">
+        <data>
+          <field name="login" position="before">
+            <field name="user_profile_id"/>
+          </field>
+        </data>
+      </field>
+    </record>
+
     <!-- Profiles -->
     <!-- Add page for technical profile configuration-->
     
