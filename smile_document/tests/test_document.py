@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from mock import patch
 
 import openerp.tests.common as common
 from openerp.exceptions import Warning
@@ -34,20 +34,21 @@ class test_document(common.TransactionCase):
 
     def test_create_document(self):
         docType1 = self.ir_attachment_type.create({'name': 'Doc Type Test 1'})
-        today = datetime.now().date()
-        # Create Valid Doc
-        d1 = today.replace(month=today.month + 2)
-        vals1 = {'name': 'Demo1', 'document_type_id': docType1.id, 'expiry_date': d1}
-        doc1 = self.ir_attachment.create(vals1)
-        self.assertEquals('valid', doc1.status)
-        # Archive Doc
-        doc1.write({'archived': True})
-        self.assertEquals('archived', doc1.status)
-        # Create Expired Doc
-        d2 = today.replace(day=today.day - 1)
-        vals2 = {'name': 'Demo2', 'document_type_id': docType1.id, 'expiry_date': d2}
-        doc2 = self.ir_attachment.create(vals2)
-        self.assertEquals('expired', doc2.status)
+        with patch('openerp.fields.Date') as mock_date:
+            mock_date.today.return_value = '2016-04-01'
+            # Create Valid Doc
+            vals1 = {'name': 'Demo1', 'document_type_id': docType1.id, 'expiry_date': '2016-06-01'}
+            doc1 = self.ir_attachment.create(vals1)
+            self.assertEquals('valid', doc1.status)
+            # Archive Doc
+            doc1.write({'archived': True})
+            self.assertEquals('archived', doc1.status)
+        with patch('openerp.fields.Date') as mock_date:
+            mock_date.today.return_value = '2016-04-01'
+            # Create Expired Doc
+            vals2 = {'name': 'Demo2', 'document_type_id': docType1.id, 'expiry_date': '2016-03-12'}
+            doc2 = self.ir_attachment.create(vals2)
+            self.assertEquals('expired', doc2.status)
 
     def test_unlink_document_type(self):
         """
