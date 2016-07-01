@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api
+from openerp import models, api
 
 
 class EventEvent(models.Model):
@@ -39,7 +39,7 @@ class EventEvent(models.Model):
                                'show_as': 'free',
                                'partner_ids': [(6, 0, [])],
                                'event_event_id': event.id, }
-        ce_id = self.env['calendar.event'].create(calendar_event_vals)
+        self.env['calendar.event'].create(calendar_event_vals)
         return event
 
     @api.multi
