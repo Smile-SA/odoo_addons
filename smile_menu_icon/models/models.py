@@ -36,15 +36,15 @@ class IrUiMenu(models.Model):
     @api.cr_uid_context
     @tools.ormcache_context(accepted_keys=('lang',))
     def load_menus_root(self, cr, uid, context=None):
-        tmp_context = context or {}
-        tmp_context['new_menu_fields_to_read'] = ['fa_icon']
-        res = super(IrUiMenu, self).load_menus_root(cr, uid, context=tmp_context)
+        context = context or {}
+        context['new_menu_fields_to_read'] = ['fa_icon']
+        res = super(IrUiMenu, self).load_menus_root(cr, uid, context=context)
         return res
 
     @api.cr_uid_context
     @tools.ormcache_context(accepted_keys=('lang', ))
     def load_menus(self, cr, uid, context=None):
-        tmp_context = context or {}
-        tmp_context['new_menu_fields_to_read'] = ['fa_icon']
-        res = super(IrUiMenu, self).load_menus(cr, uid, context=tmp_context)
+        context = context or {}
+        context['new_menu_fields_to_read'] = ['fa_icon']
+        res = super(IrUiMenu, self).load_menus(cr, uid, context=context)
         return res
