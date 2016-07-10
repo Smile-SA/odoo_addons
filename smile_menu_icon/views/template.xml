@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="0">
+
+    <template id="smile_menu_icon" name="smile_menu_icon" inherit_id="web.menu_link">
+      <xpath expr="//span[@class='oe_menu_text']" position="replace">
+        <span class="oe_menu_text">
+          <i t-if="menu.get('fa_icon')" t-attf-class="fa fa-fw #{menu['fa_icon']}"/>
+          <t t-esc="menu['name']"/>
+        </span>
+      </xpath>
+    </template>
+
+  </data>
+</openerp>

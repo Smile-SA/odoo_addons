@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Marketing main menu -->
+        <record id="base.marketing_menu" model="ir.ui.menu">
+            <field name="fa_icon">fa fa-star</field>
+        </record>
+
+        <!-- Sales main menu -->
+        <record id="base.menu_base_partner" model="ir.ui.menu">
+            <field name="fa_icon">fa fa-eur</field>
+        </record>
+
+        <!-- Project main menu -->
+        <record id="base.menu_main_pm" model="ir.ui.menu">
+            <field name="fa_icon">fa fa-calendar</field>
+        </record>
+
+        <!-- Accounting main menu -->
+        <record id="account.menu_finance" model="ir.ui.menu">
+            <field name="fa_icon">fa fa-file-text-o</field>
+        </record>
+
+        <!-- Reporting main menu -->
+        <record id="base.menu_reporting" model="ir.ui.menu">
+            <field name="fa_icon">fa fa-bar-chart</field>
+        </record>
+
+        <!-- Website main menu -->
+        <record id="website.menu_website" model="ir.ui.menu">
+            <field name="fa_icon">fa fa-wifi</field>
+        </record>
+
+        <!-- Warehouse main menu -->
+        <record id="stock.menu_stock_root" model="ir.ui.menu">
+            <field name="fa_icon">fa fa-building</field>
+        </record>
+
+        <!-- Settings main menu -->
+        <record id="base.menu_administration" model="ir.ui.menu">
+            <field name="fa_icon">fa fa-cogs</field>
+        </record>
+
+    </data>
+</openerp>
