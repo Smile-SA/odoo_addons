@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import importlib
+import inspect
 import logging
 import os
 import types
@@ -76,6 +78,33 @@ class IrModuleModule(models.Model):
         return res
 
     @staticmethod
+    def get_test_modules(module):
+        """
+        Returns the list of files starting by "test_" inside a module.
+        Search recursively inside tests directory, so tests can be places inside subdirectories.
+
+        @param module: module name (str)
+        @return: list
+        """
+        def inspect_module(mod):
+            result = []
+            for name, mod_obj in inspect.getmembers(mod, inspect.ismodule):
+                if name.startswith('test_'):
+                    result.append(mod_obj)
+                else:
+                    result += inspect_module(mod_obj)
+            return result
+
+        modpath = 'openerp.addons.' + module
+        try:
+            mod = importlib.import_module('.tests', modpath)
+        except Exception, e:
+            if str(e) != 'No module named tests':
+                _logger.exception('Can not `import %s`.', module)
+            return []
+        return inspect_module(mod)
+
+    @staticmethod
     def _get_unit_test_comments(module_name):
         """Returns a list of tuple (basename of the file, path of the file, list of comments of the file).
 
@@ -83,7 +112,7 @@ class IrModuleModule(models.Model):
         """
         res = []
 
-        module_tests = modules.module.get_test_modules(module_name)
+        module_tests = IrModuleModule.get_test_modules(module_name)
         for module_test in module_tests:
             module_test_file = module_test.__file__
             if module_test_file.endswith('.pyc'):
