@@ -50,7 +50,8 @@ odoo.define('web_search_range', function (require) {
                         {value: "<=", text: _lt("less or equal than")},
                     ];
 		        if (value1 && value2) {
-			        condition['attrs']['string'] += _.str.sprintf(_t(' and "%(value)s"'), {value: value2});
+					var formated_value2 = openerp.web.format_value(value2, {type: field.type});;
+			        condition['attrs']['string'] += _.str.sprintf(_t(' and "%(value)s"'), {value: formated_value2});
                     var first_condition = condition['attrs']['domain'][0];
                     var second_condition = condition['attrs']['domain'][0];
                     first_condition[1] = ">=";
