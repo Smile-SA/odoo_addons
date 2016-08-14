@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0-20150317\n"
+"Project-Id-Version: Odoo Server 9.0c-20160804\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-31 19:18+0000\n"
-"PO-Revision-Date: 2015-03-31 19:18+0000\n"
+"POT-Creation-Date: 2016-08-14 13:53+0000\n"
+"PO-Revision-Date: 2016-08-14 13:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -15,58 +15,64 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#: field:mail.thread,create_uid:0
 #. module: smile_followers
+#: model:ir.model.fields,field_description:smile_followers.field_mail_thread_attachment_ids
+msgid "Attachments"
+msgstr "Pièces jointes"
+
+#. module: smile_followers
+#: model:ir.model.fields,field_description:smile_followers.field_mail_thread_create_uid
 msgid "Created by"
 msgstr "Créé par"
 
-#: field:mail.thread,create_date:0
 #. module: smile_followers
+#: model:ir.model.fields,field_description:smile_followers.field_mail_thread_create_date
 msgid "Created on"
 msgstr "Créé le"
 
-#: field:res.users,disable_auto_subscribe:0
 #. module: smile_followers
+#: model:ir.model.fields,field_description:smile_followers.field_res_users_disable_auto_subscribe
 msgid "Disable auto subscribe"
 msgstr "Désactiver l'auto souscription"
 
-#: model:ir.model,name:smile_followers.model_mail_thread
 #. module: smile_followers
+#: model:ir.model,name:smile_followers.model_mail_thread
 msgid "Email Thread"
 msgstr "Discussion par courriel"
 
-#: help:res.users,disable_auto_subscribe:0
 #. module: smile_followers
+#: model:ir.model.fields,help:smile_followers.field_res_users_disable_auto_subscribe
 msgid "If checked, this user will not receive notifications on instances he created"
 msgstr "Si coché, cet utilisateur ne recevra pas de notifications sur les instances créées par lui"
 
-#: field:mail.thread,write_uid:0
 #. module: smile_followers
+#: model:ir.model.fields,field_description:smile_followers.field_mail_thread_write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
-#: field:mail.thread,write_date:0
 #. module: smile_followers
+#: model:ir.model.fields,field_description:smile_followers.field_mail_thread_write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
-#: help:res.partner,notification_model_ids:0
 #. module: smile_followers
+#: model:ir.model.fields,help:smile_followers.field_res_partner_notification_model_ids
+#: model:ir.model.fields,help:smile_followers.field_res_users_notification_model_ids
 msgid "Models that the partner can follow"
 msgstr "Modèles que le partenaire peut suivre"
 
-#: field:res.partner,notification_model_ids:0
 #. module: smile_followers
+#: model:ir.model.fields,field_description:smile_followers.field_res_partner_notification_model_ids
+#: model:ir.model.fields,field_description:smile_followers.field_res_users_notification_model_ids
 msgid "Notifications on"
 msgstr "Notifications sur"
 
-#: model:ir.model,name:smile_followers.model_res_partner
 #. module: smile_followers
+#: model:ir.model,name:smile_followers.model_res_partner
 msgid "Partner"
 msgstr "Partenaire"
 
-#: model:ir.model,name:smile_followers.model_res_users
 #. module: smile_followers
+#: model:ir.model,name:smile_followers.model_res_users
 msgid "Users"
 msgstr "Utilisateurs"
-
