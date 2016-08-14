@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="0">
+
+    <!-- Demo Data -->
+
+    <!-- Holidays -->
+
+    <record id="res_holidays_date_demo_noel" model="res.holidays.date">
+      <field name="name">Noël 2015</field>
+      <field name="start_date">2015-12-19</field>
+      <field name="end_date">2016-01-04</field>
+      <field name="area_ids"
+        eval="[(4, ref('res_holidays_area_a')),
+               (4, ref('res_holidays_area_b')),
+               (4, ref('res_holidays_area_c')),
+               (4, ref('res_holidays_area_corse'))]"/>
+    </record>
+
+  </data>
+</openerp>
