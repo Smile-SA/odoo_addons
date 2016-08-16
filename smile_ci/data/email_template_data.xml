@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="0">
+
+    <record id="email_template_build_result" model="mail.template">
+      <field name="name">Send build result</field>
+      <field name="model_id" ref="smile_ci.model_scm_repository_branch_build"/>
+      <field name="subject">[Odoo-CI] ${object.branch_id.name | safe} ${object.branch_id.branch} - Build ${object.id} - ${ctx.get('subject', '')}</field>
+      <field name="body_html"><![CDATA[<p><b><a href="${ctx.get('build_url', '')}">${object.branch_id.name | safe} ${object.branch_id.branch} - Build ${object.id} - ${ctx.get('subject', '')}</a></b></p>
+% if object.result in ('stable', 'unstable'):
+  <ul>
+    <li>${object.failed_test_ratio} failed tests</li>
+    <li>${object.quality_code_count} quality errors</li>
+    <li>${'{0:.2f}'.format(object.coverage_avg)} coverage average</li>
+  </ul>
+% endif
+
+% if object.result == 'failed' and object.quality_code_count:
+  <ul>
+    <li>${object.quality_code_count} quality errors</li>
+  </ul>
+% endif
+
+% if ctx.get('commit_logs'):
+  <p><b>Last commits:</b><br/>${ctx['commit_logs'] | safe}</p>
+% endif
+
+% if ctx.get('build_error'):
+  <p><b>Build creation failed</b></p>
+  <p><em>Error message:</em></p>
+  ${ctx['build_error'] | safe}
+% endif]]>
+      </field>
+    </record>
+
+  </data>
+</openerp>

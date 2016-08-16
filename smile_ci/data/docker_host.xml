@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="defaut_docker_host" model="docker.host">
+            <field name="docker_base_url">unix://var/run/docker.sock</field>
+            <field name="tls" eval="False"/>
+            <field name="redirect_subdomain_to_port" eval="False"/>
+            <field name="build_base_url">http://localhost</field>
+        </record>
+
+    </data>
+</openerp>

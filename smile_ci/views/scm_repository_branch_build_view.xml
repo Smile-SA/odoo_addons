@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="0">
+
+    <record id="view_repository_branch_build_search" model="ir.ui.view">
+      <field name="name">scm.repository.branch.build.search</field>
+      <field name="model">scm.repository.branch.build</field>
+      <field name="arch" type="xml">
+        <search string="Builds">
+          <field name="id" string="Number"/>
+          <field name="branch_id"/>
+          <field name="port"/>
+          <field name="state"/>
+          <field name="result"/>
+          <field name="date_start"/>
+          <field name="date_stop"/>
+          <field name="time"/>
+          <field name="age"/>
+          <field name="is_to_keep"/>
+          <filter name="my" string="My" domain="[('branch_id.user_ids', 'in', uid)]"/>
+          <newline/>
+          <filter name="keep_alive" string="Keep alive" domain="[('is_to_keep', '=', True)]"/>
+          <filter name="dont_keep_alive" string="Don't keep alive" domain="[('is_to_keep', '=', False)]"/>
+          <group string="Group By" expand="0">
+            <filter name="group_by_branch" string="Branch" context="{'group_by': 'branch_id'}"/>
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <record id="view_repository_branch_build_tree" model="ir.ui.view">
+      <field name="name">scm.repository.branch.build.tree</field>
+      <field name="model">scm.repository.branch.build</field>
+      <field name="arch" type="xml">
+        <tree string="Builds" create="false" colors="blue:result=='stable';orange:result=='unstable';red:result=='failed';grey:result=='killed'">
+          <field name="id" string="Number"/>
+          <field name="branch_id"/>
+          <field name="port"/>
+          <field name="state"/>
+          <field name="result"/>
+          <field name="time_human"/>
+          <field name="age_human"/>
+          <field name="last_build_time_human"/>
+          <field name="coverage_avg" widget="progressbar"/>
+          <field name="is_to_keep" invisible="1"/>
+          <field name="is_killable" invisible="1"/>
+          <button name="open" type="object" string="Open" icon="fa-sign-in"
+            attrs="{'invisible': [('state', '!=', 'running')]}"/>
+          <button name="show_logs" type="object" string="Show logs" icon="fa-file-text-o"
+            attrs="{'invisible': ['|', ('is_killable', '=', False), ('state', '=', 'done')]}"/>
+          <button name="stop_container" type="object" string="Stop" icon="fa-stop" groups="smile_scm.group_scm_user"
+            attrs="{'invisible': ['|', ('is_killable', '=', False), ('state', '=', 'done')]}"/>
+          <button name="keep_alive" type="object" string="Keep alive" icon="fa-lock" groups="smile_scm.group_scm_user"
+            attrs="{'invisible': ['|', ('state', '!=', 'running'), ('is_to_keep', '=', True)]}"/>
+          <button name="keep_alive" type="object" string="Don't keep alive" icon="fa-unlock-alt" groups="smile_scm.group_scm_user"
+            attrs="{'invisible': ['|', ('state', '!=', 'running'), ('is_to_keep', '=', False)]}"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_repository_branch_build_graph" model="ir.ui.view">
+      <field name="name">scm.repository.branch.build.graph</field>
+      <field name="model">scm.repository.branch.build</field>
+      <field name="arch" type="xml">
+        <graph string="Builds" type="line">
+          <field name="branch_id" type="row"/>
+          <field name="result" type="col"/>
+        </graph>
+      </field>
+    </record>
+
+    <record id="view_repository_branch_build_form" model="ir.ui.view">
+      <field name="name">scm.repository.branch.build.form</field>
+      <field name="model">scm.repository.branch.build</field>
+      <field name="arch" type="xml">
+        <form string="Build">
+          <header>
+          	<field name="is_killable" invisible="1"/>
+            <button name="open" type="object" states="running" string="Open" class="btn-info"/>
+            <button name="keep_alive" type="object" string="Keep alive" class="btn-warning" groups="smile_scm.group_scm_user"
+              attrs="{'invisible': ['|', ('state', '!=', 'running'), ('is_to_keep', '=', True)]}"/>
+            <button name="keep_alive" type="object" string="Don't keep alive" groups="smile_scm.group_scm_user"
+              attrs="{'invisible': ['|', ('state', '!=', 'running'), ('is_to_keep', '=', False)]}"/>
+            <button name="stop_container" type="object" string="Stop" class="btn-danger" groups="smile_scm.group_scm_user"
+              attrs="{'invisible': ['|', ('is_killable', '=', False), ('state', '=', 'done')]}"/>
+            <button name="show_logs" type="object" string="Show logs"
+              attrs="{'invisible': ['|', ('is_killable', '=', False), ('state', '=', 'done')]}"/>
+            <field name="state" widget="statusbar" statusbar_visible="pending,testing"/>
+          </header>
+          <sheet>
+            <div class="oe_button_box" name="button_box" attrs="{'invisible': ['|', ('result', '=', 'killed'), ('state', 'not in', ('running', 'done'))]}">
+              <button class="oe_inline oe_stat_button" name="%(action_build_failed_test)d" type="action" icon="fa-smile-o"
+                attrs="{'invisible': [('failed_test_count','&gt;', 0)]}">
+                <field string="Failed tests" name="failed_test_ratio" widget="statinfo"/>
+              </button>
+              <button class="oe_inline oe_stat_button" name="%(action_build_failed_test)d" type="action" icon="fa-frown-o"
+                attrs="{'invisible': [('failed_test_count', '=', 0)]}">
+                <field string="Failed tests" name="failed_test_ratio" widget="statinfo"/>
+              </button>
+              <button class="oe_inline oe_stat_button" name="%(action_build_quality_code)d" type="action" icon="fa-code">
+                <field string="Quality errors" name="quality_code_count" widget="statinfo"/>
+              </button>
+              <button class="oe_inline oe_stat_button" name="%(action_build_coverage)d" type="action">
+                <field string="Coverage" name="coverage_avg" widget="percentpie"/>
+              </button>
+              <field name="failed_test_count" invisible="1"/>
+            </div>
+            <div class="oe_title">
+              <h1>
+                <field name="branch_id" class="oe_inline"/> #<field name="id" class="oe_inline"/>
+              </h1>
+            </div>
+            <group col="2">
+              <group>
+                <field name="result"/>
+                <field name="time_human"/>
+                <field name="age_human"/>
+              </group>
+              <group>
+                <field name="host"/>
+                <field name="port"/>
+                <field name="is_to_keep" attrs="{'invisible': [('state', '!=', 'running')]}"/>
+              </group>
+              <group colspan="2">
+                <field name="revno"/>
+                <field name="commit_logs"/>
+              </group>
+            </group>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers"/>
+            <field name="message_ids" widget="mail_thread"/>
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_build_show_server_logs" model="ir.ui.view">
+      <field name="name">build.show.server.logs</field>
+      <field name="model">scm.repository.branch.build</field>
+      <field name="priority">1000</field>
+      <field name="arch" type="xml">
+        <form string="Server Logs">
+          <field name="server_logs"/>
+          <footer>
+            <button string="Refresh" name="show_logs" type="object"/>
+            <button string="Close" class="oe_highlight" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_repository_branch_build">
+      <field name="name">Builds</field>
+      <field name="res_model">scm.repository.branch.build</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form,graph</field>
+      <field name="view_id" ref="view_repository_branch_build_tree"/>
+      <field name="search_view_id" ref="view_repository_branch_build_search"/>
+      <field name="context">{'search_default_my': user.id != 1}</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_branch_builds">
+      <field name="name">Builds</field>
+      <field name="res_model">scm.repository.branch.build</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form,graph</field>
+      <field name="view_id" ref="view_repository_branch_build_tree"/>
+      <field name="search_view_id" ref="view_repository_branch_build_search"/>
+      <field name="domain">[('branch_id', '=', active_id)]</field>
+    </record>
+
+  </data>
+</openerp>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="0">
+
+    <record id="smile_scm.view_repository_branch_build_kanban" model="ir.ui.view">
+      <field name="name">scm.repository.branch.build.kanban</field>
+      <field name="model">scm.repository.branch.build</field>
+      <field name="arch" type="xml">
+        <kanban create="false" string="Builds" default_group_by="branch_id" class="o_kanban_dashboard">
+          <field name="result"/>
+          <field name="state"/>
+          <field name="is_killable"/>
+          <field name="is_to_keep"/>
+          <field name="failed_test_count"/>
+          <field name="coverage_avg"/>
+          <templates>
+            <t t-name="kanban-box">
+              <div t-attf-class="#{kanban_color(record.result.raw_value == 'stable' and 5 or (record.result.raw_value == 'unstable' and 3) or (record.result.raw_value == 'failed' and 2) or (record.result.raw_value == 'killed' and 1) or 0)}">
+                <t t-call="BuildHeader"/>
+                <div class="container o_kanban_card_content o_visible">
+                  <t t-call="BuildBody"/>
+                </div>
+              </div>
+            </t>
+            <t t-name="BuildHeader">
+              <div class="o_kanban_card_header">
+                <div class="o_kanban_card_header_title">
+                  <a type="edit">
+                    <div class="o_primary">
+                      #<field name="id" class="oe_inline"/> 
+                      <field name="state" class="oe_inline" t-if="record.state.raw_value != 'running' and record.state.raw_value != 'done'"/>
+                      <field name="result" class="oe_inline" t-if="record.state.raw_value == 'running' or record.state.raw_value == 'done'"/>
+                    </div>
+                  </a>
+                  <div class="o_secondary">
+                    Age: <field name="age_human"/> - Runtime: <field name="time_human"/>
+                  </div>
+                </div>
+                <div class="col-xs-4">
+                  <div class="row btn-group pull-right">
+                    <button class="btn" name="keep_alive" type="object" string="Keep alive" groups="smile_scm.group_scm_user"
+                      t-if="record.state.raw_value == 'running' and !record.is_to_keep.raw_value">
+                      <i class="fa fa-lock"/>
+                    </button>
+                    <button class="btn" name="keep_alive" type="object" string="Unkeep alive" groups="smile_scm.group_scm_user"
+                      t-if="record.state.raw_value == 'running' and record.is_to_keep.raw_value">
+                      <i class="fa fa-unlock-alt"/>
+                    </button>
+                    <button class="btn btn-primary" name="open" type="object" string="Open" t-if="record.state.raw_value == 'running'">
+                      <i class="fa fa-sign-in"/>
+                    </button>
+                  </div>
+                  <div class="row btn-group pull-right" t-if="record.state.raw_value == 'running' and record.is_killable.raw_value">
+                    <button class="btn" name="stop_container" type="object" string="Stop" groups="smile_scm.group_scm_user">
+                      <i class="fa fa-stop"/>
+                    </button>
+                    <button class="btn" name="show_logs" type="object" string="Show logs">
+                      <i class="fa fa-file-text-o"/>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </t>
+            <t t-name="BuildBody">
+              <div class="row" t-if="record.result.raw_value != 'killed'">
+                <div class="col-xs-4">
+                  <i t-attf-class="fa fa-#{record.failed_test_count.raw_count and 'frown' or 'smile'}-o fa-2x"/><br/>
+                  <field name="failed_test_ratio"/><br/>Failed tests
+                </div>
+                <div class="col-xs-4">
+                  <i class="fa fa-code fa-2x"/><br/><field name="quality_code_count"/> Quality errors
+                </div>
+                <div class="col-xs-4">
+                  <i t-attf-class="fa fa-battery-#{record.coverage_avg.raw_value / 0.25} fa-2x"/><br/>
+                  <field name="coverage_avg"/>%<br/>Coverage
+                </div>
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+
+    <!--record id="smile_scm.view_repository_branch_kanban" model="ir.ui.view">
+      <field name="name">scm.repository.branch.kanban</field>
+      <field name="model">scm.repository.branch</field>
+      <field name="arch" type="xml">
+        <kanban create="false" group_create="false" group_edit="false" group_delete="false" group_drag="false" string="Branches" class="o_kanban_dashboard">
+          <field name="last_build_result"/>
+          <templates>
+            <t t-name="kanban-box">
+              <div t-attf-class="#{kanban_color(record.last_build_result.raw_value == 'stable' and 5 or (record.last_build_result.raw_value == 'unstable' and 3) or (record.last_build_result.raw_value == 'failed' and 2) or (record.last_build_result.raw_value == 'unknown' and 1) or 0)}">
+                <t t-call="BranchHeader"/>
+                <div class="container o_kanban_card_content o_visible">
+                  <div class="row">
+                    <t t-call="BranchBody"/>
+                  </div>
+                </div>
+                <div class="container o_kanban_card_manage_pane o_invisible">
+                  <div class="row">
+                    <t t-call="BranchSettings"/>
+                  </div>
+                </div>
+              </div>
+            </t>
+            <t t-name="BranchHeader">
+              <div class="o_kanban_card_header">
+                <div class="o_kanban_card_header_title">
+                  <a type="edit">
+                    <div class="o_primary">
+                      <field name="name"/> <field name="branch"/>
+                    </div>
+                    <div class="o_secondary">
+                      <field name="last_update"/>
+                    </div>
+                  </a>
+                </div>
+                <div class="o_kanban_manage_button_section">
+                  <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
+                </div>
+              </div>
+            </t>
+            <t t-name="BranchBody">
+              <div class="col-xs-6 o_kanban_primary_left">
+                <button name="clone" type="object" class="btn btn-primary btn-sm" groups="smile_scm.group_scm_user"
+                    attrs="{'invisible': ['|', ('use_in_ci', '=', True), ('state', '!=', 'draft')]}"><i class="fa fa-cloud-download"></i></button>
+                <button name="pull" type="object" class="btn btn-primary btn-sm" groups="smile_scm.group_scm_user"
+                    attrs="{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}"><i class="fa fa-refresh"></i></button>
+                <button name="create_build" type="object" class="btn btn-primary btn-sm" groups="smile_scm.group_scm_user"
+                    attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"><i class="fa fa-cogs"></i></button>
+                <a name="force_create_build" type="object" class="oe_inline" groups="smile_scm.group_scm_user"
+                    attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}">Force test</a>
+                <field name="use_in_ci" invisible="1"/>
+                <field name="state" invisible="1"/>
+              </div>
+            </t>
+            <t t-name="BranchSettings">
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record-->
+
+    <record model="ir.actions.act_window" id="smile_scm.action_dashboard">
+      <field name="name">Builds</field>
+      <field name="res_model">scm.repository.branch.build</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">kanban,form</field>
+      <field name="search_view_id" ref="view_repository_branch_build_search"/>
+      <field name="context">{'search_default_my': user.id != 1}</field>
+    </record>
+
+  </data>
+</openerp>

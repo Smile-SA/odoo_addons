@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_repository_search" model="ir.ui.view">
+            <field name="name">scm.repository.search</field>
+            <field name="model">scm.repository</field>
+            <field name="arch" type="xml">
+            	<search string="Repositories">
+            		<field name="name"/>
+            		<field name="vcs_id"/>
+            		<field name="url"/>
+            		<field name="partner_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Version Control Systems" domain="[]" context="{'group_by':'vcs_id'}"/>
+                        <filter string="Owner" domain="[]" context="{'group_by':'partner_id'}"/>
+					</group>
+            	</search>
+            </field>
+        </record>
+
+        <record id="view_repository_tree" model="ir.ui.view">
+            <field name="name">scm.repository.tree</field>
+            <field name="model">scm.repository</field>
+            <field name="arch" type="xml">
+            	<tree string="Repositories">
+            		<field name="name"/>
+            		<field name="vcs_id"/>
+            		<field name="url"/>
+            		<field name="partner_id"/>
+            	</tree>
+            </field>
+        </record>
+
+        <record id="view_repository_form" model="ir.ui.view">
+            <field name="name">scm.repository.form</field>
+            <field name="model">scm.repository</field>
+            <field name="arch" type="xml">
+            	<form string="Repository">
+	                <sheet string="Repository">
+	                    <div class="oe_title">
+	                        <h1><field name="name" placeholder="Name"/></h1>
+	                        <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
+                        </div>
+	                    <group>
+		            		<field name="vcs_id" widget="selection" attrs="{'readonly': [('has_branch_done', '=', True)]}"/>
+		            		<field name="url" attrs="{'readonly': [('has_branch_done', '=', True)]}"/>
+		            		<field name="partner_id"/>
+		            		<field name="has_branch_done" invisible="1"/>
+		            	</group>
+		            	<notebook colspan="4">
+		            		<page string="Branches">
+				            	<field name="branch_ids" colspan="4" context="{'tree_view_ref': 'smile_scm.view_repository_branch_simple_tree'}"/>
+		            		</page>
+		            	</notebook>
+	            	</sheet>
+	                <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+            	</form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_repository">
+            <field name="name">Repositories</field>
+            <field name="res_model">scm.repository</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_repository_tree"/>
+            <field name="search_view_id" ref="view_repository_search"/>
+        </record>
+
+	</data>
+</openerp>

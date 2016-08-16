@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="1">
+
+    <!-- Create builds -->
+    <record id="ir_cron_branch_create_builds_action" model="ir.cron">
+      <field name="name">Create builds</field>
+      <field name="user_id" ref="base.user_root"/>
+      <field name="interval_number">1</field>
+      <field name="interval_type">minutes</field>
+      <field name="numbercall">-1</field>
+      <field eval="False" name="doall"/>
+      <field eval="'scm.repository.branch'" name="model"/>
+      <field eval="'create_builds'" name="function"/>
+      <field eval="'()'" name="args"/>
+    </record>
+
+    <!-- Run pending builds -->
+    <record id="ir_cron_build_run_action" model="ir.cron">
+      <field name="name">Run builds</field>
+      <field name="user_id" ref="base.user_root"/>
+      <field name="interval_number">1</field>
+      <field name="interval_type">minutes</field>
+      <field name="numbercall">-1</field>
+      <field eval="False" name="doall"/>
+      <field eval="'scm.repository.branch.build'" name="model"/>
+      <field eval="'scheduler'" name="function"/>
+      <field eval="'()'" name="args"/>
+    </record>
+
+    <!-- Purge logs -->
+    <record id="ir_cron_purge_logs_action" model="ir.cron">
+      <field name="name">Purge logs</field>
+      <field name="user_id" ref="base.user_root"/>
+      <field name="interval_number">1</field>
+      <field name="interval_type">days</field>
+      <field name="numbercall">-1</field>
+      <field eval="False" name="doall"/>
+      <field eval="'scm.repository.branch.build'" name="model"/>
+      <field eval="'purge_logs'" name="function"/>
+      <field eval="'(1, \'months\')'" name="args"/>
+    </record>
+
+    <!-- Purge builds -->
+    <record id="ir_cron_purge_builds_action" model="ir.cron">
+      <field name="name">Purge builds</field>
+      <field name="user_id" ref="base.user_root"/>
+      <field name="interval_number">1</field>
+      <field name="interval_type">days</field>
+      <field name="numbercall">-1</field>
+      <field eval="False" name="doall"/>
+      <field eval="'scm.repository.branch'" name="model"/>
+      <field eval="'purge_builds'" name="function"/>
+      <field eval="'(6, \'months\')'" name="args"/>
+    </record>
+
+    <!-- Purge Docker images -->
+    <record id="ir_cron_purge_docker_images_action" model="ir.cron">
+      <field name="name">Purge Docker images</field>
+      <field name="user_id" ref="base.user_root"/>
+      <field name="interval_number">1</field>
+      <field name="interval_type">weeks</field>
+      <field name="numbercall">-1</field>
+      <field eval="False" name="doall"/>
+      <field eval="'docker.host'" name="model"/>
+      <field eval="'purge_images'" name="function"/>
+      <field eval="'()'" name="args"/>
+    </record>
+
+  </data>
+</openerp>

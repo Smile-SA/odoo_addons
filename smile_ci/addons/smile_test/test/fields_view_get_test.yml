@@ -1,0 +1,28 @@
+-
+  I test all fields_view_get
+-
+  !python {model: ir.model}: |
+    model_ids = self.search(cr, uid, [], context)
+    errors = []
+    for model in self.browse(cr, uid, model_ids, context):
+        if model.model in ['account.addtmpl.wizard', 'account.common.partner.report', 'account.aged.trial.balance',
+                           'account.partner.balance', 'account.partner.ledger', 'account.analytic.Journal.report',
+                           'base.module.upgrade', 'report.webkit.actions', 'account.analytic.balance', 'account.analytic.chart',
+                           'account.analytic.cost.ledger', 'account.analytic.cost.ledger.journal.report',
+                           'ir.actions.configuration.wizard', 'account.analytic.inverted.balance', 'account.automatic.reconcile',
+                           'account.balance.report', 'account.bank.accounts.wizard', 'account.bs.report', 'account.central.journal',
+                           'account.change.currency', 'account.chart', 'account.common.account.report', 'account.common.journal.report',
+                           'account.common.report', 'account.fiscalyear.close', 'account.fiscalyear.close.state', 'account.general.journal',
+                           'account.installer', 'account.installer.modules', 'account.invoice.cancel', 'account.invoice.confirm',
+                           'account.invoice.refund', 'aeroo.print_actions']:
+            # Ignore models from server and official addons
+            continue
+        for view_type in ['form', 'tree']:
+            try: 
+                self.pool.get(model.model).fields_view_get(cr, uid, False, view_type, context=context)
+            except Exception, e:
+                err_info = (model.model, view_type, repr(e))
+                errors.append(err_info)
+    if errors:
+        err_details = "\n".join(["(%s, %s): %s" % (model, view_type, err) for model, view_type, err in errors])
+        raise Exception('Error in fields_view_get for models/view_type and error:\n%s' % err_details)

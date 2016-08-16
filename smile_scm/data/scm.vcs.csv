@@ -1,0 +1,5 @@
+id,name,cmd,cmd_clone,cmd_pull,default_branch
+svn,Subversion,svn,checkout %(url)s/%(branch)s,update,trunk
+bzr,Launchpad,bzr,branch %(url)s/%(branch)s,pull,trunk
+git,Git,git,clone --depth 1 -b %(branch)s %(url)s,pull,master
+hg,Mercurial,hg,clone -b %(branch)s %(url)s,pull,default

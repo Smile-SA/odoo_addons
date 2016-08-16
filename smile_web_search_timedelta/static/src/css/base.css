@@ -1,0 +1,8 @@
+.openerp .oe-search-options .searchview_extended_prop_timedelta {
+  width: -webkit-calc(100% - 20px);
+  width: calc(100% - 20px);
+}
+.openerp .oe-search-options .searchview_extended_prop_timedelta > select, .openerp .oe-search-options .searchview_extended_prop_timedelta_value > input {
+  width: -webkit-calc(100% - 20px);
+  width: calc(100% - 20px);
+}
