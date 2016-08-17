@@ -349,20 +349,14 @@ class Build(models.Model):
                 'ppid': os.getpid(),
             })
             # Use a new thread in order to launch other build tests without waiting the end of the first one
-            new_thread = Thread(target=self._test_in_new_thread, args=(build,))
+            new_thread = Thread(target=self._test_in_new_thread, args=(build.id,))
             new_thread.start()
             time.sleep(0.1)  # ?!!
 
     @api.model
-    def image_exists_in_registry(self):
-        # TODO: implements me
-        # check if self._get_image_name() exists in Docker registry
-        return False
-
-    @api.model
-    def _test_in_new_thread(self, build):
+    def _test_in_new_thread(self, build_id):
         with api.Environment.manage():
-            return self.browse(build)._test()
+            return self.browse(build_id)._test()
 
     @api.multi
     @with_new_cursor(False)
@@ -370,11 +364,10 @@ class Build(models.Model):
         self.ensure_one()
         _logger.info('Testing build %s...' % self.id)
         try:
-            if not self.image_exists_in_registry():
-                self._create_configfile()
-                self._create_dockerfile()
-                self._build_image()
-                self._remove_directory()
+            self._create_configfile()
+            self._create_dockerfile()
+            self._build_image()
+            self._remove_directory()
             self._run_container()
             time.sleep(5)  # Ensure that Odoo is launched before calling services
             self._check_quality_code()
@@ -685,7 +678,6 @@ class Build(models.Model):
         container = self._get_container_name()
         filepaths = []
         for filename in [CONFIGFILE, COVERAGEFILE, DOCKERFILE, LOGFILE, FLAKE8FILE, TESTFILE]:
-            import pdb; pdb.set_trace()
             filepaths.append(os.path.join(self.branch_id.os_id.odoo_dir, filename))
         for path in self.branch_id.addons_path.replace(' ', '').split(','):
             filename = '%s.cloc' % path.split('/')[-1]
@@ -835,9 +827,9 @@ class Build(models.Model):
             context['commit_logs'] = tools.plaintext2html(self.commit_logs)
         if self._context.get('build_error'):
             context['build_error'] = tools.plaintext2html(self._context['build_error'])
-        template = self.env.ref('smile_ci.email_template_build_result')
-        subject = self.env['email.template'].with_context(context).render_template(template.subject, self._name, self.id)
-        body = self.env['email.template'].with_context(context).render_template(template.body_html, self._name, self.id)
+        template = self.env.ref('smile_ci.mail_template_build_result')
+        subject = self.env['mail.template'].with_context(context).render_template(template.subject, self._name, self.id)
+        body = self.env['mail.template'].with_context(context).render_template(template.body_html, self._name, self.id)
         self.message_post(body=body, subject=subject, subtype='mail.mt_comment', partner_ids=self.branch_id.partner_ids)
 
     @api.one

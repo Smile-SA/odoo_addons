@@ -62,7 +62,7 @@
               </div>
             </t>
             <t t-name="BuildBody">
-              <div class="row" t-if="record.result.raw_value != 'killed'">
+              <div class="row" t-if="record.result.raw_value != 'killed' and (record.state.raw_value == 'running' or record.state.raw_value == 'done')">
                 <div class="col-xs-4">
                   <i t-attf-class="fa fa-#{record.failed_test_count.raw_count and 'frown' or 'smile'}-o fa-2x"/><br/>
                   <field name="failed_test_ratio"/><br/>Failed tests

@@ -35,7 +35,7 @@ class MailComposeMessage(models.TransientModel):
         @param template_id: int, id of the email template
         @param res_id: int, id of the record from where the email is sent
         """
-        template = self.env['email.template'].browse(template_id)
+        template = self.env['mail.template'].browse(template_id)
         # usefull to get template language
         ctx = {'mail_auto_delete': template.auto_delete,
                'mail_notify_user_signature': False,

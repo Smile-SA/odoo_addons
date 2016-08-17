@@ -71,8 +71,7 @@
         </field>
         <button name="pull" position="attributes">
           <attribute name="states"></attribute>
-          <attribute name="attrs">{'invisible': ['|', ('use_in_ci',
-            '=', True), ('state', '=', 'draft')]}</attribute>
+          <attribute name="attrs">{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}</attribute>
         </button>
         <button name="pull" position="after">
           <button name="create_build" string="Test" type="object" class="oe_highlight" groups="smile_scm.group_scm_user"

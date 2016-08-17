@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <template id="assets_backend_extension" inherit_id="web.assets_backend">
+      <xpath expr="." position="inside">
+        <script type="text/javascript" src="/smile_ci/static/src/js/kanban_view.js"></script>
+        <link rel="stylesheet" href="/smile_ci/static/src/css/kanban_view.css"/>
+      </xpath>
+    </template>
+
+  </data>
+</openerp>

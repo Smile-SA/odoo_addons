@@ -71,7 +71,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
         "data/scm_os.xml",
         "data/scm.version.package.csv",
         "data/ir_cron.xml",
-        "data/email_template_data.xml",
+        "data/mail_template_data.xml",
 
         # Views
         "views/scm_repository_branch_build_log_view.xml",
@@ -84,8 +84,11 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
         "views/scm_os_view.xml",
         "views/docker_host_view.xml",
         "views/scm_menu.xml",
+        "views/webclient_templates.xml",
     ],
-    "demo": [
+    "demo": [],
+    "qweb": [
+        'static/src/xml/web_kanban.xml',
     ],
     "auto_install": False,
     "installable": True,

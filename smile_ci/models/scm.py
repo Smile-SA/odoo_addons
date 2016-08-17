@@ -161,6 +161,14 @@ class BranchDependencies(models.Model):
             raise Warning(_("You can't merge the branch with itself!"))
 
 
+class Repository(models.Model):
+    _inherit = 'scm.repository'
+
+    @api.model
+    def create(self, vals):
+        return super(Repository, self.with_context(mail_create_nosubscribe=True)).create(vals)
+
+
 class Branch(models.Model):
     _inherit = 'scm.repository.branch'
 

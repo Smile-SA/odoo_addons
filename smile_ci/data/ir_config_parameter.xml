@@ -4,11 +4,11 @@
 
         <record id="max_testing" model="ir.config_parameter">
             <field name="key">ci.max_testing</field>
-            <field name="value">3</field>
+            <field name="value">8</field>
         </record>
         <record id="max_running" model="ir.config_parameter">
             <field name="key">ci.max_running</field>
-            <field name="value">7</field>
+            <field name="value">17</field>
         </record>
         <record id="port_range" model="ir.config_parameter">
             <field name="key">ci.port_range</field>
@@ -36,7 +36,7 @@
         </record>
         <record id="max_running_by_branch" model="ir.config_parameter">
             <field name="key">ci.max_running_by_branch</field>
-            <field name="value">1</field>
+            <field name="value">2</field>
         </record>
 
     </data>
