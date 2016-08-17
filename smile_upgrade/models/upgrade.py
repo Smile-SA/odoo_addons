@@ -170,16 +170,16 @@ class UpgradeManager(object):
 
     def force_modules_upgrade(self, registry, modules_to_upgrade):
         uid = SUPERUSER_ID
-        with cursor(self.db) as new_cr:
+        with cursor(self.db) as cr:
             with api.Environment.manage():
-                module_obj = registry.get('ir.module.module').with_env(self.env(cr=new_cr))
-                module_obj.update_list()
-                modules = module_obj.search([('name', 'in', modules_to_upgrade),
-                                             ('state', 'in', ('uninstalled', 'to install'))])
-                modules.button_install()
-                modules = module_obj.search([('name', 'in', modules_to_upgrade),
-                                             ('state', 'in', ('installed', 'to upgrade'))])
-                modules.button_upgrade()
+                module_obj = registry.get('ir.module.module')
+                module_obj.update_list(cr, uid)
+                module_ids = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
+                                                      ('state', 'in', ('uninstalled', 'to install'))])
+                module_obj.button_install(cr, uid, module_ids)
+                module_ids = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
+                                                      ('state', 'in', ('installed', 'to upgrade'))])
+                module_obj.button_upgrade(cr, uid, module_ids)
                 cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")
         self._reset_services()
 
