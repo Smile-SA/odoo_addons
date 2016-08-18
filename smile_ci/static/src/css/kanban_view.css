@@ -8,3 +8,7 @@
 .o_column_button a:hover i {
     color: white;
 }
+.btn-nostyle {
+    background: none;
+    border: none;
+}

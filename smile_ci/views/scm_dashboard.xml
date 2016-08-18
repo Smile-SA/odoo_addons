@@ -64,15 +64,21 @@
             <t t-name="BuildBody">
               <div class="row" t-if="record.result.raw_value != 'killed' and (record.state.raw_value == 'running' or record.state.raw_value == 'done')">
                 <div class="col-xs-4">
-                  <i t-attf-class="fa fa-#{record.failed_test_count.raw_count and 'frown' or 'smile'}-o fa-2x"/><br/>
-                  <field name="failed_test_ratio"/><br/>Failed tests
+                  <button class="btn-nostyle" name="%(action_build_failed_test)d" type="action">
+                    <i t-attf-class="fa fa-#{(record.failed_test_count.raw_count or record.failed_test_ratio.raw_value == '0 / 0') and 'frown' or 'smile'}-o fa-2x"/><br/>
+                    <field name="failed_test_ratio"/><br/>Failed tests
+                  </button>
                 </div>
                 <div class="col-xs-4">
-                  <i class="fa fa-code fa-2x"/><br/><field name="quality_code_count"/> Quality errors
+                  <button class="btn-nostyle" name="%(action_build_quality_code)d" type="action">
+                    <i class="fa fa-code fa-2x"/><br/><field name="quality_code_count"/> Quality errors
+                  </button>
                 </div>
                 <div class="col-xs-4">
-                  <i t-attf-class="fa fa-battery-#{record.coverage_avg.raw_value / 0.25} fa-2x"/><br/>
-                  <field name="coverage_avg"/>%<br/>Coverage
+                  <button class="btn-nostyle" name="%(action_build_coverage)d" type="action">
+                    <i t-attf-class="fa fa-battery-#{record.coverage_avg.raw_value / 0.25} fa-2x"/><br/>
+                    <field name="coverage_avg"/>%<br/>Coverage
+                  </button>
                 </div>
               </div>
             </t>
@@ -80,66 +86,6 @@
         </kanban>
       </field>
     </record>
-
-    <!--record id="smile_scm.view_repository_branch_kanban" model="ir.ui.view">
-      <field name="name">scm.repository.branch.kanban</field>
-      <field name="model">scm.repository.branch</field>
-      <field name="arch" type="xml">
-        <kanban create="false" group_create="false" group_edit="false" group_delete="false" group_drag="false" string="Branches" class="o_kanban_dashboard">
-          <field name="last_build_result"/>
-          <templates>
-            <t t-name="kanban-box">
-              <div t-attf-class="#{kanban_color(record.last_build_result.raw_value == 'stable' and 5 or (record.last_build_result.raw_value == 'unstable' and 3) or (record.last_build_result.raw_value == 'failed' and 2) or (record.last_build_result.raw_value == 'unknown' and 1) or 0)}">
-                <t t-call="BranchHeader"/>
-                <div class="container o_kanban_card_content o_visible">
-                  <div class="row">
-                    <t t-call="BranchBody"/>
-                  </div>
-                </div>
-                <div class="container o_kanban_card_manage_pane o_invisible">
-                  <div class="row">
-                    <t t-call="BranchSettings"/>
-                  </div>
-                </div>
-              </div>
-            </t>
-            <t t-name="BranchHeader">
-              <div class="o_kanban_card_header">
-                <div class="o_kanban_card_header_title">
-                  <a type="edit">
-                    <div class="o_primary">
-                      <field name="name"/> <field name="branch"/>
-                    </div>
-                    <div class="o_secondary">
-                      <field name="last_update"/>
-                    </div>
-                  </a>
-                </div>
-                <div class="o_kanban_manage_button_section">
-                  <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
-                </div>
-              </div>
-            </t>
-            <t t-name="BranchBody">
-              <div class="col-xs-6 o_kanban_primary_left">
-                <button name="clone" type="object" class="btn btn-primary btn-sm" groups="smile_scm.group_scm_user"
-                    attrs="{'invisible': ['|', ('use_in_ci', '=', True), ('state', '!=', 'draft')]}"><i class="fa fa-cloud-download"></i></button>
-                <button name="pull" type="object" class="btn btn-primary btn-sm" groups="smile_scm.group_scm_user"
-                    attrs="{'invisible': ['|', ('use_in_ci', '=', True), ('state', '=', 'draft')]}"><i class="fa fa-refresh"></i></button>
-                <button name="create_build" type="object" class="btn btn-primary btn-sm" groups="smile_scm.group_scm_user"
-                    attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"><i class="fa fa-cogs"></i></button>
-                <a name="force_create_build" type="object" class="oe_inline" groups="smile_scm.group_scm_user"
-                    attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}">Force test</a>
-                <field name="use_in_ci" invisible="1"/>
-                <field name="state" invisible="1"/>
-              </div>
-            </t>
-            <t t-name="BranchSettings">
-            </t>
-          </templates>
-        </kanban>
-      </field>
-    </record-->
 
     <record model="ir.actions.act_window" id="smile_scm.action_dashboard">
       <field name="name">Builds</field>
