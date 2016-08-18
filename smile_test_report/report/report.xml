@@ -4,9 +4,15 @@
     <!-- Report view -->
 
     <template id="test_report_view">
+      <style type="text/css">
+		.smile_test_report h4 {
+			color: blue;
+		}
+      </style>
+
       <t t-call="report.html_container">
         <t t-call="report.external_layout">
-          <div class="page" style="margin-left: 3em">
+          <div class="page smile_test_report " style="margin-left: 3em">
 
             <!-- Title page -->
             <h1 align="center">Non-regression Tests</h1>
@@ -31,7 +37,13 @@
                   <span t-esc="test[1]"/>
                 </p>
                 <t t-foreach="test[2]" t-as="comment">
+                  <t t-if="':\n\n' not in comment and '\n' in comment">
+                    <!-- Class docstring -->
+                    <h4 style="font-size: medium; margin-top: 30px" t-raw="comment.split('\n')[0]"/>
+                    <span style="font-size: large" t-raw="comment.replace('\n', '&lt;br&gt;')"/>
+                  </t>
                   <t t-if="':\n\n' in comment">
+                    <!-- Methods dosctring -->
                     <h4 style="font-size: medium; margin-top: 30px" t-raw="comment.split(':\n\n')[0]"/>
                     <span style="font-size: large" t-raw="comment.split(':\n\n')[1].replace('\n', '&lt;br&gt;')"/>
                   </t>
@@ -49,7 +61,8 @@
 
     <!-- Report declaration -->
 
-    <report id="tests" model="ir.module.module" string="Tests Report" report_type="qweb-pdf" name="smile_test_report.test_report_view" file="Non-regression test report"/>
+    <report id="tests" model="ir.module.module" string="Tests Report" report_type="qweb-pdf" name="smile_test_report.test_report_view"
+      file="Non-regression test report"/>
 
   </data>
 </openerp>
