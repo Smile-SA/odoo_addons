@@ -21,6 +21,7 @@
 
 import csv
 from contextlib import closing
+from distutils.version import LooseVersion
 import inspect
 import logging
 import os
@@ -139,7 +140,7 @@ def _run_test(cr, module, filename):
         elif ext == '.csv':
             tools.convert_csv_import(cr, module, pathname, fp.read(), idref=None, mode='update', noupdate=False)
         elif ext == '.yml':
-            if release.major_version >= '7.0':
+            if LooseVersion(release.major_version) >= LooseVersion('7.0'):
                 tools.convert_yaml_import(cr, module, fp, kind='test', idref=None, mode='update', noupdate=False)
             else:
                 tools.convert_yaml_import(cr, module, fp, idref=None, mode='update', noupdate=False)
@@ -268,7 +269,7 @@ native_dispatch = common.dispatch
 
 
 def new_dispatch(*args):
-    i = release.major_version < '8.0' and 1 or 0
+    i = LooseVersion(release.major_version) < LooseVersion('8.0') and 1 or 0
     if args[i] == 'run_tests':
         params = args[i + 1]
         admin_passwd = params[0]

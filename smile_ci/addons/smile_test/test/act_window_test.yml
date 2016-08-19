@@ -18,7 +18,9 @@
                            ('Customer Payment', 'account.voucher'),
                            ('Inventory Analysis', 'report.stock.inventory'),
                            ('Window Actions', 'ir.actions.act_window'),
-                           ('Expenses Analysis', 'hr.expense.report')]
+                           ('Expenses Analysis', 'hr.expense.report'),
+                           ('Reports', 'ir.actions.report.xml'),
+                           ('Builds', 'scm.repository.branch.build')]
     errors = []
     user_context = self.pool.get('res.users').context_get(cr, uid, context)
     # context built as in webclient: addons/openerp/utils/tools.py

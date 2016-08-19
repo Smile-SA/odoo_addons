@@ -25,6 +25,7 @@ try:
 except ImportError:
     raise ImportError('Please install coverage package')
 
+from distutils.version import LooseVersion
 import logging
 import os
 import subprocess
@@ -84,68 +85,68 @@ class NewServices():
 
     @staticmethod
     def coverage_start():
-        if not hasattr(common, 'coverage'):
-            _logger.info('Starting code coverage...')
-            sources = NewServices.get_coverage_sources()
-            data_file = config.get('coverage_data_file') or '/tmp/.coverage'
-            common.coverage = coverage.coverage(branch=True, source=sources, data_file=data_file)
-            common.coverage.start()
-            return True
-        return False
+        if hasattr(common, 'coverage'):
+            return False
+        _logger.info('Starting code coverage...')
+        sources = NewServices.get_coverage_sources()
+        data_file = config.get('coverage_data_file') or '/tmp/.coverage'
+        common.coverage = coverage.coverage(branch=True, source=sources, data_file=data_file)
+        common.coverage.start()
+        return True
 
     @staticmethod
     def coverage_stop():
-        if hasattr(common, 'coverage'):
-            _logger.info('Stopping code coverage...')
-            common.coverage.stop()
-            common.coverage.save()
-            if config.get('coveragefile'):
-                sources = NewServices.get_coverage_sources()
-                common.coverage.xml_report(morfs=sources, outfile=config['coveragefile'], ignore_errors=True)
-            del common.coverage
-            return True
-        return False
+        if not hasattr(common, 'coverage'):
+            return False
+        _logger.info('Stopping code coverage...')
+        common.coverage.stop()
+        common.coverage.save()
+        if config.get('coveragefile'):
+            sources = NewServices.get_coverage_sources()
+            common.coverage.xml_report(morfs=sources, outfile=config['coveragefile'], ignore_errors=True)
+        del common.coverage
+        return True
 
     @staticmethod
     def check_quality_code():
         _logger.info('Checking code quality...')
-        if config.get('code_path') and config.get('flake8file'):
-            max_line_length = config.get('flake8_max_line_length') or 79
-            exclude_files = config.get('flake8_exclude_files') or '.svn,CVS,.bzr,.hg,.git,__pycache__'
-            with open(config.get('flake8file'), 'a') as f:
-                for path in config.get('code_path').replace(' ', '').split(','):
-                    cmd = ['flake8', '--max-line-length=%s' % max_line_length,
-                           '--exclude=%s' % exclude_files.replace(' ', ''), path]
-                    try:
-                        subprocess.check_output(cmd)
-                    except subprocess.CalledProcessError, e:
-                        f.write(e.output)
-            return True
-        _logger.warning('Incomplete config file: no code_path or no flake8file...')
-        return False
+        if not config.get('code_path') or not config.get('flake8file'):
+            _logger.warning('Incomplete config file: no code_path or no flake8file...')
+            return False
+        max_line_length = config.get('flake8_max_line_length') or 79
+        exclude_files = config.get('flake8_exclude_files') or '.svn,CVS,.bzr,.hg,.git,__pycache__'
+        with open(config.get('flake8file'), 'a') as f:
+            for path in config.get('code_path').replace(' ', '').split(','):
+                cmd = ['flake8', '--max-line-length=%s' % max_line_length,
+                        '--exclude=%s' % exclude_files.replace(' ', ''), path]
+                try:
+                    subprocess.check_output(cmd)
+                except subprocess.CalledProcessError, e:
+                    f.write(e.output)
+        return True
 
     @staticmethod
     def count_lines_of_code():
         _logger.info('Counting lines of code...')
-        if config.get('addons_path'):
-            for path in config.get('addons_path').replace(' ', '').split(','):
-                filename = '%s.cloc' % path.split('/')[-1]
-                with open(os.path.join(path, filename), 'a') as f:
-                    cmd = ['cloc', path]
-                    try:
-                        f.write(subprocess.check_output(cmd))
-                    except subprocess.CalledProcessError, e:
-                        f.write(e.output)
-            return True
-        _logger.warning('Incomplete config file: no addons_path...')
-        return False
+        if not config.get('addons_path'):
+            _logger.warning('Incomplete config file: no addons_path...')
+            return False
+        for path in config.get('addons_path').replace(' ', '').split(','):
+            filename = '%s.cloc' % path.split('/')[-1]
+            with open(os.path.join(path, filename), 'a') as f:
+                cmd = ['cloc', path]
+                try:
+                    f.write(subprocess.check_output(cmd))
+                except subprocess.CalledProcessError, e:
+                    f.write(e.output)
+        return True
 
 
 native_dispatch = common.dispatch
 
 
 def new_dispatch(*args):
-    i = release.major_version < '8.0' and 1 or 0
+    i = LooseVersion(release.major_version) < LooseVersion('8.0') and 1 or 0
     method = args[i]
     if method in ('coverage_start', 'coverage_stop', 'check_quality_code', 'count_lines_of_code'):
         admin_passwd = args[i + 1][0]
