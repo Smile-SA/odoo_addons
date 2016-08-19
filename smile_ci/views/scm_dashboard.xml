@@ -65,7 +65,7 @@
               <div class="row" t-if="record.result.raw_value != 'killed' and (record.state.raw_value == 'running' or record.state.raw_value == 'done')">
                 <div class="col-xs-4">
                   <button class="btn-nostyle" name="%(action_build_failed_test)d" type="action">
-                    <i t-attf-class="fa fa-#{(record.failed_test_count.raw_count or record.failed_test_ratio.raw_value == '0 / 0') and 'frown' or 'smile'}-o fa-2x"/><br/>
+                    <i t-attf-class="fa fa-#{(record.failed_test_count.raw_value or record.failed_test_ratio.raw_value == '0 / 0') and 'frown' or 'smile'}-o fa-2x"/><br/>
                     <field name="failed_test_ratio"/><br/>Failed tests
                   </button>
                 </div>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="col-xs-4">
                   <button class="btn-nostyle" name="%(action_build_coverage)d" type="action">
-                    <i t-attf-class="fa fa-battery-#{record.coverage_avg.raw_value / 0.25} fa-2x"/><br/>
+                    <i t-attf-class="fa fa-battery-#{kanban_coverage_level(record.coverage_avg.raw_value)} fa-2x"/><br/>
                     <field name="coverage_avg"/>%<br/>Coverage
                   </button>
                 </div>
@@ -93,6 +93,7 @@
       <field name="view_type">form</field>
       <field name="view_mode">kanban,form</field>
       <field name="search_view_id" ref="view_repository_branch_build_search"/>
+      <field name="domain">[('branch_id.use_in_ci', '=', True)]</field>
       <field name="context">{'search_default_my': user.id != 1}</field>
     </record>
 

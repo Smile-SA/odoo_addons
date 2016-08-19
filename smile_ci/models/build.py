@@ -24,6 +24,7 @@ import cStringIO
 import csv
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from distutils.version import LooseVersion
 from functools import partial
 import logging
 from lxml import etree
@@ -123,7 +124,7 @@ def state_cleaner(method):
                     # Force build creation for branch in test before server stop
                     if branch_ids:
                         branch_obj = self.get('scm.repository.branch')
-                        thread = Thread(target=branch_obj._force_create_build_with_new_cursor, args=(branch_ids,))
+                        thread = Thread(target=branch_obj._force_create_build_with_new_cursor, args=(cr, SUPERUSER_ID, branch_ids,))
                         thread.start()
         except Exception, e:
             _logger.error(get_exception_message(e))
@@ -290,7 +291,7 @@ class Build(models.Model):
             self.directory = os.path.join(self._builds_path, str(self.id))
             ignore_patterns = shutil.ignore_patterns(TEST_MODULE, *IGNORE_PATTERNS)  # Do not copy smile_test and useless files
             for branch, subfolder in Build._get_branches_to_merge(self.branch_id):
-                mergetree(branch.directory, os.path.join(self.directory, subfolder), ignore_patterns)
+                mergetree(branch.directory, os.path.join(self.directory, subfolder), ignore=ignore_patterns)
             self._add_ci_addons()
         except Exception, e:
             msg = get_exception_message(e)
@@ -308,7 +309,7 @@ class Build(models.Model):
             raise IOError("smile_ci/addons is not found")
         ignore_patterns = shutil.ignore_patterns(*IGNORE_PATTERNS)
         with cd(self.directory):
-            shutil.copytree(ci_addons_path, 'ci-addons', ignore=ignore_patterns)
+            mergetree(ci_addons_path, 'ci-addons', ignore=ignore_patterns)
 
     def write_with_new_cursor(self, vals):
         with cursor(self._cr.dbname, False) as new_cr:
@@ -524,9 +525,12 @@ class Build(models.Model):
     @api.multi
     def _get_start_params(self):
         self.ensure_one()
-        return {
+        params = {
             'port_bindings': {8069: int(self.port)},
         }
+        if self._context.get('docker-in-docker'):
+            params['volumes'] = '/var/run/docker.sock:/var/run/docker.sock'
+        return params
 
     @api.one
     def _build_image(self):
@@ -597,7 +601,7 @@ class Build(models.Model):
         _logger.info('Creating database for build_%s...' % self.id)
         branch = self.branch_id
         sock_db = self._connect('db')
-        if sock_db.server_version()[:3] >= '6.1':
+        if LooseVersion(sock_db.server_version()[:3]) >= LooseVersion('6.1'):
             sock_db.create_database(self.admin_passwd, DBNAME, branch.install_demo_data, branch.lang, branch.user_passwd)
         else:
             db_id = sock_db.create(self.admin_passwd, DBNAME, branch.install_demo_data, branch.lang, branch.user_passwd)

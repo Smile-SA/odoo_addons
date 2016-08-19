@@ -204,9 +204,9 @@ class Branch(models.Model):
                     except Warning:
                         _logger.error('Clone failed for branch %s (%s %s)...' % (branch.id, branch.name, branch.branch))
                         raise
-        branch.write({'state': 'done', 'last_update': fields.Datetime.now()})
-        self.message_post(body=_("Branch cloned"))
-        return True
+                    else:
+                        branch.message_post(body=_("Branch cloned"))
+        return self.write({'state': 'done', 'last_update': fields.Datetime.now()})
 
     @api.multi
     def pull(self):

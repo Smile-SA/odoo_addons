@@ -22,7 +22,10 @@
 {
     "name": "Continuous Integration",
     "version": "2.0",
-    "depends": ["smile_scm"],
+    "depends": [
+        "smile_scm",
+        "document",
+    ],
     "author": "Smile",
     "license": 'AGPL-3',
     "summary": "Secure your code modifications",
@@ -86,9 +89,14 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
         "views/scm_menu.xml",
         "views/webclient_templates.xml",
     ],
-    "demo": [],
+    "demo": [
+        "demo/scm.repository.csv",
+        "demo/scm.repository.branch.csv",
+        "demo/scm.repository.branch.dependency.csv",
+        "demo/scm_repository_branch_clone.yml",
+    ],
     "qweb": [
-        'static/src/xml/web_kanban.xml',
+        'static/src/xml/kanban.xml',
     ],
     "auto_install": False,
     "installable": True,

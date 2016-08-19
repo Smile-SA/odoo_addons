@@ -1,8 +1,9 @@
-odoo.define('test_branch', function (require) {
+odoo.define('smile_ci.Dashboard', function (require) {
     'use strict';
 
     var KanbanView = require('web_kanban.KanbanView');
     var KanbanColumn = require('web_kanban.Column');
+    var KanbanRecord = require('web_kanban.Record');
     var session = require('web.session');
 
     KanbanView.include({
@@ -79,6 +80,12 @@ odoo.define('test_branch', function (require) {
         },
         launch_branch_unsubcribe: function (event) {
             this.launch_branch_method(event, 'message_unsubscribe_users', {'user_ids': [session.uid]});
+        },
+    });
+
+    KanbanRecord.include({
+        kanban_coverage_level: function(percent) {
+            return parseInt(percent / 25);
         },
     });
 

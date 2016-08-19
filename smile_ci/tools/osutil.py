@@ -24,27 +24,28 @@ import shutil
 import subprocess
 
 
-def mergetree(src, dst, ignore=None):
+def mergetree(src, dst, symlinks=False, ignore=None):
+    if not os.path.isdir(src):
+        raise OSError(20, "Not a directory: '%s'" % src)
     if not os.path.exists(dst):
-        os.makedirs(dst)
-    names = os.listdir(src)
-    if ignore is not None:
-        ignored_names = ignore(src, names)
+        shutil.copytree(src, dst, symlinks, ignore)
     else:
-        ignored_names = set()
-    for name in names:
-        if name in ignored_names:
-            continue
-        srcname = os.path.join(src, name)
-        dstname = os.path.join(dst, name)
-        if os.path.isdir(srcname):
-            if not os.path.exists(dstname):
-                os.makedirs(dstname)
-            mergetree(srcname, dstname, ignore)
-        else:
-            if os.path.exists(dstname):
-                os.remove(dstname)
-            shutil.copy2(srcname, dstname)
+        names = os.listdir(src)
+        ignored_names = ignore(src, names) if ignore is not None else set()
+        for name in names:
+            if name in ignored_names:
+                continue
+            srcname = os.path.join(src, name)
+            dstname = os.path.join(dst, name)
+            if os.path.isdir(srcname):
+                mergetree(srcname, dstname, symlinks, ignore)
+            else:
+                if os.path.exists(dstname):
+                    os.remove(dstname)
+                if symlinks:
+                    os.symlink(srcname, dstname)
+                else:
+                    shutil.copy2(srcname, dstname)
 
 
 def check_output_chain(args, stdin=None, stdout=None, stderr=None):

@@ -145,8 +145,8 @@ class DockerHost(models.Model):
         return True
 
 
-class BranchDependencies(models.Model):
-    _name = 'scm.repository.branch.dependencies'
+class BranchDependency(models.Model):
+    _name = 'scm.repository.branch.dependency'
     _description = 'Merge with branch'
     _rec_name = 'branch_id'
 
@@ -231,7 +231,7 @@ class Branch(models.Model):
 
     # Merge options
     subfolder = fields.Char('Place current sources in')
-    branch_dependency_ids = fields.One2many('scm.repository.branch.dependencies', 'branch_id', 'Merge with')
+    branch_dependency_ids = fields.One2many('scm.repository.branch.dependency', 'branch_id', 'Merge with')
     has_branch_dependencies = fields.Boolean(readonly=True, compute='_get_is_filled_merge_with')
 
     # Update interval
