@@ -1,3 +1,0 @@
-id,repository_id/id,branch,version_id/id,use_in_ci,addons_path,code_path,test_path,modules_to_install,subfolder
-scm_repository_branch_odoo_90,scm_repository_odoo,9.0,smile_scm.v90,False,,,,,
-scm_repository_branch_smile_addons_90,scm_repository_smile_addons,9.0,smile_scm.v90,True,"server/addons,smile-addons",smile-addons,smile-addons,"smile_base,smile_audit",smile-addons
