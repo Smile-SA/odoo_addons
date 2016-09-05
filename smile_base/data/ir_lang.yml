@@ -2,21 +2,19 @@
   I force the installation of French language
 -
   !python {model: base.language.install}: |
-    lang_ids = self.pool.get('res.lang').search(cr, uid, [('code', '=', 'fr_FR')], limit=1, context=context)
-    if not lang_ids:
-      wizard_id = self.create(cr, uid, {'lang': 'fr_FR'}, context)
-      self.lang_install(cr, uid, [wizard_id], context)
+    language = self.env['res.lang'].search([('code', '=', 'fr_FR')], limit=1)
+    if not language:
+      self.create({'lang': 'fr_FR'}).lang_install()
 -
   I make French as default language if installed
 -
   !python {model: res.lang}: |
-    if self.search(cr, uid, [('code', '=', 'fr_FR')], limit=1):
-      value_obj = self.pool.get('ir.values')
-      ids = value_obj.search(cr, uid, [
+    if self.search([('code', '=', 'fr_FR')], limit=1):
+      value = self.env['ir.values'].search([
         ('name', '=', 'lang'),
         ('key', '=', 'default'),
         ('model', '=', 'res.partner'),
-      ], limit=1, context=context)
+      ], limit=1)
       vals = {
         'name': 'lang',
         'key': 'default',
@@ -24,33 +22,33 @@
         'model': 'res.partner',
         'value_unpickle': 'fr_FR',
       }
-      if ids:
-        value_obj.write(cr, uid, ids, vals, context)
+      if value:
+        value.write(vals)
       else:
-        value_obj.create(cr, uid, vals, context)
+        value.create(vals)
 -
   I correct date and time format for French language
 -
   !python {model: res.lang}: |
-    lang_ids = self.search(cr, uid, [('code', '=', 'fr_FR')], limit=1)
-    if lang_ids:
-      self.write(cr, uid, lang_ids, {
+    language = self.search([('code', '=', 'fr_FR')], limit=1)
+    if language:
+      language.write({
         'date_format': '%d/%m/%Y',
         'time_format': '%H:%M:%S',
         'grouping': '[3, 3, 3, 3, 3]',
         'decimal_point': ',',
         'thousands_sep': ' ',
-      }, context)
+      })
 -
   I correct date and time format for English language
 -
   !python {model: res.lang}: |
-    lang_ids = self.search(cr, uid, [('code', '=', 'en_US')], limit=1)
-    if lang_ids:
-      self.write(cr, uid, lang_ids, {
+    language = self.search([('code', '=', 'en_US')], limit=1)
+    if language:
+      language.write({
         'date_format': '%m/%d/%Y',
         'time_format': '%H:%M:%S',
         'grouping': '[3, 3, 3, 3, 3]',
         'decimal_point': '.',
         'thousands_sep': ',',
-      }, context)
+      })

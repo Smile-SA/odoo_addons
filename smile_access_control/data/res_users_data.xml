@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
   <data noupdate="0">
 
     <record model="res.users" id="base.user_root">
@@ -7,4 +7,4 @@
     </record>
 
   </data>
-</openerp>
+</odoo>

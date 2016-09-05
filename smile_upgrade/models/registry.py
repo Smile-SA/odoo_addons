@@ -24,27 +24,26 @@ import os
 import sys
 import time
 
-from openerp import tools
-from openerp.modules.registry import RegistryManager
-from openerp.osv import osv, orm
-from openerp.tools import config
+from odoo import tools
+from odoo.modules.registry import Registry
+from odoo.osv import osv, orm
+from odoo.tools import config
 
 from .upgrade import UpgradeManager
 
 _logger = logging.getLogger(__name__)
 
-native_new = RegistryManager.new
+native_new = Registry.new
 
 
 @classmethod
 def new(cls, db_name, force_demo=False, status=None, update_module=False):
-    with cls.lock():
+    with cls._lock:
         upgrades = False
         try:
             with UpgradeManager(db_name) as upgrade_manager:
                 upgrades = upgrade_manager.upgrades
                 if upgrades:
-                    cls.signal_registry_change(db_name)
                     t0 = time.time()
                     _logger.info('loading %s upgrade...', upgrade_manager.code_version)
                     if not upgrade_manager.db_in_creation:
@@ -75,4 +74,4 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                 os._exit(1)
             raise
 
-RegistryManager.new = new
+Registry.new = new

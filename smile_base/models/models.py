@@ -26,10 +26,10 @@ from operator import and_, or_, sub
 import psycopg2
 import time
 
-from openerp import api, tools, _
-from openerp.exceptions import UserError
-from openerp.models import BaseModel
-from openerp.osv.expression import normalize_domain
+from odoo import api, tools, _
+from odoo.exceptions import UserError
+from odoo.models import BaseModel
+from odoo.osv.expression import normalize_domain
 
 
 _logger = logging.getLogger(__name__)
@@ -38,7 +38,6 @@ native_validate_fields = BaseModel._validate_fields
 native_load = BaseModel.load
 native_modified = BaseModel.modified
 native_unlink = BaseModel.unlink
-native_store_get_values = BaseModel._store_get_values
 
 
 @api.multi
@@ -79,34 +78,6 @@ def unlink(self):
 
 
 @api.multi
-def _store_get_values(self, fields):
-    if self._context.get('no_store_function'):
-        return []
-    return native_store_get_values(fields)
-
-
-@api.multi
-def _compute_store_set(self):
-    """
-    Get the list of stored function fields to recompute (via _store_get_values)
-    and recompute them (via _store_set_values)
-    """
-    store_get_result = self._store_get_values(self._columns.keys())
-    store_get_result.sort()
-    done = {}
-    for order, model, ids_to_update, fields_to_recompute in store_get_result:
-        key = (model, tuple(fields_to_recompute))
-        done.setdefault(key, {})
-        # avoid to do several times the same computation
-        ids_to_recompute = []
-        for id_to_update in ids_to_update:
-            if id_to_update not in done[key]:
-                done[key][id_to_update] = True
-                ids_to_recompute.append(id_to_update)
-        self.env[model].browse(ids_to_recompute)._store_set_values(fields_to_recompute)
-
-
-@api.multi
 def modified(self, fnames):
     if self._context.get('recompute', True):
         native_modified(self, fnames)
@@ -131,7 +102,6 @@ def bulk_create(self, vals_list):
     for vals in vals_list:
         records |= self.with_context(**context).create(vals)
     if not self._context.get('force_store_function'):
-        records._compute_store_set()
         records.modified(self._fields)
         self.recompute()
     self._parent_store_compute()
@@ -312,16 +282,12 @@ def filtered_from_domain(self, domain):
 
 @api.multi
 def recompute_fields(self, fnames):
-    old_fnames = []
     for fname in fnames:
         field = self._fields[fname]
-        if getattr(field.column, 'store', None):
-            old_fnames.append(fname)
-        elif getattr(field, 'store') and getattr(field, 'compute'):
+        if getattr(field, 'store') and getattr(field, 'compute'):
             self._recompute_todo(field)
         else:
             raise UserError(_('%s is not a stored compute/function field') % fname)
-    self._model._store_set_values(self._cr, self._uid, self.ids, old_fnames, self._context)
     self.recompute()
     return True
 
@@ -349,7 +315,6 @@ BaseModel.open_wizard = open_wizard
 BaseModel.recompute_fields = recompute_fields
 BaseModel.unlink = unlink
 BaseModel._compare = _compare
-BaseModel._compute_store_set = _compute_store_set
 BaseModel._create_unique_index = _create_unique_index
 BaseModel._get_comparison_fields = _get_comparison_fields
 BaseModel._get_comparison_logs = _get_comparison_logs

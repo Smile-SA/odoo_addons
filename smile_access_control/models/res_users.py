@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from openerp import api, fields, models, SUPERUSER_ID, _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.exceptions import UserError
 
 
 class ResUsers(models.Model):

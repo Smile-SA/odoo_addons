@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
 	<data noupdate="0">
 
 		<record id="group_smile_log_user" model="res.groups">
@@ -7,4 +7,4 @@
 		</record>
 
 	</data>
-</openerp>
+</odoo>

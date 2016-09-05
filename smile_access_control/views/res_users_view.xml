@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
   <data noupdate="0">
 
     <!-- Users -->
@@ -125,4 +125,4 @@
     <menuitem action="action_server_superadmin" id="menu_action_superadmin" parent="base.menu_users" sequence="50"/>
 
   </data>
-</openerp>
+</odoo>

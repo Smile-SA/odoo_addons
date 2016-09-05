@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import api, models, tools
+from odoo import api, models, tools
 
 
 class IrConfigParameter(models.Model):

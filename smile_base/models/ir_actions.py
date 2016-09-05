@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from openerp import api, models, SUPERUSER_ID, tools
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import api, models, tools
+from odoo.tools.safe_eval import safe_eval as eval
 
 from ..tools import unquote
 
@@ -41,8 +41,7 @@ class IrActionsActWindow(models.Model):
         try:
             context = eval(self.context or '{}', eval_dict) or {}
             if 'act_window_id' not in context:
-                context['act_window_id'] = self.id
-                self.context = tools.ustr(context)
+                self.context = self.context[:1] + "'act_window_id': %s, " % self.id + self.context[1:]
         except:
             pass
 
@@ -73,7 +72,7 @@ class IrActionsActWindow(models.Model):
         for res in results:
             if 'context' in res:
                 try:
-                    with tools.mute_logger("openerp.tools.safe_eval"):
+                    with tools.mute_logger("odoo.tools.safe_eval"):
                         res['context'] = tools.ustr(eval(res['context'], localdict))
                 except:
                     continue

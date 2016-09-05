@@ -22,7 +22,7 @@
 import os
 import time
 
-from openerp import api, models, fields
+from odoo import api, models, fields
 
 
 class SmileLog(models.Model):

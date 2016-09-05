@@ -22,8 +22,8 @@
 import logging
 import os
 
-from openerp import api, models, modules, tools
-from openerp.modules.module import load_information_from_description_file
+from odoo import api, models, modules, tools
+from odoo.modules.module import load_information_from_description_file
 
 _logger = logging.getLogger(__name__)
 

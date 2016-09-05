@@ -21,8 +21,8 @@
 
 import logging
 
-from openerp import api, fields, models, SUPERUSER_ID, tools, _
-from openerp.modules.registry import RegistryManager
+from odoo import api, fields, models, SUPERUSER_ID, tools, _
+from odoo.modules.registry import RegistryManager
 
 from ..tools import audit_decorator
 

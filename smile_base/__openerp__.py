@@ -38,15 +38,15 @@ Features
     * Activate access logs for ir.translation object
     * Correct date and time format for French language
     * Review the menu "Applications"
-    * Remove the menu "Update modules" from apps.openerp.com
+    * Remove the menu "Update modules" from apps.odoo.com
     * Add sequence and display window actions in IrValues
     * Force to call unlink method at removal of remote object linked by a fields.many2one with ondelete='cascade'
-    * Add BaseModel.bulk_create, BaseModel.store_set_values and BaseModel._compute_store_set
+    * Add BaseModel.bulk_create
     * Improve BaseModel.load method performance
 
 Execution
 
-    openerp-server -c rcfile -d db_name --load=web,smile_base
+    odoo.py -c rcfile -d db_name --load=web,smile_base
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,

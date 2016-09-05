@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from openerp import api, fields, models, _
-from openerp.addons.base.ir.ir_values import ACTION_SLOTS, EXCLUDED_FIELDS
-from openerp.exceptions import except_orm, UserError
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import api, fields, models, _
+from odoo.addons.base.ir.ir_values import ACTION_SLOTS, EXCLUDED_FIELDS
+from odoo.exceptions import except_orm, UserError
+from odoo.tools.safe_eval import safe_eval as eval
 
 
 class IrValues(models.Model):

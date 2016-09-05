@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import api, models
+from odoo import api, models
 
 native_read_from_database = models.BaseModel._read_from_database
 native_fields_get = models.BaseModel.fields_get

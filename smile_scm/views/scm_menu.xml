@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
   <data noupdate="0">
 
     <!-- App entry -->
@@ -19,4 +19,4 @@
     <menuitem id="menu_odoo_version" parent="menu_scm_config_params" action="action_odoo_version" sequence="20"/>
 
   </data>
-</openerp>
+</odoo>

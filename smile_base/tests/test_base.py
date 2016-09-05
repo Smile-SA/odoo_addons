@@ -21,9 +21,9 @@
 
 from contextlib import contextmanager
 
-from openerp.tests.common import TransactionCase
-from openerp.tools.config import config
-from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
+from odoo.tests.common import TransactionCase
+from odoo.tools.config import config
+from odoo.addons.base.ir.ir_mail_server import MailDeliveryException
 
 
 @contextmanager

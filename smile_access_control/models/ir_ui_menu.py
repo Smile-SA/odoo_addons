@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import api, models, SUPERUSER_ID
+from odoo import api, models, SUPERUSER_ID
 
 
 class IrUiMenu(models.Model):

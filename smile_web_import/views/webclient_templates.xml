@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
   <data>
 
     <template id="assets_backend_extension" inherit_id="web.assets_backend">
@@ -9,4 +9,4 @@
     </template>
 
   </data>
-</openerp>
+</odoo>

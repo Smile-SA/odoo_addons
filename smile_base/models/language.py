@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import api, models
+from odoo import api, models
 
 
 class BaseLanguageExport(models.TransientModel):

@@ -23,8 +23,8 @@
 # do not check flake8 because of F811 error
 from lxml import etree
 
-from openerp import api, fields
-from openerp.models import Model
+from odoo import api, fields
+from odoo.models import Model
 
 native_setup_fields = Model._setup_fields
 native_fields_view_get = Model.fields_view_get

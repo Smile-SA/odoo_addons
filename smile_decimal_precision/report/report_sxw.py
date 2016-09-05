@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv.fields import float as float_field, function as function_field
-from openerp.report.report_sxw import rml_parse
+from odoo.report.report_sxw import rml_parse
 
 
 def get_digits(self, obj=None, f=None, dp=None):
@@ -36,10 +35,6 @@ def get_digits(self, obj=None, f=None, dp=None):
             d = res_digits[1]
         else:
             d = res_digits(self.cr)[1]
-    elif (hasattr(obj, '_field') and
-            isinstance(obj._field, (float_field, function_field)) and
-            obj._field.digits):
-        d = obj._field.digits[1] or DEFAULT_DIGITS
     return d
 
 rml_parse.get_digits = get_digits

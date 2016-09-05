@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from openerp import models, tools
-from openerp.addons.mail.models import mail_template
+from odoo import models, tools
+from odoo.addons.mail.models import mail_template
 
 
 class MailComposeMessage(models.TransientModel):

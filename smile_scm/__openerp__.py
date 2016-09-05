@@ -1,8 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 Smile (<http://www.smile.fr>). All Rights Reserved
+#    Copyright (C) 2013-2016 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 {
     "name": "Source Code Management",
-    "version": "0.1",
+    "version": "2.0",
     "depends": ["mail"],
     "author": "Smile",
     "license": 'AGPL-3',

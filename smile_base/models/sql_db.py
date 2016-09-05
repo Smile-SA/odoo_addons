@@ -22,10 +22,10 @@
 import logging
 import time
 
-from openerp.tools import config
-from openerp.sql_db import Cursor
+from odoo.tools import config
+from odoo.sql_db import Cursor
 
-_logger = logging.getLogger('openerp.smile_detective')
+_logger = logging.getLogger('odoo.smile_detective')
 
 
 def smile_sql_detective(min_delay):
@@ -36,7 +36,7 @@ def smile_sql_detective(min_delay):
             delay = time.time() - start
             if delay > min_delay >= 0.0:
                 _logger.info(u"SQL_BD:%s SQL_QUERY:%s SQL_PARAMS:%s SQL_TIMER:%s"
-                            % (self.dbname, query.decode('utf-8'), params, delay * 1000.0,))
+                             % (self.dbname, query.decode('utf-8'), params, delay * 1000.0,))
             return result
         return detective_execute
     return detective_log

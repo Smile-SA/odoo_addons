@@ -23,8 +23,8 @@ import ConfigParser
 import logging
 import os
 
-from openerp.tools import config
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo.tools import config
+from odoo.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__package__)
 

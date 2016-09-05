@@ -21,8 +21,8 @@
 
 from email.utils import COMMASPACE
 
-from openerp import api, models, tools
-from openerp.addons.base.ir.ir_mail_server import _logger, encode_rfc2822_address_header
+from odoo import api, models, tools
+from odoo.addons.base.ir.ir_mail_server import _logger, encode_rfc2822_address_header
 
 
 class IrMailServer(models.Model):

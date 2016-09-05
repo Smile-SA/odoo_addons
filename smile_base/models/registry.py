@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.modules.registry import Registry
+from odoo.modules.registry import Registry
 
 native_setup_models = Registry.setup_models
 

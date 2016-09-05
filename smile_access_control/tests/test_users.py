@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from openerp.tests.common import TransactionCase
-from openerp.exceptions import ValidationError
+from odoo.tests.common import TransactionCase
+from odoo.exceptions import ValidationError
 
 
 class TestUsers(TransactionCase):

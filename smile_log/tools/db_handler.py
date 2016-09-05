@@ -21,7 +21,7 @@
 
 import logging
 
-from openerp.modules.registry import RegistryManager
+from odoo.modules.registry import RegistryManager
 
 
 class SmileDBHandler(logging.Handler):

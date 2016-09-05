@@ -22,7 +22,7 @@
 import datetime
 import logging
 
-from openerp.modules.registry import RegistryManager
+from odoo.modules.registry import RegistryManager
 
 from .misc import add_timing, add_trace
 

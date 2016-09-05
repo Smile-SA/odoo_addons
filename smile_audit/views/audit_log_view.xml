@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
 
         <record model="ir.ui.view" id="view_audit_log_form">
@@ -77,4 +77,4 @@
         <menuitem id="menu_action_audit_log_tree" action="action_audit_log_tree" parent="menu_audit"/>
 
     </data>
-</openerp>
+</odoo>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
 
 		<menuitem id="menu_audit" parent="base.menu_administration" name="Audit" sequence="100"/>
@@ -51,4 +51,4 @@
         <menuitem id="menu_action_audit_rule_tree" action="action_audit_rule_tree" parent="menu_audit" />
 
     </data>
-</openerp>
+</odoo>

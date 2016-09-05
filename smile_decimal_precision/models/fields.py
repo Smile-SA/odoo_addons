@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from openerp.fields import Field
+from odoo.fields import Field
 
-from openerp.addons.smile_decimal_precision.models import DecimalPrecision as dp
+from odoo.addons.smile_decimal_precision.models import DecimalPrecision as dp
 
 
 native_get_description = Field.get_description

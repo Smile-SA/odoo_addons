@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from openerp import api, models, tools
-from openerp.addons.mail.models.mail_mail import _logger
+from odoo import api, models, tools
+from odoo.addons.mail.models.mail_mail import _logger
 
 
 class MailMail(models.Model):

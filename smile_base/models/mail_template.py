@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api, models, tools, _
-from openerp.exceptions import UserError
-from openerp.addons.mail.models.mail_template import format_tz, mako_template_env, mako_safe_template_env, _logger
+from odoo import api, models, tools, _
+from odoo.exceptions import UserError
+from odoo.addons.mail.models.mail_template import format_tz, mako_template_env, mako_safe_template_env, _logger
 
 
 class MailTemplate(models.Model):

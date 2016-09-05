@@ -1,23 +1,4 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 Smile (<http://www.smile.fr>). All Rights Reserved
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
 
 import logging
 import os
@@ -27,77 +8,13 @@ import shutil
 from subprocess import call
 import tempfile
 
-from openerp import api, fields, models, _
-from openerp.exceptions import Warning
-from openerp.tools import config
+from odoo import api, fields, models, _
+from odoo.exceptions import Warning
+from odoo.tools import config
 
 from ..tools import cd
 
 _logger = logging.getLogger(__package__)
-
-
-class VersionControlSystem(models.Model):
-    _name = 'scm.vcs'
-    _description = 'Version Control System'
-
-    name = fields.Char(required=True)
-    cmd = fields.Char('Command', size=3, required=True)
-    cmd_clone = fields.Char('Clone', required=True)
-    cmd_pull = fields.Char('Pull', required=True)
-    default_branch = fields.Char('Default branch')
-
-    _sql_constraints = [
-        ('unique_cmd', 'UNIQUE(cmd)', 'VCS must be unique'),
-    ]
-
-
-class OdooVersion(models.Model):
-    _name = 'scm.version'
-    _description = 'Odoo Version'
-    _order = 'name'
-
-    name = fields.Char(required=True)
-
-    _sql_constraints = [
-        ('unique_name', 'UNIQUE(name)', 'Odoo version must be unique'),
-    ]
-
-
-class Tag(models.Model):
-    _name = 'scm.repository.tag'
-    _description = 'Repository Tag'
-    _order = 'name'
-
-    name = fields.Char(required=True, translate=True)
-    color = fields.Integer()
-
-    _sql_constraints = [
-        ('unique_name', 'UNIQUE(name)', 'Repository tag must be unique'),
-    ]
-
-
-class Repository(models.Model):
-    _name = 'scm.repository'
-    _description = 'Repository'
-    _inherit = ['mail.thread']
-
-    @api.one
-    def _has_branch_done(self):
-        self.has_branch_done = self.branch_ids.filtered(lambda branch: branch.state == 'done')
-
-    name = fields.Char(required=True)
-    vcs_id = fields.Many2one('scm.vcs', 'Version Control System',
-                             required=True, ondelete='restrict')
-    url = fields.Char(size=256, required=True)
-    partner_id = fields.Many2one('res.partner', 'Owner')
-    tag_ids = fields.Many2many('scm.repository.tag', string="Tags")
-    branch_ids = fields.One2many('scm.repository.branch', 'repository_id', 'Branches')
-    has_branch_done = fields.Boolean('Has at least a branch done',
-                                     compute='_has_branch_done', store=False)
-
-    _sql_constraints = [
-        ('unique_url', 'UNIQUE(url)', 'Repository URL must be unique'),
-    ]
 
 
 class Branch(models.Model):

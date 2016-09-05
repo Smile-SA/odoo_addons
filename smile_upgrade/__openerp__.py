@@ -33,7 +33,7 @@ Features
 
 Execution
 
-    openerp-server -c <config_file> -d <db_name> --load=web,smile_upgrade
+    odoo.py -c <config_file> -d <db_name> --load=web,smile_upgrade
 
 Configuration
 
@@ -41,14 +41,12 @@ Configuration
         <project_directory>
         `-- upgrades
             |-- 1.1
-            |   |-- __init__.py
             |   |-- __upgrade__.py
             |   |-- *.sql
             |   |-- *.yml                   # only for post-load
             |   |-- *.csv                   # only for post-load
             |   `-- *.xml                   # only for post-load
             |-- 1.2
-            |   |-- __init__.py
             |   |-- __upgrade__.py
             |   `-- *.sql
             `-- upgrade.conf
@@ -69,9 +67,8 @@ Configuration
                          with path .../filename (depending upgrades_path)
                          or module_name/.../filename
 
-    * OpenERP server configuration -- rcfile=~/.openerp_serverrc
+    * Odoo server configuration -- rcfile=~/.odoo_serverrc
         [options]
-        server_wide_modules = web,smile_upgrade
         upgrades_path = <project_directory>
         stop_after_upgrades = True if you want to stop server after upgrades else False
 
@@ -79,9 +76,6 @@ Additional features
 
     * In post-load, you can replace filename string by tuple
       (filename, 'rollback_and_continue' or 'not_rollback_and_continue' or 'raise') -- default value = 'raise'
-    * In .yml files, add context['store_in_secure_mode'] = True
-      if you want to compute fields.function (_store_set_values)
-      by catching errors and logging them {record_id: error}
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,

@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from openerp import api, models, tools
-from openerp.addons.fetchmail.models.fetchmail import _logger
+from odoo import api, models, tools
+from odoo.addons.fetchmail.models.fetchmail import _logger
 
 
 class FetchmailServer(models.Model):

@@ -26,12 +26,12 @@ from distutils.version import LooseVersion
 import logging
 import os
 
-from openerp import api, sql_db, SUPERUSER_ID, tools
-from openerp.exceptions import UserError
-import openerp.modules as addons
-from openerp.report.interface import report_int as ReportService
-from openerp.tools.safe_eval import safe_eval as eval
-from openerp.workflow.service import WorkflowService
+from odoo import api, sql_db, SUPERUSER_ID, tools
+from odoo.exceptions import UserError
+import odoo.modules as addons
+from odoo.report.interface import report_int as ReportService
+from odoo.tools.safe_eval import safe_eval as eval
+from odoo.workflow.service import WorkflowService
 
 from config import configuration as upgrade_config
 
@@ -172,14 +172,15 @@ class UpgradeManager(object):
         uid = SUPERUSER_ID
         with cursor(self.db) as cr:
             with api.Environment.manage():
-                module_obj = registry.get('ir.module.module')
-                module_obj.update_list(cr, uid)
-                module_ids = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
-                                                      ('state', 'in', ('uninstalled', 'to install'))])
-                module_obj.button_install(cr, uid, module_ids)
-                module_ids = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
-                                                      ('state', 'in', ('installed', 'to upgrade'))])
-                module_obj.button_upgrade(cr, uid, module_ids)
+                env = api.Environment(cr, uid, {})
+                module_obj = env['ir.module.module']
+                module_obj.update_list()
+                modules = module_obj.search([('name', 'in', modules_to_upgrade),
+                                            ('state', 'in', ('uninstalled', 'to install'))])
+                modules.button_install()
+                modules = module_obj.search([('name', 'in', modules_to_upgrade),
+                                            ('state', 'in', ('installed', 'to upgrade'))])
+                modules.button_upgrade()
                 cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")
         self._reset_services()
 

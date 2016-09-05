@@ -21,10 +21,10 @@
 
 import base64
 
-from openerp import http
-from openerp.http import request
+from odoo import http
+from odoo.http import request
 
-from openerp.addons.web.controllers.main import content_disposition
+from odoo.addons.web.controllers.main import content_disposition
 
 
 class Download(http.Controller):
@@ -35,8 +35,8 @@ class Download(http.Controller):
 
     2) Define the method for downloading the file
 
-    from openerp import api, models
-    from openerp.tools import ustr
+    from odoo import api, models
+    from odoo.tools import ustr
 
 
     class StockMove(models.Model):
