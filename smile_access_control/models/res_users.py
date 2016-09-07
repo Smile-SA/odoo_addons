@@ -26,14 +26,10 @@ from odoo.exceptions import UserError
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    @api.one
-    def _is_share(self, name, args):
-        return (self.id, self.is_user_profile or not self.has_group('base.group_user'))
-
-    @api.model
-    def _setup_fields(self, partial):
-        super(ResUsers, self)._setup_fields(partial)
-        self._fields['share'].column._fnct = ResUsers._is_share
+    @api.depends('groups_id')
+    def _compute_share(self):
+        for user in self:
+            user.share = user.is_user_profile or not user.has_group('base.group_user')
 
     @api.model
     def _get_default_field_ids(self):
