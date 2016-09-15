@@ -15,8 +15,8 @@
     <menuitem id="menu_scm_config_params" parent="menu_scm_config" name="Parameters" sequence="30" groups="group_scm_manager"/>
 
     <!-- Sub-menus of Configuration/Parameters -->
-    <menuitem id="menu_vcs" parent="menu_scm_config_params" action="action_vcs" sequence="10"/>
-    <menuitem id="menu_odoo_version" parent="menu_scm_config_params" action="action_odoo_version" sequence="20"/>
+    <menuitem id="menu_odoo_version" parent="menu_scm_config_params" action="action_odoo_version" sequence="10"/>
+    <menuitem id="menu_vcs" parent="menu_scm_config_params" action="action_vcs" sequence="20"/>
 
   </data>
 </odoo>
