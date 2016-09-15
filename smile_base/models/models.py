@@ -27,7 +27,7 @@ import psycopg2
 import time
 
 from odoo import api, tools, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain
 
@@ -43,7 +43,11 @@ native_unlink = BaseModel.unlink
 @api.multi
 def _validate_fields(self, fields_to_validate):
     if not self._context.get('no_validate'):
-        native_validate_fields(self, fields_to_validate)
+        try:
+            native_validate_fields(self, fields_to_validate)
+        except ValidationError, e:
+            name = e.name.replace("%s\n\n" % _("Error while validating constraint"), "").replace("\nNone", "")
+            raise ValidationError(name)
 
 
 @api.model

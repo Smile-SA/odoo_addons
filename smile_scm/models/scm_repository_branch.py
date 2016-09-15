@@ -9,7 +9,7 @@ from subprocess import call
 import tempfile
 
 from odoo import api, fields, models, _
-from odoo.exceptions import Warning
+from odoo.exceptions import UserError
 from odoo.tools import config
 
 from ..tools import cd
@@ -73,7 +73,7 @@ class Branch(models.Model):
     def _parent_path(self):
         parent_path = config.get('repositories_path') or tempfile.gettempdir()
         if not os.path.isdir(parent_path):
-            raise Warning(_("%s doesn't exist or is not a directory") % parent_path)
+            raise UserError(_("%s doesn't exist or is not a directory") % parent_path)
         return parent_path
 
     @staticmethod
@@ -82,7 +82,7 @@ class Branch(models.Model):
         res = call(cmd)
         if res:
             _logger.debug("subprocess.call failed : %s" % res)
-            raise Warning(_('%s FAILED' % command))
+            raise UserError(_('%s FAILED' % command))
         _logger.info('%s SUCCEEDED' % command)
 
     @api.multi
@@ -93,7 +93,7 @@ class Branch(models.Model):
         except psycopg2.OperationalError:
             self._cr.rollback()  # INFO: Early rollback to allow translations to work for the user feedback
             if warning:
-                raise Warning(warning)
+                raise UserError(warning)
             raise
 
     @api.multi
@@ -102,9 +102,9 @@ class Branch(models.Model):
         with cd(self._parent_path):
             for branch in self:
                 if not branch.branch:
-                    raise Warning(_('Please define a branch before cloning'))
+                    raise UserError(_('Please define a branch before cloning'))
                 if not force and branch.state != 'draft':
-                    raise Warning(_('You cannot clone a branch already cloned'))
+                    raise UserError(_('You cannot clone a branch already cloned'))
                 if os.path.exists(branch.directory):
                     branch.state = 'done'
                     branch.pull()
@@ -118,7 +118,7 @@ class Branch(models.Model):
                     cmd.append(branch.directory)
                     try:
                         Branch._call(cmd)
-                    except Warning:
+                    except UserError:
                         _logger.error('Clone failed for branch %s (%s %s)...' % (branch.id, branch.name, branch.branch))
                         raise
                     else:
@@ -129,7 +129,7 @@ class Branch(models.Model):
     def pull(self):
         for branch in self:
             if branch.state == 'draft':
-                raise Warning(_('You cannot pull a repository not cloned'))
+                raise UserError(_('You cannot pull a repository not cloned'))
             if not os.path.exists(branch.directory):
                 branch.clone(force=True)
             else:
@@ -137,7 +137,7 @@ class Branch(models.Model):
                     vcs = branch.vcs_id
                     try:
                         Branch._call([vcs.cmd, vcs.cmd_pull])
-                    except Warning:
+                    except UserError:
                         _logger.error('Pull failed for branch %s (%s %s)...' % (branch.id, branch.name, branch.branch))
                         raise
                 branch.write({'last_update': fields.Datetime.now()})
