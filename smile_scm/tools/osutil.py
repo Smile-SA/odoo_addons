@@ -10,7 +10,12 @@ class cd:
         self.newPath = newPath
 
     def __enter__(self):
-        self.savedPath = os.getcwd()
+        self.savedPath = None
+        while not self.savedPath:
+            try:
+                self.savedPath = os.getcwd()
+            except OSError:
+                os.chdir("..")
         os.chdir(self.newPath)
 
     def __exit__(self, etype, value, traceback):
