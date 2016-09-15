@@ -215,13 +215,14 @@ class Upgrade(object):
         root, ext = os.path.splitext(f_obj.name)
         if ext == '.sql':
             self._sql_import(cr, f_obj)
-        elif mode != 'pre-load' and ext == '.yml':
+        elif mode != 'pre-load' and ext in ('.yml', '.csv', '.xml'):
             with api.Environment.manage():
-                tools.convert_yaml_import(cr, module, f_obj, 'upgrade')
-        elif mode != 'pre-load' and ext == '.csv':
-            tools.convert_csv_import(cr, module, f_obj.name, f_obj.read(), 'upgrade')
-        elif mode != 'pre-load' and ext == '.xml':
-            tools.convert_xml_import(cr, module, f_obj, 'upgrade')
+                if ext == '.yml':
+                    tools.convert_yaml_import(cr, module, yamlfile=f_obj, mode='upgrade')
+                elif ext == '.csv':
+                    tools.convert_csv_import(cr, module, fname=f_obj.name, csvcontent=f_obj.read(), mode='upgrade')
+                elif ext == '.xml':
+                    tools.convert_xml_import(cr, module, xmlfile=f_obj, mode='upgrade')
         else:
             _logger.error('%s extension is not supported in upgrade %sing', ext, mode)
             pass
