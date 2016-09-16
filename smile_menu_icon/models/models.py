@@ -33,18 +33,16 @@ class IrUiMenu(models.Model):
         fields += self._context.get('new_menu_fields_to_read', [])
         return super(IrUiMenu, self).read(fields, load)
 
-    @api.model
-    @tools.ormcache_context(keys=('lang',))
-    def load_menus_root(self):
-        self = self.with_context(new_menu_fields_to_read=['fa_icon'])
-        res = super(IrUiMenu, self).load_menus_root()
-        self = self.with_context(new_menu_fields_to_read=[])
-        return res
+    @api.cr_uid_context
+    @tools.ormcache_context('uid', keys=('lang',))
+    def load_menus_root(self, cr, uid, context=None):
+        context = context or {}
+        context['new_menu_fields_to_read'] = ['fa_icon']
+        return super(IrUiMenu, self).load_menus_root(cr, uid, context=context)
 
-    @api.model
-    @tools.ormcache_context('debug', keys=('lang',))
-    def load_menus(self, debug):
-        self = self.with_context(new_menu_fields_to_read=['fa_icon'])
-        res = super(IrUiMenu, self).load_menus(debug)
-        self = self.with_context(new_menu_fields_to_read=[])
-        return res
+    @api.cr_uid_context
+    @tools.ormcache_context('uid', 'debug', keys=('lang',))
+    def load_menus(self, cr, uid, debug, context=None):
+        context = context or {}
+        context['new_menu_fields_to_read'] = ['fa_icon']
+        return super(IrUiMenu, self).load_menus(cr, uid, debug, context=context)
