@@ -75,3 +75,13 @@ class Module(models.Model):
                     tools.convert_xml_import(cr, module_name, fp,
                                              idref=None, mode=mode, noupdate=noupdate)
         return True
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        """
+        Search module by Technical Name and Module Name.
+        """
+        domain = args and args[:] or []
+        domain += ['|', ('name', operator, name), ('shortdesc', operator, name)]
+        recs = self.search(domain, limit=limit)
+        return recs.name_get()
