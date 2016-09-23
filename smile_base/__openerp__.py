@@ -57,7 +57,6 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "sequence": 20,
     "data": [
         "security/base_security.xml",
-        "security/res_users.yml",
         "data/act_actions_window.yml",
         "data/mail_data.yml",
         "data/ir_lang.yml",
