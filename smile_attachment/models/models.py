@@ -52,7 +52,7 @@ def _search_attachments(self, operator, value):
     ]
     if 'ir.module.module' in self.env.registry.models and \
             self.env['ir.module.module'].search([('name', '=', 'document'),
-                                              ('state', 'in', ('to upgrade', 'installed'))], limit=1):
+                                                 ('state', 'in', ('to upgrade', 'installed'))], limit=1):
         domain = domain[:2] + ['|', ('index_content', operator, value)] + domain[2:]
     recs = self.env['ir.attachment'].search(domain)
     return [('id', 'in', [rec.res_id for rec in recs])]
