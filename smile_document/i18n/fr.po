@@ -1,0 +1,232 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_document
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c-20160804\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-14 10:39+0000\n"
+"PO-Revision-Date: 2016-08-14 10:39+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_attachment_form_inherit
+msgid "Additionel informations"
+msgstr "Informations additionnelles"
+
+#. module: smile_document
+#: selection:ir.attachment,status:0
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_archived
+#: model:ir.ui.view,arch_db:smile_document.view_document_search
+msgid "Archived"
+msgstr "Archivé"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_type_attachment_ids
+msgid "Attachments"
+msgstr "Pièces jointes"
+
+#. module: smile_document
+#: code:addons/smile_document/models/document.py:44
+#, python-format
+msgid "Attention : You cannot unlink document type!"
+msgstr "Attention : Attention: Vous ne pouvez pas supprimer type de document !"
+
+#. module: smile_document
+#: model:ir.ui.menu,name:smile_document.menu_document2
+msgid "Collaborative Content"
+msgstr "Collaborative Content"
+
+#. module: smile_document
+#: model:ir.ui.menu,name:smile_document.menu_document_configuration
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_type_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_type_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_attachment_form_inherit
+msgid "Creation"
+msgstr "Création"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_attachment_form_inherit
+msgid "Description"
+msgstr "Description"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_type_display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_document_search
+msgid "Document"
+msgstr "Document"
+
+#. module: smile_document
+#: model:ir.ui.menu,name:smile_document.menu_document_management_config
+msgid "Document Management"
+msgstr "Gestion documentaire"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_document_type_id
+#: model:ir.ui.view,arch_db:smile_document.view_document_search
+msgid "Document Type"
+msgstr "Type de document"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_document_date
+msgid "Document date"
+msgstr "Date du Document"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_document_type_form
+#: model:ir.ui.view,arch_db:smile_document.view_document_type_search
+msgid "Document type"
+msgstr "Type de document"
+
+#. module: smile_document
+#: code:addons/smile_document/models/document.py:37
+#: sql_constraint:ir.attachment.type:0
+#, python-format
+msgid "Document type name must be unique"
+msgstr "Le nom du Type de Document doit être unique !"
+
+#. module: smile_document
+#: model:ir.actions.act_window,name:smile_document.action_document
+#: model:ir.ui.menu,name:smile_document.menu_document
+#: model:ir.ui.menu,name:smile_document.menu_document_management_documents
+#: model:ir.ui.view,arch_db:smile_document.view_document_search
+#: model:ir.ui.view,arch_db:smile_document.view_document_tree
+msgid "Documents"
+msgstr "Documents"
+
+#. module: smile_document
+#: model:ir.actions.act_window,name:smile_document.action_document_type
+#: model:ir.ui.menu,name:smile_document.menu_document_type
+#: model:ir.ui.view,arch_db:smile_document.view_document_type_tree
+msgid "Documents types"
+msgstr "Types de documents"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_document_search
+msgid "Expiration Month"
+msgstr "Mois d’expiration"
+
+#. module: smile_document
+#: selection:ir.attachment,status:0
+#: model:ir.ui.view,arch_db:smile_document.view_document_search
+msgid "Expired"
+msgstr "Expiré"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_expiry_date
+msgid "Expiry date"
+msgstr "Date d’expiration"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_document_search
+msgid "Filter on my documents"
+msgstr "Filtrer sur mes documents"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_document_search
+msgid "Group By"
+msgstr "Regrouper par"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_attachment_form_inherit
+msgid "History"
+msgstr "Historique"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_type_id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_type___last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_type_write_uid
+msgid "Last Updated by"
+msgstr "Mis à jour par"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_type_write_date
+msgid "Last Updated on"
+msgstr "Mis à jour le"
+
+#. module: smile_document
+#: model:res.groups,name:smile_document.group_manage_document
+msgid "Manage Document"
+msgstr "Gérer les documents"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_attachment_form_inherit
+msgid "Modification"
+msgstr "Modification"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_document_search
+msgid "My Document(s)"
+msgstr "Mes Documents"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_type_name
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_document
+#: model:res.groups,name:smile_document.group_read_document
+msgid "Read Document"
+msgstr "Voir les documents"
+
+#. module: smile_document
+#: model:ir.model.fields,field_description:smile_document.field_ir_attachment_status
+#: model:ir.ui.view,arch_db:smile_document.view_document_search
+msgid "Status"
+msgstr "Statut"
+
+#. module: smile_document
+#: selection:ir.attachment,status:0
+#: model:ir.ui.view,arch_db:smile_document.view_document_search
+msgid "Valid"
+msgstr "Valide"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_document_tree
+msgid "Write Date"
+msgstr "Date de modification"
+
+#. module: smile_document
+#: model:ir.model,name:smile_document.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: smile_document
+#: model:ir.model,name:smile_document.model_ir_attachment_type
+msgid "ir.attachment.type"
+msgstr "ir.attachment.type"
+
+#. module: smile_document
+#: model:ir.ui.view,arch_db:smile_document.view_attachment_form_inherit
+msgid "on"
+msgstr "le"
