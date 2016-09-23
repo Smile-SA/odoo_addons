@@ -27,6 +27,8 @@ class TestAccessControl(TransactionCase):
 
     def setUp(self):
         super(TestAccessControl, self).setUp()
+        # Force test execution in English, to compare error messages
+        self.env.context = dict(self.env.context, lang='en_US')
         users_obj = self.env['res.users']
         groups_obj = self.env['res.groups']
         # Create groups
