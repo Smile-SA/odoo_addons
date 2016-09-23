@@ -35,7 +35,7 @@ class TestHolidays(TransactionCase):
             'name': 'Holidays Admin',
             'login': 'holidays_admin',
             'lang': 'en_US',
-            'groups_id': [(4, self.ref('base.group_no_one'))],
+            'groups_id': [(4, self.ref('smile_holidays.group_manage_holidays'))],
         }
         self.holidays_admin = self.env['res.users'].create(vals)
 

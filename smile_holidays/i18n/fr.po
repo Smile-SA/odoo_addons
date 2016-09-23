@@ -170,3 +170,13 @@ msgstr "Gérer les vacances"
 #, python-format
 msgid "The holiday period {} is already declared for zone {} between {} and {}"
 msgstr "La période de vacances {} a déjà été déclarée pour la zone {} entre {} et {}"
+
+#. module: smile_holidays
+#: model:res.groups,name:smile_holidays.group_manage_holidays
+msgid "Manage Holidays"
+msgstr "Paramétrer les vacances"
+
+#. module: smile_holidays
+#: model:res.groups,comment:smile_holidays.group_manage_holidays
+msgid "Create holiday areas and dates"
+msgstr "Créer les dates et zones de vacances"

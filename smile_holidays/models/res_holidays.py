@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp import api, fields, models, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class ResHolidaysArea(models.Model):
@@ -47,7 +47,7 @@ class ResHolidaysDate(models.Model):
     @api.constrains('start_date', 'end_date', 'area_ids')
     def _check_dates(self):
         if self.start_date > self.end_date:
-            raise Warning(_("Start Date can't be after End Date!"))
+            raise UserError(_("Start Date can't be after End Date!"))
         for area in self.area_ids:
             holidays_dates = self.search(['&', '&', ('area_ids', 'in', area.id), ('id', '!=', self.id), '|',
                                           '&', ('start_date', '>=', self.start_date), ('start_date', '<=', self.end_date), '|',
@@ -55,8 +55,8 @@ class ResHolidaysDate(models.Model):
                                           '&', ('start_date', '<=', self.start_date), ('end_date', '>=', self.end_date)])
             if holidays_dates:
                 holiday = holidays_dates[0]
-                raise Warning(_("The holiday period {} is already declared for zone {} between {} and {}")
-                              .format(holiday.name, area.name, holiday.start_date, holiday.end_date,))
+                raise UserError(_("The holiday period {} is already declared for zone {} between {} and {}")
+                                .format(holiday.name, area.name, holiday.start_date, holiday.end_date,))
 
     @api.multi
     def name_get(self):

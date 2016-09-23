@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Manage Holidays -->
+        <record id="group_manage_holidays" model="res.groups">
+            <field name="name">Manage Holidays</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="comment">Create holiday areas and dates</field>
+        </record>
+
+    </data>
+</openerp>
