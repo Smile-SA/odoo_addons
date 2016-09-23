@@ -1,0 +1,237 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_account_budget_commitment
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c-20160804\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-20 00:49+0000\n"
+"PO-Revision-Date: 2016-08-20 00:49+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_account_budget_commitment
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.view_crossovered_budget_line_search
+msgid "Analytic Account"
+msgstr "Compte analytique"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model,name:smile_account_budget_commitment.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Ligne analytique"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_analytic_line_commitment_account_id
+#, python-format
+msgid "Commitment Amount"
+msgstr "Compte d'engagement"
+
+#. module: smile_account_budget_commitment
+#: code:addons/smile_account_budget_commitment/models/account_budget.py:95
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_crossovered_budget_lines_analytic_line_ids
+#, python-format
+msgid "Analytic Lines"
+msgstr "Lignes analytiques"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,help:smile_account_budget_commitment.field_account_analytic_line_commitment_type
+msgid "Analytic line generated from sale, purchase or pay"
+msgstr "Analytic line generated from sale, purchase or pay"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_attachment_ids
+msgid "Attachments"
+msgstr "Pièces jointes"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_crossovered_budget_lines_available_amount
+msgid "Available Amount"
+msgstr "Montant disponible"
+
+#. module: smile_account_budget_commitment
+#: code:addons/smile_account_budget_commitment/models/analytic.py:56
+#, python-format
+msgid "Available amount [%s%s] is exceeded for the budget line '%s'"
+msgstr "Le montant disponible [%s%s] est dépassé pour la ligne de budget '%s'"
+
+#. module: smile_account_budget_commitment
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.view_crossovered_budget_line_search
+msgid "Budget"
+msgstr "Budget"
+
+#. module: smile_account_budget_commitment
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.view_users_form
+msgid "Budget Commitments"
+msgstr "Engagements"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model,name:smile_account_budget_commitment.model_crossovered_budget_lines
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_analytic_line_budget_line_id
+msgid "Budget Line"
+msgstr "Ligne de budget"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model,name:smile_account_budget_commitment.model_account_budget_post
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_budget_post_id
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.view_crossovered_budget_line_search
+msgid "Budgetary Position"
+msgstr "Poste budgétaire"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model,name:smile_account_budget_commitment.model_account_budget_post_commitment_limit
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.account_budget_post_commitment_limit_form_view
+msgid "Budgetary Position Commitment Limit"
+msgstr "Limite d'engagement du poste budgétaire"
+
+#. module: smile_account_budget_commitment
+#: model:ir.ui.menu,name:smile_account_budget_commitment.menu_act_crossovered_budget_lines_view
+msgid "Budgets"
+msgstr "Budgets"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_crossovered_budget_lines_commitment_amount
+msgid "Commitment Amount"
+msgstr "Montant d'engagement"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_amount_limit
+msgid "Commitment Amount Limit"
+msgstr "Limite du montant d'engagement"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_ids
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_res_users_commitment_limit_ids
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.view_budget_post_form
+msgid "Commitment Limits"
+msgstr "Limites d'engagement"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_analytic_line_commitment_type
+msgid "Commitment type"
+msgstr "Commitment type"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_account_budget_commitment
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.view_crossovered_budget_line_search
+msgid "Date from"
+msgstr "À partir de"
+
+#. module: smile_account_budget_commitment
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.view_crossovered_budget_line_search
+msgid "Date to"
+msgstr "Jusqu'à"
+
+#. module: smile_account_budget_commitment
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.view_crossovered_budget_line_form
+msgid "Details"
+msgstr "Détails"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_res_users_commitment_global_limit
+msgid "Global Commitment Limit"
+msgstr "Limite d'engagement globale"
+
+#. module: smile_account_budget_commitment
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.view_crossovered_budget_line_search
+msgid "Group By..."
+msgstr "Regrouper par..."
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,help:smile_account_budget_commitment.field_res_users_commitment_global_limit
+msgid "If equal to 0, the sky's the limit"
+msgstr "Si le montant est nul, pas de plafond"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model,name:smile_account_budget_commitment.model_account_journal
+msgid "Journal"
+msgstr "Journal"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit___last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_write_uid
+msgid "Last Updated by"
+msgstr "Mis à jour par"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_write_date
+msgid "Last Updated on"
+msgstr "Mis à jour le"
+
+#. module: smile_account_budget_commitment
+#: selection:account.analytic.line,commitment_type:0
+msgid "Pay commitment"
+msgstr "Pay commitment"
+
+#. module: smile_account_budget_commitment
+#: selection:account.analytic.line,commitment_type:0
+msgid "Purchase commitment"
+msgstr "Purchase commitment"
+
+#. module: smile_account_budget_commitment
+#: selection:account.analytic.line,commitment_type:0
+msgid "Sale commitment"
+msgstr "Sale commitment"
+
+#. module: smile_account_budget_commitment
+#: code:addons/smile_account_budget_commitment/models/account_budget.py:50
+#, python-format
+msgid "The Budget '%s' has no accounts!"
+msgstr "Le budget '%s' n'a pas de comptes!"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_user_id
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: smile_account_budget_commitment
+#: model:ir.model,name:smile_account_budget_commitment.model_res_users
+msgid "Users"
+msgstr "Utilisateurs"
+
+#. module: smile_account_budget_commitment
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.crossovered_budget_view_form
+#: model:ir.ui.view,arch_db:smile_account_budget_commitment.view_crossovered_budget_line_tree
+msgid "View details"
+msgstr "Voir les détails"
+
+#. module: smile_account_budget_commitment
+#: code:addons/smile_account_budget_commitment/models/res_users.py:39
+#, python-format
+msgid "You are not authorized to confirm this order.\n"
+"Amount for '%s' exceeds your commitment authorization"
+msgstr "Vous n'êtes pas autorisé à confirmer cette commande.\n"
+"Le montant pour '%s' dépasse votre limite d'engagement"
+
+#. module: smile_account_budget_commitment
+#: code:addons/smile_account_budget_commitment/models/account_budget.py:118
+#, python-format
+msgid "You cannot define a budget post commitment limit superior to the global limit of this user"
+msgstr "Vous ne pouvez définir une limite par poste budgétaire supérieure à la limite globale de l'utilisateur"

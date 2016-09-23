@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	
+		<record id="demo_account_777777" model="account.account">
+            <field name="code">777777</field>
+            <field name="name">Salary Expenses</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        </record>
+	
+        <record id="account_budget_post_purchase0" model="account.budget.post">
+			<field name="name">Purchases</field>
+			<field name="account_ids" eval="[(4, ref('demo_account_777777'))]"/>
+        </record>
+
+        <record id="commitment_limit0" model="account.budget.post.commitment_limit">
+            <field name="budget_post_id" ref="account_budget_post_purchase0"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="amount_limit">1000.0</field>
+        </record>
+
+	</data>
+</openerp>
