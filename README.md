@@ -6,4 +6,4 @@ This repository contains a collection of Odoo modules.
 Requirements
 ------------------------
 
-* Odoo master
+* Odoo 10.0
