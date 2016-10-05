@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="download_docker_image_wizard">
+      <div>
+        <p>
+          To run a build in local:
+        </p>
+        <ol>
+          <li>
+            Install Docker Engine (cf. <a href="https://docs.docker.com/engine/installation" target="new">official documentation)</a>
+          </li>
+          <li>
+            <input class="docker" value="docker-compose.yml" readonly="True"/>
+            <button id="button_download" class="btn docker-btn" title="Download">
+              <i class="fa fa-download"/>
+            </button>
+          </li>
+          <li>
+            <input id="docker_cmd" class="docker" value="docker-compose up" readonly="True"/>
+            <button id="button_copy" class="btn docker-btn" title="Copy to clipboard"
+                data-copy-target="#docker_cmd">
+              <i class="fa fa-copy"/>
+            </button>
+          </li>
+        </ol>
+      </div>
+      <hr/>
+      <div>
+        <p>To download another tag, replace <b>latest</b> by one of the following tags <b><t t-esc="widget.docker_tags"/></b> in docker-compose.yml:</p>
+        <pre>services:
+  odoo:
+    image: <t t-esc="widget.docker_registry_image"/>:<b><t t-esc="widget.default_tag"/></b>
+  db:
+    image: <t t-esc="widget.docker_registry_image"/>_db:<b><t t-esc="widget.default_tag"/></b></pre>
+        <p>To expose port 8069 (the default Odoo port) on port 8080, modify the followings lines in docker-compose.yml:</p>
+        <pre>services:
+  odoo:
+    ports:
+      - <b><i>8080</i></b>:8069</pre>
+        <p>To use local source code instead of container source code, add the followings lines in docker-compose.yml:</p>
+        <pre>services:
+  odoo:
+      <b>volumes:
+      - <i>your_local_source_code</i>:<t t-esc="widget.odoo_dir"/></b></pre>
+        <p>To run in a interactive mode, execute the following command lines:</p>
+        <pre>docker run -d --name db <t t-esc="widget.docker_registry_image"/>_db:<t t-esc="widget.default_tag"/>
+docker run -ti -p 8069:8069 --link db <t t-esc="widget.docker_registry_image"/>:<t t-esc="widget.default_tag"/></pre>
+      </div>
+    </t>
+
+</templates>

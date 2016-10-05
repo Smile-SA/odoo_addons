@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_docker_host_tree" model="ir.ui.view">
+      <field name="name">docker.host.tree</field>
+      <field name="model">docker.host</field>
+      <field name="arch" type="xml">
+        <tree string="Docker Hosts" colors="grey: active is False;">
+          <field name="sequence" widget="handle"/>
+          <field name="base_url"/>
+          <field name="tls"/>
+          <field name="timeout"/>
+          <field name="version"/>
+          <field name="build_base_url"/>
+          <field name="redirect_subdomain_to_port"/>
+          <field name="builds_path_store"/>
+          <field name="registries_path_store"/>
+          <field name="active"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_docker_host_form" model="ir.ui.view">
+      <field name="name">docker.host.form</field>
+      <field name="model">docker.host</field>
+      <field name="arch" type="xml">
+        <form string="Docker Hosts" colors="grey: active is False;">
+          <sheet>
+            <group>
+              <group>
+                <field name="base_url"/>
+                <field name="build_base_url"/>
+                <field name="remote_build_base_url"/>
+                <field name="builds_path_store"/>
+                <field name="registries_path_store"/>
+              </group>
+              <group>
+                <field name="active"/>
+                <field name="redirect_subdomain_to_port"/>
+                <field name="remote_redirect_subdomain_to_port"/>
+                <field name="version"/>
+                <field name="timeout"/>
+              </group>
+            </group>
+            <group>
+              <group>
+                <field name="tls"/>
+              </group>
+              <group attrs="{'invisible': [('tls', '=', False)]}">
+                <field name="tls_verify"/>
+                <field name="tls_ca_cert" attrs="{'required': [('tls', '=', True), ('tls_verify', '=', True)]}" placeholder="/path/to/ca.pem"/>
+                <field name="tls_cert" attrs="{'required': [('tls_key', '!=', False)]}" placeholder="/path/to/client-cert.pem"/>
+                <field name="tls_key" attrs="{'required': [('tls_cert', '!=', False)]}" placeholder="/path/to/client-key.pem"/>
+              </group>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_docker_host">
+      <field name="name">Docker Hosts</field>
+      <field name="res_model">docker.host</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="view_docker_host_tree"/>
+      <field name="context">{'active_test': False}</field>
+    </record>
+
+  </data>
+</odoo>

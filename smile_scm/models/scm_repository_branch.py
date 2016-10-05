@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import os
+import os.path
 import re
 import psycopg2
 import shutil
-from subprocess import call
 import tempfile
 
 from odoo import api, fields, models, _
@@ -14,7 +13,7 @@ from odoo.tools import config
 
 from ..tools import cd
 
-_logger = logging.getLogger(__package__)
+_logger = logging.getLogger(__name__)
 
 
 class Branch(models.Model):
@@ -22,6 +21,7 @@ class Branch(models.Model):
     _description = 'Branch'
     _inherit = ['mail.thread']
     _inherits = {'scm.repository': 'repository_id'}
+    _order = 'repository_name,branch'
 
     @api.one
     @api.depends('repository_id', 'repository_id.url', 'branch',
@@ -39,6 +39,7 @@ class Branch(models.Model):
 
     repository_id = fields.Many2one('scm.repository', 'Repository', required=True, ondelete='cascade',
                                     readonly=True, states={'draft': [('readonly', False)]}, copy=False)
+    repository_name = fields.Char('Name', related='repository_id.name', readonly=True, store=True)
     branch = fields.Char(help="Technical branch name", readonly=True, states={'draft': [('readonly', False)]}, copy=False)
     version_id = fields.Many2one('scm.version', 'Odoo Version', required=True, ondelete="restrict",
                                  readonly=True, states={'draft': [('readonly', False)]})
@@ -57,7 +58,7 @@ class Branch(models.Model):
     @api.multi
     def copy_data(self, default=None):
         data = super(Branch, self).copy_data(default)
-        data.update(repository_id=self.repository_id.id)
+        data[0].update(repository_id=self.repository_id.id)
         return data
 
     @api.multi
@@ -75,15 +76,6 @@ class Branch(models.Model):
         if not os.path.isdir(parent_path):
             raise UserError(_("%s doesn't exist or is not a directory") % parent_path)
         return parent_path
-
-    @staticmethod
-    def _call(cmd):
-        command = ' '.join(cmd)
-        res = call(cmd)
-        if res:
-            _logger.debug("subprocess.call failed : %s" % res)
-            raise UserError(_('%s FAILED' % command))
-        _logger.info('%s SUCCEEDED' % command)
 
     @api.multi
     def _try_lock(self, warning=None):
@@ -109,15 +101,8 @@ class Branch(models.Model):
                     branch.state = 'done'
                     branch.pull()
                 else:
-                    vcs = branch.vcs_id
-                    localdict = {'branch': branch.branch or branch.vcs_id.default_branch,
-                                 'url': branch.url}
-                    cmd_clone = vcs.cmd_clone % localdict
-                    cmd = cmd_clone.split(' ')
-                    cmd.insert(0, vcs.cmd)
-                    cmd.append(branch.directory)
                     try:
-                        Branch._call(cmd)
+                        branch.vcs_id.clone(branch.directory, branch.branch, branch.url)
                     except UserError:
                         _logger.error('Clone failed for branch %s (%s %s)...' % (branch.id, branch.name, branch.branch))
                         raise
@@ -133,13 +118,11 @@ class Branch(models.Model):
             if not os.path.exists(branch.directory):
                 branch.clone(force=True)
             else:
-                with cd(branch.directory):
-                    vcs = branch.vcs_id
-                    try:
-                        Branch._call([vcs.cmd, vcs.cmd_pull])
-                    except UserError:
-                        _logger.error('Pull failed for branch %s (%s %s)...' % (branch.id, branch.name, branch.branch))
-                        raise
+                try:
+                    branch.vcs_id.pull(branch.directory)
+                except UserError:
+                    _logger.error('Pull failed for branch %s (%s %s)...' % (branch.id, branch.name, branch.branch))
+                    raise
                 branch.write({'last_update': fields.Datetime.now()})
         return True
 
@@ -163,7 +146,9 @@ class Branch(models.Model):
     def unlink(self):
         for branch in self:
             try:
-                shutil.rmtree(branch.directory)
-            except:
+                if branch.directory and os.path.exists(branch.directory):
+                    shutil.rmtree(branch.directory)
+            except Exception, e:
+                _logger.error(_('Remove branch directory failed\n%s') % repr(e))
                 pass
         return super(Branch, self).unlink()

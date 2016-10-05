@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="docker_image_postgresql_9_1" model="docker.image">
+            <field name="name">PostgreSQL 9.1</field>
+            <field name="docker_image">postgres:9.1</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+        </record>
+        <record id="docker_image_postgresql_9_2" model="docker.image">
+            <field name="name">PostgreSQL 9.2</field>
+            <field name="docker_image">postgres:9.2</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+        </record>
+        <record id="docker_image_postgresql_9_3" model="docker.image">
+            <field name="name">PostgreSQL 9.3</field>
+            <field name="docker_image">postgres:9.3</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+        </record>
+        <record id="docker_image_postgresql_9_4" model="docker.image">
+            <field name="name">PostgreSQL 9.4</field>
+            <field name="docker_image">postgres:9.4</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+        </record>
+        <record id="docker_image_postgresql_9_5" model="docker.image">
+            <field name="name">PostgreSQL 9.5</field>
+            <field name="docker_image">postgres:9.5</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+        </record>
+        <record id="docker_image_postgresql_9_6" model="docker.image">
+            <field name="name">PostgreSQL 9.6</field>
+            <field name="docker_image">postgres:9.6</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+        </record>
+
+        <record id="docker_image_redis_3_2" model="docker.image">
+            <field name="name">Redis 3.2</field>
+            <field name="docker_image">redis:3.2</field>
+        </record>
+
+        <record id="docker_image_elasticsearch_2_4" model="docker.image">
+            <field name="name">Elasticsearch 2.4</field>
+            <field name="docker_image">elasticsearch:2.4</field>
+        </record>
+
+    </data>
+</odoo>

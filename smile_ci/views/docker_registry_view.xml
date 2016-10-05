@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_docker_registry_tree" model="ir.ui.view">
+      <field name="name">docker.registry.tree</field>
+      <field name="model">docker.registry</field>
+      <field name="arch" type="xml">
+        <tree string="Docker Registries" editable="top" colors="grey: active is False;">
+          <field name="sequence" widget="handle"/>
+          <field name="name"/>
+          <field name="image"/>
+          <field name="port"/>
+          <field name="docker_host_id"/>
+          <field name="url"/>
+          <field name="remote_url"/>
+          <field name="configfile"/>
+          <field name="tls_cert" placeholder="/path/to/domain.crt"/>
+          <field name="tls_key" placeholder="/path/to/domain.key" attrs="{'required': [('tls_cert', '!=', False)], 'readonly': [('tls_cert', '=', False)]}"/>
+          <field name="login" attrs="{'readonly': [('tls_cert', '=', False)]}"/>
+          <field name="password" attrs="{'required': [('login', '!=', False)], 'readonly': [('login', '=', False)]}"/>
+          <field name="active"/>
+          <button name="open_wizard" string="Images" type="object" icon="fa-list-ul"/>
+          <button name="open" string="Open" type="object" icon="fa-sign-in"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_docker_registry">
+      <field name="name">Docker Registries</field>
+      <field name="res_model">docker.registry</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="view_docker_registry_tree"/>
+      <field name="context">{'active_test': False}</field>
+    </record>
+
+  </data>
+</odoo>

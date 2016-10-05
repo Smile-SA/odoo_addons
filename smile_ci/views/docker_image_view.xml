@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_docker_image_tree" model="ir.ui.view">
+      <field name="name">docker.image.tree</field>
+      <field name="model">docker.image</field>
+      <field name="arch" type="xml">
+        <tree string="Docker Images" colors="grey: active is False;">
+          <field name="sequence" widget="handle"/>
+          <field name="name"/>
+          <field name="docker_image"/>
+          <field name="active"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_docker_image_form" model="ir.ui.view">
+      <field name="name">docker.image.form</field>
+      <field name="model">docker.image</field>
+      <field name="arch" type="xml">
+        <form string="Docker Image">
+          <sheet>
+            <group>
+              <group>
+                <field name="name"/>
+                <field name="docker_image"/>
+                <field name="docker_registry_id"/>
+              </group>
+              <group>
+                <field name="active"/>
+                <field name="with_persistent_storage"/>
+                <field name="is_postgres"/>
+              </group>
+            </group>
+            <group>
+              <group>
+                <field name="default_environment"/>
+              </group>
+              <group>
+                <field name="link_ids">
+                  <tree string="Linked Services" editable="top">
+                    <field name="name"/>
+                    <field name="linked_image_id"/>
+                    <field name="environment"/>
+                    <field name="volume_from"/>
+                  </tree>
+                </field>
+              </group>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_docker_image">
+      <field name="name">Docker Images</field>
+      <field name="res_model">docker.image</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="view_docker_image_tree"/>
+    </record>
+
+  </data>
+</odoo>

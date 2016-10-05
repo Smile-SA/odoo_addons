@@ -173,12 +173,12 @@ class UpgradeManager(object):
         with cursor(self.db) as cr:
             with api.Environment.manage():
                 env = api.Environment(cr, uid, {})
-                module_obj = env['ir.module.module']
-                module_obj.update_list()
-                modules = module_obj.search([('name', 'in', modules_to_upgrade),
+                Module = env['ir.module.module']
+                Module.update_list()
+                modules = Module.search([('name', 'in', modules_to_upgrade),
                                             ('state', 'in', ('uninstalled', 'to install'))])
                 modules.button_install()
-                modules = module_obj.search([('name', 'in', modules_to_upgrade),
+                modules = Module.search([('name', 'in', modules_to_upgrade),
                                             ('state', 'in', ('installed', 'to upgrade'))])
                 modules.button_upgrade()
                 cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")

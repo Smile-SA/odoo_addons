@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class Repository(models.Model):
     _name = 'scm.repository'
     _description = 'Repository'
     _inherit = ['mail.thread']
+    _order = 'name'
 
     @api.one
     def _has_branch_done(self):
@@ -25,3 +26,9 @@ class Repository(models.Model):
     _sql_constraints = [
         ('unique_url', 'UNIQUE(url)', 'Repository URL must be unique'),
     ]
+
+    @api.multi
+    def copy_data(self, default=None):
+        default = default or {}
+        default['name'] = _('%s copy') % self.name
+        return super(Repository, self).copy_data(default)
