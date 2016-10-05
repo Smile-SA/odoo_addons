@@ -100,8 +100,8 @@ msgstr "Les profils utilisateurs ne peuvent pas être liées à un profil !"
 #. module: smile_access_control
 #: model:ir.actions.server,name:smile_access_control.action_server_superadmin
 #: model:ir.ui.menu,name:smile_access_control.menu_action_superadmin
-msgid "Super Admin"
-msgstr "Super Admin"
+msgid "Administrator"
+msgstr "Administrateur"
 
 #. module: smile_access_control
 #: sql_constraint:res.users:0

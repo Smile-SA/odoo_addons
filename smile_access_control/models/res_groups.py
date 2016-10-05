@@ -27,8 +27,8 @@ class IrModel(models.Model):
 
     @api.multi
     def _get_first_level_relations(self):
-        field_obj = self.env['ir.model.fields']
-        field_recs = field_obj.search([
+        Fields = self.env['ir.model.fields']
+        field_recs = Fields.search([
             ('ttype', 'in', ('many2one', 'one2many', 'many2many')),
             ('model_id', 'in', self.ids),
         ])
@@ -56,15 +56,15 @@ class ResGroups(models.Model):
     @api.multi
     def _update_users(self, vals):
         if vals.get('users'):
-            user_obj = self.env['res.users']
-            user_profiles = user_obj.browse()
+            Users = self.env['res.users']
+            user_profiles = Users.browse()
             for item in vals['users']:
                 user_ids = []
                 if item[0] == 6:
                     user_ids = item[2]
                 elif item[0] == 4:
                     user_ids = [item[1]]
-                users = user_obj.browse(user_ids)
+                users = Users.browse(user_ids)
                 user_profiles |= users.filtered(lambda user: user.is_user_profile)
                 user_profiles |= users.mapped('user_profile_id')
             if user_profiles:
@@ -101,12 +101,12 @@ class ResGroups(models.Model):
     @api.multi
     def button_complete_access_controls(self):
         """Create access rules for the first level relation models of access rule models not only in readonly"""
-        access_obj = self.env['ir.model.access']
+        Access = self.env['ir.model.access']
         filter_rule = lambda rule: rule.perm_write or rule.perm_create or rule.perm_unlink
         for group in self:
             models = group.model_access.filtered(filter_rule).mapped('model_id')
             for model in models._get_relations(self._context.get('relations_level', 1)):
-                access_obj.create({
+                Access.create({
                     'name': '%s %s' % (model.model, group.name),
                     'model_id': model.id,
                     'group_id': group.id,

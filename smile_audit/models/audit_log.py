@@ -84,9 +84,9 @@ class AuditLog(models.Model):
         self.ensure_one()
         content = []
         data = eval(self.data or '{}')
-        model_obj = self.env[self.model_id.model]
+        RecordModel = self.env[self.model_id.model]
         for fname in set(data['new'].keys() + data['old'].keys()):
-            field = model_obj._fields.get(fname) or model_obj._inherit_fields.get(fname)
+            field = RecordModel._fields.get(fname) or RecordModel._inherit_fields.get(fname)
             old_value = self._format_value(field, data['old'].get(fname, ''))
             new_value = self._format_value(field, data['new'].get(fname, ''))
             if old_value != new_value:

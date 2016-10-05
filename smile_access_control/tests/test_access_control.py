@@ -27,25 +27,25 @@ class TestAccessControl(TransactionCase):
 
     def setUp(self):
         super(TestAccessControl, self).setUp()
-        users_obj = self.env['res.users']
-        groups_obj = self.env['res.groups']
+        Users = self.env['res.users']
+        Groups = self.env['res.groups']
         # Create groups
-        self.group1, self.group2 = map(lambda index: groups_obj.create({'name': 'Group %d' % index}), range(1, 3))
+        self.group1, self.group2 = map(lambda index: Groups.create({'name': 'Group %d' % index}), range(1, 3))
         # Create user profiles
-        self.user_profile1 = users_obj.create({
+        self.user_profile1 = Users.create({
             'name': 'Profile 1',
             'login': 'profile1',
             'is_user_profile': True,
             'groups_id': [(4, self.group1.id)],
         })
-        self.user_profile2 = users_obj.create({
+        self.user_profile2 = Users.create({
             'name': 'Profile 2',
             'login': 'profile2',
             'is_user_profile': True,
             'groups_id': [(6, 0, (self.group1 | self.group2).ids)],
         })
         # Create users
-        self.user = users_obj.create({
+        self.user = Users.create({
             'name': 'Demo User',
             'login': 'demouser',
             'user_profile_id': self.user_profile1.id,

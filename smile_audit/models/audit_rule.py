@@ -117,23 +117,23 @@ class AuditRule(models.Model):
         if not ids:
             ids = self.search(cr, SUPERUSER_ID, [])
         for rule in self.browse(cr, SUPERUSER_ID, ids):
-            model_obj = self.pool.get(rule.model_id.model)
-            if not model_obj:
+            RecordModel = self.pool.get(rule.model_id.model)
+            if not RecordModel:
                 continue
-            if rule.active and not hasattr(model_obj, 'audit_rule'):
+            if rule.active and not hasattr(RecordModel, 'audit_rule'):
                 for method in self._methods:
-                    model_obj._patch_method(method, audit_decorator())
-                model_obj.audit_rule = True
+                    RecordModel._patch_method(method, audit_decorator())
+                RecordModel.audit_rule = True
                 updated = True
-            if not rule.active and hasattr(model_obj, 'audit_rule'):
+            if not rule.active and hasattr(RecordModel, 'audit_rule'):
                 for method_name in self._methods:
-                    method = getattr(model_obj, method_name)
+                    method = getattr(RecordModel, method_name)
                     while hasattr(method, 'origin'):
                         if method.__name__ == 'audit_wrapper':
-                            model_obj._revert_method(method_name)
+                            RecordModel._revert_method(method_name)
                             break
                         method = method.origin
-                del model_obj.audit_rule
+                del RecordModel.audit_rule
                 updated = True
         if updated:
             self.clear_caches()

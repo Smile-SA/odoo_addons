@@ -24,12 +24,6 @@ def _get_args(self, method, args, kwargs):
     # avoid hasattr(self, '_ids') because __getattr__() is overridden
     if '_ids' in self.__dict__:
         vals = method in ('create', 'write', '_create', '_write') and args[0] or {}
-    else:
-        cr, uid = args[:2]
-        ids = method in ('write', 'unlink') and args[2] or []
-        context = kwargs.get('context')
-        self = self.browse(cr, uid, ids, context)
-        vals = ('create' in method and args[2]) or ('write' in method and args[3]) or {}
     if self._name == 'res.users':
         vals = self._remove_reified_groups(vals)
     fields_to_read = vals.keys()
@@ -48,10 +42,10 @@ def audit_decorator():
             origin = origin.origin
         method = origin.__name__
         records, fields_to_read = _get_args(self, method, args, kwargs)
-        rule_obj = records.env['audit.rule']
-        rule_id = rule_obj._check_audit_rule().get(records._name, {}).get(method)
+        AuditRule = records.env['audit.rule']
+        rule_id = AuditRule._check_audit_rule().get(records._name, {}).get(method)
         if rule_id:
-            rule = rule_obj.browse(rule_id)
+            rule = AuditRule.browse(rule_id)
             old_values = None
             if method != 'create':
                 if fields_to_read or method == 'unlink':

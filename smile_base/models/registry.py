@@ -26,14 +26,14 @@ native_setup_models = Registry.setup_models
 
 def new_setup_models(self, cr, partial=False):
     native_setup_models(self, cr, partial)
-    for model_obj in self.models.itervalues():
-        for fieldname, field in model_obj._fields.iteritems():
+    for RecordModel in self.models.itervalues():
+        for fieldname, field in RecordModel._fields.iteritems():
             if field.type == 'many2one' and field.ondelete and field.ondelete.lower() == 'cascade':
                 if field.comodel_name.startswith('mail.'):
                     continue
-                remote_obj = self.get(field.comodel_name)
-                if not hasattr(remote_obj, '_cascade_relations'):
-                    setattr(remote_obj, '_cascade_relations', {})
-                remote_obj._cascade_relations.setdefault(model_obj._name, set()).add(fieldname)
+                CoModel = self.get(field.comodel_name)
+                if not hasattr(CoModel, '_cascade_relations'):
+                    setattr(CoModel, '_cascade_relations', {})
+                CoModel._cascade_relations.setdefault(RecordModel._name, set()).add(fieldname)
 
 Registry.setup_models = new_setup_models

@@ -70,12 +70,12 @@ def unlink(self):
             self = self.with_context(unlink_in_cascade={self._name: list(self._ids)})
         for model, fnames in self.pool[self._name]._cascade_relations.iteritems():
             domain = ['|'] * (len(fnames) - 1) + [(fname, 'in', self._ids) for fname in fnames]
-            sub_model_obj = self.env[model]
-            sub_models = sub_model_obj.search(domain)
+            SubModel = self.env[model]
+            sub_models = SubModel.search(domain)
             sub_model_ids = list(set(sub_models._ids) - set(self._context['unlink_in_cascade'].get(model, [])))
             if sub_model_ids:
                 self._context['unlink_in_cascade'].setdefault(model, []).extend(sub_model_ids)
-                sub_model_obj.browse(sub_model_ids).unlink()
+                SubModel.browse(sub_model_ids).unlink()
     if not self.exists():
         return True
     return native_unlink(self)
