@@ -176,10 +176,10 @@ class UpgradeManager(object):
                 Module = env['ir.module.module']
                 Module.update_list()
                 modules = Module.search([('name', 'in', modules_to_upgrade),
-                                            ('state', 'in', ('uninstalled', 'to install'))])
+                                         ('state', 'in', ('uninstalled', 'to install'))])
                 modules.button_install()
                 modules = Module.search([('name', 'in', modules_to_upgrade),
-                                            ('state', 'in', ('installed', 'to upgrade'))])
+                                         ('state', 'in', ('installed', 'to upgrade'))])
                 modules.button_upgrade()
                 cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")
         self._reset_services()
