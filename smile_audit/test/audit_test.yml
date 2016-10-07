@@ -2,12 +2,12 @@
   I create an audit rule on partners
 -
   !python {model: audit.rule}: |
-    rule_id = self.search(cr, uid, [('model_id.model', '=', 'res.partner')], limit=1, context=context)
-    if not rule_id:
-      rule_id = self.create(cr, uid, {'name': 'Audit rule on partners', 'model_id': ref('base.model_res_partner')}, context)
+    rule = self.search([('model_id.model', '=', 'res.partner')], limit=1)
+    if not rule:
+      rule = self.create({'name': 'Audit rule on partners', 'model_id': ref('base.model_res_partner')})
     else:
       rule_id = rule_id[0]
-    self.pool.get('ir.model.data').create(cr, uid, {'name': 'rule_partners', 'module': 'smile_audit', 'model': 'res.partner', 'res_id': rule_id}, context)
+    self.env['ir.model.data'].create({'name': 'rule_partners', 'module': 'smile_audit', 'model': 'res.partner', 'res_id': rule_id})
 -
   As demo user, I create a new partner
 -
@@ -22,7 +22,7 @@
       ('method', '=', 'create'),
       ('res_id', '=', ref('res_partner_test')),
     ]
-    assert self.search(cr, uid, domain, limit=1, context=context), 'No audit log after user creation'
+    assert self.search(domain, limit=1), 'No audit log after user creation'
 -
   As demo user, I update contact name
 -
@@ -37,12 +37,12 @@
       ('method', '=', 'write'),
       ('res_id', '=', ref('res_partner_test')),
     ]
-    assert self.search(cr, uid, domain, limit=1, context=context), 'No audit log after user update'
+    assert self.search(domain, limit=1), 'No audit log after user update'
 -
   As demo user, I delete this address
 -
   !python {model: res.partner}: |
-    self.unlink(cr, uid, [ref('res_partner_test')], context)
+    self.env.ref('res_partner_test').unlink()
 -
   I check if an audit log is created after deletion
 -
@@ -52,4 +52,4 @@
       ('method', '=', 'unlink'),
       ('res_id', '=', ref('res_partner_test')),
     ]
-    assert self.search(cr, uid, domain, limit=1, context=context), 'No audit log after user deletion'
+    assert self.search(domain, limit=1), 'No audit log after user deletion'
