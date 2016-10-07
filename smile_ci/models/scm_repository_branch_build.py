@@ -24,7 +24,7 @@ from odoo.modules.registry import Registry
 import odoo.modules as addons
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
-from odoo.addons.smile_scm.tools import cd
+from odoo.addons.smile_scm.tools import cd, check_output_chain
 
 from ..tools import cursor, with_new_cursor, s2human, mergetree, get_exception_message
 
@@ -202,6 +202,17 @@ class Build(models.Model):
             logs.append(repr(e))
         self.server_logs = ''.join(logs[-limit:])
 
+    @api.one
+    @api.depends('branch_id.build_ids')
+    def _get_is_last(self):
+        if self.result in ('stable', 'unstable'):
+            self.is_last = self.id == self.branch_id.build_ids.filtered(lambda build: build.result == self.result)[0].id
+
+    @api.one
+    @api.depends('docker_host_id.builds_path_store')
+    def _get_directory(self):
+        self.directory = os.path.join(self.docker_host_id.builds_path, str(self.id))
+
     id = fields.Integer('Number', readonly=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True, index=True, ondelete='cascade')
     repository_id = fields.Many2one('scm.repository', related='branch_id.repository_id', readonly=True, store=True)
@@ -217,7 +228,7 @@ class Build(models.Model):
     ], 'State', readonly=True, default='pending')
     result = fields.Selection(BUILD_RESULTS, 'Result', readonly=True)
     error = fields.Char(readonly=True)
-    directory = fields.Char(readonly=True)
+    directory = fields.Char(compute='_get_directory', store=True)
     docker_registry_id = fields.Many2one('docker.registry', related='branch_id.docker_registry_id', readonly=True)
     docker_host_id = fields.Many2one('docker.host', 'Docker host', readonly=True, default=_get_default_docker_host)
     docker_image = fields.Char('Docker image - Odoo', compute='_get_docker_infos')
@@ -243,6 +254,7 @@ class Build(models.Model):
     is_to_keep = fields.Boolean("Keep alive", readonly=True, help="If checked, this build will not be stopped by scheduler")
     is_killable = fields.Boolean("Can be killed", readonly=True, help="A build can only be killed if its container is started")
     server_logs = fields.Text(compute='_get_last_server_logs', context={'limit': 30})
+    is_last = fields.Boolean(compute='_get_is_last')
 
     @api.model
     def create(self, vals):
@@ -271,7 +283,6 @@ class Build(models.Model):
     def _copy_sources(self):
         _logger.info('Copying %s %s sources...' % (self.branch_id.name, self.branch_id.branch))
         try:
-            self.directory = os.path.join(self.docker_host_id.builds_path, str(self.id))
             ignore_patterns = shutil.ignore_patterns(TEST_MODULE, *IGNORE_PATTERNS)  # Do not copy smile_test and useless files
             for branch, subfolder in Build._get_branches_to_merge(self.branch_id):
                 mergetree(branch.directory, os.path.join(self.directory, subfolder), ignore=ignore_patterns)
@@ -481,8 +492,8 @@ class Build(models.Model):
         localdict = self.branch_id._get_dockerfile_params()
         base_image = self.branch_id.docker_registry_image
         localdict['base_image'] = '%s:base' % base_image
-        if base_image not in self.branch_id.docker_registry_id.get_images()
-                or  'base' not in self.branch_id.docker_registry_id.get_image_tags(base_image):
+        if base_image not in self.branch_id.docker_registry_id.get_images() \
+                or 'base' not in self.branch_id.docker_registry_id.get_image_tags(base_image):
             self.branch_id.recreate_image()
         with cd(self.directory):
             with open(DOCKERFILE, 'w') as f:
@@ -947,14 +958,13 @@ class Build(models.Model):
     def _get_commit_params(self):
         self.ensure_one()
         params = [{
+            'container': link.name + CONTAINER_SUFFIX % self.id,
+            'repository': '%s_%s' % (self.branch_id.docker_registry_image, link.name),
+        } for link in self.branch_id.link_ids.get_all_links(only_with_persistent_storage=True)]
+        params += [{
             'container': self.docker_container,
             'repository': self.branch_id.docker_registry_image,
         }]
-        for link in self.branch_id.link_ids.get_all_links(only_with_persistent_storage=True):
-            params.append({
-                'container': link.name + CONTAINER_SUFFIX % self.id,
-                'repository': '%s_%s' % (self.branch_id.docker_registry_image, link.name),
-            })
         return params
 
     @api.one
@@ -990,7 +1000,7 @@ class Build(models.Model):
     @api.one
     def _push_image(self):
         for params in self._get_push_params():
-            self.docker_registry_id.push_image(**params)
+            self.docker_host_id.push_image(**params)
 
     @api.one
     def _remove_registry_image(self, tags=None):
@@ -1005,3 +1015,29 @@ class Build(models.Model):
             image = params['repository'].split('/')[:-1]
             for tag in (tags or ['latest']):
                 self.docker_registry_id.delete_image(image, tag)
+
+    @api.multi
+    def start_container_from_registry(self):
+        self.ensure_one()
+        if not self.is_last:
+            raise UserError(_('Image not available in registry for the build #%s') % self.id)
+        self.port = sorted(self._find_ports(), reverse=True).pop()
+        if not os.path.exists(self.directory):
+            os.makedirs(self.directory)
+        try:
+            with cd(self.directory):
+                content = self.branch_id.get_docker_compose_content(self.result, self.docker_container, self.port)
+                with open('docker-compose.yml', 'w') as f:
+                    f.write(content)
+                try:
+                    check_output_chain(['docker-compose', 'up', '-d'])
+                except Exception, e:
+                    raise UserError(_('Starting build #%s failed\n\n%s') % (self.id, repr(e)))
+        except:
+            raise
+        else:
+            self.state = 'running'
+            self._check_running()
+        finally:
+            self._remove_directory()
+        return True

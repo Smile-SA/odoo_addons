@@ -210,7 +210,7 @@ class DockerRegistry(models.Model):
         return params
 
     @api.multi
-    def _auth_config(self):
+    def auth_config(self):
         self.ensure_one()
         config = {'insecure_registry': not self.url.startswith('https')}
         if self.login:
@@ -222,7 +222,7 @@ class DockerRegistry(models.Model):
 
     @api.multi
     def _pull_base_image(self):
-        kwargs = self._auth_config()
+        kwargs = self.auth_config()
         self.docker_host_id.pull_image(self.image, **kwargs)
 
     @api.multi
@@ -305,11 +305,6 @@ class DockerRegistry(models.Model):
             return []
         url = urljoin(self.url, 'v2/%s/tags/list' % image)
         return requests.get(url, headers=self._get_headers()).json().get('tags') or []
-
-    @api.multi
-    def push_image(self, repository, **kwargs):
-        kwargs.update(self._auth_config())
-        return self.docker_host_id.push_image(repository, **kwargs)
 
     @api.multi
     def delete_image(self, image, tag='latest'):

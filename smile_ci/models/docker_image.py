@@ -58,7 +58,7 @@ class DockerImage(models.Model):
             tag = self.docker_image.split(':')[-1]
             repository = self.docker_registry_image[:-len(tag) - 1]
             docker_host.tag_image(self.docker_image, tags=tag, repository=repository)
-            self.docker_registry_id.push_image(self.docker_registry_image)
+            docker_host.push_image(self.docker_registry_image)
             docker_host.remove_image(self.docker_image)
 
     @api.one

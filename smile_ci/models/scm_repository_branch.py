@@ -16,7 +16,7 @@ from odoo.tools.safe_eval import safe_eval as eval
 
 from odoo.addons.smile_scm.tools import cd
 
-from ..tools import with_new_cursor
+from ..tools import cursor, with_new_cursor
 from .scm_repository_branch_build import BUILD_RESULTS, CONFIGFILE, DOCKERFILE
 
 _logger = logging.getLogger(__name__)
@@ -460,7 +460,7 @@ class Branch(models.Model):
     @api.one
     def _push_image(self):
         params = self._get_push_params()
-        self.docker_registry_id.push_image(**params)
+        self.docker_host_id.push_image(**params)
 
     @api.one
     def _remove_image(self):
@@ -481,13 +481,19 @@ class Branch(models.Model):
             if field in vals:
                 branches._delete_image()
                 for branch in branches.filtered(lambda branch: branch.use_in_ci):
-                    branch.docker_host_id = self.env['docker.host'].get_default_docker_host()
-                    branch._create_build_directory()
-                    branch._create_dockerfile()
-                    branch._build_image()
-                    branch._remove_build_directory()
-                    branch._push_image()
-                    branch._remove_image()
+                    try:
+                        branch.docker_host_id = self.env['docker.host'].get_default_docker_host()
+                        branch._create_build_directory()
+                        branch._create_dockerfile()
+                        branch._build_image()
+                        branch._remove_build_directory()
+                        branch._push_image()
+                        branch._remove_image()
+                    except Exception, e:
+                        msg = _("Base image creation failed\n\n%s") % repr(e)
+                        with cursor(self._cr.dbname, False) as new_cr:
+                            branch.with_env(self.env(cr=new_cr)).message_post(body=msg)
+                        raise
                 break
 
     @api.model
@@ -505,15 +511,17 @@ class Branch(models.Model):
 
     @api.multi
     def unlink(self):
+        self = self.sudo()
         self._delete_image()
         return super(Branch, self).unlink()
 
     @api.multi
-    def get_docker_compose_content(self, tag='latest'):
+    def get_docker_compose_content(self, tag='latest', container_name='', port='8069'):
         services = {
             'odoo': {
                 'image': '%s:%s' % (self.docker_registry_image, tag),
-                'ports': ['8069:8069', '8071:8071'],
+                'container_name': container_name,
+                'ports': ['%s:8069' % port, '8071:8071'],
                 'links': self.mapped('link_ids.name'),
             }
         }
