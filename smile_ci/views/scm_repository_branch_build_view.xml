@@ -76,6 +76,7 @@
         <form string="Build">
           <header>
             <field name="is_killable" invisible="1"/>
+            <field name="is_last" invisible="1"/>
             <button name="open" type="object" states="running" string="Open" class="btn-info"/>
             <button name="keep_alive" type="object" string="Keep alive" class="btn-warning" groups="smile_scm.group_scm_user"
               attrs="{'invisible': ['|', ('state', '!=', 'running'), ('is_to_keep', '=', True)]}"/>
@@ -85,6 +86,8 @@
               attrs="{'invisible': ['|', ('is_killable', '=', False), ('state', '=', 'done')]}"/>
             <button name="show_logs" type="object" string="Show logs"
               attrs="{'invisible': ['|', ('is_killable', '=', False), ('state', '=', 'done')]}"/>
+            <button name="start_container_from_registry" type="object" string="Restart" groups="smile_scm.group_scm_user"
+              attrs="{'invisible': ['|', ('is_last', '=', False), ('state', '!=', 'done')]}"/>
             <field name="state" widget="statusbar" statusbar_visible="pending,testing"/>
           </header>
           <sheet>

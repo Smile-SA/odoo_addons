@@ -10,6 +10,7 @@
           <field name="result"/>
           <field name="state"/>
           <field name="is_killable"/>
+          <field name="is_last"/>
           <field name="is_to_keep"/>
           <field name="failed_test_count"/>
           <field name="coverage_avg"/>
@@ -56,6 +57,11 @@
                     </button>
                     <button class="btn" name="show_logs" type="object" string="Show logs">
                       <i class="fa fa-file-text-o"/>
+                    </button>
+                  </div>
+                  <div class="row btn-group pull-right" t-if="record.state.raw_value == 'done' and record.is_last.raw_value">
+                    <button class="btn" name="start_container_from_registry" type="object" string="Restart" groups="smile_scm.group_scm_user">
+                      <i class="fa fa-fast-forward"/>
                     </button>
                   </div>
                 </div>
