@@ -5,9 +5,7 @@
     rule = self.search([('model_id.model', '=', 'res.partner')], limit=1)
     if not rule:
       rule = self.create({'name': 'Audit rule on partners', 'model_id': ref('base.model_res_partner')})
-    else:
-      rule_id = rule_id[0]
-    self.env['ir.model.data'].create({'name': 'rule_partners', 'module': 'smile_audit', 'model': 'res.partner', 'res_id': rule_id})
+    self.env['ir.model.data'].create({'name': 'rule_partners', 'module': 'smile_audit', 'model': 'res.partner', 'res_id': rule.id})
 -
   As demo user, I create a new partner
 -
