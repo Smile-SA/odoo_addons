@@ -112,11 +112,15 @@ class AuditRule(models.Model):
                  if getattr(rule, 'log_%s' % method.replace('_', ''))}
                 for rule in rules}
 
-    def _register_hook(self, cr, ids=None):
+    @api.model_cr
+    def _register_hook(self, ids=None):
+        self = self.sudo()
         updated = False
-        if not ids:
-            ids = self.search(cr, SUPERUSER_ID, [])
-        for rule in self.browse(cr, SUPERUSER_ID, ids):
+        if ids:
+            rules = self.browse(ids)
+        else:
+            rules = self.search([])
+        for rule in rules:
             RecordModel = self.pool.get(rule.model_id.model)
             if not RecordModel:
                 continue
