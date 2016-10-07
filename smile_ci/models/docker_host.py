@@ -302,7 +302,9 @@ class DockerHost(models.Model):
         for image in self.client.images(all=True):
             if repository in (image.get('RepoTags') or []):
                 return image
-        return self.client.pull(*repository.split(':'))
+        tag = repository.split('/')[-1].split(':')[-1]
+        repository = repository[:-len(tag) - 1]
+        return self.client.pull(repository, tag, **kwargs)
 
     @api.multi
     def execute_command(self, container, cmd, **kwargs):
