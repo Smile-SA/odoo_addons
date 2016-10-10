@@ -21,7 +21,7 @@
 
 import logging
 
-from odoo import api, fields, models, SUPERUSER_ID, tools, _
+from odoo import api, fields, models, tools, _
 from odoo.modules.registry import RegistryManager
 
 from ..tools import audit_decorator

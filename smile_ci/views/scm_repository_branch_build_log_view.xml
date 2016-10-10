@@ -82,19 +82,19 @@
       <field name="arch" type="xml">
         <graph string="Logs" type="bar" stacked="True">
           <field name="build_id" type="row"/>
-          <field name="result" type="col"/>
         </graph>
       </field>
     </record>
 
     <record  id="view_repository_branch_build_log_pivot" model="ir.ui.view">
-        <field name="name">scm.repository.branch.build.log.pivot</field>
-        <field name="model">scm.repository.branch.build.log</field>
-        <field name="arch" type="xml">
-            <pivot string="Logs Analysis">
-                <field name="build_id" type="row"/>
-            </pivot>
-        </field>
+      <field name="name">scm.repository.branch.build.log.pivot</field>
+      <field name="model">scm.repository.branch.build.log</field>
+      <field name="arch" type="xml">
+        <pivot string="Logs Analysis">
+          <field name="build_id" type="row"/>
+          <field name="result" type="col"/>
+        </pivot>
+      </field>
     </record>
 
     <!-- Actions and menus -->

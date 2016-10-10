@@ -20,7 +20,7 @@
 ##############################################################################
 
 from odoo import api, models, tools
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 from ..tools import unquote
 
@@ -39,7 +39,7 @@ class IrActionsActWindow(models.Model):
             'context': self._context,
         }
         try:
-            context = eval(self.context or '{}', eval_dict) or {}
+            context = safe_eval(self.context or '{}', eval_dict) or {}
             if 'act_window_id' not in context:
                 self.context = self.context[:1] + "'act_window_id': %s, " % self.id + self.context[1:]
         except:

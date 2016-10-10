@@ -24,7 +24,7 @@ import logging
 import os
 
 from odoo.tools import config
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__package__)
 
@@ -64,7 +64,7 @@ class ConfigManager(object):
             config.readfp(open(config_file))
             for (key, value) in config.items('options'):
                 if value in ('True', 'False'):
-                    value = eval(value)
+                    value = safe_eval(value)
                 self.options[key] = value
             for section in config.sections():
                 if section != 'options':

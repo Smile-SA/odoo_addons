@@ -9,6 +9,8 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import config
 
+from ..tools import b2human
+
 _logger = logging.getLogger(__name__)
 
 
@@ -93,6 +95,10 @@ class DockerHost(models.Model):
     builds_path_store = fields.Char('Builds path', required=True, default=_get_default_builds_path)
     registries_path_store = fields.Char('Registries path', required=True,
                                         default=_get_default_registries_path)
+    builds_host_config = fields.Text()
+    stats = fields.Html("Last stats", readonly=True)
+    stats_date = fields.Datetime("Stats date", readonly=True)
+    stats_containers = fields.Integer("Running containers", readonly=True)
 
     @api.model
     def _check_path(self, dirpath):
@@ -321,6 +327,16 @@ class DockerHost(models.Model):
             cli.execute(**kwargs)
         return True
 
+    @api.multi
+    def get_container_stats(self, container, **kwargs):
+        self.ensure_one()
+        return self.client.stats(container, **kwargs)
+
+    @api.multi
+    def execute_top(self, container, **kwargs):
+        self.ensure_one()
+        return self.client.top(container, **kwargs)
+
     @api.one
     def _purge_images(self):
         _logger.info('Purging unused images for %s...' % self.base_url)
@@ -357,3 +373,71 @@ class DockerHost(models.Model):
             default_port = netloc_wo_auth.split(':')[-1]
             netloc = netloc_wo_auth.replace(':%s' % default_port, '')
         return urljoin(base_url, '//%s:%s' % (netloc, port))
+
+    @api.multi
+    def update_stats(self):
+        self.ensure_one()
+        data = {}
+        containers = self.get_containers()
+        container_names = map(lambda cont: cont['Names'][0].replace('/', ''), containers)
+        for container in container_names:
+            stats_gen = self.get_container_stats(container, decode=True)
+            pre_stats = stats_gen.next()
+            stats = stats_gen.next()
+            data[container] = [
+                '%.2f %%' % ((stats['cpu_stats']['cpu_usage']['total_usage'] -
+                              pre_stats['cpu_stats']['cpu_usage']['total_usage']) * 100.0 /
+                             (stats['cpu_stats']['system_cpu_usage'] - pre_stats['cpu_stats']['system_cpu_usage'])),
+                '%s / %s' % (b2human(stats['memory_stats']['usage']),
+                             b2human(stats['memory_stats']['limit'])),
+                '%.2f %%' % (stats['memory_stats']['usage'] * 100.0 / stats['memory_stats']['limit']),
+                '%.2f %%' % (stats['memory_stats']['max_usage'] * 100.0 / stats['memory_stats']['limit']),
+                '%s / %s' % (b2human(sum(network['rx_bytes'] for network in stats['networks'].itervalues())),
+                             b2human(sum(network['tx_bytes'] for network in stats['networks'].itervalues()))),
+            ]
+        thead = """
+<thead>
+    <tr>
+        <th>CONTAINER</th>
+        <th>CPU %</th>
+        <th>MEM USAGE / LIMIT</th>
+        <th>MEM %</th>
+        <th>MAX %</th>
+        <th>NETWORK I/O</th>
+    </tr>
+</thead>"""
+        tbody = ''
+        for container in sorted(container_names):
+            tbody += '<tr><td>%s</td>%s</tr>' \
+                % (container, ''.join(map(lambda value: '<td>%s</td>' % value, data[container])))
+        self.stats = '<table class="o_list_view table table-condensed table-striped">%s%s</table>' % (thead, tbody)
+        self.stats_containers = len(container_names)
+        self.stats_date = fields.Datetime.now()
+        return True
+
+    @api.multi
+    def show_current_stats(self):
+        self.update_stats()
+        view = self.env.ref('smile_ci.view_docker_host_stats_form')
+        return self.open_wizard(name='Docker Host Stats', view_id=view.id)
+
+    @api.multi
+    def _show_history_stats(self, view_mode):
+        self.ensure_one()
+        return {
+            'name': _('Docker Host Stats'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'docker.host.stats',
+            'view_type': 'form',
+            'view_mode': view_mode,
+            'domain': [('docker_host_id', '=', self.id)],
+            'target': 'new',
+        }
+
+    @api.multi
+    def show_history_stats_as_pivot(self):
+        return self._show_history_stats('pivot')
+
+    @api.multi
+    def show_history_stats_as_graph(self):
+        return self._show_history_stats('graph')

@@ -24,6 +24,7 @@ class DockerImage(models.Model):
                                          default=_get_default_docker_registry)
     docker_registry_image = fields.Char(compute='_get_docker_registry_image')
     default_environment = fields.Text()
+    default_host_config = fields.Text()
     link_ids = fields.One2many('docker.link', 'base_image_id', 'Linked services')
     with_persistent_storage = fields.Boolean()
     is_postgres = fields.Boolean()

@@ -15,3 +15,10 @@ def s2human(time):
         if time >= delay:
             return str(int(time / delay)) + desc
     return str(int(time)) + "s"
+
+
+def b2human(time):
+    for delay, desc in [(1024**3, 'GiB'), (1024**2, 'MiB'), (1024, 'KiB')]:
+        if time >= delay:
+            return str(int(time / delay)) + desc
+    return str(int(time)) + "B"

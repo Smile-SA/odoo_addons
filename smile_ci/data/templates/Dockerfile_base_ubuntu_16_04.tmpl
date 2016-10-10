@@ -4,11 +4,11 @@ MAINTAINER Smile <erp@smile.fr>
 # Install packages required to:
 # * install Python packages via PyPi: python-pip
 # * install Node.js packages: npm
-# * check quality code: cloc python-coverage python-flake8
+# * check quality code: cloc python-coverage flake8
 # * install unit tests package: python-unittest2
 # * download and install wkhtmltopdf
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends python-pip npm cloc python-coverage python-flake8 python-unittest2 \
+    && apt-get install -y --no-install-recommends python-pip npm cloc flake8 python-coverage python-unittest2 \
     wget fontconfig libfontconfig1 libfreetype6 libpng12-0 libjpeg-turbo8 libx11-6 libxext6 libxrender1 \
     && ln -s /usr/bin/nodejs /usr/bin/node \
     && cd /tmp && wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb \

@@ -50,7 +50,6 @@
             <field name="model">scm.repository.branch.build.coverage</field>
             <field name="arch" type="xml">
                 <graph string="Coverage" type="line">
-                    <field name="branch_id" type="row" />
                     <field name="build_id" type="row" />
                     <field name="line_rate" type="measure" />
                     <field name="branch_rate" type="measure" />
@@ -63,6 +62,7 @@
             <field name="model">scm.repository.branch.build.coverage</field>
             <field name="arch" type="xml">
                 <pivot string="Coverage Analysis">
+                    <field name="branch_id" type="row" />
                     <field name="build_id" type="row"/>
                     <field name="line_rate" type="measure"/>
                     <field name="branch_rate" type="measure" />

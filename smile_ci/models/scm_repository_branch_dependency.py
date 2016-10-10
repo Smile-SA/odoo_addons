@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 
 
 class BranchDependency(models.Model):
@@ -17,4 +17,4 @@ class BranchDependency(models.Model):
     @api.constrains('branch_id', 'merge_with_branch_id')
     def _check_branch(self):
         if self.branch_id == self.merge_with_branch_id:
-            raise UserError(_("You can't merge the branch with itself!"))
+            raise ValidationError(_("You can't merge the branch with itself!"))

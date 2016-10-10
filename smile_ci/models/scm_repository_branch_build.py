@@ -23,6 +23,7 @@ from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 import odoo.modules as addons
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.smile_scm.tools import cd, check_output_chain
 
@@ -288,8 +289,7 @@ class Build(models.Model):
                 mergetree(branch.directory, os.path.join(self.directory, subfolder), ignore=ignore_patterns)
             self._add_ci_addons()
         except Exception, e:
-            msg = get_exception_message(e)
-            _logger.error(msg)
+            _logger.error(get_exception_message(e))
             self._remove_directory()
             raise
 
@@ -528,7 +528,8 @@ class Build(models.Model):
                                               CONTAINER_SUFFIX % self.id,
                                               labels=[self.docker_image])
             links.append((container, link.name))
-        config = {'port_bindings': {8069: self.port}, 'links': links}
+        config = safe_eval(self.docker_host_id.builds_host_config or '{}')
+        config.update({'port_bindings': {8069: self.port}, 'links': links})
         if self._context.get('docker-in-docker'):
             params['volumes'] = ['/var/run/docker.sock']
             config['binds'] = ['/var/run/docker.sock:/var/run/docker.sock']

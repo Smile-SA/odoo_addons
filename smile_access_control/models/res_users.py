@@ -20,7 +20,7 @@
 ##############################################################################
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class ResUsers(models.Model):
@@ -66,7 +66,7 @@ class ResUsers(models.Model):
     def _check_user_profile_id(self):
         admin = self.env.ref('base.user_root')
         if self.user_profile_id == admin:
-            raise UserError(_("You can't use %s as user profile !") % admin.name)
+            raise ValidationError(_("You can't use %s as user profile !") % admin.name)
 
     @api.onchange('is_user_profile')
     def onchange_user_profile(self):
@@ -88,7 +88,7 @@ class ResUsers(models.Model):
         if user_profile:
             vals = {}
             for field in fields:
-                value = getattr(user_profile, field)
+                value = user_profile[field]
                 field_type = self._fields[field].type
                 if field_type == 'many2one':
                     vals[field] = value.id

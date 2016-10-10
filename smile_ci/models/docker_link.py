@@ -3,8 +3,8 @@
 import logging
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.exceptions import ValidationError
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -18,6 +18,7 @@ class DockerLink(models.Model):
     branch_id = fields.Many2one('scm.repository.branch', 'Branch')
     linked_image_id = fields.Many2one('docker.image', 'Linked image', required=True)
     environment = fields.Text()
+    host_config = fields.Text()
     volume_from = fields.Char('Data volume')
 
     _sql_constraints = [
@@ -31,7 +32,7 @@ class DockerLink(models.Model):
         child_links = child_images.mapped('link_ids')
         while child_links:
             if child_links.mapped('linked_image_id') & child_images:
-                raise UserError(_("You cannot create recursive linked services."))
+                raise ValidationError(_("You cannot create recursive linked services."))
             child_images |= child_links.mapped('linked_image_id')
             child_links = child_links.mapped('linked_image_id.link_ids')
 
@@ -53,8 +54,8 @@ class DockerLink(models.Model):
         linked_image = self.linked_image_id
         infos = {'image': linked_image.docker_registry_image}
         if self.environment or linked_image.default_environment:
-            infos['environment'] = eval(linked_image.default_environment or '{}')
-            infos['environment'].update(eval(self.environment or '{}'))
+            infos['environment'] = safe_eval(linked_image.default_environment or '{}')
+            infos['environment'].update(safe_eval(self.environment or '{}'))
         if self.volume_from:
             infos['volumes'] = [self.volume_from]
         volumes_from, links = [], []
@@ -80,11 +81,13 @@ class DockerLink(models.Model):
         params['labels'] = labels or {}
         config = {}
         for link in self.linked_image_id.link_ids:
+            config.update(safe_eval(self.linked_image_id.default_host_config or '{}'))
             container = link.create_container(docker_host, suffix, labels)
             if not link.volume_from:
                 config.setdefault('links', []).append((container, link.name))
             else:
                 config.setdefault('volumes_from', []).append(container)
+        config.update(safe_eval(self.host_config or '{}'))
         if config:
             params['host_config'] = docker_host.create_host_config(**config)
         for key in ('links', 'volumes_from'):

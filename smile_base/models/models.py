@@ -19,11 +19,12 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import logging
 from operator import and_, or_, sub
 import psycopg2
+import pytz
 import time
 
 from odoo import api, tools, _
@@ -34,10 +35,11 @@ from odoo.osv.expression import normalize_domain
 
 _logger = logging.getLogger(__name__)
 
-native_validate_fields = BaseModel._validate_fields
 native_load = BaseModel.load
 native_modified = BaseModel.modified
+native_read_group_process_groupby = BaseModel._read_group_process_groupby
 native_unlink = BaseModel.unlink
+native_validate_fields = BaseModel._validate_fields
 
 
 @api.multi
@@ -311,6 +313,48 @@ def _create_unique_index(self, cr, column, where_clause=None):
         cr.execute(query)
 
 
+@api.model
+def _read_group_process_groupby(self, gb, query):
+    split = gb.split(':')
+    field_type = self._fields[split[0]].type
+    if field_type == 'datetime':
+        gb_function = split[1] if len(split) == 2 else None
+        tz_convert = field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones
+        qualified_field = self._inherits_join_calc(self._table, split[0], query)
+        # Cfr: http://babel.pocoo.org/docs/dates/#date-fields
+        display_formats = {
+            'minute': 'dd MMM yyyy HH:mm',
+            'hour': 'dd MMM yyyy  HH:mm',
+            'day': 'dd MMM yyyy',  # yyyy = normal year
+            'week': "'W'w YYYY",  # w YYYY = ISO week-year
+            'month': 'MMMM yyyy',
+            'quarter': 'QQQ yyyy',
+            'year': 'yyyy',
+        }
+        time_intervals = {
+            'minute': relativedelta(minutes=1),
+            'hour': relativedelta(hours=1),
+            'day': relativedelta(days=1),
+            'week': timedelta(days=7),
+            'month': relativedelta(months=1),
+            'quarter': relativedelta(months=3),
+            'year': relativedelta(years=1)
+        }
+        if tz_convert:
+            qualified_field = "timezone('%s', timezone('UTC',%s))" % (self._context.get('tz', 'UTC'), qualified_field)
+        qualified_field = "date_trunc('%s', %s)" % (gb_function or 'month', qualified_field)
+        return {
+            'field': split[0],
+            'groupby': gb,
+            'type': field_type,
+            'display_format': display_formats[gb_function or 'month'],
+            'interval': time_intervals[gb_function or 'month'],
+            'tz_convert': tz_convert,
+            'qualified_field': qualified_field,
+        }
+    return native_read_group_process_groupby(self, gb, query)
+
+
 BaseModel.bulk_create = bulk_create
 BaseModel.filtered_from_domain = filtered_from_domain
 BaseModel.load = load
@@ -322,5 +366,6 @@ BaseModel._compare = _compare
 BaseModel._create_unique_index = _create_unique_index
 BaseModel._get_comparison_fields = _get_comparison_fields
 BaseModel._get_comparison_logs = _get_comparison_logs
+BaseModel._read_group_process_groupby = _read_group_process_groupby
 BaseModel._try_lock = _try_lock
 BaseModel._validate_fields = _validate_fields

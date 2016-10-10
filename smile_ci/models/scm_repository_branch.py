@@ -10,9 +10,9 @@ import shutil
 import yaml
 
 from odoo import api, models, fields, tools, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.smile_scm.tools import cd
 
@@ -253,22 +253,22 @@ class Branch(models.Model):
     @api.constrains('use_in_ci', 'os_id')
     def _check_os_id(self):
         if self.use_in_ci and not self.os_id:
-            raise UserError(_('Operating System is mandatory if branch is used in CI'))
+            raise ValidationError(_('Operating System is mandatory if branch is used in CI'))
 
     @api.one
     @api.constrains('ignored_tests')
     def _check_ignored_tests(self):
         if not self.ignored_tests:
             return
-        if type(eval(self.ignored_tests)) != dict:
-            raise UserError(_("Please use a dict"))
+        if type(safe_eval(self.ignored_tests)) != dict:
+            raise ValidationError(_("Please use a dict"))
         message = "Values must be of type: str, unicode or list of str / unicode"
-        for value in eval(self.ignored_tests).values():
+        for value in safe_eval(self.ignored_tests).values():
             if type(value) == list:
                 if filter(lambda element: type(element) not in (str, unicode), value):
-                    raise UserError(_(message))
+                    raise ValidationError(_(message))
             elif type(value) not in (str, unicode):
-                raise UserError(_(message))
+                raise ValidationError(_(message))
 
     @api.one
     def _update(self):
@@ -492,8 +492,15 @@ class Branch(models.Model):
                     except Exception, e:
                         msg = _("Base image creation failed\n\n%s") % repr(e)
                         with cursor(self._cr.dbname, False) as new_cr:
-                            branch.with_env(self.env(cr=new_cr)).message_post(body=msg)
-                        raise
+                            branch = branch.with_env(self.env(cr=new_cr))
+                            branch.message_post(body=msg)
+                            branch.use_in_ci = False
+                        raise e
+                    else:
+                        msg = _("Base image successfully created")
+                        with cursor(self._cr.dbname, False) as new_cr:
+                            branch = branch.with_env(self.env(cr=new_cr))
+                            branch.message_post(body=msg)
                 break
 
     @api.model
@@ -517,11 +524,12 @@ class Branch(models.Model):
 
     @api.multi
     def get_docker_compose_content(self, tag='latest', container_name='', port='8069'):
+        longpolling_port = '8071' if port == '8069' else str(int(port) + 1)
         services = {
             'odoo': {
                 'image': '%s:%s' % (self.docker_registry_image, tag),
                 'container_name': container_name,
-                'ports': ['%s:8069' % port, '8071:8071'],
+                'ports': ['%s:8069' % port, '%s:8071' % longpolling_port],
                 'links': self.mapped('link_ids.name'),
             }
         }

@@ -30,7 +30,7 @@ from odoo import api, sql_db, SUPERUSER_ID, tools
 from odoo.exceptions import UserError
 import odoo.modules as addons
 from odoo.report.interface import report_int as ReportService
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 from odoo.workflow.service import WorkflowService
 
 from config import configuration as upgrade_config
@@ -141,7 +141,7 @@ class UpgradeManager(object):
                     continue
                 with open(file_path) as f:
                     try:
-                        upgrade_infos = eval(f.read())
+                        upgrade_infos = safe_eval(f.read())
                         upgrade = Upgrade(dir_path, upgrade_infos)
                         if (not upgrade.databases or self.db_name in upgrade.databases) \
                                 and self.db_version < upgrade.version <= self.code_version:

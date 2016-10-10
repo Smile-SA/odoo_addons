@@ -67,5 +67,18 @@
       <field eval="'()'" name="args"/>
     </record>
 
+    <!-- Monitor Docker hosts -->
+    <record id="ir_cron_monitor_docker_hosts_action" model="ir.cron">
+      <field name="name">Monitor Docker hosts</field>
+      <field name="user_id" ref="base.user_root"/>
+      <field name="interval_number">1</field>
+      <field name="interval_type">minutes</field>
+      <field name="numbercall">-1</field>
+      <field eval="False" name="doall"/>
+      <field eval="'docker.host.stats'" name="model"/>
+      <field eval="'compute_stats'" name="function"/>
+      <field eval="'()'" name="args"/>
+    </record>
+
   </data>
 </odoo>

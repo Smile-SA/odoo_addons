@@ -20,7 +20,7 @@
           <field name="login" attrs="{'readonly': [('tls_cert', '=', False)]}"/>
           <field name="password" attrs="{'required': [('login', '!=', False)], 'readonly': [('login', '=', False)]}"/>
           <field name="active"/>
-          <button name="open_wizard" string="Images" type="object" icon="fa-list-ul"/>
+          <button name="show_images_in_registry" string="Show images in registry" type="object" icon="fa-list-ul"/>
           <button name="open" string="Open" type="object" icon="fa-sign-in"/>
         </tree>
       </field>
@@ -33,6 +33,23 @@
       <field name="view_mode">tree</field>
       <field name="view_id" ref="view_docker_registry_tree"/>
       <field name="context">{'active_test': False}</field>
+    </record>
+
+    <record id="view_docker_registry_images_form" model="ir.ui.view">
+      <field name="name">docker.registry.images.form</field>
+      <field name="model">docker.registry</field>
+      <field name="arch" type="xml">
+        <form string="Docker Registry Images">
+          <sheet>
+            Docker images in <field name="name" readonly="True"/>
+            <field name="images"/>
+          </sheet>
+          <footer>
+            <button string="Refresh" name="show_images_in_registry" type="object"/>
+            <button string="Close" class="oe_highlight" special="cancel"/>
+         </footer>
+        </form>
+      </field>
     </record>
 
   </data>

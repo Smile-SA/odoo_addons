@@ -89,7 +89,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
         "views/docker_image_view.xml",
         "views/scm_menu.xml",
         "views/webclient_templates.xml",
-        "wizards/docker_registry_images_view.xml",
+        "wizards/docker_host_stats_view.xml",
     ],
     "demo": [
         "demo/scm.repository.csv",

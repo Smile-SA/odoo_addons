@@ -22,7 +22,7 @@
 from odoo import api, fields, models, _
 from odoo.addons.base.ir.ir_values import ACTION_SLOTS, EXCLUDED_FIELDS
 from odoo.exceptions import except_orm, UserError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 
 class IrValues(models.Model):
@@ -64,7 +64,7 @@ class IrValues(models.Model):
             if not action['value']:
                 continue  # skip if undefined
             action_model, action_id = action['value'].split(',')
-            if not eval(action_id):
+            if not safe_eval(action_id):
                 continue
             fields = [field for field in self.env[action_model]._fields
                       if field not in EXCLUDED_FIELDS]

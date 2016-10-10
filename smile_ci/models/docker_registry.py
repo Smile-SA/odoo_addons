@@ -89,6 +89,7 @@ class DockerRegistry(models.Model):
     branch_ids = fields.One2many('scm.repository.branch', 'docker_registry_id', 'Branches', readonly=True)
     login = fields.Char(copy=False)
     password = fields.Char(invisible=True, copy=False)
+    images = fields.Html('Images in registry', readonly=True)
 
     _sql_constraints = [
         ('unique_name', 'UNIQUE(name, docker_host_id)', 'Registry name must be unique per docker host'),
@@ -352,14 +353,21 @@ class DockerRegistry(models.Model):
         }
 
     @api.multi
-    def open_wizard(self):
+    def update_images(self):
         self.ensure_one()
-        wizard = self.env['docker.registry.wizard'].create({'registry_id': self.id})
-        return {
-            'name': wizard._description,
-            'type': 'ir.actions.act_window',
-            'res_model': wizard._name,
-            'view_mode': 'form',
-            'res_id': wizard.id,
-            'target': 'new',
-        }
+        tags_by_image = {}
+        images = self.get_images()
+        for image in images:
+            tags_by_image[image] = sorted(self.get_image_tags(image))
+        thead = '<thead><tr><th>Image</th><th>Tags</th></tr></thead>'
+        tbody = ''
+        for image in sorted(images):
+            tbody += '<tr><td>%s</td><td>%s</td></tr>' % (image, ', '.join(tags_by_image[image]))
+        self.images = '<table class="o_list_view table table-condensed table-striped">%s%s</table>' % (thead, tbody)
+        return True
+
+    @api.multi
+    def show_images_in_registry(self):
+        self.update_images()
+        view = self.env.ref('smile_ci.view_docker_registry_images_form')
+        return self.open_wizard(name='Docker Registry Images', view_id=view.id)

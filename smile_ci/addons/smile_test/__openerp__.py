@@ -37,5 +37,6 @@
     'auto_install': True,
     'external_dependencies': {
         'python': ['coverage'],
+        'bin': ['flake8'],
     }
 }

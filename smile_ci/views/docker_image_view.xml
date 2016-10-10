@@ -35,14 +35,16 @@
             </group>
             <group>
               <group>
-                <field name="default_environment"/>
+                <field name="default_environment" placeholder="{'ENV_VAR': 'env_value'}"/>
+                <field name="default_host_config" placeholder="{'mem_limit': '1G'}"/>
               </group>
               <group>
                 <field name="link_ids">
                   <tree string="Linked Services" editable="top">
                     <field name="name"/>
                     <field name="linked_image_id"/>
-                    <field name="environment"/>
+                    <field name="environment" placeholder="{'ENV_VAR': 'env_value'}"/>
+                    <field name="host_config" placeholder="{'mem_limit': '1G'}"/>
                     <field name="volume_from"/>
                   </tree>
                 </field>

@@ -16,7 +16,10 @@
           <field name="redirect_subdomain_to_port"/>
           <field name="builds_path_store"/>
           <field name="registries_path_store"/>
-          <field name="active"/>
+          <field name="active" invisible="1"/>
+          <button name="show_current_stats" string="Current stats" type="object" icon="fa-tasks"/>
+          <button name="show_history_stats_as_pivot" string="History stats" type="object" icon="fa-table"/>
+          <button name="show_history_stats_as_graph" string="History stats" type="object" icon="fa-bar-chart"/>
         </tree>
       </field>
     </record>
@@ -46,12 +49,13 @@
             <group>
               <group>
                 <field name="tls"/>
+                <field name="tls_verify" attrs="{'invisible': [('tls', '=', False)]}"/>
+                <field name="tls_ca_cert" attrs="{'invisible': [('tls', '=', False)], 'required': [('tls', '=', True), ('tls_verify', '=', True)]}" placeholder="/path/to/ca.pem"/>
+                <field name="tls_cert" attrs="{'invisible': [('tls', '=', False)], 'required': [('tls_key', '!=', False)]}" placeholder="/path/to/client-cert.pem"/>
+                <field name="tls_key" attrs="{'invisible': [('tls', '=', False)], 'required': [('tls_cert', '!=', False)]}" placeholder="/path/to/client-key.pem"/>
               </group>
-              <group attrs="{'invisible': [('tls', '=', False)]}">
-                <field name="tls_verify"/>
-                <field name="tls_ca_cert" attrs="{'required': [('tls', '=', True), ('tls_verify', '=', True)]}" placeholder="/path/to/ca.pem"/>
-                <field name="tls_cert" attrs="{'required': [('tls_key', '!=', False)]}" placeholder="/path/to/client-cert.pem"/>
-                <field name="tls_key" attrs="{'required': [('tls_cert', '!=', False)]}" placeholder="/path/to/client-key.pem"/>
+              <group>
+                <field name="builds_host_config" placeholder="{'mem_limit': '1G'}"/>
               </group>
             </group>
           </sheet>
@@ -66,6 +70,23 @@
       <field name="view_mode">tree,form</field>
       <field name="view_id" ref="view_docker_host_tree"/>
       <field name="context">{'active_test': False}</field>
+    </record>
+
+    <record id="view_docker_host_stats_form" model="ir.ui.view">
+      <field name="name">docker.host.stats.form</field>
+      <field name="model">docker.host</field>
+      <field name="arch" type="xml">
+        <form string="Docker Host Stats">
+          <sheet>
+            <field name="stats_containers"/> running containers on <field name="base_url" readonly="True"/>
+            <field name="stats"/>
+          </sheet>
+          <footer>
+            <button string="Refresh" name="show_current_stats" type="object"/>
+            <button string="Close" class="oe_highlight" special="cancel"/>
+         </footer>
+        </form>
+      </field>
     </record>
 
   </data>

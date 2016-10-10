@@ -131,7 +131,8 @@
                   <tree editable="top">
                     <field name="name"/>
                     <field name="linked_image_id"/>
-                    <field name="environment"/>
+                    <field name="environment" placeholder="{'ENV_VAR': 'env_value'}"/>
+                    <field name="host_config" placeholder="{'mem_limit': '1G'}"/>
                   </tree>
                 </field>
                 <field name="system_packages"/>
