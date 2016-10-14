@@ -165,7 +165,7 @@ class Build(models.Model):
 
     @api.one
     def _convert_time_to_human(self):
-        self.time_human = s2human(self.time)
+        self.time_human = s2human(self.time, details=True)
 
     @api.one
     def _convert_age_to_human(self):

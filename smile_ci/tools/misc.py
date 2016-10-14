@@ -9,11 +9,14 @@ def strip_accents(s):
     return str(a)
 
 
-def s2human(time):
-    """Copy from https://github.com/odoo/odoo-extra/blob/master/runbot/runbot.py"""
+def s2human(time, details=False):
     for delay, desc in [(86400, 'd'), (3600, 'h'), (60, 'm')]:
         if time >= delay:
-            return str(int(time / delay)) + desc
+            result = str(int(time / delay)) + desc
+            if details and desc == 'h':
+                delta = time - int(time / delay) * delay
+                result += str(int(delta / 60)).zfill(2)
+            return result
     return str(int(time)) + "s"
 
 
