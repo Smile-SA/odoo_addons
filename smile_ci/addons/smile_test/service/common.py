@@ -50,7 +50,7 @@ except ImportError:
 
 _logger = logging.getLogger(__name__)
 
-OMIT_FILES = ['__openerp__.py', '__openerp__.py', '__terp__.py', '__init__.py']
+OMIT_FILES = ['__manifest__.py', '__openerp__.py', '__terp__.py', '__init__.py']
 OMIT_DIRS = ['web', 'static', 'controllers', 'doc', 'test', 'tests']
 
 
