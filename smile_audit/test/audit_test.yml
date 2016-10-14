@@ -18,7 +18,7 @@
     domain = [
       ('model_id', '=', ref('base.model_res_partner')),
       ('method', '=', 'create'),
-      ('res_id', '=', ref('res_partner_test')),
+      ('res_id', '=', ref('smile_audit.res_partner_test')),
     ]
     assert self.search(domain, limit=1), 'No audit log after user creation'
 -
@@ -33,14 +33,14 @@
     domain = [
       ('model_id', '=', ref('base.model_res_partner')),
       ('method', '=', 'write'),
-      ('res_id', '=', ref('res_partner_test')),
+      ('res_id', '=', ref('smile_audit.res_partner_test')),
     ]
     assert self.search(domain, limit=1), 'No audit log after user update'
 -
   As demo user, I delete this address
 -
   !python {model: res.partner}: |
-    self.env.ref('res_partner_test').unlink()
+    self.env.ref('smile_audit.res_partner_test').unlink()
 -
   I check if an audit log is created after deletion
 -
@@ -48,6 +48,6 @@
     domain = [
       ('model_id', '=', ref('base.model_res_partner')),
       ('method', '=', 'unlink'),
-      ('res_id', '=', ref('res_partner_test')),
+      ('res_id', '=', ref('smile_audit.res_partner_test')),
     ]
     assert self.search(domain, limit=1), 'No audit log after user deletion'
