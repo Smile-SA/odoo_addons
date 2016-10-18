@@ -8,8 +8,14 @@
         </p>
         <ol>
           <li>
-            Install Docker Engine (cf. <a href="https://docs.docker.com/engine/installation" target="new">official documentation)</a>
+            Install Docker Compose (cf. <a href="https://docs.docker.com/compose/install" target="new">official documentation)</a>
           </li>
+          <t t-if="widget.docker_registry_insecure">
+            <li>
+              Configure your docker daemon in the /etc/default/docker file on your system by adding/completing the following line :
+              <pre>DOCKER_OPTS="--insecure-registry <t t-esc="widget.docker_registry_url"/> --icc=false"</pre>
+            </li>
+          </t>
           <li>
             <input class="docker" value="docker-compose.yml" readonly="True"/>
             <button id="button_download" class="btn docker-btn" title="Download">

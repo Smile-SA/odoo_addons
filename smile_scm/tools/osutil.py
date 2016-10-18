@@ -2,15 +2,16 @@
 
 import subprocess
 from subprocess import os
+from threading import Lock
 
 
 class cd:
-    """Context manager for changing the current working directory
-    (http://stackoverflow.com/questions/431684/how-do-i-cd-in-python)"""
     def __init__(self, newPath):
+        self._lock = Lock()
         self.newPath = newPath
 
     def __enter__(self):
+        self._lock.acquire()
         self.savedPath = None
         while not self.savedPath:
             try:
@@ -21,6 +22,7 @@ class cd:
 
     def __exit__(self, etype, value, traceback):
         os.chdir(self.savedPath)
+        self._lock.release()
 
 
 def check_output_chain(args, stdin=None, stdout=None, stderr=None):

@@ -7,7 +7,7 @@ from odoo import exceptions, tools
 
 def get_exception_message(e):
     if isinstance(e, exceptions.except_orm):
-        return tools.ustr(e.value)
+        return tools.ustr(e.value or e.name)
     if isinstance(e, xmlrpclib.Fault):
         return tools.ustr(e.faultString)
     return tools.ustr(e.message)

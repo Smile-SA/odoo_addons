@@ -10,8 +10,14 @@ class Repository(models.Model):
     _order = 'name'
 
     @api.one
+    @api.depends('branch_ids.state')
     def _has_branch_done(self):
         self.has_branch_done = self.branch_ids.filtered(lambda branch: branch.state == 'done')
+
+    @api.one
+    @api.depends('branch_ids')
+    def _get_branches_count(self):
+        self.branches_count = len(self.branch_ids)
 
     name = fields.Char(required=True)
     vcs_id = fields.Many2one('scm.vcs', 'Version Control System',
@@ -22,6 +28,7 @@ class Repository(models.Model):
     branch_ids = fields.One2many('scm.repository.branch', 'repository_id', 'Branches')
     has_branch_done = fields.Boolean('Has at least a branch done',
                                      compute='_has_branch_done', store=False)
+    branches_count = fields.Integer('Branches Count', compute='_get_branches_count', store=False)
 
     _sql_constraints = [
         ('unique_url', 'UNIQUE(url)', 'Repository URL must be unique'),

@@ -41,11 +41,11 @@
                   <div class="row btn-group pull-right">
                     <button class="btn" name="keep_alive" type="object" string="Keep alive" groups="smile_scm.group_scm_user"
                       t-if="record.state.raw_value == 'running' and !record.is_to_keep.raw_value">
-                      <i class="fa fa-lock"/>
+                      <i class="fa fa-unlock-alt"/>
                     </button>
                     <button class="btn" name="keep_alive" type="object" string="Unkeep alive" groups="smile_scm.group_scm_user"
                       t-if="record.state.raw_value == 'running' and record.is_to_keep.raw_value">
-                      <i class="fa fa-unlock-alt"/>
+                      <i class="fa fa-lock"/>
                     </button>
                     <button class="btn btn-primary" name="open" type="object" string="Open" t-if="record.state.raw_value == 'running'">
                       <i class="fa fa-sign-in"/>
@@ -53,7 +53,7 @@
                   </div>
                   <div class="row btn-group pull-right" t-if="record.state.raw_value != 'done' and record.is_killable.raw_value">
                     <button class="btn" name="stop_container" type="object" string="Stop" groups="smile_scm.group_scm_user">
-                      <i class="fa fa-stop"/>
+                      <i class="fa fa-power-off"/>
                     </button>
                     <button class="btn" name="show_logs" type="object" string="Show logs">
                       <i class="fa fa-file-text-o"/>

@@ -6,7 +6,7 @@
       <field name="name">docker.registry.tree</field>
       <field name="model">docker.registry</field>
       <field name="arch" type="xml">
-        <tree string="Docker Registries" editable="top" colors="grey: active is False;">
+        <tree string="Docker Registries" colors="grey: active is False;">
           <field name="sequence" widget="handle"/>
           <field name="name"/>
           <field name="image"/>
@@ -14,15 +14,60 @@
           <field name="docker_host_id"/>
           <field name="url"/>
           <field name="remote_url"/>
-          <field name="configfile"/>
-          <field name="tls_cert" placeholder="/path/to/domain.crt"/>
-          <field name="tls_key" placeholder="/path/to/domain.key" attrs="{'required': [('tls_cert', '!=', False)], 'readonly': [('tls_cert', '=', False)]}"/>
-          <field name="login" attrs="{'readonly': [('tls_cert', '=', False)]}"/>
-          <field name="password" attrs="{'required': [('login', '!=', False)], 'readonly': [('login', '=', False)]}"/>
-          <field name="active"/>
+          <field name="active" invisible="1"/>
           <button name="show_images_in_registry" string="Show images in registry" type="object" icon="fa-list-ul"/>
           <button name="open" string="Open" type="object" icon="fa-sign-in"/>
         </tree>
+      </field>
+    </record>
+
+    <record id="view_docker_registry_form" model="ir.ui.view">
+      <field name="name">docker.registry.form</field>
+      <field name="model">docker.registry</field>
+      <field name="arch" type="xml">
+        <form string="Docker Registry">
+          <header>
+            <button name="open" string="Open" type="object" class="oe_highlight"/>
+          </header>
+          <sheet>
+            <div class="oe_button_box" name="button_box">
+              <button class="oe_stat_button" type="object" name="show_images_in_registry" icon="fa-list-ul">
+                <field string="Stored images" name="images_count" widget="statinfo"/>
+              </button>
+              <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+              </button>
+            </div>
+            <div class="oe_title" colspan="4">
+              <label for="name" class="oe_edit_only"/>
+              <h1>
+                <field name="name" class="oe_inline"/>
+              </h1>
+                <group>
+                  <field name="image"/>
+                  <field name="port"/>
+                  <field name="configfile"/>
+                </group>
+            </div>
+            <notebook>
+              <page string="Access">
+                <group>
+                  <field name="docker_host_id"/>
+                  <field name="url"/>
+                  <field name="remote_url"/>
+                </group>
+              </page>
+              <page string="Security">
+                <group>
+                  <field name="tls_cert" placeholder="/path/to/domain.crt"/>
+                  <field name="tls_key" placeholder="/path/to/domain.key" attrs="{'required': [('tls_cert', '!=', False)], 'readonly': [('tls_cert', '=', False)]}"/>
+                  <field name="login" attrs="{'readonly': [('tls_cert', '=', False)]}"/>
+                  <field name="password" attrs="{'required': [('login', '!=', False)], 'readonly': [('login', '=', False)]}"/>
+                </group>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
       </field>
     </record>
 
@@ -30,7 +75,7 @@
       <field name="name">Docker Registries</field>
       <field name="res_model">docker.registry</field>
       <field name="view_type">form</field>
-      <field name="view_mode">tree</field>
+      <field name="view_mode">tree,form</field>
       <field name="view_id" ref="view_docker_registry_tree"/>
       <field name="context">{'active_test': False}</field>
     </record>

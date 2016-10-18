@@ -84,22 +84,20 @@
           <button name="force_create_build" string="Force test" type="object" class="btn-warning" groups="smile_scm.group_scm_user"
             attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"
             help="Create a build even if no update is available"/>
-          <button name="recreate_image" string="Recreate image" type="object" class="btn-danger" groups="smile_scm.group_scm_manager"
+          <button name="force_recreate_image" string="Recreate image" type="object" class="btn-danger" groups="smile_scm.group_scm_manager"
             attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
           <button name="open" string="Open" type="object" class="btn-info"
             attrs="{'invisible': [('running_build_id', '=', False)]}"/>
           <button name="download_docker_image" string="Download Docker image" type="object"
             attrs="{'invisible': [('use_in_ci', '=', False)]}" groups="smile_scm.group_scm_user"/>
         </button>
-        <div class="oe_title" position="before">
-          <div class="oe_button_box" name="button_box">
-            <button class="oe_stat_button" name="%(action_branch_builds)d" type="action" icon="fa-tasks">
-              <field string="Builds" name="builds_count" widget="statinfo"/>
-            </button>
-            <button class="oe_stat_button" name="toggle_use_in_ci" type="object" icon="fa-toggle-on">
-              <field name="use_in_ci" widget="boolean_button" options='{"terminology": "use_in_ci"}'/>
-            </button>
-          </div>
+        <div class="oe_button_box" position="inside">
+          <button class="oe_stat_button" name="%(action_branch_builds)d" type="action" icon="fa-tasks">
+            <field string="Builds" name="builds_count" widget="statinfo"/>
+          </button>
+          <button class="oe_stat_button" name="toggle_use_in_ci" type="object" icon="fa-toggle-on">
+            <field name="use_in_ci" widget="boolean_button" options='{"terminology": "use_in_ci"}'/>
+          </button>
         </div>
         <notebook position="inside">
           <page string="Configuration">

@@ -10,8 +10,8 @@
           <field name="sequence" widget="handle"/>
           <field name="base_url"/>
           <field name="tls"/>
-          <field name="timeout"/>
           <field name="version"/>
+          <field name="timeout"/>
           <field name="build_base_url"/>
           <field name="redirect_subdomain_to_port"/>
           <field name="builds_path_store"/>
@@ -28,36 +28,70 @@
       <field name="name">docker.host.form</field>
       <field name="model">docker.host</field>
       <field name="arch" type="xml">
-        <form string="Docker Hosts" colors="grey: active is False;">
+        <form string="Docker Host">
           <sheet>
-            <group>
+            <div class="oe_button_box" name="button_box">
+              <button class="oe_stat_button" type="object" name="show_current_stats" icon="fa-tasks">
+								<div class="o_form_field o_stat_info">
+									<span class="o_stat_text">Current Stats</span>
+								</div>
+              </button>
+              <button class="oe_stat_button" type="object" name="show_history_stats_as_graph" icon="fa-bar-chart">
+								<div class="o_form_field o_stat_info">
+									<span class="o_stat_text">History Stats</span>
+								</div>
+              </button>
+              <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+              </button>
+            </div>
+            <div class="oe_title" colspan="4">
+              <label for="base_url" class="oe_edit_only"/>
+              <h1>
+                <field name="base_url" class="oe_inline"/>
+              </h1>
               <group>
-                <field name="base_url"/>
-                <field name="build_base_url"/>
-                <field name="remote_build_base_url"/>
-                <field name="builds_path_store"/>
-                <field name="registries_path_store"/>
-              </group>
-              <group>
-                <field name="active"/>
-                <field name="redirect_subdomain_to_port"/>
-                <field name="remote_redirect_subdomain_to_port"/>
+                <field name="tls"/>
                 <field name="version"/>
                 <field name="timeout"/>
               </group>
-            </group>
-            <group>
-              <group>
-                <field name="tls"/>
-                <field name="tls_verify" attrs="{'invisible': [('tls', '=', False)]}"/>
-                <field name="tls_ca_cert" attrs="{'invisible': [('tls', '=', False)], 'required': [('tls', '=', True), ('tls_verify', '=', True)]}" placeholder="/path/to/ca.pem"/>
-                <field name="tls_cert" attrs="{'invisible': [('tls', '=', False)], 'required': [('tls_key', '!=', False)]}" placeholder="/path/to/client-cert.pem"/>
-                <field name="tls_key" attrs="{'invisible': [('tls', '=', False)], 'required': [('tls_cert', '!=', False)]}" placeholder="/path/to/client-key.pem"/>
-              </group>
-              <group>
-                <field name="builds_host_config" placeholder="{'mem_limit': '1G'}"/>
-              </group>
-            </group>
+            </div>
+            <notebook>
+              <page string="Builds">
+                <group>
+                  <table class="o_list_view table table-condensed table-striped" colspan="2">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th><label for="build_base_url"/></th>
+                        <th><label for="redirect_subdomain_to_port"/></th>
+                      </tr>
+                    </thead>
+                    <tr>
+                      <td><label for="build_base_url" string="Local"/></td>
+                      <td><field name="build_base_url"/></td>
+                      <td><field name="redirect_subdomain_to_port"/></td>
+                    </tr>
+                    <tr>
+                      <td><label for="remote_build_base_url" string="Remote"/></td>
+                      <td><field name="remote_build_base_url"/></td>
+                      <td><field name="remote_redirect_subdomain_to_port"/></td>
+                    </tr>
+                  </table>
+                  <field name="builds_path_store"/>
+                  <field name="registries_path_store"/>
+                  <field name="builds_host_config" placeholder="{'mem_limit': '1G'}"/>
+                </group>
+              </page>
+              <page string="Security" attrs="{'invisible': [('tls', '=', False)]}">
+                <group>
+                  <field name="tls_verify"/>
+                  <field name="tls_ca_cert" attrs="{'required': [('tls', '=', True), ('tls_verify', '=', True)]}" placeholder="/path/to/ca.pem"/>
+                  <field name="tls_cert" attrs="{'required': [('tls_key', '!=', False)]}" placeholder="/path/to/client-cert.pem"/>
+                  <field name="tls_key" attrs="{'required': [('tls_cert', '!=', False)]}" placeholder="/path/to/client-key.pem"/>
+                </group>
+              </page>
+            </notebook>
           </sheet>
         </form>
       </field>

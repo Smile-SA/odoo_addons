@@ -69,6 +69,13 @@
             <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
           </header>
           <sheet string="Branch">
+						<div class="oe_button_box" name="button_box">
+							<button class="oe_stat_button" name="open_repository" type="object" icon="fa-sitemap">
+								<div class="o_form_field o_stat_info">
+									<span class="o_stat_text">Repository</span>
+								</div>
+							</button>
+						</div>
             <div class="oe_title">
               <h1>
                 <field name="name" placeholder="Name"/>
@@ -103,19 +110,18 @@
       <field name="res_model">scm.repository.branch</field>
       <field name="view_type">form</field>
       <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="view_repository_branch_tree"/>
       <field name="search_view_id" ref="view_repository_branch_search"/>
     </record>
-    <record id="action_repository_branch_tree_view" model="ir.actions.act_window.view">
-      <field eval="1" name="sequence"/>
-      <field name="view_mode">tree</field>
+
+    <record model="ir.actions.act_window" id="action_repository_branches">
+      <field name="name">Branches</field>
+      <field name="res_model">scm.repository.branch</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
       <field name="view_id" ref="view_repository_branch_tree"/>
-      <field name="act_window_id" ref="action_repository_branch"/>
-    </record>
-    <record id="action_repository_branch_form_view" model="ir.actions.act_window.view">
-      <field eval="2" name="sequence"/>
-      <field name="view_mode">form</field>
-      <field name="view_id" ref="view_repository_branch_form"/>
-      <field name="act_window_id" ref="action_repository_branch"/>
+      <field name="search_view_id" ref="view_repository_branch_search"/>
+      <field name="domain">[('repository_id', '=', active_id)]</field>
     </record>
 
   </data>

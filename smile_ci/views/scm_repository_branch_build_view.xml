@@ -48,11 +48,11 @@
             attrs="{'invisible': [('state', '!=', 'running')]}"/>
           <button name="show_logs" type="object" string="Show logs" icon="fa-file-text-o"
             attrs="{'invisible': ['|', ('is_killable', '=', False), ('state', '=', 'done')]}"/>
-          <button name="stop_container" type="object" string="Stop" icon="fa-stop" groups="smile_scm.group_scm_user"
+          <button name="stop_container" type="object" string="Stop" icon="fa-power-off" groups="smile_scm.group_scm_user"
             attrs="{'invisible': ['|', ('is_killable', '=', False), ('state', '=', 'done')]}"/>
-          <button name="keep_alive" type="object" string="Keep alive" icon="fa-lock" groups="smile_scm.group_scm_user"
+          <button name="keep_alive" type="object" string="Keep alive" icon="fa-unlock-alt" groups="smile_scm.group_scm_user"
             attrs="{'invisible': ['|', ('state', '!=', 'running'), ('is_to_keep', '=', True)]}"/>
-          <button name="keep_alive" type="object" string="Don't keep alive" icon="fa-unlock-alt" groups="smile_scm.group_scm_user"
+          <button name="keep_alive" type="object" string="Don't keep alive" icon="fa-lock" groups="smile_scm.group_scm_user"
             attrs="{'invisible': ['|', ('state', '!=', 'running'), ('is_to_keep', '=', False)]}"/>
         </tree>
       </field>

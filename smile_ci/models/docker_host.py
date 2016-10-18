@@ -9,7 +9,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import config
 
-from ..tools import b2human
+from ..tools import b2human, get_exception_message
 
 _logger = logging.getLogger(__name__)
 
@@ -147,7 +147,7 @@ class DockerHost(models.Model):
                     tls_params = {'client_cert': (self.tls_cert, self.tls_key)}
                 elif self.tls_verify and not self.tls_cert:
                     tls_params = {'ca_cert': self.tls_ca_cert}
-                elif self.tls_verify and not self.tls_cert:
+                elif self.tls_verify and self.tls_cert:
                     tls_params = {
                         'client_cert': (self.tls_cert, self.tls_key),
                         'verify': self.tls_ca_cert,
@@ -197,7 +197,7 @@ class DockerHost(models.Model):
             _logger.debug(line)
         if 'Successfully built' not in all_lines[-1].get('stream', ''):
             self.purge_images()
-            raise UserError(repr(all_lines[-1]['error']))
+            raise UserError(_("Building image %s failed\n\n%s") % (tag, all_lines[-1]['error']))
         return '\n'.join(map(str, all_lines))
 
     @api.multi
@@ -221,9 +221,10 @@ class DockerHost(models.Model):
     def start_container(self, container):
         self.ensure_one()
         _logger.info('Starting container %s...' % container)
-        response = self.client.start(container)
-        if response:
-            raise UserError(response)
+        try:
+            self.client.start(container)
+        except Exception, e:
+            raise UserError(_("Starting container %s failed\n\n%s") % (container, get_exception_message(e)))
         return True
 
     @api.multi

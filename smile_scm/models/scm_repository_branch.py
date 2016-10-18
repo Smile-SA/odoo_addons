@@ -11,8 +11,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import config
 
-from ..tools import cd
-
 _logger = logging.getLogger(__name__)
 
 
@@ -21,7 +19,7 @@ class Branch(models.Model):
     _description = 'Branch'
     _inherit = ['mail.thread']
     _inherits = {'scm.repository': 'repository_id'}
-    _order = 'repository_name,branch'
+    _order = 'branch'
 
     @api.one
     @api.depends('repository_id', 'repository_id.url', 'branch',
@@ -39,7 +37,6 @@ class Branch(models.Model):
 
     repository_id = fields.Many2one('scm.repository', 'Repository', required=True, ondelete='cascade',
                                     readonly=True, states={'draft': [('readonly', False)]}, copy=False)
-    repository_name = fields.Char('Name', related='repository_id.name', readonly=True, store=True)
     branch = fields.Char(help="Technical branch name", readonly=True, states={'draft': [('readonly', False)]}, copy=False)
     version_id = fields.Many2one('scm.version', 'Odoo Version', required=True, ondelete="restrict",
                                  readonly=True, states={'draft': [('readonly', False)]})
@@ -70,6 +67,13 @@ class Branch(models.Model):
                 res[branch.id] += ' (%s)' % branch.branch
         return res.items()
 
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        records = super(Branch, self).search(args, offset, limit, order, count)
+        if not order and not count:
+            return records.sorted(key='name')
+        return records
+
     @property
     def _parent_path(self):
         parent_path = config.get('repositories_path') or tempfile.gettempdir()
@@ -91,23 +95,23 @@ class Branch(models.Model):
     @api.multi
     def clone(self, force=False):
         self._try_lock(_('Cloning already in progress'))
-        with cd(self._parent_path):
-            for branch in self:
-                if not branch.branch:
-                    raise UserError(_('Please define a branch before cloning'))
-                if not force and branch.state != 'draft':
-                    raise UserError(_('You cannot clone a branch already cloned'))
-                if os.path.exists(branch.directory):
-                    branch.state = 'done'
-                    branch.pull()
+        for branch in self:
+            if not branch.branch:
+                raise UserError(_('Please define a branch before cloning'))
+            if not force and branch.state != 'draft':
+                raise UserError(_('You cannot clone a branch already cloned'))
+            branch_directory = os.path.join(self._parent_path, branch.directory)
+            if os.path.exists(branch_directory):
+                branch.state = 'done'
+                branch.pull()
+            else:
+                try:
+                    branch.vcs_id.clone(branch_directory, branch.branch, branch.url)
+                except UserError:
+                    _logger.error('Clone failed for branch %s (%s %s)...' % (branch.id, branch.name, branch.branch))
+                    raise
                 else:
-                    try:
-                        branch.vcs_id.clone(branch.directory, branch.branch, branch.url)
-                    except UserError:
-                        _logger.error('Clone failed for branch %s (%s %s)...' % (branch.id, branch.name, branch.branch))
-                        raise
-                    else:
-                        branch.message_post(body=_("Branch cloned"))
+                    branch.message_post(body=_("Branch cloned"))
         return self.write({'state': 'done', 'last_update': fields.Datetime.now()})
 
     @api.multi
@@ -149,6 +153,18 @@ class Branch(models.Model):
                 if branch.directory and os.path.exists(branch.directory):
                     shutil.rmtree(branch.directory)
             except Exception, e:
-                _logger.error(_('Remove branch directory failed\n%s') % repr(e))
+                _logger.error('Remove branch directory failed\n%s' % repr(e))
                 pass
         return super(Branch, self).unlink()
+
+    @api.multi
+    def open_repository(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Repository'),
+            'res_model': self.repository_id._name,
+            'view_mode': 'form',
+            'res_id': self.repository_id.id,
+            'target': 'blank',
+        }

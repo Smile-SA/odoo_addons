@@ -25,9 +25,9 @@ import odoo.modules as addons
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.smile_scm.tools import cd, check_output_chain
+from odoo.addons.smile_scm.tools import check_output_chain
 
-from ..tools import cursor, with_new_cursor, s2human, mergetree, get_exception_message
+from ..tools import with_new_cursor, s2human, mergetree, get_exception_message
 
 _logger = logging.getLogger(__name__)
 
@@ -112,7 +112,7 @@ def state_cleaner(method):
                     # Force build creation for branch in test before server stop
                     if branches_to_force:
                         _logger.debug('Force build creation for branches %s' % str(branches_to_force.ids))
-                        thread = Thread(target=branches_to_force._create_builds, args=(True,))
+                        thread = Thread(target=branches_to_force.create_builds, args=(True,))
                         thread.start()
         except Exception, e:
             _logger.error(get_exception_message(e))
@@ -200,7 +200,7 @@ class Build(models.Model):
             for line in self.docker_host_id.get_archive(self.docker_container, filepath):
                 logs.append(line)
         except Exception, e:
-            logs.append(repr(e))
+            logs.append(get_exception_message(e))
         self.server_logs = ''.join(logs[-limit:])
 
     @api.one
@@ -215,7 +215,8 @@ class Build(models.Model):
         self.directory = os.path.join(self.docker_host_id.builds_path, str(self.id))
 
     id = fields.Integer('Number', readonly=True)
-    branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True, index=True, ondelete='cascade')
+    branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True,
+                                index=True, ondelete='cascade', auto_join=True)
     repository_id = fields.Many2one('scm.repository', related='branch_id.repository_id', readonly=True, store=True)
     revno = fields.Char('Revision', required=True, readonly=True)
     commit_logs = fields.Text('Last commits', readonly=True)
@@ -246,9 +247,9 @@ class Build(models.Model):
     last_build_time_human = fields.Char('Last build time', compute='_get_last_build_time_human', store=False)
     log_ids = fields.One2many('scm.repository.branch.build.log', 'build_id', 'Logs', readonly=True)
     coverage_ids = fields.One2many('scm.repository.branch.build.coverage', 'build_id', 'Coverage', readonly=True)
-    quality_code_count = fields.Integer('# Quality errors', readonly=True)
-    failed_test_count = fields.Integer('# Failed tests', readonly=True)
-    test_count = fields.Integer('# Tests', readonly=True)
+    quality_code_count = fields.Integer('# Quality errors', readonly=True, group_operator='avg')
+    failed_test_count = fields.Integer('# Failed tests', readonly=True, group_operator='avg')
+    test_count = fields.Integer('# Tests', readonly=True, group_operator='avg')
     failed_test_ratio = fields.Char('Failed tests ratio', compute='_get_failed_test_ratio')
     coverage_avg = fields.Float('Coverage average', readonly=True, group_operator='avg')
     ppid = fields.Integer('Launcher Process Id', readonly=True)
@@ -302,12 +303,13 @@ class Build(models.Model):
         else:
             raise IOError("smile_ci/addons is not found")
         ignore_patterns = shutil.ignore_patterns(*IGNORE_PATTERNS)
-        with cd(self.directory):
-            mergetree(ci_addons_path, 'ci-addons', ignore=ignore_patterns)
+        dest = os.path.join(self.directory, 'ci-addons')
+        mergetree(ci_addons_path, dest, ignore=ignore_patterns)
 
+    @api.multi
+    @with_new_cursor(False)
     def write_with_new_cursor(self, vals):
-        with cursor(self._cr.dbname, False) as new_cr:
-            return self.with_env(self.env(cr=new_cr)).write(vals)
+        return self.write(vals)
 
     @api.model
     def scheduler(self):
@@ -321,6 +323,7 @@ class Build(models.Model):
         max_testing = int(self.env['ir.config_parameter'].get_param('ci.max_testing'))
         max_testing_by_branch = int(self.env['ir.config_parameter'].get_param('ci.max_testing_by_branch'))
         builds_to_run = self.search([('branch_id.use_in_ci', '=', True),
+                                     ('branch_id.image_to_recreate', '=', False),
                                      ('state', '=', 'pending')], order='id asc')
         if builds_to_run:
             ports = sorted(self._find_ports(), reverse=True)
@@ -344,14 +347,9 @@ class Build(models.Model):
                 'ppid': os.getpid(),
             })
             # Use a new thread in order to launch other build tests without waiting the end of the first one
-            new_thread = Thread(target=self._test_in_new_thread, args=(build.id,))
+            new_thread = Thread(target=build._test)
             new_thread.start()
             time.sleep(0.1)  # ?!!
-
-    @api.model
-    def _test_in_new_thread(self, build_id):
-        with api.Environment.manage():
-            return self.browse(build_id)._test()
 
     @api.multi
     @with_new_cursor(False)
@@ -409,7 +407,7 @@ class Build(models.Model):
                 self._remove_image()
             if self.docker_registry_id.active and \
                     self.state == 'running' and self.result in ('unstable', 'stable'):
-                new_thread = Thread(target=self._store_in_registry_in_new_thread, args=(self.id, self.result))
+                new_thread = Thread(target=self._store_in_registry, args=(self.result,))
                 new_thread.start()
 
     @api.model
@@ -477,13 +475,13 @@ class Build(models.Model):
     def _create_configfile(self):
         _logger.info('Generating %s for %s...' % (CONFIGFILE, self.docker_image))
         options = self._get_options()
-        with cd(self.directory):
-            with open(CONFIGFILE, 'w') as cfile:
-                cfile.write('[options]\n')
-                for k, v in options.iteritems():
-                    cfile.write('%s = %s\n' % (k, v))
-                if self.branch_id.additional_options:
-                    cfile.write(self.branch_id.additional_options)
+        filepath = os.path.join(self.directory, CONFIGFILE)
+        with open(filepath, 'w') as cfile:
+            cfile.write('[options]\n')
+            for k, v in options.iteritems():
+                cfile.write('%s = %s\n' % (k, v))
+            if self.branch_id.additional_options:
+                cfile.write(self.branch_id.additional_options)
 
     @api.one
     def _create_dockerfile(self):
@@ -492,12 +490,9 @@ class Build(models.Model):
         localdict = self.branch_id._get_dockerfile_params()
         base_image = self.branch_id.docker_registry_image
         localdict['base_image'] = '%s:base' % base_image
-        if base_image not in self.branch_id.docker_registry_id.get_images() \
-                or 'base' not in self.branch_id.docker_registry_id.get_image_tags(base_image):
-            self.branch_id.recreate_image()
-        with cd(self.directory):
-            with open(DOCKERFILE, 'w') as f:
-                f.write(content % localdict)
+        filepath = os.path.join(self.directory, DOCKERFILE)
+        with open(filepath, 'w') as f:
+            f.write(content % localdict)
 
     @api.multi
     def _get_build_params(self):
@@ -566,11 +561,11 @@ class Build(models.Model):
                 raise
         try:
             self._check_if_running()
+            self.write_with_new_cursor({'is_killable': True})
         except:
             logs = self.docker_host_id.get_logs(self.docker_container)
             _logger.error('Container %s logs:\n%s' % (self.docker_container, logs))
             raise
-        self.write_with_new_cursor({'is_killable': True})
 
     @api.one
     def _check_if_running(self):
@@ -641,15 +636,14 @@ class Build(models.Model):
         for module_name in modules_to_install:
             module_ids = sock_exec('ir.module.module', 'search', [('name', '=', module_name)], 0, 1)
             if not module_ids:
-                raise Exception('Module %s does not exist' % module_name)
+                raise UserError(_('Module %s does not exist') % module_name)
             module_ids_to_install.append(module_ids[0])
         try:
             sock_exec('ir.module.module', 'button_install', module_ids_to_install)
             upgrade_id = sock_exec('base.module.upgrade', 'create', {})
             sock_exec('base.module.upgrade', 'upgrade_module', [upgrade_id])
         except xmlrpclib.Fault, f:
-            _logger.debug('Error while modules installation for build %s:\n%s' % (self.id, f))
-            raise Exception(f.faultString)
+            raise UserError(_('Error while modules installation\n\n%s') % f)
 
     @api.one
     def _reactivate_admin(self):
@@ -715,7 +709,6 @@ class Build(models.Model):
             except APIError:
                 missing_files.append(filename)
             except Exception, e:
-                _logger.error(repr(e))
                 _logger.error('Error while attaching %s: %s' % (filename, get_exception_message(e)))
         if missing_files:
             _logger.info("The following files are missing: %s" % missing_files)
@@ -853,12 +846,14 @@ class Build(models.Model):
             try:
                 getattr(self, '_load_%s_logs' % log_type)()
             except Exception, e:
-                _logger.error(repr(e))
                 _logger.error('Error while loading %s logs: %s' % (log_type, get_exception_message(e)))
 
     @api.multi
     def unlink(self):
-        self._stop_container()
+        try:
+            self._stop_container()
+        except:
+            pass
         return super(Build, self).unlink()
 
     @api.one
@@ -941,11 +936,6 @@ class Build(models.Model):
         builds = self._get_builds_to_purge(date)
         return builds.unlink()
 
-    @api.model
-    def _store_in_registry_in_new_thread(self, build_id, result):
-        with api.Environment.manage():
-            return self.browse(build_id)._store_in_registry(result)
-
     @api.one
     @with_new_cursor(False)
     def _store_in_registry(self, result):
@@ -1026,14 +1016,14 @@ class Build(models.Model):
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
         try:
-            with cd(self.directory):
-                content = self.branch_id.get_docker_compose_content(self.result, self.docker_container, self.port)
-                with open('docker-compose.yml', 'w') as f:
-                    f.write(content)
-                try:
-                    check_output_chain(['docker-compose', 'up', '-d'])
-                except Exception, e:
-                    raise UserError(_('Starting build #%s failed\n\n%s') % (self.id, repr(e)))
+            filepath = os.path.join(self.directory, 'docker-compose.yml')
+            content = self.branch_id.get_docker_compose_content(self.result, self.docker_container, self.port)
+            with open(filepath, 'w') as f:
+                f.write(content)
+            try:
+                check_output_chain(['docker-compose', 'up', '-d', '-f', filepath])
+            except Exception, e:
+                raise UserError(_('Starting build #%s failed\n\n%s') % (self.id, get_exception_message(e)))
         except:
             raise
         else:
@@ -1042,3 +1032,10 @@ class Build(models.Model):
         finally:
             self._remove_directory()
         return True
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        result = super(Build, self).read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+        if not orderby and groupby == ['branch_id']:
+            return sorted(result, key=lambda res: res['branch_id'][1])
+        return result

@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import shutil
+from threading import Thread
 import yaml
 
 from odoo import api, models, fields, tools, _
@@ -14,9 +15,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.smile_scm.tools import cd
-
-from ..tools import cursor, with_new_cursor
+from ..tools import cursor, with_new_cursor, get_exception_message
 from .scm_repository_branch_build import BUILD_RESULTS, CONFIGFILE, DOCKERFILE
 
 _logger = logging.getLogger(__name__)
@@ -81,6 +80,7 @@ class Branch(models.Model):
         return self.env['docker.registry'].sudo().search([], limit=1)
 
     @api.one
+    @api.depends('build_ids')
     def _get_builds_count(self):
         self.builds_count = len(self.build_ids)
 
@@ -168,6 +168,7 @@ class Branch(models.Model):
     pip_packages = fields.Text('PyPI packages')
     npm_packages = fields.Text('Node.js packages')
     additional_options = fields.Text('Additional configuration options')
+    image_to_recreate = fields.Boolean(readonly=True)
 
     # Branches merge options
     subfolder = fields.Char('Place current sources in')
@@ -272,13 +273,22 @@ class Branch(models.Model):
 
     @api.one
     def _update(self):
-        if self.state == 'draft':
-            self.clone()
+        try:
+            if self.state == 'draft':
+                self.clone()
+            else:
+                self.pull()
+        except UserError, e:
+            if "Could not find remote branch" in get_exception_message(e):
+                with cursor(self._cr.dbname, False) as new_cr:
+                    self = self.with_env(self.env(cr=new_cr))
+                    self.use_in_ci = False
+                    self.message_post(_("Branch deactivated because doesn't exist anymore\n\n%s") % get_exception_message(e))
+            raise
         else:
-            self.pull()
-        nextcall = datetime.strptime(fields.Datetime.now(), DATETIME_FORMAT)
-        nextcall += relativedelta(**{self.interval_type: self.interval_number})
-        self.nextcall = nextcall.strftime(DATETIME_FORMAT)
+            nextcall = datetime.strptime(fields.Datetime.now(), DATETIME_FORMAT)
+            nextcall += relativedelta(**{self.interval_type: self.interval_number})
+            self.nextcall = nextcall.strftime(DATETIME_FORMAT)
 
     @api.multi
     def _get_revno(self):
@@ -289,53 +299,65 @@ class Branch(models.Model):
     def _get_last_commits(self):
         self.ensure_one()
         last_revno = self.build_ids and self.build_ids[0].revno.encode('utf8') or self._get_revno()
-        return self.vcs_id.log(self.directory, last_revno)
+        try:
+            return self.vcs_id.log(self.directory, last_revno)
+        except:
+            return self.vcs_id.log(self.directory)
 
     @api.multi
-    def _changes(self):
+    def _check_if_revno_changed(self):
         self.ensure_one()
-        if not self.build_ids or tools.ustr(self._get_revno()) != tools.ustr(self.build_ids[0].revno):  # Because builds ordered by id desc
+        # INFO: self.build_ids[0] because builds ordered by id desc
+        if not self.build_ids or \
+                tools.ustr(self._get_revno()) != tools.ustr(self.build_ids[0].revno):
             return True
         return False
 
-    @api.one
+    @api.multi
     def create_build(self, force=False):
         self._create_build(force)
         return True
 
-    @api.multi
-    @with_new_cursor()
+    @api.one
     def _create_build(self, force=False):
-        self.ensure_one()
-        self._try_lock(_('Build Creation already in progress'))
         if self.use_in_ci:
+            thread = Thread(target=self._create_build_in_new_thread, args=(force,))
+            thread.start()
+
+    @api.one
+    @with_new_cursor()
+    def _create_build_in_new_thread(self, force):
+        self._try_lock(_('Build creation already in progress for branch %s') % self.display_name)
+        try:
             self._update()
-            if self._changes() or force is True:
+            if self._check_if_revno_changed() or force is True:
                 self.mapped('branch_dependency_ids.merge_with_branch_id')._update()
-                vals = {'branch_id': self.id, 'revno': self._get_revno(), 'commit_logs': self._get_last_commits()}
+                vals = {
+                    'branch_id': self.id,
+                    'revno': self._get_revno(),
+                    'commit_logs': self._get_last_commits(),
+                }
                 self.env['scm.repository.branch.build'].create(vals)
+        except Exception, e:
+            msg = "Build creation failed"
+            error = get_exception_message(e)
+            _logger.error(msg + ' for branch %s\n\n%s' % (self.display_name, error))
+            self.message_post('\n\n'.join([_(msg), error]))
 
     @api.multi
     def force_create_build(self):
         self.create_build(force=True)
         return True
 
-    @api.model
-    def create_builds(self, force=False):
-        """Method called by a scheduled action executed each X-minutes"""
-        branches = self.search([('use_in_ci', '=', True), ('nextcall', '<=', fields.Datetime.now())])
-        branches._create_builds(force)
-        return True
-
     @api.multi
-    @with_new_cursor()
-    def _create_builds(self, force=False):
-        for branch in self:
-            try:
-                branch.create_build(force)
-            except Exception, e:
-                _logger.error('Build creation failed for branch %s\n%s'
-                              % (branch.display_name, repr(e)))
+    def create_builds(self, force=False):
+        if not self:
+            self = self.search([
+                ('use_in_ci', '=', True),
+                ('nextcall', '<=', fields.Datetime.now()),
+                ('image_to_recreate', '=', False),
+            ])
+        return self.create_build(force)
 
     @api.model
     def _get_purge_date(self, age_number, age_type):
@@ -384,6 +406,8 @@ class Branch(models.Model):
             'tag': 'download_docker_image',
             'target': 'new',
             'context': {
+                'docker_registry_insecure': not self.docker_registry_id.url.startswith('https'),
+                'docker_registry_url': self.docker_registry_id.url,
                 'docker_registry_image': self.docker_registry_image,
                 'docker_tags': ', '.join(tags),
                 'default_tag': 'latest',
@@ -435,9 +459,9 @@ class Branch(models.Model):
         _logger.info('Generating dockerfile for %s:base...' % self.docker_image)
         content = base64.b64decode(self.os_id.dockerfile_base)
         localdict = self._get_dockerfile_params()
-        with cd(self.build_directory):
-            with open(DOCKERFILE, 'w') as f:
-                f.write(content % localdict)
+        filepath = os.path.join(self.build_directory, DOCKERFILE)
+        with open(filepath, 'w') as f:
+            f.write(content % localdict)
 
     @api.multi
     def _get_build_params(self):
@@ -470,57 +494,85 @@ class Branch(models.Model):
     def _delete_image(self):
         self.docker_registry_id.delete_image(self.docker_registry_image, 'base')
 
-    _docker_fields = ['use_in_ci', 'os_id', 'version_id', 'server_path',
+    _docker_fields = ['os_id', 'version_id', 'server_path',
                       'system_packages', 'pip_packages', 'npm_packages',
                       'branch_dependency_ids', 'subfolder']
 
     @api.multi
-    def _store_in_registry(self, vals):
-        branches = self.filtered(lambda branch: branch.os_id.dockerfile_base)
-        for field in self._docker_fields:
-            if field in vals:
-                branches._delete_image()
-                for branch in branches.filtered(lambda branch: branch.use_in_ci):
-                    try:
-                        branch.docker_host_id = self.env['docker.host'].get_default_docker_host()
-                        branch._create_build_directory()
-                        branch._create_dockerfile()
-                        branch._build_image()
-                        branch._remove_build_directory()
-                        branch._push_image()
-                        branch._remove_image()
-                    except Exception, e:
-                        msg = _("Base image creation failed\n\n%s") % repr(e)
-                        with cursor(self._cr.dbname, False) as new_cr:
-                            branch = branch.with_env(self.env(cr=new_cr))
-                            branch.message_post(body=msg)
-                            branch.use_in_ci = False
-                        raise e
-                    else:
-                        msg = _("Base image successfully created")
-                        with cursor(self._cr.dbname, False) as new_cr:
-                            branch = branch.with_env(self.env(cr=new_cr))
-                            branch.message_post(body=msg)
-                break
+    def _check_image_to_recreate(self, vals):
+        branches = self.filtered(lambda branch: branch.use_in_ci)
+        if branches:
+            for field in self._docker_fields:
+                if field in vals:
+                    branches.write({'image_to_recreate': True})
+                    branches.force_create_build()
+                    break
 
     @api.model
     def create(self, vals):
         branch = super(Branch, self).create(vals)
         if branch.docker_image not in branch.docker_registry_id.get_images():
-            branch._store_in_registry(vals)
+            branch._check_image_to_recreate(vals)
         return branch
 
     @api.multi
     def write(self, vals):
         res = super(Branch, self).write(vals)
-        self._store_in_registry(vals)
+        self._check_image_to_recreate(vals)
         return res
 
     @api.multi
     def unlink(self):
+        for branch in self:
+            if branch.build_ids.filtered(lambda build: build.state == 'testing'):
+                raise UserError(_('You cannot delete a branch with a testing build'))
         self = self.sudo()
         self._delete_image()
         return super(Branch, self).unlink()
+
+    @api.multi
+    def force_recreate_image(self):
+        branches = self.filtered(lambda branch: branch.use_in_ci)
+        branches.write({'image_to_recreate': True})
+        return branches.force_create_build()
+
+    @api.multi
+    def recreate_image(self):
+        self._recreate_image()
+        return True
+
+    @api.one
+    def _recreate_image(self):
+        if self.image_to_recreate and self.os_id.dockerfile_base:
+            thread = Thread(target=self._recreate_image_in_new_thread)
+            thread.start()
+
+    @api.one
+    @with_new_cursor()
+    def _recreate_image_in_new_thread(self):
+        self._try_lock(_('Base image creation already in progress for branch %s') % self.display_name)
+        try:
+            self._delete_image()
+            self.docker_host_id = self.env['docker.host'].get_default_docker_host()
+            self._create_build_directory()
+            self._create_dockerfile()
+            self._build_image()
+            self._remove_build_directory()
+            self._push_image()
+            self.image_to_recreate = False
+            self.message_post(_("Base image successfully created"))
+        except Exception, e:
+            self.use_in_ci = False
+            msg = "Base image creation failed"
+            error = get_exception_message(e)
+            _logger.error(msg + ' for branch %s\n\n%s' % (self.display_name, error))
+            self.message_post('\n\n'.join([_(msg), error]))
+
+    @api.multi
+    def recreate_images(self):
+        if not self:
+            self = self.search([('image_to_recreate', '=', True)])
+        return self.recreate_image()
 
     @api.multi
     def get_docker_compose_content(self, tag='latest', container_name='', port='8069'):
@@ -535,12 +587,6 @@ class Branch(models.Model):
         }
         services.update(self.mapped('link_ids').get_service_infos(self.docker_registry_image, tag))
         return yaml.dump(yaml.load(json.dumps({'version': '2', 'services': services})))
-
-    @api.multi
-    def recreate_image(self):
-        branches = self.filtered(lambda branch: branch.use_in_ci)
-        branches._store_in_registry({'use_in_ci': True})
-        return True
 
     @api.multi
     @api.depends('message_follower_ids', 'repository_id.message_follower_ids')

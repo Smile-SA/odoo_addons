@@ -21,24 +21,35 @@
       <field name="arch" type="xml">
         <form string="Docker Image">
           <sheet>
+            <div class="oe_button_box" name="button_box">
+              <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+              </button>
+            </div>
+            <div class="oe_title" colspan="4">
+              <label for="name" class="oe_edit_only"/>
+              <h1>
+                <field name="name" class="oe_inline"/>
+              </h1>
+            </div>
             <group>
               <group>
-                <field name="name"/>
                 <field name="docker_image"/>
                 <field name="docker_registry_id"/>
               </group>
               <group>
-                <field name="active"/>
-                <field name="with_persistent_storage"/>
                 <field name="is_postgres"/>
+                <field name="with_persistent_storage"/>
               </group>
             </group>
-            <group>
-              <group>
-                <field name="default_environment" placeholder="{'ENV_VAR': 'env_value'}"/>
-                <field name="default_host_config" placeholder="{'mem_limit': '1G'}"/>
-              </group>
-              <group>
+            <notebook>
+              <page string="Configuration">
+                <group>
+                  <field name="default_environment" placeholder="{'ENV_VAR': 'env_value'}"/>
+                  <field name="default_host_config" placeholder="{'mem_limit': '1G'}"/>
+                </group>
+              </page>
+              <page string="Linked services">
                 <field name="link_ids">
                   <tree string="Linked Services" editable="top">
                     <field name="name"/>
@@ -48,8 +59,8 @@
                     <field name="volume_from"/>
                   </tree>
                 </field>
-              </group>
-            </group>
+              </page>
+            </notebook>
           </sheet>
         </form>
       </field>

@@ -2,6 +2,14 @@
 <odoo>
     <data noupdate="0">
 
+		<record model="ir.actions.act_window" id="action_repository_branches">
+			<field name="name">Branches</field>
+			<field name="res_model">scm.repository.branch</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('repository_id', '=', active_id)]</field>
+		</record>
+
         <record id="view_repository_search" model="ir.ui.view">
             <field name="name">scm.repository.search</field>
             <field name="model">scm.repository</field>
@@ -38,6 +46,11 @@
             <field name="arch" type="xml">
             	<form string="Repository">
 	                <sheet string="Repository">
+						<div class="oe_button_box" name="button_box">
+							<button class="oe_stat_button" name="%(action_repository_branches)d" type="action" icon="fa-sitemap">
+								<field string="Branches" name="branches_count" widget="statinfo"/>
+							</button>
+						</div>
 	                    <div class="oe_title">
 	                        <h1><field name="name" placeholder="Name"/></h1>
 	                        <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>

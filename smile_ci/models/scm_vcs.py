@@ -4,7 +4,7 @@ from ast import literal_eval
 
 from odoo import api, fields, models
 
-from odoo.addons.smile_scm.tools import cd, check_output_chain
+from odoo.addons.smile_scm.tools import cd
 
 
 class VersionControlSystem(models.Model):
@@ -20,7 +20,7 @@ class VersionControlSystem(models.Model):
             cmd_revno = self.cmd_revno % {'branch': branch}
             cmd = cmd_revno.split(' ')
             cmd.insert(0, self.cmd)
-            revno = check_output_chain(cmd)
+            revno = self.call(cmd)
             if self == self.env.ref('smile_scm.svn'):
                 revno = revno.split(' ')[0]
             elif self != self.env.ref('smile_scm.git'):
@@ -28,10 +28,13 @@ class VersionControlSystem(models.Model):
             return revno.replace('\n', '')
 
     @api.multi
-    def log(self, directory, last_revno):
+    def log(self, directory, last_revno=''):
         self.ensure_one()
         with cd(directory):
-            cmd_log = self.cmd_log % {'last_revno': last_revno}
+            if last_revno:
+                cmd_log = self.cmd_log % {'last_revno': last_revno}
+            else:
+                cmd_log = 'log'
             cmd = cmd_log.split(' ')
             cmd.insert(0, self.cmd)
-            return check_output_chain(cmd)
+            return self.call(cmd)

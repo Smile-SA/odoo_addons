@@ -26,15 +26,16 @@ class VersionControlSystem(models.Model):
         ('unique_cmd', 'UNIQUE(cmd)', 'VCS must be unique'),
     ]
 
-    @staticmethod
-    def _call(cmd):
+    @api.model
+    def call(self, cmd):
         command = ' '.join(cmd)
         try:
-            check_output_chain(cmd, stderr=STDOUT)
+            result = check_output_chain(cmd, stderr=STDOUT)
+            _logger.info('%s SUCCEEDED' % command)
+            return result
         except CalledProcessError, e:
             raise UserError(_('%s FAILED\nfrom %s\n\n%s')
                             % (command, os.getcwd(), e.output))
-        _logger.info('%s SUCCEEDED' % command)
 
     @api.multi
     def clone(self, directory, branch, url):
@@ -44,7 +45,7 @@ class VersionControlSystem(models.Model):
         cmd = cmd_clone.split(' ')
         cmd.insert(0, self.cmd)
         cmd.append(directory)
-        VersionControlSystem._call(cmd)
+        self.call(cmd)
         return True
 
     @api.multi
@@ -53,5 +54,5 @@ class VersionControlSystem(models.Model):
         cmd = self.cmd_pull.split(' ')
         cmd.insert(0, self.cmd)
         with cd(directory):
-            VersionControlSystem._call(cmd)
+            self.call(cmd)
         return True

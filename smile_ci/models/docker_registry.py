@@ -74,6 +74,10 @@ class DockerRegistry(models.Model):
     def _get_default_tls_key(self):
         return config.get('registry_tls_key') or ''
 
+    @api.one
+    def _get_images_count(self):
+        self.images_count = len(self.get_images())
+
     name = fields.Char(required=True, default='registry')
     image = fields.Char(required=True, default='registry:2')
     port = fields.Char(required=True, default=5000)
@@ -89,6 +93,7 @@ class DockerRegistry(models.Model):
     branch_ids = fields.One2many('scm.repository.branch', 'docker_registry_id', 'Branches', readonly=True)
     login = fields.Char(copy=False)
     password = fields.Char(invisible=True, copy=False)
+    images_count = fields.Integer('Images in registry', compute='_get_images_count')
     images = fields.Html('Images in registry', readonly=True)
 
     _sql_constraints = [
