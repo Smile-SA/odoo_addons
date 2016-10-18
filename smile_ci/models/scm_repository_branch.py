@@ -499,6 +499,14 @@ class Branch(models.Model):
                       'branch_dependency_ids', 'subfolder']
 
     @api.multi
+    def _check_pending_builds_to_remove(self):
+        self.env['scm.repository.branch.build'].search([
+            ('branch_id', 'in', self.ids),
+            ('branch_id.use_in_ci', '=', False),
+            ('state', '=', 'pending'),
+        ]).unlink()
+
+    @api.multi
     def _check_image_to_recreate(self, vals):
         branches = self.filtered(lambda branch: branch.use_in_ci)
         if branches:
@@ -519,6 +527,7 @@ class Branch(models.Model):
     def write(self, vals):
         res = super(Branch, self).write(vals)
         self._check_image_to_recreate(vals)
+        self._check_pending_builds_to_remove()
         return res
 
     @api.multi
