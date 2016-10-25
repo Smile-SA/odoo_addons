@@ -39,7 +39,7 @@ native_new = Registry.new
 
 @classmethod
 def new(cls, db_name, force_demo=False, status=None, update_module=False):
-    callers = (frame[3] for frame in inspect.stack())
+    callers = [frame[3] for frame in inspect.stack()]
     if 'preload_registries' not in callers:
         return native_new(db_name, force_demo, update_module=update_module)
     with cls._lock:
