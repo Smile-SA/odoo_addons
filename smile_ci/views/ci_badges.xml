@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <template id="smile_ci.badge_default">&lt;?xml version="1.0"?&gt;
+      <svg t-attf-xmlns="http://www.w3.org/2000/svg" t-attf-width="{{left.width + right.width}}" height="18">
+        <!-- from https://github.com/badges/shields/tree/master/templates -->
+        <linearGradient id="smooth" x2="0" y2="100%">
+          <stop offset="0"  stop-color="#fff" stop-opacity=".7"/>
+          <stop offset=".1" stop-color="#aaa" stop-opacity=".1"/>
+          <stop offset=".9" stop-color="#000" stop-opacity=".3"/>
+          <stop offset="1"  stop-color="#000" stop-opacity=".5"/>
+        </linearGradient>
+        <rect rx="4" t-attf-width="{{ left.width + right.width }}" height="18" t-att-fill="left.color"/>
+        <rect rx="4" t-att-x="left.width" t-att-width="right.width" height="18" t-att-fill="right.color"/>
+        <rect t-att-x="left.width" width="4" height="18" t-att-fill="right.color"/>
+        <rect rx="4" t-attf-width="{{ left.width + right.width }}" height="18" fill="url(#smooth)"/>
+        <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+          <text t-attf-x="{{left.width/2+1}}" y="13" fill="#010101" fill-opacity=".3"><t t-esc="left.text"/></text>
+          <text t-attf-x="{{left.width/2+1}}" y="12"><t t-esc="left.text"/></text>
+          <text t-attf-x="{{left.width+right.width/2-1}}" y="13" fill="#010101" fill-opacity=".3"><t t-esc="right.text"/></text>
+          <text t-attf-x="{{left.width+right.width/2-1}}" y="12"><t t-esc="right.text"/></text>
+        </g>
+      </svg>
+    </template>
+    <template id="smile_ci.badge_flat">&lt;?xml version="1.0"?&gt;
+      <svg t-attf-xmlns="http://www.w3.org/2000/svg" t-attf-width="{{left.width + right.width}}" height="20">
+        <!-- from https://github.com/badges/shields/tree/master/templates -->
+        <linearGradient id="smooth" x2="0" y2="100%">
+          <stop offset="0"  stop-color="#fff" stop-opacity=".1"/>
+          <stop offset=".1" stop-color="#fff" stop-opacity=".1"/>
+          <stop offset=".9" stop-color="#fff" stop-opacity=".1"/>
+          <stop offset="1"  stop-color="#fff" stop-opacity=".1"/>
+        </linearGradient>
+        <rect rx="3" t-attf-width="{{ left.width + right.width }}" height="20" t-att-fill="left.color"/>
+        <rect rx="3" t-att-x="left.width" t-att-width="right.width" height="20" t-att-fill="right.color"/>
+        <rect t-att-x="left.width" width="4" height="20" t-att-fill="right.color"/>
+        <rect rx="3" t-attf-width="{{ left.width + right.width }}" height="20" fill="url(#smooth)"/>
+        <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+          <text t-attf-x="{{left.width/2+1}}" y="15" fill="#010101" fill-opacity=".3"><t t-esc="left.text"/></text> 
+          <text t-attf-x="{{left.width/2+1}}" y="14"><t t-esc="left.text"/></text>
+          <text t-attf-x="{{left.width+right.width/2-1}}" y="15" fill="#010101" fill-opacity=".3"><t t-esc="right.text"/></text>
+          <text t-attf-x="{{left.width+right.width/2-1}}" y="14"><t t-esc="right.text"/></text>
+        </g>
+      </svg>
+    </template>
+
+  </data>
+</odoo>

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import base64
+from functools import wraps
+import inspect
 import logging
 import os
 from passlib.hash import bcrypt
@@ -27,9 +29,13 @@ except ImportError:
     _logger.warning("Please install requests package")
 
 
-def registry_start(method):
-    def new_load(self, cr, *args, **kwargs):
-        res = method(self, cr, *args, **kwargs)
+def registry_start(setup_models):
+    @wraps(setup_models)
+    def new_setup_models(self, cr, *args, **kwargs):
+        res = setup_models(self, cr, *args, **kwargs)
+        callers = (frame[3] for frame in inspect.stack())
+        if 'preload_registries' not in callers:
+            return res
         uid = SUPERUSER_ID
         try:
             env = api.Environment(cr, uid, {})
@@ -44,7 +50,7 @@ def registry_start(method):
         except Exception, e:
             _logger.error(get_exception_message(e))
         return res
-    return new_load
+    return new_setup_models
 
 
 class DockerRegistry(models.Model):

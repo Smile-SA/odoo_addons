@@ -23,15 +23,16 @@
             <field name="arch" type="xml">
                 <form string="Odoo Version">
                     <sheet>
+                        <div class="oe_title" colspan="4">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                        </div>
                         <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="server_cmd"/>
-                            </group>
-                            <group>
-                                <field name="web_included"/>
-                                <field name="standard_xmlrpc"/>
-                            </group>
+                            <field name="server_cmd"/>
+                            <field name="standard_xmlrpc"/>
+                            <field name="web_included"/>
                         </group>
                         <field name="package_ids">
                             <tree editable="top">

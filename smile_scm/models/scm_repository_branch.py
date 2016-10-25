@@ -43,7 +43,7 @@ class Branch(models.Model):
     state = fields.Selection([
         ('draft', 'Not cloned'),
         ('done', 'Cloned'),
-    ], required=True, readonly=True, default='draft', copy=False)
+    ], 'Status', required=True, readonly=True, default='draft', copy=False)
     last_update = fields.Datetime(readonly=True, copy=False)
     directory = fields.Char(compute='_get_directory', copy=False)
     active = fields.Boolean(default=True, copy=False)

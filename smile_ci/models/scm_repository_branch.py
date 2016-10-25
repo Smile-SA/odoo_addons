@@ -10,7 +10,7 @@ import shutil
 from threading import Thread
 import yaml
 
-from odoo import api, models, fields, tools, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.safe_eval import safe_eval
@@ -20,6 +20,7 @@ from .scm_repository_branch_build import BUILD_RESULTS, CONFIGFILE, DOCKERFILE
 
 _logger = logging.getLogger(__name__)
 
+DOCKERCOMPOSEFILE = 'docker-compose.yml'
 INTERVAL_TYPES = [
     ('years', 'years'),
     ('months', 'months'),
@@ -112,30 +113,8 @@ class Branch(models.Model):
         tags = self.docker_registry_id.get_image_tags(self.docker_image)
         self.docker_tags = ', '.join(tags)
 
-    @api.one
-    @api.depends('docker_registry_image', 'link_ids')
-    def _get_docker_compose_attachment(self):
-        filename = 'docker-compose.yml'
-        Attachment = self.env['ir.attachment']
-        attachment = Attachment.search([
-            ('name', '=', filename),
-            ('res_model', '=', self._name),
-            ('res_id', '=', self.id),
-        ], limit=1)
-        if attachment:
-            self.docker_compose_attachment_id = attachment
-        else:
-            content = self.get_docker_compose_content()
-            self.docker_compose_attachment_id = Attachment.create({
-                'name': filename,
-                'datas_fname': filename,
-                'datas': base64.b64encode(content),
-                'res_model': self._name,
-                'res_id': self.id,
-            })
-
     build_ids = fields.One2many('scm.repository.branch.build', 'branch_id', 'Builds', readonly=True, copy=False)
-    builds_count = fields.Integer('Builds Count', compute='_get_builds_count', store=False)
+    builds_count = fields.Integer('Builds count', compute='_get_builds_count', store=False)
     last_build_result = fields.Selection(BUILD_RESULTS + [('unknown', 'Unknown')], 'Last result',
                                          compute='_get_last_build_result', store=False)
     running_build_id = fields.Many2one('scm.repository.branch.build', 'Running build',
@@ -187,8 +166,6 @@ class Branch(models.Model):
     docker_image = fields.Char(compute='_get_docker_image', store=True)
     docker_registry_image = fields.Char(compute='_get_docker_registry_image', store=True)
     docker_tags = fields.Char(compute='_get_docker_tags')
-    docker_compose_attachment_id = fields.Many2one('ir.attachment', 'docker-compose.yml',
-                                                   compute='_get_docker_compose_attachment')
 
     # Email receivers
     partner_ids = fields.Many2many('res.partner', string='Followers (including Repository Partners)',
@@ -392,6 +369,33 @@ class Branch(models.Model):
         return True
 
     @api.multi
+    def _get_docker_compose_attachment(self, force_recreate=False):
+        self.ensure_one()
+        attachment = self.env['ir.attachment'].search([
+            ('datas_fname', '=', DOCKERCOMPOSEFILE),
+            ('res_model', '=', self._name),
+            ('res_id', '=', self.id)
+        ], limit=1)
+        if attachment and force_recreate:
+            attachment.unlink()
+        if not attachment or force_recreate:
+            attachment = self._generate_docker_compose_attachment()
+        return attachment
+
+    @api.multi
+    def _generate_docker_compose_attachment(self):
+        self.ensure_one()
+        filename = DOCKERCOMPOSEFILE
+        content = self.get_docker_compose_content()
+        return self.env['ir.attachment'].create({
+            'name': filename,
+            'datas_fname': filename,
+            'datas': base64.b64encode(content),
+            'res_model': self._name,
+            'res_id': self.id,
+        })
+
+    @api.multi
     def download_docker_image(self):
         self.ensure_one()
         if not self.docker_tags:
@@ -400,6 +404,7 @@ class Branch(models.Model):
         for tag in ('latest', 'base'):
             if tag in tags:
                 tags.remove(tag)
+        attachment = self._get_docker_compose_attachment()
         return {
             'type': 'ir.actions.client',
             'name': 'Download Docker image',
@@ -412,7 +417,7 @@ class Branch(models.Model):
                 'docker_tags': ', '.join(tags),
                 'default_tag': 'latest',
                 'odoo_dir': self.os_id.odoo_dir,
-                'attachment_id': self.docker_compose_attachment_id.id,
+                'attachment_id': attachment.id,
             },
         }
 
@@ -422,7 +427,7 @@ class Branch(models.Model):
         return os.path.join(self.docker_host_id.builds_path, 'branch_%s' % self.id)
 
     @api.one
-    def _create_build_directory(self):
+    def _make_build_directory(self):
         if self.build_directory and not os.path.exists(self.build_directory):
             os.makedirs(self.build_directory)
 
@@ -494,10 +499,6 @@ class Branch(models.Model):
     def _delete_image(self):
         self.docker_registry_id.delete_image(self.docker_registry_image, 'base')
 
-    _docker_fields = ['os_id', 'version_id', 'server_path',
-                      'system_packages', 'pip_packages', 'npm_packages',
-                      'branch_dependency_ids', 'subfolder']
-
     @api.multi
     def _check_pending_builds_to_remove(self):
         self.env['scm.repository.branch.build'].search([
@@ -505,6 +506,18 @@ class Branch(models.Model):
             ('branch_id.use_in_ci', '=', False),
             ('state', '=', 'pending'),
         ]).unlink()
+
+    _docker_compose_fields = ['docker_registry_image', 'link_ids']
+
+    @api.multi
+    def _check_docker_compose_attachment(self, vals):
+        for field in self._docker_compose_fields:
+            if field in vals:
+                self._get_docker_compose_attachment(force_recreate=True)
+
+    _docker_fields = ['os_id', 'version_id', 'server_path',
+                      'system_packages', 'pip_packages', 'npm_packages',
+                      'branch_dependency_ids', 'subfolder']
 
     @api.multi
     def _check_image_to_recreate(self, vals):
@@ -527,6 +540,7 @@ class Branch(models.Model):
     def write(self, vals):
         res = super(Branch, self).write(vals)
         self._check_image_to_recreate(vals)
+        self._check_docker_compose_attachment(vals)
         self._check_pending_builds_to_remove()
         return res
 
@@ -563,7 +577,7 @@ class Branch(models.Model):
         try:
             self._delete_image()
             self.docker_host_id = self.env['docker.host'].get_default_docker_host()
-            self._create_build_directory()
+            self._make_build_directory()
             self._create_dockerfile()
             self._build_image()
             self._remove_build_directory()

@@ -2,7 +2,7 @@
 
 import logging
 import os
-from subprocess import CalledProcessError, STDOUT
+from subprocess import CalledProcessError
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -30,7 +30,7 @@ class VersionControlSystem(models.Model):
     def call(self, cmd):
         command = ' '.join(cmd)
         try:
-            result = check_output_chain(cmd, stderr=STDOUT)
+            result = check_output_chain(cmd)
             _logger.info('%s SUCCEEDED' % command)
             return result
         except CalledProcessError, e:

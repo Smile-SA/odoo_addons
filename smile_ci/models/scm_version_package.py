@@ -7,7 +7,7 @@ class OdooVersionPackage(models.Model):
     _name = 'scm.version.package'
     _description = 'Packages by Odoo Version and Operating System'
     _rec_name = 'os_id'
-    _order = 'version_id'
+    _order = 'os_id,version_id'
 
     version_id = fields.Many2one('scm.version', 'Odoo Version', required=True, ondelete='cascade')
     os_id = fields.Many2one('scm.os', 'Operating System', required=True, ondelete='cascade')

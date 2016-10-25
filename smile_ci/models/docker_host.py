@@ -10,15 +10,9 @@ from odoo.exceptions import UserError
 from odoo.tools import config
 
 from ..tools import b2human, get_exception_message
+from ..tools.docker_api import Client, TLSConfig
 
 _logger = logging.getLogger(__name__)
-
-
-try:
-    from docker import Client
-    from docker.tls import TLSConfig
-except ImportError:
-    _logger.warning("Please install docker package")
 
 
 class DockerHost(models.Model):
@@ -235,6 +229,8 @@ class DockerHost(models.Model):
         # So we need to filter manually search results
         containers = self.get_containers(all=True, filters={'name': container})
         containers = map(lambda container: container['Names'][0].replace('/', ''), containers)
+        if 'v' not in kwargs:
+            kwargs['v'] = True
         if container in containers:
             kwargs['container'] = container
             _logger.debug(repr(kwargs))

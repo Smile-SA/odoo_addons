@@ -6,7 +6,8 @@ import csv
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from distutils.version import LooseVersion
-from functools import partial
+from functools import partial, wraps
+import inspect
 import logging
 from lxml import etree
 import os
@@ -25,7 +26,7 @@ import odoo.modules as addons
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.smile_scm.tools import check_output_chain
+from odoo.addons.smile_scm.tools import cd, check_output_chain
 
 from ..tools import with_new_cursor, s2human, mergetree, get_exception_message
 
@@ -66,9 +67,13 @@ TEST_MODULE = 'smile_test'
 TODO_ERROR_CODE = 'T000'
 
 
-def state_cleaner(method):
-    def new_load(self, cr, *args, **kwargs):
-        res = method(self, cr, *args, **kwargs)
+def state_cleaner(setup_models):
+    @wraps(setup_models)
+    def new_setup_models(self, cr, *args, **kwargs):
+        res = setup_models(self, cr, *args, **kwargs)
+        callers = (frame[3] for frame in inspect.stack())
+        if 'preload_registries' not in callers:
+            return res
         uid = SUPERUSER_ID
         env = api.Environment(cr, uid, {})
         try:
@@ -117,7 +122,7 @@ def state_cleaner(method):
         except Exception, e:
             _logger.error(get_exception_message(e))
         return res
-    return new_load
+    return new_setup_models
 
 
 class Build(models.Model):
@@ -227,7 +232,7 @@ class Build(models.Model):
         ('testing', 'Testing'),
         ('running', 'Running'),
         ('done', 'Done'),
-    ], 'State', readonly=True, default='pending')
+    ], 'Status', readonly=True, default='pending')
     result = fields.Selection(BUILD_RESULTS, 'Result', readonly=True)
     error = fields.Char(readonly=True)
     directory = fields.Char(compute='_get_directory', store=True)
@@ -1021,7 +1026,8 @@ class Build(models.Model):
             with open(filepath, 'w') as f:
                 f.write(content)
             try:
-                check_output_chain(['docker-compose', 'up', '-d', '-f', filepath])
+                with cd(self.directory):
+                    check_output_chain(['docker-compose', 'up', '-d'])
             except Exception, e:
                 raise UserError(_('Starting build #%s failed\n\n%s') % (self.id, get_exception_message(e)))
         except:

@@ -72,6 +72,7 @@
       <field name="view_type">form</field>
       <field name="view_mode">tree,form</field>
       <field name="view_id" ref="view_docker_image_tree"/>
+      <field name="context">{'active_test': False}</field>
     </record>
 
   </data>

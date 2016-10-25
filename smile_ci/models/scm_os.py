@@ -13,3 +13,4 @@ class OperatingSystem(models.Model):
     dockerfile_base = fields.Binary('Dockerfile base template', help='Used to build Branch base image')
     odoo_dir = fields.Char('Odoo directory', required=True, default='/usr/src/odoo')
     active = fields.Boolean(default=True)
+    package_ids = fields.One2many('scm.version.package', 'os_id', 'Packages')

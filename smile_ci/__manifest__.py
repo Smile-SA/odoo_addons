@@ -76,6 +76,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
         "data/mail_template.xml",
 
         # Views
+        "views/ci_badges.xml",
         "views/scm_repository_branch_build_log_view.xml",
         "views/scm_repository_branch_build_coverage_view.xml",
         "views/scm_repository_branch_build_view.xml",
@@ -83,6 +84,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
         "views/scm_dashboard.xml",
         "views/scm_vcs_view.xml",
         "views/scm_version_view.xml",
+        "views/scm_version_package_view.xml",
         "views/scm_os_view.xml",
         "views/docker_host_view.xml",
         "views/docker_registry_view.xml",
@@ -104,6 +106,6 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
     "installable": True,
     "application": False,
     "external_dependencies": {
-        'python': ['docker', 'flake8_debugger', 'flake8_print'],
+        'python': ['docker', 'flake8_debugger', 'flake8_print', 'matplotlib'],
     },
 }
