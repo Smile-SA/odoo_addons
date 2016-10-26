@@ -75,7 +75,7 @@ class test_document_access(TransactionCase):
         self.profile_user_can_create = self.user_obj.create({
             'name': 'Profile User Can Create',
             'login': 'PUCC',
-            'is_user_profile':  True,
+            'is_user_profile': True,
             'groups_id': [
                 (4, self.group_can_create.id),
                 (4, self.env.ref('base.group_system').id)
@@ -85,7 +85,7 @@ class test_document_access(TransactionCase):
         self.profile_user_cannot_create = self.user_obj.create({
             'name': 'Profile User Cannot Create',
             'login': 'PUCNC',
-            'is_user_profile':  True,
+            'is_user_profile': True,
             'groups_id': [(6, 0, self.group_cannot_create.ids)],
         })
 

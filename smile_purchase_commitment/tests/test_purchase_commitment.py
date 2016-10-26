@@ -22,7 +22,6 @@
 import time
 
 from openerp.tests.common import TransactionCase
-from openerp.exceptions import ValidationError
 
 
 class PurchaseCommitmentTest(TransactionCase):

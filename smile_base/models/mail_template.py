@@ -54,7 +54,7 @@ class MailTemplate(models.Model):
             res_to_rec[record.id] = record
         variables = {
             'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.pool, self._cr, self._uid, dt, tz, format, context),
-            'format_numeric': lambda value, column, options=None:  self.format_numeric(value, column, options),  # Added by Smile
+            'format_numeric': lambda value, column, options=None: self.format_numeric(value, column, options),  # Added by Smile
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
         }
