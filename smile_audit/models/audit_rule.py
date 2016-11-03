@@ -101,14 +101,14 @@ class AuditRule(models.Model):
                 rule._deactivate()
         return True
 
-    _methods = ['create', 'write', 'unlink']
+    _methods = ['_create', '_write', 'unlink']
 
     @api.model
     @tools.ormcache()
     def _check_audit_rule(self):
         rules = self.sudo().search([])
         return {rule.model_id.model:
-                {method: rule.id
+                {method.replace('_', ''): rule.id
                  for method in self._methods
                  if getattr(rule, 'log_%s' % method.replace('_', ''))}
                 for rule in rules}
