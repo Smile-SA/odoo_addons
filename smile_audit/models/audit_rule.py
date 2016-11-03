@@ -183,8 +183,9 @@ class AuditRule(models.Model):
                 if vals:
                     data.setdefault(res_id, {'old': {}, 'new': {}})[age] = vals
         for res_id in data.keys():
-            for field in data[res_id]['old'].keys():
-                if data[res_id]['old'][field] == data[res_id]['new'][field]:
+            all_fields = set(data[res_id]['old'].keys()) | set(data[res_id]['new'].keys())
+            for field in all_fields:
+                if data[res_id]['old'].get(field) == data[res_id]['new'].get(field):
                     del data[res_id]['old'][field]
                     del data[res_id]['new'][field]
             if data[res_id]['old'] == data[res_id]['new']:
