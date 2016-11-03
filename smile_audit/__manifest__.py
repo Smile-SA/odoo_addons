@@ -31,8 +31,6 @@
 This module lets administrator track every user operation on all the objects of the system
 (for the moment, only create, write and unlink methods).
 
-WARNING: This module is not compatible with audit, so uninstall it before installing this one.
-
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "depends": [

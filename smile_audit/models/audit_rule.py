@@ -23,6 +23,7 @@ import logging
 
 from odoo import api, fields, models, tools, _
 from odoo.modules.registry import RegistryManager
+from odoo.tools.safe_eval import safe_eval
 
 from ..tools import audit_decorator
 
@@ -100,7 +101,7 @@ class AuditRule(models.Model):
                 rule._deactivate()
         return True
 
-    _methods = ['create', 'write', 'unlink', '_write']
+    _methods = ['create', 'write', 'unlink']
 
     @api.model
     @tools.ormcache()
@@ -121,12 +122,12 @@ class AuditRule(models.Model):
         else:
             rules = self.search([])
         for rule in rules:
-            RecordModel = self.pool.get(rule.model_id.model)
-            if not RecordModel:
+            if rule.model_id.model not in self.env.registry.models:
                 continue
+            RecordModel = self.env[rule.model_id.model]
             if rule.active and not hasattr(RecordModel, 'audit_rule'):
                 for method in self._methods:
-                    RecordModel._patch_method(method, audit_decorator())
+                    RecordModel._patch_method(method, audit_decorator(method))
                 RecordModel.audit_rule = True
                 updated = True
             if not rule.active and hasattr(RecordModel, 'audit_rule'):
@@ -166,7 +167,7 @@ class AuditRule(models.Model):
         self.update_rule(force_deactivation=True)
         return super(AuditRule, self).unlink()
 
-    _ignored_fields = ['message_ids', 'message_last_post']
+    _ignored_fields = ['__last_update', 'message_ids', 'message_last_post']
 
     @classmethod
     def _format_data_to_log(cls, old_values, new_values):
@@ -182,6 +183,10 @@ class AuditRule(models.Model):
                 if vals:
                     data.setdefault(res_id, {'old': {}, 'new': {}})[age] = vals
         for res_id in data.keys():
+            for field in data[res_id]['old'].keys():
+                if data[res_id]['old'][field] == data[res_id]['new'][field]:
+                    del data[res_id]['old'][field]
+                    del data[res_id]['new'][field]
             if data[res_id]['old'] == data[res_id]['new']:
                 del data[res_id]
         return data
@@ -190,12 +195,13 @@ class AuditRule(models.Model):
     def log(self, method, old_values=None, new_values=None):
         if old_values or new_values:
             data = self._format_data_to_log(old_values, new_values)
+            AuditLog = self.env['audit.log'].sudo()
             for res_id in data:
-                self.env['audit.log'].sudo().create({
+                log = AuditLog.create({
                     'user_id': self._uid,
                     'model_id': self.sudo().model_id.id,
-                    'method': method,
                     'res_id': res_id,
-                    'data': repr(data[res_id]),
+                    'method': method,
+                    'data': data[res_id],
                 })
         return True

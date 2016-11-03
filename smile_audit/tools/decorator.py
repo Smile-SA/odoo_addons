@@ -19,44 +19,47 @@
 #
 ##############################################################################
 
-
-def _get_args(self, method, args, kwargs):
-    # avoid hasattr(self, '_ids') because __getattr__() is overridden
-    if '_ids' in self.__dict__:
-        vals = method in ('create', 'write', '_create', '_write') and args[0] or {}
-    if self._name == 'res.users':
-        vals = self._remove_reified_groups(vals)
-    fields_to_read = vals.keys()
-    if method in ('_create', '_write'):
-        for index, fname in enumerate(fields_to_read):
-            field = self._fields[fname]
-            if not field.compute:
-                del fields_to_read[index]
-    return self, fields_to_read
+from odoo import api
 
 
-def audit_decorator():
-    def audit_wrapper(self, *args, **kwargs):
-        origin = audit_wrapper.origin
-        while hasattr(origin, 'origin'):
-            origin = origin.origin
-        method = origin.__name__
-        records, fields_to_read = _get_args(self, method, args, kwargs)
-        AuditRule = records.env['audit.rule']
-        rule_id = AuditRule._check_audit_rule().get(records._name, {}).get(method)
-        if rule_id:
-            rule = AuditRule.browse(rule_id)
-            old_values = None
-            if method != 'create':
-                if fields_to_read or method == 'unlink':
-                    old_values = records.read(fields_to_read, load='_classic_write')
-                if method == 'unlink':
-                    rule.log(method, old_values)
-        result = audit_wrapper.origin(self, *args, **kwargs)
-        if rule_id and method != 'unlink' and fields_to_read:
-            if method == 'create':
-                records = records.browse(result) if isinstance(result, (int, long)) else result
-            new_values = records.read(fields_to_read, load='_classic_write')
-            rule.log(method, old_values, new_values)
+def audit_decorator(method):
+
+    def get_audit_rule(self, method):
+        AuditRule = self.env['audit.rule']
+        rule_id = AuditRule._check_audit_rule().get(self._name, {}).get(method)
+        return AuditRule.browse(rule_id) if rule_id else None
+
+    @api.model
+    def audit_create(self, vals):
+        record = audit_create.origin(self, vals)
+        rule = get_audit_rule(self, 'create')
+        if rule:
+            new_values = record.read(load='_classic_write')
+            rule.log('create', new_values=new_values)
+        return record
+
+    @api.multi
+    def audit_write(self, vals):
+        rule = get_audit_rule(self, 'write')
+        if rule:
+            old_values = self.read(load='_classic_write')
+        result = audit_write.origin(self, vals)
+        if rule:
+            new_values = self.read(load='_classic_write')
+            rule.log('write', old_values, new_values)
         return result
-    return audit_wrapper
+
+    @api.multi
+    def audit_unlink(self):
+        rule = get_audit_rule(self, 'unlink')
+        if rule:
+            old_values = self.read(load='_classic_write')
+            rule.log('unlink', old_values)
+        return audit_unlink.origin(self)
+
+    if 'create' in method:
+        return audit_create
+    if 'write' in method:
+        return audit_write
+    if 'unlink' in method:
+        return audit_unlink

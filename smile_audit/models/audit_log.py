@@ -21,7 +21,6 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval
 
 
 class AuditLog(models.Model):
@@ -36,7 +35,7 @@ class AuditLog(models.Model):
     model = fields.Char(related='model_id.model', store=True, readonly=True, index=True)
     res_id = fields.Integer('Resource Id', readonly=True)
     method = fields.Char('Method', size=64, readonly=True)
-    data = fields.Text('Data', readonly=True)
+    data = fields.Serialized('Data', readonly=True)
     data_html = fields.Html('HTML Data', readonly=True, compute='_render_html')
 
     @api.one
@@ -46,7 +45,7 @@ class AuditLog(models.Model):
             if record:
                 self.name = record.display_name
             else:
-                data = safe_eval(self.data or '{}')
+                data = self.data or {}
                 rec_name = self.env[self.model_id.model]._rec_name
                 if rec_name in data['new']:
                     self.name = data['new'][rec_name]
@@ -83,7 +82,7 @@ class AuditLog(models.Model):
     def _get_content(self):
         self.ensure_one()
         content = []
-        data = safe_eval(self.data or '{}')
+        data = self.data or {}
         RecordModel = self.env[self.model_id.model]
         for fname in set(data['new'].keys() + data['old'].keys()):
             field = RecordModel._fields.get(fname) or RecordModel._inherit_fields.get(fname)
@@ -124,7 +123,7 @@ class AuditLog(models.Model):
             'res_model': self.model,
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': False,  # TODO: get it
+            'view_id': False,
             'res_id': self.res_id,
             'context': {'history_revision': create_date},
         }
