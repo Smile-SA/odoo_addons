@@ -37,7 +37,7 @@ class DecimalPrecision(models.Model):
     @staticmethod
     def get_display_precision(env, application):
         res = 2
-        dp = registry(env.cr.dbname)['decimal.precision']
+        dp = env['decimal.precision']
         if hasattr(dp, 'display_precision_get'):
-            res = dp.display_precision_get(env.cr, env.uid, application)
+            res = dp.display_precision_get(application)
         return 16, res
