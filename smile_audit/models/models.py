@@ -29,22 +29,23 @@ native_fields_get = models.BaseModel.fields_get
 def _read_from_database(self, field_names, inherited_field_names=[]):
     native_read_from_database(self, field_names, inherited_field_names=[])
     # Store history revision in cache
-    if self._context.get('history_revision') and getattr(self._model, 'audit_rule', None):
-        history_date = self._context.get('history_revision')
-        create_rule = self.env['audit.rule']._check_audit_rule().get(self._name, {}).get('create')
-        date_operator = create_rule and '>' or '>='
-        domain = [('model', '=', self._name), ('res_id', 'in', self.ids),
-                  ('create_date', date_operator, history_date)]
-        logs = self.env['audit.log'].sudo().search(domain, order='create_date desc')
-        for record in self:
-            vals = {}
-            for log in logs:
-                if log.res_id == record.id:
-                    data = eval(log.data or '{}')
-                    vals.update(data.get('old', {}))
-            if 'message_ids' in self._fields:
-                vals['message_ids'] = record.message_ids.filtered(lambda msg: msg.date <= history_date)
-            record._cache.update(record._convert_to_cache(vals, validate=False))
+    if self._context.get('history_revision'):
+        audit_rules = self.env['audit.rule']._check_audit_rule().get(self._name, {})
+        if audit_rules:
+            history_date = self._context.get('history_revision')
+            date_operator = audit_rules.get('create') and '>' or '>='
+            domain = [('model', '=', self._name), ('res_id', 'in', self.ids),
+                    ('create_date', date_operator, history_date)]
+            logs = self.env['audit.log'].sudo().search(domain, order='create_date desc')
+            for record in self:
+                vals = {}
+                for log in logs:
+                    if log.res_id == record.id:
+                        data = log.data or {}
+                        vals.update(data.get('old', {}))
+                if 'message_ids' in self._fields:
+                    vals['message_ids'] = record.message_ids.filtered(lambda msg: msg.date <= history_date)
+                record._cache.update(record._convert_to_cache(vals, validate=False))
 
 
 @api.model

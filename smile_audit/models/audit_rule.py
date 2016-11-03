@@ -125,12 +125,12 @@ class AuditRule(models.Model):
             if rule.model_id.model not in self.env.registry.models:
                 continue
             RecordModel = self.env[rule.model_id.model]
-            if rule.active and not hasattr(RecordModel, 'audit_rule'):
+            if rule.active:
                 for method in self._methods:
                     RecordModel._patch_method(method, audit_decorator(method))
                 RecordModel.audit_rule = True
                 updated = True
-            if not rule.active and hasattr(RecordModel, 'audit_rule'):
+            if not rule.active:
                 for method_name in self._methods:
                     method = getattr(RecordModel, method_name)
                     while hasattr(method, 'origin'):
