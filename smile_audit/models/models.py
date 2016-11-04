@@ -35,7 +35,7 @@ def _read_from_database(self, field_names, inherited_field_names=[]):
             history_date = self._context.get('history_revision')
             date_operator = audit_rules.get('create') and '>' or '>='
             domain = [('model', '=', self._name), ('res_id', 'in', self.ids),
-                    ('create_date', date_operator, history_date)]
+                      ('create_date', date_operator, history_date)]
             logs = self.env['audit.log'].sudo().search(domain, order='create_date desc')
             for record in self:
                 vals = {}

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from odoo import api, fields, models, registry, tools
+from odoo import api, fields, models, tools
 
 
 class DecimalPrecision(models.Model):

@@ -23,7 +23,6 @@ import logging
 
 from odoo import api, fields, models, tools, _
 from odoo.modules.registry import RegistryManager
-from odoo.tools.safe_eval import safe_eval
 
 from ..tools import audit_decorator
 
@@ -145,7 +144,7 @@ class AuditRule(models.Model):
         return updated
 
     @api.model
-    @api.returns('self', lambda value: value.id)
+    @api.returns('self')
     def create(self, vals):
         vals['state'] = 'done'
         rule = super(AuditRule, self).create(vals)
@@ -198,7 +197,7 @@ class AuditRule(models.Model):
             data = self._format_data_to_log(old_values, new_values)
             AuditLog = self.env['audit.log'].sudo()
             for res_id in data:
-                log = AuditLog.create({
+                AuditLog.create({
                     'user_id': self._uid,
                     'model_id': self.sudo().model_id.id,
                     'res_id': res_id,
