@@ -33,7 +33,7 @@ Available options
 * `redis_host` (default: localhost): Redis host
 * `redis_port` (default: 6379): Redis port
 * `redis_dbindex` (default: 1): Redis database index
-* `redis_host` (default: None): Redis password
+* `redis_pass` (default: None): Redis password
 
 
 Bug Tracker
