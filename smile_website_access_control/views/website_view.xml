@@ -14,5 +14,9 @@
             </field>
         </record>
 
+        <record id="website.action_website_menu" model="ir.actions.act_window">
+            <field name="context">{'search_default_my_websites': True, 'website.menu.full_list': True}</field>
+        </record>
+
     </data>
 </odoo>
