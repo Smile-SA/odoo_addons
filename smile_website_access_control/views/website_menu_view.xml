@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="menu_tree" model="ir.ui.view">
+        <field name="name">website.menu.tree</field>
+        <field name="model">website.menu</field>
+        <field name="inherit_id" ref="website.menu_tree"/>
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="groups_id" invisible="context.get('hide_groups')"
+                    widget="many2many_tags" attrs="{'readonly': [('parent_id', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="website.action_website_menu" model="ir.actions.act_window">
+        <field name="context">{'search_default_my_websites': True, 'website.menu.full_list': True}</field>
+    </record>
+
+</odoo>

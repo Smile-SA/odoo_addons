@@ -21,4 +21,4 @@
 
 import ir_ui_view
 import res_groups
-import website
+import website_menu

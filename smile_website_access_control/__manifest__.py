@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Website - Access Control",
+    "name": "Access control in website",
     "version": "0.1",
     "author": "Smile",
     "website": 'http://www.smile.fr',
@@ -35,7 +35,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & julien.drecq@smil
     "depends": ['website'],
     "data": [
         "views/res_groups_view.xml",
-        "views/website_view.xml",
+        "views/website_menu_view.xml",
     ],
     "demo": [],
     "installable": True,
