@@ -37,6 +37,7 @@ class IrUiMenu(models.Model):
     @tools.ormcache_context(accepted_keys=('lang',))
     def load_menus_root(self, cr, uid, context=None):
         context = context or {}
+        context = context.copy()
         context['new_menu_fields_to_read'] = ['fa_icon']
         res = super(IrUiMenu, self).load_menus_root(cr, uid, context=context)
         return res
