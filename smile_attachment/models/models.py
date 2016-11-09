@@ -24,10 +24,10 @@
 from lxml import etree
 
 from odoo import api, fields
-from odoo.models import Model, BaseModel
+from odoo.models import BaseModel, Model
 
 native_setup_fields = Model._setup_fields
-native_fields_view_get = Model.fields_view_get
+native_fields_view_get = BaseModel.fields_view_get
 
 
 def _get_attachments_field_name(self):
@@ -73,13 +73,14 @@ def _setup_fields(self, partial):
 def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
     res = native_fields_view_get(self, view_id=view_id, view_type=view_type,
                                  toolbar=toolbar, submenu=submenu)
-    name = self._get_attachments_field_name()
-    if view_type == 'search' and (name in self._fields):
-        View = self.env['ir.ui.view']
-        arch_etree = etree.fromstring(res['arch'])
-        element = etree.Element('field', name=name)
-        arch_etree.insert(-1, element)
-        res['arch'], res['fields'] = View.postprocess_and_fields(self._name, arch_etree, view_id)
+    if view_type == 'search' and hasattr(self, '_get_attachments_field_name'):
+        name = self._get_attachments_field_name()
+        if name in self._fields:
+            View = self.env['ir.ui.view']
+            arch_etree = etree.fromstring(res['arch'])
+            element = etree.Element('field', name=name)
+            arch_etree.insert(-1, element)
+            res['arch'], res['fields'] = View.postprocess_and_fields(self._name, arch_etree, view_id)
     return res
 
 Model._get_attachments_field_name = _get_attachments_field_name
