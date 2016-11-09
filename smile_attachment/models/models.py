@@ -24,7 +24,7 @@
 from lxml import etree
 
 from odoo import api, fields
-from odoo.models import Model
+from odoo.models import Model, BaseModel
 
 native_setup_fields = Model._setup_fields
 native_fields_view_get = Model.fields_view_get
@@ -86,5 +86,4 @@ Model._get_attachments_field_name = _get_attachments_field_name
 Model._setup_fields = _setup_fields
 Model._get_attachments = _get_attachments
 Model._search_attachments = _search_attachments
-Model.fields_view_get = fields_view_get
-
+BaseModel.fields_view_get = fields_view_get
