@@ -169,11 +169,9 @@ class UpgradeManager(object):
         self._reset_services()
 
     def force_modules_upgrade(self, registry, modules_to_upgrade):
-        uid = SUPERUSER_ID
         with cursor(self.db) as cr:
             with api.Environment.manage():
-                env = api.Environment(cr, uid, {})
-                Module = env['ir.module.module']
+                Module = env['ir.module.module'].sudo()
                 Module.update_list()
                 modules = Module.search([('name', 'in', modules_to_upgrade),
                                          ('state', 'in', ('uninstalled', 'to install'))])
