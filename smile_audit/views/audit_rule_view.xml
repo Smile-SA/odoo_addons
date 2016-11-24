@@ -15,6 +15,7 @@
                     <field name="log_create"/>
                     <field name="log_write"/>
                     <field name="log_unlink"/>
+                    <field name="group_id"/>
                     <field name="active"/>
                     <field name="state" invisible="1"/>
                 </tree>

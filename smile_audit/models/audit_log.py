@@ -85,12 +85,13 @@ class AuditLog(models.Model):
         data = self.data or {}
         RecordModel = self.env[self.model_id.model]
         for fname in set(data['new'].keys() + data['old'].keys()):
-            field = RecordModel._fields.get(fname) or RecordModel._inherit_fields.get(fname)
-            old_value = self._format_value(field, data['old'].get(fname, ''))
-            new_value = self._format_value(field, data['new'].get(fname, ''))
-            if old_value != new_value:
-                label = field.get_description(self.env)['string']
-                content.append((label, old_value, new_value))
+            field = RecordModel._fields.get(fname)
+            if field:
+                old_value = self._format_value(field, data['old'].get(fname, ''))
+                new_value = self._format_value(field, data['new'].get(fname, ''))
+                if old_value != new_value:
+                    label = field.get_description(self.env)['string']
+                    content.append((label, old_value, new_value))
         return content
 
     @api.one

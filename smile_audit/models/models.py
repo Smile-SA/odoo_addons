@@ -30,7 +30,8 @@ def _read_from_database(self, field_names, inherited_field_names=[]):
     native_read_from_database(self, field_names, inherited_field_names=[])
     # Store history revision in cache
     if self._context.get('history_revision'):
-        audit_rules = self.env['audit.rule']._check_audit_rule().get(self._name, {})
+        group_ids = self.env.user.groups_id.ids
+        audit_rules = self.env['audit.rule']._check_audit_rule(group_ids).get(self._name, {})
         if audit_rules:
             history_date = self._context.get('history_revision')
             date_operator = audit_rules.get('create') and '>' or '>='
