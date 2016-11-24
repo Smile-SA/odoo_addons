@@ -14,7 +14,7 @@ class DockerImage(models.Model):
     @api.one
     @api.depends('docker_registry_id.url', 'docker_image')
     def _get_docker_registry_image(self):
-        self.docker_registry_image = self.docker_registry_id.get_local_image(self.docker_image)
+        self.docker_registry_image = self.docker_registry_id.get_registry_image(self.docker_image)
 
     name = fields.Char(required=True)
     sequence = fields.Integer(default=10)

@@ -39,6 +39,7 @@
         "data/scm.vcs.csv",
         "data/scm.version.csv",
         "data/scm.repository.tag.csv",
+        "data/ir_cron.xml",
         "views/scm_vcs_view.xml",
         "views/scm_version_view.xml",
         "views/scm_repository_tag_view.xml",

@@ -90,17 +90,51 @@ def _get_exception_message(e):
     return tools.ustr(e.message)
 
 
+def _create_logfile():
+    filename = tools.config.get('test_logfile')
+    if not filename:
+        return
+    if os.path.exists(filename):
+        os.remove(filename)
+    with open(filename, 'wb') as f:
+        writer = csv.writer(f)
+        writer.writerow(KEYS)
+
+
 def _write_log(vals):
     filename = tools.config.get('test_logfile')
     if not filename:
         return
-    if not os.path.exists(filename):
-        with open(filename, 'wb') as f:
-            writer = csv.writer(f)
-            writer.writerow(KEYS)
     with open(filename, 'ab') as f:
         writer = csv.writer(f)
         writer.writerow([tools.ustr(vals.get(key, '')).encode('utf-8') for key in KEYS])
+
+
+def _read_logs():
+    filename = tools.config.get('test_logfile')
+    if not filename or not os.path.exists(filename):
+        return "Please indicate a test_logfile in odoo config file"
+    data, errors = [], []
+    tests_count = failed_tests_count = duration = 0
+    with open(filename) as f:
+        for row in csv.DictReader(f):
+            data.append('%s (%s)... %s' % (row['file'], row['module'], row['result']))
+            if row['result'] != 'ignored':
+                tests_count += 1
+                duration += float(row['duration'])
+            if row['result'] == 'error':
+                failed_tests_count += 1
+                errors.append('FAIL: %s (%s)' % (row['file'], row['module']))
+                errors.append('-' * 80)
+                errors.append(row['exception'])
+                errors.append('\n' + '-' * 80)
+    if failed_tests_count:
+        data.append('\n' + '=' * 80)
+        data += errors
+    data.append("Ran %s tests in %ss" % (tests_count, round(duration, 3)))
+    if failed_tests_count:
+        data.append("\nFAILED (failures=%s)" % failed_tests_count)
+    return '\n'.join(data)
 
 
 def _get_modules_list(dbname):
@@ -250,7 +284,7 @@ def _run_unit_tests(dbname, modules, ignore):
                         _write_log(vals)
 
 
-def run_tests(dbname, modules=None):
+def run_tests(dbname, modules=None, return_logs=False):
     ignore = eval(tools.config.get('ignored_tests') or '{}')
     threading.currentThread().dbname = dbname
     installed_modules = _get_modules_list(dbname)
@@ -258,8 +292,11 @@ def run_tests(dbname, modules=None):
         modules = list(set(modules) & set(installed_modules))
     else:
         modules = installed_modules
+    _create_logfile()
     _run_unit_tests(dbname, modules, ignore)
     _run_other_tests(dbname, modules, ignore)
+    if return_logs:
+        return _read_logs()
     return True
 
 native_dispatch = common.dispatch

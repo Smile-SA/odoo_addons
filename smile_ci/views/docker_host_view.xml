@@ -6,7 +6,7 @@
       <field name="name">docker.host.tree</field>
       <field name="model">docker.host</field>
       <field name="arch" type="xml">
-        <tree string="Docker Hosts" colors="grey: active is False;">
+        <tree string="Docker Hosts" colors="grey: active is False;" editable="top">
           <field name="sequence" widget="handle"/>
           <field name="base_url"/>
           <field name="tls"/>
@@ -14,8 +14,7 @@
           <field name="timeout"/>
           <field name="build_base_url"/>
           <field name="redirect_subdomain_to_port"/>
-          <field name="builds_path_store"/>
-          <field name="registries_path_store"/>
+          <field name="builds_host_config" placeholder="{'mem_limit': '1G'}"/>
           <field name="active" invisible="1"/>
           <button name="show_current_stats" string="Current stats" type="object" icon="fa-tasks"/>
           <button name="show_history_stats_as_pivot" string="History stats" type="object" icon="fa-table"/>
@@ -59,27 +58,8 @@
             <notebook>
               <page string="Builds">
                 <group>
-                  <table class="o_list_view table table-condensed table-striped" colspan="2">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th><label for="build_base_url"/></th>
-                        <th><label for="redirect_subdomain_to_port"/></th>
-                      </tr>
-                    </thead>
-                    <tr>
-                      <td><label for="build_base_url" string="Local"/></td>
-                      <td><field name="build_base_url"/></td>
-                      <td><field name="redirect_subdomain_to_port"/></td>
-                    </tr>
-                    <tr>
-                      <td><label for="remote_build_base_url" string="Remote"/></td>
-                      <td><field name="remote_build_base_url"/></td>
-                      <td><field name="remote_redirect_subdomain_to_port"/></td>
-                    </tr>
-                  </table>
-                  <field name="builds_path_store"/>
-                  <field name="registries_path_store"/>
+                  <field name="build_base_url"/>
+                  <field name="redirect_subdomain_to_port"/>
                   <field name="builds_host_config" placeholder="{'mem_limit': '1G'}"/>
                 </group>
               </page>

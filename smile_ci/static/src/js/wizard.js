@@ -13,6 +13,8 @@ odoo.define('smile_ci.DownloadDockerImage', function (require) {
         init: function(parent, context) {
             this._super(parent, context);
             this.docker_registry_insecure = context.context.docker_registry_insecure;
+            this.docker_registry_auth_login = context.context.docker_registry_auth_login;
+            this.docker_registry_auth_passwd = context.context.docker_registry_auth_passwd;
             this.docker_registry_url = context.context.docker_registry_url;
             this.docker_registry_image = context.context.docker_registry_image;
             this.docker_tags = context.context.docker_tags;

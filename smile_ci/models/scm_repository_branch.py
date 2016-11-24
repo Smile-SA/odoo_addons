@@ -106,13 +106,14 @@ class Branch(models.Model):
     @api.one
     @api.depends('docker_registry_id.docker_host_id.base_url', 'docker_image')
     def _get_docker_registry_image(self):
-        self.docker_registry_image = self.docker_registry_id.get_local_image(self.docker_image)
+        self.docker_registry_image = self.docker_registry_id.get_registry_image(self.docker_image)
 
     @api.one
     def _get_docker_tags(self):
         tags = self.docker_registry_id.get_image_tags(self.docker_image)
         self.docker_tags = ', '.join(tags)
 
+    id = fields.Integer(readonly=True)
     build_ids = fields.One2many('scm.repository.branch.build', 'branch_id', 'Builds', readonly=True, copy=False)
     builds_count = fields.Integer('Builds count', compute='_get_builds_count', store=False)
     last_build_result = fields.Selection(BUILD_RESULTS + [('unknown', 'Unknown')], 'Last result',
@@ -122,6 +123,7 @@ class Branch(models.Model):
 
     # Build creation options
     use_in_ci = fields.Boolean('Use in Continuous Integration', copy=False)
+    branch_tmpl_id = fields.Many2one('scm.repository.branch', 'Template', auto_join=True)
     os_id = fields.Many2one('scm.os', 'Operating System', default=_get_default_os)
     postgres_id = fields.Many2one('docker.image', 'Database Management System', domain=[('is_postgres', '=', True)],
                                   compute='_get_postgres', inverse='_set_postgres')
@@ -166,6 +168,7 @@ class Branch(models.Model):
     docker_image = fields.Char(compute='_get_docker_image', store=True)
     docker_registry_image = fields.Char(compute='_get_docker_registry_image', store=True)
     docker_tags = fields.Char(compute='_get_docker_tags')
+    docker_in_docker = fields.Boolean()
 
     # Email receivers
     partner_ids = fields.Many2many('res.partner', string='Followers (including Repository Partners)',
@@ -228,9 +231,10 @@ class Branch(models.Model):
         return {'domain': {'os_id': [('id', 'in', os_ids)]}}
 
     @api.one
-    @api.constrains('use_in_ci', 'os_id')
+    @api.constrains('use_in_ci', 'os_id', 'branch_tmpl_id')
     def _check_os_id(self):
-        if self.use_in_ci and not self.os_id:
+        branch = self.branch_tmpl_id or self
+        if self.use_in_ci and not branch.os_id:
             raise ValidationError(_('Operating System is mandatory if branch is used in CI'))
 
     @api.one
@@ -260,7 +264,8 @@ class Branch(models.Model):
                 with cursor(self._cr.dbname, False) as new_cr:
                     self = self.with_env(self.env(cr=new_cr))
                     self.use_in_ci = False
-                    self.message_post(_("Branch deactivated because doesn't exist anymore\n\n%s") % get_exception_message(e))
+                    self.message_post(_("Branch deactivated because doesn't exist anymore\n\n%s")
+                                      % get_exception_message(e))
             raise
         else:
             nextcall = datetime.strptime(fields.Datetime.now(), DATETIME_FORMAT)
@@ -268,51 +273,52 @@ class Branch(models.Model):
             self.nextcall = nextcall.strftime(DATETIME_FORMAT)
 
     @api.multi
-    def _get_revno(self):
+    def get_revno(self):
         self.ensure_one()
         return self.vcs_id.revno(self.directory, self.branch)
 
     @api.multi
-    def _get_last_commits(self):
+    def get_last_commits(self):
         self.ensure_one()
-        last_revno = self.build_ids and self.build_ids[0].revno.encode('utf8') or self._get_revno()
+        last_revno = self.build_ids and self.build_ids[0].revno.encode('utf8') or ''
         try:
             return self.vcs_id.log(self.directory, last_revno)
         except:
             return self.vcs_id.log(self.directory)
 
     @api.multi
-    def _check_if_revno_changed(self):
+    def check_if_revno_changed(self):
         self.ensure_one()
-        # INFO: self.build_ids[0] because builds ordered by id desc
+        self = self.sudo()
         if not self.build_ids or \
-                tools.ustr(self._get_revno()) != tools.ustr(self.build_ids[0].revno):
+                tools.ustr(self.get_revno()) not in map(tools.ustr, self.build_ids.mapped('revno')):
             return True
         return False
 
     @api.multi
     def create_build(self, force=False):
-        self._create_build(force)
+        for branch in self:
+            if branch.use_in_ci:
+                thread = Thread(target=branch._create_build_in_new_thread, args=(force,))
+                thread.start()
         return True
-
-    @api.one
-    def _create_build(self, force=False):
-        if self.use_in_ci:
-            thread = Thread(target=self._create_build_in_new_thread, args=(force,))
-            thread.start()
 
     @api.one
     @with_new_cursor()
     def _create_build_in_new_thread(self, force):
         self._try_lock(_('Build creation already in progress for branch %s') % self.display_name)
+        self._create_build(force)
+
+    @api.one
+    def _create_build(self, force):
         try:
             self._update()
-            if self._check_if_revno_changed() or force is True:
+            if self.check_if_revno_changed() or force is True:
                 self.mapped('branch_dependency_ids.merge_with_branch_id')._update()
                 vals = {
                     'branch_id': self.id,
-                    'revno': self._get_revno(),
-                    'commit_logs': self._get_last_commits(),
+                    'revno': self.get_revno(),
+                    'commit_logs': self.get_last_commits(),
                 }
                 self.env['scm.repository.branch.build'].create(vals)
         except Exception, e:
@@ -412,6 +418,8 @@ class Branch(models.Model):
             'target': 'new',
             'context': {
                 'docker_registry_insecure': not self.docker_registry_id.url.startswith('https'),
+                'docker_registry_auth_login': self.docker_registry_id.username,
+                'docker_registry_auth_passwd': self.docker_registry_id.password,
                 'docker_registry_url': self.docker_registry_id.url,
                 'docker_registry_image': self.docker_registry_image,
                 'docker_tags': ', '.join(tags),
@@ -455,7 +463,7 @@ class Branch(models.Model):
             'specific_pip_packages': format_packages(self.pip_packages),
             'specific_npm_packages': format_packages(self.npm_packages),
             'configfile': CONFIGFILE,
-            'server_cmd': os.path.join(self.server_path, self.version_id.server_cmd),
+            'server_cmd': os.path.join(self.server_path or '', self.version_id.server_cmd),
             'odoo_dir': self.os_id.odoo_dir,
         }
 
@@ -524,15 +532,15 @@ class Branch(models.Model):
         branches = self.filtered(lambda branch: branch.use_in_ci)
         if branches:
             for field in self._docker_fields:
-                if field in vals:
-                    branches.write({'image_to_recreate': True})
-                    branches.force_create_build()
+                if field in vals or vals.get('use_in_ci'):
+                    branches.force_recreate_image()
                     break
 
     @api.model
     def create(self, vals):
         branch = super(Branch, self).create(vals)
-        if branch.docker_image not in branch.docker_registry_id.get_images():
+        if not branch.branch_tmpl_id and \
+                branch.docker_image not in branch.docker_registry_id.get_images():
             branch._check_image_to_recreate(vals)
         return branch
 
@@ -555,25 +563,24 @@ class Branch(models.Model):
 
     @api.multi
     def force_recreate_image(self):
-        branches = self.filtered(lambda branch: branch.use_in_ci)
-        branches.write({'image_to_recreate': True})
-        return branches.force_create_build()
+        return self.write({'image_to_recreate': True})
 
     @api.multi
     def recreate_image(self):
-        self._recreate_image()
+        for branch in self:
+            if branch.image_to_recreate and branch.os_id.dockerfile_base:
+                thread = Thread(target=branch._recreate_image_in_new_thread)
+                thread.start()
         return True
-
-    @api.one
-    def _recreate_image(self):
-        if self.image_to_recreate and self.os_id.dockerfile_base:
-            thread = Thread(target=self._recreate_image_in_new_thread)
-            thread.start()
 
     @api.one
     @with_new_cursor()
     def _recreate_image_in_new_thread(self):
         self._try_lock(_('Base image creation already in progress for branch %s') % self.display_name)
+        self._recreate_image()
+
+    @api.one
+    def _recreate_image(self):
         try:
             self._delete_image()
             self.docker_host_id = self.env['docker.host'].get_default_docker_host()
@@ -590,25 +597,28 @@ class Branch(models.Model):
             error = get_exception_message(e)
             _logger.error(msg + ' for branch %s\n\n%s' % (self.display_name, error))
             self.message_post('\n\n'.join([_(msg), error]))
+        else:
+            self._create_build(force=True)
 
     @api.multi
     def recreate_images(self):
         if not self:
-            self = self.search([('image_to_recreate', '=', True)])
+            self = self.search([('image_to_recreate', '=', True), ('use_in_ci', '=', True)])
         return self.recreate_image()
 
     @api.multi
     def get_docker_compose_content(self, tag='latest', container_name='', port='8069'):
         longpolling_port = '8071' if port == '8069' else str(int(port) + 1)
+        repository = self.docker_registry_image
         services = {
             'odoo': {
-                'image': '%s:%s' % (self.docker_registry_image, tag),
+                'image': '%s:%s' % (repository, tag),
                 'container_name': container_name,
                 'ports': ['%s:8069' % port, '%s:8071' % longpolling_port],
                 'links': self.mapped('link_ids.name'),
             }
         }
-        services.update(self.mapped('link_ids').get_service_infos(self.docker_registry_image, tag))
+        services.update(self.mapped('link_ids').get_service_infos(repository, tag))
         return yaml.dump(yaml.load(json.dumps({'version': '2', 'services': services})))
 
     @api.multi

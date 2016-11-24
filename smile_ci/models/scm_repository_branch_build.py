@@ -14,6 +14,7 @@ import os
 import re
 import shutil
 import StringIO
+import sys
 import tarfile
 from threading import Lock, Thread
 import time
@@ -26,7 +27,7 @@ import odoo.modules as addons
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.smile_scm.tools import cd, check_output_chain
+from odoo.addons.smile_scm.tools import call
 
 from ..tools import with_new_cursor, s2human, mergetree, get_exception_message
 
@@ -36,16 +37,6 @@ try:
     from docker.errors import APIError
 except ImportError:
     _logger.warning("Please install docker package")
-
-try:
-    import flake8_debugger
-except ImportError:
-    _logger.warning("Please install flake8-debugger package")
-
-try:
-    import flake8_print
-except ImportError:
-    _logger.warning("Please install flake8-print package")
 
 BUILD_RESULTS = [
     ('stable', 'Stable'),
@@ -65,39 +56,40 @@ LOGFILE = 'server.log'
 TESTFILE = 'scm.repository.branch.build.log.csv'
 TEST_MODULE = 'smile_test'
 TODO_ERROR_CODE = 'T000'
+PRINT_ERROR_CODE = 'T001'
+DEBUGGER_ERROR_CODE = 'T002'
 
 
-def state_cleaner(setup_models):
+def builds_state_cleaner(setup_models):
     @wraps(setup_models)
     def new_setup_models(self, cr, *args, **kwargs):
         res = setup_models(self, cr, *args, **kwargs)
         callers = [frame[3] for frame in inspect.stack()]
         if 'preload_registries' not in callers:
             return res
-        uid = SUPERUSER_ID
-        env = api.Environment(cr, uid, {})
         try:
+            env = api.Environment(cr, SUPERUSER_ID, {})
             _logger.info("Cleaning testing/running builds before restarting")
-            if 'docker.host' in env.registry.models:
-                DockerHost = env['docker.host']
-                cr.execute("select relname from pg_class where relname='%s'" % DockerHost._table)
-                if cr.rowcount:
-                    # Empty builds directory: sources being copied when killing the server are not deleted
-                    for docker_host in DockerHost.search([]):
-                        for dirname in os.listdir(docker_host.builds_path):
-                            _logger.debug('Removing %s' % dirname)
-                            thread = Thread(target=shutil.rmtree, args=(os.path.join(docker_host.builds_path, dirname),))
-                            thread.start()
             if 'scm.repository.branch.build' in env.registry.models:
                 Build = env['scm.repository.branch.build']
                 cr.execute("select relname from pg_class where relname='%s'" % Build._table)
                 if cr.rowcount:
+                    # Empty builds directory except for pending builds
+                    directories = Build.search([('state', '=', 'testing')]).mapped('directory')
+                    builds_path = env['docker.host'].builds_path
+                    for dirname in os.listdir(builds_path):
+                        dirpath = os.path.join(builds_path, dirname)
+                        if dirname.startswith('build_') and dirpath not in directories or \
+                                dirname.startswith('branch_'):
+                            _logger.info('Removing %s' % dirpath)
+                            thread = Thread(target=shutil.rmtree, args=(dirpath,))
+                            thread.start()
                     # Search testing builds
                     builds = Build.search([('state', '=', 'testing')])
                     branches_to_force = builds.mapped('branch_id')
                     if builds:
                         # Kill invalid builds
-                        _logger.debug('Killing testing builds %s' % str(builds.ids))
+                        _logger.info('Killing testing builds %s' % str(builds.ids))
                         builds._stop_container()
                         builds.write({'state': 'done', 'result': 'killed'})
                     # Search running builds not running anymore
@@ -111,12 +103,12 @@ def state_cleaner(setup_models):
                     builds = runnning_builds - actual_runnning_builds
                     if builds:
                         # Kill invalid builds
-                        _logger.debug('Killing running builds %s' % str(builds.ids))
+                        _logger.info('Killing running builds %s' % str(builds.ids))
                         builds._stop_container()
                         builds.write({'state': 'done'})
                     # Force build creation for branch in test before server stop
                     if branches_to_force:
-                        _logger.debug('Force build creation for branches %s' % str(branches_to_force.ids))
+                        _logger.info('Force build creation for branches %s' % str(branches_to_force.ids))
                         thread = Thread(target=branches_to_force.create_builds, args=(True,))
                         thread.start()
         except Exception, e:
@@ -136,17 +128,14 @@ class Build(models.Model):
         cls = type(self)
         cls._scheduler_lock = Lock()
         super(Build, self).__init__(pool, cr)
-        setattr(Registry, 'setup_models', state_cleaner(getattr(Registry, 'setup_models')))
+        if not getattr(Registry, '_builds_state_cleaner', False):
+            setattr(Registry, 'setup_models', builds_state_cleaner(getattr(Registry, 'setup_models')))
+            setattr(Registry, '_builds_state_cleaner', True)
 
     @api.one
-    @api.depends('docker_host_id.build_base_url', 'docker_host_id.redirect_subdomain_to_port', 'port')
+    @api.depends('docker_host_id.build_base_url', 'port')
     def _get_url(self):
         self.url = self.docker_host_id.get_build_url(self.port)
-
-    @api.one
-    @api.depends('docker_host_id.remote_build_base_url', 'docker_host_id.remote_redirect_subdomain_to_port', 'port')
-    def _get_remote_url(self):
-        self.remote_url = self.docker_host_id.get_build_url(self.port, remote=True)
 
     @api.one
     @api.depends('date_start')
@@ -215,9 +204,9 @@ class Build(models.Model):
             self.is_last = self.id == self.branch_id.build_ids.filtered(lambda build: build.result == self.result)[0].id
 
     @api.one
-    @api.depends('docker_host_id.builds_path_store')
+    @api.depends('docker_host_id')
     def _get_directory(self):
-        self.directory = os.path.join(self.docker_host_id.builds_path, str(self.id))
+        self.directory = os.path.join(self.docker_host_id.builds_path, 'build_%s' % self.id)
 
     id = fields.Integer('Number', readonly=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True,
@@ -242,7 +231,6 @@ class Build(models.Model):
     docker_container = fields.Char('Docker container - Odoo', compute='_get_docker_infos')
     port = fields.Char(readonly=True)
     url = fields.Char(compute='_get_url')
-    remote_url = fields.Char(compute='_get_remote_url')
     date_start = fields.Datetime('Start date', readonly=True)
     date_stop = fields.Datetime('End date', readonly=True)
     time = fields.Integer(compute='_get_time')
@@ -273,16 +261,12 @@ class Build(models.Model):
         build._copy_sources()
         return build
 
-    @staticmethod
-    def _get_branches_to_merge(branch):
-        """
-        Compute first level dependencies of a branch and returns a list of tuple (Branch, subfolder).
-
-        @param branch: Branch
-        @return: list
-        """
-        branches = [(branch, branch.subfolder or '')]
-        for dependency in branch.branch_dependency_ids:
+    @api.multi
+    def _get_branches_to_merge(self):
+        self.ensure_one()
+        base_branch = self.branch_id.branch_tmpl_id or self.branch_id
+        branches = [(self.branch_id, base_branch.subfolder or '')]
+        for dependency in base_branch.branch_dependency_ids:
             branches.append((dependency.merge_with_branch_id, dependency.merge_subfolder or ''))
         return branches[::-1]
 
@@ -291,13 +275,14 @@ class Build(models.Model):
         _logger.info('Copying %s %s sources...' % (self.branch_id.name, self.branch_id.branch))
         try:
             ignore_patterns = shutil.ignore_patterns(TEST_MODULE, *IGNORE_PATTERNS)  # Do not copy smile_test and useless files
-            for branch, subfolder in Build._get_branches_to_merge(self.branch_id):
+            for branch, subfolder in self._get_branches_to_merge():
                 mergetree(branch.directory, os.path.join(self.directory, subfolder), ignore=ignore_patterns)
             self._add_ci_addons()
         except Exception, e:
             _logger.error(get_exception_message(e))
             self._remove_directory()
-            raise
+            e.traceback = sys.exc_info()
+            raise e
 
     @api.one
     def _add_ci_addons(self):
@@ -330,6 +315,7 @@ class Build(models.Model):
         builds_to_run = self.search([('branch_id.use_in_ci', '=', True),
                                      ('branch_id.image_to_recreate', '=', False),
                                      ('state', '=', 'pending')], order='id asc')
+        builds_to_run = builds_to_run.filtered(lambda build: not build.branch_id.branch_tmpl_id.image_to_recreate)
         if builds_to_run:
             ports = sorted(self._find_ports(), reverse=True)
             builds_in_test = self.search([('branch_id.use_in_ci', '=', True),
@@ -372,13 +358,14 @@ class Build(models.Model):
             self._check_quality_code()
             self._count_lines_of_code()
             self._start_coverage()
-            if self.branch_id.dump_id:
+            branch = self.branch_id.branch_tmpl_id or self.branch_id
+            if branch.dump_id:
                 self._restore_db()
             else:
                 self._create_db()
-            if self.branch_id.modules_to_install:
-                modules_to_install = self.branch_id.modules_to_install.replace(' ', '').split(',')
-                if not self.branch_id.install_modules_one_by_one:
+            if branch.modules_to_install:
+                modules_to_install = branch.modules_to_install.replace(' ', '').split(',')
+                if not branch.install_modules_one_by_one:
                     modules_to_install = [modules_to_install]
                 for module in modules_to_install:
                     if isinstance(module, basestring):
@@ -441,7 +428,7 @@ class Build(models.Model):
     @api.multi
     def _get_options(self):
         self.ensure_one()
-        branch = self.branch_id
+        branch = self.branch_id.branch_tmpl_id or self.branch_id
 
         def format_str(path):
             if not path:
@@ -461,7 +448,7 @@ class Build(models.Model):
             'flake8file': format_str(FLAKE8FILE),
             'flake8_exclude_files': self.env['ir.config_parameter'].get_param('ci.flake8.exclude_files'),
             'flake8_max_line_length': self.env['ir.config_parameter'].get_param('ci.flake8.max_line_length'),
-            'code_path': format_str(self.branch_id.code_path),
+            'code_path': format_str(branch.code_path),
             'test_path': format_str(','.join([branch.test_path or '', 'ci-addons'])),
             'addons_path': format_str(','.join([branch.addons_path or '', 'ci-addons'])),
             'ignored_tests': branch.ignored_tests,
@@ -479,21 +466,23 @@ class Build(models.Model):
     @api.one
     def _create_configfile(self):
         _logger.info('Generating %s for %s...' % (CONFIGFILE, self.docker_image))
+        branch = self.branch_id.branch_tmpl_id or self.branch_id
         options = self._get_options()
         filepath = os.path.join(self.directory, CONFIGFILE)
         with open(filepath, 'w') as cfile:
             cfile.write('[options]\n')
             for k, v in options.iteritems():
                 cfile.write('%s = %s\n' % (k, v))
-            if self.branch_id.additional_options:
-                cfile.write(self.branch_id.additional_options)
+            if branch.additional_options:
+                cfile.write(branch.additional_options)
 
     @api.one
     def _create_dockerfile(self):
         _logger.info('Generating dockerfile for %s...' % self.docker_image)
-        content = base64.b64decode(self.branch_id.os_id.dockerfile)
-        localdict = self.branch_id._get_dockerfile_params()
-        base_image = self.branch_id.docker_registry_image
+        branch = self.branch_id.branch_tmpl_id or self.branch_id
+        content = base64.b64decode(branch.os_id.dockerfile)
+        localdict = branch._get_dockerfile_params()
+        base_image = branch.docker_registry_image
         localdict['base_image'] = '%s:base' % base_image
         filepath = os.path.join(self.directory, DOCKERFILE)
         with open(filepath, 'w') as f:
@@ -515,6 +504,7 @@ class Build(models.Model):
     @api.multi
     def _get_create_container_params(self):
         self.ensure_one()
+        branch = self.branch_id.branch_tmpl_id or self.branch_id
         params = {
             'image': self.docker_image,
             'name': self.docker_container,
@@ -523,14 +513,14 @@ class Build(models.Model):
             'labels': [self.docker_image],
         }
         links = []
-        for link in self.branch_id.link_ids:
+        for link in branch.link_ids:
             container = link.create_container(self.docker_host_id,
                                               CONTAINER_SUFFIX % self.id,
                                               labels=[self.docker_image])
             links.append((container, link.name))
         config = safe_eval(self.docker_host_id.builds_host_config or '{}')
         config.update({'port_bindings': {8069: self.port}, 'links': links})
-        if self._context.get('docker-in-docker'):
+        if branch.docker_in_docker or self._context.get('docker-in-docker'):
             params['volumes'] = ['/var/run/docker.sock']
             config['binds'] = ['/var/run/docker.sock:/var/run/docker.sock']
         params['host_config'] = self.docker_host_id.create_host_config(**config)
@@ -610,7 +600,7 @@ class Build(models.Model):
     @api.one
     def _create_db(self):
         _logger.info('Creating database for %s...' % self.docker_container)
-        branch = self.branch_id
+        branch = self.branch_id.branch_tmpl_id or self.branch_id
         sock_db = self._connect('db')
         if LooseVersion(sock_db.server_version()[:3]) >= LooseVersion('6.1'):
             sock_db.create_database(self.admin_passwd, DBNAME, branch.install_demo_data, branch.lang, branch.user_passwd)
@@ -625,17 +615,15 @@ class Build(models.Model):
 
     @api.one
     def _restore_db(self):
-        _logger.info('Restoring database for %s from file %s...' % (self.docker_container, self.branch_id.dump_id.datas_fname))
-        sock_db = self._connect('db')
-        dump_file = self.branch_id.dump_id.datas
-        sock_db.restore(self.admin_passwd, DBNAME, dump_file)
+        branch = self.branch_id.branch_tmpl_id or self.branch_id
+        _logger.info('Restoring database for %s from file %s...' % (self.docker_container, branch.dump_id.datas_fname))
+        self._connect('db').restore(self.admin_passwd, DBNAME, branch.dump_id.datas)
 
     @api.one
     def _install_modules(self, modules_to_install):
         _logger.info('Installing modules %s for %s...' % (modules_to_install, self.docker_container))
-        branch = self.branch_id
-        sock_object = self._connect('object')
-        sock_exec = partial(sock_object.execute, DBNAME, branch.user_uid, branch.user_passwd)
+        branch = self.branch_id.branch_tmpl_id or self.branch_id
+        sock_exec = partial(self._connect('object').execute, DBNAME, branch.user_uid, branch.user_passwd)
         sock_exec('ir.module.module', 'update_list')  # Useful for restored database
         module_ids_to_install = []
         for module_name in modules_to_install:
@@ -648,18 +636,19 @@ class Build(models.Model):
             upgrade_id = sock_exec('base.module.upgrade', 'create', {})
             sock_exec('base.module.upgrade', 'upgrade_module', [upgrade_id])
         except xmlrpclib.Fault, f:
-            raise UserError(_('Error while modules installation\n\n%s') % f)
+            msg = f.faultString
+            if msg == 'None':
+                msg = _('Check external dependencies')
+            raise UserError(_('Error while modules installation\n\n%s' % msg))
 
     @api.one
     def _reactivate_admin(self):
         # INFO: since April 2015, logging as admin after smile_test execution is not possible
         # without reactivating it.
         _logger.info('Reactivate admin user for %s...' % self.docker_container)
-        branch = self.branch_id
-        sock_object = self._connect('object')
-        sock_exec = partial(sock_object.execute, DBNAME, branch.user_uid, branch.user_passwd)
-        admin_uid = 1
-        sock_exec('res.users', 'write', admin_uid, {'active': True})
+        branch = self.branch_id.branch_tmpl_id or self.branch_id
+        sock_exec = partial(self._connect('object').execute, DBNAME, branch.user_uid, branch.user_passwd)
+        sock_exec('res.users', 'write', branch.user_uid, {'active': True})
 
     @api.one
     def _check_quality_code(self):
@@ -689,13 +678,14 @@ class Build(models.Model):
     @api.one
     def _attach_files(self):
         _logger.info('Attaching files for %s...' % self.docker_container)
+        branch = self.branch_id.branch_tmpl_id or self.branch_id
         container = self.docker_container
         filepaths = []
         for filename in [CONFIGFILE, COVERAGEFILE, LOGFILE, FLAKE8FILE, TESTFILE]:
-            filepaths.append(os.path.join(self.branch_id.os_id.odoo_dir, filename))
-        for path in self.branch_id.addons_path.replace(' ', '').split(','):
+            filepaths.append(os.path.join(branch.os_id.odoo_dir, filename))
+        for path in branch.addons_path.replace(' ', '').split(','):
             filename = '%s.cloc' % path.split('/')[-1]
-            filepaths.append(os.path.join(self.branch_id.os_id.odoo_dir, path, filename))
+            filepaths.append(os.path.join(branch.os_id.odoo_dir, path, filename))
         missing_files = []
         for filepath in filepaths:
             try:
@@ -730,11 +720,11 @@ class Build(models.Model):
 
     @staticmethod
     def _is_flake8_error_code(code):
-        return code[0] in ('E', 'F') or code == flake8_debugger.DEBUGGER_ERROR_CODE
+        return code[0] in ('E', 'F') or code == DEBUGGER_ERROR_CODE
 
     @staticmethod
     def _is_flake8_warning_code(code):
-        return code[0] in ('W', 'C', 'N') or code in (TODO_ERROR_CODE, flake8_print.PRINT_ERROR_CODE)
+        return code[0] in ('W', 'C', 'N') or code in (TODO_ERROR_CODE, PRINT_ERROR_CODE)
 
     @api.one
     def _load_flake8_logs(self):
@@ -840,7 +830,7 @@ class Build(models.Model):
         }
         if self.commit_logs:
             context['commit_logs'] = tools.plaintext2html(self.commit_logs)
-        if self._context.get('build_error'):
+        if 'build_error' in self._context:
             context['build_error'] = tools.plaintext2html(self._context['build_error'])
         template = self.env.ref('smile_ci.mail_template_build_result')
         self.with_context(context).message_post_with_template(template.id)
@@ -864,6 +854,7 @@ class Build(models.Model):
     @api.one
     def _remove_directory(self):
         if self.directory and os.path.exists(self.directory):
+            _logger.info('Removing %s' % self.directory)
             shutil.rmtree(self.directory)
 
     @api.one
@@ -906,7 +897,7 @@ class Build(models.Model):
         return {
             'name': _('Open URL'),
             'type': 'ir.actions.act_url',
-            'url': self.remote_url,
+            'url': self.url,
             'target': 'new',
         }
 
@@ -953,10 +944,11 @@ class Build(models.Model):
     @api.multi
     def _get_commit_params(self):
         self.ensure_one()
+        branch = self.branch_id.branch_tmpl_id or self.branch_id
         params = [{
             'container': link.name + CONTAINER_SUFFIX % self.id,
             'repository': '%s_%s' % (self.branch_id.docker_registry_image, link.name),
-        } for link in self.branch_id.link_ids.get_all_links(only_with_persistent_storage=True)]
+        } for link in branch.link_ids.get_all_links(only_with_persistent_storage=True)]
         params += [{
             'container': self.docker_container,
             'repository': self.branch_id.docker_registry_image,
@@ -1026,8 +1018,7 @@ class Build(models.Model):
             with open(filepath, 'w') as f:
                 f.write(content)
             try:
-                with cd(self.directory):
-                    check_output_chain(['docker-compose', 'up', '-d'])
+                call(['docker-compose', 'up', '-d'], self.directory)
             except Exception, e:
                 raise UserError(_('Starting build #%s failed\n\n%s') % (self.id, get_exception_message(e)))
         except:

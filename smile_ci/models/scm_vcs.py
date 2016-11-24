@@ -4,7 +4,7 @@ from ast import literal_eval
 
 from odoo import api, fields, models
 
-from odoo.addons.smile_scm.tools import cd
+from odoo.addons.smile_scm.tools import call
 
 
 class VersionControlSystem(models.Model):
@@ -16,25 +16,19 @@ class VersionControlSystem(models.Model):
     @api.multi
     def revno(self, directory, branch):
         self.ensure_one()
-        with cd(directory):
-            cmd_revno = self.cmd_revno % {'branch': branch}
-            cmd = cmd_revno.split(' ')
-            cmd.insert(0, self.cmd)
-            revno = self.call(cmd)
-            if self == self.env.ref('smile_scm.svn'):
-                revno = revno.split(' ')[0]
-            elif self != self.env.ref('smile_scm.git'):
-                revno = literal_eval(revno)
-            return revno.replace('\n', '')
+        cmd = self.cmd_revno % {'branch': branch}
+        revno = call(cmd, directory)
+        if self == self.env.ref('smile_scm.svn'):
+            revno = revno.split(' ')[0]
+        elif self != self.env.ref('smile_scm.git'):
+            revno = literal_eval(revno)
+        return revno.replace('\n', '')
 
     @api.multi
     def log(self, directory, last_revno=''):
         self.ensure_one()
-        with cd(directory):
-            if last_revno:
-                cmd_log = self.cmd_log % {'last_revno': last_revno}
-            else:
-                cmd_log = 'log'
-            cmd = cmd_log.split(' ')
-            cmd.insert(0, self.cmd)
-            return self.call(cmd)
+        if last_revno:
+            cmd = self.cmd_log % {'last_revno': last_revno}
+        else:
+            cmd = '%s log' % self.cmd
+        return call(cmd, directory)

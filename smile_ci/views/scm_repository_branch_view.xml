@@ -102,6 +102,12 @@
         <notebook position="inside">
           <page string="Configuration">
             <group>
+              <field name="branch_tmpl_id" options="{'no_create': True}"
+                domain="[('repository_id', '=', repository_id), ('id', '!=', id)]"/>
+              <field name="repository_id" invisible="1"/>
+              <field name="id" invisible="1"/>
+            </group>
+            <group attrs="{'invisible': [('branch_tmpl_id', '!=', False)]}">
               <group>
                 <field name="modules_to_install" placeholder="mrp,purchase"/>
                 <field name="install_modules_one_by_one"/>
@@ -120,7 +126,7 @@
               </group>
             </group>
           </page>
-          <page string="Advanced">
+          <page string="Advanced" attrs="{'invisible': [('branch_tmpl_id', '!=', False)]}">
             <group>
               <group>
                 <field name="os_id" attrs="{'required': [('use_in_ci', '=', True)]}" options="{'no_create': True}"/>
@@ -128,11 +134,12 @@
                 <field name="other_link_ids">
                   <tree editable="top">
                     <field name="name"/>
-                    <field name="linked_image_id"/>
+                    <field name="linked_image_id" options="{'no_create': True}"/>
                     <field name="environment" placeholder="{'ENV_VAR': 'env_value'}"/>
                     <field name="host_config" placeholder="{'mem_limit': '1G'}"/>
                   </tree>
                 </field>
+                <field name="docker_in_docker"/>
                 <field name="system_packages"/>
                 <field name="pip_packages"/>
                 <field name="npm_packages"/>

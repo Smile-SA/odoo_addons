@@ -10,9 +10,9 @@ class TestBuild(TransactionCase):
     def setUp(self):
         super(TestBuild, self).setUp()
         self.branch = self.env.ref('smile_ci.scm_repository_branch_smile_addons_90')
-        # pending_builds = self.branch.build_ids.filtered(lambda build: build.state == 'pending')
-        # if pending_builds:
-        #     pending_builds.unlink()
+        pending_builds = self.branch.build_ids.filtered(lambda build: build.state == 'pending')
+        if pending_builds:
+            pending_builds.unlink()
 
     def test_010_create_build(self):
         """

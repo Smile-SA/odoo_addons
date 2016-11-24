@@ -11,6 +11,7 @@
             		<field name="cmd"/>
             		<field name="cmd_clone"/>
             		<field name="cmd_pull"/>
+            		<field name="cmd_list"/>
             		<field name="default_branch"/>
             	</tree>
             </field>

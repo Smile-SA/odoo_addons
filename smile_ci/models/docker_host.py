@@ -35,42 +35,17 @@ class DockerHost(models.Model):
     @api.model
     def _get_default_build_base_url(self):
         if config.get('build_base_url'):
-            return config.get('build_base_url')
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+            base_url = config.get('build_base_url')
+        else:
+            base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         netloc = urlparse(base_url).netloc
         port = netloc.split(':')[-1]
         netloc = netloc.replace(':%s' % port, '')
         return urljoin(base_url, '//%s' % netloc)
 
     @api.model
-    def _get_default_remote_build_base_url(self):
-        return config.get('remote_build_base_url') or ''
-
-    @api.model
     def _get_default_redirect_subdomain_to_port(self):
-        return config.get('docker_redirect_subdomain_to_port') or False
-
-    @api.model
-    def _get_default_remote_redirect_subdomain_to_port(self):
-        return config.get('remote_redirect_subdomain_to_port') or False
-
-    @api.model
-    def _get_default_path(self, config_option):
-        default_path = config_option and config.get(config_option) or tempfile.gettempdir()
-        if not os.path.isdir(default_path):
-            try:
-                os.mkdir(default_path)
-            except:
-                raise UserError(_("Permission denied to create the directory named %s") % default_path)
-        return default_path
-
-    @api.model
-    def _get_default_builds_path(self):
-        return self._get_default_path('builds_path')
-
-    @api.model
-    def _get_default_registries_path(self):
-        return self._get_default_path('registries_path')
+        return config.get('redirect_subdomain_to_port') or False
 
     base_url = fields.Char(required=True, default=_get_default_base_url)
     version = fields.Char('API version', default=_get_default_version)
@@ -82,31 +57,19 @@ class DockerHost(models.Model):
     tls_key = fields.Char('Client key')
     build_base_url = fields.Char(required=True, default=_get_default_build_base_url)
     redirect_subdomain_to_port = fields.Boolean(default=_get_default_redirect_subdomain_to_port)
-    remote_build_base_url = fields.Char(default=_get_default_remote_build_base_url)
-    remote_redirect_subdomain_to_port = fields.Boolean(default=_get_default_remote_redirect_subdomain_to_port)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
-    builds_path_store = fields.Char('Builds path', required=True, default=_get_default_builds_path)
-    registries_path_store = fields.Char('Registries path', required=True,
-                                        default=_get_default_registries_path)
     builds_host_config = fields.Text()
     stats = fields.Html("Last stats", readonly=True)
     stats_date = fields.Datetime("Stats date", readonly=True)
     stats_containers = fields.Integer("Running containers", readonly=True)
 
-    @api.model
-    def _check_path(self, dirpath):
+    @property
+    def builds_path(self):
+        dirpath = config.get('builds_path') or tempfile.gettempdir()
         if not os.path.isdir(dirpath):
             raise UserError(_("%s doesn't exist or is not a directory") % dirpath)
         return dirpath
-
-    @property
-    def builds_path(self):
-        return self._check_path(self.builds_path_store)
-
-    @property
-    def registries_path(self):
-        return self._check_path(self.registries_path_store)
 
     @api.model
     def get_default_docker_host(self):
@@ -190,7 +153,6 @@ class DockerHost(models.Model):
             all_lines.append(line)
             _logger.debug(line)
         if 'Successfully built' not in all_lines[-1].get('stream', ''):
-            self.purge_images()
             raise UserError(_("Building image %s failed\n\n%s") % (tag, all_lines[-1]['error']))
         return '\n'.join(map(str, all_lines))
 
@@ -299,6 +261,20 @@ class DockerHost(models.Model):
         return strm
 
     @api.multi
+    def login_to_registry(self, registry, username, password, **kwargs):
+        self.ensure_one()
+        _logger.info('Logging in to registry %s with username %s...' % (registry, username))
+        kwargs.update({
+            'registry': registry,
+            'username': username,
+            'password': password,
+        })
+        if 'reauth' not in kwargs:
+            kwargs['reauth'] = True
+        _logger.debug(repr(kwargs))
+        return self.client.login(**kwargs)
+
+    @api.multi
     def pull_image(self, repository, **kwargs):
         self.ensure_one()
         _logger.info('Pulling image %s...' % repository)
@@ -346,16 +322,10 @@ class DockerHost(models.Model):
         return True
 
     @api.multi
-    def get_build_url(self, port, remote=False):
+    def get_build_url(self, port):
         self.ensure_one()
-        if remote:
-            base_url = self.remote_build_base_url
-            redirect_subdomain_to_port = self.remote_redirect_subdomain_to_port
-        else:
-            base_url = self.build_base_url
-            redirect_subdomain_to_port = self.redirect_subdomain_to_port
-        netloc = urlparse(base_url).netloc
-        if redirect_subdomain_to_port:
+        netloc = urlparse(self.build_base_url).netloc
+        if self.redirect_subdomain_to_port:
             # Add subdomain
             auth = ''
             if '@' in netloc:
@@ -363,13 +333,13 @@ class DockerHost(models.Model):
                 auth += '@'
             if netloc.startswith('www.'):
                 netloc.replace('www.', '')
-            return urljoin(base_url, '//%sbuild_%s.%s' % (auth, port, netloc))
+            return urljoin(self.build_base_url, '//%sbuild_%s.%s' % (auth, port, netloc))
         # Replace default port
         netloc_wo_auth = netloc.split('@')[-1]
         if ':' in netloc_wo_auth:
             default_port = netloc_wo_auth.split(':')[-1]
             netloc = netloc_wo_auth.replace(':%s' % default_port, '')
-        return urljoin(base_url, '//%s:%s' % (netloc, port))
+        return urljoin(self.build_base_url, '//%s:%s' % (netloc, port))
 
     @api.multi
     def update_stats(self):

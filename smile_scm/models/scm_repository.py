@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class Repository(models.Model):
@@ -39,3 +40,24 @@ class Repository(models.Model):
         default = default or {}
         default['name'] = _('%s copy') % self.name
         return super(Repository, self).copy_data(default)
+
+    @api.multi
+    def list_branches(self):
+        self.ensure_one()
+        if not self.branch_ids:
+            raise UserError(_("You must define a first branch for repository %s before listing all of them") % self.name)
+        return self.vcs_id.list(self.branch_ids[0].directory, self.url)
+
+    @api.multi
+    def check_branches(self):
+        if not self.ids:
+            self = self.search([])
+        branches_to_deactivate = self.env['scm.repository.branch'].browse()
+        for repository in self:
+            if not repository.vcs_id.cmd_list:
+                continue
+            branches = repository.list_branches()
+            for branch in repository.branch_ids:
+                if branch.branch not in branches:
+                    branches_to_deactivate |= branch
+        return branches_to_deactivate.write({'active': False})

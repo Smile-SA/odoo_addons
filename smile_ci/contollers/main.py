@@ -135,5 +135,5 @@ class CiController(Controller):
                 color = '#e05d44'
             elif coverage_avg < 75.0:
                 color = '#dfb317'
-            coverage = '%s%%' % coverage_avg
+            coverage = '%.2f%%' % coverage_avg
         return self.render_badge(theme, 'Coverage', coverage, color, build)

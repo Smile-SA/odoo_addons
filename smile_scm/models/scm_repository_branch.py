@@ -37,7 +37,8 @@ class Branch(models.Model):
 
     repository_id = fields.Many2one('scm.repository', 'Repository', required=True, ondelete='cascade',
                                     readonly=True, states={'draft': [('readonly', False)]}, copy=False)
-    branch = fields.Char(help="Technical branch name", readonly=True, states={'draft': [('readonly', False)]}, copy=False)
+    branch = fields.Char(help="Technical branch name", copy=False,  # required=False to allow to duplicate branch
+                         readonly=True, states={'draft': [('readonly', False)]})
     version_id = fields.Many2one('scm.version', 'Odoo Version', required=True, ondelete="restrict",
                                  readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([

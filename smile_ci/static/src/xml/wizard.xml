@@ -12,8 +12,14 @@
           </li>
           <t t-if="widget.docker_registry_insecure">
             <li>
-              Configure your docker daemon in the /etc/default/docker file on your system by adding/completing the following line :
+              Configure your docker daemon in the /etc/default/docker file on your system by adding/completing the following line:
               <pre>DOCKER_OPTS="--insecure-registry <t t-esc="widget.docker_registry_url"/> --icc=false"</pre>
+            </li>
+          </t>
+          <t t-if="widget.docker_registry_auth_passwd">
+            <li>
+              Login to docker registry (<t t-esc="widget.docker_registry_auth_login"/>/<t t-esc="widget.docker_registry_auth_passwd"/>):
+              <pre>docker login <t t-esc="widget.docker_registry_url"/></pre>
             </li>
           </t>
           <li>
@@ -39,16 +45,28 @@
     image: <t t-esc="widget.docker_registry_image"/>:<b><t t-esc="widget.default_tag"/></b>
   db:
     image: <t t-esc="widget.docker_registry_image"/>_db:<b><t t-esc="widget.default_tag"/></b></pre>
+
         <p>To expose port 8069 (the default Odoo port) on port 8080, modify the followings lines in docker-compose.yml:</p>
         <pre>services:
   odoo:
     ports:
       - <b><i>8080</i></b>:8069</pre>
+
         <p>To use local source code instead of container source code, add the followings lines in docker-compose.yml:</p>
         <pre>services:
   odoo:
       <b>volumes:
-      - <i>your_local_source_code</i>:<t t-esc="widget.odoo_dir"/></b></pre>
+        - <i>your_local_source_code</i>:<t t-esc="widget.odoo_dir"/></b></pre>
+
+        <p>To use local database instead of container db, modify the followings lines in docker-compose.yml:</p>
+        <pre>services:
+  odoo:
+      <b>volumes:
+        - /var/run/postgresql/.s.PGSQL.5432:/var/run/postgresql/.s.PGSQL.5432
+      command: ['--load=web,smile_test,smile_upgrade', '--db_host=/var/run/postgresql']</b>
+    <s>links: [db]</s>
+  <s>db:</s>...</pre>
+
         <p>To run in a interactive mode, execute the following command lines:</p>
         <pre>docker run -d --name db <t t-esc="widget.docker_registry_image"/>_db:<t t-esc="widget.default_tag"/>
 docker run -ti -p 8069:8069 --link db <t t-esc="widget.docker_registry_image"/>:<t t-esc="widget.default_tag"/></pre>

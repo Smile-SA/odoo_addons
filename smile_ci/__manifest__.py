@@ -81,6 +81,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
         "views/scm_repository_branch_build_coverage_view.xml",
         "views/scm_repository_branch_build_view.xml",
         "views/scm_repository_branch_view.xml",
+        "views/scm_repository_view.xml",
         "views/scm_dashboard.xml",
         "views/scm_vcs_view.xml",
         "views/scm_version_view.xml",
@@ -106,6 +107,6 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@
     "installable": True,
     "application": False,
     "external_dependencies": {
-        'python': ['docker', 'flake8_debugger', 'flake8_print', 'matplotlib'],
+        'python': ['docker', 'matplotlib'],
     },
 }

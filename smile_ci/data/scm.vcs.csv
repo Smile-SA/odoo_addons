@@ -1,5 +1,5 @@
 id,cmd_revno,cmd_log
-smile_scm.svn,log --limit=1 | sed -n 2p | cut -d '|' -f 1 | cut -c 2-,log -r %(last_revno)s:HEAD
-smile_scm.bzr,revno,log -r %(last_revno)s..
-smile_scm.git,rev-list --max-count=1 HEAD,log %(last_revno)s..
-smile_scm.hg,identify --num,log --follow
+smile_scm.svn,svn log --limit=1 | sed -n 2p | cut -d '|' -f 1 | cut -c 2-,svn log -r %(last_revno)s:HEAD
+smile_scm.bzr,bzr revno,bzr log -r %(last_revno)s..
+smile_scm.git,git rev-list --max-count=1 HEAD,git log %(last_revno)s..
+smile_scm.hg,hg identify --num,hg log --follow
