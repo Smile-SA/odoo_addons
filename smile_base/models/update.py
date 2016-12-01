@@ -19,11 +19,13 @@
 #
 ##############################################################################
 
-from openerp import models
+from openerp import models, tools
 
 
 class PublisherWarrantyContract(models.Model):
     _inherit = "publisher_warranty.contract"
 
     def update_notification(self, cr, uid, ids, cron_mode=True, context=None):
-        return True
+        if not tools.config.get('enable_publisher_warranty_contract_notification'):
+            return True
+        return super(PublisherWarrantyContract, self).update_notification(cr, uid, ids, cron_mode, context)
