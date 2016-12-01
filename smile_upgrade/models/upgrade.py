@@ -217,7 +217,7 @@ class Upgrade(object):
         elif mode != 'pre-load' and ext in ('.yml', '.csv', '.xml'):
             with api.Environment.manage():
                 if ext == '.yml':
-                    tools.convert_yaml_import(cr, module, yamlfile=f_obj, mode='upgrade')
+                    tools.convert_yaml_import(cr, module, yamlfile=f_obj, kind=None, mode='upgrade')
                 elif ext == '.csv':
                     tools.convert_csv_import(cr, module, fname=f_obj.name, csvcontent=f_obj.read(), mode='upgrade')
                 elif ext == '.xml':
