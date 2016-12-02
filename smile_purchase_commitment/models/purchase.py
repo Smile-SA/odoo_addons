@@ -26,7 +26,7 @@ class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     def _prepare_analytic_line(self, reverse=False):
-        sign = reverse and 1 or -1
+        sign = reverse and -1 or 1
         order = self.order_id
         # Get default account used to generate supplier invoice
         account = self.product_id.product_tmpl_id.get_product_accounts().get('expense')
