@@ -43,6 +43,14 @@ class IrAttachementType(models.Model):
             return super(IrAttachementType, self).unlink()
         raise UserError(_('Attention : You cannot unlink document type!'))
 
+    @api.one
+    def copy(self, default=None):
+        if default is None:
+            default = {}
+        if default.get('name', '') in ['', self.name]:
+            default['name'] = self.name + _(' (copy)')
+        return super(IrAttachementType, self).copy(default)
+
 
 class IrAttachement(models.Model):
     _inherit = 'ir.attachment'

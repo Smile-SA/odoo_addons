@@ -16,6 +16,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: smile_document
+#: code:addons/smile_document/models/document.py:51
+#, python-format
+msgid " (copy)"
+msgstr " (copie)"
+
+#. module: smile_document
 #: model:ir.ui.view,arch_db:smile_document.view_attachment_form_inherit
 msgid "Additionel informations"
 msgstr "Informations additionnelles"
@@ -36,12 +42,12 @@ msgstr "Pièces jointes"
 #: code:addons/smile_document/models/document.py:44
 #, python-format
 msgid "Attention : You cannot unlink document type!"
-msgstr "Attention : Attention: Vous ne pouvez pas supprimer type de document !"
+msgstr "Attention : Vous ne pouvez pas supprimer type de document !"
 
 #. module: smile_document
 #: model:ir.ui.menu,name:smile_document.menu_document2
 msgid "Collaborative Content"
-msgstr "Collaborative Content"
+msgstr "Contenu collaboratif"
 
 #. module: smile_document
 #: model:ir.ui.menu,name:smile_document.menu_document_configuration
@@ -105,7 +111,7 @@ msgstr "Type de document"
 #: sql_constraint:ir.attachment.type:0
 #, python-format
 msgid "Document type name must be unique"
-msgstr "Le nom du Type de Document doit être unique !"
+msgstr "Le nom du type de document doit être unique !"
 
 #. module: smile_document
 #: model:ir.actions.act_window,name:smile_document.action_document
@@ -167,12 +173,12 @@ msgstr "Dernière modification le"
 #. module: smile_document
 #: model:ir.model.fields,field_description:smile_document.field_ir_attachment_type_write_uid
 msgid "Last Updated by"
-msgstr "Mis à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: smile_document
 #: model:ir.model.fields,field_description:smile_document.field_ir_attachment_type_write_date
 msgid "Last Updated on"
-msgstr "Mis à jour le"
+msgstr "Dernière mise à jour le"
 
 #. module: smile_document
 #: model:res.groups,name:smile_document.group_manage_document
@@ -203,7 +209,7 @@ msgstr "Voir les documents"
 #: model:ir.model.fields,field_description:smile_document.field_ir_attachment_status
 #: model:ir.ui.view,arch_db:smile_document.view_document_search
 msgid "Status"
-msgstr "Statut"
+msgstr "État"
 
 #. module: smile_document
 #: selection:ir.attachment,status:0
@@ -230,3 +236,4 @@ msgstr "ir.attachment.type"
 #: model:ir.ui.view,arch_db:smile_document.view_attachment_form_inherit
 msgid "on"
 msgstr "le"
+
