@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_docker_image_tree" model="ir.ui.view">
+      <field name="name">docker.image.tree</field>
+      <field name="model">docker.image</field>
+      <field name="inherit_id" ref="smile_ci.view_docker_image_tree"/>
+      <field name="arch" type="xml">
+        <field name="docker_image" position="after">
+          <field name="ansible_role_id"/>
+        </field>
+      </field>
+    </record>
+
+    <record id="view_docker_image_form" model="ir.ui.view">
+      <field name="name">docker.image.form</field>
+      <field name="model">docker.image</field>
+      <field name="inherit_id" ref="smile_ci.view_docker_image_form"/>
+      <field name="arch" type="xml">
+        <notebook position="inside">
+          <page string="Deployment" groups="smile_cd.group_cd_reader">
+            <group>
+              <field name="ansible_role_id"/>
+              <field name="ansible_role_tags"/>
+              <field name="ansible_role_vars"/>
+            </group>
+          </page>
+        </notebook>
+      </field>
+    </record>
+
+  </data>
+</odoo>

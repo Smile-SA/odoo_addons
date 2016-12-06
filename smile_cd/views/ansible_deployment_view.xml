@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_ansible_deployment_tree" model="ir.ui.view">
+      <field name="name">ansible.deployment.tree</field>
+      <field name="model">ansible.deployment</field>
+      <field name="arch" type="xml">
+        <tree string="Deployments" colors="blue: state=='draft'; red: result=='failure'">
+          <field name="create_date"/>
+          <field name="branch_id"/>
+          <field name="build_id"/>
+          <field name="revno"/>
+          <field name="inventory_type_id"/>
+          <field name="create_uid"/>
+          <field name="state" invisible="1"/>
+          <field name="result"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_ansible_deployment_search" model="ir.ui.view">
+      <field name="name">ansible.deployment.search</field>
+      <field name="model">ansible.deployment</field>
+      <field name="arch" type="xml">
+        <search string="Deployments">
+          <field name="branch_id"/>
+          <field name="build_id"/>
+          <field name="revno"/>
+          <field name="inventory_type_id"/>
+        </search>
+      </field>
+    </record>
+
+    <record id="view_ansible_deployment_form" model="ir.ui.view">
+      <field name="name">ansible.deployment.form</field>
+      <field name="model">ansible.deployment</field>
+      <field name="arch" type="xml">
+        <form string="Deployment" edit="false">
+          <header>
+            <button class="oe_highlight" name="run" type="object" string="Run" states="draft"/>
+            <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+          </header>
+          <sheet>
+            <div class="oe_title" colspan="4">
+              <h1>
+                <field name="branch_id"/>
+                <span attrs="{'invisible': [('build_id', '=', False)]}" class="oe_inline"> #<field name="build_id"/></span>
+                <field name="result" class="oe_inline"/>
+              </h1>
+              <group>
+                <field name="revno"/>
+                <field name="inventory_type_id" widget="selection"/>
+              </group>
+            </div>
+            <notebook states="done">
+              <page string="Logs">
+                <field name="logs"/>
+              </page>
+            </notebook>
+          </sheet>
+          <footer>
+            <button string="Close" class="btn-primary" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_ansible_deployment_popup" model="ir.ui.view">
+      <field name="name">ansible.deployment.popup</field>
+      <field name="model">ansible.deployment</field>
+      <field name="arch" type="xml">
+        <form string="Deployment">
+          <sheet>
+            <div class="oe_title" colspan="4">
+              <h1>
+                <field name="branch_id"/>
+                <span attrs="{'invisible': [('build_id', '=', False)]}" class="oe_inline"> #<field name="build_id"/></span>
+                <field name="result" class="oe_inline"/>
+              </h1>
+              <group>
+                <field name="revno"/>
+                <field name="inventory_type_id" options="{'no_create': True, 'no_open': True}"/>
+              </group>
+            </div>
+            <notebook states="done">
+              <page string="Logs">
+                <field name="logs"/>
+              </page>
+            </notebook>
+          </sheet>
+          <footer>
+            <button class="oe_highlight" name="run" type="object" string="Run" states="draft"/>
+            <field name="state" invisible="1"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_branch_deployments">
+      <field name="name">Deployments</field>
+      <field name="res_model">ansible.deployment</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="view_ansible_deployment_tree"/>
+      <field name="search_view_id" ref="view_ansible_deployment_search"/>
+      <field name="domain">[('branch_id', '=', active_id)]</field>
+    </record>
+
+  </data>
+</odoo>

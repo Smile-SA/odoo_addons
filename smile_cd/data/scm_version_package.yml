@@ -1,0 +1,9 @@
+-
+  I specify ansible role for packages
+-
+  !python {model: scm.version.package}: |
+    version_ids = [ref('smile_scm.v61'), ref('smile_scm.v70'), ref('smile_scm.v80'), ref('smile_scm.v90'), ref('smile_scm.v100')]
+    os_ids = [ref('smile_ci.scm_os_debian_8'), ref('smile_ci.scm_os_ubuntu_16_04'), ref('smile_ci.scm_os_fedora_23'), ref('smile_ci.scm_os_centos_7')]
+    for package in self.search([('version_id', 'in', version_ids), ('os_id', 'in', os_ids), ('ansible_role_id', '=', False)]):
+      package.ansible_role_id = ref('smile_cd.ansible_role_odoo')
+      package.ansible_role_vars = "{'odoo_version': '%s'}" % package.version_id.name
