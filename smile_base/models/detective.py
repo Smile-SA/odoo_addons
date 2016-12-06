@@ -21,32 +21,42 @@
 
 import logging
 import time
-import uuid
 
+from odoo import http
 from odoo.http import WebRequest
 from odoo.sql_db import Cursor
 from odoo.tools import config
 
 _logger = logging.getLogger('odoo.smile_detective')
-_requests = {}
 
 
-def smile_detective(min_delay):  # min_delay in seconds
+def smile_json_detective(min_delay):  # min_delay in seconds
     def detective_log(dispatch_func):
         def detective_dispatch(self, *args, **kwargs):
-            pid = uuid.uuid4()
             db, uid = self.db, self.uid
             start = time.time()
-            _requests[pid] = (db, uid, args, kwargs)
-            try:
-                result = dispatch_func(self, *args, **kwargs)
-            finally:
-                del _requests[pid]
+            result = dispatch_func(self, *args, **kwargs)
             delay = time.time() - start
             if delay > min_delay:
                 # WS_TIMER in milliseconds
-                msg = u"WS_DB:%s WS_UID:%s WS_PARAMS:%s WS_TIMER:%s" % \
+                msg = u"JSON_DB:%s JSON_UID:%s JSON_PARAMS:%s JSON_TIMER:%s" % \
                       (db, uid, kwargs, delay * 1000.0)
+                _logger.info(msg)
+            return result
+        return detective_dispatch
+    return detective_log
+
+
+def smile_rpc_detective(min_delay):  # min_delay in seconds
+    def detective_log(dispatch_func):
+        def detective_dispatch(service_name, method, params):
+            start = time.time()
+            result = dispatch_func(service_name, method, params)
+            delay = time.time() - start
+            if delay > min_delay:
+                # WS_TIMER in milliseconds
+                msg = u"RPC_SERVICE:%s RPC_METHOD:%s RPC_PARAMS:%s RPC_TIMER:%s" % \
+                      (service_name, method, params, delay * 1000.0)
                 _logger.info(msg)
             return result
         return detective_dispatch
@@ -60,11 +70,12 @@ def smile_sql_detective(min_delay):
             result = dispatch_func(self, query, params, log_exceptions)
             delay = time.time() - start
             if delay > min_delay >= 0.0:
-                _logger.info(u"SQL_BD:%s SQL_QUERY:%s SQL_PARAMS:%s SQL_TIMER:%s"
+                _logger.info(u"SQL_DB:%s SQL_QUERY:%s SQL_PARAMS:%s SQL_TIMER:%s"
                              % (self.dbname, query.decode('utf-8'), params, delay * 1000.0,))
             return result
         return detective_execute
     return detective_log
 
 Cursor.execute = smile_sql_detective(config.get('log_sql_request', 0.150))(Cursor.execute)
-WebRequest._call_function = smile_detective(config.get('log_service_model', 0.300))(WebRequest._call_function)
+WebRequest._call_function = smile_json_detective(config.get('log_json_request', 0.300))(WebRequest._call_function)
+http.dispatch_rpc = smile_rpc_detective(config.get('log_rpc_request', 0.300))(http.dispatch_rpc)
