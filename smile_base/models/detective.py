@@ -21,11 +21,36 @@
 
 import logging
 import time
+import uuid
 
-from odoo.tools import config
+from odoo.http import WebRequest
 from odoo.sql_db import Cursor
+from odoo.tools import config
 
 _logger = logging.getLogger('odoo.smile_detective')
+_requests = {}
+
+
+def smile_detective(min_delay):  # min_delay in seconds
+    def detective_log(dispatch_func):
+        def detective_dispatch(self, *args, **kwargs):
+            pid = uuid.uuid4()
+            db, uid = self.db, self.uid
+            start = time.time()
+            _requests[pid] = (db, uid, args, kwargs)
+            try:
+                result = dispatch_func(self, *args, **kwargs)
+            finally:
+                del _requests[pid]
+            delay = time.time() - start
+            if delay > min_delay:
+                # WS_TIMER in milliseconds
+                msg = u"WS_DB:%s WS_UID:%s WS_PARAMS:%s WS_TIMER:%s" % \
+                      (db, uid, kwargs, delay * 1000.0)
+                _logger.info(msg)
+            return result
+        return detective_dispatch
+    return detective_log
 
 
 def smile_sql_detective(min_delay):
@@ -41,5 +66,5 @@ def smile_sql_detective(min_delay):
         return detective_execute
     return detective_log
 
-
 Cursor.execute = smile_sql_detective(config.get('log_sql_request', 0.150))(Cursor.execute)
+WebRequest._call_function = smile_detective(config.get('log_service_model', 0.300))(WebRequest._call_function)

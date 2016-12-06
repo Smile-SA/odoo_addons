@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import detective
 import fetchmail
 import ir_actions
 import ir_config_parameter
@@ -30,5 +31,4 @@ import mail_template
 import models
 import module
 import registry
-import sql_db
 import update
