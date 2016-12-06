@@ -35,6 +35,9 @@
                             </page>
                         </notebook>
 	                </sheet>
+                    <footer>
+                        <button string="Close" class="btn-primary" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
