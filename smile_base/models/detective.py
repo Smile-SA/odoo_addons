@@ -47,22 +47,6 @@ def smile_json_detective(min_delay):  # min_delay in seconds
     return detective_log
 
 
-def smile_rpc_detective(min_delay):  # min_delay in seconds
-    def detective_log(dispatch_func):
-        def detective_dispatch(service_name, method, params):
-            start = time.time()
-            result = dispatch_func(service_name, method, params)
-            delay = time.time() - start
-            if delay > min_delay:
-                # WS_TIMER in milliseconds
-                msg = u"RPC_SERVICE:%s RPC_METHOD:%s RPC_PARAMS:%s RPC_TIMER:%s" % \
-                      (service_name, method, params, delay * 1000.0)
-                _logger.info(msg)
-            return result
-        return detective_dispatch
-    return detective_log
-
-
 def smile_sql_detective(min_delay):
     def detective_log(dispatch_func):
         def detective_execute(self, query, params=None, log_exceptions=True):
@@ -76,6 +60,22 @@ def smile_sql_detective(min_delay):
         return detective_execute
     return detective_log
 
+
+def smile_xml_detective(min_delay):  # min_delay in seconds
+    def detective_log(dispatch_func):
+        def detective_dispatch(service_name, method, params):
+            start = time.time()
+            result = dispatch_func(service_name, method, params)
+            delay = time.time() - start
+            if delay > min_delay:
+                # WS_TIMER in milliseconds
+                msg = u"XML_SERVICE:%s XML_METHOD:%s XML_PARAMS:%s XML_TIMER:%s" % \
+                      (service_name, method, params, delay * 1000.0)
+                _logger.info(msg)
+            return result
+        return detective_dispatch
+    return detective_log
+
 Cursor.execute = smile_sql_detective(config.get('log_sql_request', 0.150))(Cursor.execute)
 WebRequest._call_function = smile_json_detective(config.get('log_json_request', 0.300))(WebRequest._call_function)
-http.dispatch_rpc = smile_rpc_detective(config.get('log_rpc_request', 0.300))(http.dispatch_rpc)
+http.dispatch_rpc = smile_xml_detective(config.get('log_xml_request', 0.300))(http.dispatch_rpc)
