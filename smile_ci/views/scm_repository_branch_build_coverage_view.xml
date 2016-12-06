@@ -71,7 +71,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_repository_branch_build_coverage">
-            <field name="name">Coverage</field>
+            <field name="name">Code coverage</field>
             <field name="res_model">scm.repository.branch.build.coverage</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,pivot,graph</field>

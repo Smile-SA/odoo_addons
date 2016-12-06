@@ -12,7 +12,7 @@
   <ul>
     <li>${object.failed_test_ratio} failed tests</li>
     <li>${object.quality_code_count} quality errors</li>
-    <li>${'{0:.2f}'.format(object.coverage_avg)} coverage average</li>
+    <li>${'{0:.2f}'.format(object.coverage_avg)}% coverage average</li>
   </ul>
 % endif
 

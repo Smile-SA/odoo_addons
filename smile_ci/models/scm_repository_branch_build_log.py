@@ -44,7 +44,7 @@ class Log(models.Model):
     build_id = fields.Many2one(ondelete='cascade')
     branch_id = fields.Many2one(store=True)
     type = fields.Selection([
-        ('quality_code', 'Quality code'),
+        ('quality_code', 'Code quality'),
         ('test', 'Test')
     ], required=True, readonly=True)
     result = fields.Selection([

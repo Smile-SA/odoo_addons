@@ -10,6 +10,7 @@
                 <field name="cmd_pull" position="after">
                     <field name="cmd_revno"/>
                     <field name="cmd_log"/>
+                    <field name="cmd_log_all"/>
                 </field>
             </field>
         </record>

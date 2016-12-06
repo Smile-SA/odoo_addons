@@ -10,7 +10,7 @@
           <field name="sequence" widget="handle"/>
           <field name="name"/>
           <field name="docker_image"/>
-          <field name="active"/>
+          <field name="active" invisible="1"/>
         </tree>
       </field>
     </record>
@@ -20,6 +20,10 @@
       <field name="model">docker.image</field>
       <field name="arch" type="xml">
         <form string="Docker Image">
+          <header>
+            <button name="store_in_registry" type="object" string="Update image in registry"
+              groups="smile_scm.group_scm_user"/>
+          </header>
           <sheet>
             <div class="oe_button_box" name="button_box">
               <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
@@ -36,6 +40,8 @@
               <group>
                 <field name="docker_image"/>
                 <field name="docker_registry_id"/>
+                <field name="dockerfile"/>
+                <field name="build_on_the_fly" attrs="{'invisible': [('dockerfile', '=', False)]}"/>
               </group>
               <group>
                 <field name="is_postgres"/>

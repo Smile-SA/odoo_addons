@@ -112,7 +112,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_repository_branch_build_quality_log">
-      <field name="name">Quality errors</field>
+      <field name="name">Code quality</field>
       <field name="res_model">scm.repository.branch.build.log</field>
       <field name="view_type">form</field>
       <field name="view_mode">tree,form,pivot,graph</field>

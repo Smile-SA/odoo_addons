@@ -79,6 +79,10 @@ class DockerRegistry(models.Model):
             raise UserError(_('No docker host is configured'))
         return docker_hosts[0].id
 
+    @api.one
+    def _get_directory(self):
+        self.directory = os.path.join(self.docker_host_id.builds_path, 'registry_%s' % self.id)
+
     @api.model
     def _get_default_url(self):
         return config.get('docker_registry_url') or ''
@@ -96,11 +100,11 @@ class DockerRegistry(models.Model):
         self.images_count = len(self.get_images())
 
     name = fields.Char(required=True, default='registry')
-    image = fields.Char(required=True, default='registry:2')
+    docker_image = fields.Char(required=True, default='registry:2')
     port = fields.Char(required=True, default=5000)
     configfile = fields.Binary('Configuration file', required=True)
     docker_host_id = fields.Many2one('docker.host', 'Docker host', default=_get_default_docker_host)
-    directory = fields.Char(readonly=True)
+    directory = fields.Char(compute='_get_directory')
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
     url = fields.Char('URL', required=True, default=_get_default_url)
@@ -200,7 +204,7 @@ class DockerRegistry(models.Model):
         self._create_configfile()
         params = self._get_create_container_params()
         _logger.debug(repr(params))
-        self.docker_host_id.pull_image(self.image)
+        self.docker_host_id.pull_image(self.docker_image)
         return self.docker_host_id.create_container(**params)
 
     @api.multi
@@ -216,7 +220,7 @@ class DockerRegistry(models.Model):
             privileged=True,
         )
         return {
-            'image': self.image,
+            'image': self.docker_image,
             'name': self.name,
             'detach': True,
             'ports': [5000],
@@ -263,16 +267,14 @@ class DockerRegistry(models.Model):
     @api.multi
     def _create_directory(self):
         self.ensure_one()
-        registry_path = os.path.join(self.docker_host_id.builds_path, 'registry_%s' % self.id)
         dirpaths = [
-            registry_path,
-            os.path.join(registry_path, 'config'),
-            os.path.join(registry_path, 'data'),
+            self.directory,
+            os.path.join(self.directory, 'config'),
+            os.path.join(self.directory, 'data'),
         ]
         for dirpath in dirpaths:
             if not os.path.isdir(dirpath):
                 os.makedirs(dirpath)
-        self.directory = registry_path
 
     @api.one
     def _remove_directory(self):

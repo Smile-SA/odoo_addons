@@ -6,7 +6,7 @@
       <field name="name">docker.host.tree</field>
       <field name="model">docker.host</field>
       <field name="arch" type="xml">
-        <tree string="Docker Hosts" colors="grey: active is False;" editable="top">
+        <tree string="Docker Hosts" colors="grey: active is False;">
           <field name="sequence" widget="handle"/>
           <field name="base_url"/>
           <field name="tls"/>
@@ -14,7 +14,6 @@
           <field name="timeout"/>
           <field name="build_base_url"/>
           <field name="redirect_subdomain_to_port"/>
-          <field name="builds_host_config" placeholder="{'mem_limit': '1G'}"/>
           <field name="active" invisible="1"/>
           <button name="show_current_stats" string="Current stats" type="object" icon="fa-tasks"/>
           <button name="show_history_stats_as_pivot" string="History stats" type="object" icon="fa-table"/>

@@ -25,6 +25,33 @@ import re
 import sys
 import unittest
 
+try:
+    # For Odoo 10.0
+    from odoo import release
+except ImportError:
+    try:
+        # For Odoo 6.1-9.0
+        from openerp import release
+    except ImportError:
+        try:
+            # For Odoo 5.0 and 6.0
+            import release
+        except:
+            raise ImportError("Odoo version not supported")
+
+__version_addons__ = {'10.0': 'odoo.addons',
+                      '9.0': 'openerp.addons',
+                      '8.0': 'openerp.addons',
+                      '7.0': 'openerp.addons',
+                      '6.1': 'openerp.addons',
+                      '6.0': 'addons',
+                      '5.0': 'addons', }
+try:
+    __version__ = '.'.join(map(str, release.version_info[:2]))
+    __instance_addons__ = __version_addons__[__version__]
+except:
+    raise ImportError("Odoo version not supported")
+
 _logger = logging.getLogger(__name__)
 
 
@@ -32,7 +59,7 @@ def get_test_modules(module):
     """ Return a list of module for the addons potentialy containing tests to
     feed unittest2.TestLoader.loadTestsFromModule() """
     # Try to import the module
-    module = 'openerp.addons.' + module + '.tests'
+    module = __instance_addons__ + '.' + module + '.tests'
     try:
         __import__(module)
     except Exception, e:

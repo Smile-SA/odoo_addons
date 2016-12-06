@@ -85,242 +85,6 @@ class DockerHost(models.Model):
                     default_docker_host = docker_host
         return default_docker_host
 
-    _clients = {}
-
-    @property
-    def client(self):
-        if self.id not in self._clients:
-            kwargs = {
-                'base_url': self.base_url,
-                'tls': self.tls,
-                'timeout': self.timeout,
-            }
-            if self.version:
-                kwargs['version'] = self.version
-            if self.tls and (not self.tls_verify or self.tls_ca_cert or self.tls_cert):
-                if not self.tls_verify and not self.tls_cert:
-                    tls_params = {'verify': False}
-                elif not self.tls_verify and self.tls_cert:
-                    tls_params = {'client_cert': (self.tls_cert, self.tls_key)}
-                elif self.tls_verify and not self.tls_cert:
-                    tls_params = {'ca_cert': self.tls_ca_cert}
-                elif self.tls_verify and self.tls_cert:
-                    tls_params = {
-                        'client_cert': (self.tls_cert, self.tls_key),
-                        'verify': self.tls_ca_cert,
-                    }
-                tls_config = TLSConfig(**tls_params)
-                kwargs['tls'] = tls_config
-            self._clients[self.id] = Client(**kwargs)
-        return self._clients[self.id]
-
-    @api.multi
-    def write(self, vals):
-        for docker_host_id in self.ids:
-            self._clients.pop(docker_host_id, None)
-        return super(DockerHost, self).write(vals)
-
-    @api.multi
-    def get_containers(self, **kwargs):
-        _logger.debug(repr(kwargs))
-        containers = []
-        for docker_host in self:
-            containers.extend(docker_host.client.containers(**kwargs))
-        return containers
-
-    @api.multi
-    def get_images(self, **kwargs):
-        _logger.debug(repr(kwargs))
-        containers = []
-        for docker_host in self:
-            containers.extend(docker_host.client.images(**kwargs))
-        return containers
-
-    @api.multi
-    def build_image(self, path, tag, **kwargs):
-        self.ensure_one()
-        _logger.info('Building image %s...' % tag)
-        kwargs.update({
-            'path': path,
-            'tag': tag,
-            'forcerm': True,
-            'decode': True,
-        })
-        _logger.debug(repr(kwargs))
-        generator = self.client.build(**kwargs)
-        all_lines = []
-        for line in generator:
-            all_lines.append(line)
-            _logger.debug(line)
-        if 'Successfully built' not in all_lines[-1].get('stream', ''):
-            raise UserError(_("Building image %s failed\n\n%s") % (tag, all_lines[-1]['error']))
-        return '\n'.join(map(str, all_lines))
-
-    @api.multi
-    def create_host_config(self, **kwargs):
-        self.ensure_one()
-        _logger.debug(repr(kwargs))
-        return self.client.create_host_config(**kwargs)
-
-    @api.multi
-    def create_container(self, image, name, **kwargs):
-        self.ensure_one()
-        _logger.info('Creating container %s...' % name)
-        kwargs.update({
-            'image': image,
-            'name': name,
-        })
-        _logger.debug(repr(kwargs))
-        return self.client.create_container(**kwargs)
-
-    @api.multi
-    def start_container(self, container):
-        self.ensure_one()
-        _logger.info('Starting container %s...' % container)
-        try:
-            self.client.start(container)
-        except Exception, e:
-            raise UserError(_("Starting container %s failed\n\n%s") % (container, get_exception_message(e)))
-        return True
-
-    @api.multi
-    def remove_container(self, container, **kwargs):
-        self.ensure_one()
-        _logger.info('Removing container %s...' % container)
-        # When we filter by name, we search if name contains search operand
-        # So we need to filter manually search results
-        containers = self.get_containers(all=True, filters={'name': container})
-        containers = map(lambda container: container['Names'][0].replace('/', ''), containers)
-        if 'v' not in kwargs:
-            kwargs['v'] = True
-        if container in containers:
-            kwargs['container'] = container
-            _logger.debug(repr(kwargs))
-            self.client.remove_container(**kwargs)
-        return True
-
-    @api.multi
-    def commit_container(self, container, repository, **kwargs):
-        self.ensure_one()
-        _logger.info('Creating image %s from container %s...'
-                     % (repository, container))
-        kwargs.update({
-            'container': container,
-            'repository': repository,
-        })
-        _logger.debug(repr(kwargs))
-        self.client.commit(**kwargs)
-        return True
-
-    @api.multi
-    def tag_image(self, image, tags='latest', **kwargs):
-        self.ensure_one()
-        if isinstance(tags, basestring):
-            tags = [tags]
-        kwargs['image'] = image
-        for tag in tags:
-            new_tag = '%s:%s' % (kwargs['repository'], tag) \
-                      if 'repository' in kwargs else tag
-            _logger.info('Tagging image %s as %s...' % (image, new_tag))
-            kwargs['tag'] = tag
-            _logger.debug(repr(kwargs))
-            self.client.tag(**kwargs)
-        return True
-
-    @api.multi
-    def push_image(self, repository, **kwargs):
-        self.ensure_one()
-        _logger.info('Pushing image %s...' % repository)
-        kwargs['repository'] = repository
-        _logger.debug(repr(kwargs))
-        return self.client.push(**kwargs)
-
-    @api.multi
-    def remove_image(self, image, **kwargs):
-        self.ensure_one()
-        _logger.info('Removing image %s...' % image)
-        if self.client.images(name=image, all=True):
-            kwargs['image'] = image
-            _logger.debug(repr(kwargs))
-            self.client.remove_image(**kwargs)
-        return True
-
-    @api.multi
-    def get_logs(self, container, **kwargs):
-        self.ensure_one()
-        kwargs['container'] = container
-        _logger.debug(repr(kwargs))
-        return self.client.logs(**kwargs)
-
-    @api.multi
-    def get_archive(self, container, path):
-        self.ensure_one()
-        _logger.info('Retrieving %s from container %s...' % (path, container))
-        strm, stat = self.client.get_archive(container, path)
-        _logger.debug(stat)
-        return strm
-
-    @api.multi
-    def login_to_registry(self, registry, username, password, **kwargs):
-        self.ensure_one()
-        _logger.info('Logging in to registry %s with username %s...' % (registry, username))
-        kwargs.update({
-            'registry': registry,
-            'username': username,
-            'password': password,
-        })
-        if 'reauth' not in kwargs:
-            kwargs['reauth'] = True
-        _logger.debug(repr(kwargs))
-        return self.client.login(**kwargs)
-
-    @api.multi
-    def pull_image(self, repository, **kwargs):
-        self.ensure_one()
-        _logger.info('Pulling image %s...' % repository)
-        for image in self.client.images(all=True):
-            if repository in (image.get('RepoTags') or []):
-                return image
-        tag = repository.split('/')[-1].split(':')[-1]
-        repository = repository[:-len(tag) - 1]
-        return self.client.pull(repository, tag, **kwargs)
-
-    @api.multi
-    def execute_command(self, container, cmd, **kwargs):
-        self.ensure_one()
-        _logger.info('Executing command %s inside container %s...' % (cmd, container))
-        kwargs['container'] = container
-        kwargs['cmd'] = cmd
-        _logger.debug(repr(kwargs))
-        cli = self.client
-        if getattr(cli, 'exec_create', False):
-            exec_id = cli.exec_create(**kwargs)['Id']
-            cli.exec_start(exec_id)
-        else:  # The command 'execute' is deprecated for docker-py >= 1.2.0
-            cli.execute(**kwargs)
-        return True
-
-    @api.multi
-    def get_container_stats(self, container, **kwargs):
-        self.ensure_one()
-        return self.client.stats(container, **kwargs)
-
-    @api.multi
-    def execute_top(self, container, **kwargs):
-        self.ensure_one()
-        return self.client.top(container, **kwargs)
-
-    @api.one
-    def _purge_images(self):
-        _logger.info('Purging unused images for %s...' % self.base_url)
-        for image in self.client.images(quiet=True, filters={'dangling': True}):
-            self.client.remove_image(image, force=True)
-
-    @api.model
-    def purge_images(self):
-        self.search([])._purge_images()
-        return True
-
     @api.multi
     def get_build_url(self, port):
         self.ensure_one()
@@ -348,7 +112,7 @@ class DockerHost(models.Model):
         containers = self.get_containers()
         container_names = map(lambda cont: cont['Names'][0].replace('/', ''), containers)
         for container in container_names:
-            stats_gen = self.get_container_stats(container, decode=True)
+            stats_gen = self.get_stats(container, decode=True)
             pre_stats = stats_gen.next()
             stats = stats_gen.next()
             data[container] = [
@@ -408,3 +172,332 @@ class DockerHost(models.Model):
     @api.multi
     def show_history_stats_as_graph(self):
         return self._show_history_stats('graph')
+
+    # Client #
+
+    _clients = {}
+
+    @property
+    def client(self):
+        if self.id not in self._clients:
+            kwargs = {
+                'base_url': self.base_url,
+                'tls': self.tls,
+                'timeout': self.timeout,
+            }
+            if self.version:
+                kwargs['version'] = self.version
+            if self.tls and (not self.tls_verify or self.tls_ca_cert or self.tls_cert):
+                if not self.tls_verify and not self.tls_cert:
+                    tls_params = {'verify': False}
+                elif not self.tls_verify and self.tls_cert:
+                    tls_params = {'client_cert': (self.tls_cert, self.tls_key)}
+                elif self.tls_verify and not self.tls_cert:
+                    tls_params = {'ca_cert': self.tls_ca_cert}
+                elif self.tls_verify and self.tls_cert:
+                    tls_params = {
+                        'client_cert': (self.tls_cert, self.tls_key),
+                        'verify': self.tls_ca_cert,
+                    }
+                tls_config = TLSConfig(**tls_params)
+                kwargs['tls'] = tls_config
+            self._clients[self.id] = Client(**kwargs)
+        return self._clients[self.id]
+
+    @api.multi
+    def write(self, vals):
+        for docker_host_id in self.ids:
+            self._clients.pop(docker_host_id, None)
+        return super(DockerHost, self).write(vals)
+
+    # Host #
+
+    @api.multi
+    def get_host_info(self):
+        self.ensure_one()
+        _logger.info('Getting infos for host %s...' % self.display_name)
+        return self.client.info()
+
+    # Container #
+
+    @api.multi
+    def get_containers(self, *args, **kwargs):
+        _logger.debug(repr(kwargs))
+        containers = []
+        for docker_host in self:
+            containers.extend(docker_host.client.containers(**kwargs))
+        return containers
+
+    @api.multi
+    def create_container(self, image, name, **kwargs):
+        self.ensure_one()
+        _logger.info('Creating container %s...' % name)
+        kwargs.update({
+            'image': image,
+            'name': name,
+        })
+        _logger.debug(repr(kwargs))
+        return self.client.create_container(**kwargs)
+
+    @api.multi
+    def start_container(self, container):
+        self.ensure_one()
+        _logger.info('Starting container %s...' % container)
+        try:
+            self.client.start(container)
+        except Exception, e:
+            raise UserError(_("Starting container %s failed\n\n%s") % (container, get_exception_message(e)))
+        return True
+
+    @api.multi
+    def commit_container(self, container, repository, **kwargs):
+        self.ensure_one()
+        _logger.info('Creating image %s from container %s...'
+                     % (repository, container))
+        kwargs.update({
+            'container': container,
+            'repository': repository,
+        })
+        _logger.debug(repr(kwargs))
+        self.client.commit(**kwargs)
+        return True
+
+    @api.multi
+    def remove_container(self, container, **kwargs):
+        self.ensure_one()
+        _logger.info('Removing container %s...' % container)
+        # When we filter by name, we search if name contains search operand
+        # So we need to filter manually search results
+        containers = self.get_containers(all=True, filters={'name': container})
+        containers = map(lambda container: container['Names'][0].replace('/', ''), containers)
+        if 'v' not in kwargs:
+            kwargs['v'] = True
+        if container in containers:
+            kwargs['container'] = container
+            _logger.debug(repr(kwargs))
+            self.client.remove_container(**kwargs)
+        return True
+
+    @api.multi
+    def execute_command(self, container, cmd, **kwargs):
+        self.ensure_one()
+        command = cmd
+        if isinstance(cmd, list):
+            cmd = map(str, cmd)
+            command = ' '.join(cmd)
+        _logger.info('Executing command %s inside container %s...'
+                     % (command, container))
+        kwargs['container'] = container
+        kwargs['cmd'] = cmd
+        _logger.debug(repr(kwargs))
+        cli = self.client
+        if getattr(cli, 'exec_create', False):
+            exec_id = cli.exec_create(**kwargs)
+            return cli.exec_start(exec_id)
+        # The command 'execute' is deprecated for docker-py >= 1.2.0
+        return cli.execute(**kwargs)
+
+    @api.multi
+    def get_archive(self, container, path):
+        self.ensure_one()
+        _logger.info('Retrieving %s from container %s...' % (path, container))
+        strm, stat = self.client.get_archive(container, path)
+        _logger.debug(stat)
+        return strm
+
+    @api.multi
+    def get_stats(self, container, **kwargs):
+        self.ensure_one()
+        _logger.info('Getting stats for container %s...' % container)
+        kwargs['container'] = container
+        _logger.debug(repr(kwargs))
+        return self.client.stats(**kwargs)
+
+    @api.multi
+    def get_logs(self, container, **kwargs):
+        self.ensure_one()
+        _logger.info('Getting logs for container %s...' % container)
+        kwargs['container'] = container
+        _logger.debug(repr(kwargs))
+        return self.client.logs(**kwargs)
+
+    @api.multi
+    def get_running_processes(self, container, **kwargs):
+        self.ensure_one()
+        _logger.info('Getting running processes for container %s...' % container)
+        kwargs['container'] = container
+        _logger.debug(repr(kwargs))
+        return self.client.top(**kwargs)
+
+    # Image #
+
+    @api.multi
+    def get_images(self, *args, **kwargs):
+        _logger.debug(repr(kwargs))
+        containers = []
+        for docker_host in self:
+            containers.extend(docker_host.client.images(**kwargs))
+        return containers
+
+    @api.multi
+    def build_image(self, path, tag, **kwargs):
+        self.ensure_one()
+        _logger.info('Building image %s...' % tag)
+        kwargs.update({
+            'path': path,
+            'tag': tag,
+            'forcerm': True,
+            'decode': True,
+        })
+        _logger.debug(repr(kwargs))
+        generator = self.client.build(**kwargs)
+        all_lines = []
+        for line in generator:
+            all_lines.append(line)
+            _logger.debug(line)
+        if 'Successfully built' not in all_lines[-1].get('stream', ''):
+            raise UserError(_("Building image %s failed\n\n%s") % (tag, all_lines[-1]['error']))
+        return '\n'.join(map(str, all_lines))
+
+    @api.multi
+    def pull_image(self, repository, **kwargs):
+        self.ensure_one()
+        _logger.info('Pulling image %s...' % repository)
+        for image in self.client.images(all=True):
+            if repository in (image.get('RepoTags') or []):
+                return image
+        tag = repository.split('/')[-1].split(':')[-1]
+        repository = repository[:-len(tag) - 1]
+        return self.client.pull(repository, tag, **kwargs)
+
+    @api.multi
+    def tag_image(self, image, tags=None, **kwargs):
+        self.ensure_one()
+        tags = tags or 'latest'
+        if isinstance(tags, basestring):
+            tags = [tags]
+        kwargs['image'] = image
+        for tag in tags:
+            new_tag = '%s:%s' % (kwargs['repository'], tag) \
+                      if kwargs.get('repository') else tag
+            _logger.info('Tagging image %s as %s...' % (image, new_tag))
+            kwargs['tag'] = tag
+            _logger.debug(repr(kwargs))
+            self.client.tag(**kwargs)
+        return True
+
+    @api.multi
+    def push_image(self, repository, **kwargs):
+        self.ensure_one()
+        _logger.info('Pushing image %s...' % repository)
+        kwargs['repository'] = repository
+        _logger.debug(repr(kwargs))
+        return self.client.push(**kwargs)
+
+    @api.multi
+    def remove_image(self, image, **kwargs):
+        self.ensure_one()
+        _logger.info('Removing image %s...' % image)
+        if self.client.images(name=image, all=True):
+            kwargs['image'] = image
+            _logger.debug(repr(kwargs))
+            self.client.remove_image(**kwargs)
+        return True
+
+    @api.one
+    def _purge_images(self):
+        _logger.info('Purging unused images for %s...' % self.display_name)
+        for image in self.client.images(quiet=True, filters={'dangling': True}):
+            self.client.remove_image(image, force=True)
+
+    @api.model
+    def purge_images(self):
+        self.search([])._purge_images()
+        return True
+
+    # Network #
+
+    @api.multi
+    def get_networks(self, *args, **kwargs):
+        self.ensure_one()
+        _logger.debug(repr(kwargs))
+        return self.client.networks(**kwargs)
+
+    @api.multi
+    def create_network(self, network, **kwargs):
+        self.ensure_one()
+        _logger.info('Creating network %s...' % network)
+        kwargs['name'] = network
+        if 'driver' not in kwargs:
+            kwargs['driver'] = 'bridge'
+        _logger.debug(repr(kwargs))
+        return self.client.create_network(**kwargs)
+
+    @api.multi
+    def remove_network(self, network):
+        self.ensure_one()
+        _logger.info('Removing network %s...' % network)
+        _logger.debug(network)
+        if self.get_networks([network]):
+            self.client.remove_network(network)
+        return True
+
+    # Registry #
+
+    @api.multi
+    def login_to_registry(self, registry, username, password, **kwargs):
+        self.ensure_one()
+        _logger.info('Logging in to registry %s with username %s...' % (registry, username))
+        kwargs.update({
+            'registry': registry,
+            'username': username,
+            'password': password,
+        })
+        if 'reauth' not in kwargs:
+            kwargs['reauth'] = True
+        _logger.debug(repr(kwargs))
+        return self.client.login(**kwargs)
+
+    # Volume #
+
+    @api.multi
+    def get_volumes(self, *args, **kwargs):
+        self.ensure_one()
+        _logger.debug(repr(kwargs))
+        return self.client.volumes(**kwargs)
+
+    @api.multi
+    def create_volume(self, volume, **kwargs):
+        self.ensure_one()
+        _logger.info('Creating volume %s...' % volume)
+        kwargs['name'] = volume
+        if 'driver' not in kwargs:
+            kwargs['driver'] = 'local'
+        _logger.debug(repr(kwargs))
+        return self.client.create_volume(**kwargs)
+
+    @api.multi
+    def remove_volume(self, volume):
+        self.ensure_one()
+        _logger.info('Removing volume %s...' % volume)
+        _logger.debug(volume)
+        if self.get_volumes([volume]):
+            self.client.remove_volume(volume)
+        return True
+
+    # Utils #
+
+    @api.multi
+    def create_host_config(self, *args, **kwargs):
+        self.ensure_one()
+        return self.client.create_host_config(**kwargs)
+
+    @api.multi
+    def create_networking_config(self, *args, **kwargs):
+        self.ensure_one()
+        return self.client.create_networking_config(*args, **kwargs)
+
+    @api.multi
+    def create_endpoint_config(self, *args, **kwargs):
+        self.ensure_one()
+        return self.client.create_endpoint_config(**kwargs)

@@ -184,29 +184,24 @@ class Build(models.Model):
         self.failed_test_ratio = '%s / %s' % (self.failed_test_count, self.test_count)
 
     @api.one
-    def _get_last_server_logs(self):
-        limit = self._context.get('limit', 20)
-        if type(limit) == str:
-            limit = int(limit)
-        logs = []
-        try:
-            filepath = os.path.join(self.branch_id.os_id.odoo_dir, LOGFILE)
-            for line in self.docker_host_id.get_archive(self.docker_container, filepath):
-                logs.append(line)
-        except Exception, e:
-            logs.append(get_exception_message(e))
-        self.server_logs = ''.join(logs[-limit:])
-
-    @api.one
     @api.depends('branch_id.build_ids')
     def _get_is_last(self):
         if self.result in ('stable', 'unstable'):
             self.is_last = self.id == self.branch_id.build_ids.filtered(lambda build: build.result == self.result)[0].id
 
     @api.one
-    @api.depends('docker_host_id')
     def _get_directory(self):
         self.directory = os.path.join(self.docker_host_id.builds_path, 'build_%s' % self.id)
+
+    @api.one
+    def _get_last_server_logs(self):
+        limit = self._context.get('limit') or 30
+        filepath = os.path.join(self.branch_id.os_id.odoo_dir, LOGFILE)
+        cmd = ['tail', '-n', limit, filepath]
+        try:
+            self.server_logs = self.docker_host_id.execute_command(self.docker_container, cmd)
+        except Exception, e:
+            self.server_logs = get_exception_message(e)
 
     id = fields.Integer('Number', readonly=True)
     branch_id = fields.Many2one('scm.repository.branch', 'Branch', required=True, readonly=True,
@@ -224,20 +219,20 @@ class Build(models.Model):
     ], 'Status', readonly=True, default='pending')
     result = fields.Selection(BUILD_RESULTS, 'Result', readonly=True)
     error = fields.Char(readonly=True)
-    directory = fields.Char(compute='_get_directory', store=True)
+    directory = fields.Char(compute='_get_directory')
     docker_registry_id = fields.Many2one('docker.registry', related='branch_id.docker_registry_id', readonly=True)
     docker_host_id = fields.Many2one('docker.host', 'Docker host', readonly=True, default=_get_default_docker_host)
-    docker_image = fields.Char('Docker image - Odoo', compute='_get_docker_infos')
-    docker_container = fields.Char('Docker container - Odoo', compute='_get_docker_infos')
+    docker_image = fields.Char('Docker image', compute='_get_docker_infos')
+    docker_container = fields.Char('Docker container', compute='_get_docker_infos')
     port = fields.Char(readonly=True)
     url = fields.Char(compute='_get_url')
     date_start = fields.Datetime('Start date', readonly=True)
     date_stop = fields.Datetime('End date', readonly=True)
     time = fields.Integer(compute='_get_time')
     age = fields.Integer(compute='_get_age')
-    time_human = fields.Char('Time', compute='_convert_time_to_human', store=False)
-    age_human = fields.Char('Age', compute='_convert_age_to_human', store=False)
-    last_build_time_human = fields.Char('Last build time', compute='_get_last_build_time_human', store=False)
+    time_human = fields.Char('Time', compute='_convert_time_to_human')
+    age_human = fields.Char('Age', compute='_convert_age_to_human')
+    last_build_time_human = fields.Char('Last build time', compute='_get_last_build_time_human')
     log_ids = fields.One2many('scm.repository.branch.build.log', 'build_id', 'Logs', readonly=True)
     coverage_ids = fields.One2many('scm.repository.branch.build.coverage', 'build_id', 'Coverage', readonly=True)
     quality_code_count = fields.Integer('# Quality errors', readonly=True, group_operator='avg')
@@ -248,7 +243,7 @@ class Build(models.Model):
     ppid = fields.Integer('Launcher Process Id', readonly=True)
     is_to_keep = fields.Boolean("Keep alive", readonly=True, help="If checked, this build will not be stopped by scheduler")
     is_killable = fields.Boolean("Can be killed", readonly=True, help="A build can only be killed if its container is started")
-    server_logs = fields.Text(compute='_get_last_server_logs', context={'limit': 30})
+    server_logs = fields.Text(compute='_get_last_server_logs')
     is_last = fields.Boolean(compute='_get_is_last')
 
     @api.model
@@ -505,25 +500,31 @@ class Build(models.Model):
     def _get_create_container_params(self):
         self.ensure_one()
         branch = self.branch_id.branch_tmpl_id or self.branch_id
+        docker_host = self.docker_host_id
+        docker_host.create_network(self.docker_container)
         params = {
             'image': self.docker_image,
             'name': self.docker_container,
             'detach': True,
             'ports': [8069],
             'labels': [self.docker_image],
+            'networking_config': docker_host.create_networking_config({
+                self.docker_container: docker_host.create_endpoint_config(aliases=['odoo']),
+            }),
         }
         links = []
         for link in branch.link_ids:
-            container = link.create_container(self.docker_host_id,
+            container = link.create_container(docker_host,
                                               CONTAINER_SUFFIX % self.id,
-                                              labels=[self.docker_image])
+                                              labels=[self.docker_image],
+                                              network=self.docker_container)
             links.append((container, link.name))
-        config = safe_eval(self.docker_host_id.builds_host_config or '{}')
+        config = safe_eval(docker_host.builds_host_config or '{}')
         config.update({'port_bindings': {8069: self.port}, 'links': links})
         if branch.docker_in_docker or self._context.get('docker-in-docker'):
             params['volumes'] = ['/var/run/docker.sock']
             config['binds'] = ['/var/run/docker.sock:/var/run/docker.sock']
-        params['host_config'] = self.docker_host_id.create_host_config(**config)
+        params['host_config'] = docker_host.create_host_config(**config)
         return params
 
     @api.one
@@ -551,8 +552,7 @@ class Build(models.Model):
             try:
                 self.docker_host_id.start_container(container)
             except:
-                for container in containers:
-                    self.docker_host_id.remove_container(container)
+                self._remove_container()
                 raise
         try:
             self._check_if_running()
@@ -652,7 +652,7 @@ class Build(models.Model):
 
     @api.one
     def _check_quality_code(self):
-        _logger.info('Checking quality code for %s...' % self.docker_container)
+        _logger.info('Checking code quality for %s...' % self.docker_container)
         self._connect('common').check_quality_code(self.admin_passwd)
 
     @api.one
@@ -861,6 +861,7 @@ class Build(models.Model):
     def _remove_container(self):
         for container in self._get_linked_containers():
             self.docker_host_id.remove_container(container, force=True)
+        self.docker_host_id.remove_network(self.docker_container)
 
     @api.one
     def _remove_image(self):

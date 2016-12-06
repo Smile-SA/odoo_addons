@@ -146,7 +146,7 @@
               </group>
               <group>
                 <field name="dump_id" domain="[('res_model', '=', 'scm.repository.branch'), ('res_id', '=', active_id)]" widget="selection"/>
-                <field name="additional_options" placeholder="debug_mode = True\ntest_commit = True"/>
+                <field name="additional_options" placeholder="debug_mode = True"/>
                 <field name="subfolder" attrs="{'required': [('has_branch_dependencies', '=', True)]}"/>
                 <field name="branch_dependency_ids" nolabel="1" colspan="2" context="{'parent_id': active_id}">
                   <tree editable="top">

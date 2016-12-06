@@ -12,6 +12,7 @@ class VersionControlSystem(models.Model):
 
     cmd_revno = fields.Char('Get revision number', required=True)
     cmd_log = fields.Char('Get commit logs from last update', required=True)
+    cmd_log_all = fields.Char('Get all commit logs', required=True)
 
     @api.multi
     def revno(self, directory, branch):
@@ -30,5 +31,5 @@ class VersionControlSystem(models.Model):
         if last_revno:
             cmd = self.cmd_log % {'last_revno': last_revno}
         else:
-            cmd = '%s log' % self.cmd
+            cmd = self.cmd_log_all
         return call(cmd, directory)

@@ -28,8 +28,10 @@
 
     <menuitem id="menu_scm_os" parent="smile_scm.menu_scm_config_params" action="action_scm_os" sequence="13"/>
 
+    <act_window name="Scheduled Actions" res_model="ir.cron" id="action_ir_cron" domain="['|', ('model', 'like', 'docker.'), ('model', 'like', 'scm.')]"/>
+    <menuitem id="menu_ir_cron" parent="smile_scm.menu_scm_config_params" action="action_ir_cron" sequence="17"/>
     <act_window name="System Parameters" res_model="ir.config_parameter" id="action_config_parameter" domain="[('key', 'like', 'ci.')]"/>
-    <menuitem id="menu_config_parameter" parent="smile_scm.menu_scm_config_params" action="action_config_parameter" sequence="17"/>
+    <menuitem id="menu_config_parameter" parent="smile_scm.menu_scm_config_params" action="action_config_parameter" sequence="18"/>
 
   </data>
 </odoo>

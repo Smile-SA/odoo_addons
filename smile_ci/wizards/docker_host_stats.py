@@ -28,12 +28,16 @@ class DockerHostStats(models.TransientModel):
             return round(float(value) / 1024**2, 3)
 
         for docker_host in self.env['docker.host'].search([]):
+            memory_total = docker_host.get_host_info()['MemTotal']
             containers = docker_host.get_containers()
             container_names = map(lambda cont: cont['Names'][0].replace('/', ''), containers)
             for container in sorted(container_names):
-                stats_gen = docker_host.get_container_stats(container, decode=True)
-                pre_stats = stats_gen.next()
-                stats = stats_gen.next()
+                stats_gen = docker_host.get_stats(container, decode=True)
+                try:
+                    pre_stats = stats_gen.next()
+                    stats = stats_gen.next()
+                except StopIteration:
+                    continue
                 self.create({
                     'docker_host_id': docker_host.id,
                     'container': container,
@@ -43,8 +47,8 @@ class DockerHostStats(models.TransientModel):
                                   pre_stats['cpu_stats']['system_cpu_usage']),
                     'mem_usage': compute_MiB(stats['memory_stats']['usage']),
                     'mem_limit': compute_MiB(stats['memory_stats']['limit']),
-                    'mem_percent': stats['memory_stats']['usage'] * 100.0 / stats['memory_stats']['limit'],
-                    'mem_percent_max': stats['memory_stats']['max_usage'] * 100.0 / stats['memory_stats']['limit'],
+                    'mem_percent': stats['memory_stats']['usage'] * 100.0 / memory_total,
+                    'mem_percent_max': stats['memory_stats']['max_usage'] * 100.0 / memory_total,
                     'network_input': compute_MiB(sum(network['rx_bytes'] for network in stats['networks'].itervalues())),
                     'network_output': compute_MiB(sum(network['tx_bytes'] for network in stats['networks'].itervalues())),
                 })

@@ -46,7 +46,7 @@ class Branch(models.Model):
         ('done', 'Cloned'),
     ], 'Status', required=True, readonly=True, default='draft', copy=False)
     last_update = fields.Datetime(readonly=True, copy=False)
-    directory = fields.Char(compute='_get_directory', copy=False)
+    directory = fields.Char(compute='_get_directory')
     active = fields.Boolean(default=True, copy=False)
 
     _sql_constraints = [
@@ -107,7 +107,7 @@ class Branch(models.Model):
                 branch.pull()
             else:
                 try:
-                    branch.vcs_id.clone(branch_directory, branch.branch, branch.url)
+                    branch.vcs_id.clone(branch_directory, branch.url, branch.branch)
                 except UserError:
                     _logger.error('Clone failed for branch %s (%s %s)...' % (branch.id, branch.name, branch.branch))
                     raise
@@ -119,7 +119,7 @@ class Branch(models.Model):
     def pull(self):
         for branch in self:
             if branch.state == 'draft':
-                raise UserError(_('You cannot pull a repository not cloned'))
+                raise UserError(_('You cannot pull a branch not cloned'))
             if not os.path.exists(branch.directory):
                 branch.clone(force=True)
             else:

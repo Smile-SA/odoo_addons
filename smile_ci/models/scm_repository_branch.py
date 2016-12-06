@@ -104,7 +104,7 @@ class Branch(models.Model):
                                     for char in self.display_name.lower()).replace('__', '_').rstrip('_')
 
     @api.one
-    @api.depends('docker_registry_id.docker_host_id.base_url', 'docker_image')
+    @api.depends('docker_registry_id.url', 'docker_image')
     def _get_docker_registry_image(self):
         self.docker_registry_image = self.docker_registry_id.get_registry_image(self.docker_image)
 
@@ -113,6 +113,10 @@ class Branch(models.Model):
         tags = self.docker_registry_id.get_image_tags(self.docker_image)
         self.docker_tags = ', '.join(tags)
 
+    @api.one
+    def _get_build_directory(self):
+        self.build_directory = os.path.join(self.docker_host_id.builds_path, 'branch_%s' % self.id)
+
     id = fields.Integer(readonly=True)
     build_ids = fields.One2many('scm.repository.branch.build', 'branch_id', 'Builds', readonly=True, copy=False)
     builds_count = fields.Integer('Builds count', compute='_get_builds_count', store=False)
@@ -120,9 +124,10 @@ class Branch(models.Model):
                                          compute='_get_last_build_result', store=False)
     running_build_id = fields.Many2one('scm.repository.branch.build', 'Running build',
                                        compute='_get_running_build', store=False)
+    build_directory = fields.Char(compute='_get_build_directory')
 
     # Build creation options
-    use_in_ci = fields.Boolean('Use in Continuous Integration', copy=False)
+    use_in_ci = fields.Boolean('Used in Continuous Integration', copy=False)
     branch_tmpl_id = fields.Many2one('scm.repository.branch', 'Template', auto_join=True)
     os_id = fields.Many2one('scm.os', 'Operating System', default=_get_default_os)
     postgres_id = fields.Many2one('docker.image', 'Database Management System', domain=[('is_postgres', '=', True)],
@@ -429,11 +434,6 @@ class Branch(models.Model):
             },
         }
 
-    @property
-    def build_directory(self):
-        self.ensure_one()
-        return os.path.join(self.docker_host_id.builds_path, 'branch_%s' % self.id)
-
     @api.one
     def _make_build_directory(self):
         if self.build_directory and not os.path.exists(self.build_directory):
@@ -607,18 +607,20 @@ class Branch(models.Model):
         return self.recreate_image()
 
     @api.multi
-    def get_docker_compose_content(self, tag='latest', container_name='', port='8069'):
-        longpolling_port = '8071' if port == '8069' else str(int(port) + 1)
+    def get_docker_compose_content(self, tag='latest', container_name='odoo', port='8069'):
+        longpolling_port = '8072' if port == '8069' else str(int(port) + 1)
         repository = self.docker_registry_image
         services = {
             'odoo': {
                 'image': '%s:%s' % (repository, tag),
                 'container_name': container_name,
-                'ports': ['%s:8069' % port, '%s:8071' % longpolling_port],
+                'ports': ['%s:8069' % port, '%s:8072' % longpolling_port],
                 'links': self.mapped('link_ids.name'),
+                'stdin_open': True,  # To use pdb with docker attach
+                'tty': True,  # To color stdout
             }
         }
-        services.update(self.mapped('link_ids').get_service_infos(repository, tag))
+        services.update(self.mapped('link_ids').get_service_infos(repository, tag, add_container_name=True))
         return yaml.dump(yaml.load(json.dumps({'version': '2', 'services': services})))
 
     @api.multi
@@ -644,7 +646,12 @@ class Branch(models.Model):
     @api.multi
     def message_unsubscribe_users(self, user_ids=None):
         res = super(Branch, self).message_unsubscribe_users(user_ids)
-        self.mapped('repository_id').message_unsubscribe_users(user_ids)
-        other_branches = self.mapped('repository_id.branch_ids') - self
-        other_branches.message_subscribe_users(user_ids)
+        if user_ids:
+            user_partners = self.env['res.users'].browse(user_ids)
+            for repository in self.mapped('repository_id'):
+                subscribors = user_partners & repository.message_partner_ids
+                if subscribors:
+                    repository.message_unsubscribe(subscribors.ids)
+                    other_branches = repository.branch_ids - self
+                    other_branches.message_subscribe(subscribors.ids)
         return res

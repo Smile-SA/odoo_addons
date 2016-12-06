@@ -64,12 +64,22 @@
       <b>volumes:
         - /var/run/postgresql/.s.PGSQL.5432:/var/run/postgresql/.s.PGSQL.5432
       command: ['--load=web,smile_test,smile_upgrade', '--db_host=/var/run/postgresql']</b>
-    <s>links: [db]</s>
   <s>db:</s>...</pre>
 
+        <p>Not to be disconnected after each restart, add the following lines in docker-compose.yml:</p>
+        <pre>services:
+  odoo:
+      <b>volumes:
+        - sessions:/home/odoo/.local/share/Odoo/sessions
+volumes:
+  sessions:
+    driver: local</b></pre>
+
+        <p>To use breakpoints with pdb, execute the following command lines:</p>
+        <pre>docker-compose up -d &amp;&amp; docker attach odoo</pre>
+
         <p>To run in a interactive mode, execute the following command lines:</p>
-        <pre>docker run -d --name db <t t-esc="widget.docker_registry_image"/>_db:<t t-esc="widget.default_tag"/>
-docker run -ti -p 8069:8069 --link db <t t-esc="widget.docker_registry_image"/>:<t t-esc="widget.default_tag"/></pre>
+        <pre>docker-compose up -d &amp;&amp; docker exec -ti odoo bash</pre>
       </div>
     </t>
 

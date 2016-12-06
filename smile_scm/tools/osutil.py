@@ -47,7 +47,13 @@ def call(cmd, directory=None):
             result = ''
             if isinstance(cmd, list):
                 cmd = ' '.join(cmd)
-            for subcmd in cmd.split(' ; '):
+            for operator in (' ; ', ' && ', ' || '):
+                if isinstance(cmd, basestring):
+                    cmd = cmd.split(operator)
+                else:
+                    cmd = reduce(lambda x, y: x + y,
+                                 [item.split(operator) for item in cmd])
+            for subcmd in cmd:
                 subresult = ''
                 for subcmd2 in subcmd.split(' & '):
                     subresult = check_output_chain(subcmd2.split(' '))

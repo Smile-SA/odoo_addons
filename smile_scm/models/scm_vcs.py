@@ -21,7 +21,7 @@ class VersionControlSystem(models.Model):
     ]
 
     @api.multi
-    def clone(self, directory, branch, url):
+    def clone(self, directory, url, branch):
         self.ensure_one()
         localdict = {'url': url, 'branch': branch or self.default_branch}
         cmd_clone = self.cmd_clone % localdict
