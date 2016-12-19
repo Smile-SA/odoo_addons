@@ -17,13 +17,13 @@ msgstr ""
 
 #. module: smile_product_option_sale
 #: sql_constraint:product.option:0
-msgid "A option cannot is hidden if not mandatory and its quantity is not fixed or identical to the main product"
-msgstr "Une option ne peut pas être masquée si elle n'est pas obligatoire et que sa quantité n'est pas fixe ou identique à celle de l'article principal"
+msgid "A option cannot is hidden if not mandatory or its quantity is not fixed or identical to the main product"
+msgstr "Une option ne peut pas être masquée si elle n'est pas obligatoire ou si sa quantité n'est pas fixe ou identique à celle de l'article principal"
 
 #. module: smile_product_option_sale
 #: sql_constraint:product.option:0
-msgid "A option cannot is included in price if not mandatory and its quantity is not identical to the main product"
-msgstr "Une option ne peut pas être incluse dans le prix si elle n'est pas obligatoire et que sa quantité n'est pas identique à celle de l'article principal"
+msgid "A option cannot is included in price if not mandatory or its quantity is not identical to the main product"
+msgstr "Une option ne peut pas être incluse dans le prix si elle n'est pas obligatoire ou si sa quantité n'est pas identique à celle de l'article principal"
 
 #. module: smile_product_option_sale
 #: model:ir.model.fields,help:smile_product_option_sale.field_product_option_is_included_in_price

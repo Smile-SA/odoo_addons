@@ -94,13 +94,9 @@ class ProductOptionOrderLine(models.AbstractModel):
     @api.one
     @api.depends('price_unit', 'child_ids.price_unit')
     def _compute_visible_price(self):
-        if self.is_included_in_price:
-            self.visible_price_unit = self.visible_price_subtotal = self.visible_price_tax = self.visible_price_total = 0.0
-        else:
-            children = self.child_ids.filtered(lambda child: child.is_included_in_price)
-            self.visible_price_unit = self.price_unit + sum(children.mapped('price_unit'))
-            children = self.child_ids.filtered(lambda child: child.is_included_in_price or child.is_hidden)
-            self.visible_price_subtotal = self.price_subtotal + sum(children.mapped('price_subtotal'))
+        hidden_children = self.child_ids.filtered(lambda child: child.is_hidden)
+        self.visible_price_unit = self.price_unit + sum(hidden_children.mapped('price_unit'))
+        self.visible_price_subtotal = self.price_subtotal + sum(hidden_children.mapped('price_subtotal'))
 
     @api.one
     def _set_visible_price_unit(self):
