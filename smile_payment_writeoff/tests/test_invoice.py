@@ -39,7 +39,7 @@ class TestAutomaticPaymentWriteoff(TransactionCase):
         self.product = self.env['product.product'].create(product_vals)
         self.env.ref('base.main_company').invoice_loss_amount = 2
         self.env.ref('base.main_company').invoice_profit_amount = 1
-        account = self.env['account.account'].search([('code', '=', '658000')], limit = 1)
+        account = self.env['account.account'].search([('code', '=', '658000')], limit=1)
         if not account:
             account_values = {'name': 'Charges diverses de gestion courante',
                               'code': '658000',
@@ -47,7 +47,7 @@ class TestAutomaticPaymentWriteoff(TransactionCase):
                               'user_type_id': self.env.ref('account.data_account_type_expenses').id, }
             account = self.env['account.account'].create(account_values)
         self.env.ref('base.main_company').invoice_loss_account_id = account
-        account = self.env['account.account'].search([('code', '=', '758000')], limit = 1)
+        account = self.env['account.account'].search([('code', '=', '758000')], limit=1)
         if not account:
             account_values = {'name': 'Produits divers de gestion courante',
                               'code': '758000',
@@ -55,7 +55,7 @@ class TestAutomaticPaymentWriteoff(TransactionCase):
                               'user_type_id': self.env.ref('account.data_account_type_revenue').id, }
             account = self.env['account.account'].create(account_values)
         self.env.ref('base.main_company').invoice_profit_account_id = account
-        self.customer_account = self.env['account.account'].search([('code', '=', '411100')], limit = 1)
+        self.customer_account = self.env['account.account'].search([('code', '=', '411100')], limit=1)
         if not self.customer_account:
             customer_account_values = {'name': 'Clients - Ventes de biens ou de prestations de services',
                                        'code': '411100',
