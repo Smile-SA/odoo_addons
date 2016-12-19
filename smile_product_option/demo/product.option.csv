@@ -1,0 +1,5 @@
+id,product_tmpl_id/id,optional_product_id/id,is_mandatory,quantity_type,fixed_quantity
+product_option_8_9,product.product_product_8_product_template,product.product_product_9,1,identical,0
+product_option_8_32,product.product_product_8_product_template,product.product_product_32,0,free,0
+product_option_8_12,product.product_product_8_product_template,product.product_product_12,0,free_and_multiple,0
+product_option_8_43,product.product_product_8_product_template,product.product_product_43,0,fixed,1

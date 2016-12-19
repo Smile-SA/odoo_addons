@@ -1,0 +1,151 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_product_option_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-18 16:25+0000\n"
+"PO-Revision-Date: 2016-12-18 16:25+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_product_option_sale
+#: sql_constraint:product.option:0
+msgid "A option cannot is included in price if not mandatory and its quantity is not identical to the main product"
+msgstr "Une option ne peut pas être incluse dans le prix si elle n'est pas obligatoire et que sa quantité n'est pas identique à celle de l'article principal"
+
+#. module: smile_product_option_sale
+#: sql_constraint:product.option:0
+msgid "A option cannot is hidden if not mandatory and its quantity is not fixed or identical to the main product"
+msgstr "Une option ne peut pas être masquée si elle n'est pas obligatoire et que sa quantité n'est pas fixe ou identique à celle de l'article principal"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,help:smile_product_option_sale.field_product_option_is_included_in_price
+msgid "Check this if the price you use on the product and invoices includes this option."
+msgstr "Cochez cette case si le prix que vous utilisez pour l'article et les factures inclut cette option."
+
+#. module: smile_product_option_sale
+#: selection:sale.order.line,quantity_type:0
+msgid "Fixed"
+msgstr "Fixe"
+
+#. module: smile_product_option_sale
+#: selection:sale.order.line,quantity_type:0
+msgid "Free"
+msgstr "Libre"
+
+#. module: smile_product_option_sale
+#: selection:sale.order.line,quantity_type:0
+msgid "Free and multiple of main product"
+msgstr "Libre et multiple de l'article principal"
+
+#. module: smile_product_option_sale
+#: selection:sale.order.line,quantity_type:0
+msgid "Identical to main product"
+msgstr "Identique à l'article principal"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_is_mandatory
+msgid "Is a mandatory option"
+msgstr "Correspond à une option obligatoire"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_is_hidden
+msgid "Is hidden"
+msgstr "Est masquée"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_is_hidden_in_sale_order
+msgid "Is hidden in sale order"
+msgstr "Est masquée sur la commande de vente"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_is_included_in_price
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_is_included_in_price
+msgid "Is included in price"
+msgstr "Est incluse dans le prix"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_parent_id
+msgid "Main Line"
+msgstr "Ligne principale"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_child_ids
+msgid "Options"
+msgstr "Options"
+
+#. module: smile_product_option_sale
+#: model:ir.model,name:smile_product_option_sale.model_product_option
+msgid "Product Option"
+msgstr "Option de l'article"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_quantity_type
+msgid "Quantity type"
+msgstr "Type de quantité"
+
+#. module: smile_product_option_sale
+#: model:ir.model,name:smile_product_option_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Bon de commande"
+
+#. module: smile_product_option_sale
+#: model:ir.model,name:smile_product_option_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de bons de commande"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_visible_price_subtotal
+msgid "Subtotal"
+msgstr "Sous-total"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_visible_price_tax
+msgid "Taxes"
+msgstr "Taxes"
+
+#. module: smile_product_option_sale
+#: code:addons/smile_product_option_sale/models/sale.py:95
+#, python-format
+msgid "The option %s must be a multiple of the product %s"
+msgstr "La quantité de l'option %s doit être un multiple de celle de l'article %s"
+
+#. module: smile_product_option_sale
+#: code:addons/smile_product_option_sale/models/sale.py:91
+#, python-format
+msgid "The option %s must be the same in quantity as the product %s"
+msgstr "La quantité de l'option %s doit être identique à celle de l'article %s"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_visible_price_total
+msgid "Total"
+msgstr "Total"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_visible_price_unit
+msgid "Unit Price"
+msgstr "Prix unitaire"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_visible_line_ids
+msgid "Visible Order Lines"
+msgstr "Lignes visibles de la commande"
+
+#. module: smile_product_option_sale
+#: code:addons/smile_product_option_sale/models/sale.py:170
+#, python-format
+msgid "You cannot change the unit price of an option included in the price of the main product"
+msgstr "Vous ne pouvez pas modifier le prix unitaire d'une option inclus dans le prix de l'article principal"
+
+#. module: smile_product_option_sale
+#: code:addons/smile_product_option_sale/models/sale.py:193
+#, python-format
+msgid "You cannot delete a mandatory option!"
+msgstr "Vous ne pouvez pas supprimer une option obligatoire !"

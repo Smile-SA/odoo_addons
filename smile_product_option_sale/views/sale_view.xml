@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="view_order_form" model="ir.ui.view">
+      <field name="name">sale.order.form</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.view_order_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+          <field name="visible_price_unit" attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('is_included_in_price', '=', True)]}"/>
+          <field name="is_included_in_price" invisible="1"/>
+        </xpath>
+        <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+          <field name="visible_price_subtotal" widget="monetary"/>
+        </xpath>
+        <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="after">
+          <field name="visible_price_unit"/>
+        </xpath>
+        <xpath expr="//field[@name='order_line']/kanban/field[@name='price_subtotal']" position="after">
+          <field name="visible_price_subtotal"/>
+        </xpath>
+        <xpath expr="//field[@name='order_line']/kanban//t[@t-esc='record.price_subtotal.value']" position="attributes">
+          <attribute name="t-esc">record.visible_price_subtotal.value</attribute>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="sale.action_quotations" model="ir.actions.act_window">
+      <field name="context">{'add_all_options': True}</field>
+    </record>
+
+  </data>
+</openerp>
