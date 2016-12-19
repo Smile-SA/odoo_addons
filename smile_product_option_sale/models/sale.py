@@ -36,7 +36,8 @@ class SaleOrder(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         result = super(SaleOrder, self).fields_view_get(view_id, view_type, toolbar, submenu)
-        if view_type == 'form':  # In order to inherit all views based on the field order_line
+        if view_type == 'form' and not self._context.get('display_original_view'):
+            # In order to inherit all views based on the field order_line
             doc = etree.XML(result['arch'])
             for node in doc.xpath("//field[@name='order_line']"):
                 node.set('name', 'visible_line_ids')
