@@ -29,8 +29,11 @@
     ],
     "author": "Smile",
     "description": """
-Sales Management - Product Options
+Product Options (Sales Management)
 ==================================
+
+Manage product options in quotations/sale orders.
+Allow to specify if an option is hidden in sale order and/or if its price is included in the price of main product.
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,

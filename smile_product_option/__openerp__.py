@@ -31,6 +31,14 @@
 Product Options
 ===============
 
+Allow to add options to a product.
+These options can be mandatory or not.
+You can define if the quantity of an option is:
+* free
+* fixed
+* identical to main product
+* free and multiple of main product
+
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "summary": "",
