@@ -44,7 +44,9 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "data": [
         "views/product_view.xml",
         "views/sale_view.xml",
+        "views/account_invoice_view.xml",
         "views/report_saleorder.xml",
+        "views/report_invoice.xml",
     ],
     'demo': [
         "demo/product.option.csv",

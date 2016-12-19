@@ -19,171 +19,48 @@
 #
 ##############################################################################
 
-from lxml import etree
-
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError, ValidationError
-
-from openerp.addons.smile_product_option.models.product import QUANTITY_TYPES
+from openerp import api, fields, models
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _name = 'sale.order'
+    _inherit = ['sale.order', 'product.option.order']
+    _order_line_field = 'order_line'
 
     visible_line_ids = fields.One2many('sale.order.line', 'order_id', 'Visible Order Lines',
                                        domain=[('is_hidden', '=', False)])
 
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        result = super(SaleOrder, self).fields_view_get(view_id, view_type, toolbar, submenu)
-        if view_type == 'form' and not self._context.get('display_original_view'):
-            # In order to inherit all views based on the field order_line
-            doc = etree.XML(result['arch'])
-            for node in doc.xpath("//field[@name='order_line']"):
-                node.set('name', 'visible_line_ids')
-            result['arch'] = etree.tostring(doc)
-            result['fields']['visible_line_ids'] = result['fields']['order_line']
-        return result
-
     @api.multi
-    def _get_lines_max_level(self):
-        parents = self.order_line.filtered(lambda line: not line.parent_id)
-        max_level = 0
-        children = parents.mapped('child_ids')
-        while children:
-            max_level += 1
-            children = children.mapped('child_ids')
-        return max_level
-
-    @api.one
-    def _update_lines_sequence(self):
-        def update_sequence(lines, level, parent_sequence):
-            for index, line in enumerate(lines):
-                new_sequence = parent_sequence + (index + 1) * 100 ** level
-                if line.sequence != new_sequence:
-                    line.sequence = new_sequence
-
-        level = self._get_lines_max_level()
-        parents = self.order_line.filtered(lambda line: not line.parent_id)
-        update_sequence(parents, level, 0)
-        while level > 0:
-            level -= 1
-            for parent in parents:
-                update_sequence(parent.child_ids, level, parent.sequence)
-            parents = parents.mapped('child_ids')
-
-    @api.multi
-    def write(self, vals):
-        res = super(SaleOrder, self).write(vals)
-        for line_tuple in (vals.get('visible_line_ids') or []):
-            # If a line is created or its sequence is updated,
-            # I recompute the sequence for all order lines
-            if not line_tuple[0] or \
-                    (line_tuple[0] == 1 and 'sequence' in (line_tuple[2] or {})):
-                self._update_lines_sequence()
-                break
-        return res
+    def action_invoice_create(self, grouped=False, final=False):
+        self = self.with_context(do_not_update_optional_lines=True)
+        invoice_ids = super(SaleOrder, self).action_invoice_create(grouped, final)
+        return invoice_ids
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
-
-    @api.one
-    @api.depends('price_unit', 'child_ids.price_unit')
-    def _compute_visible_price(self):
-        if self.is_included_in_price:
-            self.visible_price_unit = self.visible_price_subtotal = self.visible_price_tax = self.visible_price_total = 0.0
-        else:
-            children = self.child_ids.filtered(lambda child: child.is_included_in_price)
-            self.visible_price_unit = self.price_unit + sum(children.mapped('price_unit'))
-            children = self.child_ids.filtered(lambda child: child.is_included_in_price or child.is_hidden)
-            self.visible_price_subtotal = self.price_subtotal + sum(children.mapped('price_subtotal'))
-
-    @api.one
-    def _set_visible_price_unit(self):
-        children_included_in_price = self.child_ids.filtered(lambda child: child.is_included_in_price)
-        self.price_unit = self.visible_price_unit - sum(children_included_in_price.mapped('price_unit'))
+    _name = 'sale.order.line'
+    _inherit = ['sale.order.line', 'product.option.order.line']
+    _order_field = 'order_id'
+    _qty_field = 'product_uom_qty'
+    _uom_field = 'product_uom'
 
     parent_id = fields.Many2one('sale.order.line', 'Main Line', ondelete='cascade', copy=False)
     child_ids = fields.One2many('sale.order.line', 'parent_id', string='Options', context={'active_test': False})
-    quantity_type = fields.Selection(QUANTITY_TYPES, readonly=True)
-    is_mandatory = fields.Boolean('Is a mandatory option', readonly=True)
-    is_included_in_price = fields.Boolean(readonly=True)
-    is_hidden = fields.Boolean(readonly=True)
-    visible_price_unit = fields.Monetary(compute='_compute_visible_price', string='Unit Price',
-                                         inverse='_set_visible_price_unit', store=True)
-    visible_price_subtotal = fields.Monetary(compute='_compute_visible_price', string='Subtotal',
-                                             readonly=True, store=True)
+    is_hidden_in_customer_invoice = fields.Boolean(readonly=True)
 
     @api.one
     @api.constrains('product_uom_qty')
     def _check_qty(self):
-        if self.quantity_type == 'identical' and \
-                self.product_uom_qty != self.parent_id.product_uom_qty:
-            raise ValidationError(_('The option %s must be the same in quantity as the product %s')
-                                  % (self.product_id.name, self.parent_id.product_id.name))
-        if self.quantity_type == 'free_and_multiple' and \
-                self.product_uom_qty % self.parent_id.product_uom_qty:
-            raise ValidationError(_('The option %s must be a multiple of the product %s')
-                                  % (self.product_id.name, self.parent_id.product_id.name))
+        super(SaleOrderLine, self)._check_qty()
 
     @api.multi
     def _get_option_vals(self, option):
-        self.ensure_one()
-        qty = 0.0
-        if option.quantity_type == 'fixed':
-            qty = option.fixed_quantity
-        elif option.quantity_type == 'identical':
-            qty = self.product_uom_qty
-        return {
-            'order_id': self.order_id.id,
-            'parent_id': self.id,
-            'product_id': option.optional_product_id.id,
-            'product_uom_qty': qty,
-            'product_uom': option.uom_id.id,
-            'quantity_type': option.quantity_type,
-            'is_mandatory': option.is_mandatory,
-            'is_included_in_price': option.is_included_in_price,
+        vals = super(SaleOrderLine, self)._get_option_vals(option)
+        vals.update({
             'is_hidden': option.is_hidden_in_sale_order,
-        }
-
-    @api.multi
-    def _update_optional_lines(self):
-        for line in self:
-            options = line.product_id.product_tmpl_id.option_ids
-            # Remove wrong option lines
-            wrong_option_lines = line.child_ids.filtered(lambda child: child.product_id not in
-                                                         options.mapped('optional_product_id'))
-            if wrong_option_lines:
-                line.with_context(force_unlink=True).child_ids -= wrong_option_lines
-            # Create new option lines
-            for option in options:
-                if self._context.get('add_all_options') or option.is_mandatory:
-                    option_line = line.child_ids.filtered(lambda child: child.product_id ==
-                                                          option.optional_product_id)
-                    if not option_line:
-                        self.create(line._get_option_vals(option))
-
-    @api.one
-    def _update_unit_price(self):
-        # Because the unit price of an option included in price is read-only
-        if self.is_included_in_price:
-            self.parent_id.price_unit -= self.price_unit
-
-    @api.model
-    def create(self, vals):
-        line = super(SaleOrderLine, self).create(vals)
-        line._update_unit_price()
-        line._update_optional_lines()
-        return line
-
-    @api.multi
-    def _update_optional_lines_qty(self):
-        for parent in self:
-            options = parent.child_ids.filtered(lambda child: child.quantity_type == 'identical' and
-                                                child.product_uom_qty != parent.product_uom_qty)
-            if options:
-                options.write({'product_uom_qty': parent.product_uom_qty})
+            'is_hidden_in_customer_invoice': option.is_hidden_in_customer_invoice,
+        })
+        return vals
 
     @api.multi
     def _update_optional_lines_qty_delivered(self):
@@ -194,33 +71,16 @@ class SaleOrderLine(models.Model):
                 option.qty_delivered = option.product_uom_qty * factor
 
     @api.multi
-    def _check_vals(self, vals):
-        if 'price_unit' in vals and \
-                self.filtered(lambda line: line.is_included_in_price):
-            raise UserError(_('You cannot change the unit price of an option '
-                              'included in the price of the main product'))
-
-    @api.multi
     def write(self, vals):
-        self._check_vals(vals)
         res = super(SaleOrderLine, self).write(vals)
-        if 'product_id' in vals:
-            self._update_optional_lines()
-        if 'product_uom_qty' in vals:
-            self._update_optional_lines_qty()
         if 'qty_delivered' in vals:
             self._update_optional_lines_qty_delivered()
         return res
 
     @api.multi
-    def unlink(self):
-        parents = self
-        while parents:
-            children = parents.mapped('child_ids')
-            self |= children
-            parents = children
-        if not self._context.get('force_unlink') and any(self.mapped('is_mandatory')):
-            parents = self.filtered(lambda line: line.is_mandatory).mapped('parent_id')
-            if len(parents & self) != len(parents):
-                raise Warning(_("You cannot delete a mandatory option!"))
-        return super(SaleOrderLine, self).unlink()
+    def _prepare_invoice_line(self, qty):
+        vals = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        vals['is_hidden'] = self.is_hidden_in_customer_invoice
+        vals['is_included_in_price'] = self.is_included_in_price
+        vals['parent_id'] = self.parent_id.invoice_lines.id
+        return vals

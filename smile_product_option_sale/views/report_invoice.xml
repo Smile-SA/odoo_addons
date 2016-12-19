@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+      <xpath expr="//tbody[@class='invoice_tbody']" position="attributes">
+        <attribute name="t-if">o._context.get('display_original_view')</attribute>
+      </xpath>
+      <xpath expr="//tbody[@class='invoice_tbody']" position="after">
+        <tbody class="invoice_tbody" t-if="not o._context.get('display_original_view')">
+          <tr t-foreach="o.visible_line_ids" t-as="l">
+            <td><span t-field="l.name"/></td>
+            <td class="text-right">
+              <span t-field="l.quantity"/>
+              <span t-field="l.uom_id"  groups="product.group_uom"/>
+            </td>
+            <td class="text-right">
+              <span t-field="l.visible_price_unit"/>
+            </td>
+            <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+              <span t-field="l.discount"/>
+            </td>
+            <td class="text-right">
+              <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
+            </td>
+            <td class="text-right">
+              <span t-field="l.visible_price_subtotal" 
+                  t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+            </td>
+          </tr>
+        </tbody>
+      </xpath>
+    </template>
+
+  </data>
+</openerp>

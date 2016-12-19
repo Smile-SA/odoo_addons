@@ -20,4 +20,6 @@
 ##############################################################################
 
 import product
+import models
 import sale
+import account_invoice

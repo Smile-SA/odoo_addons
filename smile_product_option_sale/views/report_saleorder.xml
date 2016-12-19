@@ -3,8 +3,11 @@
   <data>
 
     <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
-      <xpath expr="//tbody[@class='sale_tbody']" position="replace">
-        <tbody class="sale_tbody">
+      <xpath expr="//tbody[@class='sale_tbody']" position="attributes">
+        <attribute name="t-if">doc._context.get('display_original_view')</attribute>
+      </xpath>
+      <xpath expr="//tbody[@class='sale_tbody']" position="after">
+        <tbody class="sale_tbody" t-if="not doc._context.get('display_original_view')">
           <t t-foreach="doc.visible_line_ids" t-as="l">
             <tr t-if="l.product_uom_qty">
               <td>

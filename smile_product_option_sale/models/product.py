@@ -26,11 +26,14 @@ class ProductOption(models.Model):
     _inherit = 'product.option'
 
     is_hidden_in_sale_order = fields.Boolean()
+    is_hidden_in_customer_invoice = fields.Boolean()
     is_included_in_price = fields.Boolean(help="Check this if the price you use on the "
                                                "product and invoices includes this option.")
 
     _sql_constraints = [
-        ('check_is_hidden_in_sale_order', "CHECK(is_hidden_in_sale_order IS NOT TRUE OR (quantity_type IN ('identical', 'fixed') AND is_mandatory))",
+        ('check_is_hidden_in_sale_order', "CHECK((is_hidden_in_sale_order IS NOT TRUE AND "
+                                          "is_hidden_in_customer_invoice IS NOT TRUE) OR "
+                                          "(quantity_type IN ('identical', 'fixed') AND is_mandatory))",
          'A option cannot is hidden if not mandatory and its quantity is not fixed or identical to the main product'),
         ('check_is_included_in_price', "CHECK(is_included_in_price IS NOT TRUE OR (quantity_type = 'identical' AND is_mandatory))",
          'A option cannot is included in price if not mandatory and its quantity is not identical to the main product'),

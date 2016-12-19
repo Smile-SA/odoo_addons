@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-18 16:25+0000\n"
-"PO-Revision-Date: 2016-12-18 16:25+0000\n"
+"POT-Creation-Date: 2016-12-19 14:27+0000\n"
+"PO-Revision-Date: 2016-12-19 14:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,13 +17,13 @@ msgstr ""
 
 #. module: smile_product_option_sale
 #: sql_constraint:product.option:0
-msgid "A option cannot is included in price if not mandatory and its quantity is not identical to the main product"
-msgstr "Une option ne peut pas être incluse dans le prix si elle n'est pas obligatoire et que sa quantité n'est pas identique à celle de l'article principal"
+msgid "A option cannot is hidden if not mandatory and its quantity is not fixed or identical to the main product"
+msgstr "Une option ne peut pas être masquée si elle n'est pas obligatoire et que sa quantité n'est pas fixe ou identique à celle de l'article principal"
 
 #. module: smile_product_option_sale
 #: sql_constraint:product.option:0
-msgid "A option cannot is hidden if not mandatory and its quantity is not fixed or identical to the main product"
-msgstr "Une option ne peut pas être masquée si elle n'est pas obligatoire et que sa quantité n'est pas fixe ou identique à celle de l'article principal"
+msgid "A option cannot is included in price if not mandatory and its quantity is not identical to the main product"
+msgstr "Une option ne peut pas être incluse dans le prix si elle n'est pas obligatoire et que sa quantité n'est pas identique à celle de l'article principal"
 
 #. module: smile_product_option_sale
 #: model:ir.model.fields,help:smile_product_option_sale.field_product_option_is_included_in_price
@@ -31,52 +31,109 @@ msgid "Check this if the price you use on the product and invoices includes this
 msgstr "Cochez cette case si le prix que vous utilisez pour l'article et les factures inclut cette option."
 
 #. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_currency_id
+msgid "Currency"
+msgstr "Devise"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_display_name
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_display_name
+msgid "Display Name"
+msgstr "Afficher le nom"
+
+#. module: smile_product_option_sale
+#: selection:account.invoice.line,quantity_type:0
+#: selection:product.option.order.line,quantity_type:0
 #: selection:sale.order.line,quantity_type:0
 msgid "Fixed"
 msgstr "Fixe"
 
 #. module: smile_product_option_sale
+#: selection:account.invoice.line,quantity_type:0
+#: selection:product.option.order.line,quantity_type:0
 #: selection:sale.order.line,quantity_type:0
 msgid "Free"
 msgstr "Libre"
 
 #. module: smile_product_option_sale
+#: selection:account.invoice.line,quantity_type:0
+#: selection:product.option.order.line,quantity_type:0
 #: selection:sale.order.line,quantity_type:0
 msgid "Free and multiple of main product"
 msgstr "Libre et multiple de l'article principal"
 
 #. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_id
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_id
+msgid "ID"
+msgstr "Identifiant"
+
+#. module: smile_product_option_sale
+#: selection:account.invoice.line,quantity_type:0
+#: selection:product.option.order.line,quantity_type:0
 #: selection:sale.order.line,quantity_type:0
 msgid "Identical to main product"
 msgstr "Identique à l'article principal"
 
 #. module: smile_product_option_sale
+#: model:ir.model,name:smile_product_option_sale.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: smile_product_option_sale
+#: model:ir.model,name:smile_product_option_sale.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Ligne de facuration"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_account_invoice_line_is_mandatory
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_is_mandatory
 #: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_is_mandatory
 msgid "Is a mandatory option"
 msgstr "Correspond à une option obligatoire"
 
 #. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_account_invoice_line_is_hidden
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_is_hidden
 #: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_is_hidden
 msgid "Is hidden"
-msgstr "Est masquée"
+msgstr "Est masqué"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_is_hidden_in_customer_invoice
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_is_hidden_in_customer_invoice
+msgid "Is hidden in customer invoice"
+msgstr "Est masqué sur la facture client"
 
 #. module: smile_product_option_sale
 #: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_is_hidden_in_sale_order
 msgid "Is hidden in sale order"
-msgstr "Est masquée sur la commande de vente"
+msgstr "Est masqué sur la commande de vente"
 
 #. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_account_invoice_line_is_included_in_price
 #: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_is_included_in_price
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_is_included_in_price
 #: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_is_included_in_price
 msgid "Is included in price"
-msgstr "Est incluse dans le prix"
+msgstr "Est inclus dans le prix"
 
 #. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order___last_update
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line___last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_account_invoice_line_parent_id
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_parent_id
 #: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_parent_id
 msgid "Main Line"
 msgstr "Ligne principale"
 
 #. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_account_invoice_line_child_ids
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_child_ids
 #: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_child_ids
 msgid "Options"
 msgstr "Options"
@@ -84,9 +141,21 @@ msgstr "Options"
 #. module: smile_product_option_sale
 #: model:ir.model,name:smile_product_option_sale.model_product_option
 msgid "Product Option"
-msgstr "Option de l'article"
+msgstr "Option d'un article"
 
 #. module: smile_product_option_sale
+#: model:ir.model,name:smile_product_option_sale.model_product_option_order
+msgid "Product Option Order"
+msgstr "Product Option Order"
+
+#. module: smile_product_option_sale
+#: model:ir.model,name:smile_product_option_sale.model_product_option_order_line
+msgid "Product Option Order Line"
+msgstr "Product Option Order Line"
+
+#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_account_invoice_line_quantity_type
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_quantity_type
 #: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_quantity_type
 msgid "Quantity type"
 msgstr "Type de quantité"
@@ -102,50 +171,51 @@ msgid "Sales Order Line"
 msgstr "Ligne de bons de commande"
 
 #. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_account_invoice_line_visible_price_subtotal
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_price_subtotal
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_visible_price_subtotal
 #: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_visible_price_subtotal
 msgid "Subtotal"
 msgstr "Sous-total"
 
 #. module: smile_product_option_sale
-#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_visible_price_tax
-msgid "Taxes"
-msgstr "Taxes"
-
-#. module: smile_product_option_sale
-#: code:addons/smile_product_option_sale/models/sale.py:95
+#: code:addons/smile_product_option_sale/models/models.py:132
 #, python-format
 msgid "The option %s must be a multiple of the product %s"
-msgstr "La quantité de l'option %s doit être un multiple de celle de l'article %s"
+msgstr "L'option %s doit être un multiple du produit %s"
 
 #. module: smile_product_option_sale
-#: code:addons/smile_product_option_sale/models/sale.py:91
+#: code:addons/smile_product_option_sale/models/models.py:128
 #, python-format
 msgid "The option %s must be the same in quantity as the product %s"
-msgstr "La quantité de l'option %s doit être identique à celle de l'article %s"
+msgstr "La quantité de l'option %s doit être identique à celle du produit %s"
 
 #. module: smile_product_option_sale
-#: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_visible_price_total
-msgid "Total"
-msgstr "Total"
-
-#. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_account_invoice_line_visible_price_unit
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_price_unit
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_product_option_order_line_visible_price_unit
 #: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_line_visible_price_unit
 msgid "Unit Price"
 msgstr "Prix unitaire"
 
 #. module: smile_product_option_sale
+#: model:ir.model.fields,field_description:smile_product_option_sale.field_account_invoice_visible_line_ids
+msgid "Visible Invoice Lines"
+msgstr "Lignes de facture visibles"
+
+#. module: smile_product_option_sale
 #: model:ir.model.fields,field_description:smile_product_option_sale.field_sale_order_visible_line_ids
 msgid "Visible Order Lines"
-msgstr "Lignes visibles de la commande"
+msgstr "Lignes de commande visibles"
 
 #. module: smile_product_option_sale
-#: code:addons/smile_product_option_sale/models/sale.py:170
+#: code:addons/smile_product_option_sale/models/models.py:196
 #, python-format
 msgid "You cannot change the unit price of an option included in the price of the main product"
-msgstr "Vous ne pouvez pas modifier le prix unitaire d'une option inclus dans le prix de l'article principal"
+msgstr "You cannot change the unit price of an option included in the price of the main product"
 
 #. module: smile_product_option_sale
-#: code:addons/smile_product_option_sale/models/sale.py:193
+#: code:addons/smile_product_option_sale/models/models.py:219
 #, python-format
 msgid "You cannot delete a mandatory option!"
 msgstr "Vous ne pouvez pas supprimer une option obligatoire !"

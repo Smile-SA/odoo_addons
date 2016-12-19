@@ -8,35 +8,42 @@
       <field name="inherit_id" ref="sale.view_order_form"/>
       <field name="arch" type="xml">
         <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
-          <attribute name="invisible">1</attribute>
+          <attribute name="invisible">not context.get('display_original_view')</attribute>
         </xpath>
         <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
-          <field name="visible_price_unit" attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('is_included_in_price', '=', True)]}"/>
+          <field name="visible_price_unit" invisible="context.get('display_original_view')"
+           attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('is_included_in_price', '=', True)]}"/>
           <field name="is_included_in_price" invisible="1"/>
         </xpath>
         <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="attributes">
-          <attribute name="invisible">1</attribute>
+          <attribute name="invisible">not context.get('display_original_view')</attribute>
         </xpath>
         <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
-          <field name="visible_price_subtotal" widget="monetary"/>
+          <field name="visible_price_subtotal" widget="monetary" invisible="context.get('display_original_view')"/>
         </xpath>
         <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="attributes">
-          <attribute name="invisible">1</attribute>
+          <attribute name="invisible">not context.get('display_original_view')</attribute>
         </xpath>
         <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="after">
-          <field name="visible_price_unit"/>
+          <field name="visible_price_unit" invisible="context.get('display_original_view')"/>
         </xpath>
         <xpath expr="//field[@name='order_line']/kanban/field[@name='price_subtotal']" position="after">
           <field name="visible_price_subtotal"/>
         </xpath>
         <xpath expr="//field[@name='order_line']/kanban//t[@t-esc='record.price_subtotal.value']" position="attributes">
-          <attribute name="t-esc">record.visible_price_subtotal.value</attribute>
+          <attribute name="t-if">context.get('display_original_view')</attribute>
+        </xpath>
+        <xpath expr="//field[@name='order_line']/kanban//t[@t-esc='record.price_subtotal.value']" position="after">
+          <t t-esc="record.visible_price_subtotal.value" t-if="not context.get('display_original_view')"/>
         </xpath>
       </field>
     </record>
 
     <record id="sale.action_quotations" model="ir.actions.act_window">
       <field name="context">{'add_all_options': True}</field>
+    </record>
+    <record id="sale.action_orders" model="ir.actions.act_window">
+      <field name="context">{'show_sale': True, 'add_all_options': True}</field>
     </record>
 
   </data>

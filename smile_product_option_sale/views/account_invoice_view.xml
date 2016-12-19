@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="invoice_form" model="ir.ui.view">
+      <field name="name">account.invoice.form</field>
+      <field name="model">account.invoice</field>
+      <field name="inherit_id" ref="account.invoice_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="attributes">
+          <attribute name="invisible">not context.get('display_original_view')</attribute>
+        </xpath>
+        <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="after">
+          <field name="visible_price_unit" invisible="context.get('display_original_view')"/>
+          <field name="is_included_in_price" invisible="1"/>
+          <field name="is_hidden" invisible="1"/>
+        </xpath>
+        <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']" position="attributes">
+          <attribute name="invisible">not context.get('display_original_view')</attribute>
+        </xpath>
+        <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']" position="after">
+          <field name="visible_price_subtotal" widget="monetary" invisible="context.get('display_original_view')"/>
+        </xpath>
+        <xpath expr="//field[@name='invoice_line_ids']/kanban/field[@name='price_subtotal']" position="after">
+          <field name="visible_price_subtotal"/>
+        </xpath>
+        <xpath expr="//field[@name='invoice_line_ids']/kanban//t[@t-esc='record.price_subtotal.value']" position="attributes">
+          <attribute name="t-if">context.get('display_original_view')</attribute>
+        </xpath>
+        <xpath expr="//field[@name='invoice_line_ids']/kanban//t[@t-esc='record.price_subtotal.value']" position="after">
+          <t t-esc="record.visible_price_subtotal.value" t-if="not context.get('display_original_view')"/>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="account.action_invoice_tree1" model="ir.actions.act_window">
+      <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale', 'add_all_options': True}</field>
+    </record>
+
+  </data>
+</openerp>
