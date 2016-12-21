@@ -11,6 +11,7 @@
           <page string="Options">
             <field name="option_ids">
               <tree string="Product Options" editable="top">
+                <field name="sequence" widget="handle"/>
                 <field name="optional_product_id" required="1"/>
                 <field name="quantity_type"/>
                 <field name="fixed_quantity" attrs="{'readonly': [('quantity_type', '!=', 'fixed')]}"/>
