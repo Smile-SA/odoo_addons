@@ -35,6 +35,9 @@ Product Options (Sales Management)
 Manage product options in quotations/sale orders.
 Allow to specify if an option is hidden in sale order and/or if its price is included in the price of main product.
 
+Tips:
+* Add {'display_original_view': True} in the context of window action to display original view including hidden options.
+
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "summary": "",
