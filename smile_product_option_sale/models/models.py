@@ -57,24 +57,26 @@ class ProductOptionOrder(models.AbstractModel):
     @api.one
     def _update_lines_sequence(self):
         def update_sequence(lines, level, parent_sequence):
+            lines = lines.with_context(do_not_update_sequence=True)
             for index, line in enumerate(lines):
                 new_sequence = parent_sequence + (index + 1) * 100 ** level
                 if line.sequence != new_sequence:
                     line.sequence = new_sequence
 
-        level = self._get_lines_max_level()
-        parents = self[self._order_line_field].filtered(lambda line: not line.parent_id)
-        update_sequence(parents, level, 0)
-        while level > 0:
-            level -= 1
-            for parent in parents:
-                update_sequence(parent.child_ids, level, parent.sequence)
-            parents = parents.mapped('child_ids')
+        if not self._context.get('do_not_update_sequence'):
+            level = self._get_lines_max_level()
+            parents = self[self._order_line_field].filtered(lambda line: not line.parent_id)
+            update_sequence(parents, level, 0)
+            while level > 0:
+                level -= 1
+                for parent in parents:
+                    update_sequence(parent.child_ids, level, parent.sequence)
+                parents = parents.mapped('child_ids')
 
     @api.multi
     def write(self, vals):
-        res = super(ProductOptionOrder, self).write(vals)
-        for line_tuple in (vals.get('visible_line_ids') or []):
+        res = super(ProductOptionOrder, self.with_context(do_not_update_sequence=True)).write(vals)
+        for line_tuple in (vals.get('visible_line_ids') or vals.get('order_line') or []):
             # If a line is created or its sequence is updated,
             # I recompute the sequence for all order lines
             if not line_tuple[0] or \
@@ -177,6 +179,8 @@ class ProductOptionOrderLine(models.AbstractModel):
         if not self._context.get('do_not_update_optional_lines'):
             line._update_unit_price()
             line._update_optional_lines()
+        if 'sequence' in vals:
+            self.mapped(self._order_field)._update_lines_sequence()
         return line
 
     @api.multi
@@ -202,6 +206,8 @@ class ProductOptionOrderLine(models.AbstractModel):
             self._update_optional_lines()
         if self._qty_field in vals:
             self._update_optional_lines_qty()
+        if 'sequence' in vals:
+            self.mapped(self._order_field)._update_lines_sequence()
         return res
 
     @api.multi
