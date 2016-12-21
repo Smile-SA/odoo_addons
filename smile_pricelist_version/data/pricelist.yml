@@ -1,0 +1,8 @@
+-
+  I create default version for all pricelists
+-
+  !python {model: product.pricelist} : |
+    ids = self.search(cr, uid, [('version_ids', '=', False)], context=context)
+    for pricelist in self.browse(cr, uid, ids, context):
+      vals = pricelist._get_default_version_vals()
+      self.pool['product.pricelist.version'].create(cr, uid, vals, context)

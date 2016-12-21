@@ -41,6 +41,7 @@ Suggestions & Feedback to: mounir.salim@smile-maroc.com & corentin.pouhet-bruner
         "security/ir.model.access.csv",
         "security/pricelist_security.xml",
         "views/pricelist_view.xml",
+        "data/pricelist.yml",
     ],
     'demo': [],
     'test': [],
