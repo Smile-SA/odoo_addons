@@ -197,6 +197,10 @@ class ProductOptionOrderLine(models.AbstractModel):
                 self.filtered(lambda line: line.is_included_in_price):
             raise UserError(_('You cannot change the unit price of an option '
                               'included in the price of the main product'))
+        if self._qty_field in vals and \
+                self.filtered(lambda line: line.quantity_type == 'fixed'):
+            raise UserError(_('You cannot change the quantity of an option '
+                              'with a fixed quantity'))
 
     @api.multi
     def write(self, vals):
