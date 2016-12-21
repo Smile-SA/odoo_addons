@@ -80,7 +80,11 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _prepare_invoice_line(self, qty):
         vals = super(SaleOrderLine, self)._prepare_invoice_line(qty)
-        vals['is_hidden'] = self.is_hidden_in_customer_invoice
-        vals['is_included_in_price'] = self.is_included_in_price
-        vals['parent_id'] = self.parent_id.invoice_lines.id
+        vals.update({
+            'parent_id': self.parent_id.invoice_lines.id,
+            'quantity_type': self.quantity_type,
+            'is_mandatory': self.is_mandatory,
+            'is_hidden': self.is_hidden_in_customer_invoice,
+            'is_included_in_price': self.is_included_in_price,
+        })
         return vals
