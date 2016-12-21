@@ -214,5 +214,5 @@ class ProductOptionOrderLine(models.AbstractModel):
         if not self._context.get('force_unlink') and any(self.mapped('is_mandatory')):
             parents = self.filtered(lambda line: line.is_mandatory).mapped('parent_id')
             if len(parents & self) != len(parents):
-                raise Warning(_("You cannot delete a mandatory option!"))
+                raise UserError(_("You cannot delete a mandatory option!"))
         return super(ProductOptionOrderLine, self).unlink()
