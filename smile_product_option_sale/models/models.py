@@ -40,10 +40,7 @@ class ProductOptionOrder(models.AbstractModel):
             # In order to inherit all views based on the field order_line
             doc = etree.XML(result['arch'])
             for node in doc.xpath("//field[@name='%s']" % self._order_line_field):
-                new_node = etree.fromstring(etree.tostring(node))
-                new_node.set('name', 'visible_line_ids')
-                node.addprevious(new_node)
-                node.set('modifiers', json.dumps({'readonly': True, 'invisible': True}))
+                node.set('name', 'visible_line_ids')
             result['arch'] = etree.tostring(doc)
             result['fields']['visible_line_ids'] = result['fields'][self._order_line_field]
         return result
