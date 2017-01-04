@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import json
 from lxml import etree
 
 from openerp import api, fields, models, _
@@ -32,14 +33,17 @@ class ProductOptionOrder(models.AbstractModel):
     _description = 'Product Option Order'
     _order_line_field = ''
 
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        result = super(ProductOptionOrder, self).fields_view_get(view_id, view_type, toolbar, submenu)
-        if view_type == 'form' and not self._context.get('display_original_view'):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        result = super(ProductOptionOrder, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        context = context or {}
+        if view_type == 'form' and not context.get('display_original_view'):
             # In order to inherit all views based on the field order_line
             doc = etree.XML(result['arch'])
             for node in doc.xpath("//field[@name='%s']" % self._order_line_field):
-                node.set('name', 'visible_line_ids')
+                new_node = etree.fromstring(etree.tostring(node))
+                new_node.set('name', 'visible_line_ids')
+                node.addprevious(new_node)
+                node.set('modifiers', json.dumps({'readonly': True, 'invisible': True}))
             result['arch'] = etree.tostring(doc)
             result['fields']['visible_line_ids'] = result['fields'][self._order_line_field]
         return result
