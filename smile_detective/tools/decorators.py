@@ -2,7 +2,7 @@
 
 import cProfile as Profile
 import pstats
-from StringIO import StringIO
+import StringIO
 import time
 
 from openerp.tools.func import wraps
@@ -34,7 +34,7 @@ def sql_analyse(func):
     @wraps(func)
     def wrapper(self, query, *args, **kwargs):
         logger = Logger()
-        query_logging = logger.check(log_sql=True)
+        query_logging = logger.check()
         if query_logging:
             start = time.time()
         try:
@@ -42,5 +42,7 @@ def sql_analyse(func):
         finally:
             if query_logging:
                 delay = time.time() - start
-                logger.log_query(query, delay)
+                logger.log_db_stats(delay)
+                if logger.check(log_sql=True):
+                    logger.log_query(query, delay)
     return wrapper

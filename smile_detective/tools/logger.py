@@ -87,7 +87,7 @@ class Logger(object):
             _logger.error('Invalid Redis URL: %s' % e)
             return False
 
-    _key_pattern = 'c:%(db)s:%(model)s:%(method)s:%(datetime)s:%(uid)s:%(id)s'
+    _key_pattern = 'c:%(db)s:%(model)s:%(method)s:%(uid)s:%(datetime)s:%(id)s'
 
     @secure
     def on_enter(self, model, method):
@@ -100,7 +100,7 @@ class Logger(object):
                 self.model = model
                 self.method = method
                 self.datetime = datetime.fromtimestamp(self.start).strftime('%Y-%m-%d@%H:%M:%S.%f')
-                self.id = self.redis.incr('c:n')
+                self.id = self.redis.incrby('c:n')
                 self.key = self._key_pattern % self.__dict__
 
     @secure
@@ -118,10 +118,16 @@ class Logger(object):
     def log_call(self, args, kwargs, res):
         if self.key:
             self.redis.hmset(self.key, {
-                'tm': time.time() - self.dt,
+                'tm': time.time() - self.start,
                 'args': print_args(*args, **kwargs),
                 'res': res,
             })
+
+    @secure
+    def log_db_stats(self, delay):
+        if self.key:
+            self.redis.hincrby(self.key, 'db_nb')
+            self.redis.hincrbyfloat(self.key, 'db_tm', delay)
 
     @secure
     def log_profile(self, stats):
