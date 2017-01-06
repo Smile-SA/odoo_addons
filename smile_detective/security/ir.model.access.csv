@@ -1,0 +1,2 @@
+id,name,model_id/id,group_id/id,perm_read,perm_create,perm_write,perm_unlink
+ir_model_access_ir_logging_rule,Logging Rule,smile_detective.model_ir_logging_rule,base.group_system,1,1,1,1
