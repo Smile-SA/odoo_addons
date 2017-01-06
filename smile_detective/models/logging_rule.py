@@ -26,9 +26,9 @@ class LoggingRule(models.Model):
         rules = self.browse(cr, SUPERUSER_ID, ids)
         return [{'user_ids': rule.user_ids.ids,
                  'models': rule.model_ids.mapped('model'),
-                 'methods': rule.methods.replace(' ', '').split(','),
+                 'methods': rule.methods and rule.methods.replace(' ', '').split(',') or [],
                  'log_python': rule.log_python,
-                 'log_sql': rule.log_query}
+                 'log_sql': rule.log_sql}
                 for rule in rules]
 
     def check(self, cr, uid, model, method, log_python=False, log_sql=False):
