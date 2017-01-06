@@ -37,7 +37,7 @@ from openerp.http import request
 from openerp.tools import config
 from openerp.tools.func import wraps
 
-from ..tools import print_args
+from .misc import print_args
 
 _logger = logging.getLogger(__name__)
 
@@ -49,6 +49,7 @@ def secure(func):
             return func(*args, **kwargs)
         except:
             _logger.error('%s failed' % func.__name__)
+    return wrapper
 
 
 class ThreadLog(local):
@@ -62,7 +63,7 @@ class ThreadSingleton(type):
         return ThreadLog.inst
 
 
-class PerfLogger(object):
+class Logger(object):
     __metaclass__ = ThreadSingleton
 
     def __init__(self):

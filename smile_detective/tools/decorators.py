@@ -5,14 +5,15 @@ import pstats
 from StringIO import StringIO
 import time
 
-from openerp.addons.smile_detective.models.logging import PerfLogger
 from openerp.tools.func import wraps
+
+from .logger import Logger
 
 
 def profile(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        logger = PerfLogger()
+        logger = Logger()
         profiling = logger.check(log_python=True)
         if profiling:
             profile = Profile.Profile()
@@ -32,7 +33,7 @@ def profile(func):
 def sql_analyse(func):
     @wraps(func)
     def wrapper(self, query, *args, **kwargs):
-        logger = PerfLogger()
+        logger = Logger()
         query_logging = logger.check(log_sql=True)
         if query_logging:
             start = time.time()
