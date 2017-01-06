@@ -7,17 +7,27 @@ class LoggingRule(models.Model):
     _name = 'ir.logging.rule'
     _description = 'Logging Rule'
 
+    @api.one
+    def _get_users(self):
+        self.users = ', '.join(self.user_ids.mapped('name'))
+
+    @api.one
+    def _get_models(self):
+        self.models = ', '.join(self.model_ids.mapped('model'))
+
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
     user_ids = fields.Many2many('res.users', string='Users')
+    users = fields.Char(compute='_get_users')
     model_ids = fields.Many2many('ir.model', string='Models')
+    models = fields.Char(compute='_get_models')
     methods = fields.Char()
     log_python = fields.Boolean('Profile Python methods')
     log_sql = fields.Boolean('Log SQL queries')
 
     _sql_constraints = [
         ('check_log_python', "CHECK(log_python IS FALSE OR methods = '' OR methods IS NULL)",
-         _('Specify methods to profile them'))
+         _('Please to specify methods to profile them'))
     ]
 
     @tools.ormcache(skiparg=3)

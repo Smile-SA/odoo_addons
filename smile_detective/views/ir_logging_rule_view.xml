@@ -20,8 +20,10 @@
       <field name="arch" type="xml">
         <tree string="Logging Rules" colors="grey: active is False;">
           <field name="name"/>
-          <field name="user_ids"/>
-          <field name="model_ids"/>
+          <field name="users"/>
+          <field name="user_ids" invisible="1"/>
+          <field name="models"/>
+          <field name="model_ids" invisible="1"/>
           <field name="methods"/>
           <field name="log_python"/>
           <field name="log_sql"/>
