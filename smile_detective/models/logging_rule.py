@@ -16,7 +16,7 @@ class LoggingRule(models.Model):
     log_sql = fields.Boolean('Log SQL queries')
 
     _sql_constraints = [
-        ('check_log_python', "CHECK(log_python IS FALSE OR methods = '' OR method IS NULL)",
+        ('check_log_python', "CHECK(log_python IS FALSE OR methods = '' OR methods IS NULL)",
          _('Specify methods to profile them'))
     ]
 
