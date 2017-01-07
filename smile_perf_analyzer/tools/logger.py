@@ -6,8 +6,6 @@
 #
 # RPC calls
 # c:<db>:<model>:<method>:<date@time>:<uid>:<call_id> => hash
-#   rpctype (useful?)
-#   sessionid (useful?)
 #   tm => call time
 #   db_tm => sql queries time
 #   db_nb => sql queries number
