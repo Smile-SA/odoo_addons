@@ -128,7 +128,7 @@ class Logger(object):
 
     def _format_res(self, res):
         if self.method != 'create':
-            return 'Result hidden'
+            return '***'
         return res
 
     @secure
