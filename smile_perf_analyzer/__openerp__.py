@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Smile Detective",
+    "name": "Performance Analyzer",
     "version": "0.1",
     "depends": ["base"],
     "author": "Smile",
