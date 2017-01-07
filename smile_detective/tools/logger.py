@@ -114,13 +114,31 @@ class Logger(object):
         args = self.cr, self.uid, self.model, self.method, log_python, log_sql
         return request.registry.get('ir.logging.rule').check(*args)
 
+    def _format_args(self, args, kwargs):
+        # Hide values passed to create new record or update ones
+        if self.method in ('create', 'write'):
+            if len(args) > 1:
+                for k in args[1]:
+                    args[1][k] = '*'
+            else:
+                for field in ('values', 'vals'):
+                    for k in (kwargs.get(field) or {}):
+                        kwargs[field][k] = '*'
+        return print_args(*args, **kwargs)
+
+    def _format_res(self, res):
+        if self.method != 'create':
+            return 'Result hidden'
+        return res
+
     @secure
     def log_call(self, args, kwargs, res):
         if self.key:
+            self._filter_args(args, kwargs)
             self.redis.hmset(self.key, {
                 'tm': time.time() - self.start,
-                'args': print_args(*args, **kwargs),
-                'res': res,
+                'args': self._format_args(args, kwargs),
+                'res': self._format_res(res),
             })
 
     @secure
