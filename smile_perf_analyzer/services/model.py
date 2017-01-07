@@ -12,7 +12,7 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     if object is None:
         raise except_orm('Object Error', "Object %s doesn't exist" % obj)
     logger = PerfLogger()
-    logger.on_enter(obj, method)
+    logger.on_enter(cr, uid, obj, method)
     try:
         func = profile(getattr(object, method))
         res = func(cr, uid, *args, **kw)

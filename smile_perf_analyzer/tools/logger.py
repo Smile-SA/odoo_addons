@@ -11,9 +11,8 @@
 #   tm => call time
 #   db_tm => sql queries time
 #   db_nb => sql queries number
-#   args => params (TODO: only vals keys if method is create or write)
-#   err => true or false
-#   res => response (TODO: only if method is create)
+#   args => params (only vals keys if method is create or write)
+#   res => response (only if method is create)
 #
 # RPC calls sequence
 # c:n => integer
@@ -28,12 +27,13 @@
 #
 
 from datetime import datetime
+from functools import partial
 import logging
 import redis
 from threading import local
 import time
 
-from openerp.http import request
+import openerp
 from openerp.tools import config
 from openerp.tools.func import wraps
 
@@ -90,13 +90,15 @@ class PerfLogger(object):
     _key_pattern = 'c:%(db)s:%(model)s:%(method)s:%(uid)s:%(datetime)s:%(id)s'
 
     @secure
-    def on_enter(self, model, method):
+    def on_enter(self, cr, uid, model, method):
         if self.redis:
-            self.cr = request.cr
-            self.uid = request.uid
-            if request.registry('ir.logging.rule').check(self.cr, self.uid, model, method):
+            self._check = partial(openerp.registry(cr.dbname).get('ir.logging.rule').check,
+                                  cr, uid, model, method)
+            if self._check():
                 self.start = time.time()
-                self.db = request.db
+                self.cr = cr
+                self.db = cr.dbname
+                self.uid = uid
                 self.model = model
                 self.method = method
                 self.datetime = datetime.fromtimestamp(self.start).strftime('%Y-%m-%d@%H:%M:%S.%f')
@@ -111,8 +113,7 @@ class PerfLogger(object):
     def check(self, log_python=False, log_sql=False):
         if not self.key:
             return False
-        args = self.cr, self.uid, self.model, self.method, log_python, log_sql
-        return request.registry.get('ir.logging.rule').check(*args)
+        return self._check(log_python, log_sql)
 
     def _format_args(self, args, kwargs):
         # Hide values passed to create new record or update ones
