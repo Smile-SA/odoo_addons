@@ -63,7 +63,7 @@ class ThreadSingleton(type):
         return ThreadLog.inst
 
 
-class Logger(object):
+class PerfLogger(object):
     __metaclass__ = ThreadSingleton
 
     def __init__(self):
@@ -71,7 +71,7 @@ class Logger(object):
         self.redis = None
         self.redis_url = config.get_misc('perf', 'redis_url')
         if not self.redis_url:
-            _logger.warning('No Redis URL specified in Odoo config file')
+            _logger.warning('No Redis URL specified in Odoo config file in section perf')
         else:
             self.redis = redis.from_url(self.redis_url)
             if not self.is_alive():
@@ -134,7 +134,6 @@ class Logger(object):
     @secure
     def log_call(self, args, kwargs, res):
         if self.key:
-            self._filter_args(args, kwargs)
             self.redis.hmset(self.key, {
                 'tm': time.time() - self.start,
                 'args': self._format_args(args, kwargs),

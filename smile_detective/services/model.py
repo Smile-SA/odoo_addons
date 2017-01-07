@@ -4,14 +4,14 @@ import openerp
 from openerp.osv.orm import except_orm
 from openerp.service import model
 
-from ..tools import Logger, profile
+from ..tools import PerfLogger, profile
 
 
 def execute_cr(cr, uid, obj, method, *args, **kw):
     object = openerp.registry(cr.dbname).get(obj)
     if object is None:
         raise except_orm('Object Error', "Object %s doesn't exist" % obj)
-    logger = Logger()
+    logger = PerfLogger()
     logger.on_enter(obj, method)
     try:
         func = profile(getattr(object, method))

@@ -3,13 +3,13 @@
 from openerp.addons.web.controllers.main import DataSet
 from openerp.http import request
 
-from ..tools import Logger, profile
+from ..tools import PerfLogger, profile
 
 
 def _call_kw(self, model, method, args, kwargs):
     if method.startswith('_'):
         raise Exception("Access Denied: Underscore prefixed methods cannot be remotely called")
-    logger = Logger()
+    logger = PerfLogger()
     logger.on_enter(model, method)
     try:
         func = profile(getattr(request.registry.get(model), method))

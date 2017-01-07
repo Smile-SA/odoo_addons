@@ -7,13 +7,13 @@ import time
 
 from openerp.tools.func import wraps
 
-from .logger import Logger
+from .logger import PerfLogger
 
 
 def profile(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        logger = Logger()
+        logger = PerfLogger()
         profiling = logger.check(log_python=True)
         if profiling:
             profile = Profile.Profile()
@@ -33,7 +33,7 @@ def profile(func):
 def sql_analyse(func):
     @wraps(func)
     def wrapper(self, query, *args, **kwargs):
-        logger = Logger()
+        logger = PerfLogger()
         query_logging = logger.check()
         if query_logging:
             start = time.time()
