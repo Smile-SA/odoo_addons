@@ -8,11 +8,12 @@
 # c:s => integer
 #
 # Cumulative calls time by model.method
-# c:t:<db>:<date@time> => ordered set with time interval = 5 min
+# c:t:<db>:<date@time> => sorted set
 #   (<model>:<method>, tm)
 #
 # Cumulative calls number by model.method
-# c:n:<db>:<date@time>:<model>:<method> => nb
+# c:n:<db>:<date@time> => sorted set
+#   (<model>:<method>, nb) 
 #
 # RPC calls
 # c:x:<call_id>:<db>:<date@time>:<model>:<method>:<uid> => hash
@@ -26,8 +27,8 @@
 # c:p:<call_id> => string
 #
 # SQL requests
-# c:q:<call_id> => list
-#   (table, action, tm)
+# c:q:<call_id> => sorted set
+#   (table, statement, request time in seconds)
 
 from datetime import datetime
 from functools import partial
@@ -121,7 +122,7 @@ class PerfLogger(object):
         return self._key('c:t:%(db)s:%(datetime)s')
 
     def _log_cumulative_nb_key(self):
-        return self._key('c:n:%(db)s:%(datetime)s:%(model)s:%(method)s')
+        return self._key('c:n:%(db)s:%(datetime)s')
 
     def _log_call_key(self):
         return self._key('c:x:%(db)s:%(datetime)s:%(model)s:%(method)s:%(uid)s:%(id)s')
@@ -178,10 +179,11 @@ class PerfLogger(object):
     @only_if_active
     def log_call(self, args, kwargs, res):
         tm = time.time() - self.start
+        value = '%s:%s' % (self.model, self.method)
         key = self._log_cumulative_tm_key()
-        self.redis.incrbyfloat(key, tm)
+        self.redis.zincrby(key, value, tm)
         key = self._log_cumulative_nb_key()
-        self.redis.incrby(key)
+        self.redis.zincrby(key, value, 1)
         key = self._log_call_key()
         self.redis.hmset(key, {
             'tm': tm,
@@ -203,14 +205,17 @@ class PerfLogger(object):
         self.redis.set(key, stats)  # TODO: replace by a list
 
     def _parse_query(self, query):
-        for action, pattern in SQL_REGEX.iteritems():
+        for statement, pattern in SQL_REGEX.iteritems():
             m = pattern.match(query, flags=re.IGNORECASE)
             if m:
-                return m.group(1), action
+                return m.group(1), statement
+        return None, None
 
     @secure
     @only_if_active
     def log_query(self, query, delay):
         key = self._log_query_key()
-        table, action = self._parse_query(query)
-        self.redis.rpush(key, (table, action, delay))
+        table, statement = self._parse_query(query)
+        if table and statement:
+            value = '%s:%s' % (table, statement)
+            self.redis.zincrby(key, value, delay)
