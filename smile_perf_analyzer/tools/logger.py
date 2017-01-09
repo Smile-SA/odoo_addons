@@ -4,25 +4,31 @@
 # Log storage format #
 ######################
 #
+# RPC calls sequence
+# c:s => integer
+#
+# Cumulative calls time by model.method
+# c:t:<db>:<date@time> => ordered set with time interval = 5 min
+#   (<model>:<method>, tm)
+#
+# Cumulative calls number by model.method
+# c:n:<db>:<date@time>:<model>:<method> => nb
+#
 # RPC calls
-# c:<db>:<model>:<method>:<date@time>:<uid>:<call_id> => hash
-#   tm => call time
-#   db_tm => sql queries time
+# c:x:<call_id>:<db>:<date@time>:<model>:<method>:<uid> => hash
+#   tm => call time (in seconds)
+#   db_tm => sql queries time (in seconds)
 #   db_nb => sql queries number
 #   args => params (only vals keys if method is create or write)
 #   res => response (only if method is create)
 #
-# RPC calls sequence
-# c:n => integer
-#
 # Python profiling
-# c:p:<db>:<model>:<method>:<date@time>:<uid>:<call_id> => list
+# c:p:<call_id> => list
 #   (method,*stats)
 #
 # SQL requests
-# c:q:<db>:<model>:<method>:<date@time>:<uid>:<call_id> => list
+# c:q:<call_id> => list
 #   (query, tm)
-#
 
 from datetime import datetime
 from functools import partial
@@ -74,7 +80,6 @@ class PerfLogger(object):
     __metaclass__ = ThreadSingleton
 
     def __init__(self):
-        self.key = None
         self.redis = None
         self.redis_url = config.get_misc('perf', 'redis_url')
         if not self.redis_url:
@@ -83,6 +88,7 @@ class PerfLogger(object):
             self.redis = redis.from_url(self.redis_url)
             if not self.is_alive():
                 self.redis = None
+        self.id = None
 
     def is_alive(self):
         try:
@@ -96,9 +102,28 @@ class PerfLogger(object):
 
     @property
     def active(self):
-        return self.key is not None
+        return self.id is not None
 
-    _key_pattern = 'c:%(db)s:%(model)s:%(method)s:%(uid)s:%(datetime)s:%(id)s'
+    def _sequence_key(self):
+        return 'c:s'
+
+    def _key(self, pattern):
+        return pattern % self.__dict__
+
+    def _log_cumulative_tm_key(self):
+        return self._key('c:t:%(db)s:%(datetime)s')
+
+    def _log_cumulative_nb_key(self):
+        return self._key('c:n:%(db)s:%(datetime)s:%(model)s:%(method)s')
+
+    def _log_call_key(self):
+        return self._key('c:x:%(db)s:%(datetime)s:%(model)s:%(method)s:%(uid)s:%(id)s')
+
+    def _log_profile_key(self):
+        return self._key('c:p:%(id)s')
+
+    def _log_query_key(self):
+        return self._key('c:q:%(id)s')
 
     @secure
     def on_enter(self, cr, uid, model, method):
@@ -113,12 +138,14 @@ class PerfLogger(object):
                 self.model = model
                 self.method = method
                 self.datetime = datetime.fromtimestamp(self.start).strftime('%Y-%m-%d@%H:%M:%S.%f')
-                self.id = self.redis.incrby('c:n')
-                self.key = self._key_pattern % self.__dict__
+                key = self._sequence_key()
+                self.id = self.redis.incrby(key)
+                key = self._log_cumulative_nb_key()
+                self.redis.incrby(key)
 
     @secure
     def on_leave(self):
-        self.key = None
+        self.id = None
 
     @secure
     @only_if_active
@@ -145,8 +172,12 @@ class PerfLogger(object):
     @secure
     @only_if_active
     def log_call(self, args, kwargs, res):
-        self.redis.hmset(self.key, {
-            'tm': time.time() - self.start,
+        tm = time.time() - self.start
+        key = self._log_cumulative_tm_key()
+        self.redis.incrbyfloat(key, tm)
+        key = self._log_call_key()
+        self.redis.hmset(key, {
+            'tm': tm,
             'args': self._format_args(args, kwargs),
             'res': self._format_res(res),
         })
@@ -154,17 +185,18 @@ class PerfLogger(object):
     @secure
     @only_if_active
     def log_db_stats(self, delay):
-        self.redis.hincrby(self.key, 'db_nb')
-        self.redis.hincrbyfloat(self.key, 'db_tm', delay)
+        key = self._log_call_key()
+        self.redis.hincrby(key, 'db_nb')
+        self.redis.hincrbyfloat(key, 'db_tm', delay)
 
     @secure
     @only_if_active
     def log_profile(self, stats):
-        key = 'c:p:%s' % self.key[2:]
+        key = self._log_profile_key()
         self.redis.set(key, stats)  # TODO: replace by a list
 
     @secure
     @only_if_active
     def log_query(self, query, delay):
-        key = 'c:q:%s' % self.key[2:]
+        key = self._log_query_key()
         self.redis.rpush(key, (query, delay))
