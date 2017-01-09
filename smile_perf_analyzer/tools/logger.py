@@ -23,16 +23,16 @@
 #   res => response (only if method is create)
 #
 # Python profiling
-# c:p:<call_id> => list
-#   (method,*stats)
+# c:p:<call_id> => string
 #
 # SQL requests
 # c:q:<call_id> => list
-#   (query, tm)
+#   (table, action, tm)
 
 from datetime import datetime
 from functools import partial
 import logging
+import re
 import redis
 from threading import local
 import time
@@ -44,6 +44,13 @@ from openerp.tools.func import wraps
 from .misc import print_args
 
 _logger = logging.getLogger(__name__)
+
+SQL_REGEX = {
+    'select': re.compile('SELECT .* FROM "([a-z_]+)".*'),
+    'insert': re.compile('INSERT INTO "([a-z_]+)" .*'),
+    'update': re.compile('UPDATE "([a-z_]+)" SET .*'),
+    'delete': re.compile('DELETE FROM "([a-z_]+)".*'),
+}
 
 
 def secure(func):
@@ -195,8 +202,15 @@ class PerfLogger(object):
         key = self._log_profile_key()
         self.redis.set(key, stats)  # TODO: replace by a list
 
+    def _parse_query(self, query):
+        for action, pattern in SQL_REGEX.iteritems():
+            m = pattern.match(query, flags=re.IGNORECASE)
+            if m:
+                return m.group(1), action
+
     @secure
     @only_if_active
     def log_query(self, query, delay):
         key = self._log_query_key()
-        self.redis.rpush(key, (query, delay))
+        table, action = self._parse_query(query)
+        self.redis.rpush(key, (table, action, delay))
