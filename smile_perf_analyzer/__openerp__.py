@@ -22,7 +22,7 @@
 {
     "name": "Performance Analyzer",
     "version": "0.1",
-    "depends": ["base"],
+    "depends": ["web"],
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """
