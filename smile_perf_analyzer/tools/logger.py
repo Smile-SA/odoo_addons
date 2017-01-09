@@ -8,15 +8,15 @@
 # c:s => integer
 #
 # Cumulative calls time by model.method
-# c:t:<db>:<date@time> => sorted set
+# c:t:<db>:<timestamp> => sorted set
 #   (<model>:<method>, tm)
 #
 # Cumulative calls number by model.method
-# c:n:<db>:<date@time> => sorted set
+# c:n:<db>:<timestamp> => sorted set
 #   (<model>:<method>, nb) 
 #
 # RPC calls
-# c:x:<call_id>:<db>:<date@time>:<model>:<method>:<uid> => hash
+# c:x:<call_id>:<db>:<timestamp>:<model>:<method>:<uid> => hash
 #   tm => call time (in seconds)
 #   db_tm => sql queries time (in seconds)
 #   db_nb => sql queries number
@@ -30,7 +30,6 @@
 # c:q:<call_id> => sorted set
 #   (table, statement, request time in seconds)
 
-from datetime import datetime
 from functools import partial
 import logging
 import re
@@ -119,13 +118,13 @@ class PerfLogger(object):
         return pattern % self.__dict__
 
     def _log_cumulative_tm_key(self):
-        return self._key('c:t:%(db)s:%(datetime)s')
+        return self._key('c:t:%(db)s:%(dt)s')
 
     def _log_cumulative_nb_key(self):
-        return self._key('c:n:%(db)s:%(datetime)s')
+        return self._key('c:n:%(db)s:%(dt)s')
 
     def _log_call_key(self):
-        return self._key('c:x:%(db)s:%(datetime)s:%(model)s:%(method)s:%(uid)s:%(id)s')
+        return self._key('c:x:%(db)s:%(dt)s:%(model)s:%(method)s:%(uid)s:%(id)s')
 
     def _log_profile_key(self):
         return self._key('c:p:%(id)s')
@@ -139,13 +138,12 @@ class PerfLogger(object):
             self._check = partial(openerp.registry(cr.dbname).get('ir.logging.rule').check,
                                   cr, uid, model, method)
             if self._check():
-                self.start = time.time()
+                self.dt = time.time()
                 self.cr = cr
                 self.db = cr.dbname
                 self.uid = uid
                 self.model = model
                 self.method = method
-                self.datetime = datetime.fromtimestamp(self.start).strftime('%Y-%m-%d@%H:%M:%S.%f')
                 key = self._sequence_key()
                 self.id = self.redis.incrby(key)
 
@@ -178,7 +176,7 @@ class PerfLogger(object):
     @secure
     @only_if_active
     def log_call(self, args, kwargs, res):
-        tm = time.time() - self.start
+        tm = time.time() - self.dt
         value = '%s:%s' % (self.model, self.method)
         key = self._log_cumulative_tm_key()
         self.redis.zincrby(key, value, tm)
