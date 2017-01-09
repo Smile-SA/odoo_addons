@@ -140,8 +140,6 @@ class PerfLogger(object):
                 self.datetime = datetime.fromtimestamp(self.start).strftime('%Y-%m-%d@%H:%M:%S.%f')
                 key = self._sequence_key()
                 self.id = self.redis.incrby(key)
-                key = self._log_cumulative_nb_key()
-                self.redis.incrby(key)
 
     @secure
     def on_leave(self):
@@ -175,6 +173,8 @@ class PerfLogger(object):
         tm = time.time() - self.start
         key = self._log_cumulative_tm_key()
         self.redis.incrbyfloat(key, tm)
+        key = self._log_cumulative_nb_key()
+        self.redis.incrby(key)
         key = self._log_call_key()
         self.redis.hmset(key, {
             'tm': tm,
