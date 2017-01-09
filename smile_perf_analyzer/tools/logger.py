@@ -50,6 +50,15 @@ def secure(func):
     return wrapper
 
 
+def only_if_active(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        if not self.active:
+            return False
+        return func(self, *args, **kwargs)
+    return wrapper
+
+
 class ThreadLog(local):
     inst = None
 
@@ -85,6 +94,10 @@ class PerfLogger(object):
             _logger.error('Invalid Redis URL: %s' % e)
             return False
 
+    @property
+    def active(self):
+        return self.key is not None
+
     _key_pattern = 'c:%(db)s:%(model)s:%(method)s:%(uid)s:%(datetime)s:%(id)s'
 
     @secure
@@ -108,9 +121,8 @@ class PerfLogger(object):
         self.key = None
 
     @secure
+    @only_if_active
     def check(self, log_python=False, log_sql=False):
-        if not self.key:
-            return False
         return self._check(log_python, log_sql)
 
     def _format_args(self, args, kwargs):
@@ -131,28 +143,28 @@ class PerfLogger(object):
         return res
 
     @secure
+    @only_if_active
     def log_call(self, args, kwargs, res):
-        if self.key:
-            self.redis.hmset(self.key, {
-                'tm': time.time() - self.start,
-                'args': self._format_args(args, kwargs),
-                'res': self._format_res(res),
-            })
+        self.redis.hmset(self.key, {
+            'tm': time.time() - self.start,
+            'args': self._format_args(args, kwargs),
+            'res': self._format_res(res),
+        })
 
     @secure
+    @only_if_active
     def log_db_stats(self, delay):
-        if self.key:
-            self.redis.hincrby(self.key, 'db_nb')
-            self.redis.hincrbyfloat(self.key, 'db_tm', delay)
+        self.redis.hincrby(self.key, 'db_nb')
+        self.redis.hincrbyfloat(self.key, 'db_tm', delay)
 
     @secure
+    @only_if_active
     def log_profile(self, stats):
-        if self.key:
-            key = 'c:p:%s' % self.key[2:]
-            self.redis.set(key, stats)  # TODO: replace by a list
+        key = 'c:p:%s' % self.key[2:]
+        self.redis.set(key, stats)  # TODO: replace by a list
 
     @secure
+    @only_if_active
     def log_query(self, query, delay):
-        if self.key:
-            key = 'c:q:%s' % self.key[2:]
-            self.redis.rpush(key, (query, delay))
+        key = 'c:q:%s' % self.key[2:]
+        self.redis.rpush(key, (query, delay))
