@@ -30,6 +30,10 @@ class AccountInvoice(models.Model):
     visible_line_ids = fields.One2many('account.invoice.line', 'invoice_id', 'Visible Invoice Lines',
                                        domain=[('is_hidden', '=', False)])
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        result = super(AccountInvoice, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        return self._update_fields_view_get_result(cr, uid, result, view_type, context)
+
 
 class AccountInvoiceLine(models.Model):
     _name = 'account.invoice.line'
@@ -47,6 +51,24 @@ class AccountInvoiceLine(models.Model):
         super(AccountInvoiceLine, self)._check_qty()
 
     _changed_fields = ['name', 'price_unit', 'account_id']
+
+    @api.model
+    def create(self, vals):
+        line = super(AccountInvoiceLine, self).create(vals)
+        self._create_trigger(vals)
+        return line
+
+    @api.multi
+    def write(self, vals):
+        self._check_vals(vals)
+        res = super(AccountInvoiceLine, self).write(vals)
+        self._write_trigger(vals)
+        return res
+
+    @api.multi
+    def unlink(self):
+        self._check_unlink()
+        return super(AccountInvoiceLine, self).unlink()
 
     @api.multi
     def _get_option_vals(self, option):

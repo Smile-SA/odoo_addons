@@ -33,14 +33,16 @@ class ProductOptionOrder(models.AbstractModel):
     _description = 'Product Option Order'
     _order_line_field = ''
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        result = super(ProductOptionOrder, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+    def _update_fields_view_get_result(self, cr, uid, result, view_type='form', context=None):
         context = context or {}
         if view_type == 'form' and not context.get('display_original_view'):
             # In order to inherit all views based on the field order_line
             doc = etree.XML(result['arch'])
             for node in doc.xpath("//field[@name='%s']" % self._order_line_field):
-                node.set('name', 'visible_line_ids')
+                new_node = etree.fromstring(etree.tostring(node))
+                new_node.set('name', 'visible_line_ids')
+                node.addprevious(new_node)
+                node.set('modifiers', json.dumps({'readonly': True, 'invisible': True}))
             result['arch'] = etree.tostring(doc)
             result['fields']['visible_line_ids'] = result['fields'][self._order_line_field]
         return result
@@ -108,6 +110,7 @@ class ProductOptionOrderLine(models.AbstractModel):
 
     parent_id = fields.Many2one('product.option.order.line', 'Main Line', ondelete='cascade', copy=False)
     child_ids = fields.One2many('product.option.order.line', 'parent_id', string='Options', context={'active_test': False})
+    tab_level = fields.Integer(readonly=True)
     quantity_type = fields.Selection(QUANTITY_TYPES, readonly=True)
     is_mandatory = fields.Boolean('Is a mandatory option', readonly=True)
     is_included_in_price = fields.Boolean(readonly=True)
@@ -143,6 +146,7 @@ class ProductOptionOrderLine(models.AbstractModel):
         return {
             self._order_field: self[self._order_field].id,
             'parent_id': self.id,
+            'tab_level': self.tab_level + 1,
             'product_id': option.optional_product_id.id,
             self._qty_field: qty,
             self._uom_field: option.uom_id.id,
@@ -152,9 +156,14 @@ class ProductOptionOrderLine(models.AbstractModel):
         }
 
     @api.multi
+    def _get_product_options(self):
+        self.ensure_one()
+        return self.product_id.product_tmpl_id.option_ids
+
+    @api.multi
     def _update_optional_lines(self):
         for line in self:
-            options = line.product_id.product_tmpl_id.option_ids
+            options = line._get_product_options()
             # Remove wrong option lines
             wrong_option_lines = line.child_ids.filtered(lambda child: child.product_id not in
                                                          options.mapped('optional_product_id'))
@@ -174,15 +183,13 @@ class ProductOptionOrderLine(models.AbstractModel):
         if self.is_included_in_price:
             self.parent_id.price_unit -= self.price_unit
 
-    @api.model
-    def create(self, vals):
-        line = super(ProductOptionOrderLine, self).create(vals)
+    @api.multi
+    def _create_trigger(self, vals):
         if not self._context.get('do_not_update_optional_lines'):
-            line._update_unit_price()
-            line._update_optional_lines()
+            self._update_unit_price()
+            self._update_optional_lines()
         if 'sequence' in vals:
             self.mapped(self._order_field)._update_lines_sequence()
-        return line
 
     @api.multi
     def _update_optional_lines_qty(self):
@@ -193,7 +200,7 @@ class ProductOptionOrderLine(models.AbstractModel):
                 options.write({self._qty_field: parent[self._qty_field]})
 
     @api.multi
-    def _check_vals(self, vals):
+    def _check_write(self, vals):
         if 'price_unit' in vals and \
                 self.filtered(lambda line: line.is_included_in_price):
             raise UserError(_('You cannot change the unit price of an option '
@@ -204,19 +211,16 @@ class ProductOptionOrderLine(models.AbstractModel):
                               'with a fixed quantity'))
 
     @api.multi
-    def write(self, vals):
-        self._check_vals(vals)
-        res = super(ProductOptionOrderLine, self).write(vals)
+    def _write_trigger(self, vals):
         if 'product_id' in vals:
             self._update_optional_lines()
         if self._qty_field in vals:
             self._update_optional_lines_qty()
         if 'sequence' in vals:
             self.mapped(self._order_field)._update_lines_sequence()
-        return res
 
     @api.multi
-    def unlink(self):
+    def _check_unlink(self):
         parents = self
         while parents:
             children = parents.mapped('child_ids')
@@ -226,4 +230,3 @@ class ProductOptionOrderLine(models.AbstractModel):
             parents = self.filtered(lambda line: line.is_mandatory).mapped('parent_id')
             if len(parents & self) != len(parents):
                 raise UserError(_("You cannot delete a mandatory option!"))
-        return super(ProductOptionOrderLine, self).unlink()

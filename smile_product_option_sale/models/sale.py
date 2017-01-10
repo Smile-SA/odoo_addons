@@ -30,11 +30,14 @@ class SaleOrder(models.Model):
     visible_line_ids = fields.One2many('sale.order.line', 'order_id', 'Visible Order Lines',
                                        domain=[('is_hidden', '=', False)])
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        result = super(SaleOrder, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        return self._update_fields_view_get_result(cr, uid, result, view_type, context)
+
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
         self = self.with_context(do_not_update_optional_lines=True)
-        invoice_ids = super(SaleOrder, self).action_invoice_create(grouped, final)
-        return invoice_ids
+        return super(SaleOrder, self).action_invoice_create(grouped, final)
 
 
 class SaleOrderLine(models.Model):
@@ -47,6 +50,24 @@ class SaleOrderLine(models.Model):
     parent_id = fields.Many2one('sale.order.line', 'Main Line', ondelete='cascade', copy=False)
     child_ids = fields.One2many('sale.order.line', 'parent_id', string='Options', context={'active_test': False})
     is_hidden_in_customer_invoice = fields.Boolean(readonly=True)
+
+    @api.model
+    def create(self, vals):
+        line = super(SaleOrderLine, self).create(vals)
+        self._create_trigger(vals)
+        return line
+
+    @api.multi
+    def write(self, vals):
+        self._check_vals(vals)
+        res = super(SaleOrderLine, self).write(vals)
+        self._write_trigger(vals)
+        return res
+
+    @api.multi
+    def unlink(self):
+        self._check_unlink()
+        return super(SaleOrderLine, self).unlink()
 
     @api.one
     @api.constrains('product_uom_qty')
@@ -71,8 +92,8 @@ class SaleOrderLine(models.Model):
                 option.qty_delivered = option.product_uom_qty * factor
 
     @api.multi
-    def write(self, vals):
-        res = super(SaleOrderLine, self).write(vals)
+    def _write_trigger(self, vals):
+        res = super(SaleOrderLine, self)._write_trigger(vals)
         if 'qty_delivered' in vals:
             self._update_optional_lines_qty_delivered()
         return res
@@ -82,6 +103,7 @@ class SaleOrderLine(models.Model):
         vals = super(SaleOrderLine, self)._prepare_invoice_line(qty)
         vals.update({
             'parent_id': self.parent_id.invoice_lines.id,
+            'tab_level': self.tab_level,
             'quantity_type': self.quantity_type,
             'is_mandatory': self.is_mandatory,
             'is_hidden': self.is_hidden_in_customer_invoice,
