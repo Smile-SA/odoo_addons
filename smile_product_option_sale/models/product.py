@@ -43,3 +43,22 @@ class ProductOption(models.Model):
     def _onchange_quantity_type(self):
         if self.quantity_type != 'identical':
             self.is_included_in_price = False
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.one
+    def name_get(self):
+        # Used on sale.order and account.invoice form view to display indentation on option lines
+        product_id, name = super(ProductProduct, self).name_get()[0]
+        if self._context.get('model_name') and self._context.get('line_ids'):
+            model_name = self._context['model_name']
+            if model_name not in self.env.registry:
+                pass
+            lines = self.env[model_name].browse([line_id for (_, line_id, _) in self._context['line_ids']])
+            for line in lines.filtered(lambda line: line.parent_id):
+                if self == line.product_id:
+                    name = "%s%s" % (' + ' * line.tab_level, name)
+                    break
+        return product_id, name

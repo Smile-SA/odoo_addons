@@ -7,6 +7,9 @@
       <field name="model">sale.order</field>
       <field name="inherit_id" ref="sale.view_order_form"/>
       <field name="arch" type="xml">
+        <xpath expr="//field[@name='order_line']" position="attributes">
+          <attribute name="context">{'model_name': 'sale.order.line', 'line_ids': order_line}</attribute>
+        </xpath>
         <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
           <attribute name="invisible">not context.get('display_original_view')</attribute>
         </xpath>
@@ -14,6 +17,7 @@
           <field name="visible_price_unit" invisible="context.get('display_original_view')"
            attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('is_included_in_price', '=', True)]}"/>
           <field name="is_included_in_price" invisible="1"/>
+          <field name="is_hidden" invisible="1"/>
         </xpath>
         <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="attributes">
           <attribute name="invisible">not context.get('display_original_view')</attribute>
