@@ -243,7 +243,7 @@ def filtered_from_domain(self, domain):
     def preformat(item):
         if isinstance(item, tuple):
             item = list(item)
-        reverse = 'like' in item[1]
+        reverse = False
         field = get_field(item)
         if field.relational:
             if isinstance(item[2], basestring):
@@ -260,6 +260,7 @@ def filtered_from_domain(self, domain):
             else:
                 item[0] += '.id'
         else:
+            reverse = 'like' in item[1]
             item[0] = 'rec.%s' % item[0]
         item[1] = SQL2PYTHON_OPERATORS.get(item[1], item[1])
         item[2] = repr(item[2])
