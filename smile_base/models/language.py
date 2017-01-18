@@ -28,7 +28,8 @@ class BaseLanguageExport(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(BaseLanguageExport, self).default_get(fields)
-        res.update({'lang': 'fr_FR', 'format': 'po'})
+        if self.env['res.lang'].search([('code', '=', 'fr_FR')]):
+            res.update({'lang': 'fr_FR', 'format': 'po'})
         return res
 
 
@@ -38,7 +39,8 @@ class BaseLanguageInstall(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(BaseLanguageInstall, self).default_get(fields)
-        res.update({'lang': 'fr_FR', 'overwrite': True})
+        if self.env['res.lang'].search([('code', '=', 'fr_FR')]):
+            res.update({'lang': 'fr_FR', 'overwrite': True})
         return res
 
 
@@ -48,5 +50,6 @@ class BaseUpdateTranslations(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(BaseUpdateTranslations, self).default_get(fields)
-        res.update({'lang': 'fr_FR'})
+        if self.env['res.lang'].search([('code', '=', 'fr_FR')]):
+            res.update({'lang': 'fr_FR'})
         return res
