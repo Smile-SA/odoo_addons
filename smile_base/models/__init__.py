@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import detective
 import fetchmail
 import ir_actions
 import ir_config_parameter
