@@ -41,6 +41,8 @@ Features
     * Force to call unlink method at removal of remote object linked by a fields.many2one with ondelete='cascade'
     * Add BaseModel.bulk_create, BaseModel.store_set_values and BaseModel._compute_store_set
     * Improve BaseModel.load method performance
+    * Disable email sending and fetching by default
+    * Allow to disable cron execution
 
 Execution
 
