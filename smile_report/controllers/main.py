@@ -62,7 +62,7 @@ def report_download(self, data, token):
 
             # Added by Smile
             registry, cr, uid, context = request.registry, request.cr, request.session.uid, request.context
-            report = registry['report']._get_report_from_name(cr, uid, reportname, context)
+            report = registry['report']._get_report_from_name(cr, uid, reportname)
             if docids:
                 docids = [int(i) for i in docids.split(',')]
             if report.attachment and docids and len(docids) == 1:
