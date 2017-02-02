@@ -55,7 +55,6 @@ class SmileScript(models.Model):
     code = fields.Text(required=True, readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('validated', 'Validated')], required=True, readonly=True, default='draft')
     intervention_ids = fields.One2many('smile.script.intervention', 'script_id', 'Interventions', readonly=True)
-    automatic_dump = fields.Boolean('Automatic dump', help='Make sure postgresql authentification is correctly set', default=True)
     expect_result = fields.Boolean('Expect a result')
 
     @api.multi
@@ -70,7 +69,7 @@ class SmileScript(models.Model):
     def _can_write_after_validation(vals):
         keys = vals and vals.keys() or []
         for field in keys:
-            if field not in ('automatic_dump', 'name'):
+            if field not in ['name']:
                 return False
         return True
 
@@ -124,8 +123,6 @@ class SmileScript(models.Model):
         if not self._context.get('test_mode'):
             if self.state != 'validated':
                 raise Warning(_('You can only run validated scripts!'))
-            if self.automatic_dump:
-                self.dump_database()
         intervention = intervention_obj.create({'script_id': self.id, 'test_mode': context.get('test_mode')})
         logger = SmileDBLogger(cr.dbname, 'smile.script.intervention', intervention.id, uid)
         if not context.get('do_not_use_new_cursor'):
@@ -186,24 +183,6 @@ class SmileScript(models.Model):
     def _run_xml(self):
         convert_xml_import(self._cr, __package__, StringIO(self.code.encode('utf-8')))
         return 'No expected result'
-
-    @api.model
-    def dump_database(self):
-        dump_path = tools.config.get('smile_script_dump_path')
-        if not dump_path:
-            raise ValueError('No value found for smile_script_dump_path')
-        dbname = self._cr.dbname
-        import netsvc
-        import base64
-        import os
-        base_64_dump = netsvc.ExportService.getService('db').exp_dump(dbname)
-        dump_data = base64.b64decode(base_64_dump)
-        dump_filename = "%s_%s.dump" % (dbname, time.strftime('%Y-%m-%d %H%M%S'))
-        dump_filepath = os.path.join(dump_path, dump_filename)
-        with open(dump_filepath, 'w') as dump_file:
-            dump_file.write(dump_data)
-        _logger.info('Database %s dumped at: %s' % (dbname, dump_filepath))
-        return dump_filepath
 
 
 STATES = [

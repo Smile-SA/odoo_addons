@@ -35,7 +35,6 @@
 		                        	<group colspan="4" col="4">
 			                            <button name="run_test" type="object" string="Test"/>
 			                            <button name="run" type="object" string="Run" attrs="{'invisible': [('state', '=', 'draft')]}" confirm="Are you sure you want to perform a new intervention ?"/>
-			                            <field name="automatic_dump" attrs="{'invisible': [('state', '=', 'draft')]}"/>
 		                        	</group>
 		                            <field name="intervention_ids" nolabel="1" colspan="4" context="{'script_form_view': True}"/>
 		                        </page>
