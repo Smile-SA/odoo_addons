@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 Smile (<http://www.smile.fr>). All Rights Reserved
+#    Copyright (C) 2016 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,5 +19,14 @@
 #
 ##############################################################################
 
-import report_sxw
-import ir_qweb
+from odoo.addons.base.ir.ir_qweb.fields import FloatConverter
+
+
+def record_to_html(self, record, field_name, options):
+    if 'precision' not in options and 'decimal_precision' not in options:
+        _, precision = record._fields[field_name].get_description(self.env)['digits'] or (None, None)
+        options = dict(options, precision=precision)
+    return super(FloatConverter, self).record_to_html(record, field_name, options)
+
+
+FloatConverter.record_to_html = record_to_html
