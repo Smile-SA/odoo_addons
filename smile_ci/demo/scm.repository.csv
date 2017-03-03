@@ -1,3 +1,0 @@
-id,name,tag_ids/id,vcs_id/id,url
-scm_repository_odoo,Odoo,smile_scm.tag_official,smile_scm.git,https://github.com/odoo/odoo.git
-scm_repository_smile_addons,Smile Addons,smile_scm.tag_smile,smile_scm.git,https://github.com/Smile-SA/odoo_addons.git

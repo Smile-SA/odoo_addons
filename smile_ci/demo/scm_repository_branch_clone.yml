@@ -1,9 +1,0 @@
--
-  I clone the branches Odoo 9.0 and Smile Addons 9.0
--
-  !python {model: scm.repository.branch}: |
-    ids = [ref('scm_repository_branch_odoo_90'), ref('scm_repository_branch_smile_addons_90')]
-    branches = self.browse(ids)
-    branches_not_cloned = branches.filtered(lambda branch: branch.state == 'draft')
-    if branches_not_cloned:
-      branches_not_cloned.clone()

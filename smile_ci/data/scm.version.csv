@@ -1,9 +1,0 @@
-id,server_cmd,web_included,standard_xmlrpc
-smile_scm.v50,bin/openerp-server.py,0,0
-smile_scm.v60,bin/openerp-server.py,0,0
-smile_scm.v61,openerp-server,1,0
-smile_scm.v70,openerp-server,1,0
-smile_scm.v80,odoo.py,1,1
-smile_scm.v90,odoo.py,1,1
-smile_scm.v100,odoo-bin,1,1
-smile_scm.vmaster,odoo-bin,1,1
