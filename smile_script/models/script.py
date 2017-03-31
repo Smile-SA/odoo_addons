@@ -23,7 +23,7 @@ import logging
 from StringIO import StringIO
 import time
 
-from openerp import api, fields, models, netsvc, sql_db, SUPERUSER_ID, tools
+from openerp import api, fields, models, sql_db, SUPERUSER_ID, tools
 from openerp.exceptions import Warning
 from openerp.modules.registry import Registry
 from openerp.osv import osv, orm
@@ -44,10 +44,10 @@ class SmileScript(models.Model):
     _name = 'smile.script'
     _description = 'Smile Script'
 
-    create_date = fields.Datetime('Creation date', required=False, readonly=True)
-    create_uid = fields.Many2one('res.users', 'Creation user', required=False, readonly=True)
-    validation_date = fields.Datetime('Validation date', readonly=True)
-    validation_user_id = fields.Many2one('res.users', 'Validation user', readonly=True)
+    create_date = fields.Datetime('Created on', required=False, readonly=True)
+    create_uid = fields.Many2one('res.users', 'Created by', required=False, readonly=True)
+    validation_date = fields.Datetime('Validated on', readonly=True)
+    validation_user_id = fields.Many2one('res.users', 'Validated by', readonly=True)
     name = fields.Char(size=128, required=True, readonly=True, states={'draft': [('readonly', False)]})
     description = fields.Text(required=True, readonly=True, states={'draft': [('readonly', False)]})
     type = fields.Selection([('python', 'Python'), ('sql', 'SQL'), ('xml', 'XML')], 'Type', required=True, readonly=True,
@@ -157,17 +157,9 @@ class SmileScript(models.Model):
     def _run_python(self, logger):
         localdict = {
             'self': self,
-            'pool': self.pool,
-            'cr': self._cr,
-            'uid': self._uid,
-            'context': self._context,
-            'ref': self.env.ref,
             'logger': logger,
             'time': time,
-            'netsvc': netsvc,
             'tools': tools,
-            'SUPERUSER_ID': SUPERUSER_ID,
-            'ustr': tools.ustr,
         }
         exec self.code in localdict
         return localdict['result'] if 'result' in localdict else 'No expected result'
