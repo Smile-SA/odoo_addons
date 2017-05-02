@@ -1,0 +1,85 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_base_partner
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-05-02 15:42+0000\n"
+"PO-Revision-Date: 2017-05-02 15:42+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_base_partner
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_active
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_base_partner
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_base_partner
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_base_partner
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_base_partner
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_field_ids
+#: model:ir.ui.view,arch_db:smile_base_partner.view_partner_type_form
+msgid "Fields to update in children"
+msgstr "Champs à mettre à jour sur les enfants"
+
+#. module: smile_base_partner
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_base_partner
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type___last_update
+msgid "Last Modified on"
+msgstr "Dernière Modification le"
+
+#. module: smile_base_partner
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_base_partner
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_base_partner
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_name
+#: model:ir.ui.view,arch_db:smile_base_partner.view_partner_type_form
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_base_partner
+#: model:ir.model,name:smile_base_partner.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_base_partner
+#: model:ir.model,name:smile_base_partner.model_res_partner_type
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_partner_type_id
+#: model:ir.model.fields,field_description:smile_base_partner.field_res_users_partner_type_id
+msgid "Partner Type"
+msgstr "Type de partenaire"
+
+#. module: smile_base_partner
+#: model:ir.ui.view,arch_db:smile_base_partner.view_partner_form
+msgid "Partner type"
+msgstr "Type de partenaire"

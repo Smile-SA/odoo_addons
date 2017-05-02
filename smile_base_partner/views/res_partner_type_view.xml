@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_partner_type_search" model="ir.ui.view">
+      <field name="name">res.partner.type.search</field>
+      <field name="model">res.partner.type</field>
+      <field name="arch" type="xml">
+        <search>
+          <field name="name"/>
+        </search>
+      </field>
+    </record>
+
+    <record id="view_partner_type_tree" model="ir.ui.view">
+      <field name="name">res.partner.type.list</field>
+      <field name="model">res.partner.type</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_partner_type_form" model="ir.ui.view">
+      <field name="name">res.partner.type.form</field>
+      <field name="model">res.partner.type</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <div class="oe_button_box" name="button_box">
+              <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+              </button>
+            </div>
+            <div class="oe_title">
+              <h1>
+                <field name="name" default_focus="1" placeholder="Name"/>
+              </h1>
+            </div>
+            <notebook>
+              <page string="Fields to update in children">
+                <field name="field_ids">
+                  <tree>
+                    <field name="name" groups="base.group_no_one"/>
+                    <field name="field_description"/>
+                  </tree>
+                </field>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+  </data>
+</odoo>

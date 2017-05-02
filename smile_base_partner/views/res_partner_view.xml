@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_partner_form" model="ir.ui.view">
+      <field name="name">res.partner.form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <field name="parent_id" position="before">
+          <field name="partner_type_id" placeholder="Partner type" class="oe_inline"
+            attrs="{'invisible': [('is_company', '!=', True)]}"/>
+        </field>
+        <field name="parent_id" position="attributes">
+          <attribute name="attrs"></attribute>
+          <attribute name="class">oe_inline</attribute>
+        </field>
+      </field>
+    </record>
+
+  </data>
+</odoo>
