@@ -157,7 +157,7 @@
                 <field name="expression" groups="base.group_system"/>
               </tree>
             </field>
-            <button icon="STOCK_GO_FORWARD" name="dummy" string=""
+            <button icon="fa-exchange" name="dummy" string=""
               readonly="1"/>
             <field name="field_ids_filled" nolabel="1" colspan="2">
               <tree string="Fields" editable="top">
@@ -181,6 +181,15 @@
           <field name="mandatory" invisible="1"/>
         </tree>
       </field>
+    </record>
+    <record id="action_checklist_task_instance" model="ir.actions.act_window">
+      <field name="name">Checklist</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">checklist.task.instance</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('res_id', '=', active_id), ('model', '=', context.get('active_model'))]</field>
+      <field name="target">new</field>
     </record>
 
   </data>

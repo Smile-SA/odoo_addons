@@ -1,23 +1,4 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
 
 import time
 
@@ -274,17 +255,18 @@ class ChecklistTaskInstance(models.Model):
     _name = 'checklist.task.instance'
     _description = 'Checklist Task Instance'
 
-    task_id = fields.Many2one('checklist.task', 'Checklist Task', required=True, ondelete='cascade')
-    sequence = fields.Integer('Priority', related='task_id.sequence', store=True)
-    checklist_id = fields.Many2one('checklist', 'Checklist', related='task_id.checklist_id')
-    model_id = fields.Many2one('ir.model', 'Model', related='task_id.checklist_id.model_id')
-    name = fields.Char(size=128, related='task_id.name')
-    mandatory = fields.Boolean('Required to make record active', related='task_id.mandatory')
-    res_id = fields.Integer('Resource ID', index=True, required=True)
+    task_id = fields.Many2one('checklist.task', 'Checklist Task', required=True, ondelete='cascade', readonly=True)
+    sequence = fields.Integer('Priority', related='task_id.sequence', store=True, readonly=True)
+    checklist_id = fields.Many2one('checklist', 'Checklist', related='task_id.checklist_id', readonly=True)
+    model_id = fields.Many2one('ir.model', 'Model', related='task_id.checklist_id.model_id', readonly=True)
+    model = fields.Char(related='model_id.model', readonly=True)
+    name = fields.Char(size=128, related='task_id.name', readonly=True)
+    mandatory = fields.Boolean('Required to make record active', related='task_id.mandatory', readonly=True)
+    res_id = fields.Integer('Resource ID', index=True, required=True, readonly=True)
     active = fields.Boolean(compute='_get_activity', search='_search_activity')
     field_ids_to_fill = fields.One2many('checklist.task.field', string='Fields to fill', compute='_get_activity')
     field_ids_filled = fields.One2many('checklist.task.field', string='Filled fields', compute='_get_activity')
-    progress_rate = fields.Float('Progress Rate', digits=(16, 2), default=0.0)
+    progress_rate = fields.Float('Progress Rate', digits=(16, 2), default=0.0, readonly=True)
 
     @api.one
     @api.depends()
