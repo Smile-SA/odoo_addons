@@ -55,9 +55,8 @@ def checklist_fields_view_get_decorator():
                     arch_list.append(arch[arch.rfind('<'):])
                     fields_view['arch'] = ''.join(arch_list)
                 if view_type == 'form':
-                    fields_view['fields']['checklist_task_instance_ids'] = {'string': 'Tasks', 'type': 'one2many',
-                                                                            'relation': 'checklist.task.instance', 'context': {},
-                                                                            'readonly': True}
+                    fields_view['fields'].update(self.fields_get(['checklist_task_instance_ids']))
+                    fields_view['fields']['checklist_task_instance_ids']['views'] = {}
 
                     gnode1 = etree.Element('div', attrib={'style': "float: left; margin-left: -16px; min-width: 80%;"})
                     gnode2 = etree.Element('div', attrib={'style': "float: right; padding-left: 4px; max-width: 20%;",
