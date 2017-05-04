@@ -49,7 +49,7 @@ class Checklist(models.Model):
     model_id = fields.Many2one('ir.model', 'Model', required=True)
     model = fields.Char(related='model_id.model', readonly=True)
     active = fields.Boolean('Active', default=True)
-    active_field = fields.Boolean("Has an 'Active' field", compute='_get_active_field', default=False)
+    active_field = fields.Boolean("Has an 'Active' field", compute='_get_active_field')
     action_id = fields.Many2one('ir.actions.server', 'Actions')
     act_window_ids = fields.Many2many('ir.actions.act_window', 'checklist_act_window_rel', 'act_window_id', 'checklist_id', 'Menus')
     view_ids = fields.Many2many('ir.ui.view', 'checklist_view_rel', 'view_id', 'checklist_id', 'Views')
@@ -58,8 +58,7 @@ class Checklist(models.Model):
     @api.one
     def _get_active_field(self):
         if self.model_id:
-            model = self.env[self.model_id.model]
-            self.active_field = 'active' in model._fields.keys()
+            self.active_field = 'active' in self.env[self.model_id.model]._fields
 
     @api.one
     @api.constrains('model_id')
@@ -233,13 +232,13 @@ class ChecklistTask(models.Model):
             elif not condition_checked and task_inst:
                 task_inst.unlink()
             record.checklist_task_instance_ids.invalidate_cache()  # Force invalidate cache required because of a bug?
-            if record.checklist_task_instance_ids:
-                record.checklist_task_instance_ids[0].checklist_id.compute_progress_rates(record.with_context(checklist_computation=True))
+            checklists = record.checklist_task_instance_ids.mapped('checklist_id')
+            checklists.compute_progress_rates(record.with_context(checklist_computation=True))
 
     @api.model
     def create(self, vals):
         task = super(ChecklistTask, self).create(vals)
-        self._manage_task_instances()
+        task._manage_task_instances()
         return task
 
     @api.multi
@@ -247,7 +246,8 @@ class ChecklistTask(models.Model):
         checklists = set([task.checklist_id for task in self])
         result = super(ChecklistTask, self).write(vals)
         self._manage_task_instances()
-        for checklist in checklists:  # Recompute only previous ones because new ones are recomputed in _manage_task_instances
+        # Recompute only previous ones because new ones are recomputed in _manage_task_instances
+        for checklist in checklists:
             checklist.compute_progress_rates()
         return result
 
