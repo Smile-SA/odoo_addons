@@ -28,7 +28,7 @@ import yaml
 
 from openerp import addons, api, models
 
-_logger = logging.getLogger(__package__)
+_logger = logging.getLogger(__name__)
 
 
 class IrModuleModule(models.Model):
@@ -86,23 +86,17 @@ class IrModuleModule(models.Model):
         @param module: module name (str)
         @return: list
         """
-        def inspect_module(mod):
-            result = []
-            for name, mod_obj in inspect.getmembers(mod, inspect.ismodule):
-                if name.startswith('test_'):
-                    result.append(mod_obj)
-                else:
-                    result += inspect_module(mod_obj)
-            return result
-
-        modpath = 'openerp.addons.' + module
+        modpath = addons.__name__ + '.' + module
         try:
             mod = importlib.import_module('.tests', modpath)
         except Exception, e:
+            # If module has no `tests` sub-module, no problem.
             if str(e) != 'No module named tests':
                 _logger.exception('Can not `import %s`.', module)
             return []
-        return inspect_module(mod)
+
+        return [mod_obj for name, mod_obj in inspect.getmembers(mod, inspect.ismodule)
+                if name.startswith('test_')]
 
     @staticmethod
     def _get_unit_test_comments(module_name):
@@ -111,7 +105,6 @@ class IrModuleModule(models.Model):
         @return: list
         """
         res = []
-
         module_tests = IrModuleModule.get_test_modules(module_name)
         for module_test in module_tests:
             module_test_file = module_test.__file__
@@ -153,4 +146,5 @@ class IrModuleModule(models.Model):
             if tests:
                 # Add tests for this module
                 tests_by_module[module.name] = tests
-        return sorted([(module_name, tests_by_module[module_name]) for module_name in tests_by_module], lambda x, y: cmp(x[0], y[0]))
+        return sorted([(module_name, tests_by_module[module_name]) for module_name in tests_by_module],
+                      lambda x, y: cmp(x[0], y[0]))
