@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record id="view_ir_module_graph_wizard_form" model="ir.ui.view">
+            <field name="name">ir.module.module.graph_wizard.form</field>
+            <field name="model">ir.module.module.graph_wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Print Modules Graph">
+                	<group colspan="4" col="4">
+                		<group colspan="2" col="1" invisible="context.get('hide_stream')">
+                			<separator string="Tree" colspan="1"/>
+		                    <field name="stream" nolabel="1"/>
+                		</group>
+                		<group colspan="2" col="2">
+                			<separator string="States" colspan="2"/>
+                			<label string="Filter displayed modules in function of their state" colspan="2"/>
+                			<group col="4">
+			                    <field name="installed"/>
+			                    <label string="(black or blue if auto install)" colspan="2"/>
+			                    <field name="uninstalled"/>
+			                    <label string="(red)" colspan="2"/>
+			                    <field name="uninstallable"/>
+			                    <label string="(grey)" colspan="2"/>
+			                </group>
+                		</group>
+	                </group>
+                	<group colspan="4" col="2" attrs="{'invisible': [('file', '=', False)]}">
+            			<separator string="File" colspan="2"/>
+	                    <field name="file" nolabel="1" filename="filename"/>
+	                    <field name="filename" invisible="1"/>
+	                </group>
+                    <footer>
+                        <button type="object" name="button_generate_file" string="Print Graph" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel" attrs="{'invisible': [('file', '!=', False)]}" class="oe_link"/>
+                        <button special="cancel" string="Close" attrs="{'invisible': [('file', '=', False)]}" class="oe_link"/>
+                   </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_ir_module_graph_wizard" model="ir.actions.act_window">
+            <field name="name">Modules Graph</field>
+            <field name="res_model">ir.module.module.graph_wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ir_module_graph_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="values_ir_module_graph_wizard" model="ir.values">
+            <field name="model_id" ref="base.model_ir_module_module"/>
+            <field name="name">Modules Graph</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_ir_module_graph_wizard'))"/>
+            <field name="key">action</field>
+            <field name="model">ir.module.module</field>
+        </record>
+
+	</data>
+</openerp>
