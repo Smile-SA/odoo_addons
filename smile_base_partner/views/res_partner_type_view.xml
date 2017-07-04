@@ -17,6 +17,7 @@
       <field name="model">res.partner.type</field>
       <field name="arch" type="xml">
         <tree>
+          <field name="sequence" widget="handle"/>
           <field name="name"/>
         </tree>
       </field>
@@ -37,9 +38,36 @@
               <h1>
                 <field name="name" default_focus="1" placeholder="Name"/>
               </h1>
+              <group>
+                <field name="code" placeholder="Code" attrs="{'readonly': [('id', '!=', False)]}"/>
+                <field name="id" invisible="True"/>
+              </group>
             </div>
             <notebook>
-              <page string="Fields to update in children">
+              <page string="Characteristics">
+                <group>
+                  <group>
+                    <field name="company_type"/>
+                    <field name="type" attrs="{'invisible': [('company_type', '!=', 'person')], 'required': [('company_type', '=', 'person')]}"/>
+                    <field name="customer" attrs="{'invisible': [('company_type', '!=', 'company')]}"/>
+                    <field name="supplier" attrs="{'invisible': [('company_type', '!=', 'company')]}"/>
+                    <field name="subcompanies_label" attrs="{'invisible': [('company_type', '!=', 'company')]}" />
+                  </group>
+                  <group>
+                    <field name="can_have_parent" attrs="{'invisible': [('company_type', '!=', 'company')]}"/>
+                    <field name="parent_is_required" attrs="{'invisible': ['|', ('can_have_parent', '=', False), ('company_type', '!=', 'company')]}"/>
+                    <field name="parent_type_ids" widget="many2many_tags"
+                      domain="[('id', '!=', id), ('company_type', '=', 'company')]"
+                      attrs="{'invisible': [('can_have_parent', '=', False)]}"/>
+                    <field name="parent_relation_label" attrs="{'invisible': [('company_type', '!=', 'company')]}" />
+                  </group>
+                  <group colspan="4">
+                    <field name="partner_display_name"/>
+                  </group>
+                </group>
+              </page>
+              <page string="Fields to update in sub-companies"
+                  attrs="{'invisible': [('company_type', '!=', 'company')]}">
                 <field name="field_ids">
                   <tree>
                     <field name="name" groups="base.group_no_one"/>
@@ -51,6 +79,21 @@
           </sheet>
         </form>
       </field>
+    </record>
+
+    <record id="action_partner_types" model="ir.actions.act_window">
+      <field name="name">Contact Types</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">res.partner.type</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="menu_partner_types" model="ir.ui.menu">
+      <field name="name">Contact Types</field>
+      <field name="sequence" eval="0"/>
+      <field name="parent_id" ref="sales_team.menu_config_address_book"/>
+      <field name="action" ref="action_partner_types"/>
     </record>
 
   </data>

@@ -23,7 +23,7 @@
     "name": "Partner Organisation",
     "version": "0.1",
     "depends": [
-        "base",
+        "sales_team",
     ],
     "author": "Smile",
     "license": 'AGPL-3',
@@ -40,6 +40,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         "security/ir.model.access.csv",
         "views/res_partner_view.xml",
         "views/res_partner_type_view.xml",
+        "data/res_partner_type_data.xml",
     ],
     "demo": [],
     "auto_install": True,
