@@ -1,0 +1,5 @@
+id,name,sequence,fold
+ir_filters_categ_1,Do First,1,0
+ir_filters_categ_2,Schedule,2,0
+ir_filters_categ_3,Delegate,3,0
+ir_filters_categ_4,Don't,4,1

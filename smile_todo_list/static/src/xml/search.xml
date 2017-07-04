@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+	<div t-extend="SearchView.FavoriteMenu">
+		<t t-jquery="li.o_save_name:last" t-operation="before">
+            <li class="o_save_name" t-if="widget.target_model != 'ir.filters'">
+                <span><div class="o_checkbox"><input type="checkbox"/><span/></div> Add in todo list</span>
+				<select id="todo_category" style="margin-left: 10px"/>
+            </li>
+	    </t>
+	</div>
+
+</templates>
