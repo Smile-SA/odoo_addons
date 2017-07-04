@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+  <t t-name="Checklist">
+    <ul class="checklist_tasks_list">
+    </ul>
+  </t>
+  <t t-name="ChecklistTask">
+    <li t-attf-class="{{ task.mandatory ? 'checklist_task_mandatory' : 'checklist_task_not_mandatory' }} {{ task.progress_rate == 100.0 ? 'checklist_task_complete' : 'checklist_task_incomplete'}}">
+      <i t-attf-class="fa {{ task.progress_rate == 100.0 ? 'fa-check-square-o': 'fa-square-o' }}" aria-hidden="true"></i>
+      <t t-esc="task.name"/>
+      <ul class="checklist_task_fields_list" t-if="task.fields_filled.length + task.fields_to_fill.length > 1">
+        <li t-foreach="task.fields_filled" t-as="field" class="checklist_task_field_filled">
+          <t t-esc="field"/>
+        </li>
+        <li t-foreach="task.fields_to_fill" t-as="field" class="checklist_task_field_to_fill">
+          <t t-esc="field"/>
+        </li>
+      </ul>
+    </li>
+  </t>
+
+</templates>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<openerp>
+<odoo>
   <data noupdate="0">
 
     <record model="checklist" id="cron_checklist">
@@ -26,4 +26,4 @@
     </record>
 
   </data>
-</openerp>
+</odoo>

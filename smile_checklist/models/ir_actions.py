@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api, models
-from openerp.tools.misc import unquote
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import api, models
+from odoo.tools.misc import unquote
+from odoo.tools.safe_eval import safe_eval as eval
 
 
 class IrActionsActWindow(models.Model):

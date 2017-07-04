@@ -46,14 +46,23 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "depends": ['base'],
     "data": [
         'security/ir.model.access.csv',
+
         'data/act_actions_window.yml',
+
         'views/checklist_view.xml',
+        'views/checklist_task_view.xml',
+        'views/checklist_task_instance_view.xml',
+        'views/checklist_view.xml',
+        'views/menus.xml',
+        'views/webclient_templates.xml',
     ],
     "demo": [
         'demo/checklist_demo.xml',
     ],
+    "qweb": [
+        'static/src/xml/checklist.xml',
+    ],
     "test": [],
     "installable": True,
     "active": False,
-    "certificate": '',
 }
