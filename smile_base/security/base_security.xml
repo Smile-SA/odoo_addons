@@ -4,6 +4,7 @@
 
         <record id="group_hidden" model="res.groups" context="{'noadmin':True}">
             <field name="name">Hidden Features</field>
+            <field name="category_id" ref="base.module_category_usability"/>
         </record>
 
 	</data>
