@@ -1,0 +1,7 @@
+-
+  I create default version for all pricelists
+-
+  !python {model: product.pricelist} : |
+    for pricelist in self.search([('version_ids', '=', False)]):
+      vals = pricelist._get_default_version_vals()
+      self.env['product.pricelist.version'].create(vals)
