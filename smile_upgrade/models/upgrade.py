@@ -21,20 +21,32 @@
 
 import psycopg2
 
+from contextlib import contextmanager
 from distutils.version import LooseVersion
 import logging
 import os
 
-from odoo import api, sql_db, SUPERUSER_ID, tools
-from odoo.exceptions import UserError
-import odoo.modules as addons
-from odoo.report.interface import report_int as ReportService
-from odoo.tools.safe_eval import safe_eval
-from odoo.workflow.service import WorkflowService
+from openerp import api, sql_db, SUPERUSER_ID, tools
+from openerp.exceptions import UserError
+import openerp.modules as addons
+from openerp.report.interface import report_int as ReportService
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.workflow.service import WorkflowService
 
 from config import configuration as upgrade_config
 
 _logger = logging.getLogger(__package__)
+
+
+@contextmanager
+def cursor(db, auto_commit=True):
+    cr = db.cursor()
+    try:
+        yield cr
+        if auto_commit:
+            cr.commit()
+    finally:
+        cr.close()
 
 
 class UpgradeManager(object):
@@ -129,7 +141,7 @@ class UpgradeManager(object):
                     continue
                 with open(file_path) as f:
                     try:
-                        upgrade_infos = safe_eval(f.read())
+                        upgrade_infos = eval(f.read())
                         upgrade = Upgrade(dir_path, upgrade_infos)
                         if (not upgrade.databases or self.db_name in upgrade.databases) \
                                 and self.db_version < upgrade.version <= self.code_version:
@@ -146,28 +158,28 @@ class UpgradeManager(object):
         WorkflowService.CACHE = {}
 
     def pre_load(self):
-        with self.db.cursor() as cr:
+        with cursor(self.db) as cr:
             for upgrade in self.upgrades:
                 upgrade.load_files(cr, 'pre-load')
 
     def post_load(self):
-        with self.db.cursor() as cr:
+        with cursor(self.db) as cr:
             for upgrade in self.upgrades:
                 upgrade.load_files(cr, 'post-load')
         self._reset_services()
 
     def force_modules_upgrade(self, registry, modules_to_upgrade):
-        with self.db.cursor() as cr:
+        uid = SUPERUSER_ID
+        with cursor(self.db) as cr:
             with api.Environment.manage():
-                env = api.Environment(cr, SUPERUSER_ID, {})
-                Module = env['ir.module.module']
-                Module.update_list()
-                modules = Module.search([('name', 'in', modules_to_upgrade),
-                                         ('state', 'in', ('uninstalled', 'to install'))])
-                modules.button_install()
-                modules = Module.search([('name', 'in', modules_to_upgrade),
-                                         ('state', 'in', ('installed', 'to upgrade'))])
-                modules.button_upgrade()
+                module_obj = registry.get('ir.module.module')
+                module_obj.update_list(cr, uid)
+                ids_to_install = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
+                                                             ('state', 'in', ('uninstalled', 'to install'))])
+                module_obj.button_install(cr, uid, ids_to_install)
+                ids_to_upgrade = module_obj.search(cr, uid, [('name', 'in', modules_to_upgrade),
+                                                             ('state', 'in', ('installed', 'to upgrade'))])
+                module_obj.button_upgrade(cr, uid, ids_to_upgrade)
                 cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")
         self._reset_services()
 
@@ -205,11 +217,11 @@ class Upgrade(object):
         elif mode != 'pre-load' and ext in ('.yml', '.csv', '.xml'):
             with api.Environment.manage():
                 if ext == '.yml':
-                    tools.convert_yaml_import(cr, module, yamlfile=f_obj, kind=None, mode='upgrade')
+                    tools.convert_yaml_import(cr, module, f_obj, mode='upgrade', kind=None)
                 elif ext == '.csv':
-                    tools.convert_csv_import(cr, module, fname=f_obj.name, csvcontent=f_obj.read(), mode='upgrade')
+                    tools.convert_csv_import(cr, module, f_obj.name, f_obj.read(), mode='upgrade')
                 elif ext == '.xml':
-                    tools.convert_xml_import(cr, module, xmlfile=f_obj, mode='upgrade')
+                    tools.convert_xml_import(cr, module, f_obj, mode='upgrade')
         else:
             _logger.error('%s extension is not supported in upgrade %sing', ext, mode)
             pass
