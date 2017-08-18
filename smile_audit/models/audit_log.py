@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from dateutil import tz
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -76,6 +78,12 @@ class AuditLog(models.Model):
                               for rec_id in value])
         if field.type == 'binary' and value:
             return '&lt;binary data&gt;'
+        if field.type == 'datetime':
+            from_tz = tz.tzutc()
+            to_tz = tz.gettz(self.env.user.tz)
+            datetime_wo_tz = fields.Datetime.from_string(value)
+            datetime_with_tz = datetime_wo_tz.replace(tzinfo=from_tz)
+            return fields.Datetime.to_string(datetime_with_tz.astimezone(to_tz))
         return value
 
     @api.multi
