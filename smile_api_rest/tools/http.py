@@ -4,6 +4,7 @@ from functools import wraps
 import json
 
 from odoo.http import request
+from odoo.tools.safe_eval import safe_eval
 
 
 class make_response():
@@ -14,3 +15,11 @@ class make_response():
             result = func(*args, **kwargs)
             return request.make_response(json.dumps(result))
         return wrapper
+
+
+def eval_request_params(kwargs):
+    for k, v in kwargs.iteritems():
+        try:
+            kwargs[k] = safe_eval(v)
+        except:
+            continue

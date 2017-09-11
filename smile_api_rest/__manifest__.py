@@ -28,6 +28,7 @@
     "license": 'AGPL-3',
     "website": 'http://www.smile.fr',
     "description": """
+There are URIs available:
 
 /api/auth                   POST    - Login in Odoo and set cookies
 
@@ -37,6 +38,8 @@
 /api/<model>/<id>           PUT     - Update one
 /api/<model>/<id>           DELETE  - Delete one
 /api/<model>/<id>/<method>  PUT     - Call method (with optional parameters)
+
+WARNING: before calling /api/auth, call /web?db=*** otherwise web service is not found.
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
