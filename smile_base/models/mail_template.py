@@ -53,7 +53,9 @@ class MailTemplate(models.Model):
         for record in records:
             res_to_rec[record.id] = record
         variables = {
-            'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.pool, self._cr, self._uid, dt, tz, format, context),
+            'format_date': lambda date, format=False, context=self._context: format_date(self.env, date, format),
+            'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.env, dt, tz, format),
+            'format_amount': lambda amount, currency, context=self._context: format_amount(self.env, amount, currency),
             'format_numeric': lambda value, column, options=None: self.format_numeric(value, column, options),  # Added by Smile
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
@@ -64,8 +66,7 @@ class MailTemplate(models.Model):
                 render_result = template.render(variables)
             except Exception:
                 _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
-                raise UserError(_("Failed to render template %r using values %r") % (template, variables))
-                render_result = u""
+                raise UserError(_("Failed to render template %r using values %r")% (template, variables))
             if render_result == u"False":
                 render_result = u""
             results[res_id] = render_result
