@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_line_form" model="ir.ui.view">
+        <field name="name">accounting.export.account.move.line.form</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <!-- Place this group after the group "Analytic"-->
+            <group groups="analytic.group_analytic_accounting" position="after">
+                <group string="Accounting Export">
+                    <field name="first_generation_date" readonly="1"/>
+                    <field name="last_generation_date" readonly="1"/>
+                </group>
+            </group>
+        </field>
+    </record>
+    <record id="view_account_move_line_filter" model="ir.ui.view">
+        <field name="name">accounting.export.account.move.line.search</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[last()]" position="after">
+                <separator/>
+                <filter string="Exported" domain="[('exported', '!=', False)]" help="Exported Journal Items"/>
+                <filter string="To export" domain="[('exported', '=', False)]" help="Journal Items to export"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

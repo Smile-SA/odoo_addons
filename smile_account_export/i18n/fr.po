@@ -1,0 +1,394 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_account_export
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0+e-20170623\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-10-02 13:05+0000\n"
+"PO-Revision-Date: 2017-10-02 13:05+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_template_form_view
+msgid "<span><i>All accounts if none selected</i></span>"
+msgstr "<span><i>Tous les comptes si aucun sélectionné</i></span>"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_template_form_view
+msgid "<span><i>All journals if none selected</i></span>"
+msgstr "<span><i>Tous les journaux si aucun sélectionné</i></span>"
+
+#. module: smile_account_export
+#: model:ir.model,name:smile_account_export.model_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+msgid "Account Export"
+msgstr "Export comptable"
+
+#. module: smile_account_export
+#: model:ir.model,name:smile_account_export.model_account_export_template
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_template_form_view
+msgid "Account Export Template"
+msgstr "Modèle d'export comptable"
+
+#. module: smile_account_export
+#: model:ir.actions.act_window,name:smile_account_export.action_account_export_template
+#: model:ir.ui.menu,name:smile_account_export.account_export_template_menu
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_search_view
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_template_tree_view
+msgid "Account Export Templates"
+msgstr "Modèles d'export comptable"
+
+#. module: smile_account_export
+#: model:ir.actions.act_window,name:smile_account_export.action_account_export
+#: model:ir.actions.act_window,name:smile_account_export.action_account_export_from_template
+#: model:ir.ui.menu,name:smile_account_export.account_export_menu
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_tree_view
+msgid "Account Exports"
+msgstr "Exports comptables"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_journal_ids
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_template_journal_ids
+msgid "Account Journals"
+msgstr "Journaux comptables"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.view_move_line_form
+msgid "Accounting Export"
+msgstr "Export Comptable"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_account_ids
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_template_account_ids
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_template_form_view
+msgid "Accounts"
+msgstr "Comptes"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_template_active
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+msgid "Are you sure you want to reset move lines?"
+msgstr "Etes-vous sûr de vouloir réinitialiser les écritures ?"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_account_export
+#: selection:account.export,state:0
+msgid "Cancelled"
+msgstr "Annulé"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_company_id
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_template_company_id
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_search_view
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_create_uid
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_template_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_credit
+msgid "Credit"
+msgstr "Crédit"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_debit
+msgid "Debit"
+msgstr "Débit"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_account_export
+#: selection:account.export,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+msgid "Export"
+msgstr "Exporter"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_export_tmpl_id
+msgid "Export template"
+msgstr "Modèle d'export"
+
+#. module: smile_account_export
+#: selection:account.export,state:0
+#: model:ir.model.fields,field_description:smile_account_export.field_account_move_line_exported
+#: model:ir.ui.view,arch_db:smile_account_export.view_account_move_line_filter
+msgid "Exported"
+msgstr "Exporté"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.view_account_move_line_filter
+msgid "Exported Journal Items"
+msgstr "Ecritures exportées"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+msgid "Exported lines"
+msgstr "Lignes exportées"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+msgid "Exported move lines will be reset to \"To export\""
+msgstr "Les écritures exportées seront réinitialisées à \"A exporter\""
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_template_export_ids
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_template_form_view
+msgid "Exports"
+msgstr "Exports"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_template_form_view
+msgid "Filters"
+msgstr "Filtres"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_move_line_first_generation_date
+msgid "First generation date"
+msgstr "Date du premier export"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_force_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_template_force_export
+msgid "Force export"
+msgstr "Forcer l'export"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_generation_date
+msgid "Generation date"
+msgstr "Date d'export"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_search_view
+msgid "Group By"
+msgstr "Grouper par"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_template_has_non_draft_exports
+msgid "Has non-draft export(s)"
+msgstr "Dispose d'un export non brouillon"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_account_export
+#: model:ir.model,name:smile_account_export.model_account_move_line
+msgid "Journal Item"
+msgstr "Écriture comptable"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_account_move_line_ids
+msgid "Journal Items"
+msgstr "Écritures comptables"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.view_account_move_line_filter
+msgid "Journal Items to export"
+msgstr "Ecritures à exporter"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_template_form_view
+msgid "Journals"
+msgstr "Journaux"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export___last_update
+msgid "Last Modified on"
+msgstr "Dernière Modification le"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_move_line_last_generation_date
+msgid "Last generation date"
+msgstr "Date du dernier export"
+
+#. module: smile_account_export
+#: model:res.groups,name:smile_account_export.group_account_export_templates
+msgid "Manage account export templates"
+msgstr "Gérer des modèles d'export comptable"
+
+#. module: smile_account_export
+#: model:ir.model.fields,help:smile_account_export.field_account_export_force_export
+#: model:ir.model.fields,help:smile_account_export.field_account_export_template_force_export
+msgid "Moves lines already exported will be exported again"
+msgstr "Les écritures déjà exportées seront exportées à nouveau"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_name
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_template_name
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_account_export
+#: code:addons/smile_account_export/models/account_export.py:222
+#, python-format
+msgid "New account export on %s"
+msgstr "Nouvel export comptable le %s"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_template_exports_count
+msgid "Number of exports"
+msgstr "Nombre d'exports"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_account_moves_count
+msgid "Number of journal entries"
+msgstr "Nombre de pièces comptables"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_account_move_lines_count
+msgid "Number of journal items"
+msgstr "Nombre d'écritures comptables"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+msgid "Period"
+msgstr "Période"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_provider
+msgid "Provider"
+msgstr "Fournisseur"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_record_ids
+msgid "Record Ids (technical field)"
+msgstr "Ids des enregistrements exportés (champ technique)"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_template_form_view
+msgid "Schedule export"
+msgstr "Planifier l'export"
+
+#. module: smile_account_export
+#: code:addons/smile_account_export/models/account_export_template.py:62
+#, python-format
+msgid "Scheduled Action"
+msgstr "Action planifiée"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_template_cron_id
+msgid "Scheduled action"
+msgstr "Action planifiée"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_start_date
+msgid "Start date"
+msgstr "Date de début"
+
+#. module: smile_account_export
+#: code:addons/smile_account_export/models/account_export.py:51
+#, python-format
+msgid "Start date cannot be later than stop date"
+msgstr "La date de début ne peut être postérieure à celle de fin"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_state
+msgid "State"
+msgstr "État"
+
+#. module: smile_account_export
+#: model:ir.model.fields,field_description:smile_account_export.field_account_export_stop_date
+msgid "Stop date"
+msgstr "Date de fin"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+msgid "Summary"
+msgstr "Résumé"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+msgid "Test"
+msgstr "Tester"
+
+#. module: smile_account_export
+#: code:addons/smile_account_export/models/account_export.py:220
+#, python-format
+msgid "Test account export on %s"
+msgstr "Test de l'export comptable le %s"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_template_form_view
+msgid "Test export"
+msgstr "Tester l'export"
+
+#. module: smile_account_export
+#: selection:account.export,state:0
+msgid "Tested"
+msgstr "Testé"
+
+#. module: smile_account_export
+#: code:addons/smile_account_export/models/account_export.py:180
+#, python-format
+msgid "There is no move lines to export."
+msgstr "Aucun écriture comptable à exporter."
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.view_account_move_line_filter
+msgid "To export"
+msgstr "A exporter"
+
+#. module: smile_account_export
+#: code:addons/smile_account_export/models/account_export.py:90
+#, python-format
+msgid "You can't delete done exports!"
+msgstr "Vous ne pouvez pas supprimer des exports terminés!"
+
+#. module: smile_account_export
+#: code:addons/smile_account_export/models/account_export_template.py:98
+#, python-format
+msgid "You cannot modify a template which has a non-draft export."
+msgstr "Vous ne pouvez pas modifier un modèle qui dispose d'un export dans un statut autre que brouillon."
+
+#. module: smile_account_export
+#: code:addons/smile_account_export/models/account_export.py:177
+#, python-format
+msgid "You cannot run a cancelled export!"
+msgstr "Vous ne pouvez pas jouer un export annulé !"

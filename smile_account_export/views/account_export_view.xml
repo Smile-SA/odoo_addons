@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Account Export-->
+    <record id="account_export_form_view" model="ir.ui.view">
+        <field name="name">account.export.form</field>
+        <field name="model">account.export</field>
+        <field name="arch" type="xml">
+            <form string="Account Export">
+                <header>
+                    <button name="run_export" string="Export" type="object"
+                        attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" class="oe_highlight"/>
+                    <button name="run_export" string="Test" type="object"
+                        attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" context="{'test_mode': True}"/>
+                    <button name="cancel_export" string="Cancel" type="object"
+                        attrs="{'invisible': [('state', '!=', 'done')]}"
+                        help="Exported move lines will be reset to &quot;To export&quot;"
+                        confirm="Are you sure you want to reset move lines?"/>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="button_show_lines" type="object" icon="fa-list">
+                            <field string="Exported lines" name="account_move_lines_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="provider"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="company_id" readonly="1"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="generation_date"
+                                 attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="force_export"
+                                 attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="summary" string="Summary" states="done">
+                            <group>
+                                <field name="account_move_lines_count"/>
+                                <field name="account_moves_count"/>
+                                <field name="debit"/>
+                                <field name="credit"/>
+                            </group>
+                        </page>
+                        <page name="filters" string="Filters">
+                            <group>
+                                <group string="Period" colsan="4">
+                                    <field name="start_date"/>
+                                    <field name="stop_date"/>
+                                </group>
+                                <group string="Journals">
+                                    <div>
+                                        <span><i>All journals if none selected</i></span>
+                                        <field name="journal_ids" options="{'no_create': True}"
+                                            attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                            domain="[('company_id', '=', company_id)]" nolabel="1">
+                                            <tree editable="top">
+                                                <field name="name" options="{'no_create': 1}"/>
+                                                <field name="code"/>
+                                            </tree>
+                                        </field>
+                                    </div>
+                                </group>
+                                <group string="Accounts">
+                                    <div>
+                                        <span><i>All accounts if none selected</i></span>
+                                        <field name="account_ids" options="{'no_create': True}"
+                                            attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                            domain="[('company_id', '=', company_id)]" nolabel="1"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="account_export_tree_view" model="ir.ui.view">
+        <field name="name">account.export.tree</field>
+        <field name="model">account.export</field>
+        <field name="arch" type="xml">
+            <tree string="Account Exports" colors="blue:state=='draft'; gray:state=='cancel'">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+                <field name="start_date"/>
+                <field name="stop_date"/>
+                <field name="generation_date"/>
+            </tree>
+        </field>
+    </record>
+    <record id="account_export_search_view" model="ir.ui.view">
+        <field name="name">account.export.search</field>
+        <field name="model">account.export</field>
+        <field name="arch" type="xml">
+            <search string="Account Exports">
+                <field name="name"/>
+                <field name="provider"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="account_ids"/>
+                <field name="journal_ids"/>
+                <filter string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Exported" domain="[('state', '=', 'done')]"/>
+                <group string="Group By">
+                    <filter string="State" context="{'group_by' : 'state'}"/>
+                    <filter string="Date" context="{'group_by' : 'generation_date'}"/>
+                    <filter string="Company" context="{'group_by' : 'company_id'}"
+                         groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_export" model="ir.actions.act_window">
+        <field name="name">Account Exports</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.export</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_account_export_from_template" model="ir.actions.act_window">
+        <field name="name">Account Exports</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.export</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('export_tmpl_id', '=', active_id)]</field>
+    </record>
+
+</odoo>

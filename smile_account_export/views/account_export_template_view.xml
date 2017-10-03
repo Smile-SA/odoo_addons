@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Account Export-->
+    <record id="account_export_template_form_view" model="ir.ui.view">
+        <field name="name">account.export.template.form</field>
+        <field name="model">account.export.template</field>
+        <field name="arch" type="xml">
+            <form string="Account Export Template">
+                <header>
+                    <button name="create_cron" string="Schedule export" type="object" class="oe_highlight"/>
+                    <button name="create_export" string="Test export" type="object" context="{'test_mode': True}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                        <button class="oe_stat_button" name="%(smile_account_export.action_account_export_from_template)d"
+                                type="action" icon="fa-list">
+                            <field string="Exports" name="exports_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="provider"
+                                attrs="{'readonly': [('has_non_draft_exports', '=', True)]}"/>
+                            <field name="company_id" readonly="1"
+                                attrs="{'readonly': [('has_non_draft_exports', '=', True)]}"
+                                groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="force_export"
+                                attrs="{'readonly': [('has_non_draft_exports', '=', True)]}"/>
+                            <field name="has_non_draft_exports" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="filters" string="Filters">
+                            <group>
+                                <group string="Journals">
+                                    <div>
+                                        <span><i>All journals if none selected</i></span>
+                                        <field name="journal_ids" options="{'no_create': True}"
+                                            attrs="{'readonly': [('has_non_draft_exports', '=', True)]}"
+                                            domain="[('company_id', '=', company_id)]" nolabel="1">
+                                            <tree editable="top">
+                                                <field name="name" options="{'no_create': 1}"/>
+                                                <field name="code"/>
+                                            </tree>
+                                        </field>
+                                    </div>
+                                </group>
+                                <group string="Accounts">
+                                    <div>
+                                        <span><i>All accounts if none selected</i></span>
+                                        <field name="account_ids" options="{'no_create': True}"
+                                            attrs="{'readonly': [('has_non_draft_exports', '=', True)]}"
+                                            domain="[('company_id', '=', company_id)]" nolabel="1"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="account_export_template_tree_view" model="ir.ui.view">
+        <field name="name">account.export.template.tree</field>
+        <field name="model">account.export.template</field>
+        <field name="arch" type="xml">
+            <tree string="Account Export Templates">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="exports_count"/>
+            </tree>
+        </field>
+    </record>
+    <record id="account_export_search_view" model="ir.ui.view">
+        <field name="name">account.export.template.search</field>
+        <field name="model">account.export.template</field>
+        <field name="arch" type="xml">
+            <search string="Account Export Templates">
+                <field name="name"/>
+                <field name="provider"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="account_ids"/>
+                <field name="journal_ids"/>
+                <group string="Group By">
+                    <filter string="Company" context="{'group_by' : 'company_id'}"
+                         groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_export_template" model="ir.actions.act_window">
+        <field name="name">Account Export Templates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.export.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
