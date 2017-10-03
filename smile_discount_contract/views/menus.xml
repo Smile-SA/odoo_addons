@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem id="menu_discounts" name="Discounts"
+      parent="account.menu_finance" sequence="4"/>
+    <menuitem id="menu_discount_countracts" action="action_discount_contract"
+      parent="menu_discounts" sequence="10"/>
+    <menuitem id="menu_discount_countract_templates" action="action_discount_contract_template"
+      parent="menu_discounts" sequence="20"/>
+
+    <menuitem id="menu_config_discounts" name="Discounts"
+      parent="account.menu_finance_configuration" sequence="20"/>
+    <menuitem id="menu_discount_countract_close_reasons" action="action_discount_contract_close_reason"
+      parent="menu_config_discounts" sequence="10"/>
+
+</odoo>

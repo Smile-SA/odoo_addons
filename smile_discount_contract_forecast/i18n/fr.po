@@ -1,0 +1,153 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_discount_contract_forecast
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0+e-20170807\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-08-09 10:15+0000\n"
+"PO-Revision-Date: 2017-08-09 10:15+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.ui.view,arch_db:smile_discount_contract_forecast.view_discount_contract_forecast_method_form
+msgid "# You can use the following variables:<br/>\n"
+"# * self = a contract line from which you compute the theoretical base<br/>\n"
+"# * fields<br/>\n"
+"# * relativedelta"
+msgstr "# Vous pouvez utiliser les variables suivantes :<br/>\n"
+"# * self = une ligne de détails de contrat pour laquelle vous souhaitez calculer la base théorique<br/>\n"
+"# * fields<br/>\n"
+"# * relativedelta"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.ui.view,arch_db:smile_discount_contract_forecast.view_discount_contract_form
+msgid "<span class=\"o_stat_text\">Theoretical</span>"
+msgstr "<span class=\"o_stat_text\">Théorique</span>"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method_attachment_ids
+msgid "Attachments"
+msgstr "Pièces jointes"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.actions.act_window,help:smile_discount_contract_forecast.action_discount_contract_forecast_method
+msgid "Click here to create a forecast method for discount contracts."
+msgstr "Cliquer ici pour créer une méthode de projection pour les accords de remise."
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method_code
+msgid "Code"
+msgstr "Code"
+
+#. module: smile_discount_contract_forecast
+#: model:discount.contract.forecast_method,name:smile_discount_contract_forecast.forecast_method_previous_period_values
+msgid "Complete with previous period values"
+msgstr "Complète avec les valeurs de la période précédente"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model,name:smile_discount_contract_forecast.model_discount_contract
+msgid "Discount Contract"
+msgstr "Accord de remise"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model,name:smile_discount_contract_forecast.model_discount_contract_line
+msgid "Discount Contrat - Discount by rule"
+msgstr "Accord de remise - Remise par règle"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method_display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_discount_contract_forecast
+#: model:discount.contract.forecast_method,name:smile_discount_contract_forecast.forecast_method_prorata_valoris
+msgid "Following the previous period progress to date"
+msgstr "Suivant l'avancement à date de la période précédente"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model,name:smile_discount_contract_forecast.model_discount_contract_forecast_method
+msgid "Forecast Method"
+msgstr "Forecast Méthode"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.actions.act_window,name:smile_discount_contract_forecast.action_discount_contract_forecast_method
+#: model:ir.ui.menu,name:smile_discount_contract_forecast.menu_discount_countract_forecast_methods
+msgid "Forecast Methods"
+msgstr "Méthodes de projection"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method_id
+#: model:ir.ui.view,arch_db:smile_discount_contract_forecast.view_discount_contract_forecast_method_form
+msgid "Forecast method"
+msgstr "Méthode de projection"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.ui.view,arch_db:smile_discount_contract_forecast.view_discount_contract_forecast_method_search
+#: model:ir.ui.view,arch_db:smile_discount_contract_forecast.view_discount_contract_forecast_method_tree
+msgid "Forecast methods"
+msgstr "Méthodes de projection"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method_formula
+#: model:ir.ui.view,arch_db:smile_discount_contract_forecast.view_discount_contract_forecast_method_form
+msgid "Formula"
+msgstr "Formule"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method_id_4898
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method___last_update
+msgid "Last Modified on"
+msgstr "Dernière Modification le"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method_write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method_write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_forecast_method_name
+#: model:ir.ui.view,arch_db:smile_discount_contract_forecast.view_discount_contract_forecast_method_form
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_discount_contract_forecast
+#: model:discount.contract.forecast_method,name:smile_discount_contract_forecast.forecast_method_prorata_temporis
+msgid "Prorata temporis"
+msgstr "Prorata temporis"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_line_theoretical_base
+msgid "Theoretical base"
+msgstr "Base théorique"
+
+#. module: smile_discount_contract_forecast
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_line_theoretical_discount
+#: model:ir.model.fields,field_description:smile_discount_contract_forecast.field_discount_contract_theoretical_discount
+msgid "Theoretical discount"
+msgstr "Montant théorique de la remise"

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem id="menu_discount_countract_forecast_methods"
+      action="action_discount_contract_forecast_method"
+      parent="smile_discount_contract.menu_config_discounts" sequence="20"/>
+
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <record id="crm_case_form_view_oppor" model="ir.ui.view">
+    <field name="name">crm.lead.opporutnity</field>
+    <field name="model">crm.lead</field>
+    <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+    <field name="arch" type="xml">
+      <xpath expr="//button[@name='action_set_won']" position="before">
+        <button string="New Discount Contract" name="%(action_discount_contract_new)d"
+          type="action" class="oe_highlight"
+          context="{'search_default_partner_id': partner_id,
+                    'default_partner_id': partner_id}"/>
+      </xpath>
+      <div name="button_box" position="inside">
+        <button name="%(action_discount_contracts)s" type="action"
+          class="oe_stat_button" icon="fa-book">
+          <field string="Contract(s)" name="nb_of_discount_contracts" widget="statinfo"/>
+        </button>
+      </div>
+    </field>
+  </record>
+
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <record model="ir.ui.view" id="view_discount_contract_line_form">
+    <field name="name">discount.contract.line.form</field>
+    <field name="model">discount.contract.line</field>
+    <field name="arch" type="xml">
+      <form string="Discount contract line">
+        <sheet>
+          <group>
+            <field name="contract_id"/>
+            <field name="rule_id"/>
+            <field name="base_value"/>
+            <field name="discount_amount"/>
+            <field name="currency_id" invisible="1"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="view_discount_contract_line_tree">
+    <field name="name">discount.contract.line.tree</field>
+    <field name="model">discount.contract.line</field>
+    <field name="arch" type="xml">
+      <tree string="Discount contract lines">
+        <field name="contract_id"/>
+        <field name="rule_id"/>
+        <field name="base_value"/>
+        <field name="discount_amount"/>
+        <field name="currency_id" invisible="1"/>
+      </tree>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="view_discount_contract_line_search">
+    <field name="name">discount.contract.line.search</field>
+    <field name="model">discount.contract.line</field>
+    <field name="arch" type="xml">
+      <search string="Discount contract lines">
+        <field name="rule_id"/>
+        <field name="contract_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_discount_contract_line" model="ir.actions.act_window">
+    <field name="name">Discount contract lines</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">discount.contract.line</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('contract_id', '=', active_id)]</field>
+  </record>
+
+</odoo>

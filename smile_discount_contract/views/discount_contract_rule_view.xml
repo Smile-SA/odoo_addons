@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <record model="ir.ui.view" id="view_discount_contract_rule_form">
+    <field name="name">discount.contract.rule.form</field>
+    <field name="model">discount.contract.rule</field>
+    <field name="arch" type="xml">
+      <form string="Discount rule">
+        <sheet>
+          <div class="oe_title" colspan="4">
+            <h1>
+              <field name="name" placeholder="Name"/>
+            </h1>
+          </div>
+          <group>
+            <field name="applied_on"/>
+            <field name="product_categ_ids" widget="many2many_tags"
+              attrs="{'invisible': [('applied_on', '!=', 'category')]}"/>
+            <field name="product_tmpl_ids" widget="many2many_tags"
+              attrs="{'invisible': [('applied_on', '!=', 'product')]}"/>
+            <field name="product_ids" widget="many2many_tags"
+              attrs="{'invisible': [('applied_on', '!=', 'variant')]}"/>
+          </group>
+          <notebook>
+            <page string="Computation">
+              <group col="4">
+                <field name="value_type"/>
+                <field name="based_on"/>
+                <label for="formula" colspan="4"
+                  attrs="{'invisible': [('based_on', '!=', 'formula')]}"/>
+                <p colspan="4"
+                  attrs="{'invisible': [('based_on', '!=', 'formula')]}">
+# To compute base value, you can use the following variables:<br/>
+# * rule = current rule<br/>
+# * invoice_lines = prefiltered invoice lines
+                </p>
+                <field name="formula" colspan="4" nolabel="1"
+                  attrs="{'invisible': [('based_on', '!=', 'formula')]}"/>
+              </group>
+              <field name="slice_ids">
+                <tree editable="top">
+                  <field name="min_value"/>
+                  <field name="discount_type"/>
+                  <button name="edit_formula" type="object" icon="fa-pencil-square-o"
+                    attrs="{'invisible': [('discount_type', '!=', 'formula')]}"/>
+                  <field name="discount_value"
+                    attrs="{'required': [('discount_type', '!=', 'formula')], 'readonly': [('discount_type', '=', 'formula')]}"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Description">
+              <field name="description"/>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="view_discount_contract_rule_tree">
+    <field name="name">discount.contract.rule.tree</field>
+    <field name="model">discount.contract.rule</field>
+    <field name="arch" type="xml">
+      <tree string="Discount rules">
+        <field name="sequence" widget="handle"/>
+        <field name="name"/>
+        <field name="contract_tmpl_id"/>
+        <field name="applied_on"/>
+        <field name="product_categ_ids" widget="many2many_tags"
+          attrs="{'invisible': [('applied_on', '!=', 'category')]}"/>
+        <field name="product_tmpl_ids" widget="many2many_tags"
+          attrs="{'invisible': [('applied_on', '!=', 'product')]}"/>
+        <field name="product_ids" widget="many2many_tags"
+          attrs="{'invisible': [('applied_on', '!=', 'variant')]}"/>
+        <field name="value_type"/>
+        <field name="based_on"/>
+      </tree>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="view_discount_contract_rule_search">
+    <field name="name">discount.contract.rule.search</field>
+    <field name="model">discount.contract.rule</field>
+    <field name="arch" type="xml">
+      <search string="Discount rules">
+        <field name="name"/>
+        <field name="contract_tmpl_id"/>
+        <field name="applied_on"/>
+        <field name="product_categ_ids"/>
+        <field name="product_tmpl_ids"/>
+        <field name="product_ids"/>
+        <field name="value_type"/>
+        <field name="based_on"/>
+      </search>
+    </field>
+  </record>
+
+</odoo>

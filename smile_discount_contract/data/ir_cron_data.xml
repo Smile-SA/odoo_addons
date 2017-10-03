@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+
+  <record model="ir.cron" id="discount_contract_refund_generation">
+    <field name="name">Compute discount amount and generate refunds for discount contracts</field>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall">-1</field>
+    <field name="nextcall">2000-01-01 01:00:00</field>
+    <field name="doall" eval="False"/>
+    <field name="model" eval="'discount.contract'"/>
+    <field name="function" eval="'auto_generate_refund'"/>
+    <field name="args" eval="'()'" />
+  </record>
+
+</odoo>

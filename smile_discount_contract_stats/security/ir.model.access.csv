@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_discount_contract_subline_user,discount.contract.subline,model_discount_contract_subline,base.group_user,1,0,0,0
+access_discount_contract_subline_invoice,discount.contract.subline,model_discount_contract_subline,account.group_account_invoice,1,1,1,1

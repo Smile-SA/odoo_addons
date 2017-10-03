@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+
+  <!-- Discount product -->
+  <record model="product.product" id="discount_product_demo">
+    <field name="name">Discount</field>
+  </record>
+
+  <!-- Discount contract template -->
+  <record model="discount.contract.template" id="discount_contract_template_demo">
+    <field name="name">Demo template</field>
+    <field name="code">DEMO</field>
+    <field name="contract_type">sale</field>
+    <field name="journal_id" search="[('type', '=', 'sale')]"/>
+    <field name="product_id" ref="discount_product_demo"/>
+  </record>
+  <record model="discount.contract.rule" id="discount_contract_rule_demo1">
+    <field name="name">Rule applied on global</field>
+    <field name="contract_tmpl_id" ref="discount_contract_template_demo"/>
+  </record>
+  <record model="discount.contract.rule.slice" id="discount_contract_rule_slice_demo1">
+    <field name="rule_id" ref="discount_contract_rule_demo1"/>
+    <field name="min_value">10000.0</field>
+    <field name="discount_type">percent</field>
+    <field name="discount_value">10.0</field>
+  </record>
+  <record model="discount.contract.rule.slice" id="discount_contract_rule_slice_demo2">
+    <field name="rule_id" ref="discount_contract_rule_demo1"/>
+    <field name="min_value">5000.0</field>
+    <field name="discount_type">percent</field>
+    <field name="discount_value">5.0</field>
+  </record>
+  <record model="discount.contract.rule" id="discount_contract_rule_demo2">
+    <field name="name">Rule applied on product categories</field>
+    <field name="contract_tmpl_id" ref="discount_contract_template_demo"/>
+    <field name="applied_on">category</field>
+    <field name="product_categ_ids" eval="[(6, 0, [ref('product.product_category_5')])]"/>
+    <field name="based_on">qty</field>
+  </record>
+  <record model="discount.contract.rule.slice" id="discount_contract_rule_slice_demo3">
+    <field name="rule_id" ref="discount_contract_rule_demo2"/>
+    <field name="min_value">1000.0</field>
+    <field name="discount_type">fixed</field>
+    <field name="discount_value">200.0</field>
+  </record>
+
+  <!-- Discount contract -->
+  <record model="discount.contract" id="discount_contract_demo">
+    <field name="contract_tmpl_id" ref="discount_contract_template_demo"/>
+    <field name="partner_id" ref="base.res_partner_2"/>
+  </record>
+
+</odoo>

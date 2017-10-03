@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <record model="ir.ui.view" id="view_discount_contract_forecast_method_form">
+    <field name="name">discount.contract.forecast_method.form</field>
+    <field name="model">discount.contract.forecast_method</field>
+    <field name="arch" type="xml">
+      <form string="Forecast method">
+        <sheet>
+          <div class="oe_title" colspan="4">
+            <h1>
+              <field name="name" placeholder="Name"/>
+            </h1>
+          </div>
+          <notebook>
+            <page string="Formula">
+              <p>
+# You can use the following variables:<br/>
+# * self = a contract line from which you compute the theoretical base<br/>
+# * fields<br/>
+# * relativedelta
+              </p>
+              <field name="formula"/>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="view_discount_contract_forecast_method_tree">
+    <field name="name">discount.contract.forecast_method.tree</field>
+    <field name="model">discount.contract.forecast_method</field>
+    <field name="arch" type="xml">
+      <tree string="Forecast methods">
+        <field name="name"/>
+      </tree>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="view_discount_contract_forecast_method_search">
+    <field name="name">discount.contract.forecast_method.search</field>
+    <field name="model">discount.contract.forecast_method</field>
+    <field name="arch" type="xml">
+      <search string="Forecast methods">
+        <field name="name"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_discount_contract_forecast_method" model="ir.actions.act_window">
+    <field name="name">Forecast Methods</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">discount.contract.forecast_method</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create">
+        Click here to create a forecast method for discount contracts.
+      </p>
+    </field>
+  </record>
+
+</odoo>

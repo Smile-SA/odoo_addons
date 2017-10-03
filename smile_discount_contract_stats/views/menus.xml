@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem id="menu_report_discounts" action="action_discount_contract_subline"
+      name="Discounts"
+      parent="account.account_reports_business_intelligence_menu" sequence="50"/>
+
+</odoo>

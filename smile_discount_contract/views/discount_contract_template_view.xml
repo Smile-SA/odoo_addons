@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <record model="ir.ui.view" id="view_discount_contract_template_form">
+    <field name="name">discount.contract.template.form</field>
+    <field name="model">discount.contract.template</field>
+    <field name="arch" type="xml">
+      <form string="Discount contract template">
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button name="%(action_discount_contract_from_template)s" type="action"
+              class="oe_stat_button" icon="fa-book">
+              <field string="Contract(s)" name="nb_of_contracts" widget="statinfo"/>
+            </button>
+            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+              <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+            </button>
+          </div>
+          <div class="oe_title" colspan="4">
+            <h1>
+              <field name="name" placeholder="Name"/>
+            </h1>
+            <div>
+              <label string="Over a period of" class="oe_inline"/>
+              <field name="months" class="oe_inline"/>
+              <label string="months" class="oe_inline"/>
+            </div>
+            <div>
+              <label string="Refund generated" class="oe_inline"/>
+              <field name="refund_months" class="oe_inline"/>
+              <label string="months after the end of contract, on the" class="oe_inline"/>
+              <field name="refund_day" class="oe_inline"/>
+              <label string="of the month" class="oe_inline"/>
+            </div>
+          </div>
+          <group>
+            <group>
+              <field name="contract_type"/>
+              <field name="parent_id" domain="[('contract_type', '=', contract_type), ('id', '!=', id)]"/>
+              <field name="company_id" groups="base.group_multi_company"/>
+              <field name="code"/>
+              <field name="id" invisible="1"/>
+            </group>
+            <group groups="account.group_account_user">
+              <field name="journal_id" domain="[('type', '=', contract_type)]"/>
+              <field name="product_id"/>
+            </group>
+          </group>
+          <notebook>
+            <page string="Rules">
+              <field name="rule_ids">
+                <tree>
+                  <field name="sequence" widget="handle"/>
+                  <field name="name"/>
+                  <field name="applied_on"/>
+                  <field name="value_type"/>
+                  <field name="based_on"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Description">
+              <field name="description"/>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="view_discount_contract_template_tree">
+    <field name="name">discount.contract.template.tree</field>
+    <field name="model">discount.contract.template</field>
+    <field name="arch" type="xml">
+      <tree string="Discount contract templates">
+        <field name="code"/>
+        <field name="name"/>
+        <field name="company_id" groups="base.group_multi_company"/>
+        <field name="contract_type"/>
+        <field name="months"/>
+      </tree>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="view_discount_contract_template_search">
+    <field name="name">discount.contract.template.search</field>
+    <field name="model">discount.contract.template</field>
+    <field name="arch" type="xml">
+      <search string="Discount contract templates">
+        <field name="name"/>
+        <field name="code"/>
+        <field name="contract_type"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_discount_contract_template" model="ir.actions.act_window">
+    <field name="name">Discount contract templates</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">discount.contract.template</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+            Click here to create a template of discount contracts.
+        </p>
+    </field>
+  </record>
+
+</odoo>

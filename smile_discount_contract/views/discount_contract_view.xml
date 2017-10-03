@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <record model="ir.ui.view" id="view_discount_contract_close_reason_wizard">
+    <field name="name">discount.contract.close_reason_wizard</field>
+    <field name="model">discount.contract</field>
+    <field name="priority">1001</field>
+    <field name="arch" type="xml">
+      <form string="Close reason">
+        <group>
+          <field name="close_reason_id" required="1"/>
+          <field name="state" invisible="1"/>
+        </group>
+        <footer>
+          <button name="set_close" string="Submit" type="object" class="btn btn-sm btn-primary"/>
+          <button special="cancel" string="Cancel" class="btn btn-sm btn-default"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_discount_contract_close_reason_wizard" model="ir.actions.act_window">
+    <field name="name">Close reason</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">discount.contract</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="view_discount_contract_close_reason_wizard"/>
+    <field name="target">new</field>
+  </record>
+
+  <record model="ir.ui.view" id="view_discount_contract_form">
+    <field name="name">discount.contract.form</field>
+    <field name="model">discount.contract</field>
+    <field name="arch" type="xml">
+      <form string="Discount contract">
+        <header>
+          <button name="set_open" string="Validate contract" type="object"
+            states="draft,sent" class="oe_highlight" groups="account.group_account_invoice"/>
+          <button name="generate_refund" string="Generate refund" type="object"
+            states="open" class="oe_highlight" groups="account.group_account_invoice"/>
+          <button name="send_by_email" string="Send by Email" type="object" states="draft,sent,open"/>
+          <button name="print_contract" string="Print" type="object" states="draft,sent,open"/>
+          <button name="set_cancel" string="Cancel contract" type="object"
+            states="draft" groups="account.group_account_invoice"/>
+          <button name="%(smile_discount_contract.action_discount_contract_close_reason_wizard)d"
+            string="Close contract" type="action" states="open" groups="account.group_account_invoice"/>
+          <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
+        </header>
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button name="%(smile_discount_contract.action_discount_contract_line)s" type="action"
+              class="oe_stat_button" icon="fa-usd">
+              <div class="o_form_field o_stat_info">
+                  <span class="o_stat_value">
+                    <field name="discount_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                  </span>
+                  <span class="o_stat_text">Due</span>
+              </div>
+            </button>
+            <button name="view_refunds" type="object"
+              class="oe_stat_button" icon="fa-pencil-square-o">
+              <div class="o_form_field o_stat_info">
+                  <span class="o_stat_value">
+                    <field name="discount_refund" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                  </span>
+                  <span class="o_stat_text">Invoiced</span>
+              </div>
+            </button>
+          </div>
+          <div class="oe_title" colspan="4">
+            <h1>
+              <field name="display_name"/>
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="contract_tmpl_id"/>
+              <field name="contract_type" invisible="1"/>
+              <field name="partner_id" domain="[(contract_type == 'sale' and 'customer' or 'supplier', '=', True)]"/>
+              <field name="reference"/>
+              <field name="company_id" groups="base.group_multi_company"/>
+              <field name="currency_id" invisible="1"/>
+              <label for="last_update"/>
+              <div>
+                <field name="last_update"/>
+                <button name="compute_discount_amount" string="⇒ Update" type="object"
+                  states="draft,open"
+                  class="oe_link" groups="account.group_account_invoice"/>
+              </div>
+              <field name="close_reason_id" states="close"/>
+            </group>
+            <group>
+              <field name="date_start"/>
+              <field name="date_stop"/>
+              <field name="refund_date"/>
+              <field name="auto_renew" states="draft,open"/>
+              <field name="max_renew" attrs="{'invisible': ['|', ('state', 'not in', ('draft', 'open')), ('auto_renew', '=', False)]}"/>
+            </group>
+          </group>
+        </sheet>
+        <div class="oe_chatter">
+          <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+          <field name="message_ids" widget="mail_thread"/>
+        </div>
+      </form>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="view_discount_contract_tree">
+    <field name="name">discount.contract.tree</field>
+    <field name="model">discount.contract</field>
+    <field name="arch" type="xml">
+      <tree string="Discount contracts"
+        decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+        <field name="name"/>
+        <field name="contract_tmpl_id"/>
+        <field name="partner_id"/>
+        <field name="company_id" groups="base.group_multi_company"/>
+        <field name="currency_id" invisible="1"/>
+        <field name="date_start"/>
+        <field name="date_stop"/>
+        <field name="auto_renew"/>
+        <field name="discount_residual"/>
+        <field name="discount_refund"/>
+        <field name="last_update"/>
+        <field name="state"/>
+      </tree>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="view_discount_contract_search">
+    <field name="name">discount.contract.search</field>
+    <field name="model">discount.contract</field>
+    <field name="arch" type="xml">
+      <search string="Discount contracts">
+        <field name="name"/>
+        <field name="contract_tmpl_id"/>
+        <field name="partner_id"/>
+        <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+        <filter name="open" string="Validated" domain="[('state', '=', 'open')]"/>
+        <filter name="in_progress" string="In progress" domain="[('state', '=', 'open'), ('date_start', '&lt;=', context_today().strftime('%Y-%m-%d')), ('date_stop', '>=', context_today().strftime('%Y-%m-%d'))]"/>
+        <filter name="close" string="Closed" domain="[('state', '=', 'close')]"/>
+        <group>
+          <filter name="group_by_contract_tmpl" string="Contract template" context="{'group_by': 'contract_tmpl_id'}"/>
+          <filter name="group_by_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+          <filter name="group_by_company" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+          <filter name="group_by_date_start" string="Start date" context="{'group_by': 'date_start'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_discount_contract" model="ir.actions.act_window">
+    <field name="name">Discount contracts</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">discount.contract</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+            Click here to create a discount contract.
+        </p>
+    </field>
+  </record>
+
+  <record id="action_discount_contract_from_template" model="ir.actions.act_window">
+    <field name="name">Discount contracts</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">discount.contract</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('contract_tmpl_id', '=', active_id)]</field>
+    <field name="context">{'default_contract_tmpl_id': active_id}</field>
+  </record>
+
+</odoo>

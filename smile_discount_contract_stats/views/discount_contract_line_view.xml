@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <record model="ir.ui.view" id="view_discount_contract_line_tree">
+    <field name="name">discount.contract.line.tree</field>
+    <field name="model">discount.contract.line</field>
+    <field name="inherit_id" ref="smile_discount_contract.view_discount_contract_line_tree"/>
+    <field name="arch" type="xml">
+      <field name="discount_amount" position="after">
+        <field name="next_slice_id"/>
+      </field>
+    </field>
+  </record>
+
+</odoo>
