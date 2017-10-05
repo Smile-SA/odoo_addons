@@ -31,7 +31,8 @@ class AccountExport(models.Model):
             (u'Numéro de pièce', 'aml.move_id.name'),
             (u'Numéro de facture', 'aml.move_id.name'),
             (u'Date d\'échéance',
-             'format_date(aml.date_maturity, \'%d/%m/%Y\')'),
+             'aml.date_maturity and '
+             'format_date(aml.date_maturity, \'%d/%m/%Y\') or \'\''),
             (u'Débit', 'format_amount(aml.debit)'),
             (u'Crédit', 'format_amount(aml.credit)'),
         ]
