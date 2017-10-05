@@ -14,6 +14,9 @@ class AccountExport(models.Model):
     def _get_sage_format_params(self):
         return {'delimiter': '\t'}
 
+    def _get_sage_add_header(self):
+        return False
+
     def _get_sage_mapping(self):
         return [
             (u'Code journal', 'aml.journal_id.code'),
@@ -23,7 +26,8 @@ class AccountExport(models.Model):
              '\'FACT.\' + '
              '(aml.move_id.partner_id.ref or aml.move_id.partner_id.name)'),
             (u'Imputation comptable', 'aml.account_id.code'),
-            (u'Code tiers', 'aml.move_id.partner_id.ref'),
+            (u'Code tiers',
+             'aml.move_id.partner_id.ref or aml.move_id.partner_id.name'),
             (u'Numéro de pièce', 'aml.move_id.name'),
             (u'Numéro de facture', 'aml.move_id.name'),
             (u'Date d\'échéance',
