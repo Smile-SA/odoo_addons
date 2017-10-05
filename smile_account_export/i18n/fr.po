@@ -360,6 +360,16 @@ msgid "Test export"
 msgstr "Tester l'export"
 
 #. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_template_form_view
+msgid "Advanced"
+msgstr "Avancé"
+
+#. module: smile_account_export
+#: model:ir.ui.view,arch_db:smile_account_export.account_export_form_view
+msgid "Advanced"
+msgstr "Avancé"
+
+#. module: smile_account_export
 #: selection:account.export,state:0
 msgid "Tested"
 msgstr "Testé"

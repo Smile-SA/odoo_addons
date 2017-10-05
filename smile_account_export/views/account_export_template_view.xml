@@ -28,14 +28,9 @@
                             <field name="name"/>
                             <field name="provider"
                                 attrs="{'readonly': [('has_non_draft_exports', '=', True)]}"/>
-                            <field name="company_id" readonly="1"
+                            <field name="company_id"
                                 attrs="{'readonly': [('has_non_draft_exports', '=', True)]}"
                                 groups="base.group_multi_company"/>
-                        </group>
-                        <group>
-                            <field name="force_export"
-                                attrs="{'readonly': [('has_non_draft_exports', '=', True)]}"/>
-                            <field name="has_non_draft_exports" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -62,6 +57,11 @@
                                             domain="[('company_id', '=', company_id)]" nolabel="1"/>
                                     </div>
                                 </group>
+                            </group>
+                            <group string="Advanced">
+                                <field name="force_export"
+                                    attrs="{'readonly': [('has_non_draft_exports', '=', True)]}"/>
+                                <field name="has_non_draft_exports" invisible="1"/>
                             </group>
                         </page>
                     </notebook>

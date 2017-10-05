@@ -21,7 +21,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="button_show_lines" type="object" icon="fa-list">
-                            <field string="Exported lines" name="account_move_lines_count" widget="statinfo"/>
+                            <span class="o_stat_text">Exported lines</span>
                         </button>
                     </div>
                     <group>
@@ -52,9 +52,12 @@
                         </page>
                         <page name="filters" string="Filters">
                             <group>
-                                <group string="Period" colsan="4">
+                                <group string="Period">
                                     <field name="start_date"/>
                                     <field name="stop_date"/>
+                                </group>
+                                <group string="Advanced">
+                                    <field name="force_export"/>
                                 </group>
                                 <group string="Journals">
                                     <div>
