@@ -63,17 +63,19 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                     upgrade_manager.set_db_version()
                     _logger.info('%s upgrade successfully loaded in %ss',
                                  upgrade_manager.code_version, time.time() - t0)
+                else:
+                    _logger.info('no upgrade to load')
             registry = native_new(db_name, force_demo, update_module=update_module)
             if upgrades and config.get('stop_after_upgrades'):
                 _logger.info('Stopping Odoo server')
                 os._exit(0)
             return registry
         except Exception, e:
+            _logger.critical('Upgrade FAILED')
             e.traceback = sys.exc_info()
             if upgrades and config.get('stop_after_upgrades'):
                 msg = isinstance(e, (osv.except_osv, orm.except_orm)) and e.value or e
                 _logger.error(tools.ustr(msg), exc_info=e.traceback)
-                _logger.critical('Upgrade FAILED')
                 _logger.info('Stopping Odoo server')
                 os._exit(1)
             raise
