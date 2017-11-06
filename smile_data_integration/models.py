@@ -27,10 +27,11 @@ def _convert_values(self, vals):
 
 
 def call_kw_model(method, self, args, kwargs):
-    if method.__name__ == 'create' and args:
+    # FIX : Call _convert_values in other methods than only create usefull when smile_checklist is installed
+    # TODO : Add a better way to manage model method that need _convert_values
+    if method.__name__ in ['create', 'checklist_wrapper'] and args:
         _convert_values(self, args[0])
     return native_call_kw_model(method, self, args, kwargs)
-
 
 def call_kw_multi(method, self, args, kwargs):
     if args:
