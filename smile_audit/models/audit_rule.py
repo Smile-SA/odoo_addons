@@ -111,6 +111,7 @@ class AuditRule(models.Model):
                 for rule in self.browse(cr, SUPERUSER_ID, ids)}
 
     def _register_hook(self, cr, ids=None):
+        clear_caches = bool(ids)
         updated = False
         if not ids:
             ids = self.search(cr, SUPERUSER_ID, [])
@@ -122,7 +123,7 @@ class AuditRule(models.Model):
                 for method in self._methods:
                     model_obj._patch_method(method, audit_decorator())
                 model_obj.audit_rule = True
-                updated = True
+                updated = clear_caches
             if not rule.active and hasattr(model_obj, 'audit_rule'):
                 for method_name in self._methods:
                     method = getattr(model_obj, method_name)
@@ -132,7 +133,7 @@ class AuditRule(models.Model):
                             break
                         method = method.origin
                 del model_obj.audit_rule
-                updated = True
+                updated = clear_caches
         if updated:
             self.clear_caches()
         return updated
