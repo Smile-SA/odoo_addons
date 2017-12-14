@@ -133,7 +133,7 @@ class AuditRule(models.Model):
                         break
                 else:
                     RecordModel._patch_method(method, audit_decorator(method))
-            updated = True
+            updated = bool(ids)
         if updated:
             self.clear_caches()
         return updated
