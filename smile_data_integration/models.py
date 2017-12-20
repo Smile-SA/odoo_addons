@@ -28,18 +28,30 @@ def _convert_values(self, vals):
 
 def _convert_domain(self, domain):
     for condition in domain:
-        if isinstance(condition, (tuple, list)) and \
-                isinstance(condition[2], basestring):
+        if isinstance(condition, (tuple, list)) and condition[2] and \
+                (isinstance(condition[2], basestring) or
+                 (isinstance(condition[2], list) and
+                  isinstance(condition[2][0], basestring))):
             model = self
             for field_name in condition[0].split('.'):
                 field = model._fields.get(field_name)
-                if isinstance(field, fields.Many2one):
+                relational_types = (fields.Many2one,
+                                    fields.One2many, fields.Many2many)
+                if isinstance(field, relational_types):
                     model = self.env[field.comodel_name]
                 elif field_name != 'id':
                     break
             else:
-                condition[2] = self.env['ir.model.data'].xmlid_to_res_id(
-                    condition[2], raise_if_not_found=True)
+                IrModelData = self.env['ir.model.data']
+                if isinstance(condition[2], basestring):
+                    condition[2] = IrModelData.xmlid_to_res_id(
+                        condition[2], raise_if_not_found=True)
+                else:
+                    ids = []
+                    for xmlid in condition[2]:
+                        ids.append(IrModelData.xmlid_to_res_id(
+                            xmlid, raise_if_not_found=True))
+                    condition[2] = ids
 
 
 def call_kw_model(method, self, args, kwargs):

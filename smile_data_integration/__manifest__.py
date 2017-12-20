@@ -30,7 +30,8 @@
     "description": """
 Features:
 * Add old_id field in models, except from _old_id = False
-* Accept external_id as create / write values or write / unlink ids or search domain operands
+* Accept external_id as create / write values or write / unlink ids
+  or search domain operands
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     & stephane.salah@smile.fr
