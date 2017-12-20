@@ -26,9 +26,27 @@ def _convert_values(self, vals):
                 vals[field], raise_if_not_found=True)
 
 
+def _convert_domain(self, domain):
+    for condition in domain:
+        if isinstance(condition, (tuple, list)) and \
+                isinstance(condition[2], basestring):
+            model = self
+            for field_name in condition[0].split('.'):
+                field = model._fields.get(field_name)
+                if isinstance(field, fields.Many2one):
+                    model = self.env[field.comodel_name]
+                elif field_name != 'id':
+                    break
+            else:
+                condition[2] = self.env['ir.model.data'].xmlid_to_res_id(
+                    condition[2], raise_if_not_found=True)
+
+
 def call_kw_model(method, self, args, kwargs):
-    if method.__name__ == 'create' and args:
+    if method.__name__ in ['create', 'checklist_wrapper'] and args:
         _convert_values(self, args[0])
+    if method.__name__ in ('search', 'search_read', 'search_count') and args:
+        _convert_domain(self, args[0])
     return native_call_kw_model(method, self, args, kwargs)
 
 
