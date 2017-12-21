@@ -1,0 +1,1339 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AccountExport	../smile_account_export/models/account_export.py	/^class AccountExport(models.Model):$/;"	kind:class	line:14
+AccountExport	../smile_account_export_sage/models/account_export.py	/^class AccountExport(models.Model):$/;"	kind:class	line:6
+AccountExport	../smile_account_export_yellodit/models/account_export.py	/^class AccountExport(models.Model):$/;"	kind:class	line:6
+AccountExportSageTest	../smile_account_export_sage/tests/test_account_export_sage.py	/^class AccountExportSageTest(TransactionCase):$/;"	kind:class	line:6
+AccountExportTemplate	../smile_account_export/models/account_export_template.py	/^class AccountExportTemplate(models.Model):$/;"	kind:class	line:7
+AccountExportTemplate	../smile_account_export_sage/models/account_export_template.py	/^class AccountExportTemplate(models.Model):$/;"	kind:class	line:6
+AccountExportTemplate	../smile_account_export_yellodit/models/account_export_template.py	/^class AccountExportTemplate(models.Model):$/;"	kind:class	line:6
+AccountInvoice	../smile_discount_contract/models/account_invoice.py	/^class AccountInvoice(models.Model):$/;"	kind:class	line:6
+AccountInvoice	../smile_multi_company_account/models/account_invoice.py	/^class AccountInvoice(models.Model):$/;"	kind:class	line:8
+AccountMoveLine	../smile_account_export/models/account_move_line.py	/^class AccountMoveLine(models.Model):$/;"	kind:class	line:6
+AccountPayment	../smile_payment_writeoff/models/account_payment.py	/^class AccountPayment(models.Model):$/;"	kind:class	line:25
+AuditLog	../smile_audit/models/audit_log.py	/^class AuditLog(models.Model):$/;"	kind:class	line:28
+AuditRule	../smile_audit/models/audit_rule.py	/^class AuditRule(models.Model):$/;"	kind:class	line:32
+BaseLanguageExport	../smile_base/models/language.py	/^class BaseLanguageExport(models.TransientModel):$/;"	kind:class	line:25
+BaseLanguageInstall	../smile_base/models/language.py	/^class BaseLanguageInstall(models.TransientModel):$/;"	kind:class	line:36
+BaseTest	../smile_base/tests/test_base.py	/^class BaseTest(TransactionCase):$/;"	kind:class	line:44
+BaseUpdateTranslations	../smile_base/models/language.py	/^class BaseUpdateTranslations(models.TransientModel):$/;"	kind:class	line:47
+Checklist	../smile_checklist/models/checklist.py	/^class Checklist(models.Model):$/;"	kind:class	line:22
+ChecklistTask	../smile_checklist/models/checklist_task.py	/^class ChecklistTask(models.Model):$/;"	kind:class	line:9
+ChecklistTaskField	../smile_checklist/models/checklist_task.py	/^class ChecklistTaskField(models.Model):$/;"	kind:class	line:76
+ChecklistTaskInstance	../smile_checklist/models/checklist_task_instance.py	/^class ChecklistTaskInstance(models.Model):$/;"	kind:class	line:9
+ConfigManager	../smile_upgrade/models/config.py	/^class ConfigManager(object):$/;"	kind:class	line:32
+CrmLead	../smile_discount_contract_crm/models/crm_lead.py	/^class CrmLead(models.Model):$/;"	kind:class	line:6
+DecimalPrecision	../smile_decimal_precision/models/decimal_precision.py	/^class DecimalPrecision(models.Model):$/;"	kind:class	line:25
+DiscountContract	../smile_discount_contract/models/discount_contract.py	/^class DiscountContract(models.Model):$/;"	kind:class	line:10
+DiscountContract	../smile_discount_contract_crm/models/discount_contract.py	/^class DiscountContract(models.Model):$/;"	kind:class	line:6
+DiscountContract	../smile_discount_contract_forecast/models/discount_contract.py	/^class DiscountContract(models.Model):$/;"	kind:class	line:6
+DiscountContractCloseReason	../smile_discount_contract/models/discount_contract_close_reason.py	/^class DiscountContractCloseReason(models.Model):$/;"	kind:class	line:6
+DiscountContractForecastMethod	../smile_discount_contract_forecast/models/discount_contract_forecast_method.py	/^class DiscountContractForecastMethod(models.Model):$/;"	kind:class	line:6
+DiscountContractForecastTest	../smile_discount_contract_forecast/tests/test_discount_contract_forecast.py	/^class DiscountContractForecastTest(SingleTransactionCase):$/;"	kind:class	line:6
+DiscountContractLine	../smile_discount_contract/models/discount_contract_line.py	/^class DiscountContractLine(models.Model):$/;"	kind:class	line:10
+DiscountContractLine	../smile_discount_contract_forecast/models/discount_contract_line.py	/^class DiscountContractLine(models.Model):$/;"	kind:class	line:10
+DiscountContractLine	../smile_discount_contract_stats/models/discount_contract_line.py	/^class DiscountContractLine(models.Model):$/;"	kind:class	line:6
+DiscountContractRule	../smile_discount_contract/models/discount_contract_rule.py	/^class DiscountContractRule(models.Model):$/;"	kind:class	line:7
+DiscountContractRuleSlice	../smile_discount_contract/models/discount_contract_rule_slice.py	/^class DiscountContractRuleSlice(models.Model):$/;"	kind:class	line:7
+DiscountContractSubline	../smile_discount_contract_stats/models/discount_contract_subline.py	/^class DiscountContractSubline(models.Model):$/;"	kind:class	line:7
+DiscountContractTemplate	../smile_discount_contract/models/discount_contract_template.py	/^class DiscountContractTemplate(models.Model):$/;"	kind:class	line:7
+DiscountContractTest	../smile_discount_contract/tests/test_discount_contract.py	/^class DiscountContractTest(SingleTransactionCase):$/;"	kind:class	line:6
+Download	../smile_base/controllers/main.py	/^class Download(http.Controller):$/;"	kind:class	line:30
+FetchmailServer	../smile_base/models/fetchmail.py	/^class FetchmailServer(models.Model):$/;"	kind:class	line:26
+Http	../smile_website_login_as/models/ir_http.py	/^class Http(models.AbstractModel):$/;"	kind:class	line:28
+IrActionsActWindow	../smile_base/models/ir_actions.py	/^class IrActionsActWindow(models.Model):$/;"	kind:class	line:28
+IrActionsActWindow	../smile_checklist/models/ir_actions.py	/^class IrActionsActWindow(models.Model):$/;"	kind:class	line:8
+IrAttachment	../smile_attachment/models/ir_attachment.py	/^class IrAttachment(models.Model):$/;"	kind:class	line:25
+IrConfigParameter	../smile_base/models/ir_config_parameter.py	/^class IrConfigParameter(models.Model):$/;"	kind:class	line:25
+IrFilters	../smile_todo_list/models/ir_filters.py	/^class IrFilters(models.Model):$/;"	kind:class	line:38
+IrFiltersCategory	../smile_todo_list/models/ir_filters.py	/^class IrFiltersCategory(models.Model):$/;"	kind:class	line:29
+IrMailServer	../smile_base/models/ir_mail_server.py	/^class IrMailServer(models.Model):$/;"	kind:class	line:28
+IrModel	../smile_access_control/models/res_groups.py	/^class IrModel(models.Model):$/;"	kind:class	line:25
+IrModel	../smile_model_graph/models/ir_model.py	/^class IrModel(models.Model):$/;"	kind:class	line:28
+IrModelExport	../smile_impex/models/export.py	/^class IrModelExport(models.Model):$/;"	kind:class	line:175
+IrModelExportTemplate	../smile_impex/models/export.py	/^class IrModelExportTemplate(models.Model):$/;"	kind:class	line:35
+IrModelGraphWizard	../smile_model_graph/wizard/ir_model_graph_wizard.py	/^class IrModelGraphWizard(models.TransientModel):$/;"	kind:class	line:25
+IrModelImpex	../smile_impex/models/impex.py	/^class IrModelImpex(models.AbstractModel):$/;"	kind:class	line:158
+IrModelImpexTemplate	../smile_impex/models/impex.py	/^class IrModelImpexTemplate(models.AbstractModel):$/;"	kind:class	line:49
+IrModelImport	../smile_impex/models/import_.py	/^class IrModelImport(models.Model):$/;"	kind:class	line:83
+IrModelImportTemplate	../smile_impex/models/import_.py	/^class IrModelImportTemplate(models.Model):$/;"	kind:class	line:33
+IrModelMethods	../smile_model_methods/models/ir_model.py	/^class IrModelMethods(models.Model):$/;"	kind:class	line:34
+IrModuleGraphWizard	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^class IrModuleGraphWizard(models.TransientModel):$/;"	kind:class	line:25
+IrModuleModule	../smile_module_graph/models/ir_module.py	/^class IrModuleModule(models.Model):$/;"	kind:class	line:28
+IrProperty	../smile_multi_company_base/models/ir_property.py	/^class IrProperty(models.Model):$/;"	kind:class	line:7
+IrUiMenu	../smile_access_control/models/ir_ui_menu.py	/^class IrUiMenu(models.Model):$/;"	kind:class	line:25
+IrUiView	../smile_website_access_control/models/ir_ui_view.py	/^class IrUiView(models.Model):$/;"	kind:class	line:25
+IrValues	../smile_base/models/ir_values.py	/^class IrValues(models.Model):$/;"	kind:class	line:28
+LOG_LEVELS	../smile_impex/models/impex.py	/^LOG_LEVELS = [$/;"	kind:variable	line:37
+METHOD_TYPES	../smile_model_methods/models/ir_model.py	/^METHOD_TYPES = [$/;"	kind:variable	line:26
+MailComposeMessage	../smile_base/wizard/mail_compose_message.py	/^class MailComposeMessage(models.TransientModel):$/;"	kind:class	line:26
+MailComposeMessage	../smile_discount_contract/wizard/mail_compose_message.py	/^class MailComposeMessage(models.TransientModel):$/;"	kind:class	line:6
+MailComposer	../smile_mail/wizard/mail_compose_message.py	/^class MailComposer(models.TransientModel):$/;"	kind:class	line:6
+MailMail	../smile_base/models/mail_mail.py	/^class MailMail(models.Model):$/;"	kind:class	line:26
+MailTemplate	../smile_base/models/mail_template.py	/^class MailTemplate(models.Model):$/;"	kind:class	line:8
+Module	../smile_base/models/module.py	/^class Module(models.Model):$/;"	kind:class	line:31
+ProductPricelist	../smile_pricelist_version/models/pricelist.py	/^class ProductPricelist(models.Model):$/;"	kind:class	line:28
+ProductPricelistItem	../smile_pricelist_version/models/pricelist.py	/^class ProductPricelistItem(models.Model):$/;"	kind:class	line:88
+ProductPricelistVersion	../smile_pricelist_version/models/pricelist.py	/^class ProductPricelistVersion(models.Model):$/;"	kind:class	line:51
+PublisherWarrantyContract	../smile_base/models/update.py	/^class PublisherWarrantyContract(models.AbstractModel):$/;"	kind:class	line:25
+PurchaseOrder	../smile_multi_company_purchase/models/purchase_order.py	/^class PurchaseOrder(models.Model):$/;"	kind:class	line:7
+RELATIVEDELTA_TYPES	../smile_web_search_timedelta/models/models.py	/^RELATIVEDELTA_TYPES = {$/;"	kind:variable	line:29
+RedisSessionStore	../smile_redis_session_store/redis_session_store.py	/^class RedisSessionStore(werkzeug.contrib.sessions.SessionStore):$/;"	kind:class	line:45
+ResCompany	../smile_multi_company_account/models/res_company.py	/^class ResCompany(models.Model):$/;"	kind:class	line:7
+ResCompany	../smile_multi_company_base/models/res_company.py	/^class ResCompany(models.Model):$/;"	kind:class	line:7
+ResCompany	../smile_multi_company_purchase/models/res_company.py	/^class ResCompany(models.Model):$/;"	kind:class	line:7
+ResCompany	../smile_multi_company_sale/models/res_company.py	/^class ResCompany(models.Model):$/;"	kind:class	line:7
+ResCompany	../smile_payment_writeoff/models/res_company.py	/^class ResCompany(models.Model):$/;"	kind:class	line:26
+ResGroups	../smile_access_control/models/res_groups.py	/^class ResGroups(models.Model):$/;"	kind:class	line:51
+ResGroups	../smile_website_access_control/models/res_groups.py	/^class ResGroups(models.Model):$/;"	kind:class	line:25
+ResPartner	../smile_base_partner/models/res_partner.py	/^class ResPartner(models.Model):$/;"	kind:class	line:10
+ResPartnerType	../smile_base_partner/models/res_partner_type.py	/^class ResPartnerType(models.Model):$/;"	kind:class	line:6
+ResUsers	../smile_access_control/models/res_users.py	/^class ResUsers(models.Model):$/;"	kind:class	line:26
+ResUsers	../smile_website_login_as/models/res_users.py	/^class ResUsers(models.Model):$/;"	kind:class	line:25
+RestApi	../smile_api_rest/controllers/api.py	/^class RestApi(Controller):$/;"	kind:class	line:8
+SESSION_TIMEOUT	../smile_redis_session_store/redis_session_store.py	/^SESSION_TIMEOUT = 60 * 60 * 24 * 7  # 1 weeks in seconds$/;"	kind:variable	line:31
+SET_OPERATORS	../smile_base/models/models.py	/^SET_OPERATORS = {$/;"	kind:variable	line:193
+SQL2PYTHON_OPERATORS	../smile_base/models/models.py	/^SQL2PYTHON_OPERATORS = {$/;"	kind:variable	line:198
+STATES	../smile_impex/models/impex.py	/^STATES = [$/;"	kind:variable	line:128
+SaleOrder	../smile_multi_company_sale/models/sale_order.py	/^class SaleOrder(models.Model):$/;"	kind:class	line:7
+SmileDBHandler	../smile_log/tools/db_handler.py	/^class SmileDBHandler(logging.Handler):$/;"	kind:class	line:27
+SmileDBLogger	../smile_log/tools/db_logger.py	/^class SmileDBLogger:$/;"	kind:class	line:30
+SmileLog	../smile_log/models/smile_log.py	/^class SmileLog(models.Model):$/;"	kind:class	line:28
+TestAccessControl	../smile_access_control/tests/test_access_control.py	/^class TestAccessControl(TransactionCase):$/;"	kind:class	line:26
+TestAutomaticPaymentWriteoff	../smile_payment_writeoff/tests/test_invoice.py	/^class TestAutomaticPaymentWriteoff(TransactionCase):$/;"	kind:class	line:25
+TestChecklist	../smile_checklist/tests/test_checklist.py	/^class TestChecklist(TransactionCase):$/;"	kind:class	line:25
+TestGroups	../smile_access_control/tests/test_groups.py	/^class TestGroups(TransactionCase):$/;"	kind:class	line:25
+TestUsers	../smile_access_control/tests/test_users.py	/^class TestUsers(TransactionCase):$/;"	kind:class	line:26
+Upgrade	../smile_upgrade/models/upgrade.py	/^class Upgrade(object):$/;"	kind:class	line:187
+UpgradeManager	../smile_upgrade/models/upgrade.py	/^class UpgradeManager(object):$/;"	kind:class	line:52
+WebsiteMenu	../smile_website_access_control/models/website_menu.py	/^class WebsiteMenu(models.Model):$/;"	kind:class	line:26
+WizardIrModelMethods	../smile_model_methods/wizard/wizard_ir_model_method.py	/^class WizardIrModelMethods(models.TransientModel):$/;"	kind:class	line:25
+__call__	../smile_api_rest/tools/http.py	/^    def __call__(self, func):$/;"	kind:member	line:12
+__call__	../smile_base/tools/misc.py	/^    def __call__(self, *args, **kwargs):$/;"	kind:member	line:54
+__enter__	../smile_upgrade/models/upgrade.py	/^    def __enter__(self):$/;"	kind:member	line:70
+__exit__	../smile_upgrade/models/upgrade.py	/^    def __exit__(self, exc_type, exc_value, traceback):$/;"	kind:member	line:73
+__getattr__	../smile_upgrade/models/upgrade.py	/^    def __getattr__(self, key):$/;"	kind:member	line:200
+__getattribute__	../smile_base/tools/misc.py	/^    def __getattribute__(self, attr):$/;"	kind:member	line:51
+__getitem__	../smile_base/tools/misc.py	/^    def __getitem__(self, key):$/;"	kind:member	line:48
+__init__	../smile_checklist/models/checklist.py	/^    def __init__(self, pool, cr):$/;"	kind:member	line:26
+__init__	../smile_impex/models/export.py	/^    def __init__(self, pool, cr):$/;"	kind:member	line:180
+__init__	../smile_impex/models/import_.py	/^    def __init__(self, pool, cr):$/;"	kind:member	line:88
+__init__	../smile_log/tools/db_handler.py	/^    def __init__(self, level=logging.NOTSET):$/;"	kind:member	line:29
+__init__	../smile_log/tools/db_logger.py	/^    def __init__(self, dbname, model_name, res_id, uid=0):$/;"	kind:member	line:32
+__init__	../smile_redis_session_store/redis_session_store.py	/^    def __init__(self, *args, **kwargs):$/;"	kind:member	line:47
+__init__	../smile_upgrade/models/config.py	/^    def __init__(self):$/;"	kind:member	line:35
+__init__	../smile_upgrade/models/upgrade.py	/^    def __init__(self, db_name):$/;"	kind:member	line:58
+__init__	../smile_upgrade/models/upgrade.py	/^    def __init__(self, dir_path, infos):$/;"	kind:member	line:193
+__init__.py	../smile_access_control/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_access_control/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_access_control/tests/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_account_export/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_account_export/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_account_export/tools/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_account_export_sage/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_account_export_sage/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_account_export_sage/tests/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_account_export_yellodit/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_account_export_yellodit/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_api_rest/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_api_rest/controllers/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_api_rest/tools/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_attachment/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_attachment/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_audit/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_audit/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_audit/tools/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_base/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_base/controllers/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_base/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_base/tests/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_base/tools/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_base/wizard/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_base_partner/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_base_partner/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_checklist/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_checklist/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_checklist/tests/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_data_integration/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_decimal_precision/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_decimal_precision/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_decimal_precision/report/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_discount_contract/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_discount_contract/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_discount_contract/tests/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_discount_contract/wizard/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_discount_contract_crm/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_discount_contract_crm/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_discount_contract_forecast/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_discount_contract_forecast/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_discount_contract_forecast/tests/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_discount_contract_stats/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_discount_contract_stats/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_impex/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_impex/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_impex/tools/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_log/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_log/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_log/tools/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_mail/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_mail/wizard/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_model_graph/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_model_graph/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_model_graph/wizard/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_model_methods/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_model_methods/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_model_methods/wizard/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_module_graph/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_module_graph/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_module_graph/wizard/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_multi_company_account/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_multi_company_account/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_multi_company_base/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_multi_company_base/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_multi_company_purchase/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_multi_company_purchase/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_multi_company_sale/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_multi_company_sale/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_payment_writeoff/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_payment_writeoff/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_payment_writeoff/tests/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_pricelist_version/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_pricelist_version/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_redis_session_store/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_todo_list/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_todo_list/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_upgrade/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_upgrade/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_web_export/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_web_gantt/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_web_import/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_web_search_timedelta/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_web_search_timedelta/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_website_access_control/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_website_access_control/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_website_login_as/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_website_login_as/models/__init__.py	1;"	kind:file	line:1
+__init__.py	../smile_widgets_extension/__init__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_access_control/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_account_export/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_account_export_sage/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_account_export_yellodit/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_api_rest/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_attachment/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_audit/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_base/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_base_partner/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_checklist/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_data_integration/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_decimal_precision/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_discount_contract/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_discount_contract_crm/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_discount_contract_forecast/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_discount_contract_stats/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_impex/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_log/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_mail/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_model_graph/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_module_graph/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_multi_company_account/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_multi_company_base/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_multi_company_purchase/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_multi_company_sale/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_payment_writeoff/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_pricelist_version/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_redis_session_store/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_todo_list/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_upgrade/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_web_export/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_web_gantt/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_web_import/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_web_search_timedelta/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_website_access_control/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_website_login_as/__manifest__.py	1;"	kind:file	line:1
+__manifest__.py	../smile_widgets_extension/__manifest__.py	1;"	kind:file	line:1
+__openerp__.py	../smile_model_methods/__openerp__.py	1;"	kind:file	line:1
+__repr__	../smile_base/tools/misc.py	/^    def __repr__(self):$/;"	kind:member	line:61
+_activate	../smile_audit/models/audit_rule.py	/^    def _activate(self):$/;"	kind:member	line:81
+_add_action	../smile_audit/models/audit_rule.py	/^    def _add_action(self):$/;"	kind:member	line:57
+_add_graph_nodes_and_edges	../smile_module_graph/models/ir_module.py	/^    def _add_graph_nodes_and_edges(self, graph):$/;"	kind:member	line:63
+_add_values	../smile_audit/models/audit_rule.py	/^    def _add_values(self):$/;"	kind:member	line:69
+_auto_init	../smile_data_integration/models.py	/^def _auto_init(self):$/;"	kind:function	line:12
+_can_modify	../smile_discount_contract/models/discount_contract_template.py	/^    def _can_modify(self):$/;"	kind:member	line:86
+_check_audit_rule	../smile_audit/models/audit_rule.py	/^    def _check_audit_rule(self, group_ids):$/;"	kind:member	line:109
+_check_date	../smile_pricelist_version/models/pricelist.py	/^    def _check_date(self):$/;"	kind:member	line:65
+_check_export_template_config	../smile_impex/models/export.py	/^    def _check_export_template_config(self):$/;"	kind:member	line:58
+_check_unique_checklist_per_object	../smile_checklist/models/checklist.py	/^    def _check_unique_checklist_per_object(self):$/;"	kind:member	line:47
+_check_update	../smile_account_export/models/account_export_template.py	/^    def _check_update(self, vals):$/;"	kind:member	line:94
+_check_user_profile_id	../smile_access_control/models/res_users.py	/^    def _check_user_profile_id(self):$/;"	kind:member	line:66
+_company_default_get	../smile_multi_company_account/models/res_company.py	/^    def _company_default_get(self, object=False, field=False):$/;"	kind:member	line:24
+_company_dependent_models	../smile_multi_company_account/models/res_company.py	/^    _company_dependent_models = ['account.invoice', 'sale.order', 'purchase.order']$/;"	kind:variable	line:9
+_company_inherit_fields	../smile_base_partner/models/res_partner_type.py	/^    _company_inherit_fields = ['company_type', 'customer', 'supplier']$/;"	kind:variable	line:9
+_compare	../smile_base/models/models.py	/^def _compare(self, other):$/;"	kind:function	line:151
+_compute_base_value	../smile_discount_contract/models/discount_contract_line.py	/^    def _compute_base_value(self):$/;"	kind:member	line:76
+_compute_base_value	../smile_discount_contract/models/discount_contract_rule.py	/^    def _compute_base_value(self, invoice_lines):$/;"	kind:member	line:51
+_compute_discount_amount	../smile_discount_contract/models/discount_contract.py	/^    def _compute_discount_amount(self):$/;"	kind:member	line:210
+_compute_discount_amount	../smile_discount_contract/models/discount_contract_line.py	/^    def _compute_discount_amount(self):$/;"	kind:member	line:86
+_compute_discount_amount	../smile_discount_contract_forecast/models/discount_contract.py	/^    def _compute_discount_amount(self):$/;"	kind:member	line:15
+_compute_discounts	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    def _compute_discounts(self):$/;"	kind:member	line:44
+_compute_display_name	../smile_base_partner/models/res_partner.py	/^    def _compute_display_name(self):$/;"	kind:member	line:164
+_compute_share	../smile_access_control/models/res_users.py	/^    def _compute_share(self):$/;"	kind:member	line:30
+_compute_theoretical_base	../smile_discount_contract_forecast/models/discount_contract_line.py	/^    def _compute_theoretical_base(self):$/;"	kind:member	line:26
+_compute_theoretical_discount	../smile_discount_contract_forecast/models/discount_contract_line.py	/^    def _compute_theoretical_discount(self):$/;"	kind:member	line:35
+_convert_time_to_human	../smile_impex/models/impex.py	/^    def _convert_time_to_human(self):$/;"	kind:member	line:176
+_convert_values	../smile_data_integration/models.py	/^def _convert_values(self, vals):$/;"	kind:function	line:20
+_count_subcompanies	../smile_base_partner/models/res_partner.py	/^    def _count_subcompanies(self):$/;"	kind:member	line:33
+_create_contract_lines	../smile_discount_contract/models/discount_contract.py	/^    def _create_contract_lines(self):$/;"	kind:member	line:201
+_create_contract_sublines	../smile_discount_contract_stats/models/discount_contract_line.py	/^    def _create_contract_sublines(self):$/;"	kind:member	line:31
+_create_export	../smile_impex/models/export.py	/^    def _create_export(self, *args):$/;"	kind:member	line:152
+_create_import	../smile_impex/models/import_.py	/^    def _create_import(self, *args):$/;"	kind:member	line:66
+_create_unique_index	../smile_base/models/models.py	/^def _create_unique_index(self, cr, column, where_clause=None):$/;"	kind:function	line:306
+_deactivate	../smile_audit/models/audit_rule.py	/^    def _deactivate(self):$/;"	kind:member	line:90
+_default_journal	../smile_multi_company_account/models/account_invoice.py	/^    def _default_journal(self):$/;"	kind:member	line:12
+_description	../smile_account_export/models/account_export.py	/^    _description = 'Account Export'$/;"	kind:variable	line:16
+_description	../smile_account_export/models/account_export_template.py	/^    _description = 'Account Export Template'$/;"	kind:variable	line:9
+_description	../smile_audit/models/audit_log.py	/^    _description = 'Audit Log'$/;"	kind:variable	line:30
+_description	../smile_audit/models/audit_rule.py	/^    _description = 'Audit Rule'$/;"	kind:variable	line:34
+_description	../smile_base_partner/models/res_partner_type.py	/^    _description = 'Contact Type'$/;"	kind:variable	line:8
+_description	../smile_checklist/models/checklist.py	/^    _description = 'Checklist'$/;"	kind:variable	line:24
+_description	../smile_checklist/models/checklist_task.py	/^    _description = 'Checklist Task Field'$/;"	kind:variable	line:78
+_description	../smile_checklist/models/checklist_task.py	/^    _description = 'Checklist Task'$/;"	kind:variable	line:11
+_description	../smile_checklist/models/checklist_task_instance.py	/^    _description = 'Checklist Task Instance'$/;"	kind:variable	line:11
+_description	../smile_discount_contract/models/discount_contract.py	/^    _description = 'Discount Contract'$/;"	kind:variable	line:12
+_description	../smile_discount_contract/models/discount_contract_close_reason.py	/^    _description = 'Discount Contract Close Reason'$/;"	kind:variable	line:8
+_description	../smile_discount_contract/models/discount_contract_line.py	/^    _description = 'Discount Contrat - Discount by rule'$/;"	kind:variable	line:12
+_description	../smile_discount_contract/models/discount_contract_rule.py	/^    _description = 'Discount Contract Rule'$/;"	kind:variable	line:9
+_description	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    _description = 'Discount Contract Rule Slice'$/;"	kind:variable	line:9
+_description	../smile_discount_contract/models/discount_contract_template.py	/^    _description = 'Discount Contract Template'$/;"	kind:variable	line:9
+_description	../smile_discount_contract_forecast/models/discount_contract_forecast_method.py	/^    _description = 'Forecast Method'$/;"	kind:variable	line:8
+_description	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    _description = 'Discount Contrat - Discount by rule and product'$/;"	kind:variable	line:9
+_description	../smile_impex/models/export.py	/^    _description = 'Export Template'$/;"	kind:variable	line:37
+_description	../smile_impex/models/export.py	/^    _description = 'Export'$/;"	kind:variable	line:177
+_description	../smile_impex/models/impex.py	/^    _description = 'Import\/Export Template'$/;"	kind:variable	line:51
+_description	../smile_impex/models/impex.py	/^    _description = 'Import\/Export'$/;"	kind:variable	line:160
+_description	../smile_impex/models/import_.py	/^    _description = 'Import Template'$/;"	kind:variable	line:35
+_description	../smile_impex/models/import_.py	/^    _description = 'Import'$/;"	kind:variable	line:85
+_description	../smile_log/models/smile_log.py	/^    _description = 'Smile Logs'$/;"	kind:variable	line:30
+_description	../smile_model_graph/wizard/ir_model_graph_wizard.py	/^    _description = 'Models Graph Wizard'$/;"	kind:variable	line:27
+_description	../smile_model_methods/models/ir_model.py	/^    _description = 'Model Method'$/;"	kind:variable	line:36
+_description	../smile_model_methods/wizard/wizard_ir_model_method.py	/^    _description = 'Wizard Model Method'$/;"	kind:variable	line:27
+_description	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^    _description = 'Module Graph Wizard'$/;"	kind:variable	line:27
+_description	../smile_pricelist_version/models/pricelist.py	/^    _description = 'Pricelist Version'$/;"	kind:variable	line:53
+_description	../smile_todo_list/models/ir_filters.py	/^    _description = 'Filters Category'$/;"	kind:variable	line:31
+_dispatch	../smile_website_login_as/models/ir_http.py	/^    def _dispatch(cls):$/;"	kind:member	line:40
+_execute	../smile_impex/models/export.py	/^    def _execute(self):$/;"	kind:member	line:193
+_execute	../smile_impex/models/impex.py	/^    def _execute(self):$/;"	kind:member	line:238
+_execute	../smile_impex/models/import_.py	/^    def _execute(self):$/;"	kind:member	line:98
+_format_args	../smile_base_partner/models/res_partner.py	/^    def _format_args(self, args):$/;"	kind:member	line:136
+_format_data_to_log	../smile_audit/models/audit_rule.py	/^    def _format_data_to_log(cls, old_values, new_values):$/;"	kind:member	line:167
+_format_record_ids	../smile_account_export/models/account_export.py	/^    def _format_record_ids(self, record_ids, reverse=False):$/;"	kind:member	line:73
+_format_value	../smile_audit/models/audit_log.py	/^    def _format_value(self, field, value):$/;"	kind:member	line:62
+_get_account_move_lines	../smile_account_export/models/account_export.py	/^    def _get_account_move_lines(self):$/;"	kind:member	line:55
+_get_action_domain	../smile_todo_list/models/ir_filters.py	/^    def _get_action_domain(self, action_id=None):$/;"	kind:member	line:69
+_get_active_field	../smile_checklist/models/checklist.py	/^    def _get_active_field(self):$/;"	kind:member	line:41
+_get_activity	../smile_checklist/models/checklist_task_instance.py	/^    def _get_activity(self):$/;"	kind:member	line:29
+_get_all_children	../smile_multi_company_base/models/res_company.py	/^    def _get_all_children(self):$/;"	kind:member	line:11
+_get_all_dependencies	../smile_base/models/module.py	/^    def _get_all_dependencies(self):$/;"	kind:member	line:35
+_get_all_rules	../smile_discount_contract/models/discount_contract_template.py	/^    def _get_all_rules(self):$/;"	kind:member	line:59
+_get_attachments	../smile_attachment/models/models.py	/^def _get_attachments(self):$/;"	kind:function	line:42
+_get_attachments_field_name	../smile_attachment/models/models.py	/^def _get_attachments_field_name(self):$/;"	kind:function	line:33
+_get_checklist_by_model	../smile_checklist/models/checklist.py	/^    def _get_checklist_by_model(self):$/;"	kind:member	line:55
+_get_checklist_task_inst	../smile_checklist/models/checklist.py	/^    def _get_checklist_task_inst(self):$/;"	kind:member	line:62
+_get_client_action_vals	../smile_impex/models/export.py	/^    def _get_client_action_vals(self, **kwargs):$/;"	kind:member	line:73
+_get_code_version	../smile_upgrade/models/upgrade.py	/^    def _get_code_version(self):$/;"	kind:member	line:84
+_get_color	../smile_module_graph/models/ir_module.py	/^    def _get_color(self):$/;"	kind:member	line:51
+_get_comparison_fields	../smile_base/models/models.py	/^def _get_comparison_fields(self):$/;"	kind:function	line:146
+_get_comparison_logs	../smile_base/models/models.py	/^def _get_comparison_logs(self, other):$/;"	kind:function	line:169
+_get_content	../smile_audit/models/audit_log.py	/^    def _get_content(self):$/;"	kind:member	line:90
+_get_contract_date_stop	../smile_discount_contract/models/discount_contract.py	/^    def _get_contract_date_stop(self):$/;"	kind:member	line:79
+_get_contract_timedelta	../smile_discount_contract/models/discount_contract.py	/^    def _get_contract_timedelta(self):$/;"	kind:member	line:73
+_get_count	../smile_todo_list/models/ir_filters.py	/^    def _get_count(self):$/;"	kind:member	line:57
+_get_count_exports	../smile_account_export/models/account_export_template.py	/^    def _get_count_exports(self):$/;"	kind:member	line:41
+_get_cron_vals	../smile_account_export/models/account_export_template.py	/^    def _get_cron_vals(self):$/;"	kind:member	line:72
+_get_cron_vals	../smile_impex/models/export.py	/^    def _get_cron_vals(self, **kwargs):$/;"	kind:member	line:62
+_get_cron_vals	../smile_impex/models/impex.py	/^    def _get_cron_vals(self, **kwargs):$/;"	kind:member	line:80
+_get_cron_vals	../smile_impex/models/import_.py	/^    def _get_cron_vals(self, **kwargs):$/;"	kind:member	line:42
+_get_cursor	../smile_log/tools/db_handler.py	/^    def _get_cursor(self, dbname):$/;"	kind:member	line:33
+_get_db_in_creation	../smile_upgrade/models/upgrade.py	/^    def _get_db_in_creation(self):$/;"	kind:member	line:78
+_get_db_version	../smile_upgrade/models/upgrade.py	/^    def _get_db_version(self):$/;"	kind:member	line:92
+_get_default_company	../smile_account_export/models/account_export_template.py	/^    def _get_default_company(self):$/;"	kind:member	line:36
+_get_default_company	../smile_discount_contract/models/discount_contract.py	/^    def _get_default_company(self):$/;"	kind:member	line:17
+_get_default_field_ids	../smile_access_control/models/res_users.py	/^    def _get_default_field_ids(self):$/;"	kind:member	line:35
+_get_default_options	../smile_upgrade/models/config.py	/^    def _get_default_options(self):$/;"	kind:member	line:43
+_get_default_version_vals	../smile_pricelist_version/models/pricelist.py	/^    def _get_default_version_vals(self):$/;"	kind:member	line:34
+_get_dependency_modules	../smile_module_graph/models/ir_module.py	/^    def _get_dependency_modules(self, stream='down', states=None):$/;"	kind:member	line:78
+_get_discount_contracts	../smile_discount_contract_crm/models/crm_lead.py	/^    def _get_discount_contracts(self):$/;"	kind:member	line:12
+_get_discount_residual	../smile_discount_contract/models/discount_contract.py	/^    def _get_discount_residual(self):$/;"	kind:member	line:88
+_get_display_name_context	../smile_base_partner/models/res_partner.py	/^    def _get_display_name_context(self):$/;"	kind:member	line:157
+_get_domain	../smile_multi_company_base/models/ir_property.py	/^    def _get_domain(self, prop_name, model):$/;"	kind:member	line:47
+_get_domain_and_context	../smile_todo_list/models/ir_filters.py	/^    def _get_domain_and_context(self):$/;"	kind:member	line:42
+_get_email	../smile_base/tests/test_base.py	/^    def _get_email(self):$/;"	kind:member	line:68
+_get_eval_context	../smile_account_export/models/account_export.py	/^    def _get_eval_context(self):$/;"	kind:member	line:166
+_get_eval_context	../smile_discount_contract_forecast/models/discount_contract_line.py	/^    def _get_eval_context(self):$/;"	kind:member	line:18
+_get_eval_context	../smile_impex/models/export.py	/^    def _get_eval_context(self):$/;"	kind:member	line:101
+_get_export_infos	../smile_account_export/models/account_move_line.py	/^    def _get_export_infos(self):$/;"	kind:member	line:20
+_get_export_vals	../smile_impex/models/export.py	/^    def _get_export_vals(self, *args):$/;"	kind:member	line:163
+_get_first_level_relations	../smile_access_control/models/res_groups.py	/^    def _get_first_level_relations(self):$/;"	kind:member	line:29
+_get_graph	../smile_model_graph/models/ir_model.py	/^    def _get_graph(self, show_relation_name=False):$/;"	kind:member	line:55
+_get_graph_modules	../smile_module_graph/models/ir_module.py	/^    def _get_graph_modules(self, stream='down', states=None):$/;"	kind:member	line:96
+_get_import_vals	../smile_impex/models/import_.py	/^    def _get_import_vals(self, *args):$/;"	kind:member	line:71
+_get_inherit_values	../smile_base_partner/models/res_partner.py	/^    def _get_inherit_values(self, partner_type, not_null=False):$/;"	kind:member	line:59
+_get_invoice_lines	../smile_discount_contract/models/discount_contract_line.py	/^    def _get_invoice_lines(self, in_previous_period=False):$/;"	kind:member	line:57
+_get_invoicing_company	../smile_multi_company_account/models/res_company.py	/^    def _get_invoicing_company(self):$/;"	kind:member	line:12
+_get_model	../smile_model_methods/models/ir_model.py	/^    def _get_model(self):$/;"	kind:member	line:53
+_get_name	../smile_audit/models/audit_log.py	/^    def _get_name(self):$/;"	kind:member	line:44
+_get_nb_of_contracts	../smile_discount_contract/models/discount_contract_template.py	/^    def _get_nb_of_contracts(self):$/;"	kind:member	line:55
+_get_next_slice	../smile_discount_contract_stats/models/discount_contract_line.py	/^    def _get_next_slice(self):$/;"	kind:member	line:17
+_get_parent_types	../smile_base_partner/models/res_partner.py	/^    def _get_parent_types(self):$/;"	kind:member	line:28
+_get_partner_filters	../smile_discount_contract/models/discount_contract_line.py	/^    def _get_partner_filters(self):$/;"	kind:member	line:47
+_get_partner_type_infos	../smile_base_partner/models/res_partner.py	/^    def _get_partner_type_infos(self):$/;"	kind:member	line:39
+_get_period_dates	../smile_discount_contract/models/discount_contract_line.py	/^    def _get_period_dates(self, in_previous_period=False):$/;"	kind:member	line:28
+_get_period_dates	../smile_discount_contract_forecast/models/discount_contract_line.py	/^    def _get_period_dates(self, in_previous_period=False):$/;"	kind:member	line:46
+_get_period_filters	../smile_discount_contract/models/discount_contract_line.py	/^    def _get_period_filters(self, in_previous_period=False):$/;"	kind:member	line:39
+_get_record_ids_by_company_id	../smile_multi_company_base/models/ir_property.py	/^    def _get_record_ids_by_company_id(self, model, ids):$/;"	kind:member	line:11
+_get_refund_date	../smile_discount_contract/models/discount_contract.py	/^    def _get_refund_date(self):$/;"	kind:member	line:100
+_get_refund_vals	../smile_discount_contract/models/discount_contract.py	/^    def _get_refund_vals(self):$/;"	kind:member	line:224
+_get_related_models	../smile_model_graph/models/ir_model.py	/^    def _get_related_models(self, deep=1, excluded_model_names=None):$/;"	kind:member	line:77
+_get_relations	../smile_access_control/models/res_groups.py	/^    def _get_relations(self, level=1):$/;"	kind:member	line:38
+_get_res_ids	../smile_impex/models/export.py	/^    def _get_res_ids(self, *args):$/;"	kind:member	line:104
+_get_res_ids_offset	../smile_impex/models/export.py	/^    def _get_res_ids_offset(self, *args):$/;"	kind:member	line:121
+_get_res_name	../smile_log/models/smile_log.py	/^    def _get_res_name(self):$/;"	kind:member	line:46
+_get_sage_add_header	../smile_account_export_sage/models/account_export.py	/^    def _get_sage_add_header(self):$/;"	kind:member	line:17
+_get_sage_filename	../smile_account_export_sage/models/account_export.py	/^    def _get_sage_filename(self):$/;"	kind:member	line:9
+_get_sage_format_params	../smile_account_export_sage/models/account_export.py	/^    def _get_sage_format_params(self):$/;"	kind:member	line:14
+_get_sage_mapping	../smile_account_export_sage/models/account_export.py	/^    def _get_sage_mapping(self):$/;"	kind:member	line:20
+_get_server_action_vals	../smile_impex/models/export.py	/^    def _get_server_action_vals(self, model_id, **kwargs):$/;"	kind:member	line:67
+_get_server_action_vals	../smile_impex/models/impex.py	/^    def _get_server_action_vals(self, model_id, **kwargs):$/;"	kind:member	line:99
+_get_server_action_vals	../smile_impex/models/import_.py	/^    def _get_server_action_vals(self, model_id, **kwargs):$/;"	kind:member	line:47
+_get_session_key	../smile_redis_session_store/redis_session_store.py	/^    def _get_session_key(self, sid):$/;"	kind:member	line:66
+_get_signature	../smile_model_methods/models/ir_model.py	/^    def _get_signature(self):$/;"	kind:member	line:62
+_get_slice_to_apply	../smile_discount_contract/models/discount_contract_rule.py	/^    def _get_slice_to_apply(self, base_value):$/;"	kind:member	line:77
+_get_states	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^    def _get_states(wizard):$/;"	kind:member	line:38
+_get_time	../smile_impex/models/impex.py	/^    def _get_time(self):$/;"	kind:member	line:166
+_get_type	../smile_model_methods/models/ir_model.py	/^    def _get_type(self):$/;"	kind:member	line:41
+_get_upgrades	../smile_upgrade/models/upgrade.py	/^    def _get_upgrades(self):$/;"	kind:member	line:125
+_get_user_name	../smile_log/models/smile_log.py	/^    def _get_user_name(self):$/;"	kind:member	line:37
+_get_visible_menu_ids	../smile_website_access_control/models/website_menu.py	/^    def _get_visible_menu_ids(self, debug=False):$/;"	kind:member	line:34
+_get_window_actions	../smile_base/models/ir_values.py	/^    def _get_window_actions(self):$/;"	kind:member	line:34
+_get_yellodit_filename	../smile_account_export_yellodit/models/account_export.py	/^    def _get_yellodit_filename(self):$/;"	kind:member	line:9
+_get_yellodit_format_params	../smile_account_export_yellodit/models/account_export.py	/^    def _get_yellodit_format_params(self):$/;"	kind:member	line:14
+_get_yellodit_mapping	../smile_account_export_yellodit/models/account_export.py	/^    def _get_yellodit_mapping(self):$/;"	kind:member	line:17
+_group_by_full	../smile_todo_list/models/ir_filters.py	/^    _group_by_full = {$/;"	kind:variable	line:95
+_ignored_fields	../smile_audit/models/audit_rule.py	/^    _ignored_fields = ['__last_update', 'message_ids', 'message_last_post']$/;"	kind:variable	line:164
+_import_file	../smile_upgrade/models/upgrade.py	/^    def _import_file(self, cr, mode, f_obj, module):$/;"	kind:member	line:213
+_inherit	../smile_access_control/models/ir_ui_menu.py	/^    _inherit = 'ir.ui.menu'$/;"	kind:variable	line:26
+_inherit	../smile_access_control/models/res_groups.py	/^    _inherit = 'ir.model'$/;"	kind:variable	line:26
+_inherit	../smile_access_control/models/res_groups.py	/^    _inherit = 'res.groups'$/;"	kind:variable	line:52
+_inherit	../smile_access_control/models/res_users.py	/^    _inherit = 'res.users'$/;"	kind:variable	line:27
+_inherit	../smile_account_export/models/account_export_template.py	/^    _inherit = ['mail.thread']$/;"	kind:variable	line:10
+_inherit	../smile_account_export/models/account_move_line.py	/^    _inherit = 'account.move.line'$/;"	kind:variable	line:7
+_inherit	../smile_account_export_sage/models/account_export.py	/^    _inherit = 'account.export'$/;"	kind:variable	line:7
+_inherit	../smile_account_export_sage/models/account_export_template.py	/^    _inherit = 'account.export.template'$/;"	kind:variable	line:7
+_inherit	../smile_account_export_yellodit/models/account_export.py	/^    _inherit = 'account.export'$/;"	kind:variable	line:7
+_inherit	../smile_account_export_yellodit/models/account_export_template.py	/^    _inherit = 'account.export.template'$/;"	kind:variable	line:7
+_inherit	../smile_attachment/models/ir_attachment.py	/^    _inherit = 'ir.attachment'$/;"	kind:variable	line:26
+_inherit	../smile_base/models/fetchmail.py	/^    _inherit = "fetchmail.server"$/;"	kind:variable	line:27
+_inherit	../smile_base/models/ir_actions.py	/^    _inherit = 'ir.actions.act_window'$/;"	kind:variable	line:29
+_inherit	../smile_base/models/ir_config_parameter.py	/^    _inherit = 'ir.config_parameter'$/;"	kind:variable	line:26
+_inherit	../smile_base/models/ir_mail_server.py	/^    _inherit = "ir.mail_server"$/;"	kind:variable	line:29
+_inherit	../smile_base/models/ir_values.py	/^    _inherit = 'ir.values'$/;"	kind:variable	line:29
+_inherit	../smile_base/models/language.py	/^    _inherit = 'base.language.export'$/;"	kind:variable	line:26
+_inherit	../smile_base/models/language.py	/^    _inherit = 'base.language.install'$/;"	kind:variable	line:37
+_inherit	../smile_base/models/language.py	/^    _inherit = 'base.update.translations'$/;"	kind:variable	line:48
+_inherit	../smile_base/models/mail_mail.py	/^    _inherit = 'mail.mail'$/;"	kind:variable	line:27
+_inherit	../smile_base/models/mail_template.py	/^    _inherit = "mail.template"$/;"	kind:variable	line:9
+_inherit	../smile_base/models/module.py	/^    _inherit = 'ir.module.module'$/;"	kind:variable	line:32
+_inherit	../smile_base/models/update.py	/^    _inherit = "publisher_warranty.contract"$/;"	kind:variable	line:26
+_inherit	../smile_base/wizard/mail_compose_message.py	/^    _inherit = 'mail.compose.message'$/;"	kind:variable	line:27
+_inherit	../smile_base_partner/models/res_partner.py	/^    _inherit = 'res.partner'$/;"	kind:variable	line:11
+_inherit	../smile_checklist/models/ir_actions.py	/^    _inherit = 'ir.actions.act_window'$/;"	kind:variable	line:9
+_inherit	../smile_decimal_precision/models/decimal_precision.py	/^    _inherit = 'decimal.precision'$/;"	kind:variable	line:26
+_inherit	../smile_discount_contract/models/account_invoice.py	/^    _inherit = 'account.invoice'$/;"	kind:variable	line:7
+_inherit	../smile_discount_contract/models/discount_contract.py	/^    _inherit = 'mail.thread'$/;"	kind:variable	line:13
+_inherit	../smile_discount_contract/models/discount_contract_template.py	/^    _inherit = 'mail.thread'$/;"	kind:variable	line:10
+_inherit	../smile_discount_contract/wizard/mail_compose_message.py	/^    _inherit = 'mail.compose.message'$/;"	kind:variable	line:7
+_inherit	../smile_discount_contract_crm/models/crm_lead.py	/^    _inherit = 'crm.lead'$/;"	kind:variable	line:7
+_inherit	../smile_discount_contract_crm/models/discount_contract.py	/^    _inherit = 'discount.contract'$/;"	kind:variable	line:7
+_inherit	../smile_discount_contract_forecast/models/discount_contract.py	/^    _inherit = 'discount.contract'$/;"	kind:variable	line:7
+_inherit	../smile_discount_contract_forecast/models/discount_contract_line.py	/^    _inherit = 'discount.contract.line'$/;"	kind:variable	line:11
+_inherit	../smile_discount_contract_stats/models/discount_contract_line.py	/^    _inherit = 'discount.contract.line'$/;"	kind:variable	line:7
+_inherit	../smile_impex/models/export.py	/^    _inherit = 'ir.model.impex'$/;"	kind:variable	line:178
+_inherit	../smile_impex/models/export.py	/^    _inherit = 'ir.model.impex.template'$/;"	kind:variable	line:38
+_inherit	../smile_impex/models/import_.py	/^    _inherit = 'ir.model.impex'$/;"	kind:variable	line:86
+_inherit	../smile_impex/models/import_.py	/^    _inherit = 'ir.model.impex.template'$/;"	kind:variable	line:36
+_inherit	../smile_mail/wizard/mail_compose_message.py	/^    _inherit = 'mail.compose.message'$/;"	kind:variable	line:7
+_inherit	../smile_model_graph/models/ir_model.py	/^    _inherit = 'ir.model'$/;"	kind:variable	line:29
+_inherit	../smile_module_graph/models/ir_module.py	/^    _inherit = "ir.module.module"$/;"	kind:variable	line:29
+_inherit	../smile_multi_company_account/models/account_invoice.py	/^    _inherit = 'account.invoice'$/;"	kind:variable	line:9
+_inherit	../smile_multi_company_account/models/res_company.py	/^    _inherit = 'res.company'$/;"	kind:variable	line:8
+_inherit	../smile_multi_company_base/models/ir_property.py	/^    _inherit = 'ir.property'$/;"	kind:variable	line:8
+_inherit	../smile_multi_company_base/models/res_company.py	/^    _inherit = 'res.company'$/;"	kind:variable	line:8
+_inherit	../smile_multi_company_purchase/models/purchase_order.py	/^    _inherit = 'purchase.order'$/;"	kind:variable	line:8
+_inherit	../smile_multi_company_purchase/models/res_company.py	/^    _inherit = 'res.company'$/;"	kind:variable	line:8
+_inherit	../smile_multi_company_sale/models/res_company.py	/^    _inherit = 'res.company'$/;"	kind:variable	line:8
+_inherit	../smile_multi_company_sale/models/sale_order.py	/^    _inherit = 'sale.order'$/;"	kind:variable	line:8
+_inherit	../smile_payment_writeoff/models/account_payment.py	/^    _inherit = 'account.payment'$/;"	kind:variable	line:26
+_inherit	../smile_payment_writeoff/models/res_company.py	/^    _inherit = 'res.company'$/;"	kind:variable	line:27
+_inherit	../smile_pricelist_version/models/pricelist.py	/^    _inherit = 'product.pricelist'$/;"	kind:variable	line:29
+_inherit	../smile_pricelist_version/models/pricelist.py	/^    _inherit = 'product.pricelist.item'$/;"	kind:variable	line:89
+_inherit	../smile_todo_list/models/ir_filters.py	/^    _inherit = 'ir.filters'$/;"	kind:variable	line:39
+_inherit	../smile_website_access_control/models/ir_ui_view.py	/^    _inherit = 'ir.ui.view'$/;"	kind:variable	line:26
+_inherit	../smile_website_access_control/models/res_groups.py	/^    _inherit = 'res.groups'$/;"	kind:variable	line:26
+_inherit	../smile_website_access_control/models/website_menu.py	/^    _inherit = 'website.menu'$/;"	kind:variable	line:27
+_inherit	../smile_website_login_as/models/ir_http.py	/^    _inherit = 'ir.http'$/;"	kind:variable	line:29
+_inherit	../smile_website_login_as/models/res_users.py	/^    _inherit = 'res.users'$/;"	kind:variable	line:26
+_inherits	../smile_account_export/models/account_export.py	/^    _inherits = {'account.export.template': 'export_tmpl_id'}$/;"	kind:variable	line:17
+_is_redis_server_running	../smile_redis_session_store/redis_session_store.py	/^    def _is_redis_server_running(self):$/;"	kind:member	line:82
+_load_data	../smile_base/models/module.py	/^    def _load_data(self, module_name, kind='demo', mode='update', noupdate=False):$/;"	kind:member	line:58
+_log_access	../smile_log/models/smile_log.py	/^    _log_access = False$/;"	kind:variable	line:32
+_logger	../smile_audit/models/audit_rule.py	/^_logger = logging.getLogger(__package__)$/;"	kind:variable	line:29
+_logger	../smile_base/models/models.py	/^_logger = logging.getLogger(__name__)$/;"	kind:variable	line:36
+_logger	../smile_base/models/module.py	/^_logger = logging.getLogger(__name__)$/;"	kind:variable	line:28
+_logger	../smile_impex/models/impex.py	/^_logger = logging.getLogger(__package__)$/;"	kind:variable	line:46
+_logger	../smile_upgrade/models/config.py	/^_logger = logging.getLogger(__package__)$/;"	kind:variable	line:29
+_logger	../smile_upgrade/models/registry.py	/^_logger = logging.getLogger(__name__)$/;"	kind:variable	line:35
+_logger	../smile_upgrade/models/upgrade.py	/^_logger = logging.getLogger(__package__)$/;"	kind:variable	line:38
+_manage_checklist_task_instances	../smile_checklist/models/models.py	/^def _manage_checklist_task_instances(self):$/;"	kind:function	line:7
+_manage_task_instances	../smile_checklist/models/checklist_task.py	/^    def _manage_task_instances(self, records=None):$/;"	kind:member	line:26
+_methods	../smile_audit/models/audit_rule.py	/^    _methods = ['_create', '_write', 'unlink']$/;"	kind:variable	line:105
+_name	../smile_account_export/models/account_export.py	/^    _name = 'account.export'$/;"	kind:variable	line:15
+_name	../smile_account_export/models/account_export_template.py	/^    _name = 'account.export.template'$/;"	kind:variable	line:8
+_name	../smile_audit/models/audit_log.py	/^    _name = 'audit.log'$/;"	kind:variable	line:29
+_name	../smile_audit/models/audit_rule.py	/^    _name = 'audit.rule'$/;"	kind:variable	line:33
+_name	../smile_base_partner/models/res_partner_type.py	/^    _name = 'res.partner.type'$/;"	kind:variable	line:7
+_name	../smile_checklist/models/checklist.py	/^    _name = 'checklist'$/;"	kind:variable	line:23
+_name	../smile_checklist/models/checklist_task.py	/^    _name = 'checklist.task'$/;"	kind:variable	line:10
+_name	../smile_checklist/models/checklist_task.py	/^    _name = 'checklist.task.field'$/;"	kind:variable	line:77
+_name	../smile_checklist/models/checklist_task_instance.py	/^    _name = 'checklist.task.instance'$/;"	kind:variable	line:10
+_name	../smile_discount_contract/models/discount_contract.py	/^    _name = 'discount.contract'$/;"	kind:variable	line:11
+_name	../smile_discount_contract/models/discount_contract_close_reason.py	/^    _name = 'discount.contract.close_reason'$/;"	kind:variable	line:7
+_name	../smile_discount_contract/models/discount_contract_line.py	/^    _name = 'discount.contract.line'$/;"	kind:variable	line:11
+_name	../smile_discount_contract/models/discount_contract_rule.py	/^    _name = 'discount.contract.rule'$/;"	kind:variable	line:8
+_name	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    _name = 'discount.contract.rule.slice'$/;"	kind:variable	line:8
+_name	../smile_discount_contract/models/discount_contract_template.py	/^    _name = 'discount.contract.template'$/;"	kind:variable	line:8
+_name	../smile_discount_contract_forecast/models/discount_contract_forecast_method.py	/^    _name = 'discount.contract.forecast_method'$/;"	kind:variable	line:7
+_name	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    _name = 'discount.contract.subline'$/;"	kind:variable	line:8
+_name	../smile_impex/models/export.py	/^    _name = 'ir.model.export'$/;"	kind:variable	line:176
+_name	../smile_impex/models/export.py	/^    _name = 'ir.model.export.template'$/;"	kind:variable	line:36
+_name	../smile_impex/models/impex.py	/^    _name = 'ir.model.impex'$/;"	kind:variable	line:159
+_name	../smile_impex/models/impex.py	/^    _name = 'ir.model.impex.template'$/;"	kind:variable	line:50
+_name	../smile_impex/models/import_.py	/^    _name = 'ir.model.import'$/;"	kind:variable	line:84
+_name	../smile_impex/models/import_.py	/^    _name = 'ir.model.import.template'$/;"	kind:variable	line:34
+_name	../smile_log/models/smile_log.py	/^    _name = 'smile.log'$/;"	kind:variable	line:29
+_name	../smile_model_graph/wizard/ir_model_graph_wizard.py	/^    _name = 'ir.model.graph_wizard'$/;"	kind:variable	line:26
+_name	../smile_model_methods/models/ir_model.py	/^    _name = 'ir.model.methods'$/;"	kind:variable	line:35
+_name	../smile_model_methods/wizard/wizard_ir_model_method.py	/^    _name = 'wizard.ir.model.methods'$/;"	kind:variable	line:26
+_name	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^    _name = 'ir.module.module.graph_wizard'$/;"	kind:variable	line:26
+_name	../smile_pricelist_version/models/pricelist.py	/^    _name = 'product.pricelist.version'$/;"	kind:variable	line:52
+_name	../smile_todo_list/models/ir_filters.py	/^    _name = 'ir.filters.category'$/;"	kind:variable	line:30
+_onchange_company_type	../smile_base_partner/models/res_partner.py	/^    def _onchange_company_type(self):$/;"	kind:member	line:48
+_onchange_contract_type	../smile_discount_contract/models/discount_contract_template.py	/^    def _onchange_contract_type(self):$/;"	kind:member	line:63
+_onchange_discount_type	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    def _onchange_discount_type(self):$/;"	kind:member	line:27
+_onchange_partner_type	../smile_base_partner/models/res_partner.py	/^    def _onchange_partner_type(self):$/;"	kind:member	line:55
+_order	../smile_account_export/models/account_export.py	/^    _order = 'generation_date desc'$/;"	kind:variable	line:18
+_order	../smile_audit/models/audit_log.py	/^    _order = 'create_date desc, id desc'$/;"	kind:variable	line:31
+_order	../smile_base/models/ir_values.py	/^    _order = 'sequence, id'$/;"	kind:variable	line:30
+_order	../smile_checklist/models/checklist_task.py	/^    _order = 'sequence'$/;"	kind:variable	line:12
+_order	../smile_checklist/models/checklist_task_instance.py	/^    _order = 'sequence'$/;"	kind:variable	line:12
+_order	../smile_discount_contract/models/discount_contract.py	/^    _order = 'date_start desc'$/;"	kind:variable	line:14
+_order	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    _order = 'rule_id, min_value'$/;"	kind:variable	line:11
+_order	../smile_impex/models/impex.py	/^    _order = 'create_date desc'$/;"	kind:variable	line:162
+_order	../smile_log/models/smile_log.py	/^    _order = 'log_date desc'$/;"	kind:variable	line:33
+_order	../smile_model_methods/models/ir_model.py	/^    _order = 'name'$/;"	kind:variable	line:37
+_order	../smile_pricelist_version/models/pricelist.py	/^    _order = "applied_on, sequence, min_quantity desc, categ_id desc"  # add sequence on order$/;"	kind:variable	line:90
+_order	../smile_pricelist_version/models/pricelist.py	/^    _order = 'date_start desc'$/;"	kind:variable	line:54
+_patch_model_decoration	../smile_checklist/models/checklist.py	/^    def _patch_model_decoration(self, model):$/;"	kind:member	line:67
+_person_inherit_fields	../smile_base_partner/models/res_partner_type.py	/^    _person_inherit_fields = ['company_type', 'type']$/;"	kind:variable	line:10
+_process	../smile_impex/models/impex.py	/^    def _process(self):$/;"	kind:member	line:212
+_process_with_new_cursor	../smile_impex/models/impex.py	/^    def _process_with_new_cursor(self):$/;"	kind:member	line:208
+_protected_fields	../smile_discount_contract/models/discount_contract_template.py	/^    _protected_fields = ['contract_type', 'rule_ids', 'months']$/;"	kind:variable	line:92
+_read_from_database	../smile_audit/models/models.py	/^def _read_from_database(self, field_names, inherited_field_names=[]):$/;"	kind:function	line:29
+_read_group_category_ids	../smile_todo_list/models/ir_filters.py	/^    def _read_group_category_ids(self, domain, **kwargs):$/;"	kind:member	line:91
+_read_group_process_groupby	../smile_base/models/models.py	/^def _read_group_process_groupby(self, gb, query):$/;"	kind:function	line:322
+_rec_name	../smile_discount_contract/models/discount_contract_line.py	/^    _rec_name = 'rule_id'$/;"	kind:variable	line:13
+_rec_name	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    _rec_name = 'min_value'$/;"	kind:variable	line:10
+_rec_name	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    _rec_name = 'product_id'$/;"	kind:variable	line:10
+_rec_name	../smile_impex/models/impex.py	/^    _rec_name = 'create_date'$/;"	kind:variable	line:161
+_rec_name	../smile_log/models/smile_log.py	/^    _rec_name = 'message'$/;"	kind:variable	line:31
+_rec_name	../smile_model_graph/wizard/ir_model_graph_wizard.py	/^    _rec_name = 'filename'$/;"	kind:variable	line:28
+_rec_name	../smile_model_methods/wizard/wizard_ir_model_method.py	/^    _rec_name = ''$/;"	kind:variable	line:28
+_rec_name	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^    _rec_name = 'filename'$/;"	kind:variable	line:28
+_register_hook	../smile_audit/models/audit_rule.py	/^    def _register_hook(self, ids=None):$/;"	kind:member	line:118
+_render_html	../smile_audit/models/audit_log.py	/^    def _render_html(self):$/;"	kind:member	line:106
+_reset_services	../smile_upgrade/models/upgrade.py	/^    def _reset_services(self):$/;"	kind:member	line:156
+_revert_model_decoration	../smile_checklist/models/checklist.py	/^    def _revert_model_decoration(self, model):$/;"	kind:member	line:99
+_search	../smile_access_control/models/ir_ui_menu.py	/^    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):$/;"	kind:member	line:29
+_search	../smile_base_partner/models/res_partner.py	/^    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):$/;"	kind:member	line:152
+_search_activity	../smile_checklist/models/checklist_task_instance.py	/^    def _search_activity(self, operator, value):$/;"	kind:member	line:51
+_search_attachments	../smile_attachment/models/models.py	/^def _search_attachments(self, operator, value):$/;"	kind:function	line:47
+_search_exported	../smile_account_export/models/account_move_line.py	/^    def _search_exported(self, operator, value):$/;"	kind:member	line:37
+_search_first_generation_date	../smile_account_export/models/account_move_line.py	/^    def _search_first_generation_date(self, operator, value):$/;"	kind:member	line:59
+_search_generation_date	../smile_account_export/models/account_move_line.py	/^    def _search_generation_date(self, operator, value, exclude):$/;"	kind:member	line:44
+_search_last_generation_date	../smile_account_export/models/account_move_line.py	/^    def _search_last_generation_date(self, operator, value):$/;"	kind:member	line:63
+_set_account_move_lines	../smile_account_export/models/account_export.py	/^    def _set_account_move_lines(self):$/;"	kind:member	line:68
+_set_model	../smile_model_methods/models/ir_model.py	/^    def _set_model(self):$/;"	kind:member	line:57
+_setup_fields	../smile_attachment/models/models.py	/^def _setup_fields(self, partial):$/;"	kind:function	line:62
+_sql_constraints	../smile_access_control/models/res_users.py	/^    _sql_constraints = [$/;"	kind:variable	line:56
+_sql_constraints	../smile_audit/models/audit_rule.py	/^    _sql_constraints = [$/;"	kind:variable	line:50
+_sql_constraints	../smile_discount_contract/models/discount_contract_template.py	/^    _sql_constraints = [$/;"	kind:variable	line:49
+_sql_import	../smile_upgrade/models/upgrade.py	/^    def _sql_import(self, cr, f_obj):$/;"	kind:member	line:207
+_try_lock	../smile_base/models/models.py	/^def _try_lock(self, warning=None):$/;"	kind:function	line:119
+_try_lock	../smile_impex/models/impex.py	/^    def _try_lock(self, warning=None):$/;"	kind:member	line:67
+_try_lock	../smile_upgrade/models/upgrade.py	/^    def _try_lock(self, warning=None):$/;"	kind:member	line:116
+_unwritable_fields	../smile_account_export/models/account_export_template.py	/^    _unwritable_fields = ['provider', 'company_id', 'journal_ids',$/;"	kind:variable	line:90
+_update_children	../smile_base_partner/models/res_partner.py	/^    def _update_children(self, vals):$/;"	kind:member	line:73
+_update_context	../smile_base/models/ir_actions.py	/^    def _update_context(self):$/;"	kind:member	line:32
+_update_context	../smile_checklist/models/ir_actions.py	/^    def _update_context(self):$/;"	kind:member	line:12
+_update_contract_line	../smile_discount_contract/models/discount_contract_line.py	/^    def _update_contract_line(self):$/;"	kind:member	line:97
+_update_contract_line	../smile_discount_contract_forecast/models/discount_contract_line.py	/^    def _update_contract_line(self):$/;"	kind:member	line:40
+_update_contract_line	../smile_discount_contract_stats/models/discount_contract_line.py	/^    def _update_contract_line(self):$/;"	kind:member	line:40
+_update_contract_sublines	../smile_discount_contract_stats/models/discount_contract_line.py	/^    def _update_contract_sublines(self):$/;"	kind:member	line:45
+_update_fields_view_get_result	../smile_base_partner/models/res_partner.py	/^    def _update_fields_view_get_result(self, result, view_type='form'):$/;"	kind:member	line:118
+_update_from_profile	../smile_access_control/models/res_users.py	/^    def _update_from_profile(self, fields=None):$/;"	kind:member	line:78
+_update_models	../smile_checklist/models/checklist.py	/^    def _update_models(self, models=None):$/;"	kind:member	line:113
+_update_models	../smile_data_integration/__init__.py	/^def _update_models(cr, registry):$/;"	kind:function	line:8
+_update_users	../smile_access_control/models/res_groups.py	/^    def _update_users(self, vals):$/;"	kind:member	line:57
+_update_users_linked_to_profile	../smile_access_control/models/res_users.py	/^    def _update_users_linked_to_profile(self, fields=None):$/;"	kind:member	line:105
+_validate_fields	../smile_base/models/models.py	/^def _validate_fields(self, fields_to_validate):$/;"	kind:function	line:46
+_website_enabled	../smile_website_login_as/models/ir_http.py	/^    def _website_enabled(cls):$/;"	kind:member	line:32
+_where_calc	../smile_web_search_timedelta/models/models.py	/^def _where_calc(self, domain, active_test=True):$/;"	kind:function	line:42
+account_export.py	../smile_account_export/models/account_export.py	1;"	kind:file	line:1
+account_export.py	../smile_account_export_sage/models/account_export.py	1;"	kind:file	line:1
+account_export.py	../smile_account_export_yellodit/models/account_export.py	1;"	kind:file	line:1
+account_export_template.py	../smile_account_export/models/account_export_template.py	1;"	kind:file	line:1
+account_export_template.py	../smile_account_export_sage/models/account_export_template.py	1;"	kind:file	line:1
+account_export_template.py	../smile_account_export_yellodit/models/account_export_template.py	1;"	kind:file	line:1
+account_ids	../smile_account_export/models/account_export_template.py	/^    account_ids = fields.Many2many($/;"	kind:variable	line:21
+account_invoice.py	../smile_discount_contract/models/account_invoice.py	1;"	kind:file	line:1
+account_invoice.py	../smile_multi_company_account/models/account_invoice.py	1;"	kind:file	line:1
+account_move_line.py	../smile_account_export/models/account_move_line.py	1;"	kind:file	line:1
+account_move_line_ids	../smile_account_export/models/account_export.py	/^    account_move_line_ids = fields.Many2many($/;"	kind:variable	line:35
+account_move_lines_count	../smile_account_export/models/account_export.py	/^    account_move_lines_count = fields.Integer($/;"	kind:variable	line:41
+account_moves_count	../smile_account_export/models/account_export.py	/^    account_moves_count = fields.Integer($/;"	kind:variable	line:43
+account_payment.py	../smile_payment_writeoff/models/account_payment.py	1;"	kind:file	line:1
+act_window_ids	../smile_checklist/models/checklist.py	/^    act_window_ids = fields.Many2many('ir.actions.act_window', 'checklist_act_window_rel', 'act_window_id', 'checklist_id', 'Menus')$/;"	kind:variable	line:36
+action_id	../smile_audit/models/audit_rule.py	/^    action_id = fields.Many2one('ir.actions.act_window', 'Client Action', readonly=True)$/;"	kind:variable	line:47
+action_id	../smile_checklist/models/checklist.py	/^    action_id = fields.Many2one('ir.actions.server', 'Action')$/;"	kind:variable	line:35
+action_id	../smile_checklist/models/checklist_task.py	/^    action_id = fields.Many2one('ir.actions.server', 'Action')$/;"	kind:variable	line:19
+active	../smile_access_control/models/res_groups.py	/^    active = fields.Boolean(default=True)$/;"	kind:variable	line:54
+active	../smile_account_export/models/account_export_template.py	/^    active = fields.Boolean(default=True)$/;"	kind:variable	line:13
+active	../smile_audit/models/audit_rule.py	/^    active = fields.Boolean(default=True)$/;"	kind:variable	line:37
+active	../smile_base_partner/models/res_partner_type.py	/^    active = fields.Boolean(default=True)$/;"	kind:variable	line:16
+active	../smile_checklist/models/checklist.py	/^    active = fields.Boolean('Active', default=True)$/;"	kind:variable	line:33
+active	../smile_checklist/models/checklist_task.py	/^    active = fields.Boolean('Active', default=True)$/;"	kind:variable	line:18
+active	../smile_checklist/models/checklist_task_instance.py	/^    active = fields.Boolean(compute='_get_activity', search='_search_activity')$/;"	kind:variable	line:22
+active	../smile_discount_contract/models/discount_contract_close_reason.py	/^    active = fields.Boolean(default=True)$/;"	kind:variable	line:11
+active	../smile_discount_contract/models/discount_contract_template.py	/^    active = fields.Boolean(default=True)$/;"	kind:variable	line:16
+active	../smile_model_methods/models/ir_model.py	/^    active = fields.Boolean(readonly=True, default=True)$/;"	kind:variable	line:111
+active_field	../smile_checklist/models/checklist.py	/^    active_field = fields.Boolean("Has an 'Active' field", compute='_get_active_field')$/;"	kind:variable	line:34
+active_field	../smile_checklist/models/checklist_task.py	/^    active_field = fields.Boolean("Field 'Active'", related='checklist_id.active_field')$/;"	kind:variable	line:21
+add_graph_edge	../smile_model_graph/models/ir_model.py	/^    def add_graph_edge(graph, nodes, edges, src, dest, ttype, direction='normal', reverse=False, label=''):$/;"	kind:member	line:39
+add_graph_edge	../smile_module_graph/models/ir_module.py	/^    def add_graph_edge(graph, nodes, edges, src, dest):$/;"	kind:member	line:39
+add_graph_node	../smile_model_graph/models/ir_model.py	/^    def add_graph_node(graph, nodes, name, label=None, color='black'):$/;"	kind:member	line:32
+add_graph_node	../smile_module_graph/models/ir_module.py	/^    def add_graph_node(graph, nodes, name, label=None, color='black'):$/;"	kind:member	line:32
+add_timing	../smile_log/tools/misc.py	/^def add_timing(original_method):$/;"	kind:function	line:26
+add_trace	../smile_log/tools/misc.py	/^def add_trace(original_method):$/;"	kind:function	line:34
+all_rule_ids	../smile_discount_contract/models/discount_contract_template.py	/^    all_rule_ids = fields.One2many('discount.contract.rule',$/;"	kind:variable	line:45
+api.py	../smile_api_rest/controllers/api.py	1;"	kind:file	line:1
+api.py	../smile_impex/tools/api.py	1;"	kind:file	line:1
+applied_on	../smile_discount_contract/models/discount_contract_rule.py	/^    applied_on = fields.Selection([$/;"	kind:variable	line:18
+archive_and_delete_old_logs	../smile_log/models/smile_log.py	/^    def archive_and_delete_old_logs(self, nb_days=90, archive_path=''):$/;"	kind:member	line:63
+args	../smile_impex/models/impex.py	/^    args = fields.Text('Arguments', readonly=True)$/;"	kind:variable	line:189
+audit_create	../smile_audit/tools/decorator.py	/^    def audit_create(self, vals):$/;"	kind:function	line:34
+audit_decorator	../smile_audit/tools/decorator.py	/^def audit_decorator(method):$/;"	kind:function	line:25
+audit_log.py	../smile_audit/models/audit_log.py	1;"	kind:file	line:1
+audit_rule.py	../smile_audit/models/audit_rule.py	1;"	kind:file	line:1
+audit_unlink	../smile_audit/tools/decorator.py	/^    def audit_unlink(self):$/;"	kind:function	line:55
+audit_write	../smile_audit/tools/decorator.py	/^    def audit_write(self, vals):$/;"	kind:function	line:44
+authenticate	../smile_api_rest/controllers/api.py	/^    def authenticate(self, db, login, password):$/;"	kind:member	line:22
+auto_generate_refund	../smile_discount_contract/models/discount_contract.py	/^    def auto_generate_refund(self):$/;"	kind:member	line:269
+auto_renew	../smile_discount_contract/models/discount_contract.py	/^    auto_renew = fields.Boolean('Self-renewal')$/;"	kind:variable	line:56
+base_value	../smile_discount_contract/models/discount_contract_line.py	/^    base_value = fields.Float(digits=dp.get_precision('Discount base value'),$/;"	kind:variable	line:21
+base_value	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    base_value = fields.Float(digits=dp.get_precision('Discount base value'),$/;"	kind:variable	line:17
+based_on	../smile_discount_contract/models/discount_contract_rule.py	/^    based_on = fields.Selection([$/;"	kind:variable	line:35
+body	../smile_mail/wizard/mail_compose_message.py	/^    body = fields.Html(default='<div><\/div>')$/;"	kind:variable	line:9
+build_email	../smile_base/models/ir_mail_server.py	/^    def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,$/;"	kind:member	line:40
+bulk_create	../smile_base/models/models.py	/^def bulk_create(self, vals_list):$/;"	kind:function	line:94
+button_call	../smile_model_methods/wizard/wizard_ir_model_method.py	/^    def button_call(self):$/;"	kind:member	line:34
+button_complete_access_controls	../smile_access_control/models/res_groups.py	/^    def button_complete_access_controls(self):$/;"	kind:member	line:102
+button_generate_file	../smile_model_graph/wizard/ir_model_graph_wizard.py	/^    def button_generate_file(self):$/;"	kind:member	line:36
+button_generate_file	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^    def button_generate_file(self):$/;"	kind:member	line:49
+button_show_lines	../smile_account_export/models/account_export.py	/^    def button_show_lines(self):$/;"	kind:member	line:94
+call_kw_model	../smile_data_integration/models.py	/^def call_kw_model(method, self, args, kwargs):$/;"	kind:function	line:29
+call_kw_multi	../smile_data_integration/models.py	/^def call_kw_multi(method, self, args, kwargs):$/;"	kind:function	line:35
+can_have_parent	../smile_base_partner/models/res_partner.py	/^    can_have_parent = fields.Boolean(compute='_get_partner_type_infos')$/;"	kind:variable	line:16
+can_have_parent	../smile_base_partner/models/res_partner_type.py	/^    can_have_parent = fields.Boolean(default=True)$/;"	kind:variable	line:19
+cancel_export	../smile_account_export/models/account_export.py	/^    def cancel_export(self):$/;"	kind:member	line:145
+category_id	../smile_todo_list/models/ir_filters.py	/^    category_id = fields.Many2one('ir.filters.category', 'Todo category')$/;"	kind:variable	line:63
+check_dates	../smile_account_export/models/account_export.py	/^    def check_dates(self):$/;"	kind:member	line:49
+check_move_line	../smile_payment_writeoff/tests/test_invoice.py	/^    def check_move_line(self, move_id, nb_lines, amount=None, acc_number=None):$/;"	kind:member	line:88
+checklist.py	../smile_checklist/models/checklist.py	1;"	kind:file	line:1
+checklist_create_decorator	../smile_checklist/models/checklist_decorators.py	/^def checklist_create_decorator():$/;"	kind:function	line:57
+checklist_decorators.py	../smile_checklist/models/checklist_decorators.py	1;"	kind:file	line:1
+checklist_fields_view_get_decorator	../smile_checklist/models/checklist_decorators.py	/^def checklist_fields_view_get_decorator():$/;"	kind:function	line:8
+checklist_id	../smile_checklist/models/checklist_task.py	/^    checklist_id = fields.Many2one('checklist', 'Checklist', required=True, ondelete='cascade')$/;"	kind:variable	line:15
+checklist_id	../smile_checklist/models/checklist_task_instance.py	/^    checklist_id = fields.Many2one('checklist', 'Checklist', related='task_id.checklist_id', readonly=True)$/;"	kind:variable	line:16
+checklist_task.py	../smile_checklist/models/checklist_task.py	1;"	kind:file	line:1
+checklist_task_instance.py	../smile_checklist/models/checklist_task_instance.py	1;"	kind:file	line:1
+checklist_wrapper	../smile_checklist/models/checklist_decorators.py	/^    def checklist_wrapper(self, vals):$/;"	kind:function	line:59
+checklist_wrapper	../smile_checklist/models/checklist_decorators.py	/^    def checklist_wrapper(self, vals):$/;"	kind:function	line:68
+checklist_wrapper	../smile_checklist/models/checklist_decorators.py	/^    def checklist_wrapper(self, view_id=None, view_type='form', toolbar=False, submenu=False):$/;"	kind:function	line:10
+checklist_write_decorator	../smile_checklist/models/checklist_decorators.py	/^def checklist_write_decorator():$/;"	kind:function	line:66
+child_ids	../smile_discount_contract/models/discount_contract_template.py	/^    child_ids = fields.One2many('discount.contract.template',$/;"	kind:variable	line:43
+client_action_id	../smile_impex/models/export.py	/^    client_action_id = fields.Many2one('ir.values', 'Client Action', copy=False)$/;"	kind:variable	line:44
+close	../smile_log/tools/db_handler.py	/^    def close(self):$/;"	kind:member	line:66
+close_reason_id	../smile_discount_contract/models/discount_contract.py	/^    close_reason_id = fields.Many2one('discount.contract.close_reason',$/;"	kind:variable	line:53
+code	../smile_base_partner/models/res_partner_type.py	/^    code = fields.Char(required=True)  # Readonly if id$/;"	kind:variable	line:14
+code	../smile_discount_contract/models/discount_contract_template.py	/^    code = fields.Char()$/;"	kind:variable	line:14
+code	../smile_discount_contract_forecast/models/discount_contract_forecast_method.py	/^    code = fields.Char()$/;"	kind:variable	line:11
+color	../smile_todo_list/models/ir_filters.py	/^    color = fields.Integer('Color Index')$/;"	kind:variable	line:64
+company_id	../smile_account_export/models/account_export_template.py	/^    company_id = fields.Many2one($/;"	kind:variable	line:16
+company_id	../smile_discount_contract/models/discount_contract.py	/^    company_id = fields.Many2one('res.company', 'Company',$/;"	kind:variable	line:28
+company_id	../smile_discount_contract/models/discount_contract_template.py	/^    company_id = fields.Many2one('res.company', 'Company')$/;"	kind:variable	line:21
+company_id	../smile_multi_company_account/models/account_invoice.py	/^    company_id = fields.Many2one(domain=[('chart_template_id', '!=', False)])$/;"	kind:variable	line:26
+company_id	../smile_multi_company_purchase/models/purchase_order.py	/^    company_id = fields.Many2one(domain=[('chart_template_id', '!=', False)])$/;"	kind:variable	line:10
+company_id	../smile_multi_company_sale/models/sale_order.py	/^    company_id = fields.Many2one(domain=[('chart_template_id', '!=', False)])$/;"	kind:variable	line:10
+company_type	../smile_base_partner/models/res_partner_type.py	/^    company_type = fields.Selection([$/;"	kind:variable	line:28
+compute	../smile_base/models/models.py	/^    def compute(item):$/;"	kind:function	line:271
+compute	../smile_base_partner/models/res_partner.py	/^                                       compute='_get_parent_types')$/;"	kind:variable	line:19
+compute	../smile_discount_contract/models/discount_contract_template.py	/^                                   compute='_get_all_rules')$/;"	kind:variable	line:47
+compute_base_value	../smile_discount_contract/models/discount_contract_line.py	/^    def compute_base_value(self, in_previous_period=False):$/;"	kind:member	line:70
+compute_discount_amount	../smile_discount_contract/models/discount_contract.py	/^    def compute_discount_amount(self):$/;"	kind:member	line:219
+compute_discount_amount	../smile_discount_contract/models/discount_contract_rule.py	/^    def compute_discount_amount(self, base_value):$/;"	kind:member	line:86
+compute_discount_amount	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    def compute_discount_amount(self, base_value):$/;"	kind:member	line:39
+compute_progress_rates	../smile_checklist/models/checklist.py	/^    def compute_progress_rates(self, records=None):$/;"	kind:member	line:155
+condition	../smile_checklist/models/checklist_task.py	/^    condition = fields.Char('Condition', size=256, required=True, help="object in localcontext", default='True')$/;"	kind:variable	line:17
+config.py	../smile_upgrade/models/config.py	1;"	kind:file	line:1
+config_to_enable_email_sending	../smile_base/tests/test_base.py	/^def config_to_enable_email_sending(enable_email_sending):$/;"	kind:function	line:30
+configuration	../smile_upgrade/models/config.py	/^configuration = ConfigManager()$/;"	kind:variable	line:75
+contact_ids	../smile_base_partner/models/res_partner.py	/^    contact_ids = fields.One2many('res.partner', 'parent_id', 'Contacts & Addresses',$/;"	kind:variable	line:20
+contract_id	../smile_discount_contract/models/discount_contract_line.py	/^    contract_id = fields.Many2one('discount.contract', 'Contract',$/;"	kind:variable	line:15
+contract_ids	../smile_discount_contract/models/discount_contract_template.py	/^    contract_ids = fields.One2many('discount.contract', 'contract_tmpl_id',$/;"	kind:variable	line:37
+contract_line_id	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    contract_line_id = fields.Many2one('discount.contract.line',$/;"	kind:variable	line:12
+contract_line_ids	../smile_discount_contract/models/discount_contract.py	/^    contract_line_ids = fields.One2many('discount.contract.line',$/;"	kind:variable	line:58
+contract_subline_ids	../smile_discount_contract_stats/models/discount_contract_line.py	/^    contract_subline_ids = fields.One2many('discount.contract.subline',$/;"	kind:variable	line:9
+contract_tmpl_id	../smile_discount_contract/models/discount_contract.py	/^    contract_tmpl_id = fields.Many2one('discount.contract.template',$/;"	kind:variable	line:23
+contract_tmpl_id	../smile_discount_contract/models/discount_contract_rule.py	/^    contract_tmpl_id = fields.Many2one('discount.contract.template',$/;"	kind:variable	line:12
+contract_type	../smile_discount_contract/models/discount_contract.py	/^    contract_type = fields.Selection(related='contract_tmpl_id.contract_type',$/;"	kind:variable	line:26
+contract_type	../smile_discount_contract/models/discount_contract_template.py	/^    contract_type = fields.Selection([$/;"	kind:variable	line:17
+contract_type	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    contract_type = fields.Selection($/;"	kind:variable	line:23
+copy_data	../smile_access_control/models/res_users.py	/^    def copy_data(self, default=None):$/;"	kind:member	line:129
+copy_data	../smile_discount_contract/models/discount_contract_template.py	/^    def copy_data(self, default=None):$/;"	kind:member	line:103
+copy_data	../smile_pricelist_version/models/pricelist.py	/^    def copy_data(self, default=None):$/;"	kind:member	line:79
+count	../smile_todo_list/models/ir_filters.py	/^    count = fields.Integer(compute='_get_count')$/;"	kind:variable	line:66
+create	../smile_access_control/models/res_users.py	/^    def create(self, vals):$/;"	kind:member	line:110
+create	../smile_api_rest/controllers/api.py	/^    def create(self, model, **kwargs):$/;"	kind:member	line:43
+create	../smile_audit/models/audit_rule.py	/^    def create(self, vals):$/;"	kind:member	line:143
+create	../smile_base/models/ir_actions.py	/^    def create(self, vals):$/;"	kind:member	line:49
+create	../smile_base_partner/models/res_partner.py	/^    def create(self, vals):$/;"	kind:member	line:82
+create	../smile_checklist/models/checklist.py	/^    def create(self, vals):$/;"	kind:member	line:131
+create	../smile_checklist/models/checklist_task.py	/^    def create(self, vals):$/;"	kind:member	line:42
+create	../smile_checklist/models/ir_actions.py	/^    def create(self, vals):$/;"	kind:member	line:29
+create	../smile_discount_contract/models/discount_contract.py	/^    def create(self, vals):$/;"	kind:member	line:118
+create	../smile_discount_contract_stats/models/discount_contract_line.py	/^    def create(self, vals):$/;"	kind:member	line:25
+create	../smile_pricelist_version/models/pricelist.py	/^    def create(self, vals):$/;"	kind:member	line:43
+create	../smile_pricelist_version/models/pricelist.py	/^    def create(self, vals):$/;"	kind:member	line:98
+create	../smile_website_access_control/models/website_menu.py	/^    def create(self, values):$/;"	kind:member	line:76
+create_client_action	../smile_impex/models/export.py	/^    def create_client_action(self, **kwargs):$/;"	kind:member	line:85
+create_cron	../smile_account_export/models/account_export_template.py	/^    def create_cron(self):$/;"	kind:member	line:56
+create_cron	../smile_impex/models/impex.py	/^    def create_cron(self, **kwargs):$/;"	kind:member	line:92
+create_date	../smile_audit/models/audit_log.py	/^    create_date = fields.Datetime('Date', readonly=True)$/;"	kind:variable	line:34
+create_date	../smile_impex/models/impex.py	/^    create_date = fields.Datetime('Creation Date', readonly=True)$/;"	kind:variable	line:179
+create_export	../smile_account_export/models/account_export_template.py	/^    def create_export(self, vals=None):$/;"	kind:member	line:47
+create_export	../smile_impex/models/export.py	/^    def create_export(self, *args):$/;"	kind:member	line:137
+create_import	../smile_impex/models/import_.py	/^    def create_import(self, *args):$/;"	kind:member	line:54
+create_invoice_line	../smile_payment_writeoff/tests/test_invoice.py	/^    def create_invoice_line(self, invoice):$/;"	kind:member	line:79
+create_payment	../smile_payment_writeoff/tests/test_invoice.py	/^    def create_payment(self, customer, invoice, amount):$/;"	kind:member	line:66
+create_server_action	../smile_impex/models/impex.py	/^    def create_server_action(self, **kwargs):$/;"	kind:member	line:110
+create_uid	../smile_account_export/models/account_export_template.py	/^    create_uid = fields.Many2one('res.users', 'Created by', readonly=True)$/;"	kind:variable	line:14
+create_uid	../smile_impex/models/impex.py	/^    create_uid = fields.Many2one('res.users', 'Creation User', readonly=True)$/;"	kind:variable	line:180
+create_unique_index	../smile_base/tools/sql.py	/^def create_unique_index(cr, table, column, where_clause=None):$/;"	kind:function	line:22
+credit	../smile_account_export/models/account_export.py	/^    credit = fields.Integer('Credit', compute='_get_account_move_lines')$/;"	kind:variable	line:46
+critical	../smile_log/tools/db_logger.py	/^    def critical(self, msg):$/;"	kind:member	line:81
+crm_lead.py	../smile_discount_contract_crm/models/crm_lead.py	1;"	kind:file	line:1
+cron_id	../smile_account_export/models/account_export_template.py	/^    cron_id = fields.Many2one('ir.cron', 'Scheduled action', copy=False)$/;"	kind:variable	line:33
+cron_id	../smile_impex/models/impex.py	/^    cron_id = fields.Many2one('ir.cron', 'Scheduled Action', copy=False)$/;"	kind:variable	line:58
+currency_id	../smile_discount_contract/models/discount_contract.py	/^    currency_id = fields.Many2one(related='company_id.currency_id',$/;"	kind:variable	line:32
+currency_id	../smile_discount_contract/models/discount_contract_line.py	/^    currency_id = fields.Many2one(related='contract_id.currency_id',$/;"	kind:variable	line:24
+currency_id	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    currency_id = fields.Many2one(related='contract_line_id.currency_id',$/;"	kind:variable	line:20
+cursor	../smile_upgrade/models/upgrade.py	/^def cursor(db, auto_commit=True):$/;"	kind:function	line:42
+custom_method	../smile_api_rest/controllers/api.py	/^    def custom_method(self, model, id, method, **kwargs):$/;"	kind:member	line:63
+customer	../smile_base_partner/models/res_partner_type.py	/^    customer = fields.Boolean(string='Is a Customer', default=True,$/;"	kind:variable	line:32
+data	../smile_audit/models/audit_log.py	/^    data = fields.Serialized('Data', readonly=True)$/;"	kind:variable	line:40
+data_html	../smile_audit/models/audit_log.py	/^    data_html = fields.Html('HTML Data', readonly=True, compute='_render_html')$/;"	kind:variable	line:41
+date	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    date = fields.Date($/;"	kind:variable	line:26
+date_end	../smile_pricelist_version/models/pricelist.py	/^    date_end = fields.Date('End date', copy=False)$/;"	kind:variable	line:61
+date_end	../smile_pricelist_version/models/pricelist.py	/^    date_end = fields.Date(related='version_id.date_end', store=True, readonly=True)$/;"	kind:variable	line:95
+date_start	../smile_discount_contract/models/discount_contract.py	/^    date_start = fields.Date('Start date', readonly=True,$/;"	kind:variable	line:47
+date_start	../smile_pricelist_version/models/pricelist.py	/^    date_start = fields.Date('Start date', copy=False)$/;"	kind:variable	line:60
+date_start	../smile_pricelist_version/models/pricelist.py	/^    date_start = fields.Date(related='version_id.date_start', store=True, readonly=True)$/;"	kind:variable	line:94
+date_stop	../smile_discount_contract/models/discount_contract.py	/^    date_stop = fields.Date('End date', compute='_get_contract_date_stop',$/;"	kind:variable	line:51
+db_handler.py	../smile_log/tools/db_handler.py	1;"	kind:file	line:1
+db_logger.py	../smile_log/tools/db_logger.py	1;"	kind:file	line:1
+debit	../smile_account_export/models/account_export.py	/^    debit = fields.Integer('Debit', compute='_get_account_move_lines')$/;"	kind:variable	line:45
+debug	../smile_log/tools/db_logger.py	/^    def debug(self, msg):$/;"	kind:member	line:64
+decimal_precision.py	../smile_decimal_precision/models/decimal_precision.py	1;"	kind:file	line:1
+decorator	../smile_impex/models/impex.py	/^    def decorator(method):$/;"	kind:function	line:137
+decorator	../smile_impex/tools/api.py	/^    def decorator(method):$/;"	kind:function	line:27
+decorator.py	../smile_audit/tools/decorator.py	1;"	kind:file	line:1
+deep	../smile_model_graph/wizard/ir_model_graph_wizard.py	/^    deep = fields.Integer(required=True, default=True)$/;"	kind:variable	line:30
+default	../smile_account_export/models/account_export_template.py	/^        default=lambda self: self._get_default_company())$/;"	kind:variable	line:18
+default	../smile_discount_contract/models/discount_contract_template.py	/^                            default=12)$/;"	kind:variable	line:27
+default_get	../smile_base/models/language.py	/^    def default_get(self, fields):$/;"	kind:member	line:29
+default_get	../smile_base/models/language.py	/^    def default_get(self, fields):$/;"	kind:member	line:40
+default_get	../smile_base/models/language.py	/^    def default_get(self, fields):$/;"	kind:member	line:51
+delete	../smile_redis_session_store/redis_session_store.py	/^    def delete(self, session):$/;"	kind:member	line:62
+description	../smile_discount_contract/models/discount_contract_rule.py	/^    description = fields.Html(translate=True)$/;"	kind:variable	line:15
+description	../smile_discount_contract/models/discount_contract_template.py	/^    description = fields.Html(translate=True)$/;"	kind:variable	line:15
+digits	../smile_discount_contract/models/discount_contract_rule_slice.py	/^                                  digits=dp.get_precision('Discount value'))$/;"	kind:variable	line:23
+digits	../smile_discount_contract/models/discount_contract_rule_slice.py	/^                             digits=dp.get_precision('Discount base value'))$/;"	kind:variable	line:16
+discount_amount	../smile_discount_contract/models/discount_contract.py	/^    discount_amount = fields.Monetary('Total discount', readonly=True)$/;"	kind:variable	line:61
+discount_amount	../smile_discount_contract/models/discount_contract_line.py	/^    discount_amount = fields.Monetary(readonly=True)$/;"	kind:variable	line:23
+discount_amount	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    discount_amount = fields.Monetary(readonly=True)$/;"	kind:variable	line:19
+discount_amount_signed	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    discount_amount_signed = fields.Monetary($/;"	kind:variable	line:35
+discount_contract.py	../smile_discount_contract/models/discount_contract.py	1;"	kind:file	line:1
+discount_contract.py	../smile_discount_contract_crm/models/discount_contract.py	1;"	kind:file	line:1
+discount_contract.py	../smile_discount_contract_forecast/models/discount_contract.py	1;"	kind:file	line:1
+discount_contract_close_reason.py	../smile_discount_contract/models/discount_contract_close_reason.py	1;"	kind:file	line:1
+discount_contract_forecast_method.py	../smile_discount_contract_forecast/models/discount_contract_forecast_method.py	1;"	kind:file	line:1
+discount_contract_id	../smile_discount_contract/models/account_invoice.py	/^    discount_contract_id = fields.Many2one('discount.contract',$/;"	kind:variable	line:9
+discount_contract_line.py	../smile_discount_contract/models/discount_contract_line.py	1;"	kind:file	line:1
+discount_contract_line.py	../smile_discount_contract_forecast/models/discount_contract_line.py	1;"	kind:file	line:1
+discount_contract_line.py	../smile_discount_contract_stats/models/discount_contract_line.py	1;"	kind:file	line:1
+discount_contract_rule.py	../smile_discount_contract/models/discount_contract_rule.py	1;"	kind:file	line:1
+discount_contract_rule_slice.py	../smile_discount_contract/models/discount_contract_rule_slice.py	1;"	kind:file	line:1
+discount_contract_subline.py	../smile_discount_contract_stats/models/discount_contract_subline.py	1;"	kind:file	line:1
+discount_contract_template.py	../smile_discount_contract/models/discount_contract_template.py	1;"	kind:file	line:1
+discount_refund	../smile_discount_contract/models/discount_contract.py	/^    discount_refund = fields.Monetary('Total refund', store=True,$/;"	kind:variable	line:64
+discount_residual	../smile_discount_contract/models/discount_contract.py	/^    discount_residual = fields.Monetary('Discount to refund', store=True,$/;"	kind:variable	line:62
+discount_type	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    discount_type = fields.Selection([$/;"	kind:variable	line:17
+discount_value	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    discount_value = fields.Float('Discount',$/;"	kind:variable	line:22
+display_digits	../smile_decimal_precision/models/decimal_precision.py	/^    display_digits = fields.Integer('Display Digits', required=True, default=2)$/;"	kind:variable	line:28
+display_history_revision	../smile_audit/models/audit_log.py	/^    def display_history_revision(self):$/;"	kind:member	line:125
+display_precision_get	../smile_decimal_precision/models/decimal_precision.py	/^    def display_precision_get(self, application):$/;"	kind:member	line:32
+do_not_store_record_ids	../smile_impex/models/export.py	/^    do_not_store_record_ids = fields.Boolean('Do not store exported records',$/;"	kind:variable	line:53
+docstring	../smile_model_methods/models/ir_model.py	/^    docstring = fields.Text('Description', readonly=True)$/;"	kind:variable	line:112
+domain	../smile_audit/models/audit_rule.py	/^                               domain=[('model', '!=', 'audit.log')],$/;"	kind:variable	line:45
+domain	../smile_base_partner/models/res_partner.py	/^                                  domain=[('is_company', '=', False)])$/;"	kind:variable	line:21
+domain	../smile_discount_contract_crm/models/discount_contract.py	/^                                     domain="[('type', '=', 'opportunity')]")$/;"	kind:variable	line:10
+edit_formula	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    def edit_formula(self):$/;"	kind:member	line:49
+emit	../smile_log/tools/db_handler.py	/^    def emit(self, record):$/;"	kind:member	line:42
+error	../smile_log/tools/db_logger.py	/^    def error(self, msg):$/;"	kind:member	line:77
+eval_request_params	../smile_api_rest/tools/http.py	/^def eval_request_params(kwargs):$/;"	kind:function	line:23
+exception	../smile_log/tools/db_logger.py	/^    def exception(self, msg):$/;"	kind:member	line:85
+export.py	../smile_impex/models/export.py	1;"	kind:file	line:1
+export_ids	../smile_account_export/models/account_export_template.py	/^    export_ids = fields.One2many($/;"	kind:variable	line:26
+export_ids	../smile_impex/models/export.py	/^    export_ids = fields.One2many('ir.model.export', 'export_tmpl_id', 'Exports', readonly=True, copy=False)$/;"	kind:variable	line:40
+export_tmpl_id	../smile_account_export/models/account_export.py	/^    export_tmpl_id = fields.Many2one($/;"	kind:variable	line:20
+export_tmpl_id	../smile_impex/models/export.py	/^    export_tmpl_id = fields.Many2one('ir.model.export.template', 'Template', readonly=True, required=True,$/;"	kind:variable	line:184
+exported	../smile_account_export/models/account_move_line.py	/^    exported = fields.Boolean($/;"	kind:variable	line:9
+exports_count	../smile_account_export/models/account_export_template.py	/^    exports_count = fields.Integer($/;"	kind:variable	line:29
+expression	../smile_checklist/models/checklist_task.py	/^    expression = fields.Text('Expression', required=True,$/;"	kind:variable	line:82
+extend	../smile_base/models/models.py	/^    def extend(domain):$/;"	kind:function	line:223
+fetch_mail	../smile_base/models/fetchmail.py	/^    def fetch_mail(self):$/;"	kind:member	line:30
+fetchmail.py	../smile_base/models/fetchmail.py	1;"	kind:file	line:1
+field_ids	../smile_access_control/models/res_users.py	/^    field_ids = fields.Many2many('ir.model.fields', 'res_users_fields_rel', 'user_id', 'field_id', 'Fields to update',$/;"	kind:variable	line:46
+field_ids	../smile_base_partner/models/res_partner_type.py	/^    field_ids = fields.Many2many('ir.model.fields', domain=[$/;"	kind:variable	line:46
+field_ids	../smile_checklist/models/checklist_task.py	/^    field_ids = fields.One2many('checklist.task.field', 'task_id', 'Fields', required=True)$/;"	kind:variable	line:23
+field_ids_filled	../smile_checklist/models/checklist_task_instance.py	/^    field_ids_filled = fields.One2many('checklist.task.field', string='Filled fields', compute='_get_activity')$/;"	kind:variable	line:24
+field_ids_to_fill	../smile_checklist/models/checklist_task_instance.py	/^    field_ids_to_fill = fields.One2many('checklist.task.field', string='Fields to fill', compute='_get_activity')$/;"	kind:variable	line:23
+fields.py	../smile_decimal_precision/models/fields.py	1;"	kind:file	line:1
+fields_get	../smile_audit/models/models.py	/^def fields_get(self, allfields=None, attributes=None):$/;"	kind:function	line:53
+fields_view_get	../smile_attachment/models/models.py	/^def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):$/;"	kind:function	line:73
+fields_view_get	../smile_base_partner/models/res_partner.py	/^    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):$/;"	kind:member	line:131
+file	../smile_model_graph/wizard/ir_model_graph_wizard.py	/^    file = fields.Binary(filename='filename', readonly=True)$/;"	kind:variable	line:32
+file	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^    file = fields.Binary(filename='filename', readonly=True)$/;"	kind:variable	line:34
+filename	../smile_model_graph/wizard/ir_model_graph_wizard.py	/^    filename = fields.Char(required=True, default='model_graph.png')$/;"	kind:variable	line:33
+filename	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^    filename = fields.Char(required=True, default='module_graph.png')$/;"	kind:variable	line:35
+filter_account_move_lines	../smile_account_export/models/account_export.py	/^    def filter_account_move_lines(self):$/;"	kind:member	line:140
+filter_domain	../smile_impex/models/export.py	/^    filter_domain = fields.Text(default='[]', help="Available variables: context, time, user")$/;"	kind:variable	line:46
+filter_method	../smile_impex/models/export.py	/^    filter_method = fields.Char(help="signature: @api.model + *args")$/;"	kind:variable	line:47
+filter_type	../smile_impex/models/export.py	/^    filter_type = fields.Selection([('domain', 'Domain'), ('method', 'Method')], required=True, default='domain')$/;"	kind:variable	line:45
+filter_visible_menus	../smile_website_access_control/models/website_menu.py	/^    def filter_visible_menus(self):$/;"	kind:member	line:59
+filter_visible_pages	../smile_website_access_control/models/ir_ui_view.py	/^    def filter_visible_pages(self):$/;"	kind:member	line:36
+filtered_from_domain	../smile_base/models/models.py	/^def filtered_from_domain(self, domain):$/;"	kind:function	line:209
+first_generation_date	../smile_account_export/models/account_move_line.py	/^    first_generation_date = fields.Date($/;"	kind:variable	line:12
+float_time_convert	../smile_base/tools/misc.py	/^def float_time_convert(float_val):$/;"	kind:function	line:25
+float_to_strtime	../smile_base/tools/misc.py	/^def float_to_strtime(float_time):$/;"	kind:function	line:37
+fold	../smile_todo_list/models/ir_filters.py	/^    fold = fields.Boolean('Folded by Default')$/;"	kind:variable	line:35
+force_execute_action	../smile_impex/models/export.py	/^    force_execute_action = fields.Boolean('Force Action Execution', help="Even if there are no record to export")$/;"	kind:variable	line:52
+force_export	../smile_account_export/models/account_export_template.py	/^    force_export = fields.Boolean($/;"	kind:variable	line:23
+force_modules_upgrade	../smile_upgrade/models/upgrade.py	/^    def force_modules_upgrade(self, registry, modules_to_upgrade):$/;"	kind:member	line:171
+force_send_by_email	../smile_discount_contract/models/discount_contract.py	/^    def force_send_by_email(self):$/;"	kind:member	line:159
+forecast_method_id	../smile_discount_contract_forecast/models/discount_contract.py	/^    forecast_method_id = fields.Many2one('discount.contract.forecast_method',$/;"	kind:variable	line:9
+format_amount	../smile_account_export/tools/misc.py	/^def format_amount(amount, decimal_separator='.'):$/;"	kind:function	line:13
+format_date	../smile_account_export/tools/misc.py	/^def format_date(date, date_format=DEFAULT_SERVER_DATE_FORMAT):$/;"	kind:function	line:7
+format_numeric	../smile_base/models/mail_template.py	/^    def format_numeric(self, value, column, options=None):$/;"	kind:member	line:12
+formula	../smile_discount_contract/models/discount_contract_rule.py	/^    formula = fields.Text()$/;"	kind:variable	line:43
+formula	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    formula = fields.Text()$/;"	kind:variable	line:24
+formula	../smile_discount_contract_forecast/models/discount_contract_forecast_method.py	/^    formula = fields.Text(required=True)$/;"	kind:variable	line:12
+from_date	../smile_impex/models/impex.py	/^    from_date = fields.Datetime('Start date', readonly=True)$/;"	kind:variable	line:181
+generate_refund	../smile_discount_contract/models/discount_contract.py	/^    def generate_refund(self):$/;"	kind:member	line:261
+generation_date	../smile_account_export/models/account_export.py	/^    generation_date = fields.Datetime(copy=False, readonly=True)$/;"	kind:variable	line:29
+get	../smile_redis_session_store/redis_session_store.py	/^    def get(self, sid):$/;"	kind:member	line:72
+get	../smile_upgrade/models/config.py	/^    def get(self, key, default=None):$/;"	kind:member	line:40
+getEffectiveLevel	../smile_log/tools/db_logger.py	/^    def getEffectiveLevel(self):$/;"	kind:member	line:61
+get_account_move_lines_domain	../smile_account_export/models/account_export.py	/^    def get_account_move_lines_domain(self):$/;"	kind:member	line:122
+get_actions	../smile_base/models/ir_values.py	/^    def get_actions(self, action_slot, model, res_id=False):$/;"	kind:member	line:44
+get_audit_rule	../smile_audit/tools/decorator.py	/^    def get_audit_rule(self, method):$/;"	kind:function	line:27
+get_digits	../smile_decimal_precision/report/report_sxw.py	/^def get_digits(self, obj=None, f=None, dp=None):$/;"	kind:function	line:25
+get_display_precision	../smile_decimal_precision/models/decimal_precision.py	/^    def get_display_precision(env, application):$/;"	kind:member	line:38
+get_field	../smile_base/models/models.py	/^    def get_field(item):$/;"	kind:function	line:220
+get_filters	../smile_discount_contract/models/discount_contract_rule.py	/^    def get_filters(self):$/;"	kind:member	line:91
+get_graph	../smile_model_graph/models/ir_model.py	/^    def get_graph(self, deep=1, show_relation_name=False, path='model_graph.png'):$/;"	kind:member	line:93
+get_graph	../smile_module_graph/models/ir_module.py	/^    def get_graph(self, stream='down', states=None, path='module_graph.png'):$/;"	kind:member	line:105
+get_multi	../smile_multi_company_base/models/ir_property.py	/^    def get_multi(self, name, model, ids):$/;"	kind:member	line:18
+get_param	../smile_base/models/ir_config_parameter.py	/^    def get_param(self, key, default=False):$/;"	kind:member	line:29
+get_records	../smile_base/models/models.py	/^    def get_records(item):$/;"	kind:function	line:213
+get_values	../smile_base/models/models.py	/^    def get_values(items):$/;"	kind:function	line:171
+group_id	../smile_audit/models/audit_rule.py	/^    group_id = fields.Many2one('res.groups', 'User Group')$/;"	kind:variable	line:41
+group_ids	../smile_todo_list/models/ir_filters.py	/^    group_ids = fields.Many2many('res.groups', string='Groups')$/;"	kind:variable	line:65
+groups	../smile_account_export/models/account_move_line.py	/^        groups="account.group_account_user")$/;"	kind:variable	line:11
+groups	../smile_account_export/models/account_move_line.py	/^        groups="account.group_account_user")$/;"	kind:variable	line:14
+groups	../smile_account_export/models/account_move_line.py	/^        groups="account.group_account_user")$/;"	kind:variable	line:17
+groups_id	../smile_website_access_control/models/website_menu.py	/^    groups_id = fields.Many2many('res.groups', 'website_menu_res_group_rel',$/;"	kind:variable	line:29
+has_non_draft_exports	../smile_account_export/models/account_export_template.py	/^    has_non_draft_exports = fields.Boolean($/;"	kind:variable	line:31
+help	../smile_account_export/models/account_export_template.py	/^        help="Moves lines already exported will be exported again")$/;"	kind:variable	line:25
+help	../smile_audit/models/audit_rule.py	/^                               help='Select model for which you want to generate log.',$/;"	kind:variable	line:44
+help	../smile_base_partner/models/res_partner_type.py	/^                                       help="The variable 'partner' represents the partner for which we compute the display name")$/;"	kind:variable	line:53
+help	../smile_base_partner/models/res_partner_type.py	/^                              help="Check this box if this contact is a customer.")$/;"	kind:variable	line:33
+help	../smile_base_partner/models/res_partner_type.py	/^                              help="Check this box if this contact is a vendor. "$/;"	kind:variable	line:35
+help	../smile_base_partner/models/res_partner_type.py	/^    help="Used to select automatically the right address according to the context in sales and purchases documents.")$/;"	kind:variable	line:43
+help	../smile_checklist/models/checklist_task.py	/^                             help="You can use the following variables: object, time")$/;"	kind:variable	line:83
+help	../smile_impex/models/export.py	/^                                             help="If checked, export regeneration will not be possible")$/;"	kind:variable	line:54
+http.py	../smile_api_rest/tools/http.py	1;"	kind:file	line:1
+id	../smile_base_partner/models/res_partner_type.py	/^    id = fields.Integer(readonly=True)$/;"	kind:variable	line:12
+id	../smile_discount_contract/models/discount_contract_template.py	/^    id = fields.Char(readonly=True)$/;"	kind:variable	line:12
+impex.py	../smile_impex/models/impex.py	1;"	kind:file	line:1
+import_.py	../smile_impex/models/import_.py	1;"	kind:file	line:1
+import_ids	../smile_impex/models/import_.py	/^    import_ids = fields.One2many('ir.model.import', 'import_tmpl_id', 'Imports', readonly=True, copy=False)$/;"	kind:variable	line:38
+import_tmpl_id	../smile_impex/models/import_.py	/^    import_tmpl_id = fields.Many2one('ir.model.import.template', 'Template', readonly=True, required=True,$/;"	kind:variable	line:92
+info	../smile_log/tools/db_logger.py	/^    def info(self, msg):$/;"	kind:member	line:67
+init	../smile_multi_company_purchase/models/res_company.py	/^    def init(self):$/;"	kind:member	line:11
+init	../smile_multi_company_sale/models/res_company.py	/^    def init(self):$/;"	kind:member	line:11
+installed	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^    installed = fields.Boolean(default=True)$/;"	kind:variable	line:33
+invoice_loss_account_id	../smile_payment_writeoff/models/res_company.py	/^    invoice_loss_account_id = fields.Many2one('account.account', 'Loss Account', ondelete='restrict')$/;"	kind:variable	line:31
+invoice_loss_amount	../smile_payment_writeoff/models/res_company.py	/^    invoice_loss_amount = fields.Float(string='Max Loss Amount', digits=dp.get_precision('Account'))$/;"	kind:variable	line:29
+invoice_profit_account_id	../smile_payment_writeoff/models/res_company.py	/^    invoice_profit_account_id = fields.Many2one('account.account', 'Profit Account', ondelete='restrict')$/;"	kind:variable	line:32
+invoice_profit_amount	../smile_payment_writeoff/models/res_company.py	/^    invoice_profit_amount = fields.Float(string='Max Profit Amount', digits=dp.get_precision('Account'))$/;"	kind:variable	line:30
+ir_actions.py	../smile_base/models/ir_actions.py	1;"	kind:file	line:1
+ir_actions.py	../smile_checklist/models/ir_actions.py	1;"	kind:file	line:1
+ir_attachment.py	../smile_attachment/models/ir_attachment.py	1;"	kind:file	line:1
+ir_config_parameter.py	../smile_base/models/ir_config_parameter.py	1;"	kind:file	line:1
+ir_filters.py	../smile_todo_list/models/ir_filters.py	1;"	kind:file	line:1
+ir_http.py	../smile_website_login_as/models/ir_http.py	1;"	kind:file	line:1
+ir_mail_server.py	../smile_base/models/ir_mail_server.py	1;"	kind:file	line:1
+ir_model.py	../smile_model_graph/models/ir_model.py	1;"	kind:file	line:1
+ir_model.py	../smile_model_methods/models/ir_model.py	1;"	kind:file	line:1
+ir_model_graph_wizard.py	../smile_model_graph/wizard/ir_model_graph_wizard.py	1;"	kind:file	line:1
+ir_module.py	../smile_module_graph/models/ir_module.py	1;"	kind:file	line:1
+ir_module_graph_wizard.py	../smile_module_graph/wizard/ir_module_graph_wizard.py	1;"	kind:file	line:1
+ir_property.py	../smile_multi_company_base/models/ir_property.py	1;"	kind:file	line:1
+ir_qweb.py	../smile_decimal_precision/report/ir_qweb.py	1;"	kind:file	line:1
+ir_ui_menu.py	../smile_access_control/models/ir_ui_menu.py	1;"	kind:file	line:1
+ir_ui_view.py	../smile_website_access_control/models/ir_ui_view.py	1;"	kind:file	line:1
+ir_values.py	../smile_base/models/ir_values.py	1;"	kind:file	line:1
+is_redis_session_store_activated	../smile_redis_session_store/redis_session_store.py	/^def is_redis_session_store_activated():$/;"	kind:function	line:34
+is_update_users	../smile_access_control/models/res_users.py	/^    is_update_users = fields.Boolean(string="Update users after creation", default=lambda *a: True,$/;"	kind:variable	line:53
+is_user_profile	../smile_access_control/models/res_users.py	/^    is_user_profile = fields.Boolean('Is User Profile', oldname='user_profile')$/;"	kind:variable	line:41
+item_ids	../smile_pricelist_version/models/pricelist.py	/^    item_ids = fields.One2many('product.pricelist.item', 'version_id', 'Pricelist items')$/;"	kind:variable	line:59
+journal_id	../smile_discount_contract/models/discount_contract_template.py	/^    journal_id = fields.Many2one('account.journal', 'Refund journal',$/;"	kind:variable	line:29
+journal_id	../smile_multi_company_account/models/account_invoice.py	/^    journal_id = fields.Many2one(default=_default_journal)$/;"	kind:variable	line:25
+journal_ids	../smile_account_export/models/account_export_template.py	/^    journal_ids = fields.Many2many($/;"	kind:variable	line:19
+language.py	../smile_base/models/language.py	1;"	kind:file	line:1
+last_generation_date	../smile_account_export/models/account_move_line.py	/^    last_generation_date = fields.Date($/;"	kind:variable	line:15
+last_update	../smile_discount_contract/models/discount_contract.py	/^    last_update = fields.Datetime(readonly=True)$/;"	kind:variable	line:66
+level	../smile_log/models/smile_log.py	/^    level = fields.Char(size=16, readonly=True)$/;"	kind:variable	line:59
+limit	../smile_impex/models/export.py	/^    limit = fields.Integer()$/;"	kind:variable	line:48
+load	../smile_base/models/models.py	/^def load(self, fields, data):$/;"	kind:function	line:56
+load	../smile_upgrade/models/config.py	/^    def load(self):$/;"	kind:member	line:58
+load_data	../smile_base/models/module.py	/^    def load_data(self, kind='demo', mode='update', noupdate=False):$/;"	kind:member	line:48
+load_files	../smile_upgrade/models/upgrade.py	/^    def load_files(self, cr, mode):$/;"	kind:member	line:229
+log	../smile_audit/models/audit_rule.py	/^    def log(self, method, old_values=None, new_values=None):$/;"	kind:member	line:190
+log	../smile_log/tools/db_logger.py	/^    def log(self, msg):$/;"	kind:member	line:73
+log_create	../smile_audit/models/audit_rule.py	/^    log_create = fields.Boolean('Log Creation', default=False)$/;"	kind:variable	line:38
+log_date	../smile_log/models/smile_log.py	/^    log_date = fields.Datetime('Date', readonly=True)$/;"	kind:variable	line:52
+log_entry_args	../smile_impex/models/impex.py	/^    log_entry_args = fields.Boolean('Log entry arguments', default=True)$/;"	kind:variable	line:62
+log_ids	../smile_impex/models/export.py	/^    log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export.template')],$/;"	kind:variable	line:41
+log_ids	../smile_impex/models/export.py	/^    log_ids = fields.One2many('smile.log', 'res_id', 'Logs', readonly=True,$/;"	kind:variable	line:186
+log_ids	../smile_impex/models/import_.py	/^    log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import.template')],$/;"	kind:variable	line:39
+log_ids	../smile_impex/models/import_.py	/^    log_ids = fields.One2many('smile.log', 'res_id', 'Logs', readonly=True,$/;"	kind:variable	line:94
+log_level	../smile_impex/models/impex.py	/^    log_level = fields.Selection(LOG_LEVELS)$/;"	kind:variable	line:190
+log_level	../smile_impex/models/impex.py	/^    log_level = fields.Selection(LOG_LEVELS, default=20, required=True)$/;"	kind:variable	line:61
+log_res_name	../smile_log/models/smile_log.py	/^    log_res_name = fields.Char(string='Ressource name', size=256, compute='_get_res_name')$/;"	kind:variable	line:55
+log_returns	../smile_impex/models/impex.py	/^    log_returns = fields.Boolean('Log returns')$/;"	kind:variable	line:63
+log_returns	../smile_impex/models/impex.py	/^    log_returns = fields.Boolean('Log returns', readonly=True)$/;"	kind:variable	line:191
+log_uid	../smile_log/models/smile_log.py	/^    log_uid = fields.Integer('User', readonly=True)$/;"	kind:variable	line:53
+log_unlink	../smile_audit/models/audit_rule.py	/^    log_unlink = fields.Boolean('Log Deletion', default=True)$/;"	kind:variable	line:40
+log_user_name	../smile_log/models/smile_log.py	/^    log_user_name = fields.Char(string='User', size=256, compute='_get_user_name')$/;"	kind:variable	line:54
+log_write	../smile_audit/models/audit_rule.py	/^    log_write = fields.Boolean('Log Update', default=True)$/;"	kind:variable	line:39
+login_as	../smile_website_login_as/models/res_users.py	/^    def login_as(self):$/;"	kind:member	line:31
+login_as_user_id	../smile_website_login_as/models/res_users.py	/^    login_as_user_id = fields.Many2one('res.users', 'Login as')$/;"	kind:variable	line:28
+logout_as	../smile_website_login_as/models/res_users.py	/^    def logout_as(self):$/;"	kind:member	line:40
+mail_compose_message.py	../smile_base/wizard/mail_compose_message.py	1;"	kind:file	line:1
+mail_compose_message.py	../smile_discount_contract/wizard/mail_compose_message.py	1;"	kind:file	line:1
+mail_compose_message.py	../smile_mail/wizard/mail_compose_message.py	1;"	kind:file	line:1
+mail_mail.py	../smile_base/models/mail_mail.py	1;"	kind:file	line:1
+mail_template.py	../smile_base/models/mail_template.py	1;"	kind:file	line:1
+main.py	../smile_base/controllers/main.py	1;"	kind:file	line:1
+make_response	../smile_api_rest/tools/http.py	/^class make_response():$/;"	kind:class	line:10
+mandatory	../smile_checklist/models/checklist_task.py	/^    mandatory = fields.Boolean('Required to make active object')$/;"	kind:variable	line:22
+mandatory	../smile_checklist/models/checklist_task_instance.py	/^    mandatory = fields.Boolean('Required to make record active', related='task_id.mandatory', readonly=True)$/;"	kind:variable	line:20
+mapi	../smile_model_methods/models/ir_model.py	/^    mapi = fields.Char('API', compute='_get_signature', store=True)$/;"	kind:variable	line:110
+mark_as_exported	../smile_account_export/models/account_export.py	/^    def mark_as_exported(self, account_move_line_ids):$/;"	kind:member	line:158
+mark_as_tested	../smile_account_export/models/account_export.py	/^    def mark_as_tested(self):$/;"	kind:member	line:151
+max_offset	../smile_impex/models/export.py	/^    max_offset = fields.Integer()$/;"	kind:variable	line:49
+max_renew	../smile_discount_contract/models/discount_contract.py	/^    max_renew = fields.Integer('Max renewals', default=-1)$/;"	kind:variable	line:57
+message	../smile_log/models/smile_log.py	/^    message = fields.Text('Message', readonly=True)$/;"	kind:variable	line:60
+method	../smile_audit/models/audit_log.py	/^    method = fields.Char('Method', size=64, readonly=True)$/;"	kind:variable	line:39
+method	../smile_impex/models/impex.py	/^    method = fields.Char(size=64, required=True, help='Arguments can be passed through Method args '$/;"	kind:variable	line:55
+method_args	../smile_impex/models/impex.py	/^    method_args = fields.Char(help="Arguments passed as a dictionary\\nExample: {'code': '705000'}")$/;"	kind:variable	line:57
+min_value	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    min_value = fields.Float('Min. value', required=True, default=0.0,$/;"	kind:variable	line:15
+misc.py	../smile_account_export/tools/misc.py	1;"	kind:file	line:1
+misc.py	../smile_base/tools/misc.py	1;"	kind:file	line:1
+misc.py	../smile_impex/tools/misc.py	1;"	kind:file	line:1
+misc.py	../smile_log/tools/misc.py	1;"	kind:file	line:1
+model	../smile_audit/models/audit_log.py	/^    model = fields.Char(related='model_id.model', store=True, readonly=True, index=True)$/;"	kind:variable	line:37
+model	../smile_checklist/models/checklist.py	/^    model = fields.Char(related='model_id.model', readonly=True)$/;"	kind:variable	line:32
+model	../smile_checklist/models/checklist_task_instance.py	/^    model = fields.Char(related='model_id.model', readonly=True)$/;"	kind:variable	line:18
+model	../smile_model_methods/models/ir_model.py	/^    model = fields.Char('Technical Name', compute='_get_model', inverse='_set_model', compute_sudo=True, store=True)$/;"	kind:variable	line:108
+model_id	../smile_audit/models/audit_log.py	/^    model_id = fields.Many2one('ir.model', 'Model', required=True, readonly=True)$/;"	kind:variable	line:36
+model_id	../smile_audit/models/audit_rule.py	/^    model_id = fields.Many2one('ir.model', 'Model', required=True,$/;"	kind:variable	line:43
+model_id	../smile_checklist/models/checklist.py	/^    model_id = fields.Many2one('ir.model', 'Model', required=True)$/;"	kind:variable	line:31
+model_id	../smile_checklist/models/checklist_task.py	/^    model_id = fields.Many2one('ir.model', 'Model', related='checklist_id.model_id')$/;"	kind:variable	line:16
+model_id	../smile_checklist/models/checklist_task_instance.py	/^    model_id = fields.Many2one('ir.model', 'Model', related='task_id.checklist_id.model_id', readonly=True)$/;"	kind:variable	line:17
+model_id	../smile_impex/models/impex.py	/^    model_id = fields.Many2one('ir.model', 'Model', required=True, ondelete='cascade')$/;"	kind:variable	line:54
+model_id	../smile_model_methods/models/ir_model.py	/^    model_id = fields.Many2one('ir.model', 'Model', ondelete='cascade', readonly=True, index=True)$/;"	kind:variable	line:107
+model_name	../smile_log/models/smile_log.py	/^    model_name = fields.Char('Model name', size=64, readonly=True, index=True)$/;"	kind:variable	line:56
+models.py	../smile_attachment/models/models.py	1;"	kind:file	line:1
+models.py	../smile_audit/models/models.py	1;"	kind:file	line:1
+models.py	../smile_base/models/models.py	1;"	kind:file	line:1
+models.py	../smile_checklist/models/models.py	1;"	kind:file	line:1
+models.py	../smile_data_integration/models.py	1;"	kind:file	line:1
+models.py	../smile_web_search_timedelta/models/models.py	1;"	kind:file	line:1
+models_id	../smile_model_methods/wizard/wizard_ir_model_method.py	/^    models_id = fields.Many2many('ir.model', 'ir_model_methotds_rel', 'wizard_model_id', 'model_id', string="Model list")$/;"	kind:variable	line:30
+modified	../smile_base/models/models.py	/^def modified(self, fnames):$/;"	kind:function	line:87
+module.py	../smile_base/models/module.py	1;"	kind:file	line:1
+months	../smile_discount_contract/models/discount_contract_template.py	/^    months = fields.Integer('Over a period of N-months', required=True,$/;"	kind:variable	line:26
+mtype	../smile_model_methods/models/ir_model.py	/^    mtype = fields.Selection(METHOD_TYPES, 'Type', compute='_get_type', store=True)$/;"	kind:variable	line:106
+name	../smile_account_export/models/account_export_template.py	/^    name = fields.Char(required=True)$/;"	kind:variable	line:12
+name	../smile_audit/models/audit_log.py	/^    name = fields.Char('Resource Name', size=256, compute='_get_name')$/;"	kind:variable	line:33
+name	../smile_audit/models/audit_rule.py	/^    name = fields.Char(size=32, required=True)$/;"	kind:variable	line:36
+name	../smile_base_partner/models/res_partner_type.py	/^    name = fields.Char(required=True, translate=True)$/;"	kind:variable	line:13
+name	../smile_checklist/models/checklist.py	/^    name = fields.Char(size=128, required=True, translate=True)$/;"	kind:variable	line:30
+name	../smile_checklist/models/checklist_task.py	/^    name = fields.Char(size=128, required=True, translate=True)$/;"	kind:variable	line:14
+name	../smile_checklist/models/checklist_task.py	/^    name = fields.Char(size=128, required=True, translate=True)$/;"	kind:variable	line:80
+name	../smile_checklist/models/checklist_task_instance.py	/^    name = fields.Char(size=128, related='task_id.name', readonly=True)$/;"	kind:variable	line:19
+name	../smile_discount_contract/models/discount_contract.py	/^    name = fields.Char('Reference', required=True, copy=False, readonly=True,$/;"	kind:variable	line:20
+name	../smile_discount_contract/models/discount_contract_close_reason.py	/^    name = fields.Char(required=True, translate=True)$/;"	kind:variable	line:10
+name	../smile_discount_contract/models/discount_contract_rule.py	/^    name = fields.Char(required=True, translate=True)$/;"	kind:variable	line:11
+name	../smile_discount_contract/models/discount_contract_template.py	/^    name = fields.Char(required=True, translate=True)$/;"	kind:variable	line:13
+name	../smile_discount_contract_forecast/models/discount_contract_forecast_method.py	/^    name = fields.Char(required=True, translate=True)$/;"	kind:variable	line:10
+name	../smile_impex/models/impex.py	/^    name = fields.Char(size=64, required=True)$/;"	kind:variable	line:53
+name	../smile_model_methods/models/ir_model.py	/^    name = fields.Char(required=True, readonly=True)$/;"	kind:variable	line:105
+name	../smile_pricelist_version/models/pricelist.py	/^    name = fields.Char(required=True, translate=True)$/;"	kind:variable	line:56
+name	../smile_todo_list/models/ir_filters.py	/^    name = fields.Char(required=True, translate=True)$/;"	kind:variable	line:33
+name	../smile_todo_list/models/ir_filters.py	/^    name = fields.Char(translate=True)$/;"	kind:variable	line:61
+name_get	../smile_account_export/models/account_export.py	/^    def name_get(self):$/;"	kind:member	line:81
+name_get	../smile_discount_contract/models/discount_contract.py	/^    def name_get(self):$/;"	kind:member	line:109
+name_get	../smile_discount_contract/models/discount_contract_template.py	/^    def name_get(self):$/;"	kind:member	line:69
+name_get	../smile_discount_contract_forecast/models/discount_contract_forecast_method.py	/^    def name_get(self):$/;"	kind:member	line:15
+name_search	../smile_base_partner/models/res_partner.py	/^    def name_search(self, name, args=None, operator='ilike', limit=100):$/;"	kind:member	line:147
+name_search	../smile_discount_contract/models/discount_contract_template.py	/^    def name_search(self, name, args=None, operator='ilike', limit=100):$/;"	kind:member	line:76
+native_auto_init	../smile_data_integration/models.py	/^native_auto_init = models.Model._auto_init$/;"	kind:variable	line:6
+native_call_kw_model	../smile_data_integration/models.py	/^native_call_kw_model = api.call_kw_model$/;"	kind:variable	line:7
+native_call_kw_multi	../smile_data_integration/models.py	/^native_call_kw_multi = api.call_kw_multi$/;"	kind:variable	line:8
+native_fields_get	../smile_audit/models/models.py	/^native_fields_get = models.BaseModel.fields_get$/;"	kind:variable	line:25
+native_fields_view_get	../smile_attachment/models/models.py	/^native_fields_view_get = BaseModel.fields_view_get$/;"	kind:variable	line:30
+native_get_description	../smile_decimal_precision/models/fields.py	/^native_get_description = Field.get_description$/;"	kind:variable	line:27
+native_load	../smile_base/models/models.py	/^native_load = BaseModel.load$/;"	kind:variable	line:38
+native_modified	../smile_base/models/models.py	/^native_modified = BaseModel.modified$/;"	kind:variable	line:39
+native_new	../smile_upgrade/models/registry.py	/^native_new = Registry.new$/;"	kind:variable	line:37
+native_read_from_database	../smile_audit/models/models.py	/^native_read_from_database = models.BaseModel._read_from_database$/;"	kind:variable	line:24
+native_read_group_process_groupby	../smile_base/models/models.py	/^native_read_group_process_groupby = BaseModel._read_group_process_groupby$/;"	kind:variable	line:40
+native_setup_fields	../smile_attachment/models/models.py	/^native_setup_fields = Model._setup_fields$/;"	kind:variable	line:29
+native_setup_models	../smile_base/models/registry.py	/^native_setup_models = Registry.setup_models$/;"	kind:variable	line:24
+native_unlink	../smile_base/models/models.py	/^native_unlink = BaseModel.unlink$/;"	kind:variable	line:41
+native_validate_fields	../smile_base/models/models.py	/^native_validate_fields = BaseModel._validate_fields$/;"	kind:variable	line:42
+native_where_calc	../smile_web_search_timedelta/models/models.py	/^native_where_calc = models.BaseModel._where_calc$/;"	kind:variable	line:38
+nb_of_contracts	../smile_discount_contract/models/discount_contract_template.py	/^    nb_of_contracts = fields.Integer(compute='_get_nb_of_contracts')$/;"	kind:variable	line:39
+nb_of_discount_contracts	../smile_discount_contract_crm/models/crm_lead.py	/^    nb_of_discount_contracts = fields.Integer(compute='_get_discount_contracts')$/;"	kind:variable	line:9
+new	../smile_upgrade/models/registry.py	/^def new(cls, db_name, force_demo=False, status=None, update_module=False):$/;"	kind:function	line:41
+new_get_description	../smile_decimal_precision/models/fields.py	/^def new_get_description(self, env):$/;"	kind:function	line:30
+new_method	../smile_log/tools/misc.py	/^    def new_method(self, msg):$/;"	kind:function	line:27
+new_method	../smile_log/tools/misc.py	/^    def new_method(self, msg):$/;"	kind:function	line:35
+new_setup_models	../smile_base/models/registry.py	/^def new_setup_models(self, cr, partial=False):$/;"	kind:function	line:27
+new_thread	../smile_impex/models/impex.py	/^    new_thread = fields.Boolean('New Thread', readonly=True)$/;"	kind:variable	line:186
+new_thread	../smile_impex/models/impex.py	/^    new_thread = fields.Boolean(default=True)$/;"	kind:variable	line:60
+next_slice_id	../smile_discount_contract_stats/models/discount_contract_line.py	/^    next_slice_id = fields.Many2one('discount.contract.rule.slice',$/;"	kind:variable	line:12
+offset	../smile_impex/models/export.py	/^    offset = fields.Integer()$/;"	kind:variable	line:188
+onchange_user_profile	../smile_access_control/models/res_users.py	/^    def onchange_user_profile(self):$/;"	kind:member	line:72
+onchange_writeoff_amount	../smile_payment_writeoff/models/account_payment.py	/^    def onchange_writeoff_amount(self):$/;"	kind:member	line:29
+ondelete	../smile_discount_contract/models/discount_contract_line.py	/^                                  ondelete='cascade')$/;"	kind:variable	line:17
+ondelete	../smile_discount_contract/models/discount_contract_line.py	/^                              ondelete='cascade')$/;"	kind:variable	line:20
+ondelete	../smile_discount_contract/models/discount_contract_template.py	/^                                ondelete='restrict')$/;"	kind:variable	line:42
+one_at_a_time	../smile_impex/models/impex.py	/^    one_at_a_time = fields.Boolean()$/;"	kind:variable	line:64
+open_checklist	../smile_checklist/models/models.py	/^def open_checklist(self):$/;"	kind:function	line:15
+open_graph_wizard	../smile_module_graph/models/ir_module.py	/^    def open_graph_wizard(self):$/;"	kind:member	line:114
+open_wizard	../smile_base/models/models.py	/^def open_wizard(self, **kwargs):$/;"	kind:function	line:131
+opportunity_id	../smile_discount_contract_crm/models/discount_contract.py	/^    opportunity_id = fields.Many2one('crm.lead', 'Opportunity',$/;"	kind:variable	line:9
+order	../smile_impex/models/export.py	/^    order = fields.Char('Order by')$/;"	kind:variable	line:50
+parent_id	../smile_base_partner/models/res_partner.py	/^    parent_id = fields.Many2one(ondelete='restrict')$/;"	kind:variable	line:13
+parent_id	../smile_discount_contract/models/discount_contract_template.py	/^    parent_id = fields.Many2one('discount.contract.template',$/;"	kind:variable	line:40
+parent_is_required	../smile_base_partner/models/res_partner.py	/^    parent_is_required = fields.Boolean(compute='_get_partner_type_infos')$/;"	kind:variable	line:17
+parent_is_required	../smile_base_partner/models/res_partner_type.py	/^    parent_is_required = fields.Boolean(default=False)$/;"	kind:variable	line:20
+parent_relation_label	../smile_base_partner/models/res_partner.py	/^    parent_relation_label = fields.Char(related='partner_type_id.parent_relation_label', readonly=True)$/;"	kind:variable	line:24
+parent_relation_label	../smile_base_partner/models/res_partner_type.py	/^    parent_relation_label = fields.Char('Parent relation label', translate=True, required=True, default='attached to')$/;"	kind:variable	line:24
+parent_type_ids	../smile_base_partner/models/res_partner.py	/^    parent_type_ids = fields.Many2many('res.partner.type', string='Company types authorized for parent',$/;"	kind:variable	line:18
+parent_type_ids	../smile_base_partner/models/res_partner_type.py	/^    parent_type_ids = fields.Many2many('res.partner.type', string='Company types authorized for parent',$/;"	kind:variable	line:21
+parse	../smile_base/models/models.py	/^    def parse():$/;"	kind:function	line:278
+partner_display_name	../smile_base_partner/models/res_partner_type.py	/^    partner_display_name = fields.Char(default='partner.name_get()[0][1]',$/;"	kind:variable	line:52
+partner_id	../smile_discount_contract/models/discount_contract.py	/^    partner_id = fields.Many2one('res.partner', 'Partner',$/;"	kind:variable	line:41
+partner_id	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    partner_id = fields.Many2one($/;"	kind:variable	line:29
+partner_type_id	../smile_base_partner/models/res_partner.py	/^    partner_type_id = fields.Many2one('res.partner.type', 'Partner Type')$/;"	kind:variable	line:15
+pid	../smile_impex/models/impex.py	/^    pid = fields.Integer('Process Id', readonly=True)$/;"	kind:variable	line:188
+pid	../smile_log/models/smile_log.py	/^    pid = fields.Integer(readonly=True, group_operator="count")$/;"	kind:variable	line:58
+pid	../smile_log/tools/db_logger.py	/^    def pid(self):$/;"	kind:member	line:55
+post_load	../smile_upgrade/models/upgrade.py	/^    def post_load(self):$/;"	kind:member	line:165
+post_message	../smile_account_export/models/account_export.py	/^    def post_message(self, attachment_ids=None):$/;"	kind:member	line:212
+pre_load	../smile_upgrade/models/upgrade.py	/^    def pre_load(self):$/;"	kind:member	line:160
+preformat	../smile_base/models/models.py	/^    def preformat(item):$/;"	kind:function	line:243
+prepare_and_send	../smile_base/wizard/mail_compose_message.py	/^    def prepare_and_send(self, model, partner_ids, template_id, res_id, composition_mode='mass_mail'):$/;"	kind:member	line:29
+pricelist.py	../smile_pricelist_version/models/pricelist.py	1;"	kind:file	line:1
+pricelist_id	../smile_pricelist_version/models/pricelist.py	/^    pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', required=True,$/;"	kind:variable	line:57
+print_contract	../smile_discount_contract/models/discount_contract.py	/^    def print_contract(self):$/;"	kind:member	line:170
+print_graph	../smile_model_graph/models/ir_model.py	/^    def print_graph(graph, path):$/;"	kind:member	line:49
+print_graph	../smile_module_graph/models/ir_module.py	/^    def print_graph(graph, path):$/;"	kind:member	line:46
+process	../smile_impex/models/impex.py	/^    def process(self):$/;"	kind:member	line:195
+process_email_queue	../smile_base/models/mail_mail.py	/^    def process_email_queue(self, ids=None):$/;"	kind:member	line:30
+product_categ_ids	../smile_discount_contract/models/discount_contract_rule.py	/^    product_categ_ids = fields.Many2many('product.category',$/;"	kind:variable	line:24
+product_category_id	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    product_category_id = fields.Many2one($/;"	kind:variable	line:32
+product_id	../smile_discount_contract/models/discount_contract_template.py	/^    product_id = fields.Many2one('product.product', 'Discount product',$/;"	kind:variable	line:31
+product_id	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    product_id = fields.Many2one('product.product', 'Product',$/;"	kind:variable	line:15
+product_ids	../smile_discount_contract/models/discount_contract_rule.py	/^    product_ids = fields.Many2many('product.product',$/;"	kind:variable	line:28
+product_tmpl_ids	../smile_discount_contract/models/discount_contract_rule.py	/^    product_tmpl_ids = fields.Many2many('product.template',$/;"	kind:variable	line:26
+progress_rate	../smile_checklist/models/checklist_task_instance.py	/^    progress_rate = fields.Float('Progress Rate', digits=(16, 2), default=0.0, readonly=True)$/;"	kind:variable	line:25
+provider	../smile_account_export/models/account_export_template.py	/^    provider = fields.Selection([], 'Provider', required=True)$/;"	kind:variable	line:15
+provider	../smile_account_export_sage/models/account_export_template.py	/^    provider = fields.Selection(selection_add=[$/;"	kind:variable	line:9
+provider	../smile_account_export_yellodit/models/account_export_template.py	/^    provider = fields.Selection(selection_add=[$/;"	kind:variable	line:9
+purchase_discount	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    purchase_discount = fields.Monetary($/;"	kind:variable	line:39
+purchase_order.py	../smile_multi_company_purchase/models/purchase_order.py	1;"	kind:file	line:1
+read	../smile_api_rest/controllers/api.py	/^    def read(self, model, id, **kwargs):$/;"	kind:member	line:35
+read	../smile_base/models/ir_actions.py	/^    def read(self, fields=None, load='_classic_read'):$/;"	kind:member	line:61
+read	../smile_checklist/models/checklist_task_instance.py	/^    def read(self, fields=None, load='_classic_read'):$/;"	kind:member	line:56
+readonly	../smile_discount_contract/models/discount_contract_line.py	/^                              readonly=True)$/;"	kind:variable	line:22
+readonly	../smile_discount_contract_forecast/models/discount_contract.py	/^                                           readonly=True)$/;"	kind:variable	line:12
+readonly	../smile_discount_contract_stats/models/discount_contract_subline.py	/^                              readonly=True)$/;"	kind:variable	line:18
+recompute_fields	../smile_base/models/models.py	/^def recompute_fields(self, fnames):$/;"	kind:function	line:295
+record_count	../smile_impex/models/export.py	/^    record_count = fields.Integer('# Records')$/;"	kind:variable	line:190
+record_ids	../smile_account_export/models/account_export.py	/^    record_ids = fields.Text($/;"	kind:variable	line:38
+record_ids	../smile_impex/models/export.py	/^    record_ids = fields.Text('Records', readonly=True, required=True, default='[]')$/;"	kind:variable	line:189
+record_to_html	../smile_decimal_precision/report/ir_qweb.py	/^def record_to_html(self, record, field_name, options):$/;"	kind:function	line:25
+redis_session_store.py	../smile_redis_session_store/redis_session_store.py	1;"	kind:file	line:1
+reference	../smile_discount_contract/models/discount_contract.py	/^    reference = fields.Char('Partner Ref.')$/;"	kind:variable	line:22
+refund_date	../smile_discount_contract/models/discount_contract.py	/^    refund_date = fields.Date('Planned refund date',$/;"	kind:variable	line:69
+refund_day	../smile_discount_contract/models/discount_contract_template.py	/^    refund_day = fields.Integer('Refund - Day of month', default=1)$/;"	kind:variable	line:35
+refund_ids	../smile_discount_contract/models/discount_contract.py	/^    refund_ids = fields.One2many('account.invoice', 'discount_contract_id',$/;"	kind:variable	line:67
+refund_months	../smile_discount_contract/models/discount_contract_template.py	/^    refund_months = fields.Integer($/;"	kind:variable	line:33
+registry.py	../smile_base/models/registry.py	1;"	kind:file	line:1
+registry.py	../smile_upgrade/models/registry.py	1;"	kind:file	line:1
+related	../smile_discount_contract_stats/models/discount_contract_subline.py	/^        related='contract_line_id.contract_id.contract_type',$/;"	kind:variable	line:24
+related	../smile_discount_contract_stats/models/discount_contract_subline.py	/^        related='contract_line_id.contract_id.date_start',$/;"	kind:variable	line:27
+related	../smile_discount_contract_stats/models/discount_contract_subline.py	/^        related='contract_line_id.contract_id.partner_id',$/;"	kind:variable	line:30
+related	../smile_discount_contract_stats/models/discount_contract_subline.py	/^        related='product_id.categ_id',$/;"	kind:variable	line:33
+relation	../smile_base_partner/models/res_partner_type.py	/^                                       relation="res_partner_type_parent_types_rel",$/;"	kind:variable	line:22
+render_template	../smile_base/models/mail_template.py	/^    def render_template(self, template_txt, model, res_ids, post_process=False):$/;"	kind:member	line:22
+report_sxw.py	../smile_decimal_precision/report/report_sxw.py	1;"	kind:file	line:1
+res_company.py	../smile_multi_company_account/models/res_company.py	1;"	kind:file	line:1
+res_company.py	../smile_multi_company_base/models/res_company.py	1;"	kind:file	line:1
+res_company.py	../smile_multi_company_purchase/models/res_company.py	1;"	kind:file	line:1
+res_company.py	../smile_multi_company_sale/models/res_company.py	1;"	kind:file	line:1
+res_company.py	../smile_payment_writeoff/models/res_company.py	1;"	kind:file	line:1
+res_groups.py	../smile_access_control/models/res_groups.py	1;"	kind:file	line:1
+res_groups.py	../smile_website_access_control/models/res_groups.py	1;"	kind:file	line:1
+res_id	../smile_attachment/models/ir_attachment.py	/^    res_id = fields.Integer(index=True)$/;"	kind:variable	line:29
+res_id	../smile_audit/models/audit_log.py	/^    res_id = fields.Integer('Resource Id', readonly=True)$/;"	kind:variable	line:38
+res_id	../smile_checklist/models/checklist_task_instance.py	/^    res_id = fields.Integer('Resource ID', index=True, required=True, readonly=True)$/;"	kind:variable	line:21
+res_id	../smile_log/models/smile_log.py	/^    res_id = fields.Integer('Ressource id', readonly=True, group_operator="count", index=True)$/;"	kind:variable	line:57
+res_model	../smile_attachment/models/ir_attachment.py	/^    res_model = fields.Char(index=True)$/;"	kind:variable	line:28
+res_partner.py	../smile_base_partner/models/res_partner.py	1;"	kind:file	line:1
+res_partner_type.py	../smile_base_partner/models/res_partner_type.py	1;"	kind:file	line:1
+res_users.py	../smile_access_control/models/res_users.py	1;"	kind:file	line:1
+res_users.py	../smile_website_login_as/models/res_users.py	1;"	kind:file	line:1
+returns	../smile_impex/models/impex.py	/^    returns = fields.Text('Returns', readonly=True)$/;"	kind:variable	line:192
+rule_id	../smile_discount_contract/models/discount_contract_line.py	/^    rule_id = fields.Many2one('discount.contract.rule', 'Rule',$/;"	kind:variable	line:18
+rule_id	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    rule_id = fields.Many2one('discount.contract.rule', 'Rule',$/;"	kind:variable	line:13
+rule_ids	../smile_discount_contract/models/discount_contract_template.py	/^    rule_ids = fields.One2many('discount.contract.rule', 'contract_tmpl_id',$/;"	kind:variable	line:22
+run_export	../smile_account_export/models/account_export.py	/^    def run_export(self):$/;"	kind:member	line:170
+s2human	../smile_impex/tools/misc.py	/^def s2human(time):$/;"	kind:function	line:23
+sale_discount	../smile_discount_contract_stats/models/discount_contract_subline.py	/^    sale_discount = fields.Monetary($/;"	kind:variable	line:37
+sale_order.py	../smile_multi_company_sale/models/sale_order.py	1;"	kind:file	line:1
+save	../smile_redis_session_store/redis_session_store.py	/^    def save(self, session):$/;"	kind:member	line:57
+save_attachment	../smile_account_export/models/account_export.py	/^    def save_attachment(self, datas):$/;"	kind:member	line:108
+saveas	../smile_base/controllers/main.py	/^    def saveas(self, model, record_id, method, encoded=False, filename=None, **kw):$/;"	kind:member	line:66
+search	../smile_website_access_control/models/ir_ui_view.py	/^    def search(self, args, offset=0, limit=None, order=None, count=False):$/;"	kind:member	line:29
+search	../smile_website_access_control/models/website_menu.py	/^    def search(self, args, offset=0, limit=None, order=None, count=False):$/;"	kind:member	line:64
+search_multi	../smile_multi_company_base/models/ir_property.py	/^    def search_multi(self, name, model, operator, value):$/;"	kind:member	line:40
+search_read	../smile_api_rest/controllers/api.py	/^    def search_read(self, model, **kwargs):$/;"	kind:member	line:29
+send_by_email	../smile_discount_contract/models/discount_contract.py	/^    def send_by_email(self):$/;"	kind:member	line:134
+send_email	../smile_base/models/ir_mail_server.py	/^    def send_email(self, message, mail_server_id=None, smtp_server=None, smtp_port=None,$/;"	kind:member	line:32
+send_mail	../smile_discount_contract/wizard/mail_compose_message.py	/^    def send_mail(self, auto_commit=False):$/;"	kind:member	line:10
+sequence	../smile_base/models/ir_values.py	/^    sequence = fields.Integer('Sequence')$/;"	kind:variable	line:37
+sequence	../smile_base_partner/models/res_partner_type.py	/^    sequence = fields.Integer('Priority', default=10)$/;"	kind:variable	line:15
+sequence	../smile_checklist/models/checklist_task.py	/^    sequence = fields.Integer('Priority', required=True, default=15)$/;"	kind:variable	line:20
+sequence	../smile_checklist/models/checklist_task_instance.py	/^    sequence = fields.Integer('Priority', related='task_id.sequence', store=True, readonly=True)$/;"	kind:variable	line:15
+sequence	../smile_discount_contract/models/discount_contract_close_reason.py	/^    sequence = fields.Integer(default=10)$/;"	kind:variable	line:12
+sequence	../smile_discount_contract/models/discount_contract_rule.py	/^    sequence = fields.Integer(default=10)$/;"	kind:variable	line:16
+sequence	../smile_todo_list/models/ir_filters.py	/^    sequence = fields.Integer()$/;"	kind:variable	line:34
+server_action_id	../smile_impex/models/impex.py	/^    server_action_id = fields.Many2one('ir.actions.server', 'Server action', copy=False)$/;"	kind:variable	line:59
+session_gc	../smile_redis_session_store/redis_session_store.py	/^    def session_gc(session_store):$/;"	kind:function	line:93
+session_store	../smile_redis_session_store/redis_session_store.py	/^    def session_store(self):$/;"	kind:function	line:98
+setLevel	../smile_log/tools/db_logger.py	/^    def setLevel(self, level):$/;"	kind:member	line:58
+setUp	../smile_access_control/tests/test_access_control.py	/^    def setUp(self):$/;"	kind:member	line:28
+setUp	../smile_access_control/tests/test_groups.py	/^    def setUp(self):$/;"	kind:member	line:27
+setUp	../smile_access_control/tests/test_users.py	/^    def setUp(self):$/;"	kind:member	line:28
+setUp	../smile_account_export_sage/tests/test_account_export_sage.py	/^    def setUp(self):$/;"	kind:member	line:11
+setUp	../smile_base/tests/test_base.py	/^    def setUp(self):$/;"	kind:member	line:46
+setUp	../smile_discount_contract/tests/test_discount_contract.py	/^    def setUp(self):$/;"	kind:member	line:8
+setUp	../smile_discount_contract_forecast/tests/test_discount_contract_forecast.py	/^    def setUp(self):$/;"	kind:member	line:8
+setUp	../smile_payment_writeoff/tests/test_invoice.py	/^    def setUp(self):$/;"	kind:member	line:27
+set_cancel	../smile_discount_contract/models/discount_contract.py	/^    def set_cancel(self):$/;"	kind:member	line:183
+set_close	../smile_discount_contract/models/discount_contract.py	/^    def set_close(self):$/;"	kind:member	line:187
+set_db_version	../smile_upgrade/models/upgrade.py	/^    def set_db_version(self):$/;"	kind:member	line:103
+set_multi	../smile_multi_company_base/models/ir_property.py	/^    def set_multi(self, name, model, values, default_value=None):$/;"	kind:member	line:29
+set_open	../smile_discount_contract/models/discount_contract.py	/^    def set_open(self):$/;"	kind:member	line:175
+show_relation_name	../smile_model_graph/wizard/ir_model_graph_wizard.py	/^    show_relation_name = fields.Boolean('Show Relation Name')$/;"	kind:variable	line:31
+signature	../smile_model_methods/models/ir_model.py	/^    signature = fields.Char(compute='_get_signature', store=True)$/;"	kind:variable	line:109
+slice_ids	../smile_discount_contract/models/discount_contract_rule.py	/^    slice_ids = fields.One2many('discount.contract.rule.slice',$/;"	kind:variable	line:41
+smile_log.py	../smile_log/models/smile_log.py	1;"	kind:file	line:1
+sql.py	../smile_base/tools/sql.py	1;"	kind:file	line:1
+start_date	../smile_account_export/models/account_export.py	/^    start_date = fields.Date($/;"	kind:variable	line:30
+state	../smile_account_export/models/account_export.py	/^    state = fields.Selection([$/;"	kind:variable	line:23
+state	../smile_audit/models/audit_rule.py	/^    state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], 'Status', default='draft', readonly=True)$/;"	kind:variable	line:42
+state	../smile_discount_contract/models/discount_contract.py	/^    state = fields.Selection([$/;"	kind:variable	line:34
+state	../smile_impex/models/impex.py	/^    state = fields.Selection(STATES, 'State', readonly=True, required=True, default='running')$/;"	kind:variable	line:187
+state_cleaner	../smile_impex/models/impex.py	/^def state_cleaner(model):$/;"	kind:function	line:136
+stop_date	../smile_account_export/models/account_export.py	/^    stop_date = fields.Date($/;"	kind:variable	line:32
+stream	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^    stream = fields.Selection([('down', 'Down'), ('up', 'Up'), ('up-down', 'Up & Down')], required=True, default='up')$/;"	kind:variable	line:30
+string	../smile_discount_contract/models/discount_contract_rule.py	/^                                         string='Product categories')$/;"	kind:variable	line:25
+string	../smile_discount_contract/models/discount_contract_rule.py	/^                                        string='Products')$/;"	kind:variable	line:27
+string	../smile_discount_contract/models/discount_contract_rule.py	/^                                   string='Product variants')$/;"	kind:variable	line:29
+string	../smile_discount_contract/models/discount_contract_template.py	/^                                   string='All rules',$/;"	kind:variable	line:46
+subcompanies_count	../smile_base_partner/models/res_partner.py	/^    subcompanies_count = fields.Integer('Number of sub-companies', compute='_count_subcompanies')$/;"	kind:variable	line:22
+subcompanies_label	../smile_base_partner/models/res_partner.py	/^    subcompanies_label = fields.Char(related='partner_type_id.subcompanies_label', readonly=True)$/;"	kind:variable	line:23
+subcompanies_label	../smile_base_partner/models/res_partner_type.py	/^    subcompanies_label = fields.Char('Sub-companies label', translate=True, required=True, default='Sub-companies')$/;"	kind:variable	line:25
+supplier	../smile_base_partner/models/res_partner_type.py	/^    supplier = fields.Boolean(string='Is a Vendor',$/;"	kind:variable	line:34
+task_id	../smile_checklist/models/checklist_task.py	/^    task_id = fields.Many2one('checklist.task', 'Task', required=True, ondelete="cascade")$/;"	kind:variable	line:81
+task_id	../smile_checklist/models/checklist_task_instance.py	/^    task_id = fields.Many2one('checklist.task', 'Checklist Task', required=True, ondelete='cascade', readonly=True)$/;"	kind:variable	line:14
+task_ids	../smile_checklist/models/checklist.py	/^    task_ids = fields.One2many('checklist.task', 'checklist_id', 'Tasks')$/;"	kind:variable	line:38
+test_000_compute_theoretical_values	../smile_discount_contract_forecast/tests/test_discount_contract_forecast.py	/^    def test_000_compute_theoretical_values(self):$/;"	kind:member	line:13
+test_000_create_contract_lines	../smile_discount_contract/tests/test_discount_contract.py	/^    def test_000_create_contract_lines(self):$/;"	kind:member	line:14
+test_00_automatic_paid_invoice	../smile_payment_writeoff/tests/test_invoice.py	/^    def test_00_automatic_paid_invoice(self):$/;"	kind:member	line:107
+test_010_create_payer	../smile_account_export_sage/tests/test_account_export_sage.py	/^    def test_010_create_payer(self):$/;"	kind:member	line:24
+test_010_validate_contract	../smile_discount_contract/tests/test_discount_contract.py	/^    def test_010_validate_contract(self):$/;"	kind:member	line:25
+test_020_duplicate_contract	../smile_discount_contract/tests/test_discount_contract.py	/^    def test_020_duplicate_contract(self):$/;"	kind:member	line:33
+test_030_cancel_contract	../smile_discount_contract/tests/test_discount_contract.py	/^    def test_030_cancel_contract(self):$/;"	kind:member	line:41
+test_040_close_contract	../smile_discount_contract/tests/test_discount_contract.py	/^    def test_040_close_contract(self):$/;"	kind:member	line:50
+test_access_control.py	../smile_access_control/tests/test_access_control.py	1;"	kind:file	line:1
+test_account_export_sage.py	../smile_account_export_sage/tests/test_account_export_sage.py	1;"	kind:file	line:1
+test_base.py	../smile_base/tests/test_base.py	1;"	kind:file	line:1
+test_bulk_create	../smile_base/tests/test_base.py	/^    def test_bulk_create(self):$/;"	kind:member	line:50
+test_button_complete_access_controls	../smile_access_control/tests/test_groups.py	/^    def test_button_complete_access_controls(self):$/;"	kind:member	line:80
+test_change_profile_with_no_update_users_do_not_change_users	../smile_access_control/tests/test_access_control.py	/^    def test_change_profile_with_no_update_users_do_not_change_users(self):$/;"	kind:member	line:72
+test_changing_a_group_dependencies_should_update_groups_of_user_belonging_to_this_group	../smile_access_control/tests/test_access_control.py	/^    def test_changing_a_group_dependencies_should_update_groups_of_user_belonging_to_this_group(self):$/;"	kind:member	line:54
+test_changing_user_profile_of_a_user_should_update_groups_of_user	../smile_access_control/tests/test_access_control.py	/^    def test_changing_user_profile_of_a_user_should_update_groups_of_user(self):$/;"	kind:member	line:63
+test_check_user_profile_id	../smile_access_control/tests/test_users.py	/^    def test_check_user_profile_id(self):$/;"	kind:member	line:82
+test_checklist.py	../smile_checklist/tests/test_checklist.py	1;"	kind:file	line:1
+test_create	../smile_access_control/tests/test_users.py	/^    def test_create(self):$/;"	kind:member	line:56
+test_create_cron	../smile_checklist/tests/test_checklist.py	/^    def test_create_cron(self):$/;"	kind:member	line:27
+test_disable_email_sending	../smile_base/tests/test_base.py	/^    def test_disable_email_sending(self):$/;"	kind:member	line:77
+test_discount_contract.py	../smile_discount_contract/tests/test_discount_contract.py	1;"	kind:file	line:1
+test_discount_contract_forecast.py	../smile_discount_contract_forecast/tests/test_discount_contract_forecast.py	1;"	kind:file	line:1
+test_enable_email_sending	../smile_base/tests/test_base.py	/^    def test_enable_email_sending(self):$/;"	kind:member	line:88
+test_groups.py	../smile_access_control/tests/test_groups.py	1;"	kind:file	line:1
+test_invoice.py	../smile_payment_writeoff/tests/test_invoice.py	1;"	kind:file	line:1
+test_mode	../smile_impex/models/impex.py	/^    test_mode = fields.Boolean('Test Mode', readonly=True)$/;"	kind:variable	line:185
+test_onchange_user_profile	../smile_access_control/tests/test_users.py	/^    def test_onchange_user_profile(self):$/;"	kind:member	line:95
+test_unlink_cascade	../smile_base/tests/test_base.py	/^    def test_unlink_cascade(self):$/;"	kind:member	line:62
+test_update_users_of_a_group	../smile_access_control/tests/test_access_control.py	/^    def test_update_users_of_a_group(self):$/;"	kind:member	line:93
+test_users.py	../smile_access_control/tests/test_users.py	1;"	kind:file	line:1
+test_using_admin_as_profile_should_fail	../smile_access_control/tests/test_access_control.py	/^    def test_using_admin_as_profile_should_fail(self):$/;"	kind:member	line:81
+test_write	../smile_access_control/tests/test_groups.py	/^    def test_write(self):$/;"	kind:member	line:67
+test_write	../smile_access_control/tests/test_users.py	/^    def test_write(self):$/;"	kind:member	line:72
+theoretical_base	../smile_discount_contract_forecast/models/discount_contract_line.py	/^    theoretical_base = fields.Float(readonly=True, digits=dp.get_precision($/;"	kind:variable	line:13
+theoretical_discount	../smile_discount_contract_forecast/models/discount_contract.py	/^    theoretical_discount = fields.Monetary('Theoretical discount',$/;"	kind:variable	line:11
+theoretical_discount	../smile_discount_contract_forecast/models/discount_contract_line.py	/^    theoretical_discount = fields.Monetary(readonly=True)$/;"	kind:variable	line:15
+time	../smile_impex/models/impex.py	/^    time = fields.Integer(compute='_get_time')$/;"	kind:variable	line:183
+time_debug	../smile_log/tools/db_logger.py	/^    def time_debug(self, msg):$/;"	kind:member	line:93
+time_human	../smile_impex/models/impex.py	/^    time_human = fields.Char('Time', compute='_convert_time_to_human', store=False)$/;"	kind:variable	line:184
+time_info	../smile_log/tools/db_logger.py	/^    def time_info(self, msg):$/;"	kind:member	line:89
+to_date	../smile_impex/models/impex.py	/^    to_date = fields.Datetime('End date', readonly=True)$/;"	kind:variable	line:182
+to_update	../smile_model_methods/wizard/wizard_ir_model_method.py	/^    to_update = fields.Boolean("Update lines ?")$/;"	kind:variable	line:31
+todo_list	../smile_todo_list/models/ir_filters.py	/^    todo_list = fields.Boolean()$/;"	kind:variable	line:62
+truncate	../smile_account_export/tools/misc.py	/^def truncate(f, n):$/;"	kind:function	line:17
+type	../smile_base_partner/models/res_partner.py	/^    type = fields.Selection(default=False)$/;"	kind:variable	line:14
+type	../smile_base_partner/models/res_partner_type.py	/^    type = fields.Selection([$/;"	kind:variable	line:37
+uninstallable	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^    uninstallable = fields.Boolean()$/;"	kind:variable	line:31
+uninstalled	../smile_module_graph/wizard/ir_module_graph_wizard.py	/^    uninstalled = fields.Boolean('Not Installed')$/;"	kind:variable	line:32
+unique	../smile_impex/models/export.py	/^    unique = fields.Boolean(help="If unique, each record is exported only once")$/;"	kind:variable	line:51
+unlink	../smile_account_export/models/account_export.py	/^    def unlink(self):$/;"	kind:member	line:88
+unlink	../smile_api_rest/controllers/api.py	/^    def unlink(self, model, id):$/;"	kind:member	line:57
+unlink	../smile_audit/models/audit_log.py	/^    def unlink(self):$/;"	kind:member	line:121
+unlink	../smile_audit/models/audit_rule.py	/^    def unlink(self):$/;"	kind:member	line:160
+unlink	../smile_base/models/models.py	/^def unlink(self):$/;"	kind:function	line:68
+unlink	../smile_checklist/models/checklist.py	/^    def unlink(self):$/;"	kind:member	line:148
+unlink	../smile_checklist/models/checklist_task.py	/^    def unlink(self):$/;"	kind:member	line:68
+unlink	../smile_discount_contract/models/discount_contract.py	/^    def unlink(self):$/;"	kind:member	line:127
+unlink	../smile_website_access_control/models/website_menu.py	/^    def unlink(self):$/;"	kind:member	line:86
+unlink_client_action	../smile_impex/models/export.py	/^    def unlink_client_action(self):$/;"	kind:member	line:94
+unlink_server_action	../smile_impex/models/impex.py	/^    def unlink_server_action(self):$/;"	kind:member	line:120
+unquote	../smile_base/tools/misc.py	/^class unquote(str):$/;"	kind:class	line:46
+update.py	../smile_base/models/update.py	1;"	kind:file	line:1
+update_checklists	../smile_checklist/models/checklist.py	/^def update_checklists(method):$/;"	kind:function	line:10
+update_list	../smile_model_methods/models/ir_model.py	/^    def update_list(self, models=None):$/;"	kind:member	line:115
+update_notification	../smile_base/models/update.py	/^    def update_notification(self, cron_mode=True):$/;"	kind:member	line:29
+update_rule	../smile_audit/models/audit_rule.py	/^    def update_rule(self, force_deactivation=False):$/;"	kind:member	line:97
+update_user_groups_view	../smile_access_control/models/res_groups.py	/^    def update_user_groups_view(self):$/;"	kind:member	line:121
+upgrade.py	../smile_upgrade/models/upgrade.py	1;"	kind:file	line:1
+url	../smile_website_access_control/models/ir_ui_view.py	/^        def url(page):$/;"	kind:function	line:37
+user_id	../smile_audit/models/audit_log.py	/^    user_id = fields.Many2one('res.users', 'User', required=True, readonly=True)$/;"	kind:variable	line:35
+user_id	../smile_discount_contract/models/discount_contract.py	/^    user_id = fields.Many2one('res.users', 'Contact', required=True,$/;"	kind:variable	line:45
+user_ids	../smile_access_control/models/res_users.py	/^    user_ids = fields.One2many('res.users', 'user_profile_id', 'Users', domain=[('is_user_profile', '=', False)])$/;"	kind:variable	line:45
+user_profile_id	../smile_access_control/models/res_users.py	/^    user_profile_id = fields.Many2one('res.users', 'User Profile',$/;"	kind:variable	line:42
+value_type	../smile_discount_contract/models/discount_contract_rule.py	/^    value_type = fields.Selection([$/;"	kind:variable	line:31
+values_id	../smile_audit/models/audit_rule.py	/^    values_id = fields.Many2one('ir.values', "Add in the 'More' menu", readonly=True)$/;"	kind:variable	line:48
+version_id	../smile_pricelist_version/models/pricelist.py	/^    version_id = fields.Many2one('product.pricelist.version', 'Pricelist version',$/;"	kind:variable	line:92
+version_ids	../smile_pricelist_version/models/pricelist.py	/^    version_ids = fields.One2many('product.pricelist.version', 'pricelist_id', 'Pricelist versions')$/;"	kind:variable	line:31
+view_details	../smile_todo_list/models/ir_filters.py	/^    def view_details(self):$/;"	kind:member	line:73
+view_discount_contract_lines	../smile_discount_contract/models/account_invoice.py	/^    def view_discount_contract_lines(self):$/;"	kind:member	line:13
+view_ids	../smile_checklist/models/checklist.py	/^    view_ids = fields.Many2many('ir.ui.view', 'checklist_view_rel', 'view_id', 'checklist_id', 'Views')$/;"	kind:variable	line:37
+view_refunds	../smile_discount_contract/models/discount_contract.py	/^    def view_refunds(self):$/;"	kind:member	line:283
+view_subcompanies	../smile_base_partner/models/res_partner.py	/^    def view_subcompanies(self):$/;"	kind:member	line:106
+warning	../smile_log/tools/db_logger.py	/^    def warning(self, msg):$/;"	kind:member	line:70
+website_menu.py	../smile_website_access_control/models/website_menu.py	1;"	kind:file	line:1
+website_menu_ids	../smile_website_access_control/models/res_groups.py	/^    website_menu_ids = fields.Many2many('website.menu', 'website_menu_res_group_rel',$/;"	kind:variable	line:28
+window_action_ids	../smile_base/models/ir_values.py	/^    window_action_ids = fields.Many2many('ir.actions.act_window', 'ir_values_window_actions_rel',$/;"	kind:variable	line:38
+window_actions	../smile_base/models/ir_values.py	/^    window_actions = fields.Char('Window Actions', size=128, compute='_get_window_actions',$/;"	kind:variable	line:40
+with_impex_cursor	../smile_impex/tools/api.py	/^def with_impex_cursor(autocommit=True):$/;"	kind:function	line:26
+wizard_ir_model_method.py	../smile_model_methods/wizard/wizard_ir_model_method.py	1;"	kind:file	line:1
+wrapper	../smile_api_rest/tools/http.py	/^        def wrapper(*args, **kwargs):$/;"	kind:function	line:14
+wrapper	../smile_checklist/models/checklist.py	/^    def wrapper(self, cr, *args, **kwargs):$/;"	kind:function	line:11
+wrapper	../smile_impex/models/impex.py	/^        def wrapper(self, cr, *args, **kwargs):$/;"	kind:function	line:139
+wrapper	../smile_impex/tools/api.py	/^        def wrapper(self, *args, **kwargs):$/;"	kind:function	line:29
+write	../smile_access_control/models/res_groups.py	/^    def write(self, vals):$/;"	kind:member	line:74
+write	../smile_access_control/models/res_users.py	/^    def write(self, vals):$/;"	kind:member	line:117
+write	../smile_account_export/models/account_export_template.py	/^    def write(self, vals):$/;"	kind:member	line:86
+write	../smile_api_rest/controllers/api.py	/^    def write(self, model, id, **kwargs):$/;"	kind:member	line:50
+write	../smile_audit/models/audit_rule.py	/^    def write(self, vals):$/;"	kind:member	line:152
+write	../smile_base/models/ir_actions.py	/^    def write(self, vals):$/;"	kind:member	line:55
+write	../smile_base_partner/models/res_partner.py	/^    def write(self, vals):$/;"	kind:member	line:90
+write	../smile_checklist/models/checklist.py	/^    def write(self, vals):$/;"	kind:member	line:137
+write	../smile_checklist/models/checklist_task.py	/^    def write(self, vals):$/;"	kind:member	line:48
+write	../smile_checklist/models/ir_actions.py	/^    def write(self, vals):$/;"	kind:member	line:35
+write	../smile_discount_contract/models/discount_contract_rule.py	/^    def write(self, vals):$/;"	kind:member	line:46
+write	../smile_discount_contract/models/discount_contract_rule_slice.py	/^    def write(self, vals):$/;"	kind:member	line:32
+write	../smile_discount_contract/models/discount_contract_template.py	/^    def write(self, vals):$/;"	kind:member	line:95
+write	../smile_website_access_control/models/website_menu.py	/^    def write(self, values):$/;"	kind:member	line:81

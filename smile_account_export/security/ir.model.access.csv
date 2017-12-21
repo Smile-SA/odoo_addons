@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_export_account_template_manager,account.export.template.manager,smile_account_export.model_account_export_template,account.group_account_manager,1,1,1,1
-access_export_account_manager,account.export.manager,smile_account_export.model_account_export,account.group_account_manager,1,1,1,1
-access_export_account_template_user,account.export.template.user,smile_account_export.model_account_export_template,account.group_account_user,1,0,0,0
-access_export_account_user,account.export.user,smile_account_export.model_account_export,account.group_account_user,1,0,0,0

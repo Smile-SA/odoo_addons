@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_res_partner_type,access_res_partner_type,model_res_partner_type,,1,0,0,0
-access_res_partner_type_manager,access_res_partner_type,model_res_partner_type,base.group_partner_manager,1,1,1,0
