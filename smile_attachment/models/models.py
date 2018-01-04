@@ -27,6 +27,7 @@ from odoo import api, fields
 from odoo.models import BaseModel, Model
 
 native_setup_fields = Model._setup_fields
+native_fields_get = BaseModel.fields_get
 native_fields_view_get = BaseModel.fields_view_get
 
 
@@ -83,8 +84,21 @@ def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu
             res['arch'], res['fields'] = View.postprocess_and_fields(self._name, arch_etree, view_id)
     return res
 
+
+@api.model
+def fields_get(self, allfields=None, write_access=True, attributes=None):
+    res = native_fields_get(self, allfields, attributes)
+    if hasattr(self, '_get_attachments_field_name') and \
+            (not allfields or 'attachment_ids' in allfields):
+        name = self._get_attachments_field_name()
+        res[name]['string'] = self.env['ir.translation']._get_source(
+            'ir.model.fields,field_description', 'model', self.env.lang,
+            'Attachments')
+    return res
+
 Model._get_attachments_field_name = _get_attachments_field_name
 Model._setup_fields = _setup_fields
 Model._get_attachments = _get_attachments
 Model._search_attachments = _search_attachments
+BaseModel.fields_get = fields_get
 BaseModel.fields_view_get = fields_view_get
