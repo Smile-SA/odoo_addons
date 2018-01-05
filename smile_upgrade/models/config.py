@@ -19,18 +19,17 @@
 #
 ##############################################################################
 
-try:
-    # For Python 3
-    from configparser import ConfigParser, NoSectionError
-except ImportError:
-    # For Python 2
-    from ConfigParser import ConfigParser, NoSectionError
-
 import logging
 import os
+import sys
 
 from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval
+
+if sys.version_info > (3,):
+    from configparser import ConfigParser, NoSectionError
+else:
+    from ConfigParser import ConfigParser, NoSectionError
 
 _logger = logging.getLogger(__package__)
 

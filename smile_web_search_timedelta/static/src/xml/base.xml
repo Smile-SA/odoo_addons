@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+	<t t-extend="SearchView.extended_search.proposition">
+		<t t-jquery="span.o_searchview_extended_prop_value" t-operation="after">
+		    <span class="o_searchview_extended_prop_timedelta">
+			    <span class="o_searchview_extended_prop_timedelta_value"/>
+			    <select class="o_searchview_extended_prop_timedelta_type"/>
+			</span>
+	    </t>
+	</t>
+
+</templates>
