@@ -107,7 +107,7 @@ def fields_get(self, cr, uid, allfields=None, context=None, write_access=True, a
     if hasattr(self, '_get_attachments_field_name') and \
             (not allfields or 'attachment_ids' in allfields):
         name = self._get_attachments_field_name()
-        lang = context.get('lang') or 'en_US'
+        lang = context and context.get('lang') or 'en_US'
         res[name]['string'] = self.pool.get('ir.translation')._get_source(cr, uid,
             'ir.model.fields,field_description', 'model', lang, 'Attachments')
     return res
