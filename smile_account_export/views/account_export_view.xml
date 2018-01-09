@@ -35,10 +35,7 @@
                                 groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="generation_date"
-                                 attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="force_export"
-                                 attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="generation_date"/>
                         </group>
                     </group>
                     <notebook>
