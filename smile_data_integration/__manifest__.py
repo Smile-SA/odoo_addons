@@ -33,6 +33,10 @@ Features:
 * Accept external_id as create / write values or write / unlink ids
   or search domain operands
 
+Execution:
+* odoo.py -c <config_file> -d <db_name> --load=web,smile_data_integration
+
+
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     & stephane.salah@smile.fr
     """,
