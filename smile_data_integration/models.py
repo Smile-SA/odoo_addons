@@ -14,7 +14,7 @@ native_call_kw_multi = api.call_kw_multi
 def _auto_init(self):
     name = 'old_id'
     if self._auto and self._old_id and name not in self._fields:
-        field = fields.Integer(index=True, readonly=True)
+        field = fields.Integer(readonly=True)
         self._add_field(name, field)
     native_auto_init(self)
 
