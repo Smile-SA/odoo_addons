@@ -21,11 +21,11 @@ def _auto_init(self):
 
 @api.model
 def _setup_base(self, partial):
+    native_setup_base(self, partial)
     name = 'old_id'
     if self._auto and self._old_id and name not in self._fields:
         field = fields.Integer(readonly=True)
         self._add_field(name, field)
-    native_setup_base(self, partial)
 
 
 def _convert_values(self, vals):
