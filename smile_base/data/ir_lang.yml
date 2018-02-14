@@ -3,17 +3,11 @@
 -
   !python {model: res.lang}: |
     if self.search([('code', '=', 'fr_FR')], limit=1):
-      value = self.env['ir.values'].search([
-        ('name', '=', 'lang'),
-        ('key', '=', 'default'),
-        ('model', '=', 'res.partner'),
-      ], limit=1)
+      partner_lang_field_id = self.env.ref('base.field_res_partner_lang').id
+      value = self.env['ir.default'].search([('field_id', '=', partner_lang_field_id)], limit=1)
       vals = {
-        'name': 'lang',
-        'key': 'default',
-        'key2': False,
-        'model': 'res.partner',
-        'value_unpickle': 'fr_FR',
+        'field_id': partner_lang_field_id,
+        'json_value': '"fr_FR"',
       }
       if value:
         value.write(vals)

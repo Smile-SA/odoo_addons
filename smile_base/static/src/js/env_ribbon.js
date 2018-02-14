@@ -16,7 +16,11 @@ odoo.define('add_environment_ribbon', function (require) {
             }).then(function(server_env) {
                 self.$el.html(server_env.toUpperCase());
             });
-            config_parameter.call('get_param', ['server.environment.ribbon_color', 'rgba(255, 0, 0, .6)']).then(function(color) {
+            rpc.query({
+                model: 'ir.config_parameter',
+                method: 'get_param',
+                args: ['server.environment.ribbon_color', 'rgba(255, 0, 0, .6)'],
+            }).then(function(color) {
                 self.$el.css({'background-color': color});
             });
             return self._super();
