@@ -41,7 +41,7 @@ class IrModelExportTemplate(models.Model):
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.export.template')],
                               readonly=True, copy=False)
 
-    client_action_id = fields.Many2one('ir.values', 'Client Action', copy=False)
+    client_action = fields.Boolean(compute='_get_client_action', store=True)
     filter_type = fields.Selection([('domain', 'Domain'), ('method', 'Method')], required=True, default='domain')
     filter_domain = fields.Text(default='[]', help="Available variables: context, time, user")
     filter_method = fields.Char(help="signature: @api.model + *args")
@@ -52,6 +52,11 @@ class IrModelExportTemplate(models.Model):
     force_execute_action = fields.Boolean('Force Action Execution', help="Even if there are no record to export")
     do_not_store_record_ids = fields.Boolean('Do not store exported records',
                                              help="If checked, export regeneration will not be possible")
+
+    @api.one
+    @api.depends('server_action_id.binding_model_id')
+    def _get_client_action(self):
+        self.client_action = bool(self.server_action_id.binding_model_id)
 
     @api.one
     @api.constrains('unique', 'do_not_store_record_ids')
@@ -70,32 +75,18 @@ class IrModelExportTemplate(models.Model):
             vals['code'] = "self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)" % (self.id,)
         return vals
 
-    def _get_client_action_vals(self, **kwargs):
-        vals = {
-            'name': self.name,
-            'model_id': self.model_id.id,
-            'model': self.model_id.model,
-            'key2': 'client_action_multi',
-            'value': 'ir.actions.server,%d' % self.server_action_id.id,
-        }
-        vals.update(kwargs)
-        return vals
-
     @api.one
     def create_client_action(self, **kwargs):
-        if not self.client_action_id:
-            if not self.server_action_id:
-                self.create_server_action()
-            vals = self._get_client_action_vals(**kwargs)
-            self.client_action_id = self.env['ir.values'].create(vals)
+        if not self.server_action_id:
+            self.create_server_action()
+        if not self.server_action_id.binding_model_id:
+            self.server_action_id.binding_model_id = self.model_id
         return True
 
     @api.one
     def unlink_client_action(self):
-        if self.client_action_id:
-            self.client_action_id.unlink()
-            if self.server_action_id:
-                self.server_action_id.unlink()
+        if self.server_action_id:
+            self.server_action_id.unlink()
         return True
 
     def _get_eval_context(self):

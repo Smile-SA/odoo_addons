@@ -66,7 +66,7 @@ msgid "Can't find method: %s on object: %s"
 msgstr "Can't find method: %s on object: %s"
 
 #. module: smile_impex
-#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template_client_action_id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template_client_action
 msgid "Client Action"
 msgstr "Action client"
 

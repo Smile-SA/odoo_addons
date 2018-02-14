@@ -118,8 +118,6 @@ class IrModelImpexTemplate(models.AbstractModel):
 
     @api.one
     def unlink_server_action(self):
-        if self.client_action_id:
-            raise UserError(_('Please remove client action before removing server action'))
         if self.server_action_id:
             self.server_action_id.unlink()
         return True

@@ -36,11 +36,11 @@
 									<button type="object" name="create_cron" string="Create Scheduled Action" colspan="2"
 										attrs="{'invisible': [('cron_id', '!=', False)]}" class="oe_link"/>
 									<newline/>
-									<field name="client_action_id" />
+									<field name="client_action" />
 									<button type="object" name="create_client_action" string="Create Client Action" colspan="2"
-										attrs="{'invisible': [('client_action_id', '!=', False)]}" class="oe_link"/>
+										attrs="{'invisible': [('client_action', '!=', False)]}" class="oe_link"/>
 									<button type="object" name="unlink_client_action" string="Delete Client Action" colspan="2"
-										attrs="{'invisible': [('client_action_id', '=', False)]}" class="oe_link"/>
+										attrs="{'invisible': [('client_action', '=', False)]}" class="oe_link"/>
 									<newline/>
 									<field name="server_action_id" />
 									<button type="object" name="create_server_action" string="Create Server Action" colspan="2"
