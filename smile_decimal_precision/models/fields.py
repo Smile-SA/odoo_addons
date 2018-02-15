@@ -29,8 +29,8 @@ native_get_description = Field.get_description
 
 def new_get_description(self, env):
     desc = native_get_description(self, env)
-    if getattr(self, '_digits', None) and callable(self._digits) and self._digits.func_closure:
-        application = self._digits.func_closure[0].cell_contents
+    if getattr(self, '_digits', None) and callable(self._digits) and self._digits.__closure__:
+        application = self._digits.__closure__[0].cell_contents
         desc['digits'] = dp.get_display_precision(env, application)
     return desc
 
