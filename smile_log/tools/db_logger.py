@@ -21,16 +21,20 @@
 
 import datetime
 import logging
+import sys
 
 from odoo import registry
 
 from .misc import add_timing, add_trace
 
+if sys.version_info > (3,):
+    long = int
+
 
 class SmileDBLogger:
 
     def __init__(self, dbname, model_name, res_id, uid=0):
-        assert isinstance(uid, int), 'uid should be an integer'
+        assert isinstance(uid, (int, long)), 'uid should be an integer'
         self._logger = logging.getLogger('smile_log')
 
         pid = 0
