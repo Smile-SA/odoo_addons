@@ -191,6 +191,7 @@ def _get_comparison_logs(self, other):
         logs.append('<b>%s</b>: %s' % (label, log))
     return logs
 
+
 SET_OPERATORS = {
     '&': and_,
     '|': or_,

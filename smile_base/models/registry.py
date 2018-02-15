@@ -36,4 +36,5 @@ def new_setup_models(self, cr):
                     setattr(CoModel, '_cascade_relations', {})
                 CoModel._cascade_relations.setdefault(RecordModel._name, set()).add(fieldname)
 
+
 Registry.setup_models = new_setup_models
