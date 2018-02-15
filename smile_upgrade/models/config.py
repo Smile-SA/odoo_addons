@@ -77,4 +77,5 @@ class ConfigManager(object):
         except (IOError, NoSectionError):
             return
 
+
 configuration = ConfigManager()

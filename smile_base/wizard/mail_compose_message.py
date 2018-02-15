@@ -35,13 +35,14 @@ class MailComposeMessage(models.TransientModel):
         @param template_id: int, id of the email template
         @param res_id: int, id of the record from where the email is sent
         """
+        def format_tz(dt, tz=False, format=False):
+            return mail_template.format_tz(self._model, self._cr, self._uid,
+                                           dt, tz, format, self._context)
         template = self.env['mail.template'].browse(template_id)
         # usefull to get template language
         ctx = {'mail_auto_delete': template.auto_delete,
                'mail_notify_user_signature': False,
                'tpl_partners_only': False}
-        format_tz = lambda dt, tz=False, format=False: mail_template.format_tz(self._model, self._cr, self._uid,
-                                                                               dt, tz, format, self._context)
         arg = {
             'object': self.env[model].browse(res_id),
             'user': self.env.user,

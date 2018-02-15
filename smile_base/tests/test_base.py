@@ -28,17 +28,17 @@ from odoo.addons.base.ir.ir_mail_server import MailDeliveryException
 
 @contextmanager
 def config_to_enable_email_sending(enable_email_sending):
-   init_config = {
-       'enable_email_sending': config.get('enable_email_sending'),
-       'test_enable': config.get('test_enable'),
-   }
-   try:
-       config['enable_email_sending'] = enable_email_sending
-       config['test_enable'] = not enable_email_sending
-       yield config
-   finally:
-       for key, value in init_config.items():
-           config[key] = value
+    init_config = {
+        'enable_email_sending': config.get('enable_email_sending'),
+        'test_enable': config.get('test_enable'),
+    }
+    try:
+        config['enable_email_sending'] = enable_email_sending
+        config['test_enable'] = not enable_email_sending
+        yield config
+    finally:
+        for key, value in init_config.items():
+            config[key] = value
 
 
 class BaseTest(TransactionCase):

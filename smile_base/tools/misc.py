@@ -53,8 +53,13 @@ class unquote(str):
         return unquote('%s.%s' % (self, attr))
 
     def __call__(self, *args, **kwargs):
-        format_args = lambda k: isinstance(k, string_types) and '"%s"' % k or k
-        format_kwargs = lambda t: '%s=%s' % (t[0], isinstance(t[1], string_types) and '"%s"' % t[1] or t[1])
+        def format_args(k):
+            return isinstance(k, string_types) and '"%s"' % k or k
+
+        def format_kwargs(t):
+            return '%s=%s' % \
+                (t[0], isinstance(t[1], string_types) and '"%s"' % t[1] or t[1])
+
         params = [', '.join(map(format_args, args)),
                   ', '.join(map(format_kwargs, kwargs.items()))]
         return unquote('%s(%s)' % (self, ', '.join(params)))

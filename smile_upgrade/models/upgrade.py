@@ -207,9 +207,12 @@ class Upgrade(object):
             pass
 
     def load_files(self, cr, mode):
+        def format_files_list(f):
+            if isinstance(f, tuple):
+                return f[0], len(f) == 2 and f[1] or 'raise'
+            return f, 'raise'
         _logger.debug('%sing %s upgrade...', mode, self.version)
         files_list = getattr(self, mode, [])
-        format_files_list = lambda f: isinstance(f, tuple) and (f[0], len(f) == 2 and f[1] or 'raise') or (f, 'raise')
         for fname, error_management in map(format_files_list, files_list):
             f_name = fname.replace('/', os.path.sep)
             fp = os.path.join(self.dir_path, f_name)

@@ -19,6 +19,11 @@
 #
 ##############################################################################
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
+
 def create_unique_index(cr, table, column, where_clause=None):
     if type(column) == list:
         column = ','.join(column)

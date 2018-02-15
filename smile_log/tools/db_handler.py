@@ -72,4 +72,5 @@ class SmileDBHandler(logging.Handler):
                 cr.close()
         self._dbname_to_cr = {}
 
+
 logging.getLogger('smile_log').addHandler(SmileDBHandler())

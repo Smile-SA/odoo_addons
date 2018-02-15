@@ -4,7 +4,7 @@ import sys
 
 from odoo import api, models, tools, _
 from odoo.exceptions import UserError
-from odoo.addons.mail.models.mail_template import format_tz, mako_template_env, mako_safe_template_env, _logger
+from odoo.addons.mail.models.mail_template import format_amount, format_date, format_tz, mako_template_env, mako_safe_template_env, _logger
 
 if sys.version_info > (3,):
     long = int
@@ -71,7 +71,7 @@ class MailTemplate(models.Model):
                 render_result = template.render(variables)
             except Exception:
                 _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
-                raise UserError(_("Failed to render template %r using values %r")% (template, variables))
+                raise UserError(_("Failed to render template %r using values %r") % (template, variables))
             if render_result == u"False":
                 render_result = u""
             results[res_id] = render_result
