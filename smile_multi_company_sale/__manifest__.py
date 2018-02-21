@@ -19,20 +19,31 @@
 #
 ##############################################################################
 
-from odoo.fields import Field
+{
+    "name": "Multi-company - Sales",
+    "version": "0.1",
+    "depends": [
+        "smile_multi_company_account",
+        "sale_management",
+    ],
+    "author": "Smile",
+    "license": 'AGPL-3',
+    "description": """
+Multi-company Sales
+===================
 
-from odoo.addons.smile_decimal_precision.models import DecimalPrecision as dp
-
-
-native_get_description = Field.get_description
-
-
-def new_get_description(self, env):
-    desc = native_get_description(self, env)
-    if getattr(self, '_digits', None) and callable(self._digits) and self._digits.__closure__:
-        application = self._digits.__closure__[0].cell_contents
-        desc['digits'] = dp.get_display_precision(env, application)
-    return desc
-
-
-Field.get_description = new_get_description
+Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+    """,
+    "summary": "",
+    "website": "http://www.smile.fr",
+    "category": 'Hidden',
+    "sequence": 20,
+    "data": [
+        'views/sale_order_view.xml',
+        'wizard/sale_make_invoice_advance_views.xml',
+    ],
+    "qweb": [],
+    "auto_install": True,
+    "installable": True,
+    "application": False,
+}
