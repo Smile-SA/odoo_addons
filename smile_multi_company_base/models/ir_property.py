@@ -46,14 +46,6 @@ class IrProperty(models.Model):
             super(IrProperty, self).set_multi(
                 name, model, record_values, default_value)
 
-    @api.model
-    def search_multi(self, name, model, operator, value):
-        if not self._context.get('force_company'):
-            force_companies = self.env.user.company_id._get_all_children()
-            self = self.with_context(force_company_ids=force_companies.ids)
-        return super(IrProperty, self).search_multi(
-            name, model, operator, value)
-
     def _get_domain(self, prop_name, model):
         domain = super(IrProperty, self)._get_domain(prop_name, model)
         if self._context.get('force_company_ids'):
