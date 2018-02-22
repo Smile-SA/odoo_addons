@@ -10,4 +10,4 @@ class ResCompany(models.Model):
     @api.model_cr
     def init(self):
         super(ResCompany, self).init()
-        self._company_dependent_models.append('sale.order')
+        self._invoicing_company_dependent_models.append('sale.order')

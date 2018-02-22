@@ -7,4 +7,4 @@ from odoo import fields, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    company_id = fields.Many2one(domain=[('chart_template_id', '!=', False)])
+    company_id = fields.Many2one(domain=[('is_invoicing_company', '=', True)])

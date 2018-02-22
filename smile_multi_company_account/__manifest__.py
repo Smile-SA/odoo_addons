@@ -20,7 +20,9 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "website": "http://www.smile.fr",
     "category": 'Hidden',
     "sequence": 20,
-    "data": [],
+    "data": [
+        'views/res_company_view.xml',
+    ],
     "qweb": [],
     "auto_install": True,
     "installable": True,

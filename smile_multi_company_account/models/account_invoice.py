@@ -15,12 +15,14 @@ class AccountInvoice(models.Model):
             return journal
         inv_type = self._context.get('type', 'out_invoice')
         inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
-        company = self.env['res.company']._company_default_get('account.invoice')
+        journal_types = list(filter(None, map(TYPE2JOURNAL.get, inv_types)))
+        company = self.env['res.company']._company_default_get(
+            'account.invoice')
         domain = [
-            ('type', 'in', list(filter(None, map(TYPE2JOURNAL.get, inv_types)))),
+            ('type', 'in', journal_types),
             ('company_id', '=', company.id),
         ]
         return self.env['account.journal'].search(domain, limit=1)
 
     journal_id = fields.Many2one(default=_default_journal)
-    company_id = fields.Many2one(domain=[('chart_template_id', '!=', False)])
+    company_id = fields.Many2one(domain=[('is_invoicing_company', '=', True)])
