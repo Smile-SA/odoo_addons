@@ -97,6 +97,7 @@ def fields_get(self, allfields=None, write_access=True, attributes=None):
                 'Attachments')
     return res
 
+
 Model._get_attachments_field_name = _get_attachments_field_name
 Model._setup_fields = _setup_fields
 Model._get_attachments = _get_attachments
