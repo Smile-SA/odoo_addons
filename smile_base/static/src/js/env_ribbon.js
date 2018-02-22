@@ -10,29 +10,21 @@ odoo.define('add_environment_ribbon', function (require) {
         start: function() {
             var self = this;
             rpc.query({
-                model: 'ir.config_parameter',
-                method: 'get_param',
-                args: ['server.environment', 'prod'],
-            }).then(function(server_env) {
-                self.$el.html(server_env.toUpperCase());
-            });
-            rpc.query({
-                model: 'ir.config_parameter',
-                method: 'get_param',
-                args: ['server.environment.ribbon_color', 'rgba(255, 0, 0, .6)'],
-            }).then(function(color) {
-                self.$el.css({'background-color': color});
+                model: 'ir.env_ribbon',
+                method: 'get_values',
+            }).then(function(env_ribbon) {
+                self.$el.html(env_ribbon[0].toUpperCase());
+                self.$el.css({'background-color': env_ribbon[1]});
             });
             return self._super();
         }
     });
 
     rpc.query({
-        model: 'ir.config_parameter',
-        method: 'get_param',
-        args: ['server.environment', 'prod'],
-    }).then(function(server_env) {
-        if (server_env != 'prod') {
+        model: 'ir.env_ribbon',
+        method: 'get_values',
+    }).then(function(env_ribbon) {
+        if (env_ribbon[0] != 'prod') {
             SystrayMenu.Items.push(EnvironmentRibbon);
         }
     });

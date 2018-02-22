@@ -10,9 +10,8 @@ odoo.define('display_code_version', function (require) {
         start: function() {
             var self = this;
             rpc.query({
-                model: 'ir.config_parameter',
-                method:'get_param',
-                args: ['code.version', '?!'],
+                model: 'ir.code_version',
+                method:'get_value',
             }).then(function(code_version) {
                 self.$('.code_version').html(code_version);
             });

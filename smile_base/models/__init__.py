@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from . import env_ribbon
 from . import fetchmail
 from . import ir_actions
 from . import ir_config_parameter
