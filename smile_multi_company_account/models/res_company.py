@@ -14,7 +14,7 @@ class ResCompany(models.Model):
     @api.one
     @api.depends('chart_template_id')
     def _is_invoicing_company(self):
-        self.is_invoicing_company = self.chart_template_id != False
+        self.is_invoicing_company = bool(self.chart_template_id)
 
     @api.multi
     def _get_invoicing_company(self):
