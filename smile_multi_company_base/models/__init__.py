@@ -3,3 +3,4 @@
 
 from . import ir_property
 from . import res_company
+from . import res_users
