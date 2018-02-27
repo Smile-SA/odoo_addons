@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from odoo import api, models, tools
+from odoo import api, models
 
 
 class EnvRibbon(models.AbstractModel):
