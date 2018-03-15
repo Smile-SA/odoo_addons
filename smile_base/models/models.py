@@ -32,6 +32,7 @@ from odoo import api, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain
+from odoo.tools.safe_eval import safe_eval
 
 
 _logger = logging.getLogger(__name__)
@@ -209,6 +210,8 @@ SQL2PYTHON_OPERATORS = {
 
 @api.multi
 def filtered_from_domain(self, domain):
+    if isinstance(domain, string_types):
+        domain = safe_eval(domain)
     if not domain or not self:
         return self
 
