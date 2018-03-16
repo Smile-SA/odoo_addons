@@ -1,0 +1,247 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_checklist
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-02 11:54+0000\n"
+"PO-Revision-Date: 2015-01-02 11:54+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_checklist
+#: code:addons/smile_checklist/models/checklist.py:68
+#, python-format
+msgid "A checklist already exists for this model !"
+msgstr "Une checklist existe déjà pour ce modèle !"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_form
+#: field:checklist.task,action_id:0
+msgid "Action"
+msgstr "Action"
+
+#. module: smile_checklist
+#: field:checklist,action_id:0
+msgid "Actions"
+msgstr "Actions"
+
+#. module: smile_checklist
+#: field:checklist,active:0
+#: field:checklist.task,active:0
+msgid "Active"
+msgstr "Active"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_form
+#: field:checklist.task,checklist_id:0
+#: model:ir.model,name:smile_checklist.model_checklist
+msgid "Checklist"
+msgstr "Checklist"
+
+#. module: smile_checklist
+#: field:checklist.task.instance,task_id:0
+#: model:ir.model,name:smile_checklist.model_checklist_task
+msgid "Checklist Task"
+msgstr "Tâche"
+
+#. module: smile_checklist
+#: model:ir.model,name:smile_checklist.model_checklist_task_field
+msgid "Checklist Task Field"
+msgstr "Champ"
+
+#. module: smile_checklist
+#: model:ir.model,name:smile_checklist.model_checklist_task_instance
+msgid "Checklist Task Instance"
+msgstr "Instance"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_tree
+#: model:ir.actions.act_window,name:smile_checklist.action_checklist
+#: model:ir.ui.menu,name:smile_checklist.menu_checklist_checklist
+#: model:ir.ui.menu,name:smile_checklist.menu_checklists
+msgid "Checklists"
+msgstr "Checklists"
+
+#. module: smile_checklist
+#: field:checklist.task,condition:0
+msgid "Condition"
+msgstr "Condition"
+
+#. module: smile_checklist
+#: field:checklist,create_uid:0
+#: field:checklist.task,create_uid:0
+#: field:checklist.task.field,create_uid:0
+#: field:checklist.task.instance,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_checklist
+#: field:checklist,create_date:0
+#: field:checklist.task,create_date:0
+#: field:checklist.task.field,create_date:0
+#: field:checklist.task.instance,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_checklist
+#: model:checklist,name:smile_checklist.cron_checklist
+msgid "Cron checklist"
+msgstr "Checklist sur les cron"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_form
+msgid "Ex. object.name"
+msgstr "Ex. object.name"
+
+#. module: smile_checklist
+#: field:checklist.task.field,expression:0
+msgid "Expression"
+msgstr "Expression"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_form
+#: view:checklist.task.field:smile_checklist.view_checklist_task_field_form
+msgid "Field"
+msgstr "Champ"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_form
+#: field:checklist.task,field_ids:0
+#: view:checklist.task.field:smile_checklist.view_checklist_task_field_tree
+#: view:checklist.task.instance:smile_checklist.view_checklist_task_instance_form
+msgid "Fields"
+msgstr "Champs"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_form
+#: view:checklist.task.instance:smile_checklist.view_checklist_task_instance_form
+msgid "Fields to fill"
+msgstr "Champs à renseigner"
+
+#. module: smile_checklist
+#: view:checklist.task.instance:smile_checklist.view_checklist_task_instance_form
+msgid "Filled fields"
+msgstr "Champs renseignés"
+
+#. module: smile_checklist
+#: field:checklist,id:0
+#: field:checklist.task,id:0
+#: field:checklist.task.field,id:0
+#: field:checklist.task.instance,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_checklist
+#: field:checklist,write_uid:0
+#: field:checklist.task,write_uid:0
+#: field:checklist.task.field,write_uid:0
+#: field:checklist.task.instance,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_checklist
+#: field:checklist,write_date:0
+#: field:checklist.task,write_date:0
+#: field:checklist.task.field,write_date:0
+#: field:checklist.task.instance,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_form
+msgid "Leave blank in order to this checklist appears in all object menus"
+msgstr "Laisser vide afin que la checklist apparaisse sur tous les menus du modèle"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_form
+msgid "Leave blank in order to this checklist appears in all object views"
+msgstr "Laisser vide afin que la checklist apparaisse sur toutes les vues du modèle"
+
+#. module: smile_checklist
+#: model:checklist.task,name:smile_checklist.checklist_task_4
+msgid "Mandatory Object"
+msgstr "Object requis"
+
+#. module: smile_checklist
+#: field:checklist,act_window_ids:0
+msgid "Menus"
+msgstr "Menus"
+
+#. module: smile_checklist
+#: field:checklist,model_id:0
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_checklist
+#: field:checklist,name:0
+#: field:checklist.task,name:0
+#: field:checklist.task.field,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_checklist
+#: model:checklist.task.field,name:smile_checklist.checklist_task_field_14
+msgid "Object"
+msgstr "Object"
+
+#. module: smile_checklist
+#: field:checklist.task,sequence:0
+#: field:checklist.task.instance,sequence:0
+msgid "Priority"
+msgstr "Prioritaire"
+
+#. module: smile_checklist
+#: field:checklist.task.instance,progress_rate:0
+msgid "Progress Rate"
+msgstr "Taux d'avancement"
+
+#. module: smile_checklist
+#: field:checklist.task,mandatory:0
+msgid "Required to make active object"
+msgstr "Obligatoire pour rendre la ressource active"
+
+#. module: smile_checklist
+#: field:checklist.task.instance,res_id:0
+msgid "Resource ID"
+msgstr "Id de la ressource"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_form
+#: field:checklist.task.field,task_id:0
+#: view:checklist.task.instance:smile_checklist.view_checklist_task_instance_form
+msgid "Task"
+msgstr "Tâche"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_form
+#: field:checklist,task_ids:0
+#: view:checklist.task.instance:smile_checklist.view_checklist_task_instance_tree
+msgid "Tasks"
+msgstr "Tâches"
+
+#. module: smile_checklist
+#: field:checklist,view_ids:0
+msgid "Views"
+msgstr "Vues"
+
+#. module: smile_checklist
+#: view:checklist:smile_checklist.view_checklist_form
+msgid "Visibility"
+msgstr "Visibilité"
+
+#. module: smile_checklist
+#: help:checklist.task.field,expression:0
+msgid "You can use the following variables: object, time"
+msgstr "Vous pouvez utiliser les variables suivantes: object, time"
+
+#. module: smile_checklist
+#: help:checklist.task,condition:0
+msgid "object in localcontext"
+msgstr "object in localcontext"
