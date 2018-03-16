@@ -1,7 +1,0 @@
-id,name,model_id/id,group_id/id,perm_read,perm_create,perm_write,perm_unlink
-ir_model_access_checklist,Checklist,smile_checklist.model_checklist,base.group_system,1,1,1,1
-ir_model_access_checklist_task,Checklist Task,smile_checklist.model_checklist_task,base.group_system,1,1,1,1
-ir_model_access_checklist_task_instance,Checklist Task Instance,smile_checklist.model_checklist_task_instance,base.group_system,1,1,1,1
-ir_model_access_checklist_all,Checklist,smile_checklist.model_checklist,,1,0,0,0
-ir_model_access_checklist_task_all,Checklist Task,smile_checklist.model_checklist_task,,1,0,0,0
-ir_model_access_checklist_task_instance_all,Checklist Task Instance,smile_checklist.model_checklist_task_instance,,1,1,1,0
