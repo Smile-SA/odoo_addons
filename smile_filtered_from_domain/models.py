@@ -31,7 +31,6 @@ SQL2PYTHON_OPERATORS = {
 def filtered_from_domain(self, domain):
     if isinstance(domain, string_types):
         domain = safe_eval(domain)
-    import pdb; pdb.set_trace()
     if not domain or not self:
         return self
 
