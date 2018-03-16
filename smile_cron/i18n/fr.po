@@ -1,0 +1,97 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_cron
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-31 15:30+0000\n"
+"PO-Revision-Date: 2018-01-31 15:30+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_cron
+#: model:ir.ui.view,arch_db:smile_cron.view_smile_cron_cron
+msgid "Caution: the number of calls is decremented per each call time in the timesheet."
+msgstr "Attention : le nombre d'appels est décrémenté par chaque appel d'un horaire de la liste."
+
+#. module: smile_cron
+#: model:ir.model.fields,field_description:smile_cron.field_ir_cron_time_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_cron
+#: model:ir.model.fields,field_description:smile_cron.field_ir_cron_time_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_cron
+#: model:ir.model.fields,field_description:smile_cron.field_ir_cron_time_cron_job_id
+msgid "Cron job"
+msgstr "Action planifiée"
+
+#. module: smile_cron
+#: model:ir.model.fields,field_description:smile_cron.field_ir_cron_schedule_type
+msgid "Cron schedule type"
+msgstr "Type de planification"
+
+#. module: smile_cron
+#: selection:ir.cron,schedule_type:0
+msgid "Default"
+msgstr "Par défaut"
+
+#. module: smile_cron
+#: model:ir.model.fields,field_description:smile_cron.field_ir_cron_time_display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_cron
+#: model:ir.model.fields,field_description:smile_cron.field_ir_cron_time_id
+msgid "ID"
+msgstr "Identifiant"
+
+#. module: smile_cron
+#: model:ir.model.fields,field_description:smile_cron.field_ir_cron_time___last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_cron
+#: model:ir.model.fields,field_description:smile_cron.field_ir_cron_time_write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_cron
+#: model:ir.model.fields,field_description:smile_cron.field_ir_cron_time_write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_cron
+#: model:ir.model.fields,field_description:smile_cron.field_ir_cron_time_call_time
+msgid "Next Execution Date"
+msgstr "Prochaine date d'exécution"
+
+#. module: smile_cron
+#: model:ir.model.fields,help:smile_cron.field_ir_cron_time_call_time
+msgid "Next planned execution date for this job."
+msgstr "Prochaine date d'exécution de cette tâche."
+
+#. module: smile_cron
+#: selection:ir.cron,schedule_type:0
+#: model:ir.model.fields,field_description:smile_cron.field_ir_cron_call_time_ids
+msgid "Timesheet"
+msgstr "Liste d'horaires"
+
+#. module: smile_cron
+#: model:ir.model,name:smile_cron.model_ir_cron
+msgid "ir.cron"
+msgstr "ir.cron"
+
+#. module: smile_cron
+#: model:ir.model,name:smile_cron.model_ir_cron_time
+msgid "ir.cron.time"
+msgstr "ir.cron.time"

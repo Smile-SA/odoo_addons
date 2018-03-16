@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_smile_cron_cron">
+        <field name="name">smile_cron.ir.cron.form</field>
+        <field name="model">ir.cron</field>
+        <field name="inherit_id" ref="base.ir_cron_view"/>
+        <field name="arch" type="xml">
+            <field name="nextcall" position="replace">
+                <field name="schedule_type"/>
+                <field name="nextcall" attrs="{'invisible': [('schedule_type', '!=', 'default')]}"/>
+                <field name="call_time_ids" attrs="{'invisible': [('schedule_type', '!=', 'timesheet')]}"/>
+                <div colspan="2" class="alert alert-danger" role="alert"
+                    attrs="{'invisible': [('schedule_type', '!=', 'timesheet')]}">
+                    <p>Caution: the number of calls is decremented per each call time in the timesheet.</p>
+                </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>
