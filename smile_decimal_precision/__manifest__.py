@@ -25,12 +25,16 @@
     "depends": ["decimal_precision"],
     "author": "Smile",
     "license": 'AGPL-3',
-    "description": "This module allows to distinguish computation digits and display digits in decimal precision",
+    "description": """
+This module allows to distinguish computation digits
+and display digits in decimal precision.
+""",
     "website": "http://www.smile.fr",
     "category": "Hidden/Dependency",
     "sequence": 32,
     "data": [
         "views/decimal_precision_view.xml",
+        "views/res_currency_view.xml",
     ],
     "auto_install": True,
     "installable": True,

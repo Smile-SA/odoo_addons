@@ -1,23 +1,4 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 Smile (<http://www.smile.fr>). All Rights Reserved
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, tools
 
@@ -25,12 +6,15 @@ from odoo import api, fields, models, tools
 class DecimalPrecision(models.Model):
     _inherit = 'decimal.precision'
 
-    display_digits = fields.Integer('Display Digits', required=True, default=2)
+    display_digits = fields.Integer(
+        'Display Digits', required=True, default=2)
 
     @api.model
     @tools.ormcache('application')
     def display_precision_get(self, application):
-        self.env.cr.execute('select display_digits from decimal_precision where name=%s', (application,))
+        self.env.cr.execute(
+            'select display_digits from decimal_precision where name=%s',
+            (application,))
         res = self.env.cr.fetchone()
         return res[0] if res else 2
 
