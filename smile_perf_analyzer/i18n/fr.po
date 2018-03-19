@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0c\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-26 22:17+0000\n"
-"PO-Revision-Date: 2017-01-26 22:17+0000\n"
+"POT-Creation-Date: 2018-03-19 09:05+0000\n"
+"PO-Revision-Date: 2018-03-19 09:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr "Accepte une expression régulière"
 #. module: smile_perf_analyzer
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_rule_active
 msgid "Active"
-msgstr "Actif"
+msgstr "Actif/ve"
 
 #. module: smile_perf_analyzer
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_args
@@ -36,7 +36,13 @@ msgid "Arguments"
 msgstr "Arguments"
 
 #. module: smile_perf_analyzer
-#: code:addons/smile_perf_analyzer/models/perf_log.py:91
+#: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_attachment_ids
+#: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_rule_attachment_ids
+msgid "Attachments"
+msgstr "Pièces jointes"
+
+#. module: smile_perf_analyzer
+#: code:addons/smile_perf_analyzer/models/perf_log.py:104
 #, python-format
 msgid "Count"
 msgstr "Nombre"
@@ -60,7 +66,7 @@ msgstr "Créé le"
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_date
 #: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
 msgid "Date"
-msgstr "Date"
+msgstr "Date "
 
 #. module: smile_perf_analyzer
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_display_name
@@ -69,8 +75,8 @@ msgid "Display Name"
 msgstr "Nom à afficher"
 
 #. module: smile_perf_analyzer
-#: code:addons/smile_perf_analyzer/models/perf_log.py:84
-#: code:addons/smile_perf_analyzer/models/perf_log.py:91
+#: code:addons/smile_perf_analyzer/models/perf_log.py:97
+#: code:addons/smile_perf_analyzer/models/perf_log.py:104
 #, python-format
 msgid "Duration"
 msgstr "Durée"
@@ -81,15 +87,10 @@ msgid "Error"
 msgstr "Erreur"
 
 #. module: smile_perf_analyzer
-#: code:addons/smile_perf_analyzer/models/perf_log.py:91
+#: code:addons/smile_perf_analyzer/models/perf_log.py:104
 #, python-format
 msgid "Field"
 msgstr "Champ"
-
-#. module: smile_perf_analyzer
-#: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_rule_recompute_min_duration
-msgid "Slow fields recomputation - Min. duration"
-msgstr "Recalcul lent des champs calculés - Seuil"
 
 #. module: smile_perf_analyzer
 #: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
@@ -153,7 +154,7 @@ msgid "Methods"
 msgstr "Méthodes"
 
 #. module: smile_perf_analyzer
-#: code:addons/smile_perf_analyzer/models/perf_log.py:91
+#: code:addons/smile_perf_analyzer/models/perf_log.py:104
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_model
 #: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
 #, python-format
@@ -165,11 +166,6 @@ msgstr "Modèle"
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_rule_models
 msgid "Models"
 msgstr "Modèles"
-
-#. module: smile_perf_analyzer
-#: model:ir.model,name:smile_perf_analyzer.model_ir_module_module
-msgid "Module"
-msgstr "Module"
 
 #. module: smile_perf_analyzer
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_rule_name
@@ -209,15 +205,15 @@ msgid "Performance Logs"
 msgstr "Logs de performance"
 
 #. module: smile_perf_analyzer
-#: code:addons/smile_perf_analyzer/models/perf_rule.py:44
+#: code:addons/smile_perf_analyzer/models/perf_rule.py:48
 #, python-format
 msgid "Please to specify methods to profile them"
-msgstr "Please to specify methods to profile them"
+msgstr "Merci d'indiquer des méthodes à profiler"
 
 #. module: smile_perf_analyzer
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_rule_log_python
 msgid "Profile Python methods"
-msgstr "Profile Python methods"
+msgstr "Méthodes Python"
 
 #. module: smile_perf_analyzer
 #: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_form
@@ -230,10 +226,10 @@ msgid "Python stats"
 msgstr "Stats Python"
 
 #. module: smile_perf_analyzer
-#: code:addons/smile_perf_analyzer/models/perf_log.py:77
+#: code:addons/smile_perf_analyzer/models/perf_log.py:90
 #, python-format
 msgid "Requests count"
-msgstr "Requests count"
+msgstr "Nombre de requêtes"
 
 #. module: smile_perf_analyzer
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_result
@@ -243,7 +239,7 @@ msgstr "Résultat"
 #. module: smile_perf_analyzer
 #: model:ir.ui.menu,name:smile_perf_analyzer.menu_ir_logging_perf_rule
 msgid "Rules"
-msgstr "Rules"
+msgstr "Règles"
 
 #. module: smile_perf_analyzer
 #: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_form
@@ -271,7 +267,7 @@ msgid "SQL stats - Html"
 msgstr "Stats SQL - Html"
 
 #. module: smile_perf_analyzer
-#: code:addons/smile_perf_analyzer/models/perf_log.py:84
+#: code:addons/smile_perf_analyzer/models/perf_log.py:97
 #, python-format
 msgid "Slow Query"
 msgstr "Requête lente"
@@ -303,13 +299,18 @@ msgid "Slow fields recomputation"
 msgstr "Recalcul lent des champs calculés"
 
 #. module: smile_perf_analyzer
-#: code:addons/smile_perf_analyzer/models/perf_log.py:77
-#, python-format
-msgid "Statement"
-msgstr "Statement"
+#: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_rule_recompute_min_duration
+msgid "Slow fields recomputation - Min. duration"
+msgstr "Recalcul lent des champs calculés - Seuil"
 
 #. module: smile_perf_analyzer
-#: code:addons/smile_perf_analyzer/models/perf_log.py:77
+#: code:addons/smile_perf_analyzer/models/perf_log.py:89
+#, python-format
+msgid "Statement"
+msgstr "Relevé"
+
+#. module: smile_perf_analyzer
+#: code:addons/smile_perf_analyzer/models/perf_log.py:89
 #, python-format
 msgid "Table"
 msgstr "Table"
@@ -320,22 +321,21 @@ msgid "Total"
 msgstr "Total"
 
 #. module: smile_perf_analyzer
-#: code:addons/smile_perf_analyzer/models/perf_log.py:77
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_total_time
+msgid "Total Time"
+msgstr "Durée cumulée"
+
+#. module: smile_perf_analyzer
+#: code:addons/smile_perf_analyzer/models/perf_log.py:90
 #, python-format
 msgid "Total time"
 msgstr "Durée cumulée"
 
 #. module: smile_perf_analyzer
-#: code:addons/smile_perf_analyzer/models/perf_log.py:84
+#: code:addons/smile_perf_analyzer/models/perf_log.py:97
 #, python-format
 msgid "Trace"
 msgstr "Trace"
-
-#. module: smile_perf_analyzer
-#: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_uid
-msgid "User Id"
-msgstr "Id de l'utilisateur"
 
 #. module: smile_perf_analyzer
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_user_id
@@ -343,10 +343,25 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: smile_perf_analyzer
+#: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_uid
+msgid "User Id"
+msgstr "Id de l'utilisateur"
+
+#. module: smile_perf_analyzer
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_rule_user_ids
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_rule_users
 msgid "Users"
 msgstr "Utilisateurs"
+
+#. module: smile_perf_analyzer
+#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_form
+msgid "^(?!/longpolling)"
+msgstr "^(?!/longpolling)"
+
+#. module: smile_perf_analyzer
+#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_form
+msgid "create,write"
+msgstr "create,write"
 
 #. module: smile_perf_analyzer
 #: model:ir.model.fields,help:smile_perf_analyzer.field_ir_logging_perf_rule_recompute_min_duration
