@@ -27,7 +27,7 @@
     "license": 'AGPL-3',
     "description": """
 This module allows to distinguish computation digits
-and display digits in decimal precision.
+and display digits in decimal precisions and currencies.
 """,
     "website": "http://www.smile.fr",
     "category": "Hidden/Dependency",
