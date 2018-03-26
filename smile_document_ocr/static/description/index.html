@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <div>
+                <h3 class="oe_slogan"><u>OCR for documents</u></h3><br/>
+                This module was written to make uploaded documents, for example scans, searchable by running OCR on
+                them.<br/>
+                It supports all image formats Pillow supports for reading and PDFs.<br/>
+                <h3>Installation</h3>
+                To install this module, you need to:<br/>
+                <ul>
+                    <li>install tesseract and the language(s) your documents use</li>
+                    <li>if you want to support OCR on PDFs, install imagemagick</li>
+                    <li>install the module itself</li>
+                </ul>
+                On an Debian or Ubuntu system you would typically run:<br/>
+                <ul>
+                    <li>$ sudo apt-get install tesseract-ocr imagemagick</li>
+                </ul>
+                <h3>Configuration</h3>
+                To configure this module, go to:<br/>
+                <ul>
+                    <li>Settings/Technical/Parameters/System parameters and review the parameters with names
+                        document_ocr.*
+                    </li>
+                </ul>
+                <h3>Usage</h3>
+                By default, character recognition is done asynchronously by a cronjob at night. This is because the
+                recognition process takes a while and you don't want to make your users wait for the indexation to
+                finish. The interval to run the cronjob can be adjusted to your needs in the Scheduled Actions menu,
+                under ` Settings`. In case you want to force the OCR to be done immediately, set configuration parameter
+                document_ocr.synchronous to value True.<br/>
+                By default, recognition language is set to english. In case you want to use a different default, set
+                configuration parameter document_ocr.language to value respective value ex:por, for Portuguese.<br/>
+                In PDF case, OCR will run after it will be converted to an image. But OCR will be applied to all
+                PDFs.<br/>
+                System parameters used:<br/>
+                <ul>
+                    <li>document_ocr.synchronous: bool</li>
+                    <li>document_ocr.language: string</li>
+                    <li>document_ocr.dpi: integer</li>
+                    <li>document_ocr.quality: integer</li>
+                </ul>
+                <h3>Contributors</h3>
+                <ul>
+                    <li>Holger Brunn hbrunn@therp.nl</li>
+                    <li>Carlos Almeida carlos.almeida@tkobr.com</li>
+                </ul>
+                <h3>Maintainer</h3>
+                This module is maintained by ThinkOpen Solutions Brasil.</br>
+                <h4>support at <a href="https://github.com/thinkopensolutions/tko-addons/issues.">https://github.com/thinkopensolutions/tko-addons/issues</a>.</h4>
+            </div>
+        </div>
+    </div>
+</section>
