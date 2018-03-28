@@ -18,31 +18,24 @@ class BudgetLine(models.Model):
         'Available Amount', digits=0,
         compute="_get_commitment_amounts")
 
-    @api.one
-    def _get_commitment_amounts(self):
-        self.commitment_amount = self.with_context(commitment=True). \
-            _prac_amt()[self.id]
-        self.available_amount = self.planned_amount - self.commitment_amount
-
     @api.multi
-    def _get_sql_query(self, analytic_account_id, date_from, date_to,
-                       acc_ids, commitment=False):
-        """
-        If computing commitment, search lines with commitment account,
-        else with general account.
-        """
-        sql_string = "SELECT SUM(amount) " \
-                     "FROM account_analytic_line " \
-                     "WHERE account_id=%s " \
-                     "AND (date between to_date(%s,'yyyy-mm-dd') " \
-                     "AND to_date(%s,'yyyy-mm-dd')) " + \
-                     "AND " + \
-                     ("%s " % "commitment_account_id"
-                      if self._context.get('commitment')
-                      else "general_account_id") + \
-                     "=ANY(%s)"
-        sql_args = (analytic_account_id, date_from, date_to, acc_ids)
-        return sql_string, sql_args
+    def _get_commitment_amounts(self):
+        for line in self:
+            result = 0.0
+            acc_ids = line.general_budget_id.account_ids.ids
+            date_to = self.env.context.get('wizard_date_to') or line.date_to
+            date_from = self.env.context.get('wizard_date_from') or line.date_from
+            if line.analytic_account_id.id:
+                self.env.cr.execute("""
+                    SELECT SUM(amount)
+                    FROM account_analytic_line
+                    WHERE account_id=%s
+                        AND (date between to_date(%s,'yyyy-mm-dd') AND to_date(%s,'yyyy-mm-dd'))
+                        AND commitment_account_id=ANY(%s)""",
+                (line.analytic_account_id.id, date_from, date_to, acc_ids,))
+                result = self.env.cr.fetchone()[0] or 0.0
+            line.commitment_amount = result
+            line.available_amount = line.planned_amount - line.commitment_amount
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None,
