@@ -32,7 +32,7 @@ class BudgetCommitmentTest(TransactionCase):
         invoice.invoice_line_ids.write({
             'account_analytic_id': self.analytic_account.id,
         })
-        invoice.signal_workflow('invoice_open')
+        invoice.action_invoice_open()
         invoice.pay_and_reconcile(self.env['account.journal'].search(
             [('type', '=', 'bank')], limit=1), 525)
 
