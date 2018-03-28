@@ -1,7 +1,7 @@
 odoo.define('web_auto_refresh', function (require) {
 	"use strict";
     var WebClient = require('web.WebClient');
-    var bus = require('bus.bus')	
+    var bus = require('bus.bus')
 
     WebClient.include({
         init: function(parent, client_options){
@@ -43,23 +43,25 @@ odoo.define('web_auto_refresh', function (require) {
         },
         bus_off: function(eventname, eventfunction) {
             bus.bus.on(eventname, this, eventfunction);
-            var index = _.indexOf(this.known_bus_events, (eventname, eventfunction)); 
+            var index = _.indexOf(this.known_bus_events, (eventname, eventfunction));
             this.known_bus_events.splice(index, 1);
         },
         declare_bus_channel: function() {
             var self = this,
                 channel = "auto_refresh";
-            this.bus_on(channel, function(message) {            // generic auto referesh
-                var active_view = self.action_manager.inner_widget.active_view;
-                if (typeof(active_view) != 'undefined'){   // in mail inbox page, no active view defined
-                    var controller = self.action_manager.inner_widget.active_view.controller;
-                    var action = self.action_manager.inner_widget.action;
+            // generic auto referesh
+            this.bus_on(channel, function(message) {
+                var widget = self.action_manager.inner_widget;
+                // in mail inbox page, no active view defined
+                if (widget && typeof(widget.active_view) != 'undefined'){
+                    var controller = widget.active_view.controller;
+                    var action = widget.action;
                     if (action.auto_search && controller.modelName == message && controller.mode != "edit"){
                         controller.reload();
                     }
                 }
-            }); 
-			this.add_bus_channel(channel);			
+            });
+			this.add_bus_channel(channel);
         },
         add_bus_channel: function(channel) {
             if (this.known_bus_channels.indexOf(channel) == -1) {

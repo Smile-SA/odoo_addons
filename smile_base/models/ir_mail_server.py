@@ -30,12 +30,14 @@ class IrMailServer(models.Model):
 
     @api.model
     def send_email(self, message, mail_server_id=None, smtp_server=None, smtp_port=None,
-                   smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False):
+                   smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
+                   smtp_session=None):
         if not tools.config.get('enable_email_sending'):
             _logger.warning('Email sending not enabled')
             return False
         return super(IrMailServer, self).send_email(message, mail_server_id, smtp_server, smtp_port,
-                                                    smtp_user, smtp_password, smtp_encryption, smtp_debug)
+                                                    smtp_user, smtp_password, smtp_encryption, smtp_debug,
+                                                    smtp_session)
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                     attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
