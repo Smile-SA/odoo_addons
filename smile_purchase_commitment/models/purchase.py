@@ -18,10 +18,9 @@ class PurchaseOrderLine(models.Model):
             'account_id': self.account_analytic_id.id,
             'unit_amount': sign * self.product_qty,
             'product_uom_id': self.product_uom.id,
-            'amount': sign * order.currency_id.
+            'amount': -1 * sign * order.currency_id.
             with_context(date=order.date_order).compute(
                 self.price_subtotal, order.company_id.currency_id),
-            'commitment_type': 'purchase',
             'commitment_account_id': account and account.id,
             'ref': self.order_id.name,
             'user_id': self._uid,

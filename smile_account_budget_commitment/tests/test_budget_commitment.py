@@ -26,7 +26,6 @@ class BudgetCommitmentTest(TransactionCase):
             'planned_amount': 1000.0,
         })
         self.user = self.env.ref('base.user_demo')
-        self.user.commitment_global_limit = 1000
         # Generate invoice and pay it
         invoice = self.env.ref('l10n_generic_coa.demo_invoice_3').copy()
         invoice.invoice_line_ids.write({
@@ -46,25 +45,21 @@ class BudgetCommitmentTest(TransactionCase):
         I check that I can create an analytic line of 200€.
         I check that I can't create an analytic line of 1500€.
         """
+        self.user.commitment_global_limit = 1000
+        self.budget_limit.amount_limit = 100.0
+        AnalyticLine = self.env['account.analytic.line'].sudo(self.user)
         vals = {
             'name': 'Commitment Test',
-            'commitment_type': 'purchase',
             'account_id': self.analytic_account.id,
             'commitment_account_id': self.budget_post.account_ids[0].id,
             'date': time.strftime('%Y-%m-%d'),
             'user_id': self.user.id,
         }
-        self.budget_limit.amount_limit = 100.0
-        self.env['account.analytic.line'].sudo(self.user).create(
-            dict(vals, amount=200))
-        with self.assertRaisesRegexp(
-                ValidationError,
-                "You cannot define a budget post commitment "
-                "limit superior to the global limit of this user"):
+        with self.assertRaises(ValidationError):
+            AnalyticLine.create(dict(vals, amount=200))
+        with self.assertRaises(ValidationError):
             self.budget_limit.amount_limit = 1500
         self.budget_limit.amount_limit = 1000
-        self.env['account.analytic.line'].sudo(self.user).create(
-            dict(vals, amount=200))
-        self.env['account.analytic.line'].sudo(self.user).create(
-            dict(vals, amount=1500))
-        self.assertTrue(self.budget_line.commitment_amount)
+        AnalyticLine.create(dict(vals, amount=200))
+        with self.assertRaises(ValidationError):
+            AnalyticLine.create(dict(vals, amount=1500))

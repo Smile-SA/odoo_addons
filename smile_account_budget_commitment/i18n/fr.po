@@ -39,11 +39,6 @@ msgid "Analytic Lines"
 msgstr "Lignes analytiques"
 
 #. module: smile_account_budget_commitment
-#: model:ir.model.fields,help:smile_account_budget_commitment.field_account_analytic_line_commitment_type
-msgid "Analytic line generated from sale, purchase or payroll"
-msgstr "Analytic line generated from sale, purchase or payroll"
-
-#. module: smile_account_budget_commitment
 #: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_attachment_ids
 msgid "Attachments"
 msgstr "Pièces jointes"
@@ -51,7 +46,7 @@ msgstr "Pièces jointes"
 #. module: smile_account_budget_commitment
 #: model:ir.model.fields,field_description:smile_account_budget_commitment.field_crossovered_budget_lines_available_amount
 msgid "Available Amount"
-msgstr "Montant disponible"
+msgstr "Disponible"
 
 #. module: smile_account_budget_commitment
 #: code:addons/smile_account_budget_commitment/models/analytic.py:56
@@ -96,7 +91,7 @@ msgstr "Budgets"
 #. module: smile_account_budget_commitment
 #: model:ir.model.fields,field_description:smile_account_budget_commitment.field_crossovered_budget_lines_commitment_amount
 msgid "Commitment Amount"
-msgstr "Montant engagé"
+msgstr "Engagé"
 
 #. module: smile_account_budget_commitment
 #: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_amount_limit
@@ -109,11 +104,6 @@ msgstr "Limite du montant d'engagement"
 #: model:ir.ui.view,arch_db:smile_account_budget_commitment.view_budget_post_form
 msgid "Commitment Limits"
 msgstr "Limites d'engagement"
-
-#. module: smile_account_budget_commitment
-#: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_analytic_line_commitment_type
-msgid "Commitment type"
-msgstr "Commitment type"
 
 #. module: smile_account_budget_commitment
 #: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_create_uid
@@ -184,21 +174,6 @@ msgstr "Mis à jour par"
 #: model:ir.model.fields,field_description:smile_account_budget_commitment.field_account_budget_post_commitment_limit_write_date
 msgid "Last Updated on"
 msgstr "Mis à jour le"
-
-#. module: smile_account_budget_commitment
-#: selection:account.analytic.line,commitment_type:0
-msgid "Payroll commitment"
-msgstr "Payroll commitment"
-
-#. module: smile_account_budget_commitment
-#: selection:account.analytic.line,commitment_type:0
-msgid "Purchase commitment"
-msgstr "Purchase commitment"
-
-#. module: smile_account_budget_commitment
-#: selection:account.analytic.line,commitment_type:0
-msgid "Sale commitment"
-msgstr "Sale commitment"
 
 #. module: smile_account_budget_commitment
 #: code:addons/smile_account_budget_commitment/models/account_budget.py:50

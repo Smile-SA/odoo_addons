@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from math import copysign
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -10,16 +12,19 @@ class AnalyticLine(models.Model):
     budget_line_id = fields.Many2one(
         'crossovered.budget.lines', 'Budget Line',
         compute='_get_budget_line', store=True)
-    commitment_type = fields.Selection([
-        ('purchase', 'Purchase commitment'),
-        ('sale', 'Sale commitment'),
-        ('payroll', 'Payroll commitment'),
-    ], 'Commitment type',
-        help="Analytic line generated from sale, purchase or payroll")
     commitment_account_id = fields.Many2one(
         'account.account', 'Commitment Account',
-        ondelete='restrict', readonly=True,
+        ondelete='restrict',
         domain=[('deprecated', '=', False)])
+
+    _sql_constraints = [
+        ('check_accounts',
+         'CHECK ((commitment_account_id IS NOT NULL AND ' \
+         'general_account_id IS NULL) or ' \
+         '(commitment_account_id IS NULL AND ' \
+         'general_account_id IS NOT NULL))',
+         'Commitment account is required if general account is not set'),
+    ]
 
     @api.one
     @api.depends('account_id', 'commitment_account_id', 'date')
@@ -41,13 +46,15 @@ class AnalyticLine(models.Model):
     @api.one
     @api.constrains('budget_line_id', 'amount')
     def _check_budget_availability(self):
-        if self.budget_line_id and self.budget_line_id.available_amount < 0.0:
-            raise UserError(
-                _("Available amount [%s%s] is exceeded "
-                  "for the budget line '%s'")
-                % (abs(self.budget_line_id.available_amount),
-                   self.budget_line_id.company_id.currency_id.symbol,
-                   self.display_name))
+        if self.budget_line_id:
+            sign = copysign(1, self.budget_line_id.planned_amount)
+            if self.budget_line_id.available_amount * sign < 0.0:
+                raise UserError(
+                    _("Available amount [%s%s] is exceeded "
+                      "for the budget line '%s'")
+                    % (abs(self.budget_line_id.available_amount),
+                    self.budget_line_id.company_id.currency_id.symbol,
+                    self.display_name))
 
     @api.one
     @api.constrains('user_id', 'amount', 'account_id',
