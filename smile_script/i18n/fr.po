@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0c-20160229\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-20 13:49+0000\n"
-"PO-Revision-Date: 2017-02-20 13:49+0000\n"
+"POT-Creation-Date: 2018-03-30 08:34+0000\n"
+"PO-Revision-Date: 2018-03-30 08:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,19 +17,13 @@ msgstr ""
 
 #. module: smile_script
 #: model:ir.ui.view,arch_db:smile_script.smile_script_form_view
-msgid "<span attrs=\"{'invisible': [('type', '!=', 'python')]}\"><i>You can use the following variables: self, logger, time, tools. To display a result, use the variable \"result\".</i></span>"
-msgstr "<span attrs=\"{'invisible': [('type', '!=', 'python')]}\"><i>Voici les variables disponibles : self, logger, time, tools. Pour afficher un résultat, utiliser la variable \"result\".</i></span>"
+msgid "<span attrs=\"{'invisible': [('type', '!=', 'python')]}\"><i>You can use the following variables: self, fields, logger, tools. To display a result, use the variable \"result\".</i></span>"
+msgstr "<span attrs=\"{'invisible': [('type', '!=', 'python')]}\"><i>Voici les variables disponibles : self, fields, logger, tools. Pour afficher un résultat, utiliser la variable \"result\".</i></span>"
 
 #. module: smile_script
 #: model:ir.ui.view,arch_db:smile_script.smile_script_form_view
 msgid "Are you sure you want to perform a new intervention ?"
 msgstr "Etes-vous sûr de vouloir jouer une nouvelle intervention ?"
-
-#. module: smile_script
-#: model:ir.model.fields,field_description:smile_script.field_smile_script_attachment_ids
-#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention_attachment_ids
-msgid "Attachments"
-msgstr "Pièces jointes"
 
 #. module: smile_script
 #: model:ir.model.fields,field_description:smile_script.field_smile_script_code
@@ -70,6 +64,11 @@ msgid "Draft"
 msgstr "Brouillon"
 
 #. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention_end_date
+msgid "End date"
+msgstr "Date de fin"
+
+#. module: smile_script
 #: model:ir.ui.view,arch_db:smile_script.smile_script_intervention_search_view
 #: selection:smile.script.intervention,state:0
 msgid "Exception"
@@ -102,25 +101,13 @@ msgid "Intervention"
 msgstr "Intervention"
 
 #. module: smile_script
-#: code:addons/smile_script/models/script.py:224
+#: code:addons/smile_script/models/script_intervention.py:56
 #, python-format
 msgid "Intervention cannot be deleted"
-msgstr "Une intervention ne peut être supprimée"
+msgstr "Cette intervention ne peut être supprimée"
 
 #. module: smile_script
-#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention_end_date
-msgid "Intervention end"
-msgstr "Fin d'intervention"
-
-#. module: smile_script
-#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention_create_date
-msgid "Intervention start"
-msgstr "Début d'intervention"
-
-#. module: smile_script
-#: model:ir.actions.act_window,name:smile_script.act_smile_script_intervention
 #: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention_ids
-#: model:ir.ui.menu,name:smile_script.menu_interventions
 #: model:ir.ui.menu,name:smile_script.menu_smile_script_intervention
 #: model:ir.ui.view,arch_db:smile_script.smile_script_intervention_search_view
 #: model:ir.ui.view,arch_db:smile_script.smile_script_intervention_tree_view
@@ -150,6 +137,31 @@ msgstr "Dernière mise à jour le"
 #: model:ir.ui.view,arch_db:smile_script.smile_script_intervention_form_view
 msgid "Logs"
 msgstr "Logs"
+
+#. module: smile_script
+#: model:ir.ui.menu,name:smile_script.menu_interventions
+msgid "Maintenance"
+msgstr "Maintenance"
+
+#. module: smile_script
+#: model:ir.model,name:smile_script.model_smile_script_intervention
+msgid "Maintenance Intervention"
+msgstr "Maintenance Intervention"
+
+#. module: smile_script
+#: model:ir.actions.act_window,name:smile_script.act_smile_script_intervention
+msgid "Maintenance Interventions"
+msgstr "Interventions de maintenance"
+
+#. module: smile_script
+#: model:ir.model,name:smile_script.model_smile_script
+msgid "Maintenance Script"
+msgstr "Script de maintenance"
+
+#. module: smile_script
+#: model:ir.actions.act_window,name:smile_script.act_smile_script
+msgid "Maintenance Scripts"
+msgstr "Scripts de maintenance"
 
 #. module: smile_script
 #: model:ir.model.fields,field_description:smile_script.field_smile_script_name
@@ -191,7 +203,6 @@ msgid "Script"
 msgstr "Script"
 
 #. module: smile_script
-#: model:ir.actions.act_window,name:smile_script.act_smile_script
 #: model:ir.ui.menu,name:smile_script.menu_smile_script
 #: model:ir.ui.view,arch_db:smile_script.smile_script_search_view
 #: model:ir.ui.view,arch_db:smile_script.smile_script_tree_view
@@ -199,19 +210,14 @@ msgid "Scripts"
 msgstr "Scripts"
 
 #. module: smile_script
-#: model:ir.model,name:smile_script.model_smile_script
-msgid "Smile Script"
-msgstr "Smile Script"
-
-#. module: smile_script
 #: model:res.groups,name:smile_script.group_smile_script_user
 msgid "Smile Script / User"
 msgstr "Smile Script / Utilisateur"
 
 #. module: smile_script
-#: model:ir.model,name:smile_script.model_smile_script_intervention
-msgid "Smile Script Intervention"
-msgstr "Smile Script Intervention"
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention_create_date
+msgid "Start date"
+msgstr "Date de début"
 
 #. module: smile_script
 #: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention_state
@@ -273,25 +279,25 @@ msgid "XML"
 msgstr "XML"
 
 #. module: smile_script
-#: code:addons/smile_script/models/script.py:88
+#: code:addons/smile_script/models/script.py:78
 #, python-format
 msgid "You can only delete draft scripts!"
 msgstr "Vous ne pouvez supprimer que des scripts à l'état brouillon !"
 
 #. module: smile_script
-#: code:addons/smile_script/models/script.py:81
+#: code:addons/smile_script/models/script.py:72
 #, python-format
 msgid "You can only modify draft scripts!"
 msgstr "Vous ne pouvez modifier que des scripts à l'état brouillon !"
 
 #. module: smile_script
-#: code:addons/smile_script/models/script.py:125
+#: code:addons/smile_script/models/script.py:107
 #, python-format
 msgid "You can only run validated scripts!"
 msgstr "Vous ne pouvez exécuter que des scripts validés !"
 
 #. module: smile_script
-#: code:addons/smile_script/models/script.py:105
+#: code:addons/smile_script/models/script.py:85
 #, python-format
 msgid "You can only validate draft scripts!"
 msgstr "Vous ne pouvez valider que des scripts à l'état brouillon !"
@@ -299,4 +305,4 @@ msgstr "Vous ne pouvez valider que des scripts à l'état brouillon !"
 #. module: smile_script
 #: model:ir.ui.view,arch_db:smile_script.smile_script_form_view
 msgid "result = 'String displayed in the result column of intervention'"
-msgstr "result = 'String displayed in the result column of intervention'"
+msgstr "result = 'Chaîne de caractère affichée au sein de la colonne Résultat'"

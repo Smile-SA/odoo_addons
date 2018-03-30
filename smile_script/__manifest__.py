@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Script Execution",
+    "name": "Maintenance scripts",
     "version": "1.0",
     "author": "Smile",
     "website": 'http://www.smile.fr',
@@ -31,7 +31,7 @@ Features
 
     * Log scripts run on the database
 
-Suggestions & Feedback to: xavier.fernandez@smile.fr, corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "depends": ['smile_log'],
     "data": [

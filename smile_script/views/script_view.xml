@@ -3,7 +3,8 @@
     <data noupdate="0">
 
 
-        <menuitem id="menu_interventions" parent="base.menu_custom" name="Interventions" sequence="25" groups="base.group_no_one"/>
+        <menuitem id="menu_interventions" parent="base.menu_custom"
+          name="Maintenance" sequence="25" groups="base.group_no_one"/>
 
         <record id="smile_script_form_view" model="ir.ui.view">
             <field name="name">Smile script - Form</field>
@@ -32,7 +33,7 @@
                                 <field name="description"/>
                                 <label for="type"/>
                                 <field name="type"/>
-                                <label for="code"/><span attrs="{'invisible': [('type', '!=', 'python')]}"><i>You can use the following variables: self, logger, time, tools. To display a result, use the variable "result".</i></span>
+                                <label for="code"/><span attrs="{'invisible': [('type', '!=', 'python')]}"><i>You can use the following variables: self, fields, logger, tools. To display a result, use the variable "result".</i></span>
                                 <field name="code" placeholder="result = 'String displayed in the result column of intervention'"/>
                                 <div attrs="{'invisible': [('type', '!=', 'sql')]}"><field name="expect_result"/><label for="expect_result"/></div>
                                 <label for="intervention_ids"/>
@@ -89,7 +90,7 @@
         </record>
 
         <record id="act_smile_script" model="ir.actions.act_window">
-            <field name="name">Scripts</field>
+            <field name="name">Maintenance Scripts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">smile.script</field>
             <field name="view_type">form</field>
@@ -97,7 +98,8 @@
         </record>
 
         <menuitem id="menu_smile_script" parent="menu_interventions" action="act_smile_script"
-        	 groups="base.group_no_one"/>
+            name="Scripts"
+        	groups="base.group_no_one"/>
 
         <record id="smile_script_intervention_form_view" model="ir.ui.view">
             <field name="name">Smile script intervention - Form</field>
@@ -170,7 +172,7 @@
         </record>
 
         <record id="act_smile_script_intervention" model="ir.actions.act_window">
-            <field name="name">Interventions</field>
+            <field name="name">Maintenance Interventions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">smile.script.intervention</field>
             <field name="view_type">form</field>
@@ -181,6 +183,7 @@
         </record>
 
         <menuitem id="menu_smile_script_intervention" parent="menu_interventions"
+            name="Interventions"
         	action="act_smile_script_intervention" groups="base.group_no_one"/>
 
     </data>
