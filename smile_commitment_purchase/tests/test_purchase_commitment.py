@@ -14,11 +14,11 @@ class PurchaseCommitmentTest(TransactionCase):
             'account_budget.crossovered_budget_budgetoptimistic0')
         self.analytic_account = self.env.ref('analytic.analytic_seagate_p2')
         self.budget_post = self.env.ref(
-            'smile_account_budget_commitment.account_budget_post_purchase0')
+            'smile_commitment_base.account_budget_post_purchase0')
         self.budget_post.account_ids = self.purchase.order_line[0]. \
             product_id.categ_id.property_account_expense_categ_id.ids
         self.budget_limit = self.env.ref(
-            'smile_account_budget_commitment.commitment_limit0')
+            'smile_commitment_base.commitment_limit0')
         self.budget_line = self.env['crossovered.budget.lines'].create({
             'crossovered_budget_id': budget.id,
             'analytic_account_id': self.analytic_account.id,

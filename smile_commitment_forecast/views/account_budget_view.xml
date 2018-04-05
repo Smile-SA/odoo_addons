@@ -5,7 +5,7 @@
         <record model="ir.ui.view" id="crossovered_budget_view_form">
             <field name="name">crossovered.budget.form</field>
             <field name="model">crossovered.budget</field>
-            <field name="inherit_id" ref="smile_account_budget_commitment.crossovered_budget_view_form"/>
+            <field name="inherit_id" ref="smile_commitment_base.crossovered_budget_view_form"/>
             <field name="arch" type="xml">
                 <field name="available_amount" position="after">
                     <field name="forecast_commitment_amount"/>
@@ -17,7 +17,7 @@
         <record model="ir.ui.view" id="view_crossovered_budget_line_tree">
             <field name="name">crossovered.budget.lines.tree</field>
             <field name="model">crossovered.budget.lines</field>
-            <field name="inherit_id" ref="smile_account_budget_commitment.view_crossovered_budget_line_tree"/>
+            <field name="inherit_id" ref="smile_commitment_base.view_crossovered_budget_line_tree"/>
             <field name="arch" type="xml">
                 <field name="available_amount" position="after">
                     <field name="forecast_commitment_amount"/>
@@ -29,7 +29,7 @@
         <record model="ir.ui.view" id="view_crossovered_budget_line_form">
             <field name="name">crossovered.budget.lines.form</field>
             <field name="model">crossovered.budget.lines</field>
-            <field name="inherit_id" ref="smile_account_budget_commitment.view_crossovered_budget_line_form"/>
+            <field name="inherit_id" ref="smile_commitment_base.view_crossovered_budget_line_form"/>
             <field name="arch" type="xml">
                 <field name="available_amount" position="after">
                     <field name="forecast_commitment_amount"/>
@@ -53,6 +53,6 @@
 				</xpath>
             </field>
         </record>
-        
+
     </data>
 </odoo>

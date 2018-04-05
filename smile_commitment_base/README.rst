@@ -6,7 +6,7 @@ Account Budget Commitment
 
 Since Odoo 9.0, it's not possible anymore to set a general account on analytic lines.
 
-This module adds a commitment account on analytic line. 
+This module adds a commitment account on analytic line.
 
 A new commitment type is defined on analytic line: purchase, sale or payroll.
 
@@ -21,8 +21,8 @@ Usage
 
 You can set commitment budget limits on users' form, on `Commitments` page.
 
-To follow purchase commitment, please install 
-`smile_purchase_commitment <https://github.com/Smile-SA/odoo_addons/tree/9.0/smile_purchase_commitment>`_
+To follow purchase commitment, please install
+`smile_commitment_purchase <https://github.com/Smile-SA/odoo_addons/tree/11.0/smile_commitment_purchase>`_
 .
 
 
@@ -32,7 +32,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/Smile-SA/odoo_addons/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
-`here <https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_account_budget_commitment%0Aversion:%209.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`here <https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_commitment_base%0Aversion:%209.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 
 Credits
