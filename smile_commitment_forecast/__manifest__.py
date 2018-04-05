@@ -23,7 +23,7 @@
     "name": "Budget Commitment Forecast",
     "version": "0.1",
     "depends": [
-        "smile_account_budget_commitment",
+        "smile_commitment_base",
     ],
     "author": "Smile",
     "license": 'AGPL-3',

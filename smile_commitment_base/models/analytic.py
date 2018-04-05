@@ -19,9 +19,9 @@ class AnalyticLine(models.Model):
 
     _sql_constraints = [
         ('check_accounts',
-         'CHECK ((commitment_account_id IS NOT NULL AND ' \
-         'general_account_id IS NULL) or ' \
-         '(commitment_account_id IS NULL AND ' \
+         'CHECK ((commitment_account_id IS NOT NULL AND '
+         'general_account_id IS NULL) or '
+         '(commitment_account_id IS NULL AND '
          'general_account_id IS NOT NULL))',
          'Commitment account is required if general account is not set'),
     ]
@@ -53,8 +53,8 @@ class AnalyticLine(models.Model):
                     _("Available amount [%s%s] is exceeded "
                       "for the budget line '%s'")
                     % (abs(self.budget_line_id.available_amount),
-                    self.budget_line_id.company_id.currency_id.symbol,
-                    self.display_name))
+                       self.budget_line_id.company_id.currency_id.symbol,
+                       self.display_name))
 
     @api.one
     @api.constrains('user_id', 'amount', 'account_id',

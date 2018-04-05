@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-
-import odoo.addons.decimal_precision as dp
+from odoo import api, fields, models
 
 
 class BudgetLine(models.Model):
@@ -15,10 +12,10 @@ class BudgetLine(models.Model):
         self._fields_to_compute += ['forecast_commitment_amount',
                                     'forecast_available_amount']
 
-    forecast_commitment_amount = fields.Float(digits=0,
-        compute="_compute_practical_amount")
-    forecast_available_amount = fields.Float(digits=0,
-        compute="_compute_practical_amount")
+    forecast_commitment_amount = fields.Float(
+        digits=0, compute="_compute_practical_amount")
+    forecast_available_amount = fields.Float(
+        digits=0, compute="_compute_practical_amount")
 
     @api.multi
     def _compute_practical_amount(self):
@@ -46,4 +43,4 @@ class BudgetLine(models.Model):
     @api.model
     def _get_sql_query(self, forecast=False):
         return super(BudgetLine, self)._get_sql_query() + \
-        " AND forecast IS %sTRUE " % ('' if forecast else 'NOT ')
+            " AND forecast IS %sTRUE " % ('' if forecast else 'NOT ')

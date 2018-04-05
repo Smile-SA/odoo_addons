@@ -3,7 +3,6 @@
 import time
 
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import ValidationError
 
 
 class BudgetCommitmentForecastTest(TransactionCase):

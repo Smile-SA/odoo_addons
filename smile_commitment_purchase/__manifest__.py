@@ -24,7 +24,7 @@
     "version": "0.1",
     "depends": [
         "purchase",
-        "smile_account_budget_commitment",
+        "smile_commitment_base",
     ],
     "author": "Smile",
     "license": 'AGPL-3',

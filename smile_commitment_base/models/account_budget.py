@@ -11,10 +11,10 @@ class BudgetLine(models.Model):
 
     analytic_line_ids = fields.One2many(
         'account.analytic.line', 'budget_line_id', 'Analytic Lines')
-    commitment_amount = fields.Float(digits=0,
-        compute="_compute_practical_amount")
-    available_amount = fields.Float(digits=0,
-        compute="_compute_practical_amount")
+    commitment_amount = fields.Float(
+        digits=0, compute="_compute_practical_amount")
+    available_amount = fields.Float(
+        digits=0, compute="_compute_practical_amount")
 
     @api.multi
     def _compute_practical_amount(self):
@@ -38,7 +38,8 @@ class BudgetLine(models.Model):
                 commitment_amount = self.env.cr.fetchone()[0] or 0.0
             line.practical_amount = practical_amount
             line.commitment_amount = commitment_amount
-            line.available_amount = line.planned_amount - line.commitment_amount
+            line.available_amount = line.planned_amount - \
+                line.commitment_amount
 
     @api.model
     def _get_sql_query(self):
