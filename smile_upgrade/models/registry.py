@@ -63,6 +63,8 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                     upgrade_manager.set_db_version()
                     _logger.info('%s upgrade successfully loaded in %ss',
                                  upgrade_manager.code_version, time.time() - t0)
+                else:
+                    _logger.info('no upgrade to load')
             registry = native_new(db_name, force_demo, update_module=update_module)
             if upgrades and config.get('stop_after_upgrades'):
                 _logger.info('Stopping Odoo server')
