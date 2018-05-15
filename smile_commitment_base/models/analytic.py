@@ -3,7 +3,7 @@
 from math import copysign
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AnalyticLine(models.Model):
@@ -17,14 +17,13 @@ class AnalyticLine(models.Model):
         ondelete='restrict',
         domain=[('deprecated', '=', False)])
 
-    _sql_constraints = [
-        ('check_accounts',
-         'CHECK ((commitment_account_id IS NOT NULL AND '
-         'general_account_id IS NULL) or '
-         '(commitment_account_id IS NULL AND '
-         'general_account_id IS NOT NULL))',
-         'Commitment account is required if general account is not set'),
-    ]
+    @api.one
+    @api.constrains
+    def _check_accounts(self):
+        if not self.general_account_id and not self.commitment_account_id:
+            raise ValidationError(
+                _('Commitment account is required '
+                  'if general account is not set.'))
 
     @api.one
     @api.depends('account_id', 'commitment_account_id', 'date')

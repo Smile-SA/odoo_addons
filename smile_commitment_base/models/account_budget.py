@@ -10,7 +10,8 @@ class BudgetLine(models.Model):
     _inherit = 'crossovered.budget.lines'
 
     analytic_line_ids = fields.One2many(
-        'account.analytic.line', 'budget_line_id', 'Analytic Lines')
+        'account.analytic.line', 'budget_line_id', 'Analytic Lines',
+        copy=False)
     commitment_amount = fields.Float(
         digits=0, compute="_compute_practical_amount")
     available_amount = fields.Float(
