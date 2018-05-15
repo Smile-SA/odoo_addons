@@ -83,7 +83,7 @@ class TestAccessControl(TransactionCase):
             I try to create a user with Administrator as user profile
             I check that it failed
         """
-        with self.assertRaisesRegexp(ValidationError, "You can't use (.*) as user profile !"):
+        with self.assertRaises(ValidationError):
             self.env['res.users'].create({
                 'name': 'toto',
                 'login': 'toto',
