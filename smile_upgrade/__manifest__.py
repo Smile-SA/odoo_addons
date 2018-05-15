@@ -29,7 +29,8 @@
 
 Features
 
-    * Allow to upgrade automatically database after code update and server restarting
+    * Allow to upgrade automatically database
+    after code update and server restarting
 
 Execution
 
@@ -60,7 +61,8 @@ Configuration
             * version
             * databases: let's empty if valid for all databases
             * description
-            * modules_to_install_at_creation: modules list to install at database creation
+            * modules_to_install_at_creation: modules list to install
+            at database creation
             * modules_to_upgrade: modules list to update or install
             * pre-load: list of .sql files
             * post-load: list with .sql, .yml, .csv and .xml files
@@ -70,12 +72,15 @@ Configuration
     * Odoo server configuration -- rcfile=~/.odoo_serverrc
         [options]
         upgrades_path = <project_directory>
-        stop_after_upgrades = True if you want to stop server after upgrades else False
+        stop_after_upgrades = True if you want to stop server after upgrades
+            else False
 
 Additional features
 
     * In post-load, you can replace filename string by tuple
-      (filename, 'rollback_and_continue' or 'not_rollback_and_continue' or 'raise') -- default value = 'raise'
+      (filename,
+       'rollback_and_continue' or 'not_rollback_and_continue' or 'raise')
+      -- default value = 'raise'
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,

@@ -48,7 +48,8 @@ class ConfigManager(object):
     def _get_default_options(self):
         upgrade_path = config.get('upgrades_path', '')
         if not upgrade_path:
-            _logger.warning("Unspecified 'upgrades_path' option in Odoo configuration file")
+            _logger.warning("Unspecified 'upgrades_path' option "
+                            "in Odoo configuration file")
             return
         if not os.path.exists(upgrade_path) or not os.path.isdir(upgrade_path):
             _logger.error("Specified 'upgrades_path' option is not valid")
@@ -73,7 +74,8 @@ class ConfigManager(object):
                 self.options[key] = value
             for section in config.sections():
                 if section != 'options':
-                    _logger.warning("Only options section is taken into account in upgrades configuration")
+                    _logger.warning("Only options section is taken into "
+                                    "account in upgrades configuration")
         except (IOError, NoSectionError):
             return
 

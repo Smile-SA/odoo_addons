@@ -28,6 +28,7 @@ import os
 from odoo import api, sql_db, SUPERUSER_ID, tools
 from odoo.exceptions import UserError
 import odoo.modules as addons
+from odoo.tools.func import lazy_property
 from odoo.tools.safe_eval import safe_eval
 
 from .config import configuration as upgrade_config
@@ -46,12 +47,11 @@ class UpgradeManager(object):
         self.db = sql_db.db_connect(db_name)
         self.cr = self.db.cursor()
         self.cr.autocommit(True)
-        self.db_in_creation = self._get_db_in_creation()
-        self.code_version = self._get_code_version()
-        self.db_version = self._get_db_version()
         self.upgrades = self._get_upgrades()
-        self.modules_to_upgrade = list(set(sum([upgrade.modules_to_upgrade for upgrade in self.upgrades], [])))
-        self.modules_to_install_at_creation = self.upgrades and self.upgrades[-1].modules_to_install_at_creation or []
+        self.modules_to_upgrade = list(set(sum(
+            [upgrade.modules_to_upgrade for upgrade in self.upgrades], [])))
+        self.modules_to_install_at_creation = self.upgrades and \
+            self.upgrades[-1].modules_to_install_at_creation or []
 
     def __enter__(self):
         return self
@@ -61,24 +61,30 @@ class UpgradeManager(object):
             self.cr.commit()
         self.cr.close()
 
-    def _get_db_in_creation(self):
-        self.cr.execute("SELECT relname FROM pg_class WHERE relname='ir_config_parameter'")
+    @lazy_property
+    def db_in_creation(self):
+        self.cr.execute("SELECT relname FROM pg_class "
+                        "WHERE relname='ir_config_parameter'")
         if self.cr.rowcount:
             return False
         return True
 
-    def _get_code_version(self):
+    @lazy_property
+    def code_version(self):
         version = upgrade_config.get('version')
         if not version:
-            _logger.warning('Unspecified version in upgrades configuration file')
+            _logger.warning(
+                'Unspecified version in upgrades configuration file')
             version = '0'
         _logger.debug('code version: %s', version)
         return LooseVersion(version)
 
-    def _get_db_version(self):
+    @lazy_property
+    def db_version(self):
         if self.db_in_creation:
-            return '0'
-        self.cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'code.version' LIMIT 1")
+            return LooseVersion('0')
+        self.cr.execute("SELECT value FROM ir_config_parameter "
+                        "WHERE key = 'code.version' LIMIT 1")
         version = self.cr.fetchone()
         if not version:
             _logger.warning('Unspecified version in database')
@@ -88,22 +94,29 @@ class UpgradeManager(object):
 
     def set_db_version(self):
         params = (SUPERUSER_ID, str(self.code_version))
-        self.cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'code.version' LIMIT 1")
+        self.cr.execute("SELECT value FROM ir_config_parameter "
+                        "WHERE key = 'code.version' LIMIT 1")
         if not self.cr.rowcount:
-            query = """INSERT INTO ir_config_parameter (create_date, create_uid, key, value)
+            query = """INSERT INTO ir_config_parameter
+               (create_date, create_uid, key, value)
                VALUES (now() at time zone 'UTC', %s, 'code.version', %s)"""
         else:
             query = """UPDATE ir_config_parameter
-                SET (write_date, write_uid, value) = (now() at time zone 'UTC', %s, %s)
+                SET (write_date, write_uid, value) =
+                (now() at time zone 'UTC', %s, %s)
                 WHERE key = 'code.version'"""
         self.cr.execute(query, params)
         _logger.debug('database version updated to %s', self.code_version)
 
     def _try_lock(self, warning=None):
         try:
-            self.cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'code.version'", log_exceptions=False)
+            self.cr.execute("SELECT value FROM ir_config_parameter "
+                            "WHERE key = 'code.version'",
+                            log_exceptions=False)
         except psycopg2.OperationalError:
-            self.cr.rollback()  # INFO: Early rollback to allow translations to work for the user feedback
+            # INFO: Early rollback to allow translations
+            # to work for the user feedback
+            self.cr.rollback()
             if warning:
                 raise UserError(warning)
             raise
@@ -129,11 +142,14 @@ class UpgradeManager(object):
                     try:
                         upgrade_infos = safe_eval(f.read())
                         upgrade = Upgrade(dir_path, upgrade_infos)
-                        if (not upgrade.databases or self.db_name in upgrade.databases) \
-                                and self.db_version < upgrade.version <= self.code_version:
+                        if (not upgrade.databases or
+                                self.db_name in upgrade.databases) \
+                                and self.db_version < upgrade.version \
+                                <= self.code_version:
                             upgrades.append(upgrade)
                     except Exception as e:
-                        _logger.error('%s is not valid: %s', file_path, repr(e))
+                        _logger.error(
+                            '%s is not valid: %s', file_path, repr(e))
         upgrades.sort(key=lambda upgrade: upgrade.version)
         if upgrades and self.db_in_creation:
             upgrades = upgrades[-1:]
@@ -149,19 +165,22 @@ class UpgradeManager(object):
             for upgrade in self.upgrades:
                 upgrade.load_files(cr, 'post-load')
 
-    def force_modules_upgrade(self, registry, modules_to_upgrade):
+    def force_modules_upgrade(self, modules_to_upgrade):
         with self.db.cursor() as cr:
             with api.Environment.manage():
                 env = api.Environment(cr, SUPERUSER_ID, {})
                 Module = env['ir.module.module']
                 Module.update_list()
                 modules = Module.search([('name', 'in', modules_to_upgrade),
-                                         ('state', 'in', ('uninstalled', 'to install'))])
+                                         ('state', 'in',
+                                          ('uninstalled', 'to install'))])
                 modules.button_install()
                 modules = Module.search([('name', 'in', modules_to_upgrade),
-                                         ('state', 'in', ('installed', 'to upgrade'))])
+                                         ('state', 'in',
+                                          ('installed', 'to upgrade'))])
                 modules.button_upgrade()
-                cr.execute("UPDATE ir_module_module SET state = 'to upgrade' WHERE state = 'to install'")
+                cr.execute("UPDATE ir_module_module SET state = 'to upgrade' "
+                           "WHERE state = 'to install'")
 
 
 class Upgrade(object):
@@ -178,10 +197,17 @@ class Upgrade(object):
             setattr(self, k, v)
 
     def __getattr__(self, key):
-        default_values = {'version': '', 'databases': [], 'modules_to_upgrade': [],
-                          'modules_to_install_at_creation': [], 'pre-load': [], 'post-load': []}
+        default_values = {
+            'version': '',
+            'databases': [],
+            'modules_to_upgrade': [],
+            'modules_to_install_at_creation': [],
+            'pre-load': [],
+            'post-load': [],
+        }
         if key not in self.__dict__ and key not in default_values:
-            raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, key))
+            raise AttributeError("'%s' object has no attribute '%s'"
+                                 % (self.__class__.__name__, key))
         return self.__dict__.get(key) or default_values.get(key)
 
     def _sql_import(self, cr, f_obj):
@@ -197,13 +223,18 @@ class Upgrade(object):
         elif mode != 'pre-load' and ext in ('.yml', '.csv', '.xml'):
             with api.Environment.manage():
                 if ext == '.yml':
-                    tools.convert_yaml_import(cr, module, yamlfile=f_obj, kind=None, mode='upgrade')
+                    tools.convert_yaml_import(
+                        cr, module, yamlfile=f_obj, kind=None, mode='upgrade')
                 elif ext == '.csv':
-                    tools.convert_csv_import(cr, module, fname=f_obj.name, csvcontent=f_obj.read(), mode='upgrade')
+                    tools.convert_csv_import(
+                        cr, module, fname=f_obj.name, csvcontent=f_obj.read(),
+                        mode='upgrade')
                 elif ext == '.xml':
-                    tools.convert_xml_import(cr, module, xmlfile=f_obj, mode='upgrade')
+                    tools.convert_xml_import(
+                        cr, module, xmlfile=f_obj, mode='upgrade')
         else:
-            _logger.error('%s extension is not supported in upgrade %sing', ext, mode)
+            _logger.error(
+                '%s extension is not supported in upgrade %sing', ext, mode)
             pass
 
     def load_files(self, cr, mode):
@@ -239,4 +270,6 @@ class Upgrade(object):
                     elif error_management == 'raise':
                         raise e
                     elif error_management != 'not_rollback_and_continue':
-                        _logger.error('%s value not supported in error management', error_management)
+                        _logger.error(
+                            '%s value not supported in error management',
+                            error_management)

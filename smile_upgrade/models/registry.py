@@ -40,7 +40,8 @@ native_new = Registry.new
 @classmethod
 def new(cls, db_name, force_demo=False, status=None, update_module=False):
     callers = [frame[3] for frame in inspect.stack()]
-    if 'preload_registries' not in callers and '_initialize_db' not in callers:
+    if 'preload_registries' not in callers and \
+            '_initialize_db' not in callers:
         return native_new(db_name, force_demo, update_module=update_module)
     with cls._lock:
         upgrades = False
@@ -49,21 +50,27 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                 upgrades = upgrade_manager.upgrades
                 if upgrades:
                     t0 = time.time()
-                    _logger.info('loading %s upgrade...', upgrade_manager.code_version)
+                    _logger.info('loading %s upgrade...',
+                                 upgrade_manager.code_version)
                     if not upgrade_manager.db_in_creation:
                         upgrade_manager.pre_load()
                         modules = upgrade_manager.modules_to_upgrade
                     else:
-                        modules = upgrade_manager.modules_to_install_at_creation
+                        modules = upgrade_manager. \
+                            modules_to_install_at_creation
                     if modules:
-                        registry = native_new(db_name, force_demo)
-                        upgrade_manager.force_modules_upgrade(registry, modules)
+                        native_new(db_name, force_demo, update_module=False)
+                        upgrade_manager.force_modules_upgrade(modules)
                     native_new(db_name, force_demo, update_module=True)
                     upgrade_manager.post_load()
                     upgrade_manager.set_db_version()
                     _logger.info('%s upgrade successfully loaded in %ss',
-                                 upgrade_manager.code_version, time.time() - t0)
-            registry = native_new(db_name, force_demo, update_module=update_module)
+                                 upgrade_manager.code_version,
+                                 time.time() - t0)
+                else:
+                    _logger.info('no upgrade to load')
+            registry = native_new(db_name, force_demo,
+                                  update_module=update_module)
             if upgrades and config.get('stop_after_upgrades'):
                 _logger.info('Stopping Odoo server')
                 os._exit(0)
@@ -71,7 +78,8 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
         except Exception as e:
             e.traceback = sys.exc_info()
             if upgrades and config.get('stop_after_upgrades'):
-                msg = isinstance(e, (osv.except_osv, orm.except_orm)) and e.value or e
+                msg = isinstance(e, (osv.except_osv, orm.except_orm)) and \
+                    e.value or e
                 _logger.error(tools.ustr(msg), exc_info=e.traceback)
                 _logger.critical('Upgrade FAILED')
                 _logger.info('Stopping Odoo server')
