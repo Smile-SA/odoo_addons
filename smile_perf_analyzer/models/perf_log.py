@@ -110,11 +110,12 @@ class IrLoggingPerfLog(models.Model):
         with perf_cursor(cr.dbname) as new_cr:
             perf_dbname = new_cr.dbname
             new_cr.execute("SELECT relname FROM pg_class WHERE relkind "
-                           "IN ('r','v') AND relname=%s", self._table)
+                           "IN ('r','v') AND relname=%s",
+                           (self._table,))
             if not new_cr.rowcount:
                 new_cr.execute('CREATE TABLE "%s" '
                                '(id SERIAL NOT NULL, PRIMARY KEY(id))'
-                               % self._table)
+                               % (self._table,))
             columns = [(k, f.column_type[1])
                        for k, f in self._fields.items()
                        if f.column_type and f.store]
@@ -147,7 +148,7 @@ class IrLoggingPerfLog(models.Model):
         cr.execute('CREATE USER MAPPING FOR %s SERVER perf_server OPTIONS '
                    '(user %%s, password %%s)'
                    % db_user, (db_user, db_password))
-        cr.execute('DROP FOREIGN TABLE IF EXISTS %s' % self._table)
+        cr.execute('DROP FOREIGN TABLE IF EXISTS %s' % (self._table,))
         cr.execute('CREATE FOREIGN TABLE %s (%s) SERVER perf_server'
                    % (self._table, ', '.join('%s %s' % c for c in columns)))
         cr.commit()
