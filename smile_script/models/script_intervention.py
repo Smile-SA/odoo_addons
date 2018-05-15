@@ -28,8 +28,11 @@ class ScriptIntervention(models.Model):
 
     def __init__(self, pool, cr):
         super(ScriptIntervention, self).__init__(pool, cr)
-        setattr(Registry, 'setup_models',
-                state_cleaner(getattr(Registry, 'setup_models')))
+        model = pool[self._name]
+        if not getattr(model, '_state_cleaner', False):
+            model._state_cleaner = True
+            setattr(Registry, 'setup_models', state_cleaner(
+                getattr(Registry, 'setup_models')))
 
     script_id = fields.Many2one(
         'smile.script', 'Script', required=True, readonly=True)
