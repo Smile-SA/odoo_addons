@@ -20,7 +20,7 @@ class MailTemplate(models.Model):
             field = self.env[model]._fields[fieldname]
             converter = self.env['ir.qweb.field.%s' % field.type]
             return converter.value_to_html(value, field, options)
-        except:
+        except Exception:
             return value
 
     @api.model

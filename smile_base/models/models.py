@@ -240,7 +240,7 @@ def filtered_from_domain(self, domain):
         if not isinstance(domain, string_types):
             domain = repr(domain)
         domain = extend(normalize_domain(eval(domain, localdict)))
-    except:
+    except Exception:
         raise UserError(_('Domain not supported for %s filtering: %s') % (self._name, domain))
 
     stack = []
@@ -277,7 +277,7 @@ def filtered_from_domain(self, domain):
         try:
             expr = preformat(item)
             return self.filtered(lambda rec: eval(expr, dict(localdict, rec=rec)))
-        except:
+        except Exception:
             return self.browse()
 
     def parse():
