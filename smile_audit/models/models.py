@@ -28,7 +28,7 @@ native_fields_get = models.BaseModel.fields_get
 
 @api.multi
 def _read_from_database(self, field_names, inherited_field_names=[]):
-    native_read_from_database(self, field_names, inherited_field_names=[])
+    native_read_from_database(self, field_names, inherited_field_names)
     # Store history revision in cache
     if self._context.get('history_revision'):
         group_ids = self.env.user.groups_id.ids
