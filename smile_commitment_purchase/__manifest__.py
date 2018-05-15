@@ -35,7 +35,7 @@
     "category": 'Purchase Management',
     "sequence": 20,
     "data": [],
-    "auto_install": False,
+    "auto_install": True,
     "installable": True,
     "application": False,
 }
