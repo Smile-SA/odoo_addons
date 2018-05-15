@@ -53,11 +53,19 @@ odoo.define('web_auto_refresh', function (require) {
             this.bus_on(channel, function(message) {
                 var widget = self.action_manager.inner_widget;
                 // in mail inbox page, no active view defined
-                if (widget && typeof(widget.active_view) != 'undefined'){
-                    var controller = widget.active_view.controller;
-                    var action = widget.action;
-                    if (action.auto_search && controller.modelName == message && controller.mode != "edit"){
-                        controller.reload();
+                if (widget) {
+                    if (message.includes('#')) {
+                        widget.do_action({
+                            "type": "ir.actions.act_url",
+                            "url": message,
+                            "target": "self",
+                        });
+                    } else if (typeof(widget.active_view) != 'undefined') {
+                        var controller = widget.active_view.controller;
+                        var action = widget.action;
+                        if (action.auto_search && controller.modelName == message && controller.mode != "edit") {
+                            controller.reload();
+                        }
                     }
                 }
             });
