@@ -89,7 +89,7 @@ class BaseAutomation(models.Model):
             except Exception:
                 pass
         Method = self.env['ir.model.methods'].sudo()
-        existing_method_names = ['create', 'write', 'unlink', 'browse']
+        existing_method_names = ['create', 'write', 'unlink', 'browse', 'exists']
         existing_method_names += [m['name'] for m in Method.search_read([
             ('model_id', '=', model.id),
             ('name', 'in', method_names),
@@ -229,7 +229,8 @@ class BaseAutomation(models.Model):
                 # read old values before the update
                 old_values = {
                     old_vals.pop('id'): old_vals
-                    for old_vals in records.read()
+                    for pre_records in pre.values()
+                    for old_vals in pre_records.read()
                 }
                 # call original method
                 res = _other_method.origin(records, *args, **kwargs)
