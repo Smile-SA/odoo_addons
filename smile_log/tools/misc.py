@@ -35,6 +35,6 @@ def add_trace(original_method):
     def new_method(self, msg):
         stack = traceback.format_exc()
         stack = stack.replace('%', '%%')
-        msg += '\n%s' % stack.decode('utf-8')
+        msg += '\n%s' % stack
         return original_method(self, msg)
     return new_method
