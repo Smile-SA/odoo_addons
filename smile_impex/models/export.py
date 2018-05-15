@@ -64,13 +64,8 @@ class IrModelExportTemplate(models.Model):
         if self.unique and self.do_not_store_record_ids:
             raise UserError(_('Exported records storing is required if export must be unique'))
 
-    def _get_cron_vals(self, **kwargs):
-        vals = super(IrModelExportTemplate, self)._get_cron_vals(**kwargs)
-        vals['function'] = 'create_export'
-        return vals
-
-    def _get_server_action_vals(self, model_id, **kwargs):
-        vals = super(IrModelExportTemplate, self)._get_server_action_vals(model_id, **kwargs)
+    def _get_server_action_vals(self, **kwargs):
+        vals = super(IrModelExportTemplate, self)._get_server_action_vals(**kwargs)
         if vals:
             vals['code'] = "self.pool.get('ir.model.export.template').create_export(cr, uid, %d, context)" % (self.id,)
         return vals
@@ -170,7 +165,11 @@ class IrModelExport(models.Model):
 
     def __init__(self, pool, cr):
         super(IrModelExport, self).__init__(pool, cr)
-        setattr(Registry, 'setup_models', state_cleaner(pool[self._name])(getattr(Registry, 'setup_models')))
+        model = pool[self._name]
+        if not getattr(model, '_state_cleaner', False):
+            model._state_cleaner = True
+            setattr(Registry, 'setup_models', state_cleaner(model)(
+                getattr(Registry, 'setup_models')))
 
     export_tmpl_id = fields.Many2one('ir.model.export.template', 'Template', readonly=True, required=True,
                                      ondelete='cascade', index=True)

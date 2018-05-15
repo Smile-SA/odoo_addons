@@ -39,13 +39,8 @@ class IrModelImportTemplate(models.Model):
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import.template')],
                               readonly=True, copy=False)
 
-    def _get_cron_vals(self, **kwargs):
-        vals = super(IrModelImportTemplate, self)._get_cron_vals(**kwargs)
-        vals['function'] = 'create_import'
-        return vals
-
-    def _get_server_action_vals(self, model_id, **kwargs):
-        vals = super(IrModelImportTemplate, self)._get_server_action_vals(model_id, **kwargs)
+    def _get_server_action_vals(self, **kwargs):
+        vals = super(IrModelImportTemplate, self)._get_server_action_vals(**kwargs)
         vals['code'] = "self.pool.get('ir.model.import.template').create_import(cr, uid, %d, context)" % (self.id,)
         return vals
 
@@ -87,7 +82,11 @@ class IrModelImport(models.Model):
 
     def __init__(self, pool, cr):
         super(IrModelImport, self).__init__(pool, cr)
-        setattr(Registry, 'setup_models', state_cleaner(pool[self._name])(getattr(Registry, 'setup_models')))
+        model = pool[self._name]
+        if not getattr(model, '_state_cleaner', False):
+            model._state_cleaner = True
+            setattr(Registry, 'setup_models', state_cleaner(model)(
+                getattr(Registry, 'setup_models')))
 
     import_tmpl_id = fields.Many2one('ir.model.import.template', 'Template', readonly=True, required=True,
                                      ondelete='cascade', index=True)

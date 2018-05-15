@@ -26,7 +26,7 @@ import psycopg2
 import sys
 from threading import Thread
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.tools.func import wraps
 
@@ -79,10 +79,7 @@ class IrModelImpexTemplate(models.AbstractModel):
 
     def _get_cron_vals(self, **kwargs):
         vals = {
-            'name': self.name,
-            'user_id': 1,
-            'model': self._name,
-            'args': '(%d, )' % self.id,
+            'ir_actions_server_id': self.server_action_id.id,
             'numbercall': -1,
         }
         vals.update(kwargs)
@@ -90,17 +87,19 @@ class IrModelImpexTemplate(models.AbstractModel):
 
     @api.one
     def create_cron(self, **kwargs):
+        self.create_server_action()
         if not self.cron_id:
             vals = self._get_cron_vals(**kwargs)
             cron_id = self.env['ir.cron'].create(vals)
             self.write({'cron_id': cron_id.id})
         return True
 
-    def _get_server_action_vals(self, model_id, **kwargs):
+    def _get_server_action_vals(self, **kwargs):
+        model = self.env['ir.model'].search([('model', '=', self._name)], limit=1)
         vals = {
             'name': self.name,
             'user_id': SUPERUSER_ID,
-            'model_id': model_id,
+            'model_id': model.id,
             'state': 'code',
         }
         vals.update(kwargs)
@@ -109,10 +108,7 @@ class IrModelImpexTemplate(models.AbstractModel):
     @api.one
     def create_server_action(self, **kwargs):
         if not self.server_action_id:
-            model = self.env['ir.model'].search([('model', '=', self._name)], limit=1)
-            if not model:  # Normally should not happen
-                raise UserError(_('Please restart Odoo server'))
-            vals = self._get_server_action_vals(model.id, **kwargs)
+            vals = self._get_server_action_vals(**kwargs)
             self.server_action_id = self.env['ir.actions.server'].create(vals)
         return True
 
@@ -227,7 +223,7 @@ class IrModelImpex(models.AbstractModel):
             logger.error(repr(e))
             try:
                 self.write({'state': 'exception', 'to_date': fields.Datetime.now()})
-            except:
+            except Exception:
                 logger.warning("Cannot set import to exception")
             e.traceback = sys.exc_info()
             raise
