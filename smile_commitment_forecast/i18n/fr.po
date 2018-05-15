@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* smile_account_budget_forecast
+#   * smile_commitment_forecast
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server 11.0-20180403\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-29 14:43+0000\n"
-"PO-Revision-Date: 2018-03-29 14:43+0000\n"
+"POT-Creation-Date: 2018-04-20 13:08+0000\n"
+"PO-Revision-Date: 2018-04-20 13:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -15,27 +15,27 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. module: smile_account_budget_forecast
-#: model:ir.model,name:smile_account_budget_forecast.model_account_analytic_line
+#. module: smile_commitment_forecast
+#: model:ir.model,name:smile_commitment_forecast.model_account_analytic_line
 msgid "Analytic Line"
 msgstr "Ligne analytique"
 
-#. module: smile_account_budget_forecast
-#: model:ir.model,name:smile_account_budget_forecast.model_crossovered_budget_lines
+#. module: smile_commitment_forecast
+#: model:ir.model,name:smile_commitment_forecast.model_crossovered_budget_lines
 msgid "Budget Line"
 msgstr "Ligne de budget"
 
-#. module: smile_account_budget_forecast
-#: model:ir.model.fields,field_description:smile_account_budget_forecast.field_account_analytic_line_forecast
+#. module: smile_commitment_forecast
+#: model:ir.model.fields,field_description:smile_commitment_forecast.field_account_analytic_line_forecast
 msgid "Forecast"
 msgstr "Prévisionnel"
 
-#. module: smile_account_budget_forecast
-#: model:ir.model.fields,field_description:smile_account_budget_forecast.field_crossovered_budget_lines_forecast_available_amount
+#. module: smile_commitment_forecast
+#: model:ir.model.fields,field_description:smile_commitment_forecast.field_crossovered_budget_lines_forecast_available_amount
 msgid "Forecast Available Amount"
 msgstr "Disponible prévisionnel"
 
-#. module: smile_account_budget_forecast
-#: model:ir.model.fields,field_description:smile_account_budget_forecast.field_crossovered_budget_lines_forecast_commitment_amount
+#. module: smile_commitment_forecast
+#: model:ir.model.fields,field_description:smile_commitment_forecast.field_crossovered_budget_lines_forecast_commitment_amount
 msgid "Forecast Commitment Amount"
 msgstr "Engagé prévisionnel"
