@@ -1,0 +1,171 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_advance_payment_base
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0-20180403\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-04-05 14:33+0000\n"
+"PO-Revision-Date: 2018-04-05 14:33+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_res_partner_property_account_payable_advance_id
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_res_users_property_account_payable_advance_id
+msgid "Account Advance Payable"
+msgstr "Compte d'avances fournisseur"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_res_partner_property_account_receivable_advance_id
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_res_users_property_account_receivable_advance_id
+msgid "Account Advance Receivable"
+msgstr "Compte d'avances client"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_advance_residual
+msgid "Advance Residual"
+msgstr "Solde à reprendre"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_payment_id
+msgid "Advance payment"
+msgstr "Acompte"
+
+#. module: smile_advance_payment_base
+#: model:ir.model,name:smile_advance_payment_base.model_account_payment_recovery
+msgid "Advance payment recovery"
+msgstr "Reprise d'acompte"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_invoice_recovery_ids
+msgid "Advance payments"
+msgstr "Acomptes"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_attachment_ids
+msgid "Attachments"
+msgstr "Pièces jointes"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_company_id
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_advance_payment_base
+#: model:ir.model,name:smile_advance_payment_base.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_currency_id
+msgid "Currency"
+msgstr "Devise"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_display_name
+msgid "Display Name"
+msgstr "Nom à afficher"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_advance_payment_base
+#: model:ir.model,name:smile_advance_payment_base.model_account_invoice
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_invoice_id
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_journal_is_advance_payment
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_is_advance_payment
+msgid "Is Advance Payment"
+msgstr "Acompte"
+
+#. module: smile_advance_payment_base
+#: model:ir.model,name:smile_advance_payment_base.model_account_journal
+msgid "Journal"
+msgstr "Journal"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_move_id
+msgid "Journal entry"
+msgstr "Pièce comptable"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery___last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_advance_payment_base
+#: model:ir.model,name:smile_advance_payment_base.model_account_payment
+msgid "Payments"
+msgstr "Paiements"
+
+#. module: smile_advance_payment_base
+#: code:addons/smile_advance_payment_base/models/account_payment.py:43
+#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:108
+#, python-format
+msgid "Please indicate an account advance payable on this supplier"
+msgstr "Merci d'indiquer un compte d'acompte pour ce fournisseur"
+
+#. module: smile_advance_payment_base
+#: code:addons/smile_advance_payment_base/models/account_payment.py:36
+#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:101
+#, python-format
+msgid "Please indicate an account advance receivable on this customer"
+msgstr "Merci d'indiquer un compte d'acompte pour ce client"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_amount
+msgid "Recovered amount"
+msgstr "Montant repris"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_journal_recovery_sequence_id
+msgid "Recovery entry sequence"
+msgstr "Séquence de reprise d'acompte"
+
+#. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_ids
+msgid "Recoveries"
+msgstr "Reprises"
+
+#. module: smile_advance_payment_base
+#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:30
+#, python-format
+msgid "You cannot recover a negative amount."
+msgstr "Vous ne pouvez pas reprendre un montant négatif."
+
+#. module: smile_advance_payment_base
+#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:33
+#, python-format
+msgid "You cannot recover more than the advance payment amount."
+msgstr "Vous ne pouvez pas reprendre plus que le montant de l'acompte."

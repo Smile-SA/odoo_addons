@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <group name="accounting_entries" position="after">
+                	<group name="payment" string="Payments"
+                            attrs="{'invisible': [('supplier', '=', True)]}">
+                        <field name="payment_mode"
+                        attrs="{'readonly': [('has_payments_in_progress', '=', True)]}"/>
+                        <field name="payment_method_id" widget="selection"/>
+                        <field name="has_payments_in_progress" invisible="1"/>
+                    </group>
+                </group>
+			</field>
+		</record>
+
+	</data>
+</odoo>
