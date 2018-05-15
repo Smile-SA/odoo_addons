@@ -27,6 +27,7 @@ class BudgetLine(models.Model):
             date_from = self.env.context.get('wizard_date_from') or \
                 line.date_from
             today = fields.Date.today()
+            forecast_commitment_amount = 0.0  # TODO: check if it's a good fix
             if line.analytic_account_id.id and date_to >= today:
                 date_from = min(date_from, today)
                 params = (line.analytic_account_id.id,
