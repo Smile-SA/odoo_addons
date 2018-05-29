@@ -86,7 +86,7 @@ def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu
 
 
 @api.model
-def fields_get(self, allfields=None, write_access=True, attributes=None):
+def fields_get(self, allfields=None, attributes=None):
     res = native_fields_get(self, allfields, attributes)
     if hasattr(self, '_get_attachments_field_name') and \
             (not allfields or 'attachment_ids' in allfields):
