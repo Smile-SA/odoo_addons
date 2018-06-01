@@ -42,7 +42,7 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
     callers = [frame[3] for frame in inspect.stack()]
     if 'preload_registries' not in callers and \
             '_initialize_db' not in callers:
-        return native_new(db_name, force_demo, update_module=update_module)
+        return native_new(db_name, force_demo, status, update_module)
     with cls._lock:
         upgrades = False
         try:
@@ -52,16 +52,21 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                     t0 = time.time()
                     _logger.info('loading %s upgrade...',
                                  upgrade_manager.code_version)
+                    init, update = \
+                        dict(config['init']), dict(config['update'])
                     if not upgrade_manager.db_in_creation:
                         upgrade_manager.pre_load()
-                        modules = upgrade_manager.modules_to_upgrade
+                        config['update'].update({
+                            module: True for module in
+                            upgrade_manager.modules_to_upgrade
+                        })
                     else:
-                        modules = upgrade_manager. \
-                            modules_to_install_at_creation
-                    if modules:
-                        native_new(db_name, force_demo, update_module=False)
-                        upgrade_manager.force_modules_upgrade(modules)
-                    native_new(db_name, force_demo, update_module=True)
+                        config['init'].update({
+                            module: True for module in
+                            upgrade_manager.modules_to_install_at_creation
+                        })
+                    native_new(db_name, force_demo, status, update_module)
+                    config['init'], config['update'] = init, update
                     upgrade_manager.post_load()
                     upgrade_manager.set_db_version()
                     _logger.info('%s upgrade successfully loaded in %ss',
@@ -69,8 +74,7 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                                  time.time() - t0)
                 else:
                     _logger.info('no upgrade to load')
-            registry = native_new(db_name, force_demo,
-                                  update_module=update_module)
+            registry = native_new(db_name, force_demo, status, update_module)
             if upgrades and config.get('stop_after_upgrades'):
                 _logger.info('Stopping Odoo server')
                 os._exit(0)

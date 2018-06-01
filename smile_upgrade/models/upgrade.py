@@ -111,7 +111,7 @@ class UpgradeManager(object):
     def _try_lock(self, warning=None):
         try:
             self.cr.execute("SELECT value FROM ir_config_parameter "
-                            "WHERE key = 'code.version'",
+                            "WHERE key = 'code.version' FOR UPDATE NOWAIT",
                             log_exceptions=False)
         except psycopg2.OperationalError:
             # INFO: Early rollback to allow translations
@@ -164,23 +164,6 @@ class UpgradeManager(object):
         with self.db.cursor() as cr:
             for upgrade in self.upgrades:
                 upgrade.load_files(cr, 'post-load')
-
-    def force_modules_upgrade(self, modules_to_upgrade):
-        with self.db.cursor() as cr:
-            with api.Environment.manage():
-                env = api.Environment(cr, SUPERUSER_ID, {})
-                Module = env['ir.module.module']
-                Module.update_list()
-                modules = Module.search([('name', 'in', modules_to_upgrade),
-                                         ('state', 'in',
-                                          ('uninstalled', 'to install'))])
-                modules.button_install()
-                modules = Module.search([('name', 'in', modules_to_upgrade),
-                                         ('state', 'in',
-                                          ('installed', 'to upgrade'))])
-                modules.button_upgrade()
-                cr.execute("UPDATE ir_module_module SET state = 'to upgrade' "
-                           "WHERE state = 'to install'")
 
 
 class Upgrade(object):
