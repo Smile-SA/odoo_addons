@@ -117,11 +117,3 @@ class ResGroups(models.Model):
                     'perm_unlink': False,
                 })
         return True
-
-    @api.model
-    def update_user_groups_view(self):
-        user_context = dict(self._context)
-        if 'active_test' in user_context:
-            del user_context['active_test']
-        new_env = self.env(context=user_context)
-        return super(ResGroups, self.with_env(env=new_env)).update_user_groups_view()
