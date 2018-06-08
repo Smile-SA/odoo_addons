@@ -116,7 +116,7 @@ class ResUsers(models.Model):
     @api.multi
     def _update_users_linked_to_profile(self, fields=None):
         for user_profile in self.filtered(lambda user: user.is_user_profile and user.is_update_users):
-            users = self.search([('user_profile_id', '=', user_profile)])
+            users = self.search([('user_profile_id', '=', user_profile.id)])
             users.with_context(active_test=False)._update_from_profile(fields)
 
     @api.model
