@@ -45,14 +45,13 @@ class ResUsers(models.Model):
     is_user_profile = fields.Boolean('Is User Profile', oldname='user_profile')
     user_profile_id = fields.Many2one('res.users', 'User Profile',
                                       domain=[('id', '!=', SUPERUSER_ID), ('is_user_profile', '=', True)],
-                                      context={'active_test': False})
-    user_ids = fields.One2many('res.users', 'user_profile_id', 'Users', domain=[('is_user_profile', '=', False)])
+                                      context={'active_test': False}, index=True)
+    user_count = fields.Integer(compute='get_user_count', compute_sudo=True)
     field_ids = fields.Many2many('ir.model.fields', 'res_users_fields_rel', 'user_id', 'field_id', 'Fields to update',
                                  domain=[
                                      ('model', 'in', ('res.users', 'res.partner')),
                                      ('ttype', 'not in', ('one2many',)),
-                                     ('name', 'not in', ('is_user_profile', 'user_profile_id',
-                                                         'user_ids', 'field_ids', 'view'))],
+                                     ('name', 'not in', ('is_user_profile', 'user_profile_id', 'field_ids', 'view'))],
                                  default=_get_default_field_ids)
     is_update_users = fields.Boolean(string="Update users after creation", default=lambda *a: True,
                                      help="If non checked, users associated to this profile will not be updated after creation")
@@ -71,6 +70,15 @@ class ResUsers(models.Model):
         admin = self.env.ref('base.user_root')
         if self.user_profile_id == admin:
             raise UserError(_("You can't use %s as user profile !") % admin.name)
+
+    @api.one
+    def get_user_count(self):
+        self.user_count = len(self.with_context(prefetch_fields=False).search([('user_profile_id', '=', self.id)]))
+
+    @api.multi
+    def button_show_users(self):
+        self.ensure_one()
+        return self.open_wizard(target='current', view_mode='tree,form', domain=[('user_profile_id', '=', self.id)],)
 
     @api.onchange('is_user_profile')
     def onchange_user_profile(self):
@@ -108,7 +116,8 @@ class ResUsers(models.Model):
     @api.multi
     def _update_users_linked_to_profile(self, fields=None):
         for user_profile in self.filtered(lambda user: user.is_user_profile and user.is_update_users):
-            user_profile.with_context(active_test=False).mapped('user_ids')._update_from_profile(fields)
+            users = self.search([('user_profile_id', '=', user_profile)])
+            users.with_context(active_test=False)._update_from_profile(fields)
 
     @api.model
     def create(self, vals):
@@ -131,7 +140,6 @@ class ResUsers(models.Model):
 
     def copy_data(self, cr, uid, user_id, default=None, context=None):
         default = default.copy() if default else {}
-        default['user_ids'] = []
         if self.read(cr, uid, user_id, ['is_user_profile'], context)['is_user_profile']:
             default['is_user_profile'] = False
             default['user_profile_id'] = user_id
