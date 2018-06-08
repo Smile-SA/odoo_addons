@@ -38,7 +38,7 @@
 
     <!-- Profiles -->
     <!-- Add page for technical profile configuration-->
-    
+
     <record id="view_user_profile_form" model="ir.ui.view">
       <field name="name">res.users.form</field>
       <field name="model">res.users</field>
@@ -56,12 +56,15 @@
               <field name="is_user_profile" invisible="1"/>
               <field name="is_update_users" attrs="{'invisible': [('is_user_profile', '=', False)]}"/>
               <label for="is_update_users"/>
-              <separator string="Linked users" colspan="4"/>
-              <field name="user_ids" nolabel="1" colspan="4" widget="many2many" context="{'form_view_ref': 'base.view_users_form'}"/>
               <separator string="Fields to update for linked users" colspan="4"/>
               <field name="field_ids" nolabel="1" colspan="4"/>
             </page>
           </notebook>
+          <div name="button_box" position="inside">
+            <button class="oe_inline oe_stat_button" name="button_show_users" type="object" icon="fa-users">
+                <field string="Users" name="user_count" widget="statinfo"/>
+            </button>
+          </div>
         </data>
       </field>
     </record>
