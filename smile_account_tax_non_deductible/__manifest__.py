@@ -36,6 +36,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         "views/account_invoice_view.xml",
         "views/product_template_view.xml",
         "views/res_company_view.xml",
+        "views/res_partner_industry_view.xml",
     ],
     "demo": [],
     'test': [],

@@ -9,43 +9,7 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Industries">
-                        <field name="industry_ids">
-                            <tree>
-                                <field name="sequence" widget="handle"/>
-                                <field name="name"/>
-                                <field name="full_name"/>
-                            </tree>
-                            <form>
-                                <sheet>
-                                    <div class="oe_button_box" name="button_box">
-                                        <button name="toggle_active" type="object"
-                                                class="oe_stat_button" icon="fa-archive">
-                                            <field name="active" widget="boolean_button"
-                                                options='{"terminology": "archive"}'/>
-                                        </button>
-                                    </div>
-                                    <div class="oe_title">
-                                        <label for="name" class="oe_edit_only"/>
-                                        <h1>
-                                            <field name="name"/>
-                                        </h1>
-                                        <group>
-                                            <field name="full_name"/>
-                                        </group>
-                                    </div>
-                                    <notebook colspan="4">
-                                        <page string="Taxation rates">
-                                            <field name="taxation_rate_ids">
-                                                <tree editable="top">
-                                                    <field name="start_date"/>
-                                                    <field name="value"/>
-                                                </tree>
-                                            </field>
-                                        </page>
-                                    </notebook>
-                                </sheet>
-                            </form>
-                        </field>
+                        <field name="industry_ids"/>
                     </page>
                 </notebook>
             </field>

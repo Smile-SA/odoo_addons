@@ -202,7 +202,7 @@ msgstr "Un coefficient de taxation est propre à un secteur d'activité"
 
 #. module: smile_account_tax_non_deductible
 #: model:ir.model.fields,field_description:smile_account_tax_non_deductible.field_res_partner_industry_taxation_rate_ids
-#: model:ir.ui.view,arch_db:smile_account_tax_non_deductible.view_company_form
+#: model:ir.ui.view,arch_db:smile_account_tax_non_deductible.res_partner_industry_view_form
 msgid "Taxation rates"
 msgstr "Coefficients de taxation"
 
