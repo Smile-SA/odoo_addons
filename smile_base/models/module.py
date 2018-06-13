@@ -55,7 +55,8 @@ class Module(models.Model):
                 self._load_data(module.name, kind, mode, noupdate)
 
     @api.model
-    def _load_data(self, module_name, kind='demo', mode='update', noupdate=False):
+    def _load_data(self, module_name, kind='demo', mode='update',
+                   noupdate=False):
         cr = self._cr
         info = load_information_from_description_file(module_name)
         for filename in info.get(kind, []):
@@ -66,12 +67,15 @@ class Module(models.Model):
                 if ext == '.sql':
                     tools.convert_sql_import(cr, fp)
                 elif ext == '.csv':
-                    tools.convert_csv_import(cr, module_name, pathname, fp.read(),
-                                             idref=None, mode=mode, noupdate=noupdate)
+                    tools.convert_csv_import(
+                        cr, module_name, pathname, fp.read(),
+                        idref=None, mode=mode, noupdate=noupdate)
                 elif ext == '.yml':
-                    tools.convert_yaml_import(cr, module_name, fp, kind=kind,
-                                              idref=None, mode=mode, noupdate=noupdate)
+                    tools.convert_yaml_import(
+                        cr, module_name, fp, kind=kind,
+                        idref=None, mode=mode, noupdate=noupdate)
                 elif ext == '.xml':
-                    tools.convert_xml_import(cr, module_name, fp,
-                                             idref=None, mode=mode, noupdate=noupdate)
+                    tools.convert_xml_import(
+                        cr, module_name, fp,
+                        idref=None, mode=mode, noupdate=noupdate)
         return True

@@ -28,13 +28,15 @@ def new_setup_models(self, cr):
     native_setup_models(self, cr)
     for RecordModel in self.models.values():
         for fieldname, field in RecordModel._fields.items():
-            if field.type == 'many2one' and field.ondelete and field.ondelete.lower() == 'cascade':
+            if field.type == 'many2one' and field.ondelete and \
+                    field.ondelete.lower() == 'cascade':
                 if field.comodel_name.startswith('mail.'):
                     continue
                 CoModel = self.get(field.comodel_name)
                 if not hasattr(CoModel, '_cascade_relations'):
                     setattr(CoModel, '_cascade_relations', {})
-                CoModel._cascade_relations.setdefault(RecordModel._name, set()).add(fieldname)
+                CoModel._cascade_relations.setdefault(
+                    RecordModel._name, set()).add(fieldname)
 
 
 Registry.setup_models = new_setup_models

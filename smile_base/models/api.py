@@ -19,33 +19,20 @@
 #
 ##############################################################################
 
-{
-    "name": "Audit Trail",
-    "version": "0.1",
-    "sequence": 100,
-    "category": "Tools",
-    "author": "Smile",
-    "license": 'AGPL-3',
-    "website": 'http://www.smile.fr',
-    "description": """
-This module lets administrator track every user operation on
-all the objects of the system
-(for the moment, only create, write and unlink methods).
+import logging
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
-    """,
-    "depends": [
-        'base',
-    ],
-    "data": [
-        'security/ir.model.access.csv',
-        'views/audit_rule_view.xml',
-        'views/audit_log_view.xml',
-    ],
-    "test": [
-        'test/audit_test.yml',
-    ],
-    'installable': True,
-    'auto_install': False,
-    'application': False,
-}
+from odoo import api
+
+_logger = logging.getLogger(__name__)
+
+native_add_todo = api.Environment.add_todo
+
+
+def add_todo(self, field, records):
+    if not self.registry.field_sequence(field):
+        _logger.warning('%s not recomputed (%s)' % (field, field.related))
+        return
+    return native_add_todo(self, field, records)
+
+
+api.Environment.add_todo = add_todo

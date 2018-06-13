@@ -41,7 +41,8 @@ class IrActionsActWindow(models.Model):
         try:
             context = safe_eval(self.context or '{}', eval_dict) or {}
             if 'act_window_id' not in context:
-                self.context = self.context[:1] + "'act_window_id': %s, " % self.id + self.context[1:]
+                self.context = self.context[:1] + "'act_window_id': %s, " \
+                    % self.id + self.context[1:]
         except Exception:
             pass
 
@@ -73,7 +74,8 @@ class IrActionsActWindow(models.Model):
             if 'context' in res:
                 try:
                     with tools.mute_logger("odoo.tools.safe_eval"):
-                        res['context'] = tools.ustr(eval(res['context'], localdict))
+                        res['context'] = tools.ustr(
+                            eval(res['context'], localdict))
                 except Exception:
                     continue
         return results

@@ -32,13 +32,15 @@ def audit_decorator(method):
     def get_audit_rule(self, method):
         AuditRule = self.env['audit.rule']
         group_ids = self.env.user.groups_id.ids
-        rule_id = AuditRule._check_audit_rule(group_ids).get(self._name, {}).get(method)
+        rule_id = AuditRule._check_audit_rule(group_ids).get(
+            self._name, {}).get(method)
         return AuditRule.browse(rule_id) if rule_id else None
 
     @api.model
     def audit_create(self, vals):
         result = audit_create.origin(self, vals)
-        record = self.browse(result) if isinstance(result, (int, long)) else result
+        record = self.browse(result) if isinstance(result, (int, long)) \
+            else result
         rule = get_audit_rule(self, 'create')
         if rule:
             new_values = record.read(load='_classic_write')

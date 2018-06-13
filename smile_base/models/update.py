@@ -27,6 +27,8 @@ class PublisherWarrantyContract(models.AbstractModel):
 
     @api.multi
     def update_notification(self, cron_mode=True):
-        if not tools.config.get('enable_publisher_warranty_contract_notification'):
+        if not tools.config.get(
+                'enable_publisher_warranty_contract_notification'):
             return True
-        return super(PublisherWarrantyContract, self).update_notification(cron_mode)
+        return super(PublisherWarrantyContract, self). \
+            update_notification(cron_mode)

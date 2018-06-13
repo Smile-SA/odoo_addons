@@ -57,8 +57,8 @@ class unquote(str):
             return isinstance(k, string_types) and '"%s"' % k or k
 
         def format_kwargs(t):
-            return '%s=%s' % \
-                (t[0], isinstance(t[1], string_types) and '"%s"' % t[1] or t[1])
+            return '%s=%s' % (
+                t[0], isinstance(t[1], string_types) and '"%s"' % t[1] or t[1])
 
         params = [', '.join(map(format_args, args)),
                   ', '.join(map(format_kwargs, kwargs.items()))]

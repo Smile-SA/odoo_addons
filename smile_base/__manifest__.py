@@ -33,13 +33,15 @@
 Features
 
     * Install and make French the default language
-    * Remove the scheduled action "Update Notification" which sends companies and users info to OpenERP S.A.
+    * Remove the scheduled action "Update Notification"
+      which sends companies and users info to OpenERP S.A.
     * Activate access logs for ir.translation object
     * Correct date and time format for French language
     * Review the menu "Applications"
     * Remove the menu "Update modules" from apps.odoo.com
     * Add sequence and display window actions in IrValues
-    * Force to call unlink method at removal of remote object linked by a fields.many2one with ondelete='cascade'
+    * Force to call unlink method at removal of remote object linked by
+      a fields.many2one with ondelete='cascade'
     * Add BaseModel.bulk_create
     * Improve BaseModel.load method performance
 

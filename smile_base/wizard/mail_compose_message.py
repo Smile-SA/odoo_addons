@@ -26,7 +26,8 @@ from odoo.addons.mail.models import mail_template
 class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
 
-    def prepare_and_send(self, model, partner_ids, template_id, res_id, composition_mode='mass_mail'):
+    def prepare_and_send(self, model, partner_ids, template_id, res_id,
+                         composition_mode='mass_mail'):
         """
         Prepare the message then send it.
 
@@ -49,7 +50,8 @@ class MailComposeMessage(models.TransientModel):
             'ctx': ctx,
             'format_tz': format_tz,
         }
-        lang = mail_template.mako_template_env.from_string(tools.ustr(template.lang)).render(arg)
+        lang = mail_template.mako_template_env.from_string(
+            tools.ustr(template.lang)).render(arg)
 
         message = self.with_context(active_ids=None).create({
             'model': model,
@@ -59,9 +61,14 @@ class MailComposeMessage(models.TransientModel):
             'notify': True,
             'res_id': res_id,
         })
-        message_lang = message.with_context(lang=lang) if lang and lang != 'False' else message
-        value = message_lang.onchange_template_id(template_id, composition_mode, model, res_id)['value']
-        if value.get('attachment_ids') and (composition_mode == 'comment' or not template.report_template):
-            value['attachment_ids'] = [(4, attachment_id) for attachment_id in value['attachment_ids']]
+        message_lang = message.with_context(lang=lang) \
+            if lang and lang != 'False' else message
+        value = message_lang.onchange_template_id(
+            template_id, composition_mode, model, res_id)['value']
+        if value.get('attachment_ids') and (
+                composition_mode == 'comment' or not template.report_template):
+            value['attachment_ids'] = [
+                (4, attachment_id)
+                for attachment_id in value['attachment_ids']]
         message.write(value)
         message.send_mail()

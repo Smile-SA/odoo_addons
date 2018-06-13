@@ -38,12 +38,16 @@ class AuditRule(models.Model):
     log_write = fields.Boolean('Log Update', default=True)
     log_unlink = fields.Boolean('Log Deletion', default=True)
     group_id = fields.Many2one('res.groups', 'User Group')
-    state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], 'Status', default='draft', readonly=True)
-    model_id = fields.Many2one('ir.model', 'Model', required=True,
-                               help='Select model for which you want to generate log.',
-                               domain=[('model', '!=', 'audit.log')],
-                               readonly=True, states={'draft': [('readonly', False)]})
-    action_id = fields.Many2one('ir.actions.act_window', "Add in the 'More' menu", readonly=True)
+    state = fields.Selection(
+        [('draft', 'Draft'), ('done', 'Done')], 'Status',
+        default='draft', readonly=True)
+    model_id = fields.Many2one(
+        'ir.model', 'Model', required=True,
+        help='Select model for which you want to generate log.',
+        domain=[('model', '!=', 'audit.log')],
+        readonly=True, states={'draft': [('readonly', False)]})
+    action_id = fields.Many2one(
+        'ir.actions.act_window', "Add in the 'More' menu", readonly=True)
 
     _sql_constraints = [
         ('model_uniq', 'unique(model_id, group_id)',
@@ -59,8 +63,10 @@ class AuditRule(models.Model):
                 'res_model': 'audit.log',
                 'src_model': self.model_id.model,
                 'binding_model_id': self.model_id.id,
-                'domain': "[('model_id','=', %s), ('res_id', '=', active_id), ('method', 'in', %s)]"
-                          % (self.model_id.id, [method.replace('_', '') for method in self._methods])
+                'domain': "[('model_id','=', %s), "
+                          "('res_id', '=', active_id), ('method', 'in', %s)]"
+                          % (self.model_id.id, [method.replace('_', '')
+                             for method in self._methods])
             }
             self.action_id = self.env['ir.actions.act_window'].create(vals)
 
@@ -91,7 +97,11 @@ class AuditRule(models.Model):
     @api.model
     @tools.ormcache()
     def _check_audit_rule(self, group_ids):
-        rules = self.sudo().search(['|', ('group_id', '=', False), ('group_id', 'in', group_ids)])
+        rules = self.sudo().search([
+            '|',
+            ('group_id', '=', False),
+            ('group_id', 'in', group_ids),
+        ])
         return {rule.model_id.model:
                 {method.replace('_', ''): rule.id
                  for method in self._methods
@@ -107,7 +117,8 @@ class AuditRule(models.Model):
         else:
             rules = self.search([])
         for rule in rules:
-            if rule.model_id.model not in self.env.registry.models or not rule.active:
+            if rule.model_id.model not in self.env.registry.models or \
+                    not rule.active:
                 continue
             RecordModel = self.env[rule.model_id.model]
             for method in self._methods:
@@ -161,9 +172,11 @@ class AuditRule(models.Model):
                 if vals:
                     data.setdefault(res_id, {'old': {}, 'new': {}})[age] = vals
         for res_id in list(data.keys()):
-            all_fields = set(data[res_id]['old'].keys()) | set(data[res_id]['new'].keys())
+            all_fields = set(data[res_id]['old'].keys()) | \
+                set(data[res_id]['new'].keys())
             for field in all_fields:
-                if data[res_id]['old'].get(field) == data[res_id]['new'].get(field):
+                if data[res_id]['old'].get(field) == \
+                        data[res_id]['new'].get(field):
                     del data[res_id]['old'][field]
                     del data[res_id]['new'][field]
             if data[res_id]['old'] == data[res_id]['new']:

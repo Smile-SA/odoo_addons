@@ -17,7 +17,8 @@ class IrProperty(models.Model):
 
     @api.model
     def get_multi(self, name, model, ids):
-        if 'company_id' not in self.env[model]._fields or \
+        if 'force_company' in self._context or \
+                'company_id' not in self.env[model]._fields or \
                 name == 'company_id':
             return super(IrProperty, self).get_multi(name, model, ids)
         record_ids_by_company_id = self._get_record_ids_by_company_id(
@@ -31,7 +32,8 @@ class IrProperty(models.Model):
 
     @api.model
     def set_multi(self, name, model, values, default_value=None):
-        if 'company_id' not in self.env[model]._fields or \
+        if 'force_company' in self._context or \
+                'company_id' not in self.env[model]._fields or \
                 name == 'company_id':
             return super(IrProperty, self).set_multi(
                 name, model, values, default_value)

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010 Smile (<http://www.smile.fr>). All Rights Reserved
+#    Copyright (C) 2013 Smile (<http://www.smile.fr>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,33 +19,24 @@
 #
 ##############################################################################
 
-{
-    "name": "Audit Trail",
-    "version": "0.1",
-    "sequence": 100,
-    "category": "Tools",
-    "author": "Smile",
-    "license": 'AGPL-3',
-    "website": 'http://www.smile.fr',
-    "description": """
-This module lets administrator track every user operation on
-all the objects of the system
-(for the moment, only create, write and unlink methods).
+import sys
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
-    """,
-    "depends": [
-        'base',
-    ],
-    "data": [
-        'security/ir.model.access.csv',
-        'views/audit_rule_view.xml',
-        'views/audit_log_view.xml',
-    ],
-    "test": [
-        'test/audit_test.yml',
-    ],
-    'installable': True,
-    'auto_install': False,
-    'application': False,
-}
+from odoo.sql_db import Cursor, _logger
+from odoo.tools import ustr
+
+native_execute = Cursor.execute
+
+
+@Cursor.check
+def execute(self, query, params=None, log_exceptions=None):
+    try:
+        return native_execute(self, query, params, log_exceptions)
+    except Exception as e:
+        log_exceptions = log_exceptions is not None or \
+            self._default_log_exceptions
+        if log_exceptions:
+            _logger.error(ustr(e), exc_info=sys.exc_info())
+        raise
+
+
+Cursor.execute = execute

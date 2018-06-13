@@ -41,9 +41,15 @@ class ResUsers(models.Model):
     @api.model
     def search_users_with_commitment_authorizations(self,
                                                     amount_by_budget_post):
+        """ Call this method to get users having commitment authorization
+        @param amount_by_budget_post: dict with budget post id as key
+            and total amount to commit as value
+
+        @returns: set of user ids
+        """
         res = []
         cr = self._cr
-        for budget_post_id, amount in amount_by_budget_post.iteritems():
+        for budget_post_id, amount in amount_by_budget_post.items():
             if not budget_post_id:
                 continue
             cr.execute("SELECT user_id, amount_limit "

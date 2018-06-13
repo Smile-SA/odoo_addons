@@ -55,7 +55,8 @@ class BaseTest(TransactionCase):
         names = ['t1', 't2', 't3']
         vals_list = [{'name': name} for name in names]
         categories = self.model.bulk_create(vals_list)
-        self.assertEquals(3, len(categories), 'Three categories shoudl have been created!')
+        self.assertEquals(3, len(categories),
+                          'Three categories shoudl have been created!')
         self.assertListEqual(names, sorted(categories.mapped('name')),
                              'Names of the created categories are wrong!')
 
@@ -83,7 +84,8 @@ class BaseTest(TransactionCase):
         email = self._get_email()
         with config_to_enable_email_sending(False):
             email.send()
-            self.assertEquals('exception', email.state, 'Email should be in exception!')
+            self.assertEquals('exception', email.state,
+                              'Email should be in exception!')
 
     def test_enable_email_sending(self):
         """
@@ -91,7 +93,8 @@ class BaseTest(TransactionCase):
             I send an email
             I check that email was sent
         """
-        # I remove all outgoing mail server to be sure the exception will be raised
+        # I remove all outgoing mail server to be sure
+        # the exception will be raised
         self.env['ir.mail_server'].search([]).unlink()
         email = self._get_email()
         with config_to_enable_email_sending(True):
