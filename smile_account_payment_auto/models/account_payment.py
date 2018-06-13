@@ -22,7 +22,8 @@ class AccountPayment(models.Model):
     def _onchange_partner_and_payment_method(self):
         self.payment_mode = self.partner_id.payment_mode
         if self.partner_bank_required:
-            self.partner_bank_id = self.bank_ids and self.bank_ids[0]
+            self.partner_bank_id = self.partner_id.bank_ids and \
+                self.partner_id.bank_ids[0]
 
     @api.one
     @api.constrains('partner_bank_required', 'partner_bank_id')
