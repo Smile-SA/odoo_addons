@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="0">
+
+		<record id="view_talend_job_form" model="ir.ui.view">
+			<field name="name">talend.job.form</field>
+			<field name="model">talend.job</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<form string="Talend Job">
+                    <header>
+                        <button name="run" type="object" string="Run" class="oe_highlight"/>
+                        <button name="refresh_logs" type="object" string="Refresh logs" class="oe_link"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="archive_file" />
+                                <field name="context_file" />
+                            </group>
+                            <group>
+                                <field name="path" />
+                                <field name="args"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Logs">
+                                <field name="log_ids">
+                                    <tree>
+                                        <field name="create_date"/>
+                                        <field name="end_date"/>
+                                        <field name="logs"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_talend_job_tree" model="ir.ui.view">
+			<field name="name">talend.job.tree</field>
+			<field name="model">talend.job</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<tree string="Talend Jobs">
+					<field name="name"/>
+					<field name="path"/>
+					<field name="args"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_talend_jobs" model="ir.actions.act_window">
+			<field name="name">Talend Jobs</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">talend.job</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="menu_talend_job" action="action_talend_jobs" parent="base.menu_administration"/>
+
+	</data>
+</odoo>
