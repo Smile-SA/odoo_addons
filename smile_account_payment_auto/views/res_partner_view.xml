@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <group name="accounting_entries" position="after">
                 	<group name="payment" string="Payments"
-                            attrs="{'invisible': [('supplier', '=', True)]}">
+                            attrs="{'invisible': [('supplier', '=', False)]}">
                         <field name="payment_mode"
                         attrs="{'readonly': [('has_payments_in_progress', '=', True)]}"/>
                         <field name="payment_method_id" widget="selection"/>
