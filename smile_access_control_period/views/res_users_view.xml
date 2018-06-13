@@ -10,8 +10,14 @@
 			<field name="arch" type="xml">
 				<xpath expr="//page[1]" position="inside">
 					<separator colspan="4" string="Read-Only Period"/>
-					<field name="date_start" string="Start date"/>
-					<field name="date_stop" string="End date"/>
+                    <group>
+                        <group>
+                            <field name="date_start" string="From"/>
+                        </group>
+                        <group>
+                            <field name="date_stop" string="To"/>
+                        </group>
+                    </group>
 				</xpath>
 			</field>
 		</record>

@@ -29,8 +29,8 @@ msgstr " jusqu'au %s"
 
 #. module: smile_access_control_period
 #: model:ir.ui.view,arch_db:smile_access_control_period.view_res_user_form
-msgid "End date"
-msgstr "Date de fin"
+msgid "To"
+msgstr "au"
 
 #. module: smile_access_control_period
 #: model:ir.ui.view,arch_db:smile_access_control_period.view_res_user_form
@@ -49,8 +49,8 @@ msgstr "Date de début de lecture seule (date incluse)"
 
 #. module: smile_access_control_period
 #: model:ir.ui.view,arch_db:smile_access_control_period.view_res_user_form
-msgid "Start date"
-msgstr "Date de début"
+msgid "From"
+msgstr "Du"
 
 #. module: smile_access_control_period
 #: model:ir.model,name:smile_access_control_period.model_res_users
