@@ -22,101 +22,18 @@
 import logging
 import os
 import psutil
-import psycopg2
 import sys
 from threading import Thread
 
 from odoo import api, fields, models, SUPERUSER_ID
-from odoo.exceptions import UserError
 from odoo.tools.func import wraps
 
 from odoo.addons.smile_log.tools import SmileDBLogger
 
+from .impex_template import LOG_LEVELS
 from ..tools import s2human, with_impex_cursor
 
-LOG_LEVELS = [
-    (0, 'NOTSET'),
-    (10, 'DEBUG'),
-    (20, 'INFO'),
-    (30, 'WARNING'),
-    (40, 'ERROR'),
-    (50, 'CRITICAL'),
-]
-
-_logger = logging.getLogger(__package__)
-
-
-class IrModelImpexTemplate(models.AbstractModel):
-    _name = 'ir.model.impex.template'
-    _description = 'Import/Export Template'
-
-    name = fields.Char(size=64, required=True)
-    model_id = fields.Many2one('ir.model', 'Model', required=True, ondelete='cascade')
-    method = fields.Char(size=64, required=True, help='Arguments can be passed through Method args '
-                                                      'or received at import/export creation call')
-    method_args = fields.Char(help="Arguments passed as a dictionary\nExample: {'code': '705000'}")
-    cron_id = fields.Many2one('ir.cron', 'Scheduled Action', copy=False)
-    server_action_id = fields.Many2one('ir.actions.server', 'Server action', copy=False)
-    new_thread = fields.Boolean(default=True)
-    log_level = fields.Selection(LOG_LEVELS, default=20, required=True)
-    log_entry_args = fields.Boolean('Log entry arguments', default=True)
-    log_returns = fields.Boolean('Log returns')
-    one_at_a_time = fields.Boolean()
-
-    @api.multi
-    def _try_lock(self, warning=None):
-        self = self.filtered(lambda tmpl: tmpl.one_at_a_time)
-        if not self:
-            return
-        try:
-            self._cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
-                             (tuple(self.ids),), log_exceptions=False)
-        except psycopg2.OperationalError:
-            self._cr.rollback()  # INFO: Early rollback to allow translations to work for the user feedback
-            if warning:
-                raise UserError(warning)
-            raise
-
-    def _get_cron_vals(self, **kwargs):
-        vals = {
-            'ir_actions_server_id': self.server_action_id.id,
-            'numbercall': -1,
-        }
-        vals.update(kwargs)
-        return vals
-
-    @api.one
-    def create_cron(self, **kwargs):
-        self.create_server_action()
-        if not self.cron_id:
-            vals = self._get_cron_vals(**kwargs)
-            cron_id = self.env['ir.cron'].create(vals)
-            self.write({'cron_id': cron_id.id})
-        return True
-
-    def _get_server_action_vals(self, **kwargs):
-        model = self.env['ir.model'].search([('model', '=', self._name)], limit=1)
-        vals = {
-            'name': self.name,
-            'user_id': SUPERUSER_ID,
-            'model_id': model.id,
-            'state': 'code',
-        }
-        vals.update(kwargs)
-        return vals
-
-    @api.one
-    def create_server_action(self, **kwargs):
-        if not self.server_action_id:
-            vals = self._get_server_action_vals(**kwargs)
-            self.server_action_id = self.env['ir.actions.server'].create(vals)
-        return True
-
-    @api.one
-    def unlink_server_action(self):
-        if self.server_action_id:
-            self.server_action_id.unlink()
-        return True
+_logger = logging.getLogger(__name__)
 
 
 STATES = [
@@ -135,9 +52,11 @@ def state_cleaner(model):
             env = api.Environment(cr, SUPERUSER_ID, {})
             if model._name in env.registry.models:
                 Model = env[model._name]
-                cr.execute("select relname from pg_class where relname='%s'" % model._table)
+                cr.execute("select relname from pg_class "
+                           "where relname='%s'" % model._table)
                 if cr.rowcount:
-                    impex_infos = Model.search_read([('state', '=', 'running')], ['pid'], order='id')
+                    impex_infos = Model.search_read(
+                        [('state', '=', 'running')], ['pid'], order='id')
                     impex_ids = []
                     for impex in impex_infos:
                         if not psutil.pid_exists(impex['pid']):
@@ -175,10 +94,12 @@ class IrModelImpex(models.AbstractModel):
     from_date = fields.Datetime('Start date', readonly=True)
     to_date = fields.Datetime('End date', readonly=True)
     time = fields.Integer(compute='_get_time')
-    time_human = fields.Char('Time', compute='_convert_time_to_human', store=False)
+    time_human = fields.Char(
+        'Time', compute='_convert_time_to_human', store=False)
     test_mode = fields.Boolean('Test Mode', readonly=True)
     new_thread = fields.Boolean('New Thread', readonly=True)
-    state = fields.Selection(STATES, 'State', readonly=True, required=True, default='running')
+    state = fields.Selection(
+        STATES, 'State', readonly=True, required=True, default='running')
     pid = fields.Integer('Process Id', readonly=True)
     args = fields.Text('Arguments', readonly=True)
     log_level = fields.Selection(LOG_LEVELS)
@@ -190,7 +111,8 @@ class IrModelImpex(models.AbstractModel):
         res = []
         for record in self:
             if record.new_thread or record.test_mode:
-                thread = Thread(target=IrModelImpex._process_with_new_cursor, args=(self,))
+                thread = Thread(target=IrModelImpex._process_with_new_cursor,
+                                args=(self,))
                 thread.start()
                 res.append((record.id, True))
             else:
@@ -222,7 +144,10 @@ class IrModelImpex(models.AbstractModel):
         except Exception as e:
             logger.error(repr(e))
             try:
-                self.write({'state': 'exception', 'to_date': fields.Datetime.now()})
+                self.write({
+                    'state': 'exception',
+                    'to_date': fields.Datetime.now(),
+                })
             except Exception:
                 logger.warning("Cannot set import to exception")
             e.traceback = sys.exc_info()

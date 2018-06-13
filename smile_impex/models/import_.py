@@ -19,60 +19,11 @@
 #
 ##############################################################################
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 from odoo.modules.registry import Registry
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.smile_log.tools import SmileDBLogger
 from odoo.addons.smile_impex.models.impex import state_cleaner
-
-from ..tools import with_impex_cursor
-
-
-class IrModelImportTemplate(models.Model):
-    _name = 'ir.model.import.template'
-    _description = 'Import Template'
-    _inherit = 'ir.model.impex.template'
-
-    import_ids = fields.One2many('ir.model.import', 'import_tmpl_id', 'Imports', readonly=True, copy=False)
-    log_ids = fields.One2many('smile.log', 'res_id', 'Logs', domain=[('model_name', '=', 'ir.model.import.template')],
-                              readonly=True, copy=False)
-
-    def _get_server_action_vals(self, **kwargs):
-        vals = super(IrModelImportTemplate, self)._get_server_action_vals(**kwargs)
-        vals['code'] = "self.pool.get('ir.model.import.template').create_import(cr, uid, %d, context)" % (self.id,)
-        return vals
-
-    @api.multi
-    @with_impex_cursor()
-    def create_import(self, *args):
-        self._try_lock(_('Import already in progress'))
-        try:
-            import_rec = self._create_import(*args)
-        except Exception as e:
-            tmpl_logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
-            tmpl_logger.error(repr(e))
-            raise UserError(repr(e))
-        else:
-            return import_rec.process()
-
-    @api.multi
-    def _create_import(self, *args):
-        vals = self._get_import_vals(*args)
-        return self.env['ir.model.import'].create(vals)
-
-    @api.multi
-    def _get_import_vals(self, *args):
-        self.ensure_one()
-        return {
-            'import_tmpl_id': self.id,
-            'test_mode': self._context.get('test_mode'),
-            'new_thread': self._context.get('new_thread', self.new_thread),
-            'args': repr(args),
-            'log_level': self.log_level,
-            'log_returns': self.log_returns,
-        }
 
 
 class IrModelImport(models.Model):
@@ -88,10 +39,13 @@ class IrModelImport(models.Model):
             setattr(Registry, 'setup_models', state_cleaner(model)(
                 getattr(Registry, 'setup_models')))
 
-    import_tmpl_id = fields.Many2one('ir.model.import.template', 'Template', readonly=True, required=True,
-                                     ondelete='cascade', index=True)
-    log_ids = fields.One2many('smile.log', 'res_id', 'Logs', readonly=True,
-                              domain=[('model_name', '=', 'ir.model.import')])
+    import_tmpl_id = fields.Many2one(
+        'ir.model.import.template', 'Template',
+        readonly=True, required=True,
+        ondelete='cascade', index=True)
+    log_ids = fields.One2many(
+        'smile.log', 'res_id', 'Logs', readonly=True,
+        domain=[('model_name', '=', 'ir.model.import')])
 
     @api.multi
     def _execute(self):
@@ -100,6 +54,6 @@ class IrModelImport(models.Model):
         if self._context.get('original_cr'):
             new_env = self.env(cr=self._context['original_cr'])
             model_obj = model_obj.with_env(new_env)
-        args = eval(self.args or '[]')
-        kwargs = eval(self.import_tmpl_id.method_args or '{}')
+        args = safe_eval(self.args or '[]')
+        kwargs = safe_eval(self.import_tmpl_id.method_args or '{}')
         return getattr(model_obj, self.import_tmpl_id.method)(*args, **kwargs)

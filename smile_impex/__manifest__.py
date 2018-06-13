@@ -39,7 +39,8 @@ Features
         * a scheduled action to generate periodically a new import/export
     # Log execution exceptions
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & isabelle.richard@smile.fr
+Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+& isabelle.richard@smile.fr
     """,
     "summary": "",
     "website": "http://www.smile.fr",
