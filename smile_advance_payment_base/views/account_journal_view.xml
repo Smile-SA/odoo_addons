@@ -9,7 +9,8 @@
             <field name="arch" type="xml">
                 <data>
                     <field name="type" position="after">
-                        <field name="is_advance_payment"/>
+                        <field name="is_advance_payment"
+                            attrs="{'invisible': [('type', 'not in', ('bank', 'cash'))]}"/>
                     </field>
                     <field name="refund_sequence" position="before">
                         <field name="recovery_sequence_id"
