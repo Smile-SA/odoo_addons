@@ -52,9 +52,11 @@ class AccountPaymentRecovery(models.Model):
         self.ensure_one()
         date = self.invoice_id.date_invoice
         payment_journal = self.payment_id.journal_id
+        recovery_sequence = payment_journal.recovery_sequence_id or \
+            payment_journal.sequence_id
         return {
-            'name': payment_journal.recovery_sequence_id.
-            with_context(ir_sequence_date=date).next_by_id(),
+            'name': recovery_sequence.with_context(
+                ir_sequence_date=date).next_by_id(),
             'journal_id': payment_journal.id,
             'date': date,
             'ref': self.payment_id.communication or '',
