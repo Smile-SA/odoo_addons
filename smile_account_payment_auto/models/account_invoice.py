@@ -65,7 +65,8 @@ class AccountInvoice(models.Model):
     def _get_group_payment_key(self):
         self.ensure_one()
         return self.partner_id.id, \
-            self.partner_id.payment_mode, \
+            self.partner_id.payment_mode == 'I' and \
+            self.id or self.partner_id.payment_mode, \
             self.partner_id.payment_method_id.id, \
             self.partner_bank_id.id, \
             self.company_id.id
