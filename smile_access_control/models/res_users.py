@@ -52,6 +52,7 @@ class ResUsers(models.Model):
                                  default=_get_default_field_ids)
     is_update_users = fields.Boolean(string="Update users after creation", default=lambda *a: True,
                                      help="If non checked, users associated to this profile will not be updated after creation")
+    users_count = fields.Integer(compute='_compute_users_count')
 
     _sql_constraints = [
         ('active_admin_check', 'CHECK (id = 1 AND active = TRUE OR id <> 1)',
@@ -67,6 +68,10 @@ class ResUsers(models.Model):
         admin = self.env.ref('base.user_root')
         if self.user_profile_id == admin:
             raise ValidationError(_("You can't use %s as user profile !") % admin.name)
+
+    @api.one
+    def _compute_users_count(self):
+        self.users_count = len(self.user_ids)
 
     @api.onchange('is_user_profile')
     def onchange_user_profile(self):
