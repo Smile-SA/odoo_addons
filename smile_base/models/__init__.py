@@ -19,15 +19,18 @@
 #
 ##############################################################################
 
+from . import api
+from . import base
 from . import env_ribbon
 from . import fetchmail
 from . import ir_actions
 from . import ir_config_parameter
 from . import ir_mail_server
+from . import ir_module_module
 from . import language
 from . import mail_mail
 from . import mail_template
-from . import models
 from . import module
 from . import registry
+from . import sql_db
 from . import update
