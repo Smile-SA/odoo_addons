@@ -84,6 +84,11 @@ msgid "Execution Mode"
 msgstr "Mode d'exécution"
 
 #. module: smile_asynchronous_report
+#: model:ir.model.fields,field_description:smile_asynchronous_report.field_ir_act_report_xml_cron_id
+msgid "Scheduled Action"
+msgstr "Action planifiée"
+
+#. module: smile_asynchronous_report
 #: model:ir.model.fields,field_description:smile_asynchronous_report.field_ir_actions_report_execution_user_ids
 msgid "Followers"
 msgstr "Abonnés"
