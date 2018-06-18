@@ -30,3 +30,9 @@ class ResPartner(models.Model):
     def _has_payments_in_progress(self):
         self.has_payments_in_progress = \
             'progress_paid' in self.mapped('invoice_ids.state')
+
+    @api.model
+    def create(self, vals):
+        if 'payment_method_id' in vals and not vals['payment_method_id']:
+            del vals['payment_method_id']
+        return super(ResPartner, self).create(vals)

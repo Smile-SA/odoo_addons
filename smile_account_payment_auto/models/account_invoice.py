@@ -13,14 +13,15 @@ class AccountInvoice(models.Model):
         related='partner_id.payment_method_id.partner_bank_required',
         readonly=True, store=True)
     partner_bank_id = fields.Many2one(
-        'res.partner.bank', 'Bank Account', readonly=True,
         states={'draft': [('readonly', False)], 'open': [('readonly', False)]})
 
-    @api.onchange('partner_id')
-    def _onchange_partner(self):
+    @api.onchange('partner_id', 'company_id')
+    def _onchange_partner_id(self):
+        res = super(AccountInvoice, self)._onchange_partner_id()
         if self.partner_bank_required:
             self.partner_bank_id = self.partner_id.bank_ids and \
                 self.partner_id.bank_ids[0]
+        return res
 
     @api.multi
     def set_to_progress_paid(self):
