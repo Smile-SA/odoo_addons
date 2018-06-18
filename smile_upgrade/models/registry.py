@@ -22,7 +22,6 @@
 import inspect
 import logging
 import os
-import sys
 import time
 
 from odoo import tools
@@ -80,11 +79,10 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                 os._exit(0)
             return registry
         except Exception as e:
-            e.traceback = sys.exc_info()
             if upgrades and config.get('stop_after_upgrades'):
                 msg = isinstance(e, (osv.except_osv, orm.except_orm)) and \
                     e.value or e
-                _logger.error(tools.ustr(msg), exc_info=e.traceback)
+                _logger.error(tools.ustr(msg), exc_info=True)
                 _logger.critical('Upgrade FAILED')
                 _logger.info('Stopping Odoo server')
                 os._exit(1)
