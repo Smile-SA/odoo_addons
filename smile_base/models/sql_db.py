@@ -19,10 +19,9 @@
 #
 ##############################################################################
 
-import sys
+import traceback
 
 from odoo.sql_db import Cursor, _logger
-from odoo.tools import ustr
 
 native_execute = Cursor.execute
 
@@ -32,10 +31,8 @@ def execute(self, query, params=None, log_exceptions=None):
     try:
         return native_execute(self, query, params, log_exceptions)
     except Exception as e:
-        log_exceptions = log_exceptions is not None or \
-            self._default_log_exceptions
-        if log_exceptions:
-            _logger.error(ustr(e), exc_info=sys.exc_info())
+        _logger.error('Traceback (most recent call last):\n' + ''.join(
+            traceback.format_stack()))
         raise
 
 
