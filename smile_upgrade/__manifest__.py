@@ -60,6 +60,8 @@ Configuration
         Content: dictonary with the following keys:
             * version
             * databases: let's empty if valid for all databases
+            * translations_to_reload: language codes list to reload
+            in post-load
             * description
             * modules_to_install_at_creation: modules list to install
             at database creation

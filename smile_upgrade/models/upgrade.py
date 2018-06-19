@@ -165,6 +165,19 @@ class UpgradeManager(object):
             for upgrade in self.upgrades:
                 upgrade.load_files(cr, 'post-load')
 
+    def reload_translations(self):
+        languages = []
+        for upgrade in self.upgrades:
+            languages += upgrade.translations_to_reload
+        if languages:
+            with api.Environment.manage():
+                with self.db.cursor() as cr:
+                    context = {'overwrite': True}
+                    env = api.Environment(cr, SUPERUSER_ID, context)
+                    for lang in languages:
+                        env['base.language.install'].create(
+                            {'lang': lang}).lang_install()
+
 
 class Upgrade(object):
     """Upgrade
@@ -183,6 +196,7 @@ class Upgrade(object):
         default_values = {
             'version': '',
             'databases': [],
+            'translations_to_reload': [],
             'modules_to_upgrade': [],
             'modules_to_install_at_creation': [],
             'pre-load': [],
