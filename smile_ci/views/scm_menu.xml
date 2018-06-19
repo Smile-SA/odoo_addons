@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <!-- App entry -->
+    <menuitem id="smile_scm.menu_main_scm" name="Integration"/>
+
+    <!-- App menus -->
+    <menuitem id="menu_scm_builds" name="Builds" parent="smile_scm.menu_main_scm" sequence="10"/>
+
+    <!-- Sub-menus of Builds -->
+    <menuitem id="menu_repository_branch_build" parent="menu_scm_builds" action="action_repository_branch_build"
+      sequence="10"/>
+    <menuitem id="menu_scm_builds_logs" name="Logs" parent="menu_scm_builds" sequence="20"/>
+
+    <!-- Sub-menus of Builds/Logs -->
+    <menuitem id="menu_repository_branch_build_test_log" parent="menu_scm_builds_logs" action="action_repository_branch_build_test_log"
+      sequence="10"/>
+    <menuitem id="menu_repository_branch_build_quality_log" parent="menu_scm_builds_logs" action="action_repository_branch_build_quality_log"
+      sequence="20"/>
+    <menuitem id="menu_repository_branch_build_coverage" parent="menu_scm_builds_logs" action="action_repository_branch_build_coverage"
+      sequence="30" />
+
+    <!-- Sub-menus of Configuration/Parameters -->
+    <menuitem id="menu_docker_host" parent="smile_scm.menu_scm_config_params" action="smile_docker.action_docker_host" sequence="1"/>
+    <menuitem id="menu_docker_registry" parent="smile_scm.menu_scm_config_params" action="smile_docker.action_docker_registry" sequence="4"/>
+    <menuitem id="menu_docker_image" parent="smile_scm.menu_scm_config_params" action="smile_docker.action_docker_image" sequence="7"/>
+
+    <menuitem id="menu_scm_os" parent="smile_scm.menu_scm_config_params" action="action_scm_os" sequence="13"/>
+
+    <act_window name="Scheduled Actions" res_model="ir.cron" id="action_ir_cron" domain="['|', ('model', 'like', 'docker.'), ('model', 'like', 'scm.')]"/>
+    <menuitem id="menu_ir_cron" parent="smile_scm.menu_scm_config_params" action="action_ir_cron" sequence="17"/>
+    <act_window name="System Parameters" res_model="ir.config_parameter" id="action_config_parameter" domain="[('key', 'like', 'ci.')]"/>
+    <menuitem id="menu_config_parameter" parent="smile_scm.menu_scm_config_params" action="action_config_parameter" sequence="18"/>
+
+  </data>
+</odoo>

@@ -1,0 +1,45 @@
+FROM debian:9
+MAINTAINER Smile <erp@smile.fr>
+
+# Set locale
+ENV LANG C.UTF-8
+
+# Install packages required to:
+# * install Python packages via PyPi: python3-pip
+# * install Node.js packages: npm
+# * check code quality: cloc
+# * download and install wkhtmltopdf
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates curl gnupg sudo cloc \
+    python3-coverage python3-pip python3-setuptools python3-renderpm libssl1.0-dev xz-utils \
+    && curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - \
+    && apt-get install -y nodejs \
+    && curl -o wkhtmltox.tar.xz -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
+    && echo '3f923f425d345940089e44c1466f6408b9619562 wkhtmltox.tar.xz' | sha1sum -c - \
+    && tar xvf wkhtmltox.tar.xz \
+    && cp wkhtmltox/lib/* /usr/local/lib/ \
+    && cp wkhtmltox/bin/* /usr/local/bin/ \
+    && cp -r wkhtmltox/share/man/man1 /usr/local/share/man/
+
+# Install Odoo requirements, recommandations and specific packages
+RUN apt-get install -y %(system_packages)s
+
+# Install PyPI requirements
+RUN pip3 install -q flake8 unittest2 %(pip_packages)s
+
+# Install Node.js requirements
+RUN npm install -g %(npm_packages)s
+
+# Create Odoo user and sources directory
+RUN adduser odoo --disabled-password
+RUN mkdir -p %(odoo_dir)s
+RUN chown odoo:odoo %(odoo_dir)s
+
+# Install specific system requirements
+RUN apt-get install -y %(specific_system_packages)s
+
+# Install specific PyPI packages
+RUN pip3 install -q %(specific_pip_packages)s
+
+# Install specific Node.js requirements
+RUN npm install -g %(specific_npm_packages)s

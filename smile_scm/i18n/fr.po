@@ -1,0 +1,476 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_scm
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-02 14:44+0000\n"
+"PO-Revision-Date: 2016-12-02 14:44+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_scm
+#: code:addons/smile_scm/tools/osutil.py:58
+#, python-format
+msgid "%s FAILED\n"
+"from %s\n"
+"\n"
+"%s"
+msgstr "%s EN ECHEC\n"
+"depuis %s\n"
+"\n"
+"%s"
+
+#. module: smile_scm
+#: code:addons/smile_scm/models/scm_repository.py:41
+#, python-format
+msgid "%s copy"
+msgstr "%s copy"
+
+#. module: smile_scm
+#: code:addons/smile_scm/models/scm_repository_branch.py:82
+#, python-format
+msgid "%s doesn't exist or is not a directory"
+msgstr "%s n'existe pasou n'est pas un répertoire"
+
+#. module: smile_scm
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_form
+msgid "<span class=\"o_stat_text\">Repository</span>"
+msgstr "<span class=\"o_stat_text\">Dépôt</span>"
+
+#. module: smile_scm
+#: model:ir.actions.act_window,help:smile_scm.action_dashboard
+msgid "<strong>No data to display.</strong>"
+msgstr "<strong>Aucune donnée à afficher.</strong>"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_active
+msgid "Active"
+msgstr "Active"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_attachment_ids
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_attachment_scm_repository_branch_ids
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag_attachment_ids
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_attachment_ids
+#: model:ir.model.fields,field_description:smile_scm.field_scm_version_attachment_ids
+msgid "Attachments"
+msgstr "Pièces jointes"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_auto_create_branches
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_auto_create_branches
+msgid "Auto create branches"
+msgstr "Créer automatiquement les branches"
+
+#. module: smile_scm
+#: model:ir.model,name:smile_scm.model_scm_repository_branch
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_branch
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_form
+msgid "Branch"
+msgstr "Branche"
+
+#. module: smile_scm
+#: code:addons/smile_scm/models/scm_repository_branch.py:115
+#, python-format
+msgid "Branch cloned"
+msgstr "Branche clonée"
+
+#. module: smile_scm
+#: model:ir.actions.act_window,name:smile_scm.action_repository_branch
+#: model:ir.actions.act_window,name:smile_scm.action_repository_branches
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_branch_ids
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_ids
+#: model:ir.ui.menu,name:smile_scm.menu_repository_branch
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_kanban
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_search
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_simple_tree
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_tree
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_form
+msgid "Branches"
+msgstr "Branches"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_branches_count
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branches_count
+msgid "Branches Count"
+msgstr "Nombre de branches"
+
+#. module: smile_scm
+#: model:ir.actions.act_window,name:smile_scm.action_dashboard
+msgid "Builds"
+msgstr "Builds"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_cmd_clone
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_form
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_simple_tree
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_tree
+msgid "Clone"
+msgstr "Cloner"
+
+#. module: smile_scm
+#: selection:scm.repository.branch,state:0
+msgid "Cloned"
+msgstr "Clonée"
+
+#. module: smile_scm
+#: code:addons/smile_scm/models/scm_repository_branch.py:98
+#, python-format
+msgid "Cloning already in progress"
+msgstr "Clonage déjà en cours"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag_color
+msgid "Color"
+msgstr "Couleur"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_cmd
+msgid "Command"
+msgstr "Commande"
+
+#. module: smile_scm
+#: model:ir.ui.menu,name:smile_scm.menu_scm_config
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: smile_scm
+#: model:ir.module.category,name:smile_scm.module_category_scm
+msgid "Continuous Integration"
+msgstr "Intégration continue"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_create_uid
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_create_uid
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag_create_uid
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_create_uid
+#: model:ir.model.fields,field_description:smile_scm.field_scm_version_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_create_date
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_create_date
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag_create_date
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_create_date
+#: model:ir.model.fields,field_description:smile_scm.field_scm_version_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_scm
+#: model:ir.ui.menu,name:smile_scm.menu_scm_dashboard
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_default_branch
+msgid "Default branch"
+msgstr "Branche par défaut"
+
+#. module: smile_scm
+#: model:ir.model.fields,help:smile_scm.field_scm_repository_auto_create_branches
+#: model:ir.model.fields,help:smile_scm.field_scm_repository_branch_auto_create_branches
+msgid "Define a default branch template to auto-create branches"
+msgstr "Définir une branche comme modèle par défaut afin de pouvoir créer automatiquement les autres branches"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_directory
+msgid "Directory"
+msgstr "Répertoire"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_display_name
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_display_name
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag_display_name
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_display_name
+#: model:ir.model.fields,field_description:smile_scm.field_scm_version_display_name
+msgid "Display Name"
+msgstr "Afficher le nom"
+
+#. module: smile_scm
+#: model:ir.actions.act_window,help:smile_scm.action_dashboard
+msgid "Got to \"Configuration &gt; Branches\" and force test."
+msgstr "Se rendre au sein du menu \"Configuration &gt; Branches\" et forcer le test."
+
+#. module: smile_scm
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_search
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_search
+msgid "Group By..."
+msgstr "Regrouper par..."
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_has_branch_done
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_has_branch_done
+msgid "Has at least a branch done"
+msgstr "Dispose d'au moins une branche terminée"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_id
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_id
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag_id
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_id
+#: model:ir.model.fields,field_description:smile_scm.field_scm_version_id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_scm
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_form
+msgid "Information"
+msgstr "Information"
+
+#. module: smile_scm
+#: model:ir.ui.menu,name:smile_scm.menu_main_scm
+msgid "Source Code"
+msgstr "Code source"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository___last_update
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch___last_update
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag___last_update
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs___last_update
+#: model:ir.model.fields,field_description:smile_scm.field_scm_version___last_update
+msgid "Last Modified on"
+msgstr "Dernière Modification le"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_write_uid
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag_write_uid
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_write_uid
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_write_uid
+#: model:ir.model.fields,field_description:smile_scm.field_scm_version_write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_write_date
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag_write_date
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_write_date
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_write_date
+#: model:ir.model.fields,field_description:smile_scm.field_scm_version_write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_last_update
+msgid "Last update"
+msgstr "Dernière mise à jour"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_cmd_list
+msgid "List branches"
+msgstr "Lister des branches"
+
+#. module: smile_scm
+#: model:res.groups,name:smile_scm.group_scm_manager
+msgid "Manager"
+msgstr "Gestionnaire"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_name
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_name
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag_name
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_name
+#: model:ir.model.fields,field_description:smile_scm.field_scm_version_name
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_form
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_form
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_scm
+#: selection:scm.repository.branch,state:0
+msgid "Not cloned"
+msgstr "Non clonée"
+
+#. module: smile_scm
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_kanban
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: smile_scm
+#: model:ir.model,name:smile_scm.model_scm_version
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_version_id
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_search
+msgid "Odoo Version"
+msgstr "Version d'Odoo"
+
+#. module: smile_scm
+#: model:ir.actions.act_window,name:smile_scm.action_odoo_version
+#: model:ir.ui.menu,name:smile_scm.menu_odoo_version
+#: model:ir.ui.view,arch_db:smile_scm.view_odoo_version_tree
+msgid "Odoo Versions"
+msgstr "Versions d'Odoo"
+
+#. module: smile_scm
+#: sql_constraint:scm.version:0
+msgid "Odoo version must be unique"
+msgstr "Une version doit être unique"
+
+#. module: smile_scm
+#: model:scm.repository.tag,name:smile_scm.tag_official
+msgid "Official"
+msgstr "Officiel"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_partner_id
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_partner_id
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_search
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_search
+msgid "Owner"
+msgstr "Propriétaire"
+
+#. module: smile_scm
+#: model:ir.ui.menu,name:smile_scm.menu_scm_config_params
+msgid "Parameters"
+msgstr "Paramètres"
+
+#. module: smile_scm
+#: model:scm.repository.tag,name:smile_scm.tag_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_scm
+#: code:addons/smile_scm/models/scm_repository_branch.py:101
+#, python-format
+msgid "Please define a branch before cloning"
+msgstr "Merci de définir une branche avant le clonage"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_cmd_pull
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_form
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_simple_tree
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_tree
+msgid "Pull"
+msgstr "Mette à jour"
+
+#. module: smile_scm
+#: model:res.groups,name:smile_scm.group_scm_reader
+msgid "Reader"
+msgstr "Lecteur"
+
+#. module: smile_scm
+#: model:ir.actions.act_window,name:smile_scm.action_repository
+#: model:ir.ui.menu,name:smile_scm.menu_repository
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_search
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_tree
+msgid "Repositories"
+msgstr "Dépôts"
+
+#. module: smile_scm
+#: code:addons/smile_scm/models/scm_repository_branch.py:166
+#: model:ir.model,name:smile_scm.model_scm_repository
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_repository_id
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_search
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_form
+#, python-format
+msgid "Repository"
+msgstr "Dépôt"
+
+#. module: smile_scm
+#: model:ir.model,name:smile_scm.model_scm_repository_tag
+msgid "Repository Tag"
+msgstr "Etiquette"
+
+#. module: smile_scm
+#: model:ir.actions.act_window,name:smile_scm.action_repository_tag
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_tag_tree
+msgid "Repository Tags"
+msgstr "Etiquettes"
+
+#. module: smile_scm
+#: sql_constraint:scm.repository:0
+msgid "Repository URL must be unique"
+msgstr "L'URL d'un dépôt doit être unique"
+
+#. module: smile_scm
+#: sql_constraint:scm.repository.branch:0
+msgid "Repository branch must be unique"
+msgstr "Une branche d'un dépôt doit être unique"
+
+#. module: smile_scm
+#: sql_constraint:scm.repository.tag:0
+msgid "Repository tag must be unique"
+msgstr "Une étiquette doit être unique"
+
+#. module: smile_scm
+#: model:scm.repository.tag,name:smile_scm.tag_smile
+msgid "Smile"
+msgstr "Smile"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_state
+msgid "Status"
+msgstr "Statut"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_tag_ids
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag_ids
+msgid "Tags"
+msgstr "Etiquettes"
+
+#. module: smile_scm
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_form
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_form
+msgid "Tags..."
+msgstr "Etiquettes..."
+
+#. module: smile_scm
+#: model:ir.model.fields,help:smile_scm.field_scm_repository_branch_branch
+msgid "Technical branch name"
+msgstr "Nom technique de la branche"
+
+#. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_url
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_url
+msgid "Url"
+msgstr "Url"
+
+#. module: smile_scm
+#: model:res.groups,name:smile_scm.group_scm_user
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: smile_scm
+#: sql_constraint:scm.vcs:0
+msgid "VCS must be unique"
+msgstr "Un gestionnaire de sources doit être unique"
+
+#. module: smile_scm
+#: model:ir.model,name:smile_scm.model_scm_vcs
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_vcs_id
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_vcs_id
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_search
+msgid "Version Control System"
+msgstr "Gestionnaire de sources"
+
+#. module: smile_scm
+#: model:ir.actions.act_window,name:smile_scm.action_vcs
+#: model:ir.ui.menu,name:smile_scm.menu_vcs
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_search
+#: model:ir.ui.view,arch_db:smile_scm.view_vcs_tree
+msgid "Version Control Systems"
+msgstr "Gestionnaires de sources"
+
+#. module: smile_scm
+#: code:addons/smile_scm/models/scm_repository_branch.py:103
+#, python-format
+msgid "You cannot clone a branch already cloned"
+msgstr "Vous ne pouvez pas re-cloner une branche déjà clonée"
+
+#. module: smile_scm
+#: code:addons/smile_scm/models/scm_repository_branch.py:122
+#, python-format
+msgid "You cannot pull a branch not cloned"
+msgstr "Vous ne pouvez pas mettre à jour une branche non clonée"
+
+#. module: smile_scm
+#: code:addons/smile_scm/models/scm_repository.py:48
+#, python-format
+msgid "You must define a first branch for repository %s before listing all of them"
+msgstr "Vous devez définir une première branche pour le dépôt %s avant de pouvoir lister l'ensemble d'entre elles"

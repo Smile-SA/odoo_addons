@@ -1,0 +1,619 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_docker
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-12 10:07+0000\n"
+"PO-Revision-Date: 2016-12-12 10:07+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_docker
+#: code:addons/smile_docker/tools/osutil.py:64
+#, python-format
+msgid "%s FAILED\n"
+"from %s\n"
+"\n"
+"%s"
+msgstr "%s en échec\n"
+"depuis %s\n"
+"\n"
+"%s"
+
+#. module: smile_docker
+#: code:addons/smile_docker/models/docker_registry.py:65
+#, python-format
+msgid "%s copy"
+msgstr "%s copy"
+
+#. module: smile_docker
+#: code:addons/smile_docker/models/docker_host.py:53
+#, python-format
+msgid "%s doesn't exist or is not a directory"
+msgstr "%s n'existe pas ou ne correspond pas à un répertoire"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_form
+msgid "/path/to/ca.pem"
+msgstr "/path/to/ca.pem"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_form
+msgid "/path/to/client-cert.pem"
+msgstr "/path/to/client-cert.pem"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_form
+msgid "/path/to/client-key.pem"
+msgstr "/path/to/client-key.pem"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_form
+msgid "<span class=\"o_stat_text\">Current Stats</span>"
+msgstr "<span class=\"o_stat_text\">Stats courantes</span>"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_form
+msgid "<span class=\"o_stat_text\">History Stats</span>"
+msgstr "<span class=\"o_stat_text\">Historique des stats</span>"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_version
+msgid "API version"
+msgstr "API version"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_registry_form
+msgid "Access"
+msgstr "Accès"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_active
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_active
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_active
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_container_auto_run
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_container_auto_run
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_auto_run
+msgid "Auto-run"
+msgstr "Auto-run"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_base_image_id
+msgid "Main image"
+msgstr "Image principale"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_base_url
+msgid "Base url"
+msgstr "URL"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_build_build_directory
+#: model:ir.model.fields,field_description:smile_docker.field_docker_container_build_directory
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_build_directory
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_container_build_directory
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_build_directory
+msgid "Build directory"
+msgstr "Répertoire"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_build_on_the_fly
+msgid "Build on the fly"
+msgstr "Créer à la volée"
+
+#. module: smile_docker
+#: code:addons/smile_docker/models/docker_host.py:253
+#, python-format
+msgid "Building image %s failed\n"
+"\n"
+"%s"
+msgstr "Création de l'image %s en échec\n"
+"\n"
+"%s"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_tls_ca_cert
+msgid "CA certificate"
+msgstr "Certtificat de l'AC"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_tls_cert
+msgid "Client certificate"
+msgstr "Certificat"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_tls_key
+msgid "Client key"
+msgstr "Clé privée"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_stats_form
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_registry_images_form
+msgid "Close"
+msgstr "Fermer"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_image_form
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_configfile
+msgid "Configuration file"
+msgstr "Fichier de configuration"
+
+#. module: smile_docker
+#: sql_constraint:docker.registry:0
+msgid "Container name must be unique per docker host"
+msgstr "Le nom du conteneur doit être unique pour un hôte Docker donné"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_create_uid
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_create_uid
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_create_uid
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_create_date
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_create_date
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_create_date
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_tree
+msgid "Current stats"
+msgstr "Stats courantes"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_volume_from
+msgid "Data volume"
+msgstr "Volume de données"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_default_environment
+msgid "Default environment"
+msgstr "Environnement par défaut"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_default_host_config
+msgid "Default host config"
+msgstr "Configuration par défaut"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_build_display_name
+#: model:ir.model.fields,field_description:smile_docker.field_docker_container_display_name
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_display_name
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_container_display_name
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_display_name
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_display_name
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_display_name
+msgid "Display Name"
+msgstr "Afficher le nom"
+
+#. module: smile_docker
+#: model:ir.module.category,name:smile_docker.module_category_docker
+msgid "Docker"
+msgstr "Docker"
+
+#. module: smile_docker
+#: model:ir.model,name:smile_docker.model_docker_build
+msgid "Docker Build"
+msgstr "Docker Build"
+
+#. module: smile_docker
+#: model:ir.model,name:smile_docker.model_docker_container
+msgid "Docker Container"
+msgstr "Docker Container"
+
+#. module: smile_docker
+#: model:ir.model,name:smile_docker.model_docker_host
+msgid "Docker Host"
+msgstr "Docker Host"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_form
+msgid "Docker Host"
+msgstr "Hôte Docker"
+
+#. module: smile_docker
+#: code:addons/smile_docker/models/docker_host.py:452
+#, python-format
+msgid "Docker Host Stats"
+msgstr "Docker Host Stats"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_stats_form
+#, python-format
+msgid "Docker Host Stats"
+msgstr "Stats"
+
+#. module: smile_docker
+#: model:ir.actions.act_window,name:smile_docker.action_docker_host
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_tree
+msgid "Docker Hosts"
+msgstr "Hôtes Docker"
+
+#. module: smile_docker
+#: model:ir.model,name:smile_docker.model_docker_image
+msgid "Docker Image"
+msgstr "Docker Image"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_image_form
+msgid "Docker Image"
+msgstr "Image Docker"
+
+#. module: smile_docker
+#: model:ir.actions.act_window,name:smile_docker.action_docker_image
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_image_tree
+msgid "Docker Images"
+msgstr "Images Docker"
+
+#. module: smile_docker
+#: model:ir.model,name:smile_docker.model_docker_link
+msgid "Docker Link"
+msgstr "Docker Link"
+
+#. module: smile_docker
+#: model:ir.actions.act_window,name:smile_docker.action_docker_registry
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_registry_tree
+msgid "Docker Registries"
+msgstr "Registres Docker"
+
+#. module: smile_docker
+#: model:ir.model,name:smile_docker.model_docker_registry
+msgid "Docker Registry"
+msgstr "Docker Registry"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_registry_form
+msgid "Docker Registry"
+msgstr "Registre Docker"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_registry_images_form
+msgid "Docker Registry Images"
+msgstr "Images présentes au sein du registre Docker"
+
+#. module: smile_docker
+#: model:ir.model,name:smile_docker.model_docker_image_container
+msgid "Docker Service"
+msgstr "Docker Service"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_container_docker_container
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_container_docker_container
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_docker_container
+msgid "Docker container"
+msgstr "Conteneur Docker"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_build_docker_host_id
+#: model:ir.model.fields,field_description:smile_docker.field_docker_container_docker_host_id
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_container_docker_host_id
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_docker_host_id
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_docker_host_id
+msgid "Docker host"
+msgstr "Hôte Docker"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_build_docker_image
+#: model:ir.model.fields,field_description:smile_docker.field_docker_container_docker_image
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_container_image_id
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_docker_image
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_docker_image
+msgid "Docker image"
+msgstr "Image Docker"
+
+#. module: smile_docker
+#: sql_constraint:docker.image:0
+msgid "Docker image must be unique by Docker registry"
+msgstr "L'image Docker doit etre unique pour un registre Docker donné"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_registry_images_form
+msgid "Docker images in"
+msgstr "Images Docker au sein de"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_docker_registry_id
+msgid "Docker registry"
+msgstr "Registre Docker"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_container_docker_image
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_docker_registry_image
+msgid "Docker registry image"
+msgstr "Image Docker"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_build_dockerfile
+#: model:ir.model.fields,field_description:smile_docker.field_docker_container_dockerfile
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_container_dockerfile
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_dockerfile
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_dockerfile
+msgid "Dockerfile"
+msgstr "Dockerfile"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_environment
+msgid "Environment"
+msgstr "Environnement"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_tree
+msgid "History stats"
+msgstr "Historique des stats"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_host_config
+msgid "Host config"
+msgstr "Configuration"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_build_id
+#: model:ir.model.fields,field_description:smile_docker.field_docker_container_id
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_id
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_container_id
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_id
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_id
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_docker
+#: code:addons/smile_docker/models/docker_image.py:106
+#, python-format
+msgid "Image storing in registry already in progress"
+msgstr "Sauvegarde de l'image au sein du registre déjà en cours"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_images
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_images_count
+msgid "Images in registry"
+msgstr "Images au sein du registre"
+
+#. module: smile_docker
+#: model:ir.model.fields,help:smile_docker.field_docker_host_timeout
+msgid "In seconds"
+msgstr "En secondes"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_is_in_registry
+msgid "Is in registry"
+msgstr "Présente au sein du registre"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_build___last_update
+#: model:ir.model.fields,field_description:smile_docker.field_docker_container___last_update
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host___last_update
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image___last_update
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_container___last_update
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link___last_update
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry___last_update
+msgid "Last Modified on"
+msgstr "Dernière Modification le"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_write_uid
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_write_uid
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_write_uid
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_write_date
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_write_date
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_write_date
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_stats
+msgid "Last stats"
+msgstr "Dernières stats"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_image_form
+msgid "Linked Services"
+msgstr "Services liés"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_linked_image_id
+msgid "Linked image"
+msgstr "Image liée"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_link_ids
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_image_form
+msgid "Linked services"
+msgstr "Services liés"
+
+#. module: smile_docker
+#: model:res.groups,name:smile_docker.group_docker_manager
+msgid "Manager"
+msgstr "Gestionnaire"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_build_name
+#: model:ir.model.fields,field_description:smile_docker.field_docker_container_name
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_container_name
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_name
+#: model:ir.model.fields,field_description:smile_docker.field_docker_link_name
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_name
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_docker
+#: sql_constraint:docker.image:0
+msgid "Name must be unique"
+msgstr "Le nom doit être unique"
+
+#. module: smile_docker
+#: code:addons/smile_docker/models/docker_host.py:60
+#, python-format
+msgid "No docker host is configured"
+msgstr "Aucun hôte Docker configuré"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_registry_form
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_registry_tree
+msgid "Open"
+msgstr "Ouvrir"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_password
+msgid "Password"
+msgstr "Mot de passe"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_port
+msgid "Port"
+msgstr "Port"
+
+#. module: smile_docker
+#: model:res.groups,name:smile_docker.group_docker_reader
+msgid "Reader"
+msgstr "Lecteur"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_stats_form
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_registry_images_form
+msgid "Refresh"
+msgstr "Rafraîchir"
+
+#. module: smile_docker
+#: sql_constraint:docker.registry:0
+msgid "Registry port must be unique per docker host"
+msgstr "Le port d'un registre doit être unique pour un hôte Docker donné"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_stats_containers
+msgid "Running containers"
+msgstr "Conteneurs actifs"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_form
+msgid "Security"
+msgstr "Sécurité"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_sequence
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_sequence
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_sequence
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_registry_tree
+msgid "Show images in registry"
+msgstr "Voir les images présentes au sein du registre"
+
+#. module: smile_docker
+#: code:addons/smile_docker/models/docker_container.py:200
+#: code:addons/smile_docker/models/docker_host.py:143
+#, python-format
+msgid "Starting container %s failed\n"
+"\n"
+"%s"
+msgstr "Démarrage du conteneur %s en échec\n"
+"\n"
+"%s"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_stats_date
+msgid "Stats date"
+msgstr "Date"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_registry_form
+msgid "Stored images"
+msgstr "Images sauvegardées"
+
+#. module: smile_docker
+#: code:addons/smile_docker/models/docker_registry.py:204
+#, python-format
+msgid "The image deletion is unsupported. Please add the following lines in the registry config file\n"
+"storage:\n"
+"  delete: true"
+msgstr "La suppression des images n'est pas supportée. Merci d'ajouter les lignes suivantes au sein du fichier de configuration du registre\n"
+"storage:\n"
+"  delete: true"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_timeout
+msgid "Timeout"
+msgstr "Timeout"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_tls
+msgid "Tls"
+msgstr "TLS"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_url
+msgid "URL"
+msgstr "URL"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_image_form
+msgid "Update image in registry"
+msgstr "Mettre à jour l'image au sein du registre"
+
+#. module: smile_docker
+#: model:res.groups,name:smile_docker.group_docker_user
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_registry_username
+msgid "Username"
+msgstr "Nom d’utilisateur"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_host_tls_verify
+msgid "Verify"
+msgstr "Vérifier"
+
+#. module: smile_docker
+#: model:ir.model.fields,field_description:smile_docker.field_docker_image_with_persistent_storage
+msgid "With persistent storage"
+msgstr "Stockage persistent des données inclus"
+
+#. module: smile_docker
+#: code:addons/smile_docker/models/docker_link.py:29
+#, python-format
+msgid "You cannot create recursive linked services."
+msgstr "Vous ne pouvez pas créer de services récursifs."
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_host_stats_form
+msgid "running containers on"
+msgstr "conteneurs actifs sur"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_image_form
+msgid "{'ENV_VAR': 'env_value'}"
+msgstr "{'ENV_VAR': 'env_value'}"
+
+#. module: smile_docker
+#: model:ir.ui.view,arch_db:smile_docker.view_docker_image_form
+msgid "{'mem_limit': '1G'}"
+msgstr "{'mem_limit': '1G'}"

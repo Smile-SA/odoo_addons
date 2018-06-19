@@ -1,0 +1,38 @@
+FROM centos:6
+MAINTAINER Smile <erp@smile.fr>
+
+# Install packages required to:
+# * install Python packages via Yum: epel-release
+# * install Python packages via PyPi: python-pip
+# * install Node.js packages: npm
+# * check code quality: cloc python-coverage python-flake8
+# * install unit tests package: python-unittest2
+# * download and install wkhtmltopdf
+RUN yum install -y epel-release \
+    && yum install -y python-pip npm cloc python-coverage python-flake8 python-unittest2 \
+    fontconfig libfontconfig.so.1 libXext libXrender libpng libjpeg-turbo openssl urw-fonts \
+    && cd /tmp \
+    && rpm -ivh https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.1/wkhtmltox-0.12.1_linux-centos6-amd64.rpm \
+    && rpm -ivh http://ftp.tu-chemnitz.de/pub/linux/dag/redhat/el6/en/x86_64/rpmforge/RPMS/antiword-0.37-3.el6.rf.x86_64.rpm
+
+# Install Odoo requirements and recommandations
+RUN yum install -y %(system_packages)s
+
+# Install PyPI requirements
+RUN pip install -q %(pip_packages)s
+
+# Install Node.js requirements
+RUN npm install -g %(npm_packages)s
+
+# Create Odoo user and sources directory
+RUN useradd -m odoo
+RUN mkdir -p %(odoo_dir)s
+
+# Install specific system requirements
+RUN yum install -y %(specific_system_packages)s
+
+# Install specific PyPI requirements
+RUN pip install -q %(specific_pip_packages)s
+
+# Install specific Node.js requirements
+RUN npm install -g %(specific_npm_packages)s

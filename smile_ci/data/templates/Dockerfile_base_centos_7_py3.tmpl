@@ -1,0 +1,40 @@
+FROM centos:7
+MAINTAINER Smile <erp@smile.fr>
+
+# Install Python 3.5:
+RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm \
+    && yum install -y python35u python35u-pip python35u-devel \
+    && ln -s /usr/bin/python3.5 /usr/bin/python3 \
+    && ln -s /usr/bin/pip3.5 /usr/bin/pip3
+
+# Install packages required to:
+# * install Node.js packages: npm
+# * check code quality: cloc
+# * download and install wkhtmltopdf
+RUN yum install -y npm cloc \
+    fontconfig libfontconfig.so.1 libXext libXrender libpng libjpeg-turbo openssl urw-fonts \
+    && cd /tmp \
+    && rpm -ivh https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.1/wkhtmltox-0.12.1_linux-centos7-amd64.rpm \
+    && rpm -ivh ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/home:/Kenzy:/modified:/C7/CentOS_7/x86_64/antiword-0.37-20.1.x86_64.rpm
+
+# Install Odoo requirements and recommandations
+RUN yum install -y %(system_packages)s
+
+# Install PyPI requirements
+RUN pip3.5 install -q coverage==4.2 flake8 unittest2 %(pip_packages)s
+
+# Install Node.js requirements
+RUN npm install -g %(npm_packages)s
+
+# Create Odoo user and sources directory
+RUN useradd -m odoo
+RUN mkdir -p %(odoo_dir)s
+
+# Install specific system requirements
+RUN yum install -y %(specific_system_packages)s
+
+# Install specific PyPI requirements
+RUN pip3.5 install -q %(specific_pip_packages)s
+
+# Install specific Node.js requirements
+RUN npm install -g %(specific_npm_packages)s

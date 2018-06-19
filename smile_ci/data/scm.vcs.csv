@@ -1,0 +1,5 @@
+id,cmd_revno,cmd_log,cmd_log_all
+smile_scm.svn,svn log --limit=1 | sed -n 2p | cut -d ' |' -f 1 | cut -c 2-,svn log -r %(last_revno)s:HEAD,svn log
+smile_scm.bzr,bzr revno,bzr log -r %(last_revno)s..,bzr log
+smile_scm.git,git rev-list --max-count=1 HEAD,git log %(last_revno)s..,git log
+smile_scm.hg,hg identify --num,hg log --follow,hg log

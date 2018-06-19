@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="docker_image_postgresql_9_5" model="docker.image">
+            <field name="name">PostgreSQL 9.5</field>
+            <field name="docker_image">postgres:9.5</field>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+        </record>
+
+        <record id="docker_image_odoo_10_0" model="docker.image">
+            <field name="name">Odoo 10.0</field>
+            <field name="docker_image">odoo:10.0</field>
+        </record>
+
+    </data>
+</odoo>

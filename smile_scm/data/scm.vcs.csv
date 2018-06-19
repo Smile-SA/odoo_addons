@@ -1,0 +1,5 @@
+id,name,cmd,cmd_clone,cmd_pull,cmd_list,default_branch
+svn,Subversion,svn,svn checkout %(url)s/%(branch)s,svn update,svn ls %(url)s/branches | cut -d / -f 1 ; svn ls %(url)s/tags | cut -d / -f 1 ; echo trunk,trunk
+bzr,Launchpad,bzr,bzr branch %(url)s/%(branch)s,bzr pull,,trunk
+git,Git,git,git clone --recursive --depth 1 -b %(branch)s %(url)s,git reset origin/%(branch)s --hard ; git pull --force --recurse-submodules,git ls-remote --heads --quiet | cut -d / -f 3,master
+hg,Mercurial,hg,hg clone -b %(branch)s %(url)s,hg pull,hg branches -R | cut -d ' ' -f 1,default

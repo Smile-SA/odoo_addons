@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <!-- Sub-menus of Configuration/Parameters -->
+    <menuitem id="menu_ansible_inventory_type" parent="smile_scm.menu_scm_config_params" action="action_ansible_inventory_type" sequence="-2" groups="smile_cd.group_cd_manager"/>
+    <menuitem id="menu_ansible_role" parent="smile_scm.menu_scm_config_params" action="action_ansible_role" sequence="-1" groups="smile_cd.group_cd_manager"/>
+
+    <act_window name="Scheduled Actions" res_model="ir.cron" id="action_ir_cron" domain="['|', '|', ('model', 'like', 'docker.'), ('model', 'like', 'scm.'), ('model', 'like', 'ansible.')]"/>
+
+  </data>
+</odoo>

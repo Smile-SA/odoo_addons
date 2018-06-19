@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_ansible_deployment_rule_tree" model="ir.ui.view">
+      <field name="name">ansible.deployment.rule.tree</field>
+      <field name="model">ansible.deployment.rule</field>
+      <field name="arch" type="xml">
+        <tree string="Deployment Rules" editable="top">
+          <field name="branch_id"/>
+          <field name="build_result"/>
+          <field name="inventory_type_id"/>
+          <field name="date_planned" placeholder="e.g. {'weekday': 0, 'hour': 2, 'minute': 30} for the next Monday at 2:30 am"/>
+          <field name="active"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_ansible_deployment_rule_search" model="ir.ui.view">
+      <field name="name">ansible.deployment.rule.search</field>
+      <field name="model">ansible.deployment.rule</field>
+      <field name="arch" type="xml">
+        <search string="Deployment Rules" editable="top">
+          <field name="branch_id"/>
+          <field name="build_result"/>
+          <field name="inventory_type_id"/>
+        </search>
+      </field>
+    </record>
+
+    <record id="view_ansible_deployment_rule_form" model="ir.ui.view">
+      <field name="name">ansible.deployment.rule.form</field>
+      <field name="model">ansible.deployment.rule</field>
+      <field name="arch" type="xml">
+        <form string="Deployment Rule">
+          <sheet>
+            <div class="oe_button_box" name="button_box">
+              <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+              </button>
+            </div>
+            <div class="oe_title">
+              <h1>
+                <field name="branch_id" class="oe_inline"/>
+                <field name="build_result" class="oe_inline"/>
+              </h1>
+              <group>
+                <field name="inventory_type_id" widget="selection"/>
+                <field name="date_planned" placeholder="e.g. {'days': 1, 'hour': 2, 'minute': 30}"/>
+              </group>
+            </div>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+  </data>
+</odoo>

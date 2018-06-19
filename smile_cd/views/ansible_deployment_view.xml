@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_ansible_deployment_kanban" model="ir.ui.view">
+      <field name="name">ansible.deployment.kanban</field>
+      <field name="model">ansible.deployment</field>
+      <field name="arch" type="xml">
+        <kanban create="false" string="Deployments" default_group_by="state">
+          <field name="branch_id"/>
+          <field name="build_id"/>
+          <field name="revno"/>
+          <field name="inventory_type_id"/>
+          <field name="create_uid"/>
+          <field name="state"/>
+          <field name="result"/>
+          <field name="date_planned"/>
+          <field name="time_human"/>
+          <field name="age_human"/>
+          <templates>
+            <t t-name="kanban-box">
+              <div t-attf-class="#{kanban_color(record.result.raw_value == 'success' and 5 or (record.result.raw_value == 'failure' and 2 or 0))} oe_kanban_card oe_kanban_global_click">
+                <div class="o_kanban_content">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <field name="branch_id"/>
+                      <span attrs="{'invisible': [('build_id', '=', False)]}" class="oe_inline"> #<field name="build_id"/></span>
+                      <field name="result" class="oe_inline"/>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12">
+                     <span>Deployment on <field name="inventory_type_id"/></span>
+                     <span>by <field name="create_uid"/></span>
+                     <span states="draft">planned on <field name="date_planned"/></span>
+                     <span states="in_progress,done"><field name="age_human"/> ago</span>
+                     <span states="in_progress,done">in <field name="time_human"/></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+
+    <record id="view_ansible_deployment_tree" model="ir.ui.view">
+      <field name="name">ansible.deployment.tree</field>
+      <field name="model">ansible.deployment</field>
+      <field name="arch" type="xml">
+        <tree string="Deployments" colors="blue: state=='draft'; red: result=='failure'; grey: result=='killed'" create="false">
+          <field name="branch_id"/>
+          <field name="build_id"/>
+          <field name="revno"/>
+          <field name="inventory_type_id"/>
+          <field name="create_uid"/>
+          <field name="state" invisible="1"/>
+          <field name="result"/>
+          <field name="date_planned"/>
+          <field name="time_human"/>
+          <field name="age_human"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_ansible_deployment_search" model="ir.ui.view">
+      <field name="name">ansible.deployment.search</field>
+      <field name="model">ansible.deployment</field>
+      <field name="arch" type="xml">
+        <search string="Deployments">
+          <field name="branch_id"/>
+          <field name="build_id"/>
+          <field name="revno"/>
+          <field name="inventory_type_id"/>
+        </search>
+      </field>
+    </record>
+
+    <record id="view_ansible_deployment_form" model="ir.ui.view">
+      <field name="name">ansible.deployment.form</field>
+      <field name="model">ansible.deployment</field>
+      <field name="priority">10</field>
+      <field name="arch" type="xml">
+        <form string="Deployment">
+          <header>
+            <button class="btn-primary" name="run" type="object" string="Run immediately" states="draft"/>
+            <button class="btn-info" name="refresh_logs" type="object" string="Refresh logs" states="in_progress"/>
+            <button class="btn-danger" name="kill" type="object" string="Kill" states="in_progress" groups="base.group_no_one"/>
+            <field name="state" widget="statusbar" statusbar_visible="in_progress,done"/>
+          </header>
+          <sheet>
+            <div class="oe_title" colspan="4">
+              <h1>
+                <field name="branch_id"/>
+                <span attrs="{'invisible': [('build_id', '=', False)]}" class="oe_inline"> #<field name="build_id"/></span>
+                <field name="result" class="oe_inline"/>
+              </h1>
+              <group>
+                <field name="revno"/>
+                <field name="inventory_type_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="date_planned" states="draft"/>
+                <field name="date_start" states="in_progress,done"/>
+                <field name="time_human" states="in_progress,done"/>
+              </group>
+            </div>
+            <notebook attrs="{'invisible': [('logs', '=', False)]}">
+              <page string="Logs">
+                <field name="logs"/>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_ansible_deployment_popup" model="ir.ui.view">
+      <field name="name">ansible.deployment.popup</field>
+      <field name="model">ansible.deployment</field>
+      <field name="priority">100</field>
+      <field name="arch" type="xml">
+        <form string="Deployment">
+          <sheet>
+            <div class="oe_title" colspan="4">
+              <h1>
+                <field name="branch_id"/>
+                <span attrs="{'invisible': [('build_id', '=', False)]}" class="oe_inline"> #<field name="build_id"/></span>
+                <field name="result" class="oe_inline"/>
+              </h1>
+              <group>
+                <field name="revno"/>
+                <field name="inventory_type_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="date_planned" states="draft"/>
+                <field name="date_start" states="in_progress,done"/>
+                <field name="time_human" states="in_progress,done"/>
+              </group>
+            </div>
+            <notebook attrs="{'invisible': [('logs', '=', False)]}">
+              <page string="Logs">
+                <field name="logs"/>
+              </page>
+            </notebook>
+          </sheet>
+          <footer>
+            <button class="btn-primary" name="run" type="object" string="Run immediately"
+              attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('date_planned', '!=', False)]}"
+              context="{'popin': True}"/>
+            <button class="btn-primary" name="save" type="object" string="Save"
+              attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('date_planned', '=', False)]}"
+              context="{'popin': True}"/>
+            <button class="btn-info" name="refresh_logs" type="object" string="Refresh logs"
+              states="in_progress" context="{'popin': True}"/>
+            <field name="state" invisible="1"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_branch_deployments">
+      <field name="name">Deployments</field>
+      <field name="res_model">ansible.deployment</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">kanban,tree,form</field>
+      <field name="view_id" ref="view_ansible_deployment_kanban"/>
+      <field name="search_view_id" ref="view_ansible_deployment_search"/>
+      <field name="domain">[('branch_id', '=', active_id)]</field>
+    </record>
+
+  </data>
+</odoo>

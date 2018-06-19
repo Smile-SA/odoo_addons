@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="docker_image_postgresql_9_1" model="docker.image">
+            <field name="name">PostgreSQL 9.1</field>
+            <field name="docker_image">postgres:9.1</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+            <field name="healthcheck">{
+    'test': 'pg_isready -U postgres',
+    'interval': '10s',
+    'timeout': '5s',
+    'retries': 6,
+ }</field>
+        </record>
+        <record id="docker_image_postgresql_9_2" model="docker.image">
+            <field name="name">PostgreSQL 9.2</field>
+            <field name="docker_image">postgres:9.2</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+            <field name="healthcheck">{
+    'test': 'pg_isready -U postgres',
+    'interval': '10s',
+    'timeout': '5s',
+    'retries': 6,
+ }</field>
+        </record>
+        <record id="docker_image_postgresql_9_3" model="docker.image">
+            <field name="name">PostgreSQL 9.3</field>
+            <field name="docker_image">postgres:9.3</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+            <field name="healthcheck">{
+    'test': 'pg_isready -U postgres',
+    'interval': '10s',
+    'timeout': '5s',
+    'retries': 6,
+ }</field>
+        </record>
+        <record id="docker_image_postgresql_9_4" model="docker.image">
+            <field name="name">PostgreSQL 9.4</field>
+            <field name="docker_image">postgres:9.4</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+        </record>
+        <record id="docker_image_postgresql_9_5" model="docker.image">
+            <field name="name">PostgreSQL 9.5</field>
+            <field name="docker_image">postgres:9.5</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+            <field name="healthcheck">{
+    'test': 'pg_isready -U postgres',
+    'interval': '10s',
+    'timeout': '5s',
+    'retries': 6,
+ }</field>
+        </record>
+        <record id="docker_image_postgresql_9_6" model="docker.image">
+            <field name="name">PostgreSQL 9.6</field>
+            <field name="docker_image">postgres:9.6</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="default_environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+            <field name="healthcheck">{
+    'test': 'pg_isready -U postgres',
+    'interval': '10s',
+    'timeout': '5s',
+    'retries': 6,
+ }</field>
+        </record>
+        <record id="docker_image_postgis_2_3" model="docker.image">
+            <field name="name">Postgis 2.3 (based on PostgreSQL 9.5)</field>
+            <field name="docker_image">mdillon/postgis:9.5</field>
+            <field name="is_postgres" eval="True"/>
+            <field name="environment">{
+    'POSTGRES_USER': 'odoo',
+    'POSTGRES_PASSWORD': 'odoo',
+    'PGDATA': '/var/lib/postgres/data',  # To store data in container
+}</field>
+            <field name="with_persistent_storage" eval="True"/>
+            <field name="healthcheck">{
+    'test': 'pg_isready -U postgres',
+    'interval': '10s',
+    'timeout': '5s',
+    'retries': 6,
+ }</field>
+        </record>
+
+        <record id="docker_image_redis_3_2" model="docker.image">
+            <field name="name">Redis 3.2</field>
+            <field name="docker_image">redis:3.2</field>
+        </record>
+
+        <record id="docker_image_busybox" model="docker.image">
+            <field name="name">BusyBox</field>
+            <field name="docker_image">busybox:latest</field>
+            <field name="with_persistent_storage" eval="True"/>
+        </record>
+
+        <record id="docker_image_elasticsearch_2_4" model="docker.image">
+            <field name="name">Elasticsearch 2.4</field>
+            <field name="docker_image">elasticsearch:2.4</field>
+        </record>
+        <record id="docker_link_elasticsearch_2_4_busybox" model="docker.link">
+            <field name="name">data</field>
+            <field name="base_image_id" ref="docker_image_elasticsearch_2_4"/>
+            <field name="linked_image_id" ref="docker_image_busybox"/>
+            <field name="volume_from">/usr/share/elasticsearch/data</field>
+        </record>
+
+        <record id="docker_image_owasp_zap" model="docker.image">
+            <field name="name">OWASP ZAP</field>
+            <field name="docker_image">owasp/zap2docker-stable</field>
+        </record>
+
+    </data>
+</odoo>

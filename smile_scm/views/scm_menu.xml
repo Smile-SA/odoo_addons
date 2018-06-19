@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <!-- App entry -->
+    <menuitem id="menu_main_scm" name="Source Code" parent="" sequence="99"/>
+
+    <!-- App menus -->
+    <menuitem id="menu_scm_dashboard" name="Dashboard" parent="menu_main_scm" action="action_dashboard" sequence="0"/>
+    <menuitem id="menu_scm_config" name="Configuration" parent="menu_main_scm" sequence="100" groups="group_scm_user"/>
+
+    <!-- Sub-menus of Configuration -->
+    <menuitem id="menu_repository" parent="menu_scm_config" action="action_repository" sequence="10"/>
+    <menuitem id="menu_repository_branch" parent="menu_scm_config" action="action_repository_branch" sequence="20"/>
+    <menuitem id="menu_scm_config_params" parent="menu_scm_config" name="Parameters" sequence="30" groups="group_scm_manager"/>
+
+    <!-- Sub-menus of Configuration/Parameters -->
+    <menuitem id="menu_odoo_version" parent="menu_scm_config_params" action="action_odoo_version" sequence="10"/>
+    <menuitem id="menu_vcs" parent="menu_scm_config_params" action="action_vcs" sequence="20"/>
+
+  </data>
+</odoo>

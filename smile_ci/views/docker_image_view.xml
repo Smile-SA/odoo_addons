@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_docker_image_form" model="ir.ui.view">
+      <field name="name">docker.image.form</field>
+      <field name="model">docker.image</field>
+      <field name="inherit_id" ref="smile_docker.view_docker_image_form"/>
+      <field name="arch" type="xml">
+        <field name="build_on_the_fly">
+          <field name="is_postgres"/>
+        </field>
+        <button name="store_in_registry" position="attributes">
+          <attribute name="groups">smile_scm.group_scm_user</attribute>
+        </button>
+      </field>
+    </record>
+
+  </data>
+</odoo>

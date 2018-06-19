@@ -1,0 +1,25 @@
+FROM %(base_image)s
+MAINTAINER Smile <erp@smile.fr>
+
+# Download Odoo sources
+RUN chown odoo:odoo %(odoo_dir)s
+COPY --chown=odoo:odoo . %(odoo_dir)s
+
+# Set the working directory
+WORKDIR %(odoo_dir)s
+
+# Install specific PyPI requirements
+RUN if test -f %(specific_pip_requirements)s; then pip3 install -q -r %(specific_pip_requirements)s; fi
+
+# Check existance of server command and server conf
+RUN [ -f "/usr/bin/python3" ]
+RUN [ -f "%(server_cmd)s" ]
+RUN [ -f "server.conf" ]
+
+# Expose port
+EXPOSE 8069 8072
+
+# Set the default command to run when starting the container
+USER odoo
+ENTRYPOINT ["/usr/bin/python3", "%(server_cmd)s", "-c", "server.conf"]
+CMD ["%(additional_server_options)s"]

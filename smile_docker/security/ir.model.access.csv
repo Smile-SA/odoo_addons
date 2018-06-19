@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+docker_host_reader,Docker Host,model_docker_host,group_docker_reader,1,0,0,0
+docker_registry_reader,Docker Registry,model_docker_registry,group_docker_reader,1,0,0,0
+docker_image_reader,Docker Image,model_docker_image,group_docker_reader,1,0,0,0
+docker_link_reader,Docker Link,model_docker_link,group_docker_reader,1,0,0,0
+docker_image_user,Docker Image,model_docker_image,group_docker_user,1,1,1,1
+docker_link_user,Docker Link,model_docker_link,group_docker_user,1,1,1,1
+docker_host_manager,Docker Host,model_docker_host,group_docker_manager,1,1,1,1
+docker_registry_manager,Docker Registry,model_docker_registry,group_docker_manager,1,1,1,1
