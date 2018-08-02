@@ -31,7 +31,9 @@ class TestUsers(TransactionCase):
         Groups = self.env['res.groups']
 
         # Create groups
-        self.group1, self.group2 = map(lambda index: Groups.create({'name': 'Group %d' % index}), range(1, 3))
+        self.group1, self.group2 = map(
+            lambda index: Groups.create(
+                {'name': 'Group %d' % index}), range(1, 3))
 
         # Create user profiles
         self.user_profile1 = Users.create({
@@ -76,7 +78,8 @@ class TestUsers(TransactionCase):
             We change his user_profile_id
             We check if the update has been done
         """
-        userEdited = self.env['res.users'].browse(self.user.id).write({'user_profile_id': self.user_profile2.id})
+        userEdited = self.env['res.users'].browse(
+            self.user.id).write({'user_profile_id': self.user_profile2.id})
         self.assertEqual(userEdited, True)
 
     def test_check_user_profile_id(self):
@@ -100,4 +103,5 @@ class TestUsers(TransactionCase):
         """
         admin = self.env.ref('base.user_root').id
         with self.assertRaises(ValidationError):
-            self.env['res.users'].browse(self.user.id).write({'user_profile_id': admin})
+            self.env['res.users'].browse(
+                self.user.id).write({'user_profile_id': admin})

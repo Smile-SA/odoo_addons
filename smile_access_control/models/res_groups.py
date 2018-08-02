@@ -65,7 +65,8 @@ class ResGroups(models.Model):
                 elif item[0] == 4:
                     user_ids = [item[1]]
                 users = Users.browse(user_ids)
-                user_profiles |= users.filtered(lambda user: user.is_user_profile)
+                user_profiles |= users.filtered(
+                    lambda user: user.is_user_profile)
                 user_profiles |= users.mapped('user_profile_id')
             if user_profiles:
                 user_profiles._update_users_linked_to_profile()
@@ -80,13 +81,16 @@ class ResGroups(models.Model):
 
     @api.multi
     def button_complete_access_controls(self):
-        """Create access rules for the first level relation models of access rule models not only in readonly"""
+        """Create access rules for the first level relation models
+        # of access rule models not only in readonly"""
         def filter_rule(rule):
             return rule.perm_write or rule.perm_create or rule.perm_unlink
         Access = self.env['ir.model.access']
         for group in self:
-            models = group.model_access.filtered(filter_rule).mapped('model_id')
-            for model in models._get_relations(self._context.get('relations_level', 1)):
+            models = group.model_access.filtered(
+                filter_rule).mapped('model_id')
+            for model in models._get_relations(
+                    self._context.get('relations_level', 1)):
                 Access.create({
                     'name': '%s %s' % (model.model, group.name),
                     'model_id': model.id,

@@ -26,8 +26,12 @@ class IrUiMenu(models.Model):
     _inherit = 'ir.ui.menu'
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(
+            self, args, offset=0, limit=None, order=None, count=False,
+            access_rights_uid=None):
         if self.env.uid != SUPERUSER_ID:
-            menu_id = self.env['ir.model.data'].xmlid_to_res_id('smile_access_control.menu_action_superadmin')
+            menu_id = self.env['ir.model.data'].xmlid_to_res_id(
+                'smile_access_control.menu_action_superadmin')
             args = [('id', '!=', menu_id)] + (args or [])
-        return super(IrUiMenu, self)._search(args, offset, limit, order, count, access_rights_uid)
+        return super(IrUiMenu, self)._search(
+            args, offset, limit, order, count, access_rights_uid)
