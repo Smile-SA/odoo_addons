@@ -21,6 +21,7 @@
 
 from collections import defaultdict
 import inspect
+import logging
 import os
 import sys
 
@@ -28,6 +29,8 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.smile_log.tools import SmileDBLogger
+
+_logger = logging.getLogger(__name__)
 
 
 class BaseAutomationCategory(models.Model):
@@ -89,7 +92,8 @@ class BaseAutomation(models.Model):
             except Exception:
                 pass
         Method = self.env['ir.model.methods'].sudo()
-        existing_method_names = ['create', 'write', 'unlink', 'browse', 'exists']
+        existing_method_names = [
+            'create', 'write', 'unlink', 'browse', 'exists']
         existing_method_names += [m['name'] for m in Method.search_read([
             ('model_id', '=', model.id),
             ('name', 'in', method_names),
@@ -216,6 +220,7 @@ class BaseAutomation(models.Model):
 
         def make_other_method(method_name):
             """ Instanciate an other method for the given automated action. """
+
             def _other_method(self, *args, **kwargs):
                 # retrieve the automated actions to possibly execute
                 actions = self.env['base.automation']._get_actions(
@@ -254,9 +259,14 @@ class BaseAutomation(models.Model):
         for action_rule in self.with_context({}).search(
                 [('trigger', '=', 'on_other_method')]):
             Model = self.env.get(action_rule.model_name)
-            if action_rule.trigger == 'on_other_method':
-                name = action_rule.method_id.name
-                patch(Model, name, make_other_method(name))
+            # Do not crash if the model of the base_action_rule was uninstalled
+            if Model is None:
+                _logger.warning("Action rule with ID %d depends on model %s" %
+                                (action_rule.id,
+                                 action_rule.model_name))
+                continue
+            name = action_rule.method_id.name
+            patch(Model, name, make_other_method(name))
 
 
 class BaseAutomationExecution(models.Model):
