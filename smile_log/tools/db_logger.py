@@ -42,7 +42,9 @@ class SmileDBLogger:
         try:
             cr = registry(dbname).cursor()
             cr.autocommit(True)
-            cr.execute("select relname from pg_class where relname='smile_log_seq'")
+            cr.execute(
+                "select relname from pg_class "
+                "where relname='smile_log_seq'")
             if not cr.rowcount:
                 cr.execute("create sequence smile_log_seq")
             cr.execute("select nextval('smile_log_seq')")
@@ -52,7 +54,9 @@ class SmileDBLogger:
             cr.close()
 
         self._logger_start = datetime.datetime.now()
-        self._logger_args = {'dbname': dbname, 'model_name': model_name, 'res_id': res_id, 'uid': uid, 'pid': pid}
+        self._logger_args = {
+            'dbname': dbname, 'model_name': model_name,
+            'res_id': res_id, 'uid': uid, 'pid': pid}
 
     @property
     def pid(self):

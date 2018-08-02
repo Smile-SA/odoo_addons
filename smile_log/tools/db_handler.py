@@ -50,7 +50,8 @@ class SmileDBHandler(logging.Handler):
         uid = record.args.get('uid', 0)
         model_name = record.args.get('model_name', '')
 
-        request = """INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message)
+        request = """INSERT INTO smile_log
+        (log_date, log_uid, model_name, res_id, pid, level, message)
         VALUES (now() at time zone 'UTC', %s, %s, %s, %s, %s, %s)"""
         params = (uid, model_name, res_id, pid, record.levelname, record.msg,)
 
@@ -66,8 +67,12 @@ class SmileDBHandler(logging.Handler):
         logging.Handler.close(self)
         for cr in self._dbname_to_cr.values():
             try:
-                cr.execute("INSERT INTO smile_log (log_date, log_uid, model_name, res_id, pid, level, message) "
-                           "VALUES (now() at time zone 'UTC', 0, '', 0, 0, 'INFO', 'Odoo server stopped')")
+                cr.execute(
+                    "INSERT INTO smile_log "
+                    "(log_date, log_uid, model_name, "
+                    "res_id, pid, level, message) "
+                    "VALUES (now() at time zone 'UTC', 0, '', "
+                    "0, 0, 'INFO', 'Odoo server stopped')")
             finally:
                 cr.close()
         self._dbname_to_cr = {}

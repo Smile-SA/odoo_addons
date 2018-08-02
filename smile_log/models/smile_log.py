@@ -51,17 +51,21 @@ class SmileLog(models.Model):
 
     log_date = fields.Datetime('Date', readonly=True)
     log_uid = fields.Integer('User', readonly=True)
-    log_user_name = fields.Char(string='User', size=256, compute='_get_user_name')
-    log_res_name = fields.Char(string='Ressource name', size=256, compute='_get_res_name')
+    log_user_name = fields.Char(
+        string='User', size=256, compute='_get_user_name')
+    log_res_name = fields.Char(
+        string='Ressource name', size=256, compute='_get_res_name')
     model_name = fields.Char('Model name', size=64, readonly=True, index=True)
-    res_id = fields.Integer('Ressource id', readonly=True, group_operator="count", index=True)
+    res_id = fields.Integer(
+        'Ressource id', readonly=True, group_operator="count", index=True)
     pid = fields.Integer(readonly=True, group_operator="count")
     level = fields.Char(size=16, readonly=True)
     message = fields.Text('Message', readonly=True)
 
     @api.model
     def archive_and_delete_old_logs(self, nb_days=90, archive_path=''):
-        # Thanks to transaction isolation, the COPY and DELETE will find the same smile_log records
+        # Thanks to transaction isolation, the COPY and DELETE will find
+        # the same smile_log records
         if archive_path:
             file_name = time.strftime("%Y%m%d_%H%M%S.log.csv")
             file_path = os.path.join(archive_path, file_name)
@@ -69,6 +73,8 @@ class SmileLog(models.Model):
             WHERE log_date + interval'%s days' < NOW() at time zone 'UTC')
             TO %s
             WITH (FORMAT csv, ENCODING utf8)""", (nb_days, file_path,))
-        self.env.cr.execute("DELETE FROM smile_log WHERE log_date + interval '%s days' < NOW() at time zone 'UTC'",
-                            (nb_days,))
+        self.env.cr.execute(
+            "DELETE FROM smile_log "
+            "WHERE log_date + interval '%s days' < NOW() at time zone 'UTC'",
+            (nb_days,))
         return True
