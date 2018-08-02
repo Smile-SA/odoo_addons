@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0-20180420\n"
+"Project-Id-Version: Odoo Server 11.0-20180612\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-28 12:38+0000\n"
-"PO-Revision-Date: 2018-05-28 12:38+0000\n"
+"POT-Creation-Date: 2018-07-21 08:48+0000\n"
+"PO-Revision-Date: 2018-07-21 08:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,6 +32,16 @@ msgid "Attachments"
 msgstr "Pièces jointes"
 
 #. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_child_ids
+msgid "Children"
+msgstr "Enfants"
+
+#. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_command
+msgid "Command"
+msgstr "Commande"
+
+#. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_context_file
 msgid "Context File"
 msgstr "Fichier Contexte"
@@ -48,10 +58,21 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_logs_logs
+#: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_logs_form
+msgid "Details"
+msgstr "Détails"
+
+#. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_display_name
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_logs_display_name
 msgid "Display Name"
 msgstr "Nom à afficher"
+
+#. module: smile_talend_job
+#: selection:talend.job.logs,state:0
+msgid "Done"
+msgstr "Terminée"
 
 #. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_logs_end_date
@@ -59,10 +80,37 @@ msgid "End Date"
 msgstr "Date de fin"
 
 #. module: smile_talend_job
+#: code:addons/smile_talend_job/models/talend_job.py:44
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Talend jobs."
+msgstr "Erreur! Vous ne pouvez pas créer de hiérarchie recursive avec les Talend jobs."
+
+#. module: smile_talend_job
+#: code:addons/smile_talend_job/models/talend_job.py:101
+#, python-format
+msgid "Execution already in progress"
+msgstr "Exécution éjà en cours"
+
+#. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_id
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_logs_id
 msgid "ID"
 msgstr "ID"
+
+#. module: smile_talend_job
+#: selection:talend.job.logs,state:0
+msgid "Killed"
+msgstr "Tuée"
+
+#. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_last_log_date
+msgid "Last Execution Date"
+msgstr "Date de dernière exécution"
+
+#. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_last_log_date
+msgid "Last Execution Status"
+msgstr "Etat de la dernière exécution"
 
 #. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job___last_update
@@ -84,10 +132,19 @@ msgstr "Dernière mise à jour le"
 
 #. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_log_ids
-#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_logs_logs
 #: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_form
 msgid "Logs"
-msgstr "Historiques"
+msgstr "Historique"
+
+#. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_loop
+msgid "Loop"
+msgstr "Boucle"
+
+#. module: smile_talend_job
+#: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_search
+msgid "Main Jobs"
+msgstr "Jobs maîtres"
 
 #. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_name
@@ -95,9 +152,29 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_parent_id
+msgid "Parent"
+msgstr "Parent"
+
+#. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_path
 msgid "Path"
 msgstr "Chemin"
+
+#. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_sequence
+msgid "Priority"
+msgstr "Priorité"
+
+#. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_logs_pid
+msgid "Process Id"
+msgstr "Id du processus"
+
+#. module: smile_talend_job
+#: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_form
+msgid "Refresh logs"
+msgstr "Rafraîchir les logs"
 
 #. module: smile_talend_job
 #: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_form
@@ -106,13 +183,29 @@ msgstr "Exécuter"
 
 #. module: smile_talend_job
 #: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_form
-msgid "Refresh logs"
-msgstr "Rafraîchir les logs"
+msgid "Run only it"
+msgstr "Exécuter uniquement celui-ci"
+
+#. module: smile_talend_job
+#: selection:talend.job.logs,state:0
+msgid "Running"
+msgstr "En cours"
 
 #. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_logs_create_date
 msgid "Start Date"
 msgstr "Date de début"
+
+#. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_logs_state
+msgid "Status"
+msgstr "État"
+
+#. module: smile_talend_job
+#: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_form
+#: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_logs_form
+msgid "Stop"
+msgstr "Arrêter"
 
 #. module: smile_talend_job
 #: model:ir.model,name:smile_talend_job.model_talend_job
@@ -124,17 +217,29 @@ msgstr "Job Talend"
 #. module: smile_talend_job
 #: model:ir.model,name:smile_talend_job.model_talend_job_logs
 msgid "Talend Job Logs"
-msgstr "Historiques des jobs Talend"
+msgstr "Historique des jobs Talend"
 
 #. module: smile_talend_job
 #: model:ir.actions.act_window,name:smile_talend_job.action_talend_jobs
 #: model:ir.ui.menu,name:smile_talend_job.menu_talend_job
+#: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_search
 #: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_tree
 msgid "Talend Jobs"
 msgstr "Jobs Talend"
 
 #. module: smile_talend_job
-#: code:addons/smile_talend_job/models/talend_job.py:70
+#: code:addons/smile_talend_job/models/talend_job.py:124
 #, python-format
 msgid "This module support only zipfiles"
 msgstr "Ce module supporte uniquement les fichiers ZIP"
+
+#. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_logs_time
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_logs_time_human
+msgid "Time"
+msgstr "Durée"
+
+#. module: smile_talend_job
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_version
+msgid "Version"
+msgstr "Version"

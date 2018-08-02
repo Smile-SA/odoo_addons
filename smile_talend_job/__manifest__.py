@@ -23,7 +23,7 @@
     "name": "Talend Jobs",
     "version": "0.1",
     "depends": [
-        "base",
+        "mail",
     ],
     "author": "Smile",
     "license": 'AGPL-3',
@@ -41,8 +41,11 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "data": [
         'security/ir.model.access.csv',
         'views/talend_job_view.xml',
+        'views/talend_job_logs_view.xml',
     ],
-    "qweb": [],
+    "demo": [
+        'demo/talend_jobs.xml',
+    ],
     "auto_install": True,
     "installable": True,
     "application": False,
