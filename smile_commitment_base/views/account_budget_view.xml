@@ -67,13 +67,11 @@
 	                <field name="commitment_amount"/>
 	                <field name="available_amount"/>
                 </field>
-				<field name="company_id" position="after">
-					<notebook colspan="4">
-						<page string="Details">
-							<field name="analytic_line_ids" nolabel="1"/>
-						</page>
-					</notebook>
-				</field>
+                <xpath expr="//sheet/group" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_analytic_lines" type="object" icon="fa-usd" string="View details" context="{'target': 'current'}"/>
+                    </div>
+                </xpath>
 	        </field>
         </record>
 
@@ -83,7 +81,7 @@
             <field name="inherit_id" ref="account_budget.view_crossovered_budget_line_search"/>
             <field name="arch" type="xml">
                 <field name="analytic_account_id" position="attributes">
-					<attribute name="domain">[('type','!=','view')]</attribute>                	
+					<attribute name="domain">[('type','!=','view')]</attribute>
                 </field>
                 <field name="analytic_account_id" position="after">
                     <field name="crossovered_budget_id"/>
@@ -114,6 +112,6 @@
 				</xpath>
             </field>
         </record>
-        
+
     </data>
 </odoo>
