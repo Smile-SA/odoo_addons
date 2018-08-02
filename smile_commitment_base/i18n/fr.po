@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* smile_commitment_base
+#   * smile_commitment_base
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0c-20160804\n"
+"Project-Id-Version: Odoo Server 11.0-20180612\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-20 00:49+0000\n"
-"PO-Revision-Date: 2016-08-20 00:49+0000\n"
+"POT-Creation-Date: 2018-07-30 14:46+0000\n"
+"PO-Revision-Date: 2018-07-30 14:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,13 +26,7 @@ msgid "Analytic Line"
 msgstr "Ligne analytique"
 
 #. module: smile_commitment_base
-#: model:ir.model.fields,field_description:smile_commitment_base.field_account_analytic_line_commitment_account_id
-#, python-format
-msgid "Commitment Amount"
-msgstr "Compte d'engagement"
-
-#. module: smile_commitment_base
-#: code:addons/smile_commitment_base/models/account_budget.py:95
+#: code:addons/smile_commitment_base/models/account_budget.py:81
 #: model:ir.model.fields,field_description:smile_commitment_base.field_crossovered_budget_lines_analytic_line_ids
 #, python-format
 msgid "Analytic Lines"
@@ -49,7 +43,7 @@ msgid "Available Amount"
 msgstr "Disponible"
 
 #. module: smile_commitment_base
-#: code:addons/smile_commitment_base/models/analytic.py:56
+#: code:addons/smile_commitment_base/models/analytic.py:52
 #, python-format
 msgid "Available amount [%s%s] is exceeded for the budget line '%s'"
 msgstr "Le montant disponible [%s%s] est dépassé pour la ligne de budget '%s'"
@@ -84,9 +78,9 @@ msgid "Budgetary Position Commitment Limit"
 msgstr "Plafond d'engagement du poste budgétaire"
 
 #. module: smile_commitment_base
-#: model:ir.ui.menu,name:smile_commitment_base.menu_act_crossovered_budget_lines_view
-msgid "Budgets"
-msgstr "Budgets"
+#: model:ir.model.fields,field_description:smile_commitment_base.field_account_analytic_line_commitment_account_id
+msgid "Commitment Account"
+msgstr "Compte d'engagement"
 
 #. module: smile_commitment_base
 #: model:ir.model.fields,field_description:smile_commitment_base.field_crossovered_budget_lines_commitment_amount
@@ -104,6 +98,12 @@ msgstr "Plafond du montant d'engagement"
 #: model:ir.ui.view,arch_db:smile_commitment_base.view_budget_post_form
 msgid "Commitment Limits"
 msgstr "Plafonds d'engagement"
+
+#. module: smile_commitment_base
+#: code:addons/smile_commitment_base/models/analytic.py:25
+#, python-format
+msgid "Commitment account is required if general account is not set."
+msgstr "Le compte d'engagement est requis si le compte financier n'est pas défini."
 
 #. module: smile_commitment_base
 #: model:ir.model.fields,field_description:smile_commitment_base.field_account_budget_post_commitment_limit_create_uid
@@ -124,11 +124,6 @@ msgstr "À partir de"
 #: model:ir.ui.view,arch_db:smile_commitment_base.view_crossovered_budget_line_search
 msgid "Date to"
 msgstr "Jusqu'à"
-
-#. module: smile_commitment_base
-#: model:ir.ui.view,arch_db:smile_commitment_base.view_crossovered_budget_line_form
-msgid "Details"
-msgstr "Détails"
 
 #. module: smile_commitment_base
 #: model:ir.model.fields,field_description:smile_commitment_base.field_account_budget_post_commitment_limit_display_name
@@ -156,11 +151,6 @@ msgid "If equal to 0, the sky's the limit"
 msgstr "Si le montant est nul, pas de plafond"
 
 #. module: smile_commitment_base
-#: model:ir.model,name:smile_commitment_base.model_account_journal
-msgid "Journal"
-msgstr "Journal"
-
-#. module: smile_commitment_base
 #: model:ir.model.fields,field_description:smile_commitment_base.field_account_budget_post_commitment_limit___last_update
 msgid "Last Modified on"
 msgstr "Dernière modification le"
@@ -168,18 +158,17 @@ msgstr "Dernière modification le"
 #. module: smile_commitment_base
 #: model:ir.model.fields,field_description:smile_commitment_base.field_account_budget_post_commitment_limit_write_uid
 msgid "Last Updated by"
-msgstr "Mis à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: smile_commitment_base
 #: model:ir.model.fields,field_description:smile_commitment_base.field_account_budget_post_commitment_limit_write_date
 msgid "Last Updated on"
-msgstr "Mis à jour le"
+msgstr "Dernière mise à jour le"
 
 #. module: smile_commitment_base
-#: code:addons/smile_commitment_base/models/account_budget.py:50
-#, python-format
-msgid "The Budget '%s' has no accounts!"
-msgstr "Le budget '%s' n'a pas de comptes!"
+#: model:ir.model.fields,field_description:smile_commitment_base.field_account_budget_post_commitment_limit_old_id
+msgid "Old"
+msgstr "Ancien"
 
 #. module: smile_commitment_base
 #: model:ir.model.fields,field_description:smile_commitment_base.field_account_budget_post_commitment_limit_user_id
@@ -193,12 +182,13 @@ msgstr "Utilisateurs"
 
 #. module: smile_commitment_base
 #: model:ir.ui.view,arch_db:smile_commitment_base.crossovered_budget_view_form
+#: model:ir.ui.view,arch_db:smile_commitment_base.view_crossovered_budget_line_form
 #: model:ir.ui.view,arch_db:smile_commitment_base.view_crossovered_budget_line_tree
 msgid "View details"
 msgstr "Voir les détails"
 
 #. module: smile_commitment_base
-#: code:addons/smile_commitment_base/models/res_users.py:39
+#: code:addons/smile_commitment_base/models/res_users.py:24
 #, python-format
 msgid "You are not authorized to confirm this order.\n"
 "Amount for '%s' exceeds your commitment authorization"
@@ -206,7 +196,8 @@ msgstr "Vous n'êtes pas autorisé à confirmer cette commande.\n"
 "Le montant pour '%s' dépasse votre plafond d'engagement"
 
 #. module: smile_commitment_base
-#: code:addons/smile_commitment_base/models/account_budget.py:118
+#: code:addons/smile_commitment_base/models/account_budget.py:110
 #, python-format
 msgid "You cannot define a budget post commitment limit superior to the global limit of this user"
 msgstr "Vous ne pouvez définir un plafond par poste budgétaire supérieure au plafond globale de l'utilisateur"
+

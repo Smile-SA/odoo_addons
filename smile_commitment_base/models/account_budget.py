@@ -83,7 +83,7 @@ class BudgetLine(models.Model):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.analytic.line',
-            'target': 'new',
+            'target': self._context.get('target', 'new'),
             'domain': [('id', 'in', self.analytic_line_ids._ids)],
             'context': self._context,
         }
@@ -107,7 +107,7 @@ class BudgetPositionCommitmentLimit(models.Model):
     def check_amount_limit_inferior_global_limit(self):
         if self.user_id.commitment_global_limit and \
                 self.amount_limit > self.user_id.commitment_global_limit:
-            raise UserError(_("You cannot define a budget post commitment"
+            raise UserError(_("You cannot define a budget post commitment "
                               "limit superior to the global limit of "
                               "this user"))
 
