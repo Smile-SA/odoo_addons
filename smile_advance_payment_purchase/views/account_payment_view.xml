@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_payment_form_supplier_advance_payment" model="ir.ui.view">
+            <field name="name">account.payment.purchase.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">200</field>
+            <field name="arch" type="xml">
+                <field name="payment_type" position="after">
+                    <field name="purchase_id" invisible="context.get('default_purchase_id', False)"/>
+                </field>
+                <field name="payment_type" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="partner_type" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="partner_id" position="attributes">
+                    <attribute name="invisible">context.get('default_purchase_id', False)</attribute>
+                </field>
+                <field name="communication" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="payment_transaction_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_supplier_payment_tree" model="ir.ui.view">
+            <field name="name">account.supplier.payment.tree</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_supplier_payment_tree"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="attributes">
+                    <attribute name="invisible">context.get('default_purchase_id', False)</attribute>
+                </field>
+                <field name="payment_method_id" position="attributes">
+                    <attribute name="invisible">context.get('default_purchase_id', False)</attribute>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

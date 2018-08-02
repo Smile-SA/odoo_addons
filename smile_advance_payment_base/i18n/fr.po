@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* smile_advance_payment_base
+#   * smile_advance_payment_base
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0-20180403\n"
+"Project-Id-Version: Odoo Server 11.0-20180612\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-05 14:33+0000\n"
-"PO-Revision-Date: 2018-04-05 14:33+0000\n"
+"POT-Creation-Date: 2018-07-25 15:17+0000\n"
+"PO-Revision-Date: 2018-07-25 15:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -125,23 +125,40 @@ msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: smile_advance_payment_base
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_old_id
+msgid "Old"
+msgstr "Ancien"
+
+#. module: smile_advance_payment_base
 #: model:ir.model,name:smile_advance_payment_base.model_account_payment
 msgid "Payments"
 msgstr "Paiements"
 
 #. module: smile_advance_payment_base
-#: code:addons/smile_advance_payment_base/models/account_payment.py:43
-#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:108
+#: code:addons/smile_advance_payment_base/models/account_payment.py:26
+#, python-format
+msgid "Please don't select an advance payment journal"
+msgstr "Merce de ne pas sélectionner un journal d'acompte"
+
+#. module: smile_advance_payment_base
+#: code:addons/smile_advance_payment_base/models/account_payment.py:53
+#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:127
 #, python-format
 msgid "Please indicate an account advance payable on this supplier"
 msgstr "Merci d'indiquer un compte d'acompte pour ce fournisseur"
 
 #. module: smile_advance_payment_base
-#: code:addons/smile_advance_payment_base/models/account_payment.py:36
-#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:101
+#: code:addons/smile_advance_payment_base/models/account_payment.py:46
+#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:120
 #, python-format
 msgid "Please indicate an account advance receivable on this customer"
 msgstr "Merci d'indiquer un compte d'acompte pour ce client"
+
+#. module: smile_advance_payment_base
+#: code:addons/smile_advance_payment_base/models/account_payment.py:23
+#, python-format
+msgid "Please select an advance payment journal"
+msgstr "Merci de sélectionner un journal d'acompte"
 
 #. module: smile_advance_payment_base
 #: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_amount
@@ -149,23 +166,30 @@ msgid "Recovered amount"
 msgstr "Montant repris"
 
 #. module: smile_advance_payment_base
-#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_journal_recovery_sequence_id
-msgid "Recovery entry sequence"
-msgstr "Séquence de reprise d'acompte"
-
-#. module: smile_advance_payment_base
 #: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_payment_recovery_ids
 msgid "Recoveries"
 msgstr "Reprises"
 
 #. module: smile_advance_payment_base
-#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:30
+#: model:ir.model.fields,field_description:smile_advance_payment_base.field_account_journal_recovery_sequence_id
+msgid "Recovery entry sequence"
+msgstr "Séquence de reprise d'acompte"
+
+#. module: smile_advance_payment_base
+#: code:addons/smile_advance_payment_base/models/account_payment.py:65
+#, python-format
+msgid "You can't cancel a payment with recoveries."
+msgstr "Vous ne pouvez pas annuler un paiment ayant des reprises."
+
+#. module: smile_advance_payment_base
+#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:31
 #, python-format
 msgid "You cannot recover a negative amount."
 msgstr "Vous ne pouvez pas reprendre un montant négatif."
 
 #. module: smile_advance_payment_base
-#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:33
+#: code:addons/smile_advance_payment_base/models/account_payment_recovery.py:34
 #, python-format
 msgid "You cannot recover more than the advance payment amount."
 msgstr "Vous ne pouvez pas reprendre plus que le montant de l'acompte."
+

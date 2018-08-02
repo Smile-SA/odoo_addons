@@ -35,6 +35,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "category": "Accounting & Finance",
     "sequence": 32,
     "data": [
+        "views/account_payment_view.xml",
         "views/purchase_order_view.xml",
     ],
     "demo": [],

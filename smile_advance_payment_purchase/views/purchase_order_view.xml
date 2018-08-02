@@ -11,7 +11,9 @@
                     <page string="Advance payments"
                       attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve'))]}">
                         <field name="advance_payment_ids"
-                            context="{'tree_view_ref': 'account.view_account_supplier_payment_tree', 'default_partner_id': partner_id, 'default_is_advance_payment': True, 'default_payment_type': 'outbound'}"/>
+                            context="{'tree_view_ref': 'account.view_account_supplier_payment_tree',
+                            'form_view_ref': 'smile_advance_payment_purchase.view_account_payment_form_supplier_advance_payment',
+                            'default_partner_id': partner_id, 'default_is_advance_payment': True, 'default_payment_type': 'outbound', 'default_purchase_id': active_id}"/>
                     </page>
                 </notebook>
             </field>

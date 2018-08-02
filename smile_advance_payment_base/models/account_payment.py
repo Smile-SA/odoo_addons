@@ -35,11 +35,12 @@ class AccountPayment(models.Model):
                     recovery.amount, self.currency_id)
             else:
                 advance_residual -= recovery.amount
+        self.advance_residual = advance_residual
 
     @api.one
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
     def _compute_destination_account_id(self):
-        if self.is_advance_payment:
+        if self.is_advance_payment and not self._context.get('ignore_advance'):
             if self.partner_type == 'customer':
                 if not self.partner_id.property_account_receivable_advance_id:
                     raise UserError(
@@ -56,3 +57,11 @@ class AccountPayment(models.Model):
                     self.partner_id.property_account_payable_advance_id.id
         else:
             super(AccountPayment, self)._compute_destination_account_id()
+
+    @api.multi
+    def cancel(self):
+        """ Forbids cancellation of payments having recoveries.
+        """
+        if self.filtered('recovery_ids'):
+            raise UserError(_("You can't cancel a payment with recoveries."))
+        return super(AccountPayment, self).cancel()

@@ -9,12 +9,12 @@ class ResPartner(models.Model):
     property_account_payable_advance_id = fields.Many2one(
         'account.account', "Account Advance Payable",
         domain=[
-            ('internal_type', '=', 'payable'),
+            ('internal_type', '=', 'other'),
             ('deprecated', '=', False),
         ], company_dependent=True)
     property_account_receivable_advance_id = fields.Many2one(
         'account.account', "Account Advance Receivable",
         domain=[
-            ('internal_type', '=', 'receivable'),
+            ('internal_type', '=', 'other'),
             ('deprecated', '=', False),
         ], company_dependent=True)

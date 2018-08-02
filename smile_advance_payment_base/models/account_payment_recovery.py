@@ -36,16 +36,31 @@ class AccountPaymentRecovery(models.Model):
     @api.multi
     def post(self):
         for recovery in self:
-            vals = recovery._get_move_vals()
-            recovery.move_id = self.env['account.move'].create(vals)
+            move_vals = recovery._get_move_vals()
+            line_vals = []
             for type_ in ('counterpart', 'advance'):
                 vals = getattr(recovery, '_get_%s_move_line_vals' % type_)()
-                vals['move_id'] = recovery.move_id.id
-                self.env['account.move.line'].create(vals)
+                line_vals.append((0, 0, vals))
+            move_vals['line_ids'] = line_vals
+
+            recovery.move_id = self.env['account.move'].create(move_vals)
             recovery.move_id.post()
-            moves_to_reconcile = recovery.move_id | recovery.payment_id.move_id
-            moves_to_reconcile.mapped('line_ids').auto_reconcile_lines()
+            moves_to_reconcile = recovery._get_moves_to_reconcile()
+            move_lines = moves_to_reconcile.mapped('line_ids')
+            for account in move_lines.mapped('account_id'). \
+                    filtered('reconcile'):
+                move_lines.filtered(
+                    lambda line: line.account_id == account and
+                    not line.full_reconcile_id). \
+                    auto_reconcile_lines()
+            recovery.invoice_id.payment_ids |= recovery.payment_id
         return True
+
+    @api.multi
+    def _get_moves_to_reconcile(self):
+        self.ensure_one()
+        return self.move_id | self.invoice_id.move_id | \
+            self.payment_id.move_line_ids.mapped('move_id')
 
     @api.multi
     def _get_move_vals(self):
@@ -96,7 +111,8 @@ class AccountPaymentRecovery(models.Model):
     @api.multi
     def _get_advance_move_line_vals(self):
         vals = self._get_counterpart_move_line_vals()
-        vals['debit'], vals['credit'] = vals['credit'], vals['debit']
+        vals['debit'], vals['credit'] = \
+            vals.get('credit', 0.0), vals.get('debit', 0.0)
         partner = self.invoice_id.move_id.partner_id
         if self.payment_id.partner_type == 'customer':
             if not partner.property_account_receivable_advance_id:

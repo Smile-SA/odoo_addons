@@ -13,6 +13,8 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_move_create(self):
+        """ Create recevories at invoice validation.
+        """
         res = super(AccountInvoice, self).action_move_create()
         self._recover_advance_payments()
         return res
@@ -43,6 +45,8 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_cancel(self):
+        """ Reverse recoveries when invoice is cancelled.
+        """
         res = super(AccountInvoice, self).action_invoice_cancel()
         self.recovery_ids.mapped('move_id').reverse_moves()
         return res

@@ -4,11 +4,13 @@ from odoo import fields
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 
 
-class TestAdavncePayment(AccountingTestCase):
+class TestAdvancePayment(AccountingTestCase):
 
     def setUp(self):
-        super(TestAdavncePayment, self).setUp()
+        super(TestAdvancePayment, self).setUp()
         self.partner = self.env.ref('base.res_partner_1')
+        self.partner.property_account_payable_advance_id = \
+            self.partner.property_account_payable_id
         self.product = self.env.ref('product.product_product_8')
         self.product.purchase_method = 'purchase'
 
@@ -16,10 +18,10 @@ class TestAdavncePayment(AccountingTestCase):
         """
         I create a purchase order
         I confirm it
-        I create an advance payment
+        I create and post an advance payment
         I create a supplier invoice
         I validate it
-        I check advance payment was recoverd
+        I check advance payment was recovered
         """
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner.id,
@@ -42,10 +44,12 @@ class TestAdavncePayment(AccountingTestCase):
             'partner_id': self.partner.id,
             'purchase_id': purchase_order.id,
             'payment_type': 'outbound',
+            'partner_type': 'supplier',
             'journal_id': bank_journal.id,
             'payment_method_id': payment_method.id,
             'amount': 500.0,
         })
+        advance_payment.post()
         invoice = self.env['account.invoice'].create({
             'partner_id': self.partner.id,
             'purchase_id': purchase_order.id,
@@ -54,7 +58,7 @@ class TestAdavncePayment(AccountingTestCase):
         })
         invoice.purchase_order_change()
         invoice.action_invoice_open()
-        self.assertTrue(len(invoice.payment_ids))
+        self.assertEquals(len(invoice.payment_ids), 1)
         self.assertEquals(
             invoice.residual,
             purchase_order.amount_total - advance_payment.amount)
