@@ -8,3 +8,4 @@ class ResUsers(models.Model):
 
     context_active_test = fields.Boolean(default=True)
     context_raise_load_exceptions = fields.Boolean()
+    context_data_integration = fields.Boolean()
