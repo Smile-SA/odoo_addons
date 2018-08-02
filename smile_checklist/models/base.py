@@ -21,7 +21,8 @@ class Base(models.AbstractModel):
                 'x_checklist_task_instance_ids' in self._fields:
             Checklist = self.env['checklist']
             if hasattr(Checklist, '_get_checklist_by_model'):
-                checklist_id = Checklist._get_checklist_by_model().get(self._name)
+                checklist_id = Checklist._get_checklist_by_model().get(
+                    self._name)
                 Checklist.browse(checklist_id).task_ids. \
                     _manage_task_instances(self)
 

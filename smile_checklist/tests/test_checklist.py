@@ -14,9 +14,19 @@ class TestChecklist(TransactionCase):
             I assign a model to the cron.
             I check that the cron is active.
         """
-        cron = self.env['ir.cron'].create({'name': 'Demo cron'})
+        cron = self.env['ir.cron'].create({
+            'name': 'Demo cron',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'numbercall': 0,
+        })
         self.assertFalse(
-            cron.active, 'Cron is active whereas the Object is not filled.')
-        cron.model = 'some.model'
+            cron.active,
+            'Cron is active whereas the number of calls is null.')
+        cron.numbercall = 1
         self.assertTrue(
-            cron.active, 'Cron is inactive whereas the Object is filled.')
+            cron.active,
+            'Cron is inactive whereas the number of calls is not null.')
+        cron.numbercall = 0
+        self.assertFalse(
+            cron.active,
+            'Cron is active whereas the number of calls is null.')

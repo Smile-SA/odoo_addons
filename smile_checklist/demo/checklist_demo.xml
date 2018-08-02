@@ -14,7 +14,7 @@
       <field name="checklist_id" ref="cron_checklist"/>
       <field name="active" eval="True"/>
       <field name="filter_domain">[]</field>
-      <field name="complete_domain">[('name', '!=', False)]</field>
+      <field name="complete_domain">[('numbercall', '!=', 0)]</field>
     </record>
 
   </data>
