@@ -14,7 +14,7 @@
 	            	<button name="set_to_progress_paid" type="object" string="Authorize deduction"
 	            		attrs="{'invisible': ['!','&amp;',('type','=','in_refund'),('state','=','open')]}"/>
 	            	<button name="set_to_open" type="object" string="Do not authorize deduction"
-	            		attrs="{'invisible': ['!','&amp;',('type','in',('in_refund','out_refund')),('state','=','progress_paid')]}"/>
+	            		attrs="{'invisible': ['!','&amp;',('type','=','in_refund'),('state','=','progress_paid')]}"/>
                 </button>
                 <field name="partner_bank_id" position="attributes">
                     <attribute name="invisible">0</attribute>

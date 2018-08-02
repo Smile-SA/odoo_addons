@@ -30,3 +30,13 @@ class AccountPayment(models.Model):
     def _check_partner_bank(self):
         if self.partner_bank_required and not self.partner_bank_id:
             raise ValidationError(_('Bank account is required'))
+
+    @api.multi
+    def post(self):
+        progress_paid_invoices = self.mapped('invoice_ids').filtered(
+            lambda inv: inv.state == 'progress_paid')
+        progress_paid_invoices.write({'state': 'open'})
+        res = super(AccountPayment, self).post()
+        progress_paid_invoices.filtered(lambda inv: inv.state == 'open').write(
+            {'state': 'progress_paid'})
+        return res

@@ -37,16 +37,31 @@ class AccountInvoice(models.Model):
     @api.returns('account.payment', lambda records: records.ids)
     def generate_payments(self):
         payments = self.env['account.payment']
-        for invoices in self._get_invoices_to_pay().values():
+        for invoices in self._get_grouped_invoices_to_pay().values():
             vals = invoices._get_group_payment_vals()
             if vals['amount']:
                 payments |= self.env['account.payment'].create(vals)
             else:
-                invoices.mapped('move_id.line_ids').auto_reconcile_lines()
+                moves_to_reconcile = invoices.mapped('move_id')
+                move_lines = moves_to_reconcile.mapped('line_ids')
+                for account in move_lines.mapped('account_id'). \
+                        filtered('reconcile'):
+                    move_lines.filtered(
+                        lambda line: line.account_id == account and
+                        not line.full_reconcile_id). \
+                        auto_reconcile_lines()
+                invoices.filtered(
+                    lambda inv: not inv.residual).action_invoice_paid()
+        payments.post()
         return payments
 
     @api.model
-    def _get_invoices_to_pay(self):
+    def _get_grouped_invoices_to_pay(self):
+        """ Payment must be created for invoices that fill these conditions:
+        - invoice is in state Scheduled Payment
+        - invoice residual is not null
+        - due date is lower or equal to today date (not for refund)
+        """
         groups = {}
         domain = [
             ('type', 'in', ('in_invoice', 'in_refund')),
@@ -65,6 +80,8 @@ class AccountInvoice(models.Model):
     @api.multi
     def _get_group_payment_key(self):
         self.ensure_one()
+        # TODO: fix case of refund: partner bank should not be in the key
+        # of refunds, because we want to use refund independently of its bank
         return self.partner_id.id, \
             self.partner_id.payment_mode == 'I' and \
             self.id or self.partner_id.payment_mode, \
@@ -96,4 +113,5 @@ class AccountInvoice(models.Model):
             'journal_id': payment_journal.id,
             'payment_type': payment_method.payment_type,
             'payment_method_id': payment_method.id,
+            'payment_mode': self.mapped('partner_id').payment_mode,
         }

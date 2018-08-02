@@ -40,7 +40,7 @@
             <field name="inherit_id" ref="account.view_account_payment_form"/>
             <field name="arch" type="xml">
                 <field name="payment_method_id" position="after">
-                    <field name="partner_bank_id" domain="[('partner_id', '=', partner_id)]"
+                    <field name="partner_bank_id" domain="[('partner_id', '=', partner_id)]" context="{'default_partner_id': partner_id}"
                         attrs="{'required': [('partner_bank_required', '=', True)], 'invisible': [('partner_bank_required', '!=', True)]}"/>
                     <field name="partner_bank_required" invisible="1"/>
                 </field>
@@ -52,7 +52,7 @@
             <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
             <field name="arch" type="xml">
                 <field name="payment_method_id" position="after">
-                    <field name="partner_bank_id" domain="[('partner_id', '=', partner_id)]"
+                    <field name="partner_bank_id" domain="[('partner_id', '=', partner_id)]" context="{'default_partner_id': partner_id}"
                         attrs="{'required': [('partner_bank_required', '=', True)], 'invisible': [('partner_bank_required', '!=', True)]}"/>
                     <field name="partner_bank_required" invisible="1"/>
                 </field>
