@@ -13,7 +13,7 @@ class AccountInvoice(models.Model):
         journal = super(AccountInvoice, self)._default_journal()
         if journal or self._context.get('company_id'):
             return journal
-        inv_type = self._context.get('type', 'out_invoice')
+        inv_type = self._context.get('type') or 'out_invoice'
         inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
         journal_types = list(filter(None, map(TYPE2JOURNAL.get, inv_types)))
         company = self.env['res.company']._company_default_get(
