@@ -54,7 +54,7 @@ class IrActionsReport(models.Model):
             "interval_type": "minutes",
             "numbercall": -1,
             "doall": False,
-            "priority": 0,
+            "priority": 15,
         }
 
     @api.multi

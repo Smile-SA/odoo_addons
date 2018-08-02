@@ -33,7 +33,9 @@ class Base(models.AbstractModel):
         # process triggers, mark fields to be invalidated/recomputed
         for model_path, fields in triggers.items():
             model_name, path = model_path
-            stored = {field for field in fields if field.compute and field.store}
+            stored = {
+                field for field in fields
+                if field.compute and field.store}
             # process stored fields
             if path and stored:
                 # Added by Smile #

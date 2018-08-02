@@ -14,5 +14,5 @@ class Bank(models.Model):
     def _check_bic(self):
         # INFO: ISO 9362:2009
         bic_check = re.compile(r'^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3})?$')
-        if not bic_check.match(self.bic):
+        if not bic_check.match(self.bic or ''):
             raise ValidationError(_('Incorrect BIC/SWIFT'))

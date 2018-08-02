@@ -315,21 +315,22 @@ class Base(models.AbstractModel):
         self.recompute()
         return True
 
-    def _create_unique_index(self, cr, column, where_clause=None):
+    @api.model_cr
+    def _create_unique_index(self, column, where_clause=None):
         if type(column) == list:
             column = ','.join(column)
         column_name = column.replace(' ', '').replace(',', '_')
         table = self._table
         index_name = 'uniq_%(table)s_%(column_name)s' % locals()
-        cr.execute("SELECT relname FROM pg_class WHERE relname=%s",
-                   (index_name,))
-        if not cr.rowcount:
+        self._cr.execute("SELECT relname FROM pg_class WHERE relname=%s",
+                         (index_name,))
+        if not self._cr.rowcount:
             _logger.debug('Creating unique index %s' % index_name)
             query = "CREATE UNIQUE INDEX %(index_name)s " \
                     "ON %(table)s (%(column)s)"
             query += " WHERE %s" % (where_clause or "%(column)s IS NOT NULL")
             query = query % locals()
-            cr.execute(query)
+            self._cr.execute(query)
 
     @api.model
     def _read_group_process_groupby(self, gb, query):

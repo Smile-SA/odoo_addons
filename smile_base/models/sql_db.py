@@ -30,7 +30,7 @@ native_execute = Cursor.execute
 def execute(self, query, params=None, log_exceptions=None):
     try:
         return native_execute(self, query, params, log_exceptions)
-    except Exception as e:
+    except Exception:
         _logger.error('Traceback (most recent call last):\n' + ''.join(
             traceback.format_stack()))
         raise
