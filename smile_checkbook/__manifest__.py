@@ -27,10 +27,10 @@ Manually follow your checks by updating status:
 
 Suggestions & Feedback to: isabelle.richard@smile.fr
 """,
-    "depends": ['account'],
+    "depends": ['base'],
     "data": [
-        'security/ir.model.access.csv',
         'security/security.xml',
+        'security/ir.model.access.csv',
         'views/account_check_view.xml',
         'views/template.xml',
         'wizard/account_checkbook_wizard_view.xml',
