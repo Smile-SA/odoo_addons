@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0-20180803\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-05 15:17+0000\n"
-"PO-Revision-Date: 2018-08-05 15:17+0000\n"
+"POT-Creation-Date: 2018-08-05 20:03+0000\n"
+"PO-Revision-Date: 2018-08-05 20:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -151,6 +151,12 @@ msgid "Lost"
 msgstr "Perdu"
 
 #. module: smile_checkbook
+#: code:addons/smile_checkbook/wizard/account_checkbook_wizard.py:39
+#, python-format
+msgid "Minimal number is greather than maximum number. Please check range of numbers."
+msgstr "Le numéro minimal est plus grand que le numéro maximal. Merci de vérifier la plage de numéros."
+
+#. module: smile_checkbook
 #: model:ir.model.fields,field_description:smile_checkbook.field_account_check_number
 msgid "Number"
 msgstr "Numéro"
@@ -179,7 +185,7 @@ msgid "Quantity"
 msgstr "Quantité"
 
 #. module: smile_checkbook
-#: code:addons/smile_checkbook/wizard/account_checkbook_wizard.py:39
+#: code:addons/smile_checkbook/wizard/account_checkbook_wizard.py:43
 #, python-format
 msgid "Quantity seems inconsistent with range of numbers"
 msgstr "La quantité semble incohérente avec la plage de numéros"
@@ -187,7 +193,7 @@ msgstr "La quantité semble incohérente avec la plage de numéros"
 #. module: smile_checkbook
 #: model:ir.model.fields,field_description:smile_checkbook.field_account_check_state
 msgid "State"
-msgstr "Région"
+msgstr "Statut"
 
 #. module: smile_checkbook
 #: selection:account.check,state:0

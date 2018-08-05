@@ -34,6 +34,10 @@ class AccountCheckbookWizard(models.TransientModel):
         if not (self.from_number and self.to_number):
             raise UserError(
                 _("Please define a range of numbers before generating checks"))
+        if self.from_number > self.to_number:
+            raise UserError(
+                _("Minimal number is greather than maximum number. "
+                    "Please check range of numbers."))
         if not self.from_number + self.quantity == self.to_number:
             raise UserError(
                 _("Quantity seems inconsistent with range of numbers"))
