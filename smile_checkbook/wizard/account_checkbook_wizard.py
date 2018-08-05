@@ -46,10 +46,9 @@ class AccountCheckbookWizard(models.TransientModel):
             'company_id': self.company_id.id,
             'state': 'available',
         }
-        vals_list = []
         for number in range(self.from_number, self.to_number):
-            vals_list.append(dict(common_vals, number=number))
-        AccountCheck.bulk_create(vals_list)
+            vals = dict(common_vals, number=number)
+            AccountCheck.create(vals)
         # Refresh check tree view
         action = self.env.ref('smile_checkbook.action_account_check')
         return {
