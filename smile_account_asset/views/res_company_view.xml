@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_company_form">
+            <field name="name">res.company.form</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="priority">0</field>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page name="accounting" string="Accounting">
+                        <group>
+                            <group name="assets" string="Asset Management" colspan="4">
+                                <field name="depreciation_period"/>
+                                <field name="prorata_temporis"/>
+                                <field name="first_day_acquisition" />
+                                <field name="convert_book_value_if_scrapping" />
+                            </group>
+                            <group name="fiscal_depreciation_accounts" string="Fiscal Depreciation Accounts">
+                                <field name="fiscal_depreciation_account_id" string="Fiscal Amortization Account"
+                                    domain="[('company_id', '=', active_id)]"/>
+                                <field name="fiscal_depreciation_expense_account_id" string="Provision Account"
+                                    domain="[('company_id', '=', active_id)]"/>
+                                <field name="fiscal_depreciation_income_account_id" string="Reversal Account"
+                                    domain="[('company_id', '=', active_id)]"/>
+                            </group>
+                            <group name="exceptional_depreciation_accounts" string="Exceptional Amortization Accounts">
+                                <field name="exceptional_amortization_expense_account_id" string="Provision Account"
+                                    domain="[('company_id', '=', active_id)]"/>
+                                <field name="exceptional_amortization_income_account_id" string="Reversal Account"
+                                    domain="[('company_id', '=', active_id)]"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</odoo>

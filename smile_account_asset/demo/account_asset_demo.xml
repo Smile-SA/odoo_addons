@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Asset -->
+
+        <record id="account_asset_asset_fixedasset0" model="account.asset.asset">
+            <field name="name">Hardware 0</field>
+            <field name="category_id" ref="account_asset_category_fixedassets"/>
+            <field name="purchase_value">125000</field>
+            <field name="salvage_value">4000</field>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="supplier_id" ref="base.res_partner_1"/>
+            <field name="purchase_date" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="accounting_method">accounting_linear</field>
+            <field name="accounting_annuities">5</field>
+            <field name="fiscal_method">fiscal_linear</field>
+            <field name="fiscal_annuities">5</field>
+            <field name="benefit_accelerated_depreciation" eval="False"/>
+        </record>
+
+        <record id="account_asset_asset_digitalasset0" model="account.asset.asset">
+            <field name="name">Software 0</field>
+            <field name="category_id" ref="account_asset_category_digitalassets"/>
+            <field name="purchase_value">72500</field>
+            <field name="salvage_value">2500</field>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="supplier_id" ref="base.res_partner_1"/>
+            <field name="purchase_date" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="accounting_method">accounting_linear</field>
+            <field name="accounting_annuities">5</field>
+            <field name="fiscal_method">fiscal_degressive</field>
+            <field name="fiscal_annuities">2</field>
+            <field name="fiscal_rate">50.0</field>
+            <field name="purchase_tax_ids" eval="[(6, 0, [ref('account_tax_19_6_test')])]"/>
+            <field name="benefit_accelerated_depreciation" eval="True"/>
+        </record>
+
+        <record id="account_asset_asset_digitalasset1" model="account.asset.asset">
+            <field name="name">Software 1</field>
+            <field name="category_id" ref="account_asset_category_digitalassets"/>
+            <field name="purchase_value">72500</field>
+            <field name="salvage_value">2500</field>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="supplier_id" ref="base.res_partner_1"/>
+            <field name="purchase_date" eval="time.strftime('%Y-09-01')"/>
+            <field name="in_service_date" eval="time.strftime('%Y-02-01')"/>
+            <field name="accounting_method">accounting_linear</field>
+            <field name="accounting_annuities">5</field>
+            <field name="fiscal_method">fiscal_degressive</field>
+            <field name="fiscal_annuities">2</field>
+            <field name="fiscal_rate">50.0</field>
+            <field name="purchase_tax_ids" eval="[(6, 0, [ref('account_tax_19_6_test')])]"/>
+            <field name="benefit_accelerated_depreciation" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

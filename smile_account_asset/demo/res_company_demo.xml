@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Res Company -->
+
+        <record id="base.main_company" model="res.company">
+            <field name="fiscal_depreciation_account_id" ref="account_asset_145"/>
+            <field name="fiscal_depreciation_expense_account_id" ref="account_asset_6872"/>
+            <field name="fiscal_depreciation_income_account_id" ref="account_asset_7872"/>
+            <field name="exceptional_amortization_expense_account_id" ref="account_asset_6871"/>
+            <field name="exceptional_amortization_income_account_id" ref="account_asset_7876"/>
+        </record>
+
+    </data>
+</odoo>

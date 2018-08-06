@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="menu_account_assets_management"
+            name="Assets"
+            parent="account.menu_finance_entries"/>
+
+        <menuitem id="menu_account_assets"
+            parent="menu_account_assets_management"
+            action="action_account_asset_asset_form"
+            groups="account.group_account_user"
+            sequence="50"/>
+
+        <menuitem id="menu_account_invoice_lines"
+            parent="menu_account_assets_management"
+            action="action_account_invoice_line"
+            sequence="60"/>
+
+        <menuitem id="menu_account_asset_depreciation_lines"
+            parent="menu_account_assets_management"
+            action="action_account_asset_depreciation_line"
+            sequence="70"/>
+
+        <menuitem id="menu_account_asset_sales"
+            parent="menu_account_assets_management"
+            action="action_account_asset_asset_sale_tree"
+            sequence="80"/>
+
+        <menuitem id="menu_account_asset_depreciation_methods"
+            parent="account.account_management_menu"
+            action="action_account_asset_depreciation_methods"
+            sequence="91"/>
+        <menuitem id="menu_account_asset_categories"
+            parent="account.account_management_menu"
+            action="action_account_asset_categories"
+            sequence="92"/>
+
+    </data>
+</odoo>

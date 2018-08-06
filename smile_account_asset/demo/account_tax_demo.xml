@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Account Tax -->
+
+        <record id="account_tax_19_6_test" model="account.tax">
+            <field name="name">TVA 19,6%</field>
+            <field name="amount">0.196</field>
+            <field name="account_id" ref="account_asset_44562"/>
+            <field name="refund_account_id" ref="account_asset_44562"/>
+        </record>
+
+    </data>
+</odoo>
