@@ -9,6 +9,7 @@ class TestTalendJob(TransactionCase):
     def setUp(self):
         super(TestTalendJob, self).setUp()
         self.main_job = self.env.ref('smile_talend_job.main_job')
+        self.main_job.child_ids.unlink()
 
     def test_010_talend_job_single(self):
         logs_nb = len(self.main_job.log_ids)
@@ -20,6 +21,7 @@ class TestTalendJob(TransactionCase):
     def test_020_talend_job_multiple(self):
         second_job = self.main_job.copy(
             default={'parent_id': self.main_job.id})
+        second_job._cr.commit()
         self.assertEquals(len(second_job.log_ids), 0)
         self.main_job.with_context(in_new_thread=False).run_only()
         with registry(self.env.cr.dbname).cursor() as new_cr:
