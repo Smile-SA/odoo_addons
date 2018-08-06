@@ -27,7 +27,7 @@ Manually follow your checks by updating status:
 
 Suggestions & Feedback to: isabelle.richard@smile.fr
 """,
-    "depends": ['base'],
+    "depends": ['web'],
     "data": [
         'security/security.xml',
         'security/ir.model.access.csv',
