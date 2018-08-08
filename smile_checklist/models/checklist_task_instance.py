@@ -40,7 +40,7 @@ class ChecklistTaskInstance(models.Model):
                         field_ids_to_fill |= field
                     else:
                         field_ids_filled |= field
-                except:
+                except Exception:
                     pass
         else:
             self.active = False

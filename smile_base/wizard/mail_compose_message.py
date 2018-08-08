@@ -40,13 +40,13 @@ class MailComposeMessage(models.TransientModel):
         ctx = {'mail_auto_delete': template.auto_delete,
                'mail_notify_user_signature': False,
                'tpl_partners_only': False}
-        format_tz = lambda dt, tz=False, format=False: mail_template.format_tz(self._model, self._cr, self._uid,
-                                                                               dt, tz, format, self._context)
         arg = {
             'object': self.env[model].browse(res_id),
             'user': self.env.user,
             'ctx': ctx,
-            'format_tz': format_tz,
+            'format_tz': lambda dt, tz=False, format=False:
+                mail_template.format_tz(self._model, self._cr, self._uid,
+                                        dt, tz, format, self._context),
         }
         lang = mail_template.mako_template_env.from_string(tools.ustr(template.lang)).render(arg)
 

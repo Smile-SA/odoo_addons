@@ -11,4 +11,5 @@ from ..tools import with_new_cursor
 def write_with_new_cursor(self, vals):
     return self.write(vals)
 
+
 BaseModel.write_with_new_cursor = write_with_new_cursor

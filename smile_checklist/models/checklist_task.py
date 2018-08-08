@@ -50,7 +50,7 @@ class ChecklistTask(models.Model):
             taskinfo = task.read(vals.keys(), load='_classic_write')[0]
             try:
                 shared_items = set(taskinfo.items()) & set(vals.items())
-            except:  # Case of x2m fields
+            except Exception:  # Case of x2m fields
                 shared_items = {}
             if len(shared_items) == len(vals):
                 self -= task

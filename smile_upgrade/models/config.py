@@ -72,4 +72,5 @@ class ConfigManager(object):
         except (IOError, ConfigParser.NoSectionError):
             return
 
+
 configuration = ConfigManager()

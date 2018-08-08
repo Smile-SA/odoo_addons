@@ -29,4 +29,5 @@ def __call__(self, *args, **kwargs):
     finally:
         logger.on_leave()
 
+
 EndPoint.__call__ = __call__

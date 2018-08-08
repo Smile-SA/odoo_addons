@@ -24,5 +24,5 @@ def eval_request_params(kwargs):
     for k, v in kwargs.iteritems():
         try:
             kwargs[k] = safe_eval(v)
-        except:
+        except Exception:
             continue

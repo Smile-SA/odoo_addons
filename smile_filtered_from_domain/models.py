@@ -54,7 +54,7 @@ def filtered_from_domain(self, domain):
         if not isinstance(domain, basestring):
             domain = repr(domain)
         domain = extend(normalize_domain(eval(domain, localdict)))
-    except:
+    except Exception:
         raise Warning(_('Domain not supported for %s filtering: %s') % (self._name, domain))
 
     stack = []
@@ -91,7 +91,7 @@ def filtered_from_domain(self, domain):
         try:
             expr = preformat(item)
             return self.filtered(lambda rec: eval(expr, dict(localdict, rec=rec)))
-        except:
+        except Exception:
             return self.browse()
 
     def parse():
@@ -108,5 +108,6 @@ def filtered_from_domain(self, domain):
         return stack.pop()
 
     return parse()
+
 
 BaseModel.filtered_from_domain = filtered_from_domain

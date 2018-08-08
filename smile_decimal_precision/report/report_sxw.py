@@ -37,4 +37,5 @@ def get_digits(self, obj=None, f=None, dp=None):
             d = res_digits(self.cr)[1]
     return d
 
+
 rml_parse.get_digits = get_digits

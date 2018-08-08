@@ -40,7 +40,7 @@ class ResPartnerType(models.Model):
         ('delivery', 'Shipping address'),
         ('other', 'Other address'),
     ], 'Address Type', default='contact',
-    help="Used to select automatically the right address according to the context in sales and purchases documents.")
+        help="Used to select automatically the right address according to the context in sales and purchases documents.")
 
     # Inherited fields for the children with a parent of this type
     field_ids = fields.Many2many('ir.model.fields', domain=[

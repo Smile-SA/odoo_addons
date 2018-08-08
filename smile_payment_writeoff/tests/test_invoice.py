@@ -93,15 +93,22 @@ class TestAutomaticPaymentWriteoff(TransactionCase):
         * Vérifie qu'il existe une unique ligne de l'écriture comptable move_id avec comme crébit (si amount est
           positif) ou comme crédit (si amount est négatif) amount et comme compte celui ayant comme code acc_number
         """
-        reconcile_line_id = move_id.line_ids.filtered(lambda l: l.debit > 0 and l.full_reconcile_id)
+        reconcile_line_id = move_id.line_ids.filtered(
+            lambda line: line.debit > 0 and line.full_reconcile_id)
         self.assertEqual(len(reconcile_line_id), 1)
-        line_id = reconcile_line_id.full_reconcile_id.reconciled_line_ids.filtered(lambda l: l != reconcile_line_id)
+        line_id = reconcile_line_id.full_reconcile_id. \
+            reconciled_line_ids.filtered(
+                lambda line: line != reconcile_line_id)
         move_id = line_id.move_id
         self.assertEqual(len(move_id.line_ids), nb_lines)
         if amount > 0:
-            lines = move_id.line_ids.filtered(lambda l: l.account_id.code == acc_number and l.credit == amount)
+            lines = move_id.line_ids.filtered(
+                lambda line: line.account_id.code == acc_number and
+                line.credit == amount)
         else:
-            lines = move_id.line_ids.filtered(lambda l: l.account_id.code == acc_number and l.debit == amount * -1)
+            lines = move_id.line_ids.filtered(
+                lambda line: line.account_id.code == acc_number and
+                line.debit == amount * -1)
         self.assertEqual(len(lines), 1)
 
     def test_00_automatic_paid_invoice(self):

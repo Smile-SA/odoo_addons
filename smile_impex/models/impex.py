@@ -229,7 +229,7 @@ class IrModelImpex(models.AbstractModel):
             logger.error(repr(e))
             try:
                 self.write({'state': 'exception', 'to_date': fields.Datetime.now()})
-            except:
+            except Exception:
                 logger.warning("Cannot set import to exception")
             e.traceback = sys.exc_info()
             raise

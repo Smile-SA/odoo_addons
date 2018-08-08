@@ -20,4 +20,5 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     finally:
         logger.on_leave()
 
+
 service.model.execute_cr = execute_cr

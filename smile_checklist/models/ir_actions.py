@@ -22,7 +22,7 @@ class IrActionsActWindow(models.Model):
             if 'act_window_id' not in context:
                 context['act_window_id'] = self.id
                 self.context = '%s' % context
-        except:
+        except Exception:
             pass
 
     @api.model

@@ -172,6 +172,7 @@ def setup_triggers(self, model):
         elif path:
             self.recursive = True
 
+
 Field.modified = modified
 Field.modified_draft = modified_draft
 Field.resolve_deps = resolve_deps

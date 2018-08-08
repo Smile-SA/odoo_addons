@@ -80,4 +80,5 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                 os._exit(1)
             raise
 
+
 Registry.new = new

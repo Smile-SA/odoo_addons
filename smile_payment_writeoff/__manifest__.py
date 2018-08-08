@@ -32,7 +32,9 @@ Payment_writeoff amount auto paid
 =================================
 
 This module add fields, on company, loss and profit amounts and accounts.
-When a payment is done from invoice, if writeoff is in the allowed amount, mark invoice as fully paid with the profit/loss account.
+
+When a payment is done from invoice, if writeoff is in the allowed amount,
+mark invoice as fully paid with the profit/loss account.
 
 
 Suggestions & Feedback to: matthieu.joossen@smile.fr

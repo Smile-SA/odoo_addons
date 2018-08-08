@@ -11,7 +11,9 @@ def update_checklists(method):
     def wrapper(self, cr, *args, **kwargs):
         res = method(self, cr, *args, **kwargs)
         if self.get('checklist'):
-            cr.execute("select relname from pg_class where relname='checklist'")
+            cr.execute(
+                "select relname from pg_class "
+                "where relname='checklist'")
             if cr.rowcount:
                 env = api.Environment(cr, SUPERUSER_ID, {})
                 env['checklist']._update_models()
@@ -25,7 +27,8 @@ class Checklist(models.Model):
 
     def __init__(self, pool, cr):
         super(Checklist, self).__init__(pool, cr)
-        setattr(Registry, 'setup_models', update_checklists(getattr(Registry, 'setup_models')))
+        setattr(Registry, 'setup_models', update_checklists(
+            getattr(Registry, 'setup_models')))
 
     name = fields.Char(size=128, required=True, translate=True)
     model_id = fields.Many2one('ir.model', 'Model', required=True)
@@ -33,14 +36,19 @@ class Checklist(models.Model):
     active = fields.Boolean('Active', default=True)
     active_field = fields.Boolean("Has an 'Active' field", compute='_get_active_field')
     action_id = fields.Many2one('ir.actions.server', 'Action')
-    act_window_ids = fields.Many2many('ir.actions.act_window', 'checklist_act_window_rel', 'act_window_id', 'checklist_id', 'Menus')
-    view_ids = fields.Many2many('ir.ui.view', 'checklist_view_rel', 'view_id', 'checklist_id', 'Views')
+    act_window_ids = fields.Many2many(
+        'ir.actions.act_window', 'checklist_act_window_rel',
+        'act_window_id', 'checklist_id', 'Menus')
+    view_ids = fields.Many2many(
+        'ir.ui.view', 'checklist_view_rel',
+        'view_id', 'checklist_id', 'Views')
     task_ids = fields.One2many('checklist.task', 'checklist_id', 'Tasks')
 
     @api.one
     def _get_active_field(self):
         if self.model_id:
-            self.active_field = 'active' in self.env[self.model_id.model]._fields
+            self.active_field = 'active' in self.env[
+                self.model_id.model]._fields
 
     @api.one
     @api.constrains('model_id')
@@ -48,7 +56,8 @@ class Checklist(models.Model):
         self = self.with_context(active_test=True)
         domain = [('model_id', '=', self.model_id.id), ('id', '!=', self.id)]
         if self.search_count(domain):
-            raise ValidationError(_('A checklist already exists for this model !'))
+            raise ValidationError(
+                _('A checklist already exists for this model !'))
 
     @api.model
     @tools.ormcache()
@@ -60,8 +69,11 @@ class Checklist(models.Model):
 
     @staticmethod
     def _get_checklist_task_inst(self):
-        domain = [('task_id.checklist_id.model_id.model', '=', self._name), ('res_id', '=', self.id)]
-        self.checklist_task_instance_ids = self.env['checklist.task.instance'].search(domain)
+        domain = [
+            ('task_id.checklist_id.model_id.model', '=', self._name),
+            ('res_id', '=', self.id)]
+        self.checklist_task_instance_ids = self.env[
+            'checklist.task.instance'].search(domain)
 
     @api.model
     def _patch_model_decoration(self, model):
@@ -74,11 +86,14 @@ class Checklist(models.Model):
             setattr(type(model_obj), '_get_checklist_task_inst',
                     api.one(Checklist._get_checklist_task_inst))
         new_fields = {
-            'checklist_task_instance_ids': fields.One2many('checklist.task.instance',
-                                                           string='Checklist Task Instances',
-                                                           compute='_get_checklist_task_inst'),
-            'total_progress_rate': fields.Float('Progress Rate', digits=(16, 2)),
-            'total_progress_rate_mandatory': fields.Float('Mandatory Progress Rate', digits=(16, 2)),
+            'checklist_task_instance_ids': fields.One2many(
+                'checklist.task.instance',
+                string='Checklist Task Instances',
+                compute='_get_checklist_task_inst'),
+            'total_progress_rate': fields.Float(
+                'Progress Rate', digits=(16, 2)),
+            'total_progress_rate_mandatory': fields.Float(
+                'Mandatory Progress Rate', digits=(16, 2)),
         }
         for new_field in new_fields.iteritems():
             model_obj._add_field(*new_field)
@@ -91,7 +106,8 @@ class Checklist(models.Model):
         model_obj._auto_end()
         if update:
             for method in ('create', 'write', 'fields_view_get'):
-                decorated_method = getattr(checklist_decorators, 'checklist_%s_decorator' % method)()
+                decorated_method = getattr(
+                    checklist_decorators, 'checklist_%s_decorator' % method)()
                 model_obj._patch_method(method, decorated_method)
         return update
 
@@ -114,7 +130,8 @@ class Checklist(models.Model):
         update = False
         if not models:
             checklists = self.with_context(active_test=True).search([])
-            models = {checklist.model_id: checklist for checklist in checklists}
+            models = {checklist.model_id: checklist
+                      for checklist in checklists}
         for model, checklist in models.iteritems():
             if model.model not in self.env.registry.models:
                 continue

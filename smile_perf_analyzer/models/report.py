@@ -20,4 +20,5 @@ def render_report(cr, uid, ids, name, data, context=None):
     finally:
         logger.on_leave()
 
+
 report.render_report = render_report

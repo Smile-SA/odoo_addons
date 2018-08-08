@@ -27,4 +27,5 @@ def _callback(self, model_name, method_name, args, job_id):
         logger.on_leave()
         native_callback(self, model_name, method_name, args, job_id)
 
+
 ir_cron._callback = _callback

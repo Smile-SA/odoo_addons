@@ -52,10 +52,12 @@ class unquote(str):
         return unquote('%s.%s' % (self, attr))
 
     def __call__(self, *args, **kwargs):
-        format_args = lambda k: isinstance(k, basestring) and '"%s"' % k or k
-        format_kwargs = lambda (k, v): '%s=%s' % (k, isinstance(v, basestring) and '"%s"' % v or v)
-        params = [', '.join(map(format_args, args)),
-                  ', '.join(map(format_kwargs, kwargs.iteritems()))]
+        params = [', '.join(map(
+            lambda k: isinstance(k, basestring) and '"%s"' % k or k, args)),
+            ', '.join(map(
+                lambda (k, v): '%s=%s' % (k, isinstance(v, basestring) and
+                                          '"%s"' % v or v),
+                kwargs.iteritems()))]
         return unquote('%s(%s)' % (self, ', '.join(params)))
 
     def __repr__(self):

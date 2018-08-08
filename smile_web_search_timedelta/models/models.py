@@ -57,4 +57,5 @@ def _where_calc(self, domain, active_test=True):
                 cond[2] = (datetime.now() - relativedelta(**args)).strftime(value_format)
     return native_where_calc(self, domain, active_test)
 
+
 models.BaseModel._where_calc = _where_calc

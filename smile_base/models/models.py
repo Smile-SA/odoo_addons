@@ -190,6 +190,7 @@ def _get_comparison_logs(self, other):
         logs.append('<b>%s</b>: %s' % (label, log))
     return logs
 
+
 SET_OPERATORS = {
     '&': and_,
     '|': or_,
@@ -235,7 +236,7 @@ def filtered_from_domain(self, domain):
         if not isinstance(domain, basestring):
             domain = repr(domain)
         domain = extend(normalize_domain(eval(domain, localdict)))
-    except:
+    except Exception:
         raise UserError(_('Domain not supported for %s filtering: %s') % (self._name, domain))
 
     stack = []
@@ -272,7 +273,7 @@ def filtered_from_domain(self, domain):
         try:
             expr = preformat(item)
             return self.filtered(lambda rec: eval(expr, dict(localdict, rec=rec)))
-        except:
+        except Exception:
             return self.browse()
 
     def parse():

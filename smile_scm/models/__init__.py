@@ -5,4 +5,3 @@ from . import scm_repository_branch
 from . import scm_repository_tag
 from . import scm_vcs
 from . import scm_version
-

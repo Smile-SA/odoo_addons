@@ -57,7 +57,7 @@ class SmileDBHandler(logging.Handler):
 
         try:
             cr.execute(request, params)
-        except:
+        except Exception:
             # retry
             cr = self._get_cursor(dbname)
             cr.execute(request, params)
@@ -72,5 +72,6 @@ class SmileDBHandler(logging.Handler):
             finally:
                 cr.close()
         self._dbname_to_cr = {}
+
 
 logging.getLogger('smile_log').addHandler(SmileDBHandler())

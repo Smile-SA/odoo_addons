@@ -102,9 +102,10 @@ class ResGroups(models.Model):
     def button_complete_access_controls(self):
         """Create access rules for the first level relation models of access rule models not only in readonly"""
         Access = self.env['ir.model.access']
-        filter_rule = lambda rule: rule.perm_write or rule.perm_create or rule.perm_unlink
         for group in self:
-            models = group.model_access.filtered(filter_rule).mapped('model_id')
+            models = group.model_access.filtered(
+                lambda rule: rule.perm_write or rule.perm_create or
+                rule.perm_unlink).mapped('model_id')
             for model in models._get_relations(self._context.get('relations_level', 1)):
                 Access.create({
                     'name': '%s %s' % (model.model, group.name),

@@ -28,4 +28,5 @@ def depends(*args):
         raise NotImplementedError("Compute method cannot depend on field 'id'.")
     return attrsetter('_depends', args)
 
+
 api.depends = depends
