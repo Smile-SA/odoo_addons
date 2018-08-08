@@ -350,7 +350,7 @@ class AnsibleDeployment(models.Model):
         template = self.env.ref('smile_cd.mail_template_deployment_result')
         self.with_context(
             deployment_url=deployment_url).message_post_with_template(
-                template.id)
+            template.id)
 
     @api.model
     def auto_run(self):

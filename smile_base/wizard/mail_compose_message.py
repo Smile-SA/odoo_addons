@@ -45,8 +45,9 @@ class MailComposeMessage(models.TransientModel):
             'user': self.env.user,
             'ctx': ctx,
             'format_tz': lambda dt, tz=False, format=False:
-                mail_template.format_tz(self._model, self._cr, self._uid,
-                                        dt, tz, format, self._context),
+                mail_template.format_tz(
+                    self._model, self._cr, self._uid,
+                dt, tz, format, self._context),
         }
         lang = mail_template.mako_template_env.from_string(tools.ustr(template.lang)).render(arg)
 

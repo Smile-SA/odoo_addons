@@ -824,8 +824,8 @@ class Build(models.Model):
                 lambda log: log.type == 'test' and log.result == 'error')),
             'test_count': len(self.log_ids.filtered(
                 lambda log: log.type == 'test' and log.result != 'ignored')),
-            'coverage_avg':
-                lines_count and covered_lines_count / lines_count or 0.0,
+            'coverage_avg': lines_count and
+            covered_lines_count / lines_count or 0.0,
             'result': self.log_ids.filtered(
                 lambda log: log.result == 'error') and 'unstable' or 'stable',
         })

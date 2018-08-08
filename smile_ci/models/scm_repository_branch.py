@@ -142,7 +142,7 @@ class Branch(models.Model):
         image = ''.join(
             char if char.isalnum() else '_'
             for char in (self.display_name or '').lower()).replace(
-                '__', '_').rstrip('_')
+            '__', '_').rstrip('_')
         self.docker_image = '%s:base' % image
 
     @api.one
@@ -351,7 +351,7 @@ class Branch(models.Model):
         for value in safe_eval(self.ignored_tests).values():
             if type(value) == list:
                 if list(filter(lambda element: type(element) not in
-                        (str, unicode), value)):
+                               (str, unicode), value)):
                     raise ValidationError(_(message))
             elif type(value) not in (str, unicode):
                 raise ValidationError(_(message))
@@ -480,7 +480,7 @@ class Branch(models.Model):
             return False
         date = datetime.strptime(
             last_creation_date, DATETIME_FORMAT) + relativedelta(
-                **{age_type: -age_number})
+            **{age_type: -age_number})
         return date.strftime(DATETIME_FORMAT)
 
     @api.one

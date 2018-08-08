@@ -60,7 +60,7 @@ class DiscountContractRule(models.Model):
                     if line.currency_id != line.company_currency_id:
                         amount = line.currency_id.with_context(
                             date=line.invoice_id.date_invoice).compute(
-                                amount, line.company_currency_id)
+                            amount, line.company_currency_id)
                     total += amount
                 else:
                     total += line.price_subtotal_signed

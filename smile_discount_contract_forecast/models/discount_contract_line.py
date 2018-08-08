@@ -44,9 +44,8 @@ class DiscountContractLine(models.Model):
 
     @api.multi
     def _get_period_dates(self, in_previous_period=False):
-        date_start, date_stop = super(DiscountContractLine,
-                                      self)._get_period_dates(
-                                          in_previous_period)
+        date_start, date_stop = super(
+            DiscountContractLine, self)._get_period_dates(in_previous_period)
         if self._context.get('force_date_start'):
             date_start = self._context['force_date_start']
         if self._context.get('force_date_stop'):
