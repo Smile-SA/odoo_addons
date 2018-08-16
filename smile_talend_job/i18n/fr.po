@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0-20180612\n"
+"Project-Id-Version: Odoo Server 11.0-20180803\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-21 08:48+0000\n"
-"PO-Revision-Date: 2018-07-21 08:48+0000\n"
+"POT-Creation-Date: 2018-08-06 07:51+0000\n"
+"PO-Revision-Date: 2018-08-06 07:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: smile_talend_job
-#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_archive_file
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_archive
 msgid "Archive File"
 msgstr "Fichier Archive"
 
@@ -42,9 +42,9 @@ msgid "Command"
 msgstr "Commande"
 
 #. module: smile_talend_job
-#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_context_file
-msgid "Context File"
-msgstr "Fichier Contexte"
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_context
+msgid "Context"
+msgstr "Contexte"
 
 #. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_create_uid
@@ -70,6 +70,7 @@ msgid "Display Name"
 msgstr "Nom à afficher"
 
 #. module: smile_talend_job
+#: selection:talend.job,last_log_state:0
 #: selection:talend.job.logs,state:0
 msgid "Done"
 msgstr "Terminée"
@@ -80,16 +81,16 @@ msgid "End Date"
 msgstr "Date de fin"
 
 #. module: smile_talend_job
-#: code:addons/smile_talend_job/models/talend_job.py:44
+#: code:addons/smile_talend_job/models/talend_job.py:51
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Talend jobs."
 msgstr "Erreur! Vous ne pouvez pas créer de hiérarchie recursive avec les Talend jobs."
 
 #. module: smile_talend_job
-#: code:addons/smile_talend_job/models/talend_job.py:101
+#: code:addons/smile_talend_job/models/talend_job.py:118
 #, python-format
 msgid "Execution already in progress"
-msgstr "Exécution éjà en cours"
+msgstr "Exécution déjà en cours"
 
 #. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_id
@@ -98,6 +99,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: smile_talend_job
+#: selection:talend.job,last_log_state:0
 #: selection:talend.job.logs,state:0
 msgid "Killed"
 msgstr "Tuée"
@@ -108,7 +110,7 @@ msgid "Last Execution Date"
 msgstr "Date de dernière exécution"
 
 #. module: smile_talend_job
-#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_last_log_date
+#: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_last_log_state
 msgid "Last Execution Status"
 msgstr "Etat de la dernière exécution"
 
@@ -134,7 +136,7 @@ msgstr "Dernière mise à jour le"
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_log_ids
 #: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_form
 msgid "Logs"
-msgstr "Historique"
+msgstr "Historiques"
 
 #. module: smile_talend_job
 #: model:ir.model.fields,field_description:smile_talend_job.field_talend_job_loop
@@ -173,6 +175,11 @@ msgstr "Id du processus"
 
 #. module: smile_talend_job
 #: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_form
+msgid "Propagate context"
+msgstr "Propager le contexte"
+
+#. module: smile_talend_job
+#: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_form
 msgid "Refresh logs"
 msgstr "Rafraîchir les logs"
 
@@ -187,6 +194,7 @@ msgid "Run only it"
 msgstr "Exécuter uniquement celui-ci"
 
 #. module: smile_talend_job
+#: selection:talend.job,last_log_state:0
 #: selection:talend.job.logs,state:0
 msgid "Running"
 msgstr "En cours"
@@ -202,7 +210,6 @@ msgid "Status"
 msgstr "État"
 
 #. module: smile_talend_job
-#: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_form
 #: model:ir.ui.view,arch_db:smile_talend_job.view_talend_job_logs_form
 msgid "Stop"
 msgstr "Arrêter"
@@ -228,7 +235,7 @@ msgid "Talend Jobs"
 msgstr "Jobs Talend"
 
 #. module: smile_talend_job
-#: code:addons/smile_talend_job/models/talend_job.py:124
+#: code:addons/smile_talend_job/models/talend_job.py:145
 #, python-format
 msgid "This module support only zipfiles"
 msgstr "Ce module supporte uniquement les fichiers ZIP"

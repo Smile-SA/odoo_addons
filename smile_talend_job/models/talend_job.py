@@ -27,8 +27,8 @@ class TalendJob(models.Model):
 
     name = fields.Char(required=True)
     sequence = fields.Integer('Priority', required=True, default=15)
-    archive_file = fields.Binary()
-    context_file = fields.Binary()
+    archive = fields.Binary()
+    context = fields.Text()
     path = fields.Char()
     args = fields.Char()
     log_ids = fields.One2many(
@@ -52,9 +52,9 @@ class TalendJob(models.Model):
                                     'recursive hierarchy of Talend jobs.'))
 
     @api.one
-    @api.depends('archive_file', 'child_ids.archive_file')
+    @api.depends('archive', 'child_ids.archive')
     def _get_job_version(self):
-        if self.archive_file:
+        if self.archive:
             with self._get_zipfile() as zf:
                 filename = 'jobInfo.properties'
                 # INFO: can't use configparser because this file has no section
@@ -92,16 +92,15 @@ class TalendJob(models.Model):
             self.last_log_state = False
 
     @api.one
-    @api.depends('name', 'path', 'args', 'context_file')
+    @api.depends('name', 'path', 'args', 'context')
     def _get_command(self):
         cmd = [self._get_exefile()]
         if self.args:
             cmd += self.args.split(' ')
-        if self.context_file:
-            cmd += [
-                '--context_param',
-                'contextfile=%s' % self._get_contextfile(),
-            ]
+        context = self.context and \
+            self.context.replace(' ', '').replace('\t', '') or ''
+        for param in filter(bool, context.split('\n')):
+            cmd += ['--context_param', param]
         self.command = ' '.join(cmd)
 
     @api.multi
@@ -118,10 +117,10 @@ class TalendJob(models.Model):
             raise UserError(_('Execution already in progress'))
         if self._context.get('in_new_thread', True):
             thread = threading.Thread(
-                target=self.filtered('archive_file')._run)
+                target=self.filtered('archive')._run)
             thread.start()
         else:
-            self.filtered('archive_file')._run()
+            self.filtered('archive')._run()
         return True
 
     @api.one
@@ -139,7 +138,7 @@ class TalendJob(models.Model):
     @api.multi
     def _get_zipfile(self):
         self.ensure_one()
-        bin_data = base64.b64decode(self.archive_file)
+        bin_data = base64.b64decode(self.archive)
         f = io.BytesIO(bin_data)
         if not zipfile.is_zipfile(f):
             raise UserError(_('This module support only zipfiles'))
@@ -172,10 +171,6 @@ class TalendJob(models.Model):
                  stat.S_IRWXU +
                  stat.S_IRGRP + stat.S_IXGRP +
                  stat.S_IROTH + stat.S_IXOTH)
-        if self.context_file:
-            context_file = self._get_contextfile()
-            with open(context_file, 'wb') as cf:
-                cf.write(base64.b64decode(self.context_file))
 
     @api.multi
     def refresh_logs(self):
@@ -185,5 +180,5 @@ class TalendJob(models.Model):
     def propagate_context(self):
         for job in self:
             children = job._get_all_children()
-            children.write({'context_file': job.context_file})
+            children.write({'context': job.context})
         return True

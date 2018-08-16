@@ -37,7 +37,7 @@ class TestTalendJob(TransactionCase):
     def test_030_talend_job_context_propagation(self):
         second_job = self.main_job.copy(
             default={'parent_id': self.main_job.id})
-        self.main_job.context_file = self.main_job.archive_file
-        self.assertFalse(second_job.context_file)
+        self.main_job.context = "Main context"
+        self.assertFalse(second_job.context)
         self.main_job.propagate_context()
-        self.assertTrue(bool(second_job.context_file))
+        self.assertEquals(second_job.context, self.main_job.context)
