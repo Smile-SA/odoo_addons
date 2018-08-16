@@ -38,9 +38,13 @@ class PurchaseCommitmentTest(TransactionCase):
         """
         I confirm a purchase order of 255.
         I check that the commitment is -255.
+        I cancel the order.
+        I check that the commitment is 0.
         """
         self.purchase.order_line.write({
             'account_analytic_id': self.analytic_account.id,
         })
         self.purchase.button_confirm()
         self.assertEquals(self.budget_line.commitment_amount, -255.0)
+        self.purchase.button_cancel()
+        self.assertEquals(self.budget_line.commitment_amount, 0.0)

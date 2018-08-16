@@ -46,6 +46,11 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_cancel(self):
+        """ Revert analytic line created at order confirmation.
+        Do not create a revert line for orders that were not confirmed.
+        """
+        order_lines_to_reverse = self.filtered(
+            lambda order: order.state == 'purchase').mapped('order_line')
         res = super(PurchaseOrder, self).button_cancel()
-        self.mapped('order_line')._create_analytic_line(reverse=True)
+        order_lines_to_reverse._create_analytic_line(reverse=True)
         return res
