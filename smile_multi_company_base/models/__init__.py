@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# (C) 2017 Smile (<http://www.smile.fr>)
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from . import fields
 from . import ir_property
