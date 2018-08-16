@@ -29,6 +29,7 @@ class AccountAssetSplitWizard(models.TransientModel):
     salvage_value = fields.Monetary('Salvage Value', required=True)
     quantity = fields.Float('Quantity', required=True)
 
+    @api.one
     @api.constrains('quantity')
     def _check_quantity(self):
         if not self._check_split('quantity'):
@@ -36,6 +37,7 @@ class AccountAssetSplitWizard(models.TransientModel):
                 _('You must specify a positive quantity lower than '
                   'the initial one!'))
 
+    @api.one
     @api.constrains('purchase_value', 'salvage_value')
     def _check_purchase_value(self):
         if not self._check_split('purchase_value', '>='):

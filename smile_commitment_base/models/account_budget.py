@@ -105,6 +105,7 @@ class BudgetPositionCommitmentLimit(models.Model):
         'Commitment Amount Limit', digits=dp.get_precision('Account'),
         required=True)
 
+    @api.one
     @api.constrains('amount_limit', 'user_id')
     def check_amount_limit_inferior_global_limit(self):
         if self.user_id.commitment_global_limit and \
