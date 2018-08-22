@@ -46,7 +46,7 @@ class Module(models.Model):
             _logger.info('loading %s/%s...' % (module_name, filename))
             _, ext = os.path.splitext(filename)
             pathname = os.path.join(module_name, filename)
-            with tools.file_open(pathname) as fp:
+            with tools.file_open(pathname, 'rb') as fp:
                 if ext == '.sql':
                     tools.convert_sql_import(cr, fp)
                 elif ext == '.csv':
