@@ -19,7 +19,7 @@ class TestAccountCheck(TransactionCase):
             {'name': 'Check User',
              'login': 'check_user',
              'groups_id': [(4, self.ref(
-                'smile_checkbook.group_account_check_user'))]})
+                 'smile_checkbook.group_account_check_user'))]})
         self.env['account.check'].search([]).unlink()
 
     def _generate_checks(self):
@@ -54,7 +54,7 @@ class TestAccountCheck(TransactionCase):
         wizard.sudo(self.check_manager).onchange_range_of_numbers()
         self.assertEquals(10, wizard.quantity)
         self.assertEquals(1802838, wizard.from_number)
-        self.assertEquals(1802848, wizard.to_number)
+        self.assertEquals(1802847, wizard.to_number)
         wizard.sudo(self.check_manager).write({
             'quantity': 0,
             'from_number': 0,
@@ -62,12 +62,12 @@ class TestAccountCheck(TransactionCase):
         })
         wizard.sudo(self.check_manager).write({
             'from_number': 123638,
-            'to_number': 123658,
+            'to_number': 123657,
         })
         wizard.sudo(self.check_manager).onchange_range_of_numbers()
         self.assertEquals(20, wizard.quantity)
         self.assertEquals(123638, wizard.from_number)
-        self.assertEquals(123658, wizard.to_number)
+        self.assertEquals(123657, wizard.to_number)
 
     def test_generate_checks(self):
         """ As account manager, I open wizard to generate a checkbook.

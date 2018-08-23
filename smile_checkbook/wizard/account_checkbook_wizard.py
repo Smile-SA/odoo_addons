@@ -19,9 +19,9 @@ class AccountCheckbookWizard(models.TransientModel):
     @api.onchange('from_number', 'quantity', 'to_number')
     def onchange_range_of_numbers(self):
         if self.quantity:
-            self.to_number = self.from_number + self.quantity
+            self.to_number = self.from_number + self.quantity - 1
         elif self.to_number:
-            self.quantity = self.to_number - self.from_number
+            self.quantity = self.to_number - self.from_number + 1
 
     @api.onchange('partner_id')
     def onchange_partner(self):
@@ -39,7 +39,7 @@ class AccountCheckbookWizard(models.TransientModel):
             raise UserError(
                 _("Minimal number is greather than maximum number. "
                     "Please check range of numbers."))
-        if not self.from_number + self.quantity == self.to_number:
+        if not self.from_number + self.quantity - 1 == self.to_number:
             raise UserError(
                 _("Quantity seems inconsistent with range of numbers"))
         common_vals = {
@@ -47,7 +47,7 @@ class AccountCheckbookWizard(models.TransientModel):
             'company_id': self.company_id.id,
             'state': 'available',
         }
-        for number in range(self.from_number, self.to_number):
+        for number in range(self.from_number, self.to_number + 1):
             vals = dict(common_vals, number=number)
             AccountCheck.create(vals)
         # Refresh check tree view
