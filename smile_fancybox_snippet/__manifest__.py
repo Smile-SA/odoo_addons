@@ -2,7 +2,15 @@
 {
     'name': 'Fancybox Snippet',
 
-    'author': 'Smile',
+    "version": "1.0",
+
+    "author": "Smile",
+
+    "website": 'http://www.smile.fr',
+
+    "license": 'AGPL-3',
+
+    "category": "Tools",
 
     'summary': 'A snippet implementing jquery fancybox',
 
