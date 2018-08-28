@@ -1,0 +1,250 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_analytic_forecasting
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-11-08 11:06+0000\n"
+"PO-Revision-Date: 2011-11-08 11:06+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_analytic_forecasting
+#: selection:account.analytic.forecasting.wizard,measure:0
+msgid "Ratio"
+msgstr "Ratio"
+
+#. module: smile_analytic_forecasting
+#: help:account.analytic.forecasting.report,unit_amount:0
+msgid "Specifies the amount of quantity to count."
+msgstr "Spécifie la quantité"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.wizard,period_ids:0
+#: selection:account.analytic.forecasting.wizard,x_axis:0
+msgid "Analysis Periods"
+msgstr "Périodes d'analyse"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,move_id:0
+msgid "Move Line"
+msgstr "Ecriture comptable"
+
+#. module: smile_analytic_forecasting
+#: selection:account.analytic.forecasting.report,type:0
+#: selection:account.analytic.line,type:0
+msgid "Forecast"
+msgstr "Prévu"
+
+#. module: smile_analytic_forecasting
+#: code:addons/smile_analytic_forecasting/report/analytic_report.py:114
+#, python-format
+msgid "You cannot delete an entry of this view!"
+msgstr "Vous ne pouvez pas supprimer une entrée depuis cette vue !"
+
+#. module: smile_analytic_forecasting
+#: constraint:account.analytic.forecasting.report:0
+#: constraint:account.analytic.line:0
+msgid "You cannot pass an actual entry in a future period!"
+msgstr "Vous ne pouvez pas passer d'écritures de type réalisé sur une période future !"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.wizard,field_ids:0
+msgid "Visible Fields"
+msgstr "Champs visibles"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,type:0
+#: field:account.analytic.line,type:0
+msgid "Type"
+msgstr "Type"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,product_id:0
+msgid "Product"
+msgstr "Produit"
+
+#. module: smile_analytic_forecasting
+#: constraint:account.analytic.forecasting.report:0
+msgid "You cannot pass a forecast entry in a past/current period!"
+msgstr "Vous ne pouvez pas passer d'écritures du type prévu sur une période passée ou courante !"
+
+#. module: smile_analytic_forecasting
+#: constraint:account.analytic.line:0
+msgid "You cannot pass a forecast entry in a past period!"
+msgstr "Vous ne pouvez pas passer d'écritures du type prévu sur une période passée !"
+
+#. module: smile_analytic_forecasting
+#: model:ir.model,name:smile_analytic_forecasting.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Ligne analytique"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,name:0
+msgid "Description"
+msgstr "Description"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.wizard,x_axis:0
+msgid "X-axis"
+msgstr "Absisse"
+
+#. module: smile_analytic_forecasting
+#: model:ir.model,name:smile_analytic_forecasting.model_account_analytic_forecasting_report
+msgid "Analytic Forecasting Report"
+msgstr "Analyse du prévisionnel"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,company_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_analytic_forecasting
+#: view:account.analytic.forecasting.wizard:0
+#: model:ir.actions.act_window,name:smile_analytic_forecasting.action_account_analytic_forecasting_wizard_form
+#: model:ir.ui.menu,name:smile_analytic_forecasting.menu_account_analytic_forecasting_wizard_form
+msgid "Analytic Forecasting Analysis"
+msgstr "Analyse du prévisionnel"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,user_id:0
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,ref:0
+msgid "Ref."
+msgstr "Réf."
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,date:0
+msgid "Date"
+msgstr "Date"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,currency_id:0
+msgid "Account currency"
+msgstr "Devise"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,product_uom_id:0
+msgid "UoM"
+msgstr "UdM"
+
+#. module: smile_analytic_forecasting
+#: model:ir.model,name:smile_analytic_forecasting.model_account_analytic_forecasting_wizard
+msgid "Analytic Forecasting Wizard"
+msgstr "Analyse du prévisionnel"
+
+#. module: smile_analytic_forecasting
+#: selection:account.analytic.forecasting.report,type:0
+#: selection:account.analytic.line,type:0
+msgid "Actual"
+msgstr "Réalisé"
+
+#. module: smile_analytic_forecasting
+#: constraint:account.analytic.forecasting.report:0
+#: constraint:account.analytic.line:0
+msgid "You cannot pass/update a journal entry in a closed period!"
+msgstr "Vous ne pouvez pas passer d'écritures sur une période close !"
+
+#. module: smile_analytic_forecasting
+#: view:account.analytic.forecasting.wizard:0
+msgid "Open Window"
+msgstr "Ouvrir la fenêtre"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,active:0
+#: field:account.analytic.line,active:0
+msgid "Active"
+msgstr "Active"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,amount:0
+#: selection:account.analytic.forecasting.wizard,measure:0
+msgid "Amount"
+msgstr "Montant"
+
+#. module: smile_analytic_forecasting
+#: code:addons/smile_analytic_forecasting/report/analytic_report.py:108
+#: code:addons/smile_analytic_forecasting/report/analytic_report.py:111
+#: code:addons/smile_analytic_forecasting/report/analytic_report.py:114
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,journal_id:0
+msgid "Analytic Journal"
+msgstr "Journal analytique"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,unit_amount:0
+#: selection:account.analytic.forecasting.wizard,measure:0
+msgid "Quantity"
+msgstr "Quantité"
+
+#. module: smile_analytic_forecasting
+#: code:addons/smile_analytic_forecasting/report/analytic_report.py:111
+#, python-format
+msgid "You cannot modify an entry of this view!"
+msgstr "Vous ne pouvez pas modifier une entrée depuis cette vue !"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,general_account_id:0
+msgid "General Account"
+msgstr "Compte comptable"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: smile_analytic_forecasting
+#: model:ir.module.module,shortdesc:smile_analytic_forecasting.module_meta_information
+msgid "Smile Analytic Forecasting"
+msgstr "Smile Analytic Forecasting"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,period_id:0
+msgid "Period"
+msgstr "Periode d'analyse"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,account_id:0
+msgid "Analytic Account"
+msgstr "Compte analytique"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,amount_currency:0
+msgid "Amount currency"
+msgstr "Montant devisé"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.wizard,create_period_ids:0
+#: selection:account.analytic.forecasting.wizard,x_axis:0
+msgid "Reference Periods"
+msgstr "Périodes de référence"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.wizard,measure:0
+msgid "Measure"
+msgstr "Mesure"
+
+#. module: smile_analytic_forecasting
+#: field:account.analytic.forecasting.report,create_period_id:0
+#: field:account.analytic.line,create_period_id:0
+msgid "Create Period"
+msgstr "Période de référence"
+
+#. module: smile_analytic_forecasting
+#: code:addons/smile_analytic_forecasting/report/analytic_report.py:108
+#, python-format
+msgid "You cannot add an entry of this view!"
+msgstr "Vous ne pouvez pas ajouter une entrée depuis cette vue !"

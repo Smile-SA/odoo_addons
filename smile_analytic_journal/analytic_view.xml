@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+		<!-- Analytic Journal View -->
+
+        <record id="view_account_analytic_journal_view_tree" model="ir.ui.view">
+            <field name="name">account.analytic.journal.view.tree</field>
+            <field name="model">account.analytic.journal.view</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Journal Views">
+                	<field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_journal_view_form" model="ir.ui.view">
+            <field name="name">account.analytic.journal.view.form</field>
+            <field name="model">account.analytic.journal.view</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Journal View">
+                	<field name="name"/>
+                	<field name="column_ids" colspan="4" nolabel="1" mode="tree,form">
+						<tree string="Columns">
+							<field name='name'/>
+							<field name='field_id'/>
+							<field name='required'/>
+							<field name='readonly'/>
+							<field name='searchable'/>
+							<field name='extended_filter'/>
+							<field name='groupable'/>
+							<field name='sequence'/>
+						</tree>
+						<form string="Column">
+							<group col="2">
+								<field name='field_id' on_change="onchange_field_id(field_id)"/>
+								<field name='name'/>
+								<field name='sequence'/>
+							</group>
+							<group col="2">
+								<field name='required'/>
+								<field name='readonly'/>
+								<field name='searchable'/>
+								<field name='extended_filter'/>
+								<field name='groupable'/>
+							</group>
+						</form>
+                	</field>
+                	<field name="group_ids" colspan="4" nolabel="1"/>
+                </form>
+            </field>
+        </record>
+
+
+		<!-- Analytic Journal -->
+
+        <record id="view_account_analytic_journal_tree" model="ir.ui.view">
+            <field name="name">account.analytic.journal.tree</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="account.view_account_analytic_journal_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="replace">
+                	<field name="complete_name"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_journal_form" model="ir.ui.view">
+            <field name="name">account.analytic.journal.form</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_analytic_journal_form"/>
+            <field name="arch" type="xml">
+            	<data>
+	                <field name="active" position="replace">
+						<field name="sign" attrs="{'invisible': [('type', '=', 'view')]}"/>
+						<newline/>
+	                </field>
+					<field name="name" position="before">
+						<label colspan="2"/>
+						<field name="active"/>
+					</field>
+	                <field name="company_id" position="after">
+						<field name="parent_id"/>
+						<newline/>
+						<field name="view_id"/>
+						<button type='object' name="open_window" string="Show View" colspan="2" context="{'journal_view_id': view_id, 'target':'new'}"/>
+						<newline/>
+						<field name="menu_id"/>
+						<button type='object' name="create_menu" string="Create Menu" colspan="2" attrs="{'readonly': ['|', ('view_id', '=', False), ('menu_id', '!=', False)]}" context="{'journal_view_id': view_id}"/>
+	                </field>
+	        	</data>
+            </field>
+        </record>
+
+		<!-- Analytic Journal Structure -->
+
+        <record id="view_account_analytic_journal_structure" model="ir.ui.view">
+            <field name="name">account.analytic.journal.structure</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Journals" >
+                    <field name="name"/>
+                    <field name="code" invisible="1"/>
+                    <field name="type"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_account_analytic_journal_structure" model="ir.actions.act_window">
+            <field name="name">Analytic Journals Structure</field>
+            <field name="res_model">account.analytic.journal</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_account_analytic_journal_structure"/>
+            <field name="domain">[('parent_id','=',False)]</field>
+        </record>
+
+        <menuitem action="action_account_analytic_journal_structure" id="menu_account_analytic_journal_structure" parent="account.menu_analytic_accounting" sequence="6"/>
+
+		<record model="ir.actions.server" id="open_analytic_journal">
+	        <field name="name">Open Asset</field>
+	        <field name="model_id" ref="account.model_account_analytic_journal"/>
+	        <field name="state">code</field>
+	        <field name="code">action = {
+    'type': 'ir.actions.act_window',
+    'view_type': 'form',
+    'view_mode': 'form',
+    'res_model': 'account.analytic.journal',
+    'res_id': context['active_id'],
+    'target': 'new',
+}</field>
+		</record>
+
+        <record id="account_analytic_journal_tree_but_open" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="name">Open Analytic Journal</field>
+            <field name="value" eval="'ir.actions.server,%d' % ref('open_analytic_journal')"/>
+            <field eval="True" name="object"/>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,128 @@
+-
+  I create an analytic journal "Test"
+-
+  !record {model: account.analytic.journal, id: analytic_journal_test}:
+    name: Test
+    type: general
+-
+  I create a general account type "Test"
+-
+  !record {model: account.account.type, id: account_type_test}:
+    name: Test
+    code: TEST
+-
+  I create a general account "Test"
+-
+  !record {model: account.account, id: account_test}:
+    name: Test
+    code: TEST
+    type: other
+    user_type: account_type_test
+-
+  I create an analytic account "Test"
+-
+  !record {model: account.analytic.account, id: analytic_account_test}:
+    name: Test
+-
+  I create a product "Test1"
+-
+  !record {model: product.product, id: product_test1}:
+    name: Test1
+    property_account_income: account_test
+    property_account_expense: account_test
+-
+  I create a product "Test2"
+-
+  !record {model: product.product, id: product_test2}:
+    name: Test2
+    property_account_income: account_test
+    property_account_expense: account_test
+-
+  I create a product uom category "Test"
+-
+  !record {model: product.uom.categ, id: product_uom_categ_test}:
+    name: Test
+-
+  I create a product uom "Test1"
+-
+  !record {model: product.uom, id: product_uom_test1}:
+    name: Test1
+    category_id: product_uom_categ_test
+    factor: 1.0
+-
+  I create a product uom "Test2"
+-
+  !record {model: product.uom, id: product_uom_test2}:
+    name: Test2
+    category_id: product_uom_categ_test
+    factor: 1.0
+-
+  I create a static global distribution "Analytic Journal > Product"
+-
+  !record {model: account.analytic.distribution, id: analytic_distribution_static_specific}:
+    name: Static Global Distribution Test
+    journal_ids: [analytic_journal_test]
+    axis_src_id: analytic_axis_analytic_journal
+    axis_dest_id: analytic_axis_product
+    computation_mode: static
+    distribution_type: specific
+    period_ids:
+      - date_start: False
+        date_stop: False
+        key_ids:
+          - axis_src_item_id: !eval ref('analytic_journal_test')
+            axis_dest_item_id: !eval ref('product_test1')
+            rate: 60
+          - axis_src_item_id: !eval ref('analytic_journal_test')
+            axis_dest_item_id: !eval ref('product_test2')
+            rate: 40
+-
+  I create a static specific distribution "Product 1 > UoM"
+-
+  !record {model: account.analytic.distribution, id: analytic_distribution_static_global}:
+    name: Static Specific Distribution Test
+    journal_ids: [analytic_journal_test]
+    axis_src_id: analytic_axis_product
+    axis_dest_id: analytic_axis_product_uom
+    computation_mode: static
+    distribution_type: global
+    axis_src_item_ids:
+      - res_id: !eval ref('product_test1')
+    period_ids:
+      - date_start: False
+        date_stop: False
+        key_ids:
+          - axis_dest_item_id: !eval ref('product_uom_test1')
+            rate: 50
+          - axis_dest_item_id: !eval ref('product_uom_test2')
+            rate: 50
+-
+  I create a dynamic distribution "Product 2 > UoM"
+-
+  !record {model: account.analytic.distribution, id: analytic_distribution_dynamic}:
+    name: Dynamic Distribution Test
+    journal_ids: [analytic_journal_test]
+    axis_src_id: analytic_axis_product
+    axis_dest_id: analytic_axis_product_uom
+    computation_mode: dynamic
+    python_code: "product_id2 = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'smile_analytic_multiaxis', 'product_test2')[1]\nproduct_uom_id1 = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'smile_analytic_multiaxis', 'product_uom_test1')[1]\nproduct_uom_id2 = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'smile_analytic_multiaxis', 'product_uom_test2')[1]\nresult = {product_id2: {product_uom_id1: {'rate': 75.0, 'audit': audit}, product_uom_id2: {'rate': 25.0, 'audit': audit}}}"
+-
+  I create an analytic distribution "Account Move Line > Product UoM"
+-
+  !record {model: account.analytic.distribution, id: analytic_distribution_other}:
+    name: Other Distribution Test
+    journal_ids: [analytic_journal_test]
+    axis_src_id: analytic_axis_account_move_line
+    axis_dest_id: analytic_axis_product_uom
+    computation_mode: dynamic
+-
+  I create a analytic line linked to analytic journal "Journal Test" and product "Product Test"
+-
+  !record {model: account.analytic.line, id: analytic_line_test}:
+    name: Line Test
+    journal_id: analytic_journal_test
+    account_id: analytic_account_test
+    general_account_id: account_test
+    amount: 100.0
+-
+  I check if (account_id, general_account_id) are filled and move_id is empty

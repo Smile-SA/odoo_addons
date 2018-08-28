@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_position_form" model="ir.ui.view">
+            <field name="name">account.fiscal.position.form</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_position_form"/>
+            <field name="arch" type="xml">
+            	<data>
+            		<field name="name" position="after">
+            			<field name="type" groups="base.group_multi_company"/>
+            		</field>
+            		<field name="company_id" position="attributes">
+            			<attribute name="attrs">{'invisible': [('type', '=', 'standard')], 'required': [('type', '!=', 'standard')]}</attribute>
+            		</field>
+            		<field name="company_id" position="after">
+	                    <field name="company_dest_id" widget="selection" groups="base.group_multi_company"
+	                    	attrs="{'invisible': [('type', '=', 'standard')], 'required': [('type', '!=', 'standard')]}"/>
+					</field>
+            	</data>
+            </field>
+        </record>
+        <record id="view_account_position_tree" model="ir.ui.view">
+            <field name="name">account.fiscal.position.tree</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="account.view_account_position_tree"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <field name="company_dest_id" groups="base.group_multi_company" widget="selection"/>
+                </field>
+            </field>
+        </record>
+
+	</data>
+</openerp>

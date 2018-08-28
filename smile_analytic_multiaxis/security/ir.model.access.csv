@@ -1,0 +1,13 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_account_analytic_axis_user","account.analytic.axis user","model_account_analytic_axis","account.group_account_user",1,0,0,0
+"access_account_analytic_axis_manager","account.analytic.axis manager","model_account_analytic_axis","account.group_account_manager",1,1,1,1
+"access_account_analytic_distribution_user","account.analytic.distribution user","model_account_analytic_distribution","account.group_account_user",1,0,0,0
+"access_account_analytic_distribution_manager","account.analytic.distribution manager","model_account_analytic_distribution","account.group_account_manager",1,1,1,1
+"access_account_analytic_distribution_period_user","account.analytic.distribution.period user","model_account_analytic_distribution_period","account.group_account_user",1,0,0,0
+"access_account_analytic_distribution_period_manager","account.analytic.distribution.period manager","model_account_analytic_distribution_period","account.group_account_manager",1,1,1,1
+"access_account_analytic_distribution_key_user","account.analytic.distribution.key user","model_account_analytic_distribution_key","account.group_account_user",1,0,0,0
+"access_account_analytic_distribution_key_manager","account.analytic.distribution.key manager","model_account_analytic_distribution_key","account.group_account_manager",1,1,1,1
+"access_account_analytic_distribution_item_user","account.analytic.distribution.axis_src_item user","model_account_analytic_distribution_axis_src_item","account.group_account_user",1,0,0,0
+"access_account_analytic_distribution_item_manager","account.analytic.distribution.axis_src_item manager","model_account_analytic_distribution_axis_src_item","account.group_account_manager",1,1,1,1
+"access_account_analytic_distribution_key_wizard_user","account.analytic.distribution.key.wizard user","model_account_analytic_distribution_key_wizard","account.group_account_user",1,0,0,0
+"access_account_analytic_distribution_key_wizard_manager","account.analytic.distribution.key.wizard manager","model_account_analytic_distribution_key_wizard","account.group_account_manager",1,1,1,1

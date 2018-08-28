@@ -1,0 +1,96 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="ir_model_export_file_template_sct" model="ir.model.export.file_template">
+			<field name="name">SCT</field>
+			<field name="encoding">UTF-8</field>
+			<field name="extension_custom">.xml</field>
+			<field name="lineterminator">chr(10)</field>
+			<field eval="0" name="fieldnames_in_header"/>
+			<field name="filename">sct_${time.strftime('%Y%m%d_%H%M')}</field>
+			<field name="state">other</field>
+			<field name="model_id" ref="smile_account_payment.model_payment_order"/>
+			<field name="exception_logging">report</field>
+			<field eval="1" name="create_attachment"/>
+			<field name="extension">other</field>
+			<field name="delimiter">chr(44)</field>
+			<field name="exception_handling">cancel</field>
+			<field name="header">&lt;?xml version="1.0" encoding="UTF-8" standalone="no" ?&gt;
+&lt;Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.02"&gt;
+&lt;pain.001.001.02&gt;
+
+&lt;GrpHdr&gt;
+	&lt;MsgId&gt;${str(localcontext.get('export_file_id', 0)).zfill(6)}&lt;/MsgId&gt;
+	&lt;CreDtTm&gt;${datetime.datetime.now().isoformat()}&lt;/CreDtTm&gt;
+	&lt;NbOfTxs&gt;${sum([len(order.voucher_ids) for order in object])}&lt;/NbOfTxs&gt;
+	&lt;CtrlSum&gt;${sum([voucher.amount for order in object for voucher in order.voucher_ids])}&lt;/CtrlSum&gt;
+	&lt;Grpg&gt;MIXD&lt;/Grpg&gt;
+	&lt;InitgPty&gt;
+		&lt;Nm&gt;Credit Transfer&lt;/Nm&gt;
+	&lt;/InitgPty&gt;
+&lt;/GrpHdr&gt;</field>
+			<field name="body">&lt;PmtInf&gt;
+	&lt;PmtInfId&gt;${object.name}&lt;/PmtInfId&gt;
+	&lt;PmtMtd&gt;TRF&lt;/PmtMtd&gt;
+	&lt;PmtTpInf&gt;
+		&lt;SvcLvl&gt;
+			&lt;Cd&gt;SEPA&lt;/Cd&gt;
+		&lt;/SvcLvl&gt;
+	&lt;/PmtTpInf&gt;
+	&lt;ReqdExctnDt&gt;${time.strftime('%Y-%m-%d')}&lt;/ReqdExctnDt&gt;
+	&lt;Dbtr&gt;
+		&lt;Nm&gt;{object.payment_mode_id.company_id.name}&lt;/Nm&gt;
+	&lt;/Dbtr&gt;
+	&lt;DbtrAcct&gt;
+		&lt;Id&gt;
+			&lt;IBAN&gt;{object.payment_mode_id.bank_id.iban}&lt;/IBAN&gt;
+		&lt;/Id&gt;
+	&lt;/DbtrAcct&gt;
+	&lt;DbtrAgt&gt;
+		&lt;FinInstnId&gt;
+			&lt;BIC&gt;{object.payment_mode_id.bank_id.bank.bic}&lt;/BIC&gt;
+		&lt;/FinInstnId&gt;
+	&lt;/DbtrAgt&gt;
+% for voucher in object.voucher_ids:
+	&lt;CdtTrfTxInf&gt;
+		&lt;PmtId&gt;
+			&lt;InstrId&gt;{voucher.number}&lt;/InstrId&gt;
+			&lt;EndToEndId&gt;{voucher.number}&lt;/EndToEndId&gt;
+		&lt;/PmtId&gt;
+		&lt;Amt&gt;
+			&lt;InstdAmt Ccy="${object.payment_mode_id.company_id.currency_id.symbol or 'EUR'}"&gt;${voucher.amount}&lt;/InstdAmt&gt;
+		&lt;/Amt&gt;
+		&lt;CdtrAgt&gt;
+			&lt;FinInstnId&gt;
+				&lt;BIC&gt;${voucher.partner_id.bank_ids[0].bic}&lt;/BIC&gt;
+			&lt;/FinInstnId&gt;
+		&lt;/CdtrAgt&gt;
+		&lt;Cdtr&gt;
+			&lt;Nm&gt;{voucher.partner_id.name}&lt;/Nm&gt;
+		&lt;/Cdtr&gt;
+		&lt;CdtrAcct&gt;
+			&lt;Id&gt;
+				&lt;IBAN&gt;{voucher.partner_id.bank_ids[0].iban}&lt;/IBAN&gt;
+			&lt;/Id&gt;
+		&lt;/CdtrAcct&gt;
+		&lt;RmtInf&gt;
+			&lt;Ustrd&gt;${'Factures: ' + ', '.join([line.move_line_id.move_id.name for line in voucher.line_ids])}&lt;/Ustrd&gt;
+		&lt;/RmtInf&gt;
+	&lt;/CdtTrfTxInf&gt;
+% endfor
+&lt;/PmtInf&gt;</field>
+			<field name="footer">&lt;/pain.001.001.02&gt;
+&lt;/Document&gt;</field>
+		</record>
+
+		<record id="ir_model_export_template_sct" model="ir.model.export.template">
+			<field name="model_id" ref="smile_account_payment.model_payment_order"/>
+			<field name="domain">[('state', 'in', ('open', 'done'))]</field>
+			<field name="name">SEPA Credit Transfer</field>
+			<field name="unique" eval="1"/>
+			<field name="export_file_template_id" ref="ir_model_export_file_template_sct"/>
+		</record>
+
+	</data>
+</openerp>

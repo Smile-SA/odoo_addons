@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="invoice_supplier_form" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="priority">2</field>
+			<field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+				<data>
+	                <field name="journal_id" position="attributes">
+	                	<attribute name="on_change">onchange_journal_id(journal_id, fiscal_position)</attribute>
+	                </field>
+				</data>
+            </field>
+        </record>
+
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+				<data>
+	                <field name="journal_id" position="attributes">
+	                	<attribute name="on_change">onchange_journal_id(journal_id, fiscal_position)</attribute>
+	                </field>
+	                <field name="fiscal_position" position="attributes">
+	                	<attribute name="on_change">onchange_fiscal_position(fiscal_position, journal_id)</attribute>
+	                </field>
+				</data>
+            </field>
+        </record>
+
+	</data>
+</openerp>

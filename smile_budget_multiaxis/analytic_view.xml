@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+		<!-- Account Analytic Axis -->
+
+        <record id="view_account_analytic_axis_form" model="ir.ui.view">
+            <field name="name">account.analytic.axis.form</field>
+            <field name="model">account.analytic.axis</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="smile_analytic_multiaxis.view_account_analytic_axis_form"/>
+            <field name="arch" type="xml">
+	            <field name="field_ids" position="after">
+	            	<field name="is_budget_axis"/>
+	            </field>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_axis_tree" model="ir.ui.view">
+            <field name="name">account.analytic.axis.tree</field>
+            <field name="model">account.analytic.axis</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="smile_analytic_multiaxis.view_account_analytic_axis_tree"/>
+            <field name="arch" type="xml">
+	            <field name="required" position="after">
+	            	<field name="is_budget_axis"/>
+	            </field>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_axis_search" model="ir.ui.view">
+            <field name="name">account.analytic.axis.search</field>
+            <field name="model">account.analytic.axis</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="smile_analytic_multiaxis.view_account_analytic_axis_search"/>
+            <field name="arch" type="xml">
+	            <field name="model_id" position="after">
+	            	<field name="is_budget_axis"/>
+	            </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

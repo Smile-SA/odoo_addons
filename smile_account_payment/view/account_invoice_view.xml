@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<!-- Supplier Invoice -->
+
+        <record id="view_account_invoice_supplier_form" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+	            <field name="payment_term" position="after">
+	                <field name="payment_mode_id" required="1" attrs="{'readonly': [('state', 'in', ('paid'))]}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_invoice_supplier" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.pay</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account_voucher.view_invoice_supplier"/>
+            <field name="arch" type="xml">
+                <button name="invoice_pay_customer" position="after">
+	                <button name="create_payment" type="object" string="Create a payment order" states="open" icon="gtk-go-forward"
+	                	attrs="{'invisible': [('payment_planned', '=', True)]"/>
+	            	<field name="payment_planned" invisible="1"/>
+				</button>
+            </field>
+        </record>
+
+    </data>
+</openerp>

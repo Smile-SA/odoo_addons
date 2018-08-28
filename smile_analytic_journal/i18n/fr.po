@@ -1,0 +1,162 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_analytic_journal
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-11-08 11:06+0000\n"
+"PO-Revision-Date: 2011-11-08 11:06+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal,menu_id:0
+msgid "Menu"
+msgstr "Menu"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal.view.column,name:0
+msgid "Column Label"
+msgstr "Libellé"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal.view.column,field_id:0
+msgid "Field"
+msgstr "Champ"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal.view.column,readonly:0
+msgid "Readonly"
+msgstr "Lecture seule"
+
+#. module: smile_analytic_journal
+#: view:account.analytic.journal:0
+msgid "Show View"
+msgstr "Afficher la vue"
+
+#. module: smile_analytic_journal
+#: constraint:account.analytic.line:0
+msgid "You cannot pass an actual entry in a future period!"
+msgstr "Vous ne pouvez pas passer d'écritures de type réalisé sur une période future !"
+
+#. module: smile_analytic_journal
+#: constraint:account.analytic.line:0
+msgid "You cannot pass a forecast entry in a past/current period!"
+msgstr "Vous ne pouvez pas passer d'écritures de type prévu sur une période passée ou courante !"
+
+#. module: smile_analytic_journal
+#: view:account.analytic.journal.view:0
+#: field:account.analytic.journal.view,column_ids:0
+msgid "Columns"
+msgstr "Colonnes"
+
+#. module: smile_analytic_journal
+#: constraint:account.analytic.line:0
+msgid "You cannot pass/update a journal entry in a closed period!"
+msgstr "Vous ne pouvez pas passer/mettre à jour d'écritures sur une période close !"
+
+#. module: smile_analytic_journal
+#: model:ir.model,name:smile_analytic_journal.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Ligne analytique"
+
+#. module: smile_analytic_journal
+#: view:account.analytic.journal.view:0
+#: model:ir.model,name:smile_analytic_journal.model_account_analytic_journal_view
+msgid "Analytic Journal View"
+msgstr "Analytic Journal View"
+
+#. module: smile_analytic_journal
+#: model:ir.model,name:smile_analytic_journal.model_account_analytic_journal_view_column
+msgid "Analytic Journal View Column"
+msgstr "Analytic Journal View Column"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal,complete_name:0
+#: field:account.analytic.journal.view,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_analytic_journal
+#: view:account.analytic.journal.view:0
+msgid "Column"
+msgstr "Colonne"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal.view.column,required:0
+msgid "Required"
+msgstr "Obligatoire"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal.view.column,extended_filter:0
+msgid "Searchable via extended filters"
+msgstr "Recherchable via les filtres étendus"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal.view.column,groupable:0
+msgid "Groupable"
+msgstr "Groupable"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal.view.column,view_id:0
+msgid "Journal View"
+msgstr "Vue du journal"
+
+#. module: smile_analytic_journal
+#: code:addons/smile_analytic_journal/analytic.py:115
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_analytic_journal
+#: model:ir.model,name:smile_analytic_journal.model_account_analytic_journal
+msgid "Analytic Journal"
+msgstr "Journal analytique"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal,parent_left:0
+msgid "Parent Left"
+msgstr "Parent Left"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal.view.column,searchable:0
+msgid "Searchable"
+msgstr "Recherchable"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal.view.column,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: smile_analytic_journal
+#: view:account.analytic.journal:0
+msgid "Create Menu"
+msgstr "Créer un menu"
+
+#. module: smile_analytic_journal
+#: code:addons/smile_analytic_journal/analytic.py:115
+#, python-format
+msgid "The menu [xml_id=account.menu_finance_entries] is not found!"
+msgstr "Le menu [xml_id=account.menu_finance_entries] n'a pas été trouvé !"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal,view_id:0
+msgid "Display Mode"
+msgstr "Mode d'affichage"
+
+#. module: smile_analytic_journal
+#: field:account.analytic.journal,child_ids:0
+msgid "Children"
+msgstr "Enfants"
+
+#. module: smile_analytic_journal
+#: model:ir.ui.menu,name:smile_analytic_journal.menu_account_analytic_journal_structure
+#: model:ir.actions.act_window,name:smile_analytic_journal.action_account_analytic_journal_structure
+msgid "Analytic Journals Structure"
+msgstr "Arborescence des journaux analytiques"

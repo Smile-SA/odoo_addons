@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+		<!-- Account Analytic Distribution -->
+
+        <record id="view_account_analytic_distribution_form_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.distribution.form.inherit</field>
+            <field name="model">account.analytic.distribution</field>
+            <field name="type">form</field>
+			<field name="inherit_id" ref="view_account_analytic_distribution_form"/>
+            <field name="arch" type="xml">
+            	<data>
+	                <xpath expr="/form/notebook/page[@string='Distribution']/field[@name='period_ids']/form/field[@name='key_ids']" position="replace">
+				    	<field name="key_wizard_ids" mode="tree" nolabel="1" colspan="4" 
+				    		context="{'default_period_id': active_id, 'distribution_id': distribution_id, 'show_axis_src_item': distribution_type == 'specific'}"/>
+	                </xpath>
+	            </data>
+			</field>
+		</record>
+
+    </data>
+</openerp>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_invoice_behalf_of_tree" model="ir.ui.view">
+            <field name="name">account.invoice.behalf_of.tree</field>
+            <field name="model">account.invoice.behalf_of</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+	            <tree>
+	                <field name="company_dest_id"/>
+	                <field name="company_src_id"/>
+	            </tree>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_behalf_of_form" model="ir.ui.view">
+            <field name="name">account.invoice.behalf_of.form</field>
+            <field name="model">account.invoice.behalf_of</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+	            <form string="Billing on behalf on">
+	            	<group colspan="2" col="2">
+		                <field name="company_dest_id"/>
+		                <field name="account_model_dest_id" context="{'default_company_id': company_dest_id}"
+		                	 domain="[('company_id', '=', company_dest_id)]"/>
+		                <field name="bank_account_id" domain="[('partner_id', '=', partner_dest_id)]"/>
+		                <field name="partner_dest_id" invisible="1"/>
+	            	</group>
+	            	<group colspan="2" col="2">
+		                <field name="company_src_id" domain="[('id', '!=', company_dest_id)]"/>
+		                <field name="fiscal_position_src_id" context="{'default_type': 'behalf', 'default_company_id': company_src_id}"
+		                	 domain="[('company_id', '=', company_src_id), ('company_dest_id', '=', company_dest_id)]"/>
+	            	</group>
+	            </form>
+            </field>
+        </record>
+
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+	            <field name="company_id" position="after">
+	                <field name="behalf_of_id" groups="base.group_multi_company" on_change="onchange_behalf_of_id(behalf_of_id, company_id)"/>
+	            </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

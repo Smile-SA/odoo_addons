@@ -1,0 +1,138 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_account_on_behalf_of
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-02-01 16:55+0000\n"
+"PO-Revision-Date: 2012-02-01 16:55+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_account_on_behalf_of
+#: constraint:account.move:0
+msgid "You cannot create entries on different periods/journals in the same move"
+msgstr "Impossible d'enregistrer des lignes sur des périodes ou des journaux différents dans la même écriture"
+
+#. module: smile_account_on_behalf_of
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Erreur! Vous ne pouvez pas créer de sociétés récursives"
+
+#. module: smile_account_on_behalf_of
+#: constraint:res.company:0
+msgid "You cannot inherit off days if you have no parent company!"
+msgstr "Vous ne pouvez pas choisir d'hériter des jours chaumés si vous n'avez pas défini de société mère!"
+
+#. module: smile_account_on_behalf_of
+#: field:account.invoice.behalf_of,journal_src_id:0
+msgid "Sale Journal"
+msgstr "Journal de vente"
+
+#. module: smile_account_on_behalf_of
+#: model:ir.module.module,shortdesc:smile_account_on_behalf_of.module_meta_information
+msgid "Smile Billing on behalf of"
+msgstr "Smile Billing on behalf of"
+
+#. module: smile_account_on_behalf_of
+#: field:account.invoice.behalf_of.account_src,company_src_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_account_on_behalf_of
+#: field:account.invoice.behalf_of.account_dest,account_src_id:0
+#: field:account.invoice.behalf_of.account_src,account_src_id:0
+msgid "Source Account"
+msgstr "Compte source"
+
+#. module: smile_account_on_behalf_of
+#: field:account.invoice.behalf_of.account_dest,behalf_of_id:0
+#: field:account.invoice.behalf_of.account_src,behalf_of_id:0
+#: model:ir.model,name:smile_account_on_behalf_of.model_account_invoice_behalf_of
+#: view:res.company:0
+#: field:res.company,behalf_of_ids:0
+msgid "Billing on behalf of"
+msgstr "Sociétés facturant pour le compte de"
+
+#. module: smile_account_on_behalf_of
+#: field:account.invoice.behalf_of.account_dest,account_dest_id:0
+#: field:account.invoice.behalf_of.account_src,account_dest_id:0
+msgid "Destination Account"
+msgstr "Compte destination"
+
+#. module: smile_account_on_behalf_of
+#: view:res.company:0
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: smile_account_on_behalf_of
+#: field:account.invoice.behalf_of,journal_dest_id:0
+msgid "Miscellaneous Operation Journal"
+msgstr "Journal des OD"
+
+#. module: smile_account_on_behalf_of
+#: field:account.invoice.behalf_of,company_src_id:0
+#: field:account.invoice.behalf_of.account_dest,company_src_id:0
+msgid "On behalf of"
+msgstr "Pour le compte de"
+
+#. module: smile_account_on_behalf_of
+#: constraint:account.move:0
+msgid "The date of your Journal Entry is not in the defined period!"
+msgstr "La date d'écriture ne correspond pas à la période comptable sélectionnée !"
+
+#. module: smile_account_on_behalf_of
+#: constraint:account.move:0
+msgid "You cannot create more than one move per period on centralized journal"
+msgstr "Vous ne pouvez pas créer plus d'une écriture par période sur un journal centralisé"
+
+#. module: smile_account_on_behalf_of
+#: field:account.invoice.behalf_of,bank_account_id:0
+msgid "Bank Account"
+msgstr "Compte de banque"
+
+#. module: smile_account_on_behalf_of
+#: model:ir.model,name:smile_account_on_behalf_of.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: smile_account_on_behalf_of
+#: field:account.invoice.behalf_of,account_dest_ids:0
+#: field:account.invoice.behalf_of,account_src_ids:0
+#: model:ir.model,name:smile_account_on_behalf_of.model_account_invoice_behalf_of_account_dest
+#: model:ir.model,name:smile_account_on_behalf_of.model_account_invoice_behalf_of_account_src
+msgid "Accounts Mapping"
+msgstr "Mapping des comptes"
+
+#. module: smile_account_on_behalf_of
+#: field:account.invoice.behalf_of,partner_dest_id:0
+msgid "Billing Partner"
+msgstr "Partenaire facturant"
+
+#. module: smile_account_on_behalf_of
+#: view:account.invoice.behalf_of:0
+msgid "Billing on behalf on"
+msgstr "Société facturant pour le compte de"
+
+#. module: smile_account_on_behalf_of
+#: model:ir.model,name:smile_account_on_behalf_of.model_account_move
+msgid "Account Entry"
+msgstr "Pièce comptable"
+
+#. module: smile_account_on_behalf_of
+#: field:account.invoice,behalf_of_id:0
+#: field:account.invoice.behalf_of,company_dest_id:0
+#: field:account.invoice.behalf_of.account_dest,company_dest_id:0
+msgid "Billing Company"
+msgstr "Société facturant"
+
+#. module: smile_account_on_behalf_of
+#: model:ir.model,name:smile_account_on_behalf_of.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"

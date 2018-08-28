@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+	
+		<!-- Res Company -->
+
+        <record id="view_res_company_form" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <page string="Configuration" position="inside">
+                	<group name="treasury" col="4" colspan="4" groups="base.group_multi_company">
+                    	<separator string="Treasury" colspan="4"/>
+                    	<field name="default_payment_mode_id" domain="[('company_id', '=', active_id)]"/>
+                    	<field name="post_payment_orders"/>
+                	</group>
+                </page>
+            </field>
+        </record>
+		
+	</data>
+</openerp>

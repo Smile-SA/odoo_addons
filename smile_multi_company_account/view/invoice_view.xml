@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="invoice_supplier_form" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="priority">2</field>
+			<field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+				<data>
+	                <field name="journal_id" position="attributes">
+	                	<attribute name="widget"></attribute>
+	                	<attribute name="domain">[('company_id', '=', company_id)]</attribute>
+	                </field>
+                    <field name="period_id" position="attributes">
+	                	<attribute name="widget"></attribute>
+	                	<attribute name="domain">[('company_id', '=', company_id)]</attribute>
+                    </field>
+				</data>
+            </field>
+        </record>
+
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+				<data>
+	                <field name="journal_id" position="attributes">
+	                	<attribute name="widget"></attribute>
+	                	<attribute name="domain">[('company_id', '=', company_id)]</attribute>
+	                </field>
+                    <field name="period_id" position="attributes">
+	                	<attribute name="widget"></attribute>
+	                	<attribute name="domain">[('company_id', '=', company_id)]</attribute>
+                    </field>
+				</data>
+            </field>
+        </record>
+
+        <record id="account.action_account_fiscal_position_form" model="ir.actions.act_window">
+            <field name="domain">[('type', '=', 'standard')]</field>
+        </record>
+
+	</data>
+</openerp>

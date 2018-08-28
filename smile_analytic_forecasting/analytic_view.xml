@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+		<!-- Account Analytic Line -->
+
+        <record id="view_account_analytic_line_form" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.inherit</field>
+            <field name="model">account.analytic.line</field>
+            <field name="type">form</field>
+			<field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                	<newline/>
+                	<field name="type"/>
+                	<field name="active"/>
+                </field>
+			</field>
+		</record>
+
+        <record id="view_account_analytic_line_tree" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.inherit</field>
+            <field name="model">account.analytic.line</field>
+            <field name="type">tree</field>
+			<field name="inherit_id" ref="smile_analytic_period.view_account_analytic_line_tree"/>
+            <field name="arch" type="xml">
+				<data>
+					<field name="period_id" position="after">
+		                <field name="type"/>
+					</field>
+	            </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>

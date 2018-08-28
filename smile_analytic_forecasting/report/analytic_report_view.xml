@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+		<!-- Account Analytic Period -->
+
+        <record id="view_account_analytic_forecasting_wizard_form" model="ir.ui.view">
+            <field name="name">account.analytic.forecasting.wizard.form</field>
+            <field name="model">account.analytic.forecasting.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Forecasting Analysis">
+                    <field name="measure"/>
+                    <field name="x_axis"/>
+                    <field name="create_period_ids"/>
+                    <field name="period_ids"/>
+                    <field name="field_ids"/>
+                    <button string="Open Window" name="button_open_window" type="object" colspan="4"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_analytic_forecasting_wizard_form" model="ir.actions.act_window">
+            <field name="name">Analytic Forecasting Analysis</field>
+            <field name="res_model">account.analytic.forecasting.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem action="action_account_analytic_forecasting_wizard_form" id="menu_account_analytic_forecasting_wizard_form" parent="account.menu_finance_statistic_report_statement" sequence="90"/>
+
+    </data>
+</openerp>

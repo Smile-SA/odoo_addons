@@ -1,0 +1,381 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_analytic_multiaxis
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-11-08 11:06+0000\n"
+"PO-Revision-Date: 2011-11-08 11:06+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/analytic.py:495
+#, python-format
+msgid "You cannot %s this resource before reviewing associated analytic distributions!"
+msgstr "You ne pouvez pas %s cette ressource avant d'avoir revu les distributions analytiques associées !"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+#: field:account.analytic.distribution,period_ids:0
+msgid "Application Periods"
+msgstr "Périodes d'application"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/analytic.py:495
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:34
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:52
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+#: model:ir.model,name:smile_analytic_multiaxis.model_account_analytic_distribution_period
+msgid "Analytic Distribution Application Period"
+msgstr "Analytic Distribution Application Period"
+
+#. module: smile_analytic_multiaxis
+#: constraint:account.analytic.line:0
+msgid "You cannot pass/update a journal entry in a closed period!"
+msgstr "Vous ne pouvez pas passer d'écritures sur une période close !"
+
+#. module: smile_analytic_multiaxis
+#: constraint:account.analytic.line:0
+msgid "You cannot pass an actual entry in a future period!"
+msgstr "Vous ne pouvez pas passer d'écritures de type réalisé sur une période future !"
+
+#. module: smile_analytic_multiaxis
+#: constraint:account.analytic.line:0
+msgid "You cannot pass a forecast entry in a past/current period!"
+msgstr "Vous ne pouvez pas passer d'écritures de type prévu sur une période passée ou courante !"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution,computation_mode:0
+msgid "Computation Mode"
+msgstr "Mode de calcul"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution,distribution_type:0
+msgid "Distribution Type"
+msgstr "Type de distribution"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.axis,model:0
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:52
+#, python-format
+msgid "You cannot delete distribution keys!"
+msgstr "Vous ne pouvez pas supprimer ces clés de répartition !"
+
+#. module: smile_analytic_multiaxis
+#: model:ir.module.module,shortdesc:smile_analytic_multiaxis.module_meta_information
+msgid "Smile Analytic Multi-Axis"
+msgstr "Smile Analytic Multi-Axis"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.axis,field_ids:0
+msgid "Fields to historicize"
+msgstr "Champs à historiser"
+
+#. module: smile_analytic_multiaxis
+#: model:ir.model,name:smile_analytic_multiaxis.model_account_analytic_journal
+msgid "Analytic Journal"
+msgstr "Journal analytique"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+#: model:ir.actions.act_window,name:smile_analytic_multiaxis.action_account_analytic_distribution_form
+#: model:ir.model,name:smile_analytic_multiaxis.model_account_analytic_distribution
+#: model:ir.ui.menu,name:smile_analytic_multiaxis.menu_action_account_analytic_distribution_form
+msgid "Analytic Distribution"
+msgstr "Distribution analytique"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution,company_id:0
+#: field:account.analytic.distribution.key,company_id:0
+#: field:account.analytic.distribution.key.wizard,company_id:0
+#: field:account.analytic.distribution.period,company_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_analytic_multiaxis
+#: constraint:account.analytic.axis:0
+msgid "Analytic line column label is only composed of alphanumeric characters and underscore"
+msgstr "Le libellé d'une colonne est composé uniquement de caractères alphanumeriques et de underscores (_)"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.key,rate:0
+#: field:account.analytic.distribution.key.wizard,rate:0
+msgid "Rate (%)"
+msgstr "Taux (%)"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.key,axis_src_item_id:0
+#: field:account.analytic.distribution.key,axis_src_item_name:0
+#: field:account.analytic.distribution.key.wizard,axis_src_item_id:0
+#: field:account.analytic.distribution.key.wizard,axis_src_item_name:0
+msgid "Item of Source Axis"
+msgstr "Elément de l'axe source"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.key,period_id:0
+#: field:account.analytic.distribution.key.wizard,period_id:0
+msgid "Distribution Application Period"
+msgstr "Période d'application"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.axis,active:0
+#: field:account.analytic.distribution,active:0
+#: field:account.analytic.distribution.key,active:0
+#: field:account.analytic.distribution.key.wizard,active:0
+msgid "Active"
+msgstr "Active"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution,axis_src_id:0
+msgid "Source Axis"
+msgstr "Axe source"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+#: field:account.analytic.distribution,journal_ids:0
+msgid "Journals"
+msgstr "Journaux"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.axis:0
+#: model:ir.actions.act_window,name:smile_analytic_multiaxis.action_account_analytic_axis_form
+#: model:ir.model,name:smile_analytic_multiaxis.model_account_analytic_axis
+#: model:ir.ui.menu,name:smile_analytic_multiaxis.menu_action_account_analytic_axis_form
+msgid "Analytic Axis"
+msgstr "Axe analytique"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.axis:0
+#: model:ir.actions.act_window,name:smile_analytic_multiaxis.action_account_analytic_axis_form
+#: model:ir.ui.menu,name:smile_analytic_multiaxis.menu_action_account_analytic_axis_form
+msgid "Analytic Axis"
+msgstr "Axes analytiques"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:34
+#, python-format
+msgid "A distribution key is complete only if total rate is equal to 100% !"
+msgstr "Une clé de répartition est complète uniquement si son taux cumulé est égal à 100% !"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.key,date_stop:0
+#: field:account.analytic.distribution.key.wizard,date_stop:0
+#: field:account.analytic.distribution.period,date_stop:0
+msgid "End Date"
+msgstr "Date de fin"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.axis,required:0
+msgid "Required"
+msgstr "Obligatoire"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.axis,name:0
+#: field:account.analytic.distribution,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/analytic.py:494
+#, python-format
+msgid "modify"
+msgstr "modifier"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution,python_code:0
+msgid "Python code"
+msgstr "Code Python"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution,axis_dest_id:0
+msgid "Destination Axis"
+msgstr "Axe de destination"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.key,axis_src_model:0
+#: field:account.analytic.distribution.key.wizard,axis_src_model:0
+msgid "Model of Source Axis"
+msgstr "Modèle de l'axe source"
+
+#. module: smile_analytic_multiaxis
+#: model:ir.model,name:smile_analytic_multiaxis.model_account_analytic_distribution_key
+msgid "Analytic Distribution Key"
+msgstr "Clé de répartition"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.axis,model_id:0
+msgid "Object"
+msgstr "Objet"
+
+#. module: smile_analytic_multiaxis
+#: model:ir.model,name:smile_analytic_multiaxis.model_account_analytic_distribution_key_wizard
+msgid "Analytic Distribution Key Wizard"
+msgstr "Assistant de réparition"
+
+#. module: smile_analytic_multiaxis
+#: model:ir.model,name:smile_analytic_multiaxis.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Ligne analytique"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+#: field:account.analytic.distribution.period,distribution_id:0
+msgid "Distribution"
+msgstr "Distribution"
+
+#. module: smile_analytic_multiaxis
+#: constraint:account.analytic.distribution.period:0
+msgid "Some application periods overlap!"
+msgstr "Certaines périodes d'application se chevauchent !"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.axis,domain:0
+msgid "Domain"
+msgstr "Domaine"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+msgid "Python Code"
+msgstr "Code Python"
+
+#. module: smile_analytic_multiaxis
+#: selection:account.analytic.distribution,computation_mode:0
+msgid "Dynamic"
+msgstr "Dynamique"
+
+#. module: smile_analytic_multiaxis
+#: selection:account.analytic.distribution,distribution_type:0
+msgid "Global"
+msgstr "Générique"
+
+#. module: smile_analytic_multiaxis
+#: selection:account.analytic.distribution,distribution_type:0
+msgid "Specific"
+msgstr "Spécifique"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+#: model:ir.actions.act_window,name:smile_analytic_multiaxis.action_account_analytic_distribution_form
+#: model:ir.ui.menu,name:smile_analytic_multiaxis.menu_action_account_analytic_distribution_form
+msgid "Analytic Distributions"
+msgstr "Distributions analytiques"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.period,key_ids:0
+#: field:account.analytic.distribution.period,key_wizard_ids:0
+msgid "Keys"
+msgstr "Clés"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.key,axis_dest_item_id:0
+#: field:account.analytic.distribution.key,axis_dest_item_name:0
+#: field:account.analytic.distribution.key.wizard,axis_dest_item_id:0
+#: field:account.analytic.distribution.key.wizard,axis_dest_item_name:0
+msgid "Item of Destination Axis"
+msgstr "Elément de l'axe de destination"
+
+#. module: smile_analytic_multiaxis
+#: selection:account.analytic.distribution,computation_mode:0
+msgid "Static"
+msgstr "Statique"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.axis,column_label:0
+msgid "Analytic line column label"
+msgstr "Libellé de la colonne"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.key,date_start:0
+#: field:account.analytic.distribution.key.wizard,date_start:0
+#: field:account.analytic.distribution.period,date_start:0
+msgid "Start Date"
+msgstr "Date de début"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/analytic.py:494
+#, python-format
+msgid "delete"
+msgstr "supprimer"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.journal,distribution_ids:0
+msgid "Distributions"
+msgstr "Distributions"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+msgid "Application Period"
+msgstr "Période d'application"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+msgid "Application Periods"
+msgstr "Périodes d'application"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+msgid "Source Items"
+msgstr "Eléments de l'axe source"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution.axis_src_item:0
+msgid "Source Item"
+msgstr "Elément de l'axe source"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:117
+#, python-format
+msgid "Distribution Key"
+msgstr "Clé de réparition"
+
+#. module: smile_analytic_multiaxis
+#: view:account.analytic.distribution:0
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:117
+#, python-format
+msgid "Distribution Keys"
+msgstr "Clés de réparition"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.axis_src_item,res_id:0
+msgid "Resource Identifier"
+msgstr "Identifiant"
+
+#. module: smile_analytic_multiaxis
+#: field:account.analytic.distribution.axis_src_item,res_name:0
+msgid "Resource Name"
+msgstr "Nom"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:117
+#, python-format
+msgid "Source"
+msgstr "Source"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:117
+#, python-format
+msgid "Target"
+msgstr "Cible"
+
+#. module: smile_analytic_multiaxis
+#: code:addons/smile_analytic_multiaxis/wizard/analytic_wizard.py:117
+#, python-format
+msgid "Keys"
+msgstr "Clés"

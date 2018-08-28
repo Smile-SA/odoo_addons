@@ -1,0 +1,348 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_account_payment
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.4\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2013-02-28 10:21+0000\n"
+"PO-Revision-Date: 2013-02-28 10:21+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_account_payment
+#: model:ir.actions.act_window,help:smile_account_payment.action_payment_order
+msgid "A payment order is a payment request from your company to pay a supplier invoice or a customer credit note. Here you can register all payment orders that should be done, keep track of all payment orders and mention the invoice reference and the partner the payment should be done for."
+msgstr "A payment order is a payment request from your company to pay a supplier invoice or a customer credit note. Here you can register all payment orders that should be done, keep track of all payment orders and mention the invoice reference and the partner the payment should be done for."
+
+#. module: smile_account_payment
+#: model:ir.model,name:smile_account_payment.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Justificatif comptable"
+
+#. module: smile_account_payment
+#: field:payment.mode,bank_id:0
+msgid "Bank account"
+msgstr "Compte bancaire"
+
+#. module: smile_account_payment
+#: sql_constraint:res.company:0
+msgid "Bonus percentage must be positive!"
+msgstr "Le pourcentage de prime doit être positif!"
+
+#. module: smile_account_payment
+#: view:account.voucher:0
+#: view:payment.order:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_account_payment
+#: selection:payment.order,state:0
+msgid "Cancelled"
+msgstr "Annulé"
+
+#. module: smile_account_payment
+#: model:ir.model,name:smile_account_payment.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: smile_account_payment
+#: field:payment.mode,company_id:0
+#: field:payment.order,company_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: smile_account_payment
+#: view:res.company:0
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: smile_account_payment
+#: view:account.invoice:0
+msgid "Create a payment order"
+msgstr "Créer un ordre de paiement"
+
+#. module: smile_account_payment
+#: field:payment.order,create_date:0
+msgid "Creation date"
+msgstr "Date de création"
+
+#. module: smile_account_payment
+#: field:res.company,default_payment_mode_id:0
+msgid "Default payment mode"
+msgstr "Mode de paiement par défaut"
+
+#. module: smile_account_payment
+#: sql_constraint:res.partner:0
+msgid "Default supplier needs to be a draft supplier and no customer!"
+msgstr "Le fournisseur par défaut doit être un fournisseur brouillon et non un client !"
+
+#. module: smile_account_payment
+#: selection:payment.order,date_prefered:0
+msgid "Directly"
+msgstr "Directement"
+
+#. module: smile_account_payment
+#: view:payment.order:0
+#: selection:payment.order,state:0
+msgid "Done"
+msgstr "Effectué"
+
+#. module: smile_account_payment
+#: view:payment.order:0
+#: selection:payment.order,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_account_payment
+#: selection:payment.order,date_prefered:0
+msgid "Due date"
+msgstr "Date d'échéance"
+
+#. module: smile_account_payment
+#: code:addons/smile_account_payment/account_invoice.py:68
+#: code:addons/smile_account_payment/account_invoice.py:70
+#: code:addons/smile_account_payment/account_invoice.py:72
+#: code:addons/smile_account_payment/account_voucher.py:63
+#: code:addons/smile_account_payment/account_voucher.py:79
+#: code:addons/smile_account_payment/res_partner.py:34
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_account_payment
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Erreur! Vous ne pouvez pas créer de sociétés récursives"
+
+#. module: smile_account_payment
+#: field:payment.order,total_done:0
+msgid "Execution Total"
+msgstr "Montant à l'éxécution"
+
+#. module: smile_account_payment
+#: field:payment.order,date_done:0
+msgid "Execution date"
+msgstr "Date effective"
+
+#. module: smile_account_payment
+#: selection:payment.order,date_prefered:0
+msgid "Fixed date"
+msgstr "Date fixe"
+
+#. module: smile_account_payment
+#: view:payment.mode:0
+#: view:payment.order:0
+msgid "Group By..."
+msgstr "Regrouper par..."
+
+#. module: smile_account_payment
+#: model:ir.model,name:smile_account_payment.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: smile_account_payment
+#: view:payment.mode:0
+#: field:payment.mode,journal_id:0
+#: field:payment.order,journal_id:0
+msgid "Journal"
+msgstr "Journal"
+
+#. module: smile_account_payment
+#: constraint:account.invoice:0
+msgid "La date de facturation doit être sur un mois non clos"
+msgstr "La date de facturation doit être sur un mois non clos"
+
+#. module: smile_account_payment
+#: view:payment.order:0
+msgid "Make Payments"
+msgstr "Effectuer les paiements"
+
+#. module: smile_account_payment
+#: field:payment.mode,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_account_payment
+#: code:addons/smile_account_payment/res_partner.py:34
+#, python-format
+msgid "No bank account found for the partner %s"
+msgstr "Aucun compte bancaire trouvé pour le fournisseur %s"
+
+#. module: smile_account_payment
+#: model:ir.model,name:smile_account_payment.model_res_partner
+#: field:payment.mode,partner_id:0
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_account_payment
+#: field:account.voucher,payment_id:0
+msgid "Payment"
+msgstr "Paiement"
+
+#. module: smile_account_payment
+#: model:ir.actions.act_window,name:smile_account_payment.action_payment_mode_form
+#: model:ir.model,name:smile_account_payment.model_payment_mode
+#: model:ir.ui.menu,name:smile_account_payment.menu_action_payment_mode_form
+#: view:payment.mode:0
+#: view:payment.order:0
+msgid "Payment Mode"
+msgstr "Mode de paiement"
+
+#. module: smile_account_payment
+#: view:payment.mode:0
+msgid "Payment Modes"
+msgstr "Modes de paiement"
+
+#. module: smile_account_payment
+#: model:ir.model,name:smile_account_payment.model_payment_order
+#: view:payment.order:0
+msgid "Payment Order"
+msgstr "Ordre de paiment"
+
+#. module: smile_account_payment
+#: model:ir.actions.act_window,name:smile_account_payment.action_payment_order
+#: model:ir.ui.menu,name:smile_account_payment.menu_payment_order
+#: view:payment.order:0
+msgid "Payment Orders"
+msgstr "Ordres de paiement"
+
+#. module: smile_account_payment
+#: field:payment.order,voucher_ids:0
+msgid "Payment lines"
+msgstr "Lignes de paiement"
+
+#. module: smile_account_payment
+#: field:account.invoice,payment_mode_id:0
+#: field:payment.order,payment_mode_id:0
+msgid "Payment mode"
+msgstr "Mode de paiement"
+
+#. module: smile_account_payment
+#: field:account.invoice,payment_planned:0
+msgid "Payment planned"
+msgstr "Paiement planifié"
+
+#. module: smile_account_payment
+#: model:ir.ui.menu,name:smile_account_payment.menu_main_payment
+msgid "Payments"
+msgstr "Paiements"
+
+#. module: smile_account_payment
+#: sql_constraint:res.company:0
+msgid "Payroll tax theoretic rate should be between 0 and 1!"
+msgstr "Le taux doit être entre 0 et 1 !"
+
+#. module: smile_account_payment
+#: code:addons/smile_account_payment/account_invoice.py:72
+#, python-format
+msgid "Please indicate a payment mode in the invoice %s!"
+msgstr "Merci d'indiquer un mode de paiement sur la facture %s !"
+
+#. module: smile_account_payment
+#: field:res.company,post_payment_orders:0
+msgid "Post payment orders at validation"
+msgstr "Comptabiliser les ordres de paiement dès leur validation"
+
+#. module: smile_account_payment
+#: field:payment.order,date_prefered:0
+msgid "Preferred date"
+msgstr "Date préférée"
+
+#. module: smile_account_payment
+#: sql_constraint:account.invoice:0
+msgid "Purchase invoice type must either be in_refund or in_invoice"
+msgstr "Le type de facture d'achat doit être soit avoir fournisseur soit facture fournisseur"
+
+#. module: smile_account_payment
+#: field:payment.order,name:0
+msgid "Reference"
+msgstr "Référence"
+
+#. module: smile_account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled date if fixed"
+msgstr "Date planifiée si fixe"
+
+#. module: smile_account_payment
+#: view:payment.order:0
+msgid "Set to draft"
+msgstr "Mettre en brouillon"
+
+#. module: smile_account_payment
+#: sql_constraint:res.company:0
+msgid "Shareholding rate must be between 0 and 1!"
+msgstr "Le taux de détention doit être entre 0 et 1 !"
+
+#. module: smile_account_payment
+#: model:ir.module.module,shortdesc:smile_account_payment.module_meta_information
+msgid "Smile Account Payment"
+msgstr "Smile Account Payment"
+
+#. module: smile_account_payment
+#: model:ir.module.module,description:smile_account_payment.module_meta_information
+msgid "Smile Account Payment\n"
+"\n"
+"Changes from editor module:\n"
+"1. A payment order doesn't contain lines anymore, it links to vouchers\n"
+"2. The validation of a payment order doesn't generate bank statement lines but validates vouchers\n"
+"3. The cancellation of a payment order cancel vouchers\n"
+"    "
+msgstr "Smile Account Payment\n"
+"\n"
+"Changes from editor module:\n"
+"1. A payment order doesn't contain lines anymore, it links to vouchers\n"
+"2. The validation of a payment order doesn't generate bank statement lines but validates vouchers\n"
+"3. The cancellation of a payment order cancel vouchers\n"
+"    "
+
+#. module: smile_account_payment
+#: view:payment.order:0
+#: field:payment.order,state:0
+msgid "State"
+msgstr "Statut"
+
+#. module: smile_account_payment
+#: field:payment.order,total:0
+msgid "Total"
+msgstr "Total"
+
+#. module: smile_account_payment
+#: view:res.company:0
+msgid "Treasury"
+msgstr "Trésorerie"
+
+#. module: smile_account_payment
+#: field:payment.order,user_id:0
+msgid "User"
+msgstr "Signataire"
+
+#. module: smile_account_payment
+#: code:addons/smile_account_payment/account_invoice.py:70
+#, python-format
+msgid "You can create a payment order only for a supplier invoice or a customer credit note!"
+msgstr "Vous ne pouvez créer d'ordre de paiement que pour les factures fournisseurs ou les avoirs client !"
+
+#. module: smile_account_payment
+#: code:addons/smile_account_payment/account_voucher.py:63
+#: code:addons/smile_account_payment/account_voucher.py:79
+#, python-format
+msgid "You can not modify a voucher linked to a payment!"
+msgstr "Vous ne pouvez pas modifier un paiement lié à un ordre de virement !"
+
+#. module: smile_account_payment
+#: code:addons/smile_account_payment/account_invoice.py:68
+#, python-format
+msgid "You cannot create a payment order for a invoice not validated or already paid!"
+msgstr "Vous ne pouvez créer d'ordre de paiement pour une facture non validée ou déjà payée !"
+
+#. module: smile_account_payment
+#: constraint:res.company:0
+msgid "You cannot inherit off days if you have no parent company!"
+msgstr "Vous ne pouvez pas choisir d'hériter des jours chaumés si vous n'avez pas défini de société mère !"
+

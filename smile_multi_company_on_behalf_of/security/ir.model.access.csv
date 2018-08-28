@@ -1,0 +1,3 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_account_invoice_behalf_of_all","access_account_invoice_behalf_of all","model_account_invoice_behalf_of",,1,0,0,0
+"access_account_invoice_behalf_of_manager","access_account_invoice_behalf_of manager","model_account_invoice_behalf_of","account.group_account_manager",1,1,1,1
