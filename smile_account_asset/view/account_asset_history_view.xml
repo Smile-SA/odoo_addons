@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- Asset History -->
+
+	    <record model="ir.ui.view" id="view_account_asset_history_form">
+	        <field name="name">account.asset.history.form</field>
+	        <field name="model">account.asset.history</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form string="Asset Update">
+                  <field name="asset_id" on_change="onchange_asset_id(asset_id)" invisible="1"/>
+                  <field name="category_id" on_change="onchange_category_id(category_id, asset_id)"/>
+                  <newline/>
+                  <field name="purchase_value"/>
+                  <field name="salvage_value"/>
+                  <field name="purchase_date" invisible="not context.get('asset_validation', False)"/>
+                  <field name="in_service_date" invisible="not context.get('asset_validation', False)" required="context.get('asset_validation', False)"/>
+				  <group colspan="2" col="2">
+  				 		<separator string="Accounting Depreciation" colspan="2"/>
+						<field name="accounting_method"
+							on_change="onchange_depreciation_params(purchase_value, salvage_value, purchase_date, in_service_date, accounting_method, accounting_annuities, accounting_rate, fiscal_method, fiscal_annuities, fiscal_rate)"/>
+						<field name="accounting_annuities"
+							on_change="onchange_depreciation_params(purchase_value, salvage_value, purchase_date, in_service_date, accounting_method, accounting_annuities, accounting_rate, fiscal_method, fiscal_annuities, fiscal_rate)"
+							attrs="{'required': [('accounting_method', 'not in', ('none', 'manual'))], 'invisible': [('accounting_method', 'in', ('none', 'manual'))]}"/>
+						<field name="accounting_rate"
+							on_change="onchange_depreciation_params(purchase_value, salvage_value, purchase_date, in_service_date, accounting_method, accounting_annuities, accounting_rate, fiscal_method, fiscal_annuities, fiscal_rate)"
+							attrs="{'invisible': [('accounting_rate_visibility', '=', False)], 'required': [('accounting_rate_visibility', '=', True)]}"/>
+						<field name="accounting_rate_visibility" invisible="1"/>
+				  </group>
+				  <group colspan="2" col="2">
+						<separator string="Fiscal Depreciation" colspan="2"/>
+						<field name="fiscal_method" attrs="{'readonly': [('accounting_method', '=', 'none')]}"
+							on_change="onchange_depreciation_params(purchase_value, salvage_value, purchase_date, in_service_date, accounting_method, accounting_annuities, accounting_rate, fiscal_method, fiscal_annuities, fiscal_rate)"/>
+						<field name="fiscal_annuities"
+							on_change="onchange_depreciation_params(purchase_value, salvage_value, purchase_date, in_service_date, accounting_method, accounting_annuities, accounting_rate, fiscal_method, fiscal_annuities, fiscal_rate)"
+							attrs="{'required': [('fiscal_method', 'not in', ('none', 'manual'))], 'invisible': [('fiscal_method', 'in', ('none', 'manual'))]}"/>
+						<field name="fiscal_rate" attrs="{'invisible': [('fiscal_rate_visibility', '=', False)], 'required': [('fiscal_rate_visibility', '=', True)]}"
+							on_change="onchange_depreciation_params(purchase_value, salvage_value, purchase_date, in_service_date, accounting_method, accounting_annuities, accounting_rate, fiscal_method, fiscal_annuities, fiscal_rate)"/>
+						<field name="benefit_accelerated_depreciation" attrs="{'invisible': [('fiscal_method', '=', 'none')], 'readonly': [('fiscal_method', '!=', 'manual')]}"/>
+						<field name="fiscal_rate_visibility" invisible="1"/>
+				  </group>
+				  <group colspan="4" col="1">
+				  	  <separator string="Reason"/>
+	                  <field name="note" nolabel="1" required="not context.get('asset_validation')"/>
+	              </group>
+                  <button special="cancel" string="Cancel" icon="gtk-cancel" colspan="2"/>
+                  <button type="object" name="button_validate" string="Validate" icon="gtk-execute" colspan="2"/>
+	            </form>
+	        </field>
+	    </record>
+
+	</data>
+</openerp>

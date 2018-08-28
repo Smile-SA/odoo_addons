@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="view_invoice_supplier" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.pay</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account_voucher.view_invoice_supplier"/>
+            <field name="arch" type="xml">
+                <button name="invoice_pay_customer" position="attributes">
+					<attribute name="states"></attribute>
+					<attribute name="attrs">{'invisible':['|','|',('state','not in',('open','progress_paid')),('residual','=',0.0),'&amp;',('payment_type','=','G'),('type','in',('in_invoice','out_invoice'))]}</attribute>
+                </button>
+                <button name="invoice_pay_customer" position="after">
+                    <button name="invoice_pay_by_group" type="object" string="Pay Invoice by group" icon="gtk-go-forward"
+                    	attrs="{'invisible':['|','|','|',('type','!=','in_invoice'),('state','!=','open'),('payment_type','!=','G'),('residual','=',0.0)]}"/>
+	            	<button name="set_to_progress_paid" type="object" string="Authorize Deduction" icon="gtk-go-forward"
+	            		attrs="{'invisible': ['!','&amp;',('type','=','in_refund'),('state','=','open')]}"/>
+	            	<button name="set_to_open" type="object" string="Do Not Authorize Deduction" icon="gtk-undo"
+	            		attrs="{'invisible': ['!','&amp;',('type','in',('in_refund','out_refund')),('state','=','progress_paid')]}"/>
+                	<field name="payment_type" invisible="1"/>
+                    <field name="partner_bank_necessary" invisible="1"/>
+                </button>
+                <field name="partner_bank_id" position="attributes">
+                	<attribute name="attrs">{'required': [('partner_bank_necessary', '=', True)]}</attribute>
+	            </field>
+            </field>
+        </record>
+
+        <record id="invoice_tree" model="ir.ui.view">
+            <field name="name">account.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                	<field name="payment_type" invisible="1"/>
+                </field>
+			</field>
+		</record>
+
+        <record id="view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">account.invoice.select</field>
+            <field name="model">account.invoice</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+				<field name="number" position="before">
+                    <filter icon="gtk-dnd" string="Individual" domain="[('payment_type','=','I')]"/>
+                    <filter icon="gtk-dnd-multiple" string="Grouped" domain="[('payment_type','=','G')]"/>
+                    <separator orientation="vertical"/>
+				</field>
+	            <field name="period_id" position="replace"/>
+	            <field name="journal_id" position="replace"/>
+                <filter string="Due Date" position="after">
+                    <separator orientation="vertical"/>
+                    <filter string="Payment Type" icon="terp-folder-violet" domain="[]" context="{'group_by':'payment_type'}"/>
+                </filter>
+			</field>
+        </record>
+
+	</data>
+</openerp>

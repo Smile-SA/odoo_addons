@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="lang" position="after">
+                	<newline/>
+					<field name="payment_type" attrs="{'readonly': [('has_grouped_payments_in_progress', '=', True)]}"/>
+					<field name="payment_mode_id" widget="selection"/>
+                	<field name="has_grouped_payments_in_progress" invisible="1"/>
+                </field>
+			</field>
+		</record>
+
+	</data>
+</openerp>

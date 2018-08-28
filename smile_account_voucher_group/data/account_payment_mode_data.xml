@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record model="account.payment.mode" id="payment_mode_credit_transfer">
+            <field name="name">Credit Transfer</field>
+            <field name="code">transfer</field>
+            <field name="partner_bank_necessary" eval="True"/>
+		</record>
+
+        <record model="account.payment.mode" id="payment_mode_check">
+            <field name="name">Check</field>
+            <field name="code">check</field>
+            <field name="partner_bank_necessary" eval="False"/>
+		</record>
+
+	</data>
+</openerp>

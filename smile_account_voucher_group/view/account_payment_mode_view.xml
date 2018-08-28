@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+	    <record model="ir.ui.view" id="view_account_payment_mode_form">
+	        <field name="name">account.payment.mode.search</field>
+	        <field name="model">account.payment.mode</field>
+	        <field name="type">search</field>
+	        <field name="arch" type="xml">
+	            <search string="Payment Modes">
+                    <filter icon="terp-dolar" string="Bank Account Necessary" domain="[('partner_bank_necessary','=',True)]"/>
+                    <separator orientation="vertical"/>
+	                <field name="name"/>
+	                <field name="code"/>
+	            </search>
+	        </field>
+	    </record>
+
+	    <record model="ir.ui.view" id="view_account_payment_mode_tree">
+	        <field name="name">account.payment.mode.tree</field>
+	        <field name="model">account.payment.mode</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <tree string="Payment Modes">
+	                <field name="name"/>
+	                <field name="code"/>
+	                <field name="partner_bank_necessary"/>
+	            </tree>
+	        </field>
+	    </record>
+
+	    <record model="ir.ui.view" id="view_account_payment_mode_form">
+	        <field name="name">account.payment.mode.form</field>
+	        <field name="model">account.payment.mode</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form string="Asset">
+	                <field name="name"/>
+	                <field name="code"/>
+	                <field name="journal_id"/>
+	                <field name="partner_bank_necessary"/>
+	            </form>
+	        </field>
+	    </record>
+
+	    <record model="ir.actions.act_window" id="action_account_payment_mode_form">
+	        <field name="name">Payment Modes</field>
+	        <field name="res_model">account.payment.mode</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">tree,form</field>
+	    </record>
+
+	    <menuitem id="menu_account_payment_mode_form" parent="account.menu_configuration_misc"
+	    	action="action_account_payment_mode_form" sequence="10"/>
+
+	</data>
+</openerp>

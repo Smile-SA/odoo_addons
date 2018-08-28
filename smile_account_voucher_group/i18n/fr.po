@@ -1,0 +1,180 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* smile_account_voucher_group
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1-20121025-233243\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-10-03 15:25+0000\n"
+"PO-Revision-Date: 2013-10-03 15:25+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_account_voucher_group
+#: view:account.invoice:0
+#: field:res.partner,payment_type:0
+#: field:account.invoice,payment_type:0
+#: field:account.voucher,payment_type:0
+msgid "Payment Type"
+msgstr "Type de paiement"
+
+#. module: smile_account_voucher_group
+#: constraint:account.voucher:0
+msgid "You cannot create a voucher linked to a company different from the ones of journal and account"
+msgstr "Vous ne pouvez pas créer un règlement avec une société différente de celles du mode de paiement ou du compte sélectionnés"
+
+#. module: smile_account_voucher_group
+#: view:account.invoice:0
+#: selection:res.partner,payment_type:0
+#: selection:account.invoice,payment_type:0
+#: selection:account.voucher,payment_type:0
+msgid "Grouped"
+msgstr "Groupé"
+
+#. module: smile_account_voucher_group
+#: field:account.voucher,payment_mode_id:0
+#: model:ir.model,name:smile_account_voucher_group.model_account_payment_mode
+#: field:res.partner,payment_mode_id:0
+msgid "Payment Mode"
+msgstr "Mode de paiement"
+
+#. module: smile_account_voucher_group
+#: sql_constraint:res.partner:0
+msgid "La référence doit être unique !"
+msgstr "La référence doit être unique !"
+
+#. module: smile_account_voucher_group
+#: constraint:account.voucher:0
+msgid "You cannot create an advance payment with an amount bigger than purchase order amount"
+msgstr "Vous ne pouvez pas créer d'acomptes pour un montant total supérieur à celui de la commande"
+
+#. module: smile_account_voucher_group
+#: field:account.payment.mode,journal_id:0
+msgid "Journal"
+msgstr "Journal de règlement"
+
+#. module: smile_account_voucher_group
+#: field:account.payment.mode,partner_bank_necessary:0
+#: field:account.invoice,partner_bank_necessary:0
+#: field:account.voucher,partner_bank_necessary:0
+msgid "Bank Account Necessary"
+msgstr "Compte bancaire nécessaire"
+
+#. module: smile_account_voucher_group
+#: model:account.payment.mode,name:smile_account_voucher_group.payment_mode_credit_transfer
+msgid "Credit Transfer"
+msgstr "Virement"
+
+#. module: smile_account_voucher_group
+#: field:account.payment.mode,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_account_voucher_group
+#: view:account.invoice:0
+msgid "Due Date"
+msgstr "Date d'échéance"
+
+#. module: smile_account_voucher_group
+#: sql_constraint:account.payment.mode:0
+msgid "Payment mode code must be unique"
+msgstr "Le code du mode de paiement doit être unique"
+
+#. module: smile_account_voucher_group
+#: field:account.voucher,partner_bank_id:0
+msgid "Bank Account"
+msgstr "Compte bancaire"
+
+#. module: smile_account_voucher_group
+#: field:account.payment.mode,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_account_voucher_group
+#: view:account.invoice:0
+msgid "Pay Invoice by group"
+msgstr "Payer la facture en mode groupé"
+
+#. module: account_voucher
+#: view:account.invoice:0
+msgid "Pay Invoice"
+msgstr "Payer la facture en mode individuel"
+
+#. module: account_voucher
+#: view:account.invoice:0
+msgid "Authorize Deduction"
+msgstr "Autoriser la déduction"
+
+#. module: account_voucher
+#: view:account.invoice:0
+msgid "Do Not Authorize Deduction"
+msgstr "Ne plus autoriser la déduction"
+
+#. module: smile_account_voucher_group
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Le numéro de facture doit être unique par société !"
+
+#. module: smile_account_voucher_group
+#: field:account.payment.mode,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: smile_account_voucher_group
+#: model:ir.model,name:smile_account_voucher_group.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Justificatif comptable"
+
+#. module: smile_account_voucher_group
+#: view:account.payment.mode:0
+#: model:ir.actions.act_window,name:smile_account_voucher_group.action_account_payment_mode_form
+#: model:ir.ui.menu,name:smile_account_voucher_group.menu_account_payment_mode_form
+msgid "Payment Modes"
+msgstr "Modes de paiement"
+
+#. module: smile_account_voucher_group
+#: view:account.invoice:0
+#: selection:res.partner,payment_type:0
+#: selection:account.invoice,payment_type:0
+#: selection:account.voucher,payment_type:0
+msgid "Individual"
+msgstr "Individuel"
+
+#. module: smile_account_voucher_group
+#: model:ir.model,name:smile_account_voucher_group.model_account_invoice
+#: field:account.voucher.line,invoice_id:0
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: smile_account_voucher_group
+#: model:ir.model,name:smile_account_voucher_group.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_account_voucher_group
+#: model:account.payment.mode,name:smile_account_voucher_group.payment_mode_check
+msgid "Check"
+msgstr "Chèque"
+
+#. module: smile_account_voucher_group
+#: code:addons/smile_account_voucher_group/account_invoice.py:120
+#, python-format
+msgid "Grouped payment created for the following invoices: %s"
+msgstr "Paiement groupé créé pour les factures suivantes : %s"
+
+#. module: smile_account_voucher_group
+#: code:addons/smile_account_voucher_group/account_invoice.py:123
+#, python-format
+msgid "Grouped payment creation failed for the following invoices: %s - Error: %s"
+msgstr "Echec de la création du paiement groupé créé pour les factures suivantes : %s - Erreur : %s"
+
+#. module: smile_account_voucher_group
+#: code:addons/smile_account_voucher_group/account_invoice.py:125
+#, python-format
+msgid "%s grouped payments created; %s errors"
+msgstr "%s paiements groupés créés ; %s erreurs"

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record model="ir.ui.view" id="view_account_tax_form">
+            <field name="name">account.tax.form</field>
+            <field name="model">account.tax</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <field name="ref_tax_sign" position="after">
+                    <separator colspan="4" string="Validity Period"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                </field>
+            </field>
+		</record>
+
+        <record model="ir.ui.view" id="invoice_supplier_form">
+            <field name="model">account.invoice</field>
+            <field name="name">view.account.invoice.supplier.form</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="date_invoice" position="before">
+                    <field name="date_invoice_supplier"/>
+                </field>
+                <button name="invoice_open" position="attributes">
+                    <attribute name="type">object</attribute>
+	            </button>
+            </field>
+		</record>
+
+	</data>
+</openerp>

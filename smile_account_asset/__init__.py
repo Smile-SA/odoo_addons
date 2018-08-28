@@ -1,0 +1,33 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2012 Smile (<http://www.smile.fr>). All Rights Reserved
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+import account_asset_depreciation_method
+import account_asset_category
+import account_asset
+import account_asset_depreciation_line
+import account
+import account_asset_history
+import account_invoice
+import account_asset_posting
+import account_move_line
+import res_company
+import report
+import wizard

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="view_voucher_filter_vendor_pay">
+            <field name="name">account.voucher.purchase.pay.select</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_voucher_filter_vendor_pay"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <filter string="Draft" position="before">
+                	<filter icon="terp-gtk-jump-to-ltr" name="advance" string="Advance Payment" domain="[('is_advance_payment','=',True)]"/>
+                	<separator orientation="vertical"/>
+                </filter>
+            </field>
+        </record>
+		
+		<record model="ir.actions.act_window" id="account_voucher.action_vendor_payment">
+            <field name="res_model">account.voucher</field>  
+			<field name="context">{'search_default_payment':True}</field>
+        </record>
+
+		<record model="ir.ui.view" id="view_voucher_tree">
+			<field name="name">account.voucher.tree</field>
+			<field name="model">account.voucher</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="account_voucher.view_voucher_tree" />
+			<field name="arch" type="xml">
+				<field name="amount" position="after">
+					<field name="is_advance_payment" invisible="1"/>
+				</field>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_vendor_payment_form">
+			<field name="name">account.voucher.payment.form</field>
+			<field name="model">account.voucher</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="account_voucher.view_vendor_payment_form" />
+			<field name="arch" type="xml">
+				<field name="partner_id" position="attributes">
+					<attribute name="invisible">context.get('purchase_order_form_view', False)</attribute>
+				</field>
+				<field name="partner_id" position="before">
+					<field name="is_advance_payment" invisible="1" on_change="onchange_is_advance_payment(is_advance_payment)"/>
+				</field>
+				<page string="Payment Information" position="before">
+					<page name="advance_payments" string="Advance Payment" attrs="{'invisible': [('is_advance_payment','=',False)]}">
+						<field name="purchase_order_id" attrs="{'required':[('is_advance_payment','=',True)],'readonly':[('state','not in',('draft','proforma'))]}" invisible="context.get('purchase_order_form_view')" domain="[('partner_id','=',partner_id)]"/>
+						<field name="advance_reference" attrs="{'required':[('is_advance_payment','=',True)],'readonly':[('state','not in',('draft','proforma'))]}" />
+						<field name="advance_payment_line_ids" nolabel="1" colspan="4" attrs="{'invisible': [('state','not in',('posted', 'cancel'))]}">
+							<tree string="Recovery Lines" editable="top">
+								<field name="invoice_id" domain="[('partner_id','=',parent.partner_id)]" required="1"/>
+								<field name="amount" required="1" sum="Total"/>
+							</tree>
+						</field>
+						<field name="advance_residual" attrs="{'invisible': [('state','not in',('posted', 'cancel'))]}"/>
+					</page>
+				</page>
+				<page string="Payment Information" position="attributes">
+					<attribute name="attrs">{'invisible': [('is_advance_payment','=',True)]}</attribute>
+				</page>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="account_voucher_invoice_line_form_view">
+			<field name="name">account.voucher.invoice.line.form</field>
+			<field name="model">account.voucher.invoice.line</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Recovery Line">
+					<field name="invoice_id" required="1"/>
+					<field name="voucher_id" required="1"/>
+					<field name="amount" required="1" sum="Total"/>
+					<button name="post" string="Post" type="object" attrs="{'invisible': [('move_id', '!=', False)]}"/>
+					<field name="move_id" invisible="1"/>
+				</form>
+			</field>
+		</record>
+
+	</data>
+</openerp>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record model="account.payment.mode" id="payment_mode_credit_transfer">
+            <field name="journal_id" ref="account.bank_journal"/>
+		</record>
+
+        <record model="account.payment.mode" id="payment_mode_check">
+            <field name="journal_id" ref="account.bank_journal"/>
+		</record>
+
+	</data>
+</openerp>
