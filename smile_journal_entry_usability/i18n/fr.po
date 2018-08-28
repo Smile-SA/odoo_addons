@@ -1,0 +1,158 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_journal_entry_usability
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-27 12:42+0000\n"
+"PO-Revision-Date: 2015-04-27 12:42+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_journal_entry_usability
+#: model:ir.actions.act_window,help:smile_journal_entry_usability.action_move_journal_line_all
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a journal entry.\n"
+"              </p><p>\n"
+"                A journal entry consists of several journal items, each of\n"
+"                which is either a debit or a credit transaction.\n"
+"              </p><p>\n"
+"                Odoo automatically creates one journal entry per accounting\n"
+"                document: invoice, refund, supplier payment, bank statements,\n"
+"                etc. So, you should record journal entries manually only/mainly\n"
+"                for miscellaneous operations.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer une écriture dans le journal.\n"
+"              </p><p>\n"
+"                Un écriture de journal consiste en plusieurs lignes de journal, chacune étant\n"
+"                soit une opération de crédit, soit une opération de débit.\n"
+"              </p><p>\n"
+"                Odoo créé automatiquement une écriture de journal par document\n"
+"                comptable: facture, avoir, paiement fournisseur, relevé bancaire,\n"
+"                etc. Donc, vous ne devriez créer des écritures de journal seulement/principalement\n"
+"                pour d'autres opérations.\n"
+"              </p>\n"
+"            "
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Account Entry"
+msgstr "Pièce comptable"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Accounting Documents"
+msgstr "Documents comptables"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Add an internal note..."
+msgstr "Ajouter une note interne…"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_account_move_form_inherit
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Additional informations"
+msgstr "Informations complémentaires"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Amount"
+msgstr "Montant"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Analytic"
+msgstr "Analytique"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Analytic Lines"
+msgstr "Lignes analytiques"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Cancel Entry"
+msgstr "Annuler une entrée"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Currency"
+msgstr "Devise"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Dates"
+msgstr "Dates"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_account_move_form_inherit
+#: view:account.move:smile_journal_entry_usability.view_account_move_tree_inherit
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Entry date"
+msgstr "Date de saisie"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Information"
+msgstr "Information"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Internal Note"
+msgstr "Note interne"
+
+#. module: smile_journal_entry_usability
+#: model:ir.actions.act_window,name:smile_journal_entry_usability.action_move_journal_line_all
+#: model:ir.ui.menu,name:smile_journal_entry_usability.menu_action_move_journal_line_form_all
+msgid "Journal Entries"
+msgstr "Vue des pièces comptables"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Journal Item"
+msgstr "Écriture comptable"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Journal Items"
+msgstr "Écritures comptables"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Post"
+msgstr "Comptabiliser"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Reconciliation"
+msgstr "Lettrage"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "States"
+msgstr "États"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Taxes"
+msgstr "Taxes"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Total Credit"
+msgstr "Total crédit"
+
+#. module: smile_journal_entry_usability
+#: view:account.move:smile_journal_entry_usability.view_move_form_all
+msgid "Total Debit"
+msgstr "Total débit"
+

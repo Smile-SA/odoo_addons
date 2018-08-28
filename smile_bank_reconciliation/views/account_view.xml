@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+
+	    <record model="ir.ui.view" id="view_account_bank_reconciliation_search">
+	        <field name="name">account.bank.reconciliation.search</field>
+	        <field name="model">account.bank.reconciliation</field>
+	        <field name="type">search</field>
+	        <field name="arch" type="xml">
+	            <search string="Bank reconciliation">
+                    <separator orientation="vertical"/>
+	                <field name="name"/>
+	                <field name="date"/>
+	                <field name="journal_id"/>
+	                <field name="state"/>
+	            </search>
+	        </field>
+	    </record>
+
+	    <record model="ir.ui.view" id="view_account_bank_reconciliation_tree">
+	        <field name="name">account.bank.reconciliation.tree</field>
+	        <field name="model">account.bank.reconciliation</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <tree colors="blue:state == 'draft';black:state == 'valid'" string="Bank reconciliation">
+	                <field name="name"/>
+	                <field name="date"/>
+	                <field name="journal_id"/>
+	                <field name="balance_account"/>
+	                <field name="gap"/>
+	                <field name="state"/>
+	            </tree>
+	        </field>
+	    </record>
+
+	    <record model="ir.ui.view" id="view_account_bank_reconciliation_form">
+	        <field name="name">account.bank.reconciliation.form</field>
+	        <field name="model">account.bank.reconciliation</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form string="Bank reconciliation">
+	                <header>
+                            <button name="button_validate" states="draft" string="Validate" type="object" class="oe_highlight"/>
+                            <button name="button_cancel" states="valid" string="Cancel" type="object"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,valid"/>
+                    </header>
+                <sheet>
+                    <h1><field name="name"/></h1>
+                    <group>
+                        <group colspan="1" col="2">
+                            <field name="journal_id"/>
+                            <field name="account_bank_id" invisible="1"/>
+                            <field name="date"/>
+                        </group>
+                        <group colspan="1" col="2">
+                            <field name="balance_account"/>
+                            <field name="balance_not_close"/>
+                            <field name="theoretical_balance"/>
+                            <field name="balance_per_statement"/>
+	                        <field name="gap"/>
+                        </group>
+	                </group>
+	               <notebook>
+	                    <page string="Reconcilation voucher">
+	                        <field name="reconciliation_voucher_ids" mode="tree" context="{'default_date': date}">
+	                            <tree>
+	                                <field name="name"/>
+	                                <field name="total_debit"/>
+	                                <field name="total_credit"/>
+	                                <field name="comment"/>
+	                            </tree>
+	                            <form>
+	                                <group col="4" colspan="1">
+	                                    <field name="name" colspan="1"/>
+	                                    <field name="date" invisible="1" colspan="1"/>
+	                                </group>
+	                                <group col="2" colspan="4">
+	                                    <field name="account_move_line_ids" colspan="4" nolabel="1" domain="['|',('date', '=', date),('date', '&lt;', date),('state', '=', 'valid'),('reconciliation_voucher_id', '=', False),('journal_id', '=', parent.journal_id),('account_id', '=', parent.account_bank_id)]"/>
+	                                </group>
+	                                <group col="4" string="Description">
+	                                    <field name="comment" widget="text"  nolabel="1"/>
+	                                </group>
+	                            </form>
+	                        </field>
+	                    </page>
+	                    <page string="Reconcilation gap">
+	                        <field name="reconciliation_gap_ids" mode="tree" >
+	                            <tree editable="Top">
+	                                <field name="name"/>
+	                                <field name="amount"/>
+	                            </tree>
+	                            <form>
+	                                <field name="name"/>
+	                                <field name="amount"/>
+	                            </form>
+	                        </field>
+	                    </page>
+                        <page string="Move Lines">
+                            <field name="account_move_line_ids" mode="tree">
+                                <tree>
+				                    <field name="reconciliation_voucher_id"/>
+				                    <field name="period_id"/>
+				                    <field name="date"/>
+				                    <field name="reconciliation_voucher_date"/>
+				                    <field name="name"/>
+				                    <field name="ref"/>
+				                    <field name="partner_id"/>
+				                    <field name="account_id"/>
+				                    <field name="move_id"/>
+				                    <field name="debit"/>
+				                    <field name="credit"/>
+                                </tree>
+                            </field>
+                        </page>
+	               </notebook>
+	             </sheet>
+	            </form>
+	        </field>
+	    </record>
+
+	    <record model="ir.actions.act_window" id="action_account_bank_reconciliation_form">
+	        <field name="name">Bank reconciliation</field>
+	        <field name="res_model">account.bank.reconciliation</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">tree,form</field>
+	    </record>
+
+
+        <record id="view_move_line_tree" model="ir.ui.view">
+            <field name="name">bank_reconciliationaccount.move.line.tree</field>
+            <field name="model">account.move.line</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" editable="top">
+                    <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
+                    <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="statement_id" invisible="1"/>
+                    <field name="partner_id"
+                        domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                        on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
+                    <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]" on_change="onchange_account_id(account_id, partner_id, context)"/>
+                    <field name="account_tax_id" options='{"no_open":True}' invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund','general']"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
+                    <field name="move_id" required="0"/>
+                    <field name="debit" sum="Total Debit"/>
+                    <field name="credit" sum="Total Credit"/>
+                    <field name="date_maturity" invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund']"/>
+                    <field name="reconcile_ref"/>
+                    <field name="reconciliation_id"/>
+                    <field name="reconciliation_voucher_id"/>
+                    <field name="reconciliation_voucher_date"/>
+                    <field name="invoice" invisible="1"/>
+                    <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
+                    <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
+                    <field name="state" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_move_line_bank_reconciliation_filter" model="ir.ui.view">
+            <field name="name">bank_reconciliation.account.move.line.search</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <search string="Search Journal Items">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
+                    <field name="date"/>
+                    <filter icon="terp-document-new" string="Unbalanced" domain="[('state','=','draft')]" help="Unbalanced Journal Items"/>
+                    <separator/>
+                    <filter icon="terp-document-new" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
+                    <filter name="posted" icon="terp-camera_test" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
+                    <filter icon="terp-document-new" string="Reconcilied" domain="[('reconciliation_id','!=',False), ('state','=','valid'), ('account_id.type','=','liquidity')]"/>
+                    <filter icon="terp-document-new" string="Unreconciliaton" name="unreconciliation" domain="[('reconciliation_id','=',False), ('state','=','valid'), ('account_id.type','=','liquidity')]"/>
+                    <separator/>
+                    <filter icon="terp-dolar_ok!" string="Unreconciled" domain="[('reconcile_id','=',False), ('account_id.reconcile','=',True)]" help="Unreconciled Journal Items" name="unreconciled"/>
+                    <separator/>
+                    <filter string="Next Partner to Reconcile" help="Next Partner Entries to reconcile" name="next_partner" context="{'next_partner_only': 1}" icon="terp-gtk-jump-to-ltr" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
+                    <field name="move_id" string="Number (Move)"/>
+                    <field name="account_id"/>
+                    <field name="partner_id"/>
+                    <field name="reconciliation_id"/>
+                    <field name="reconciliation_voucher_id"/>
+                    <field name="reconciliation_voucher_date"/>
+                    <field name="journal_id" context="{'journal_id':self}" widget="selection"/> <!-- it's important to keep widget='selection' in this filter viewbecause without that the value passed in the context is not the ID but the textual value (name) of the selected journal -->
+                    <field name="period_id" context="{'period_id':self}" widget="selection"/> <!-- it's important to keep the widget='selection' in this field, for the same reason as explained above -->
+                    <group expand="0" string="Group By">
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
+                        <filter string="Reconciliation" icon="terp-go-month" domain="[]" context="{'group_by':'reconciliation_id'}"/>
+                        <filter string="Reconciliation date" icon="terp-go-month" domain="[]" context="{'group_by':'reconciliation_voucher_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="action_account_move_line" model="ir.actions.act_window">
+            <field name="context">{'journal_type':'bank', 'display_account_code': True, 'search_default_unreconciliation': 1}</field>
+            <field name="name">Bank reconciliation</field>
+            <field name="res_model">account.move.line</field>
+            <field name="domain">[('journal_id.type','=','bank')]</field>
+            <field name="view_id" ref="view_move_line_tree"/>
+            <field name="search_view_id" ref="view_account_move_line_bank_reconciliation_filter"/>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Select the period and the journal you want to fill.
+              </p><p>
+                This view can be used by accountants in order to quickly record
+                entries in Odoo. If you want to record a supplier invoice,
+                start by recording the line of the expense account. Odoo
+                will propose to you automatically the Tax related to this
+                account and the counterpart "Account Payable".
+              </p>
+            </field>
+        </record>
+
+      <!-- Menus -->
+      <menuitem 
+	        id="menu_account_bank_reconciliation"
+	        parent="account.menu_finance"
+	    	name="Bank reconciliation"
+	    	sequence="6"
+	    	groups="group_read_bank_reconciliation"/>
+	    <menuitem 
+	        id="menu_account_bank_reconciliation_form"
+	        parent="menu_account_bank_reconciliation"
+	    	action="action_account_bank_reconciliation_form"
+	    	name="Bank reconciliation"
+	    	sequence="1"
+	    	groups="group_read_bank_reconciliation"/>
+	    <menuitem 
+	        id="menu_account_moves"
+	        parent="menu_account_bank_reconciliation"
+	    	action="action_account_move_line"
+	    	name="Journal Items"
+	    	sequence="2"
+	    	groups="group_read_bank_reconciliation"/>
+
+        <!-- Account move line search view -->
+        <record id="view_account_move_line_filter_bank_reconcile_inherit" model="ir.ui.view">
+            <field name="name">account.move.line.search</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='posted']" position="after">
+                    <filter icon="terp-document-new" string="Reconcilied" domain="[('reconciliation_id','!=',False)]"/>
+                    <filter icon="terp-document-new" string="Unreconciliaton" name="unreconciliation" domain="[('reconciliation_id','=',False)]"/>
+                    <separator/>
+                </xpath>
+                <xpath expr="//group/filter[@string='Period']" position="after">
+                    <filter string="Reconciliation" icon="terp-go-month" domain="[]" context="{'group_by':'reconciliation_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

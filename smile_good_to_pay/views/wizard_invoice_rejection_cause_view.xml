@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+    
+        <record id="wizard_invoice_rejection_cause_view_form" model="ir.ui.view">
+            <field name="name">account.invoice.rejection.cause.view.form</field>
+            <field name="model">account.invoice.rejection.cause</field>
+            <field name="arch" type="xml">
+                <form string="Rejection cause">
+                    <group>
+                        <field name="rejection_cause_id"/>
+                    </group>
+                    <group>
+                        <separator string="Note" colspan="4"/>
+                        <field name="note" nolabel="1"/>
+                    </group>
+                    
+                    <footer>
+                        <button name="button_reject" type='object' string="Reject" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

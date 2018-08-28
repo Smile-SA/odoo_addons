@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record model="level.reminder.type" id="no_reminder">
+            <field name="name">No reminder</field>
+        </record>
+        <record model="level.reminder.type" id="inv_statement">
+            <field name="name">Invoices statement</field>
+        </record>
+        <record model="level.reminder.type" id="reminder">
+            <field name="name">Reminder</field>
+        </record>
+        <record model="level.reminder.type" id="tel_follow">
+            <field name="name">Calling follow</field>
+        </record>
+        <record model="level.reminder.type" id="reminder_litige_valid">
+            <field name="name">Reminder after litigation or internal validation</field>
+        </record>
+        <record model="level.reminder.type" id="reminder_ar">
+            <field name="name">Reminder AR</field>
+        </record>
+        <record model="level.reminder.type" id="prediction_settlement">
+            <field name="name">Prediction settlement</field>
+        </record>
+        <record model="level.reminder.type" id="notice">
+            <field name="name">Notice</field>
+        </record>
+        <record model="level.reminder.type" id="injunction_to_pay">
+            <field name="name">Injunction to pay</field>
+        </record>
+        <record model="level.reminder.type" id="proposal_passage_loss">
+            <field name="name">Proposal passage loss</field>
+        </record>
+        <record model="level.reminder.type" id="dont_reminder">
+            <field name="name">Don't reminder</field>
+        </record>
+
+    </data>
+</openerp>

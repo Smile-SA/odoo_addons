@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="good_to_pay_procurement_form_view" model="ir.ui.view">
+            <field name="name">good_to_pay.procurement.order.form</field>
+            <field name="model">procurement.order</field>
+            <field name="inherit_id" ref="procurement.procurement_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@groups='product.group_uos']" position="after">
+                    <field name="approval_user_id"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

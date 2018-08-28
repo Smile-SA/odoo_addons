@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        
+        <record id="group_baper_invoices" model="res.groups">
+            <field name="name">BAPER invoices</field>
+            <field name="category_id" ref="base.module_category_purchase_management"/>
+            <field name="users" eval="[(4,ref('base.user_root'))]"/>
+        </record>
+
+        <record id="account.group_account_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('group_baper_invoices'))]"/>
+        </record>        
+    </data>
+</openerp>

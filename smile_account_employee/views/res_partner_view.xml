@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <menuitem id="menu_finance_employees" name="Employees" parent="account.menu_finance" groups="account.group_account_user" sequence="3"/>
+        
+        <record id="view_partner_employee_form" model="ir.ui.view">
+            <field name="name">res.partner.employee.form</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Partners">
+                <sheet>
+                    <field name="image" widget='image' class="oe_left oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
+                    <div class="oe_title oe_left">
+                        <div class="oe_edit_only">
+                            <label for="name"/> (
+                            <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Is a Company?"/>)
+                        </div>
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Name" />
+                        </h1>
+                        <field name="parent_id"
+                            placeholder="Company"
+                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
+                            attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"
+                            on_change="onchange_address(use_parent_address, parent_id)"/>
+                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                    </div>
+                    <div class="oe_right oe_button_box" name="buttons">
+                    	<button type="action" class="oe_stat_button" name="193" icon="fa-list">
+                        	<field string="Journal Items" name="journal_item_count" widget="statinfo"/>                        
+                    	</button>
+                        <button class="oe_inline oe_stat_button" type="action" name="293" icon="fa-book">
+                        	<field string="Contracts" name="contracts_count" widget="statinfo"/>
+                    	</button>
+                    </div>
+
+                    <group>
+                        <group>
+                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
+                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
+                                <field class="oe_inline"
+                                    name="type"/>
+                            </div>
+
+                            <label for="street" string="Address"/>
+                            <div>
+                                <div class="oe_edit_only">
+                                    <field name="use_parent_address" class="oe_inline"
+                                           on_change="onchange_address(use_parent_address, parent_id)"
+                                           attrs="{'invisible': ['|', ('is_company', '=', True),('parent_id', '=', False)]}"/>
+                                    <label for="use_parent_address" attrs="{'invisible': ['|', ('is_company', '=', True), ('parent_id', '=', False)]}"/>
+                                </div>
+                                <button name="open_parent" type="object" string="(edit company address)" class="oe_link oe_edit_only"
+                                        attrs="{'invisible': ['|',('parent_id','=', False),('use_parent_address','=',False)]}"/>
+                                <field name="street" placeholder="Street..."  attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                                <field name="street2"  attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                                <field name="zip" placeholder="ZIP" style="width: 40%%" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                                <field name="city2" placeholder="City" style="width: 60%%"  />
+                                <field name="city" placeholder="City" style="width: 60%%" attrs="{'readonly': [('use_parent_address','=',True)]}" invisible="1"/>
+                                <field name="state_id"  class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)" attrs="{'readonly': [('use_parent_address','=',True)]}" invisible="1"/>
+                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                            </div>
+                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                        </group>
+                        <group>
+                            <field name="function" placeholder="e.g. Sales Director"
+                                attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
+                            <field name="mobile"/>
+                            <field name="fax"/>
+                            <field name="user_ids" invisible="1"/>
+                            <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="title" options='{"no_open": True}'/>
+                        </group>
+                    </group>
+
+                    <notebook colspan="4">
+                        <page string="Contacts" attrs="{'invisible': [('is_company','=',False), ('child_ids', '=', [])]}" autofocus="autofocus">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_city2': city2, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True}">
+                                <kanban>
+                                    <field name="color"/>
+                                    <field name="name"/>
+                                    <field name="title"/>
+                                    <field name="email"/>
+                                    <field name="parent_id"/>
+                                    <field name="is_company"/>
+                                    <field name="function"/>
+                                    <field name="phone"/>
+                                    <field name="street"/>
+                                    <field name="street2"/>
+                                    <field name="zip"/>
+                                    <field name="city"/>
+                                    <field name="country_id"/>
+                                    <field name="mobile"/>
+                                    <field name="fax"/>
+                                    <field name="state_id"/>
+                                    <field name="has_image"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '')" style="position: relative">
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                <div class="oe_module_vignette">
+                                                <a type="open">
+                                                    <t t-if="record.has_image.raw_value === true">
+                                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
+                                                    </t>
+                                                    <t t-if="record.image and record.image.raw_value !== false">
+                                                        <img t-att-src="'data:image/png;base64,'+record.image.raw_value" class="oe_avatar oe_kanban_avatar_smallbox"/>
+                                                    </t>
+                                                    <t t-if="record.has_image.raw_value === false and (!record.image or record.image.raw_value === false)">
+                                                        <t t-if="record.is_company.raw_value === true">
+                                                            <img t-att-src='_s + "/base/static/src/img/company_image.png"' class="oe_kanban_image oe_kanban_avatar_smallbox"/>
+                                                        </t>
+                                                        <t t-if="record.is_company.raw_value === false">
+                                                            <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_image oe_kanban_avatar_smallbox"/>
+                                                        </t>
+                                                    </t>
+                                                </a>
+                                                    <div class="oe_module_desc">
+                                                        <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_color_border">
+                                                            <table class="oe_kanban_table">
+                                                                <tr>
+                                                                    <td class="oe_kanban_title1" align="left" valign="middle">
+                                                                        <h4><a type="open"><field name="name"/></a></h4>
+                                                                        <i><div t-if="record.function.raw_value">
+                                                                            <field name="function"/></div></i>
+                                                                        <div><a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value">
+                                                                            <field name="email"/>
+                                                                        </a></div>
+                                                                        <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
+                                                                        <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
+                                                                        <div t-if="record.fax.raw_value">Fax: <field name="fax"/></div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form string="Contact">
+                                    <sheet>
+                                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                                        <div class="oe_title">
+                                            <label for="name" class="oe_edit_only"/>
+                                            <h1><field name="name" style="width: 70%%"/></h1>
+                                            <field name="category_id" widget="many2many_tags" placeholder="Tags..." style="width: 70%%"/>
+                                        </div>
+                                        <group>
+                                            <field name="function" placeholder="e.g. Sales Director"/>
+                                            <field name="email"/>
+                                            <field name="phone"/>
+                                            <field name="mobile"/>
+                                        </group>
+                                        <div>
+                                            <field name="use_parent_address"/><label for="use_parent_address"/>
+                                        </div>
+                                        <group>
+                                            <label for="type"/>
+                                            <div name="div_type">
+                                                <field class="oe_inline" name="type"/>
+                                            </div>
+                                            <label for="street" string="Address" attrs="{'invisible': [('use_parent_address','=', True)]}"/>
+                                            <div attrs="{'invisible': [('use_parent_address','=', True)]}" name="div_address">
+                                                <field name="street" placeholder="Street..."/>
+                                                <field name="street2"/>
+                                            <div attrs="{'invisible': [('use_parent_address','=', True)]}" name="div_address">
+                                                <field name="street" placeholder="Street..."/>
+                                                <field name="street2"/>
+                                                <field name="zip" placeholder="ZIP" style="width: 40%%" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                                                <field name="city2" placeholder="City" style="width: 60%%"  />
+                                                <field name="city" placeholder="City" style="width: 60%%" attrs="{'readonly': [('use_parent_address','=',True)]}" invisible="1"/>
+                                                <field name="state_id"  class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)" attrs="{'readonly': [('use_parent_address','=',True)]}" invisible="1"/>
+                                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+                                            </div>
+                                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True, "no_create": True}'/>
+                                            </div>
+                                        </group>
+                                        <field name="supplier" invisible="True"/>
+                                        <field name="customer" invisible="True"/>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Put an internal note..."/>
+                        </page>
+                        <page name='sales_purchases' string="Sales &amp; Purchases">
+                            <group>
+                                <group>
+                                    <field name="user_id" 
+                                        context="{'default_groups_ref': ['base.group_partner_manager']}"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                </group>
+                                <group>
+                                    <field name="employee" string="Employee"/>
+                                    <field name="supplier" invisible="True"/>
+                                    <field name="customer" invisible="True"/>
+                                </group>
+                                <group>
+                                    <field name="ref"/>
+                                    <field name="lang"/>
+                                    <field name="date"/>
+                                </group>
+                                <group>
+                                    <field name="active"/>
+                                </group>
+                            </group>
+                        </page>
+		                <page string="Accounting" col="4" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice">
+		                    <group>
+		                        <group>
+		                            <field name="property_account_position" widget="selection"/>
+		                        </group>
+		                        <group>
+		                            <field name="last_reconciliation_date"/>
+		                        </group>
+		                        <group>
+		                            <field name="property_account_receivable" domain="[('user_type.code','=','other')]" groups="account.group_account_invoice"/>
+		                            <field name="property_payment_term" widget="selection"/>
+		                            <field name="credit"/>
+		                            <field name="credit_limit"/>
+		                        </group>
+		                        <group>
+		                            <field name="property_account_payable" domain="[('user_type.code','=','other')]" groups="account.group_account_invoice"/>
+		                            <field name="property_supplier_payment_term" widget="selection"/>
+		                            <field name="debit"/>
+		                        </group>
+		                    </group>
+		                    <field name="bank_ids" context="{'default_partner_id': active_id, 'form_view_ref': 'base.view_partner_bank_form'}">
+		                        <tree string="Bank Details">
+		                            <field name="state" invisible="1"/>
+		                            <field name="sequence" invisible="1"/>
+		                            <field name="acc_number"/>
+		                            <field name="bank_name"/>
+		                            <field name="owner_name"/>
+		                        </tree>
+		                    </field>
+		                </page>
+		                <page string="Accounting" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}" groups="account.group_account_invoice">
+		                    <div>
+		                        <p>Accounting-related settings are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
+		                    </div>
+		                </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_res_partner_employee_form" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('employee','=',1)]</field>
+            <field name="context">{'default_customer':0, 'default_supplier':0 , 'default_employee':1, 'default_property_account_payable':False, 'default_property_account_receivable':False}</field>
+            <field name="search_view_id" ref="base.view_res_partner_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new Employee.
+              </p><p>
+                Odoo helps you easily track all expenses related to
+                an employee.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_res_partner_employee_form_view1" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_res_partner_employee_form"/>
+        </record>
+        <record id="action_res_partner_employee_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_partner_employee_form"/>
+            <field name="act_window_id" ref="action_res_partner_employee_form"/>
+        </record>
+        <record id="action_res_partner_employee_tree_view1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_partner_tree"/>
+            <field name="act_window_id" ref="action_res_partner_employee_form"/>
+        </record>
+        <menuitem id="menu_res_partner_employee_form" parent="menu_finance_employees" action="action_res_partner_employee_form" groups="account.group_account_user" sequence="1"/>
+
+    </data>
+</openerp>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="account_fr_fec_import_form" model="ir.ui.view">
+      <field name="name">account.fr.fec.import.form</field>
+      <field name="model">account.fr.fec.import</field>
+      <field name="priority" eval="20"/>
+      <field name="arch" type="xml">
+        <form string="FEC file import" create="false">
+          <group>
+            <field name="fec_file"/>
+            <field name="delimiter"/>
+            <field name="account_journal_ids"/>
+            <field name="import_reconciliation"/>
+          </group>
+          <footer>
+            <button name="import_file" string="Import file" type="object" class="oe_highlight"/>
+            or
+            <button string="Discard" special="cancel" class="oe_link"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_account_fr_fec_import" model="ir.actions.act_window">
+      <field name="name">FEC File Import</field>
+      <field name="res_model">account.fr.fec.import</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="account_fr_fec_import_form"/>
+      <field name="target">new</field>
+    </record>
+
+    <menuitem action="action_account_fr_fec_import" id="menu_account_fr_fec_import"
+      parent="account.menu_finance_entries" sequence="100" groups="account.group_account_manager"/>
+
+  </data>
+</openerp>

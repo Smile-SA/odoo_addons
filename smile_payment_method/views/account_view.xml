@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <record model="ir.ui.view" id="inherited_account_invoice_payment_term_form">
+        <field name="name">account.invoice.form.payment.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form" />
+        <field name="arch" type="xml">
+            <xpath expr='//field[@name="payment_term"]' position="after" >
+                    <field name="payment_method_id" widget="selection"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="inherited_account_invoice_user_payment_term_form">
+        <field name="name">account.invoice.user.payment.form.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form" />
+        <field name="arch" type="xml">
+            <xpath expr='//field[@name="payment_term"]' position="after" >
+                    <field name="payment_method_id" widget="selection"/>
+            </xpath>
+        </field>
+    </record>
+
+    </data>
+</openerp>

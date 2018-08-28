@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+
+        <record id="good_to_pay_stock_picking_form" model="ir.ui.view">
+            <field name="name">good_to_pay.stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="priority" eval="500"/>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='min_date']" position="after">
+                        <field name="approval_user_id" />
+                </xpath>
+            </field>
+        </record>
+        <record id="good_to_pay_stock_picking_tree" model="ir.ui.view">
+            <field name="name">good_to_pay.stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="priority" eval="502"/>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                        <field name="approval_user_id" />
+                </xpath>
+            </field>
+        </record>
+        
+       <record id="good_to_pay_stock_picking_filter" model="ir.ui.view">
+            <field name="name">good_to_pay.stock.picking.filter</field>
+            <field name="model">stock.picking</field>
+            <field name="priority" eval="502"/>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                        <field name="approval_user_id" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

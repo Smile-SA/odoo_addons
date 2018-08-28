@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<openerp>
+	<data noupdate='1'>
+	
+	    <record id="seq_type_reconciliation" model="ir.sequence.type">
+            <field name="name">Bank reconciliation</field>
+            <field name="code">bank.reconciliation</field>
+        </record>
+		<record id='reconciliation' model='ir.sequence'>
+		            <field name='company_id' ref="base.main_company"/>
+		            <field name='name'>Bank reconciliation</field>
+                     <field name="code">bank.reconciliation</field>
+		            <field name='number_increment'>1</field>
+		            <field name='number_next_actual'>1</field>
+		            <field name='padding'>5</field>
+		            <field name='prefix'>REC/%(year)s/</field>
+		</record>
+	    <record id="seq_type_reconciliation_voucher" model="ir.sequence.type">
+            <field name="name">Bank reconciliation voucher</field>
+            <field name="code">bank.reconciliation.voucher</field>
+        </record>
+		<record id='reconciliation_voucher' model='ir.sequence'>
+		            <field name='company_id' ref="base.main_company"/>
+		            <field name='name'>Bank reconciliation voucher</field>
+                     <field name="code">bank.reconciliation.voucher</field>
+		            <field name='number_increment'>1</field>
+		            <field name='number_next_actual'>1</field>
+		            <field name='padding'>5</field>
+		            <field name='prefix'>%(year)s/</field>
+		</record>
+	</data>
+</openerp>

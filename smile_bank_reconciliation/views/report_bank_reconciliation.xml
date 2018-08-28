@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_bank_reconciliation_document">
+    <t t-call="report.external_layout">
+        <div class="page">
+            <div class="oe_structure"/>
+            <h4 class="text-right">
+                <span t-field="o.date" class="text-right"/>
+            </h4>
+            <br/>
+            <h2 class="text-center">
+                <u>
+                    <span >Bank reconciliation </span>
+                    <span t-field="o.journal_id.code"/>
+                </u>
+            </h2>
+            <br/>
+            <br/>
+            <div class="row" />
+            <table class="table table-condensed">
+                    <tr>
+                        <td ><strong>Balance of the account book</strong></td>
+                        <td class="text-right" >
+                            <span t-field="o.balance_account" t-field-options='{"widget": "monetary", "display_currency": "o.env.user.company_id.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  style="white-space: nowrap;"><strong>Not close balance</strong></td>
+                        <td class="text-right" >
+                            <p t-field="o.balance_not_close" t-field-options='{"widget": "monetary", "display_currency": "o.env.user.company_id.currency_id"}'/>
+                         </td>
+                    </tr>
+                    <tr>
+                        <td ><strong>Theoretical statement balance</strong></td>
+                        <td class="text-right">
+                            <p t-field="o.theoretical_balance" t-field-options='{"widget": "monetary", "display_currency": "o.env.user.company_id.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td ><strong>Balance per bank statement</strong></td>
+                        <td class="text-right">
+                            <p t-field="o.balance_per_statement" t-field-options='{"widget": "monetary", "display_currency": "o.env.user.company_id.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td ><strong>Gap</strong></td>
+                        <td class="text-right">
+                            <p t-field="o.gap" t-field-options='{"widget": "monetary", "display_currency": "o.env.user.company_id.currency_id"}'/>
+                         </td>
+                    </tr>
+                    <tr>
+                        <td ></td>
+                        <td ></td>
+                    </tr>
+            </table>
+            
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <p t-if="o.reconciliation_gap_ids">
+                <h4>
+                    <u>
+                        <strong>Gap identification :</strong>
+                    </u>
+                </h4>
+                <br/>
+                <br/>
+                <table class="table table-condensed">
+                      <tbody >
+                            <tr t-foreach="o.reconciliation_gap_ids" t-as="gap">
+                                <td>
+                                    <strong>
+                                        <span t-field="gap.name"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <p t-field="gap.amount" t-field-options='{"widget": "monetary", "display_currency": "o.env.user.company_id.currency_id"}'/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </tbody>
+                </table>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <table class="table table-condensed">
+                    <tr>
+                        <td ><strong>Final gap</strong></td>
+                        <td class="text-right">
+                            <p t-field="o.gap" t-field-options='{"widget": "monetary", "display_currency": "o.env.user.company_id.currency_id"}'/>
+                         </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </p>
+            
+            <div class="oe_structure"/>
+            <!--                                           MOVES                                                         -->
+            <p style="page-break-after:always;">   </p>
+                <h4 class="text-right">
+                    <span t-field="o.date" class="text-right"/>
+                </h4>
+                <h2 class="text-center">
+                    <u>
+                        <span >Bank reconciliation </span>
+                        <span t-field="o.journal_id.code"/>
+                    </u>
+                </h2>
+                <h3 class="text-center">
+                      <span >Unreconciled move lines</span>
+                </h3>
+            <br/>
+                <t t-set="credit_sum" t-value="0"/>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Move</th>
+                            <th>Period</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Reference</th>
+                            <th>Partner</th>
+                            <th>Account</th>
+                            <th class="text-right">Debit</th>
+                            <th class="text-right">Credit</th>
+                        </tr>
+                   </thead>
+                   <tbody >
+                        <tr t-foreach="o.journal_id._get_not_reconciled_moves()" t-as="mv">
+                            <t t-set="credit_sum" t-value="credit_sum+mv.credit"/> 
+                            <td>
+                               <span t-field="mv.move_id.name"/>
+                            </td>
+                            <td>
+                               <span t-field="mv.period_id.name"/>
+                            </td>
+                            <td>
+                               <span t-field="mv.date"/>
+                            </td>
+                            <td>
+                               <span t-field="mv.name"/>
+                            </td>
+                            <td>
+                               <span t-field="mv.ref"/>
+                            </td>
+                            <td>
+                               <span t-field="mv.partner_id.name"/>
+                            </td>
+                            <td>
+                               <span t-field="mv.account_id.code"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="mv.debit"
+                                    t-field-options='{"widget": "monetary", "display_currency": "o.env.user.company_id.currency_id"}'/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="mv.credit"
+                                    t-field-options='{"widget": "monetary", "display_currency": "o.env.user.company_id.currency_id"}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">
+                                <t t-esc="credit_sum"
+                                    t-esc-options='{"widget": "monetary", "display_currency": "o.env.user.company_id.currency_id"}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
+    </t>
+</template>
+
+<template id="report_bank_reconciliations">
+    <t t-call="report.html_container">
+        <t t-foreach="doc_ids" t-as="doc_id">
+            <t t-raw="translate_doc(doc_id, doc_model, 'env.user.lang', 'smile_bank_reconciliation.report_bank_reconciliation_document')"/>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

@@ -1,0 +1,447 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_bank_reconciliation
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-16 13:45+0000\n"
+"PO-Revision-Date: 2015-04-16 13:45+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_bank_reconciliation
+#: model:ir.actions.act_window,help:smile_bank_reconciliation.action_account_move_line
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                Select the period and the journal you want to fill.\n"
+"              </p><p>\n"
+"                This view can be used by accountants in order to quickly record\n"
+"                entries in Odoo. If you want to record a supplier invoice,\n"
+"                start by recording the line of the expense account. Odoo\n"
+"                will propose to you automatically the Tax related to this\n"
+"                account and the counterpart \"Account Payable\".\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"Sélectionnez la période et le journal que vous voulez remplir.\n"
+"</p><p>\n"
+"Cette vue peut être utilisée par les comptables afin d'enregistrer rapidement des entrées dans Odoo. Si vous voulez enregistrer une facture fournisseur, commencez par enregistrer la ligne de charge. Odoo vous proposera automatiquement la taxe liée à ce compte et la contrepartie \"compte à payer\".\n"
+"</p>\n"
+"            "
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Account"
+msgstr "Compte"
+
+#. module: smile_bank_reconciliation
+#: field:account.reconciliation.gap,amount:0
+msgid "Amount"
+msgstr "Montant"
+
+#. module: smile_bank_reconciliation
+#: code:addons/smile_bank_reconciliation/models/account.py:115
+#, python-format
+msgid "Attention! Account move line [%s] linked to voucher [%s] is not valid, your reconciliationcan not be validated!"
+msgstr "Attention! L'écriture [%s] associée à la pièce [%s] n'est pas validée, votre rapprochement ne peut être validé !"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,balance_account:0
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Balance of the account book"
+msgstr "Solde du compte comptable"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,balance_per_statement:0
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Balance per bank statement"
+msgstr "Solde du relevé bancaire"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,account_bank_id:0
+msgid "Bank account"
+msgstr "Compte de banque"
+
+#. module: smile_bank_reconciliation
+#: view:account.bank.reconciliation:smile_bank_reconciliation.view_account_bank_reconciliation_form
+#: view:account.bank.reconciliation:smile_bank_reconciliation.view_account_bank_reconciliation_search
+#: view:account.bank.reconciliation:smile_bank_reconciliation.view_account_bank_reconciliation_tree
+#: model:ir.actions.act_window,name:smile_bank_reconciliation.action_account_bank_reconciliation_form
+#: model:ir.actions.act_window,name:smile_bank_reconciliation.action_account_move_line
+#: model:ir.module.category,name:smile_bank_reconciliation.module_bank_reconciliation
+#: model:ir.ui.menu,name:smile_bank_reconciliation.menu_account_bank_reconciliation
+#: model:ir.ui.menu,name:smile_bank_reconciliation.menu_account_bank_reconciliation_form
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Bank reconciliation"
+msgstr "Rapprochement bancaire"
+
+#. module: smile_bank_reconciliation
+#: model:ir.ui.menu,name:smile_bank_reconciliation.menu_account_bank_reconciliation_form
+msgid "Bank reconciliation"
+msgstr "Rapprochements"
+
+#. module: smile_bank_reconciliation
+#: view:account.bank.reconciliation:smile_bank_reconciliation.view_account_bank_reconciliation_form
+msgid "Cancel"
+msgstr "Remettre en statut brouillon"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,create_uid:0
+#: field:account.reconciliation.gap,create_uid:0
+#: field:account.reconciliation.voucher,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,create_date:0
+#: field:account.reconciliation.gap,create_date:0
+#: field:account.reconciliation.voucher,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_bank_reconciliation
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Credit"
+msgstr "Crédit"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,date:0
+#: field:account.reconciliation.voucher,date:0
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Date"
+msgstr "Date"
+
+#. module: smile_bank_reconciliation
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Debit"
+msgstr "Débit"
+
+#. module: smile_bank_reconciliation
+#: view:account.bank.reconciliation:smile_bank_reconciliation.view_account_bank_reconciliation_form
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Description"
+msgstr "Description"
+
+#. module: smile_bank_reconciliation
+#: selection:account.bank.reconciliation,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_bank_reconciliation
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Final gap"
+msgstr "Ecart final"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,gap:0
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Gap"
+msgstr "Ecart"
+
+#. module: smile_bank_reconciliation
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Gap identification :"
+msgstr "Identification de l'écart :"
+
+#. module: smile_bank_reconciliation
+#: code:addons/smile_bank_reconciliation/models/account.py:105
+#, python-format
+msgid "Gap must be 0!"
+msgstr "L'écart entre le solde théorique et le solde du relevé doit être de "0" !"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Group By"
+msgstr "Grouper par"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,id:0
+#: field:account.reconciliation.gap,id:0
+#: field:account.reconciliation.voucher,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_bank_reconciliation
+#: code:addons/smile_bank_reconciliation/models/account.py:62
+#: code:addons/smile_bank_reconciliation/models/account.py:105
+#: code:addons/smile_bank_reconciliation/models/account.py:107
+#: code:addons/smile_bank_reconciliation/models/account.py:110
+#: code:addons/smile_bank_reconciliation/models/account.py:114
+#, python-format
+msgid "Invalid action!"
+msgstr "Action invalide !"
+
+#. module: smile_bank_reconciliation
+#: help:account.bank.reconciliation,account_bank_id:0
+msgid "It acts as a default account for debit amount"
+msgstr "Compte bancaire associé au journal de banque"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,journal_id:0
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+#: model:ir.model,name:smile_bank_reconciliation.model_account_journal
+msgid "Journal"
+msgstr "Journal"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_move_line_tree
+#: model:ir.model,name:smile_bank_reconciliation.model_account_move_line
+#: model:ir.ui.menu,name:smile_bank_reconciliation.menu_account_moves
+msgid "Journal Items"
+msgstr "Écritures comptables"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,write_uid:0
+#: field:account.reconciliation.gap,write_uid:0
+#: field:account.reconciliation.voucher,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière modification par"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,write_date:0
+#: field:account.reconciliation.gap,write_date:0
+#: field:account.reconciliation.voucher,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière modification le"
+
+#. module: smile_bank_reconciliation
+#: model:res.groups,name:smile_bank_reconciliation.group_manage_bank_reconciliation
+msgid "Manage bank reconciliation"
+msgstr "Gérer les rapprochements bancaires"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Move"
+msgstr "N° d'écriture"
+
+#. module: smile_bank_reconciliation
+#: view:account.bank.reconciliation:smile_bank_reconciliation.view_account_bank_reconciliation_form
+#: field:account.bank.reconciliation,account_move_line_ids:0
+msgid "Move Lines"
+msgstr "Écritures comptables"
+
+#. module: smile_bank_reconciliation
+#: code:addons/smile_bank_reconciliation/models/account.py:63
+#, python-format
+msgid "Move line [%s] in reconciliation voucher [%s] exists in reconciliation voucher [%s]!"
+msgstr "L'ecriture comptable [%s] liée à la pièce de trésorie [%s] existe déjà dans [%s]!"
+
+#. module: smile_bank_reconciliation
+#: field:account.reconciliation.voucher,account_move_line_ids:0
+msgid "Moves"
+msgstr "Ecritures"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Next Partner Entries to reconcile"
+msgstr "Écritures du partenaire suivant à lettrer"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Next Partner to Reconcile"
+msgstr "Partenaire suivant à lettrer"
+
+#. module: smile_bank_reconciliation
+#: code:addons/smile_bank_reconciliation/models/account.py:111
+#, python-format
+msgid "No account move line in reconciliation voucher %s!"
+msgstr "Aucune écriture comptable n'est associée à la pièce de trésorie %s!"
+
+#. module: smile_bank_reconciliation
+#: code:addons/smile_bank_reconciliation/models/account.py:107
+#, python-format
+msgid "No line in reconciliation voucher!"
+msgstr "Aucune pièce de trésorie trouvée !"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,balance_not_close:0
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Not close balance"
+msgstr "Solde non rapproché"
+
+#. module: smile_bank_reconciliation
+#: field:account.reconciliation.voucher,comment:0
+msgid "Note"
+msgstr "Notes"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Number (Move)"
+msgstr "N° d'écriture"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Period"
+msgstr "Période"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Posted"
+msgstr "Validé"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Posted Journal Items"
+msgstr "Écritures validées"
+
+#. module: smile_bank_reconciliation
+#: model:res.groups,name:smile_bank_reconciliation.group_read_bank_reconciliation
+msgid "Read bank reconciliation"
+msgstr "Voir les rapprochements bancaires"
+
+#. module: smile_bank_reconciliation
+#: view:account.bank.reconciliation:smile_bank_reconciliation.view_account_bank_reconciliation_form
+msgid "Reconcilation gap"
+msgstr "Ecarts et justifications"
+
+#. module: smile_bank_reconciliation
+#: view:account.bank.reconciliation:smile_bank_reconciliation.view_account_bank_reconciliation_form
+msgid "Reconcilation voucher"
+msgstr "Pièces de trésorerie"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_filter_bank_reconcile_inherit
+#: field:account.move.line,reconciliation_id:0
+#: field:account.reconciliation.gap,reconciliation_id:0
+#: field:account.reconciliation.voucher,reconciliation_id:0
+#: model:ir.actions.report.xml,name:smile_bank_reconciliation.report_bank_reconciliation
+msgid "Reconciliation"
+msgstr "Rapprochement"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Reconciliation date"
+msgstr "Date de rapprochement"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,reconciliation_gap_ids:0
+msgid "Reconciliation gap"
+msgstr "Ecarts"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,reconciliation_voucher_ids:0
+#: field:account.move.line,reconciliation_voucher_id:0
+msgid "Reconciliation voucher"
+msgstr "Pièce de trésorie"
+
+#. module: smile_bank_reconciliation
+#: field:account.move.line,reconciliation_voucher_date:0
+msgid "Reconciliation voucher date"
+msgstr "Date du rapprochement"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_filter_bank_reconcile_inherit
+msgid "Reconcilied"
+msgstr "Rapprochées"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,name:0
+#: field:account.reconciliation.gap,name:0
+#: field:account.reconciliation.voucher,name:0
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Reference"
+msgstr "Référence"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Search Journal Items"
+msgstr "Recherche par écritures"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,state:0
+msgid "Status"
+msgstr "Statut"
+
+#. module: smile_bank_reconciliation
+#: field:account.bank.reconciliation,theoretical_balance:0
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Theoretical statement balance"
+msgstr "Solde théorique du relevé"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_move_line_tree
+msgid "Total Credit"
+msgstr "Total crédit"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_move_line_tree
+msgid "Total Debit"
+msgstr "Total débit"
+
+#. module: smile_bank_reconciliation
+#: field:account.reconciliation.voucher,total_credit:0
+msgid "Total credit"
+msgstr "Total crédit"
+
+#. module: smile_bank_reconciliation
+#: field:account.reconciliation.voucher,total_debit:0
+msgid "Total debit"
+msgstr "Totale débit"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Unbalanced"
+msgstr "Déséquilibré"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Unbalanced Journal Items"
+msgstr "Écritures déséquilibrées"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Unposted"
+msgstr "Non validée"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Unposted Journal Items"
+msgstr "Écritures brouillon"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Unreconciled"
+msgstr "Non lettré"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+msgid "Unreconciled Journal Items"
+msgstr "Écritures non lettrées"
+
+#. module: smile_bank_reconciliation
+#: view:website:smile_bank_reconciliation.report_bank_reconciliation_document
+msgid "Unreconciled move lines"
+msgstr "Écritures non rapprochées"
+
+#. module: smile_bank_reconciliation
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_bank_reconciliation_filter
+#: view:account.move.line:smile_bank_reconciliation.view_account_move_line_filter_bank_reconcile_inherit
+msgid "Unreconciliaton"
+msgstr "Non-rapprochées"
+
+#. module: smile_bank_reconciliation
+#: selection:account.bank.reconciliation,state:0
+msgid "Valid"
+msgstr "Validé"
+
+#. module: smile_bank_reconciliation
+#: view:account.bank.reconciliation:smile_bank_reconciliation.view_account_bank_reconciliation_form
+msgid "Validate"
+msgstr "Valider"
+

@@ -1,0 +1,13 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+
+"account_bank_reconciliation_reader","account.bank.reconciliation read","model_account_bank_reconciliation","group_read_bank_reconciliation",1,0,0,0
+"account_reconciliation_voucher_reader","account.reconciliation.voucher read","model_account_reconciliation_voucher","group_read_bank_reconciliation",1,0,0,0
+"account_reconciliation_gap_reader","account.reconciliation.gap read","model_account_reconciliation_gap","group_read_bank_reconciliation",1,0,0,0
+"account_move_line_reader","account.move.line read","account.model_account_move_line","group_read_bank_reconciliation",1,0,0,0
+
+"account_bank_reconciliation_manager","account.bank.reconciliation manage","model_account_bank_reconciliation","group_manage_bank_reconciliation",1,1,1,1
+"account_reconciliation_voucher_manager","account.reconciliation.voucher manage","model_account_reconciliation_voucher","group_manage_bank_reconciliation",1,1,1,1
+"account_reconciliation_gap_manager","account.reconciliation.gap manage","model_account_reconciliation_gap","group_manage_bank_reconciliation",1,1,1,1
+"account_move_line_manager","account.move.line manage","account.model_account_move_line","group_manage_bank_reconciliation",1,1,1,1
+
+"account_journal_reader","account.journal read","account.model_account_journal","group_read_bank_reconciliation",1,0,0,0

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Account Journal Period -->
+        <record model="ir.ui.view" id="view_journal_period_search">
+            <field name="name">account.journal.period.search</field>
+            <field name="model">account.journal.period</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Journal Period">
+                    <field name="name"/>
+                    <field name="journal_id"/>
+                    <field name="period_id"/>
+                    <field name="fiscalyear_id"/>
+                    <field name="state"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="done" string="Done" domain="[('state','=','done')]"/>
+                    <filter name="printed" string="Printed" domain="[('state','=','printed')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="State" name="state" context="{'group_by':'state'}"/>
+                        <filter string="Period" name="period" domain="[]" context="{'group_by':'period_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_journal_period_tree">
+            <field name="name">account.journal.period.tree</field>
+            <field name="model">account.journal.period</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';black:state == 'done'" string="Journals Period">
+                    <field name="journal_id"/>
+                    <field name="period_id"/>
+                    <field name="fiscalyear_id"/>
+                    <field name="type"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_journal_period_from">
+            <field name="name">account.journal.period.form</field>
+            <field name="model">account.journal.period</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Journal Period">
+                    <header>
+                        <button name="action_done"
+                            type="object" class="oe_highlight" string="Close journal period"
+                            states="draft" help="Close journal for this period"/>
+                        <button name="action_draft"
+                            type="object" string="Re-Open journal period"
+                            states="done" help="Reopen journal for this period"/>
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                    </header>
+                    <sheet>
+	                    <h1><field name="name"/></h1>
+                        <group colspan="1" col="4">
+                           <field name="journal_id"/>
+                           <field name="type"/>
+                           <field name="period_id"/>
+                           <field name="fiscalyear_id"/>
+                           <field name="active"/>
+                        </group>
+                     </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="view_journal_period_action">
+            <field name="name">Journals Period</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.journal.period</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_journal_period_search"/>
+        </record>
+
+        <menuitem action="view_journal_period_action" id="menu_view_journal_period"
+                  parent="account.next_id_23" sequence="20"/>
+
+    </data>
+</openerp>

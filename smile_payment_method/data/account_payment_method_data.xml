@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<openerp>
+    <data noupdate='0'>
+    
+    <record model='account.payment.method' id='account_payment_method_boe'>
+        <field name='name'>Bill of exchange</field>
+        <field name='code'>BOE</field>
+        <field name="partner_bank_necessary" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+    
+    <record model='account.payment.method' id='account_payment_method_check'>
+        <field name='name'>Check</field>
+        <field name='code'>CHQ</field>
+        <field name="partner_bank_necessary" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+    
+    <record model='account.payment.method' id='account_payment_method_transfer'>
+        <field name='name'>Transfer</field>
+        <field name='code'>TRS</field>
+        <field name="partner_bank_necessary" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+    
+    <record model='account.payment.method' id='account_payment_method_cash'>
+        <field name='name'>Cash</field>
+        <field name='code'>CASH</field>
+        <field name="partner_bank_necessary" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+        
+    </data>
+</openerp>

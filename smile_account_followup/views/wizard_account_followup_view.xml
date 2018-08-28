@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+    
+        <record id="wizard_account_followup_view_form" model="ir.ui.view">
+            <field name="name">wizard.account.followup.view.form</field>
+            <field name="model">wizard.account.followup</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <group colspan="4" col="4" string="Invoice date">
+                        <field name="start_invoice_date"/>
+                        <field name="stop_invoice_date"/>
+                    </group>
+                    <group colspan="4" col="4" string="Due date">
+                        <field name="start_due_date"/>
+                        <field name="stop_due_date"/>
+                    </group>
+                    <group colspan="4" col="4">
+                        <field name="page_peer_partner"/>
+                    </group>
+                     <group colspan="4" string="Customers">
+                        <field name="partner_ids" nolabel="1"/>
+                    </group>
+                    <footer>
+                        <button name="button_print" type='object' string="Print" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+         <record id="action_wizard_account_followup" model="ir.actions.act_window">
+            <field name="name">Account followup</field>
+            <field name="res_model">wizard.account.followup</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_account_followup_view_form"/>
+            <field name="target">new</field>
+        </record>
+
+      <!--      <menuitem
+                    id="menu_wizard_budget_action" 
+                    action="action_wizard_account_followup" 
+                    parent="menu_account_followup"
+                    name="Invoices followup"
+                    sequence="100" />-->
+        
+        <record model="ir.values" id="action_account_followup_report_values">
+            <field name="model_id" ref="model_wizard_account_followup" />
+            <field name="name">Account followup report</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('action_wizard_account_followup'))" />
+            <field name="key">action</field>
+            <field name="model">account.invoice</field>
+        </record>
+        
+    </data>
+</openerp>

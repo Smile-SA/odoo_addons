@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Update Sequence -->
+        <menuitem
+            icon="STOCK_EXECUTE"
+            name="Automatic Reconciliation"
+            action="account.action_account_automatic_reconcile"
+            id="account.menu_automatic_reconcile"
+            parent="account.periodical_processing_reconciliation"
+            sequence="11"/>
+
+        <!-- Supplier & Customer reconciliation -->
+        <record id="action_account_supplier_manual_reconcile" model="ir.actions.act_window">
+            <field name="domain">[('account_id.type', '=', 'payable')]</field>
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="name">Supplier Journal Items to Reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="account.view_move_line_tree_reconcile"/>
+            <field name="view_mode">tree_account_reconciliation</field>
+            <field name="help" type="html">
+                <p>
+                    No journal items found.
+                </p>
+            </field>
+        </record>
+        <menuitem
+             name="Supplier Reconciliation"
+             action="action_account_supplier_manual_reconcile"
+             id="menu_manual_reconcile_supplier"
+             parent="account.periodical_processing_reconciliation"
+             sequence="10"/>
+    
+        <record id="action_account_customer_manual_reconcile" model="ir.actions.act_window">
+            <field name="domain">[('account_id.type', '=', 'receivable')]</field>
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="name">Customer Journal Items to Reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="account.view_move_line_tree_reconcile"/>
+            <field name="view_mode">tree_account_reconciliation</field>
+            <field name="help" type="html">
+                <p>
+                    No journal items found.
+                </p>
+            </field>
+        </record>
+        <menuitem
+             name="Customer Reconciliation"
+             action="action_account_customer_manual_reconcile"
+             id="menu_manual_reconcile_customer"
+             parent="account.periodical_processing_reconciliation"
+             sequence="10"/>
+
+    </data>
+</openerp>

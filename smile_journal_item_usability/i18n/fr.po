@@ -1,0 +1,89 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_journal_item_usability
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 15:47+0000\n"
+"PO-Revision-Date: 2015-06-30 15:47+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_journal_item_usability
+#: model:ir.actions.act_window,help:smile_journal_item_usability.action_view_account_moves_all_a
+#: model:ir.actions.act_window,help:smile_journal_item_usability.action_view_account_moves_supplier_due_date
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                Select the period and the journal you want to fill.\n"
+"              </p><p>\n"
+"                This view can be used by accountants in order to quickly record\n"
+"                entries in Odoo. If you want to record a supplier invoice,\n"
+"                start by recording the line of the expense account. Odoo\n"
+"                will propose to you automatically the Tax related to this\n"
+"                account and the counterpart \"Account Payable\".\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"Sélectionnez la période et le journal que vous voulez remplir.\n"
+"</p><p>\n"
+"Cette vue peut être utilisée par les comptables afin d'enregistrer rapidement des entrées dans Odoo. Si vous voulez enregistrer une facture fournisseur, commencez par enregistrer la ligne de charge. Odoo vous proposera automatiquement la taxe liée à ce compte et la contrepartie \"compte à payer\".\n"
+"</p>\n"
+"            "
+
+#. module: smile_journal_item_usability
+#: view:account.move.line:smile_journal_item_usability.view_account_move_line_filter_groupby_inherit
+msgid "Account move"
+msgstr "pièce comptable"
+
+#. module: smile_journal_item_usability
+#: view:account.move.line:smile_journal_item_usability.view_move_line_tree_2
+msgid "Entry date"
+msgstr "Date de saisie"
+
+#. module: smile_journal_item_usability
+#: view:account.move.line:smile_journal_item_usability.view_move_line_tree_2
+msgid "Journal Items"
+msgstr "Écritures comptables"
+
+#. module: smile_journal_item_usability
+#: model:ir.actions.act_window,name:smile_journal_item_usability.action_view_account_moves_all_a
+#: model:ir.ui.menu,name:smile_journal_item_usability.menu_action_view_account_moves_all
+msgid "Journal Items View"
+msgstr "Vue des écritures comptables"
+
+#. module: smile_journal_item_usability
+#: view:account.move.line:smile_journal_item_usability.view_account_move_line_filter_groupby_inherit
+msgid "Maturity Date"
+msgstr "Date d'échéance"
+
+#. module: smile_journal_item_usability
+#: view:account.move.line:smile_journal_item_usability.view_account_move_line_filter_my_moves_inherit
+msgid "My items"
+msgstr "Mes écritures"
+
+#. module: smile_journal_item_usability
+#: model:ir.actions.act_window,name:smile_journal_item_usability.action_view_account_moves_supplier_due_date
+#: model:ir.ui.menu,name:smile_journal_item_usability.menu_employee_account_moves_expenses
+msgid "Payment due date"
+msgstr "Échéancier de paiement"
+
+#. module: smile_journal_item_usability
+#: view:account.move.line:smile_journal_item_usability.view_move_line_tree_2
+msgid "Ref."
+msgstr "Let."
+
+#. module: smile_journal_item_usability
+#: view:account.move.line:smile_journal_item_usability.view_move_line_tree_2
+msgid "Total Credit"
+msgstr "Total crédit"
+
+#. module: smile_journal_item_usability
+#: view:account.move.line:smile_journal_item_usability.view_move_line_tree_2
+msgid "Total Debit"
+msgstr "Total débit"
+

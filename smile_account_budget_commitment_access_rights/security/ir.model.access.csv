@@ -1,0 +1,42 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_account_budget_post_group_read_budget_post,"account.budget.post read",account_budget.model_account_budget_post,group_read_budget_post,1,0,0,0
+access_account_account_group_read_budget_post,"account.account read",account.model_account_account,group_read_budget_post,1,0,0,0
+access_account_budget_post_commitment_limit _group_read_budget_post,"account.budget.post.commitment_limit  read",smile_account_budget_commitment.model_account_budget_post_commitment_limit,group_read_budget_post,1,0,0,0
+access_crossovered_budget_group_read_budget_post,"crossovered.budget read",account_budget.model_crossovered_budget,group_read_budget_post,1,0,0,0
+access_crossovered_budget_lines_group_read_budget_post,"crossovered.budget.lines read",account_budget.model_crossovered_budget_lines,group_read_budget_post,1,0,0,0
+access_account_budget_post_group_manage_budget_post,"account.budget.post create",account_budget.model_account_budget_post,group_manage_budget_post,1,1,1,0
+
+
+
+
+
+access_account_account_group_budget_monitoring,"account.account read",account.model_account_account,group_budget_monitoring,1,0,0,0
+access_account_budget_post_group_budget_monitoring,"account.budget.post read",account_budget.model_account_budget_post,group_budget_monitoring,1,0,0,0
+access_crossovered_budget_group_budget_monitoring,"crossovered.budget read",account_budget.model_crossovered_budget,group_budget_monitoring,1,0,0,0
+access_crossovered_budget_lines_group_budget_monitoring,"crossovered.budget.lines read",account_budget.model_crossovered_budget_lines,group_budget_monitoring,1,0,0,0
+access_account_analytic_line_group_budget_monitoring,"account.analytic.line read",analytic.model_account_analytic_line,group_budget_monitoring,1,0,0,0
+account_budget.access_budget,crossovered.budget.lines user,account_budget.model_crossovered_budget_lines,base.group_user,1,0,0,0
+
+
+access_crossovered_budget_group_manage_budget,"crossovered.budget read",account_budget.model_crossovered_budget,group_manage_budget,1,1,1,1
+access_crossovered_budget_lines_group_manage_budget,"crossovered.budget.lines read",account_budget.model_crossovered_budget_lines,group_manage_budget,1,1,1,1
+
+
+
+access_account_budget_post_group_budget_sums_commitment,"account.budget.post read",account_budget.model_account_budget_post,group_budget_sums_commitment,1,0,0,0
+access_account_account_group_budget_sums_commitment,"account.account read",account.model_account_account,group_budget_sums_commitment,1,0,0,0
+access_account_budget_post_commitment_limit_group_budget_sums_commitment,"account.budget.post.commitment_limit  read",smile_account_budget_commitment.model_account_budget_post_commitment_limit,group_budget_sums_commitment,1,0,0,0
+access_crossovered_budget_group_budget_sums_commitment,"crossovered.budget read",account_budget.model_crossovered_budget,group_budget_sums_commitment,1,0,0,0
+access_crossovered_budget_lines_group_budget_sums_commitment,"crossovered.budget.lines read",account_budget.model_crossovered_budget_lines,group_budget_sums_commitment,1,1,0,0
+access_account_budget_post_group_budget_sums_commitment,"account.budget.post create",account_budget.model_account_budget_post,group_budget_sums_commitment,1,0,0,0
+access_account_analytic_line_group_budget_sums_commitment,"account.analytic.line create",analytic.model_account_analytic_line,group_budget_sums_commitment,1,1,1,0
+
+
+
+
+
+
+
+
+

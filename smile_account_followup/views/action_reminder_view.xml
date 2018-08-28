@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Account Followup Main Menu -->
+        <menuitem id="menu_account_followup" parent="account.menu_finance" name="Account followup" groups="group_read_recovery" sequence="7"/>
+
+        <!-- Action Reminder -->
+        <record model="ir.ui.view" id="view_action_reminder_search">
+            <field name="name">action.reminder.search</field>
+            <field name="model">action.reminder</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Actions reminder">
+                    <separator orientation="vertical"/>
+                    <field name="level_reminder_id"/>
+                    <field name="responsible_id"/>
+                    <field name="create_uid"/>
+                    <field name="write_uid"/>
+                    <field name="account_invoice_id"/>
+                    <field name="partner_id"/>
+                    <filter string="delayed action" name="delayed_action" domain="[('action_done','=',False), ('date','&lt;=', time.strftime('%%Y-%%m-%%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Level reminder" name="level" domain="[]" context="{'group_by':'level_reminder_id'}"/>
+                        <filter string="Account invoice" name="invoice" domain="[]" context="{'group_by':'account_invoice_id'}"/>
+                        <filter string="Create User" name="create_user" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter string="Responsible" name="responsible" domain="[]" context="{'group_by':'responsible_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_action_reminder_tree">
+            <field name="name">action.reminder.tree</field>
+            <field name="model">action.reminder</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Actions reminder">
+                    <field name="level_reminder_id"/>
+                    <field name="name"/>
+                    <field name="create_uid"/>
+                    <field name="write_uid"/>
+                    <field name="date"/>
+                    <field name="account_invoice_id"/>
+                    <field name="partner_id"/>
+                    <field name="responsible_id"/>
+                    <field name="debt_amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_action_reminder_form">
+            <field name="name">action.reminder.form</field>
+            <field name="model">action.reminder</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Action reminder">
+	                <sheet>
+	                    <h1><field name="name"/></h1>
+	                    <group>
+                            <group>
+                                <field name="level_reminder_id"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                            </group>
+	                        <group string="Invoicing" colspan="1" col="2">
+	                            <field name="account_invoice_id"/>
+	                            <field name="partner_id"/>
+	                            <field name="debt_amount"/>
+	                        </group>
+	                        <group string="Contributors" colspan="1" col="2">
+                                <field name="responsible_id"/>
+                                <field name="create_uid" readonly="1"/>
+                                <field name="write_uid" readonly="1"/>
+	                        </group>
+                            <group colspan="1" col="2">
+                                <field name="action_done"/>
+                                <field name="action_dropped"/>
+                            </group>
+	                    </group>
+	                 </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_reminder_action_form">
+            <field name="name">Actions reminder</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">action.reminder</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_action_reminder_search"/>
+        </record>
+
+        <menuitem action="action_reminder_action_form" id="menu_reminder_action"
+                  parent="menu_account_followup" groups="group_read_recovery" sequence="1"/>
+
+        <!-- Level Reminder -->
+        <record model="ir.ui.view" id="view_level_reminder_search">
+            <field name="name">level.reminder.search</field>
+            <field name="model">level.reminder</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Levels reminder">
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="due_term"/>
+                    <field name="type_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Type" name="type" domain="[]" context="{'group_by':'type_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_level_reminder_tree">
+            <field name="name">level.reminder.tree</field>
+            <field name="model">level.reminder</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Levels reminder">
+                    <field name="type_id"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="due_term"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_level_reminder_form">
+            <field name="name">level.reminder.form</field>
+            <field name="model">level.reminder</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Level reminder">
+	                <sheet>
+	                    <group>
+	                        <group colspan="1" col="2">
+	                            <field name="type_id"/>
+	                            <field name="due_term"/>
+	                        </group>
+	                        <group colspan="1" col="2">
+	                            <field name="code"/>
+	                            <field name="name"/>
+	                        </group>
+	                    </group>
+	                 </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_reminder_level_form">
+            <field name="name">Levels reminder</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">level.reminder</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_level_reminder_search"/>
+        </record>
+
+        <menuitem action="action_reminder_level_form" id="menu_reminder_level"
+                  parent="menu_account_followup" groups="group_read_recovery" sequence="2"/>
+
+
+        <!-- Level Reminder Type-->
+        <record model="ir.ui.view" id="view_level_reminder_type_tree">
+            <field name="name">level.reminder.type.tree</field>
+            <field name="model">level.reminder.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Levels reminder types">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_level_reminder_type_form">
+            <field name="name">level.reminder.type.form</field>
+            <field name="model">level.reminder.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Level reminder type">
+                    <sheet>
+	                    <group>
+	                        <field name="name"/>
+	                    </group>
+                     </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_reminder_level_type_form">
+            <field name="name">Levels reminder types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">level.reminder.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_reminder_level_type_form" id="menu_reminder_level_type"
+                  parent="account.menu_configuration_misc" groups="group_manage_recovery" sequence="40"/>
+
+    </data>
+</openerp>

@@ -1,0 +1,179 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_payment_method
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-07-08 09:50+0000\n"
+"PO-Revision-Date: 2015-07-08 09:50+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_payment_method
+#: view:account.payment.method:smile_payment_method.account_payment_method_form
+#: model:ir.actions.act_window,name:smile_payment_method.account_payment_method_action
+#: model:ir.ui.menu,name:smile_payment_method.account_payment_method_menu
+msgid "Account Payment Method"
+msgstr "Méthode de paiement"
+
+#. module: smile_payment_method
+#: view:account.payment.method:smile_payment_method.account_payment_method_form
+msgid "Account Payment Method form"
+msgstr "Account Payment Method form"
+
+#. module: smile_payment_method
+#: view:account.payment.method:smile_payment_method.account_payment_method_tree
+msgid "Account Payment Method tree"
+msgstr "Account Payment Method tree"
+
+#. module: smile_payment_method
+#: model:ir.model,name:smile_payment_method.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Justificatif comptable"
+
+#. module: smile_payment_method
+#: field:account.payment.method,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_payment_method
+#: model:account.payment.method,name:smile_payment_method.account_payment_method_boe
+msgid "Bill of exchange"
+msgstr "Traite"
+
+#. module: smile_payment_method
+#: model:account.payment.method,name:smile_payment_method.account_payment_method_cash
+msgid "Cash"
+msgstr "Liquide"
+
+#. module: smile_payment_method
+#: model:account.payment.method,name:smile_payment_method.account_payment_method_check
+msgid "Check"
+msgstr "Chèque"
+
+#. module: smile_payment_method
+#: field:account.payment.method,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: smile_payment_method
+#: field:account.payment.method,create_uid:0
+msgid "Created by"
+msgstr "Crée par"
+
+#. module: smile_payment_method
+#: field:account.payment.method,create_date:0
+msgid "Created on"
+msgstr "Crée le"
+
+#. module: smile_payment_method
+#: view:account.payment.method:smile_payment_method.account_payment_method_search
+msgid "Extended Filters..."
+msgstr "Extended Filters..."
+
+#. module: smile_payment_method
+#: view:account.payment.method:smile_payment_method.account_payment_method_search
+msgid "Group By"
+msgstr "Group By"
+
+#. module: smile_payment_method
+#: field:account.payment.method,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_payment_method
+#: model:ir.model,name:smile_payment_method.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: smile_payment_method
+#: model:ir.model,name:smile_payment_method.model_account_invoice_refund
+msgid "Invoice Refund"
+msgstr "Avoir"
+
+#. module: smile_payment_method
+#: view:account.payment.method:smile_payment_method.account_payment_method_search
+#: field:account.payment.method,journal_id:0
+msgid "Journal"
+msgstr "Journal"
+
+#. module: smile_payment_method
+#: field:account.payment.method,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_payment_method
+#: field:account.payment.method,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_payment_method
+#: field:account.payment.method,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_payment_method
+#: model:ir.model,name:smile_payment_method.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_payment_method
+#: field:account.invoice,payment_method_id:0
+#: field:purchase.order,payment_method_id:0
+#: field:sale.order,payment_method_id:0
+#: field:stock.picking,payment_method_id:0
+msgid "Payment Method"
+msgstr "Méthode de paiement"
+
+#. module: smile_payment_method
+#: field:res.partner,payment_method_customer_id:0
+msgid "Payment Method Customer"
+msgstr "Méthode de paiement client"
+
+#. module: smile_payment_method
+#: field:res.partner,payment_method_suppliers_id:0
+msgid "Payment Method Suppliers"
+msgstr "Méthode de paiement fournisseur"
+
+#. module: smile_payment_method
+#: model:ir.model,name:smile_payment_method.model_stock_picking
+msgid "Picking List"
+msgstr "Opération de manutention"
+
+#. module: smile_payment_method
+#: model:ir.model,name:smile_payment_method.model_purchase_order
+msgid "Purchase Order"
+msgstr "Bon de commande"
+
+#. module: smile_payment_method
+#: model:ir.model,name:smile_payment_method.model_sale_order
+msgid "Sales Order"
+msgstr "Bon de commande"
+
+#. module: smile_payment_method
+#: view:account.payment.method:smile_payment_method.account_payment_method_search
+msgid "Search"
+msgstr "Search"
+
+#. module: smile_payment_method
+#: model:ir.model,name:smile_payment_method.model_stock_move
+msgid "Stock Move"
+msgstr "Mouvement de stock"
+
+#. module: smile_payment_method
+#: help:res.partner,payment_method_customer_id:0
+#: help:res.partner,payment_method_suppliers_id:0
+msgid "This payment method will be used instead of the default one "
+msgstr "This payment method will be used instead of the default one "
+
+#. module: smile_payment_method
+#: model:account.payment.method,name:smile_payment_method.account_payment_method_transfer
+msgid "Transfer"
+msgstr "Virement"
+

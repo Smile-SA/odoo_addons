@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+
+        <record id="good_to_pay_purchase_order_form" model="ir.ui.view">
+            <field name="name">good_to_pay.purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="priority" eval="500"/>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="after">
+                        <field name="approval_user_id" attrs="{'readonly':[('state', 'not in', ('sent','draft'))]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="good_to_pay_purchase_order_tree" model="ir.ui.view">
+            <field name="name">good_to_pay.purchase.order.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="priority" eval="502"/>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                        <field name="approval_user_id" />
+                </xpath>
+            </field>
+        </record>
+        
+       <record id="good_to_pay_purchase_order_filter" model="ir.ui.view">
+            <field name="name">good_to_pay.purchase.order.filter</field>
+            <field name="model">purchase.order</field>
+            <field name="priority" eval="502"/>
+            <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                        <field name="approval_user_id" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

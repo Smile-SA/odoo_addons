@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <!-- 
+            Category recovery
+        -->
+        <record model="ir.module.category" id="module_account_recovery">
+            <field name="name">Recovery</field>
+            <field name="sequence">10</field>
+        </record>   
+        
+        <!-- 
+            Read Bank recovery
+        -->
+        <record id="group_read_recovery" model="res.groups">
+            <field name="name">Read recovery</field>
+            <field name="category_id" ref="module_account_recovery"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <!-- 
+            Manage recovery
+        -->
+        <record id="group_manage_recovery" model="res.groups">
+            <field name="name">Manage recovery</field>
+            <field name="category_id" ref="module_account_recovery"/>
+            <field name="implied_ids" eval="[(4, ref('group_read_recovery'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="account.group_account_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('group_manage_recovery'))]"/>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        
+        <record id="view_account_invoice_recovery_form" model="ir.ui.view">
+            <field name="name">account.invoice.recovery.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_invoice']" position="before">
+                    <field name="level_reminder_id"/>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                        <page string="Recovery" name="recovery" >
+                            <group colspan="4">
+                                <field name="action_reminder_ids" nolabel="1" colspan="4" mode="tree" context="{'default_account_invoice_id': active_id}" >
+                                    <tree string="Actions reminder">
+					                    <field name="level_reminder_id"/>
+					                    <field name="name"/>
+					                    <field name="write_uid"/>
+					                    <field name="responsible_id"/>
+					                    <field name="date"/>
+					                    <field name="action_done"/>
+                                    </tree>
+					                <form string="Action reminder">
+					                    <sheet>
+					                        <h1><field name="name"/></h1>
+					                        <group>
+					                            <group>
+					                                <field name="level_reminder_id"/>
+					                            </group>
+					                            <group>
+					                                <field name="date"/>
+					                            </group>
+					                            <group string="Invoicing" colspan="1" col="2">
+					                                <field name="account_invoice_id" invisible="1"/>
+					                                <field name="partner_id"/>
+					                                <field name="debt_amount"/>
+					                            </group>
+					                            <group string="Contributors" colspan="1" col="2">
+					                                <field name="responsible_id"/>
+					                                <field name="create_uid" readonly="1"/>
+					                                <field name="write_uid" readonly="1"/>
+					                            </group>
+					                            <group colspan="1" col="2">
+					                                <field name="action_done"/>
+					                                <field name="action_dropped"/>
+					                            </group>
+					                        </group>
+					                     </sheet>
+					                </form>
+                                 </field>
+                            </group>
+                        </page>
+                 </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_recovery_tree" model="ir.ui.view">
+            <field name="name">account.invoice.recovery.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="level_reminder_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_recovery_search" model="ir.ui.view">
+            <field name="name">account.invoice.recovery.search</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='period_id']" position="after">
+                    <field name="level_reminder_id"/>
+                </xpath>
+                <xpath expr="//group/filter[@string='Due Month']" position="after">
+                    <filter string="Recovery Level" domain="[]" context="{'group_by':'level_reminder_id'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

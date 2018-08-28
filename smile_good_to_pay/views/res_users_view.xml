@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record id="view_users_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                		<page string="Other">
+                			<group string="Purchases" colspan="2" cols="2">
+                				<field name='amount_limit' />
+                			</group>
+                		</page>
+                </xpath>
+            </field>
+        </record>
+
+	</data>
+</openerp>

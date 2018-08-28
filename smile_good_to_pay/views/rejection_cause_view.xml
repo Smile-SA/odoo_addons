@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+
+        <record model="ir.ui.view" id="view_rejection_cause_tree">
+            <field name="name">rejection.cause.tree</field>
+            <field name="model">rejection.cause</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Rejection causes">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_rejection_cause_form">
+            <field name="name">rejection.cause.form</field>
+            <field name="model">rejection.cause</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Rejection cause">
+                    <sheet>
+                        <group >
+                            <field name="name"/>
+                        </group>
+                        <group >
+                            <field name="note"/>
+                        </group>
+                     </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_rejection_cause">
+            <field name="name">Rejection causes</field>
+            <field name="res_model">rejection.cause</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem 
+                  id="menu_rejection_cause"
+                  action="action_rejection_cause" 
+                  parent="account.menu_configuration_misc"
+                  groups="smile_good_to_pay.group_baper_invoices"
+                  sequence="100"/>
+
+    </data>
+</openerp>

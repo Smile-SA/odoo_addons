@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+    
+        <!-- Customize standard View journal entries -->
+        <record id="view_account_move_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_tree"/>
+            <field name="arch" type="xml">
+                <field name='date' position="after">
+                    <field name="create_date" widget="date" string="Entry date"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_move_form_reversal_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account_reversal.view_move_reversal_form"/>
+            <field name="arch" type="xml">
+                <field name="to_be_reversed" position="replace"/>
+                <field name="reversal_id" position="replace"/>
+            </field>
+        </record>
+        
+        <record id="view_account_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="to_check" position="replace"/>
+                <xpath expr="/form/notebook/page[@string='Journal Items']" position="after">
+                    <page string="Additional informations" name="additional_infos">
+                        <group>
+                            <field name="create_date" widget="date" string="Entry date" readonly="1"/>
+                            <field name="to_check"/>
+                            <field name="to_be_reversed"/>
+                            <field name="reversal_id" attrs="{'invisible': [('to_be_reversed', '=', False)]}"/>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="/form/notebook/page[@string='Journal Items']/field[@name='line_id']/tree/field[@name='invoice']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="/form/notebook/page[@string='Journal Items']/field[@name='line_id']/tree/field[@name='date_maturity']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="/form/notebook/page[@string='Journal Items']/field[@name='line_id']/tree/field[@name='amount_currency']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="/form/notebook/page[@string='Journal Items']/field[@name='line_id']/tree/field[@name='tax_amount']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="/form/notebook/page[@string='Journal Items']/field[@name='line_id']/tree/field[@name='state']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="/form/notebook/page[@string='Journal Items']/field[@name='line_id']/tree/field[@name='reconcile_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="/form/notebook/page[@string='Journal Items']/field[@name='line_id']/tree/field[@name='reconcile_partial_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- New Menu Item View journal entries -->
+        <record id="view_move_form_all" model="ir.ui.view">
+            <field name="name">account.move.all.form</field>
+            <field name="model">account.move</field>
+            <field name="priority" eval="111"/>
+            <field name="arch" type="xml">
+                <form string="Account Entry">
+                    <header>
+                        <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
+                        <button name="button_cancel" states="posted" string="Cancel Entry" type="object" groups="account.group_account_invoice"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <label for="name" class="oe_edit_only" attrs="{'invisible':[('name','=','/')]}"/>
+                    <h1>
+                        <field name="name" readonly="True" attrs="{'invisible':[('name','=','/')]}"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="journal_id"/>
+                            <field name="period_id"/>
+                            <field name="company_id" required="1" groups="base.group_multi_company"/>
+                            <field name="partner_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="ref"/>
+                            <field name="date"/>
+                            <field name="amount" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Journal Items">
+                            <field name="line_id" widget="one2many_list"
+                              context="{'line_id': line_id , 'journal_id': journal_id }">
+                                <form string="Journal Item">
+                                    <group col="6" colspan="4">
+                                        <field name="name"/>
+                                        <field name="ref"/>
+                                        <field name="partner_id"
+                                            domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                            on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, date, journal_id, context)"/>
+
+                                        <field name="journal_id"/>
+                                        <field name="period_id"/>
+                                        <field name="company_id" required="1" groups="base.group_multi_company"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Information">
+                                            <group>
+                                                <group string="Amount">
+                                                    <field name="account_id" domain="[('company_id', '=', parent.company_id), ('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                                    <field name="debit"/>
+                                                    <field name="credit"/>
+                                                    <field name="quantity"/>
+                                                </group>
+
+                                                <group string="Accounting Documents">
+                                                    <field name="invoice"/>
+                                                    <field name="move_id" required="False"/>
+                                                    <field name="statement_id"/>
+                                                </group>
+
+                                                <group string="Dates">
+                                                    <field name="date"/>
+                                                    <field name="date_maturity"/>
+                                                    <field name="date_created"/>
+                                                </group>
+
+                                                <group string="Taxes">
+                                                    <field name="tax_code_id"/>
+                                                    <field name="tax_amount"/>
+                                                    <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
+                                                </group>
+
+                                                <group string="Currency" groups="base.group_multi_currency">
+                                                    <field name="currency_id"/>
+                                                    <field name="amount_currency"/>
+                                                </group>
+
+                                                <group string="Reconciliation">
+                                                    <field name="reconcile_id"/>
+                                                    <field name="reconcile_partial_id"/>
+                                                </group>
+
+                                                <group string="States">
+                                                    <field name="state"/>
+                                                    <field name="blocked"/>
+                                                </group>
+
+                                                <group groups="analytic.group_analytic_accounting" string="Analytic">
+                                                    <field name="analytic_account_id"/>
+                                                </group>
+                                            </group>
+                                            <separator string="Internal Note"/>
+                                            <field name="narration"/>
+                                        </page>
+                                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
+                                            <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
+                                        </page>
+                                    </notebook>
+                                </form>
+                                <tree colors="blue:state == 'draft';black:state == 'posted'" editable="top" string="Journal Items">
+                                    <field name="invoice"/>
+                                    <field name="name"/>
+                                    <field name="partner_id"
+                                        domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                        on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, parent.date, parent.journal_id, context)"/>
+                                    <field name="account_id" domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
+                                    <field name="date_maturity"/>
+                                    <field name="debit" sum="Total Debit"/>
+                                    <field name="credit" sum="Total Credit"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
+                                    <field name="tax_code_id"/>
+                                    <field name="tax_amount"/>
+                                    <field name="state"/>
+                                    <field name="reconcile_id"/>
+                                    <field name="reconcile_partial_id"/>
+                                </tree>
+                            </field>
+                            <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                        </page>
+	                    <page string="Additional informations" name="additional_infos">
+	                        <group>
+	                            <field name="create_date" widget="date" string="Entry date" readonly="1"/>
+	                            <field name="to_check"/>
+	                            <field name="to_be_reversed"/>
+	                            <field name="reversal_id" attrs="{'invisible': [('to_be_reversed', '=', False)]}"/>
+	                        </group>
+	                    </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_move_journal_line_all" model="ir.actions.act_window">
+            <field name="name">Journal Entries</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="account.view_account_move_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a journal entry.
+              </p><p>
+                A journal entry consists of several journal items, each of
+                which is either a debit or a credit transaction.
+              </p><p>
+                Odoo automatically creates one journal entry per accounting
+                document: invoice, refund, supplier payment, bank statements,
+                etc. So, you should record journal entries manually only/mainly
+                for miscellaneous operations.
+              </p>
+            </field>
+        </record>
+
+       <record model="ir.actions.act_window.view" id="action_move_journal_line_all_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account.view_move_tree"/>
+            <field name="act_window_id" ref="action_move_journal_line_all"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_move_journal_line_all_form">
+        <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_move_form_all"/>
+            <field name="act_window_id" ref="action_move_journal_line_all"/>
+        </record>
+
+        <menuitem
+            icon="STOCK_JUSTIFY_FILL"
+            action="action_move_journal_line_all"
+            id="menu_action_move_journal_line_form_all"
+            parent="account.menu_finance_entries"
+            groups="account.group_account_user"
+            sequence="5"/>
+
+    </data>
+</openerp>

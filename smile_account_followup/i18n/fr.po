@@ -1,0 +1,446 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_account_followup
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-16 14:52+0000\n"
+"PO-Revision-Date: 2015-04-16 14:52+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_account_followup
+#: model:ir.actions.act_window,name:smile_account_followup.action_wizard_account_followup
+#: model:ir.ui.menu,name:smile_account_followup.menu_account_followup
+msgid "Account followup"
+msgstr "Suivi des factures impayées"
+
+#. module: smile_account_followup
+#: view:action.reminder:smile_account_followup.view_action_reminder_search
+#: field:action.reminder,account_invoice_id:0
+msgid "Account invoice"
+msgstr "Numéro de facture associé"
+
+#. module: smile_account_followup
+#: field:action.reminder,action_done:0
+msgid "Action done"
+msgstr "Effectuée"
+
+#. module: smile_account_followup
+#: field:action.reminder,action_dropped:0
+msgid "Action dropped"
+msgstr "Abandonnée"
+
+#. module: smile_account_followup
+#: view:account.invoice:smile_account_followup.view_account_invoice_recovery_form
+#: view:action.reminder:smile_account_followup.view_action_reminder_form
+msgid "Action reminder"
+msgstr "Action de relance"
+
+#. module: smile_account_followup
+#: view:account.invoice:smile_account_followup.view_account_invoice_recovery_form
+#: view:action.reminder:smile_account_followup.view_action_reminder_search
+#: view:action.reminder:smile_account_followup.view_action_reminder_tree
+#: model:ir.actions.act_window,name:smile_account_followup.action_reminder_action_form
+#: model:ir.ui.menu,name:smile_account_followup.menu_reminder_action
+msgid "Actions reminder"
+msgstr "Actions de relance"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Amount"
+msgstr "Montant TTC"
+
+#. module: smile_account_followup
+#: model:level.reminder.type,name:smile_account_followup.tel_follow
+msgid "Calling follow"
+msgstr "Suivi téléphonique"
+
+#. module: smile_account_followup
+#: view:wizard.account.followup:smile_account_followup.wizard_account_followup_view_form
+#: view:wizard.account.followup:smile_account_followup.wizard_create_action_reminder_view_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_account_followup
+#: field:level.reminder,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: smile_account_followup
+#: view:account.invoice:smile_account_followup.view_account_invoice_recovery_form
+#: view:action.reminder:smile_account_followup.view_action_reminder_form
+msgid "Contributors"
+msgstr "Intervenants"
+
+#. module: smile_account_followup
+#: view:action.reminder:smile_account_followup.view_action_reminder_search
+msgid "Create User"
+msgstr "Créateur de l’action"
+
+#. module: smile_account_followup
+#: view:wizard.account.followup:smile_account_followup.wizard_create_action_reminder_view_form
+msgid "Create actions"
+msgstr "Créer des actions"
+
+#. module: smile_account_followup
+#: model:ir.actions.act_window,name:smile_account_followup.action_create_action_reminder
+#: view:wizard.account.followup:smile_account_followup.wizard_create_action_reminder_view_form
+msgid "Create actions reminder"
+msgstr "Créer des actions de relance"
+
+#. module: smile_account_followup
+#: field:action.reminder,create_uid:0
+#: field:level.reminder,create_uid:0
+#: field:level.reminder.type,create_uid:0
+#: field:wizard.account.followup,create_uid:0
+msgid "Created by"
+msgstr "Utilisateur ayant créé l'action"
+
+#. module: smile_account_followup
+#: field:action.reminder,create_date:0
+#: field:level.reminder,create_date:0
+#: field:level.reminder.type,create_date:0
+#: field:wizard.account.followup,create_date:0
+msgid "Created on"
+msgstr "Crée sur"
+
+#. module: smile_account_followup
+#: view:wizard.account.followup:smile_account_followup.wizard_account_followup_view_form
+#: field:wizard.account.followup,partner_ids:0
+msgid "Customers"
+msgstr "Clients"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Date"
+msgstr "Date"
+
+#. module: smile_account_followup
+#: field:action.reminder,debt_amount:0
+msgid "Debt amount"
+msgstr "Montant de la créance"
+
+#. module: smile_account_followup
+#: field:level.reminder,due_term:0
+msgid "Default due term (days)"
+msgstr "Echéance par défaut (jours)"
+
+#. module: smile_account_followup
+#: field:action.reminder,name:0
+#: field:level.reminder,name:0
+#: field:wizard.account.followup,name:0
+msgid "Description"
+msgstr "Description"
+
+#. module: smile_account_followup
+#: model:level.reminder.type,name:smile_account_followup.dont_reminder
+msgid "Don't reminder"
+msgstr "Ne pas relancer"
+
+#. module: smile_account_followup
+#: field:action.reminder,date:0
+#: view:website:smile_account_followup.report_unpaid_invoice
+#: view:wizard.account.followup:smile_account_followup.wizard_account_followup_view_form
+#: field:wizard.account.followup,date:0
+msgid "Due date"
+msgstr "Date d'échéance"
+
+#. module: smile_account_followup
+#: field:wizard.account.followup,stop_due_date:0
+#: field:wizard.account.followup,stop_invoice_date:0
+msgid "End"
+msgstr "Au"
+
+#. module: smile_account_followup
+#: field:account.invoice,action_reminder_ids:0
+msgid "Followup actions"
+msgstr "Actions de recouvrement"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "From:"
+msgstr "Du : "
+
+#. module: smile_account_followup
+#: view:action.reminder:smile_account_followup.view_action_reminder_search
+#: view:level.reminder:smile_account_followup.view_level_reminder_search
+msgid "Group By"
+msgstr "Grouper par"
+
+#. module: smile_account_followup
+#: field:action.reminder,id:0
+#: field:level.reminder,id:0
+#: field:level.reminder.type,id:0
+#: field:report.smile_account_followup.report_unpaid_invoice,id:0
+#: field:wizard.account.followup,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_account_followup
+#: model:level.reminder.type,name:smile_account_followup.injunction_to_pay
+msgid "Injunction to pay"
+msgstr "Injonction de payer"
+
+#. module: smile_account_followup
+#: code:addons/smile_account_followup/models/wizard_account_followup.py:59
+#, python-format
+msgid "Invalid action!"
+msgstr "Action invalide !"
+
+#. module: smile_account_followup
+#: model:ir.model,name:smile_account_followup.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: smile_account_followup
+#: view:wizard.account.followup:smile_account_followup.wizard_account_followup_view_form
+msgid "Invoice date"
+msgstr "Date de facture"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Invoices date"
+msgstr "Date de facture"
+
+#. module: smile_account_followup
+#: model:level.reminder.type,name:smile_account_followup.inv_statement
+msgid "Invoices statement"
+msgstr "Relevé de factures"
+
+#. module: smile_account_followup
+#: view:account.invoice:smile_account_followup.view_account_invoice_recovery_form
+#: view:action.reminder:smile_account_followup.view_action_reminder_form
+msgid "Invoicing"
+msgstr "Informations facture"
+
+#. module: smile_account_followup
+#: field:action.reminder,write_uid:0
+#: field:level.reminder,write_uid:0
+#: field:level.reminder.type,write_uid:0
+#: field:wizard.account.followup,write_uid:0
+msgid "Last Updated by"
+msgstr "Utilisateur ayant modifié l'action"
+
+#. module: smile_account_followup
+#: field:action.reminder,write_date:0
+#: field:level.reminder,write_date:0
+#: field:level.reminder.type,write_date:0
+#: field:wizard.account.followup,write_date:0
+msgid "Last Updated on"
+msgstr "Last Updated on"
+
+#. module: smile_account_followup
+#: view:action.reminder:smile_account_followup.view_action_reminder_search
+#: field:action.reminder,level_reminder_id:0
+#: view:level.reminder:smile_account_followup.view_level_reminder_form
+#: field:wizard.account.followup,level_reminder_id:0
+msgid "Level reminder"
+msgstr "Action de relance"
+
+#. module: smile_account_followup
+#: view:level.reminder.type:smile_account_followup.view_level_reminder_type_form
+msgid "Level reminder type"
+msgstr "Type du niveau de relance"
+
+#. module: smile_account_followup
+#: model:ir.actions.act_window,name:smile_account_followup.action_reminder_level_form
+#: model:ir.ui.menu,name:smile_account_followup.menu_reminder_level
+#: view:level.reminder:smile_account_followup.view_level_reminder_search
+#: view:level.reminder:smile_account_followup.view_level_reminder_tree
+msgid "Levels reminder"
+msgstr "Niveaux de relance"
+
+#. module: smile_account_followup
+#: model:ir.actions.act_window,name:smile_account_followup.action_reminder_level_type_form
+#: model:ir.ui.menu,name:smile_account_followup.menu_reminder_level_type
+#: view:level.reminder.type:smile_account_followup.view_level_reminder_type_tree
+msgid "Levels reminder types"
+msgstr "Types des niveaux de relance"
+
+#. module: smile_account_followup
+#: model:res.groups,name:smile_account_followup.group_manage_recovery
+msgid "Manage recovery"
+msgstr "Responsable recouvrement"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Mobile:"
+msgstr "Portable:"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Monitoring actions"
+msgstr "Suivi des actions"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Monitoring unpaid invoices"
+msgstr "Suivi des factures impayées"
+
+#. module: smile_account_followup
+#: field:level.reminder.type,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_account_followup
+#: model:level.reminder.type,name:smile_account_followup.no_reminder
+msgid "No reminder"
+msgstr "Aucune relance"
+
+#. module: smile_account_followup
+#: model:level.reminder.type,name:smile_account_followup.notice
+msgid "Notice"
+msgstr "Mise en demeure"
+
+#. module: smile_account_followup
+#: field:wizard.account.followup,page_peer_partner:0
+msgid "Page peer partner"
+msgstr "Afficher chaque client dans une page"
+
+#. module: smile_account_followup
+#: field:action.reminder,partner_id:0
+msgid "Partner"
+msgstr "Client"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Payed amount"
+msgstr "Montant Regle/Comp"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Phone:"
+msgstr "Tél:"
+
+#. module: smile_account_followup
+#: model:level.reminder.type,name:smile_account_followup.prediction_settlement
+msgid "Prediction settlement"
+msgstr "Prévision de règlement"
+
+#. module: smile_account_followup
+#: view:wizard.account.followup:smile_account_followup.wizard_account_followup_view_form
+msgid "Print"
+msgstr "imprimer"
+
+#. module: smile_account_followup
+#: model:level.reminder.type,name:smile_account_followup.proposal_passage_loss
+msgid "Proposal passage loss"
+msgstr "Proposition passage en perte"
+
+#. module: smile_account_followup
+#: model:res.groups,name:smile_account_followup.group_read_recovery
+msgid "Read recovery"
+msgstr "Suivi de recouvrement"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Real amount"
+msgstr "Solde"
+
+#. module: smile_account_followup
+#: view:account.invoice:smile_account_followup.view_account_invoice_recovery_form
+#: model:ir.module.category,name:smile_account_followup.module_account_recovery
+msgid "Recovery"
+msgstr "Recouvrement"
+
+#. module: smile_account_followup
+#: view:account.invoice:smile_account_followup.view_account_invoice_recovery_search
+#: field:account.invoice,level_reminder_id:0
+msgid "Recovery Level"
+msgstr "Niveau de recouvrement"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Ref:"
+msgstr "Ref:"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Reference"
+msgstr "Référence"
+
+#. module: smile_account_followup
+#: model:level.reminder.type,name:smile_account_followup.reminder
+msgid "Reminder"
+msgstr "Lettre de rappel"
+
+#. module: smile_account_followup
+#: model:level.reminder.type,name:smile_account_followup.reminder_ar
+msgid "Reminder AR"
+msgstr "Lettre rappel en AR"
+
+#. module: smile_account_followup
+#: model:level.reminder.type,name:smile_account_followup.reminder_litige_valid
+msgid "Reminder after litigation or internal validation"
+msgstr "Reprise relance après litige ou validation interne"
+
+#. module: smile_account_followup
+#: code:addons/smile_account_followup/models/action_reminder.py:43
+#: sql_constraint:level.reminder:0
+#, python-format
+msgid "Reminder level code must be unique"
+msgstr "Le code du niveau de relance doit être unique !"
+
+#. module: smile_account_followup
+#: view:action.reminder:smile_account_followup.view_action_reminder_search
+#: field:action.reminder,responsible_id:0
+#: field:wizard.account.followup,responsible_id:0
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: smile_account_followup
+#: help:wizard.account.followup,page_peer_partner:0
+msgid "Show partner data: Page peer partner"
+msgstr "Afficher chaque client dans une page"
+
+#. module: smile_account_followup
+#: field:wizard.account.followup,start_due_date:0
+#: field:wizard.account.followup,start_invoice_date:0
+msgid "Start"
+msgstr "Du"
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "To:"
+msgstr "Au : "
+
+#. module: smile_account_followup
+#: view:website:smile_account_followup.report_unpaid_invoice
+msgid "Total:"
+msgstr "Total :"
+
+#. module: smile_account_followup
+#: view:level.reminder:smile_account_followup.view_level_reminder_search
+#: field:level.reminder,type_id:0
+msgid "Type"
+msgstr "Type"
+
+#. module: smile_account_followup
+#: model:ir.actions.report.xml,name:smile_account_followup.unpaid_invoice_report_id
+msgid "Unpaid invoice"
+msgstr "Suivi des factures"
+
+#. module: smile_account_followup
+#: code:addons/smile_account_followup/models/wizard_account_followup.py:59
+#, python-format
+msgid "You can not create actions for invoices in draft or paid state!"
+msgstr "Vous ne pouvez pas associer des actions de relance à des factures à l'état brouillon ou payée !"
+
+#. module: smile_account_followup
+#: view:action.reminder:smile_account_followup.view_action_reminder_search
+msgid "delayed action"
+msgstr "Actions en retard"
+
+#. module: smile_account_followup
+#: view:wizard.account.followup:smile_account_followup.wizard_account_followup_view_form
+#: view:wizard.account.followup:smile_account_followup.wizard_create_action_reminder_view_form
+msgid "or"
+msgstr "ou"
+

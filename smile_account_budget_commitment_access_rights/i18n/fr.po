@@ -1,0 +1,72 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_account_budget_commitment_access_rights
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-03-19 14:32+0000\n"
+"PO-Revision-Date: 2015-03-19 14:32+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_account_budget_commitment_access_rights
+#: model:res.groups,name:smile_account_budget_commitment_access_rights.group_budget_monitoring
+msgid "Budget monitoring"
+msgstr "Suivi des budgets"
+
+#. module: smile_account_budget_commitment_access_rights
+#: model:res.groups,name:smile_account_budget_commitment_access_rights.group_budget_sums_commitment
+msgid "Budget sums commitment"
+msgstr "Engager des sommes sur le budget"
+
+#. module: smile_account_budget_commitment_access_rights
+#: model:ir.module.category,name:smile_account_budget_commitment_access_rights.module_category_budget_management
+msgid "Budgets"
+msgstr "Budgets"
+
+#. module: smile_account_budget_commitment_access_rights
+#: model:ir.module.category,description:smile_account_budget_commitment_access_rights.module_category_budget_management
+msgid "Helps you handle your budget."
+msgstr "Helps you handle your budget."
+
+#. module: smile_account_budget_commitment_access_rights
+#: model:res.groups,name:smile_account_budget_commitment_access_rights.group_higher_budget_commitments
+msgid "Make higher budget commitments"
+msgstr "Effectuer des engagements supérieurs au budget"
+
+#. module: smile_account_budget_commitment_access_rights
+#: model:res.groups,name:smile_account_budget_commitment_access_rights.group_manage_budget_post
+msgid "Manage Budget Post"
+msgstr "Gérer les postes budgétaires"
+
+#. module: smile_account_budget_commitment_access_rights
+#: model:res.groups,name:smile_account_budget_commitment_access_rights.group_manage_budget
+msgid "Manage budget"
+msgstr "Définition des budgets"
+
+#. module: smile_account_budget_commitment_access_rights
+#: model:res.groups,name:smile_account_budget_commitment_access_rights.group_negative_purchase_order
+msgid "Negative purchase order"
+msgstr "Autorisation de bon de commande négatif"
+
+#. module: smile_account_budget_commitment_access_rights
+#: model:res.groups,name:smile_account_budget_commitment_access_rights.group_negative_purchase_order_to_invoice
+msgid "Negative purchase order great than invoiced amount"
+msgstr "Bon de commande négatif supérieur au montant autorisé"
+
+#. module: smile_account_budget_commitment_access_rights
+#: model:res.groups,name:smile_account_budget_commitment_access_rights.group_read_budget_post
+msgid "Read Budget Post"
+msgstr "Voir les postes budgétaires"
+
+#. module: smile_account_budget_commitment_access_rights
+#: model:res.groups,name:smile_account_budget_commitment_access_rights.group_review_commitments_budget
+msgid "Review the commitments on a budget"
+msgstr "Revoir les engagements sur un budget"
+

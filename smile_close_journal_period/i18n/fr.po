@@ -1,0 +1,85 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_close_journal_period
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-23 10:04+0000\n"
+"PO-Revision-Date: 2015-04-23 10:04+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_from
+msgid "Close journal for this period"
+msgstr "Clôturer le journal de période"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_from
+msgid "Close journal period"
+msgstr "Clôturer le journal"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_search
+msgid "Done"
+msgstr "Clôturé"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_search
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_search
+msgid "Group By"
+msgstr "Group By"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_search
+msgid "Journal"
+msgstr "Journal"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_from
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_search
+msgid "Journal Period"
+msgstr "Journal de période"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_tree
+#: model:ir.actions.act_window,name:smile_close_journal_period.view_journal_period_action
+#: model:ir.ui.menu,name:smile_close_journal_period.menu_view_journal_period
+msgid "Journals Period"
+msgstr "Périodes de journal"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_search
+msgid "Period"
+msgstr "Période"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_search
+msgid "Printed"
+msgstr "Imprimé"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_from
+msgid "Re-Open journal period"
+msgstr "Remettre à l'état brouillon"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_from
+msgid "Reopen journal for this period"
+msgstr "Remettre le journal de période à l'état brouillon"
+
+#. module: smile_close_journal_period
+#: view:account.journal.period:smile_close_journal_period.view_journal_period_search
+msgid "State"
+msgstr "État"
+

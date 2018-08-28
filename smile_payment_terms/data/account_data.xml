@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!--
+        Payment term
+        -->
+        <record id="account_payment_term_cash" model="account.payment.term">
+            <field name="name">Cash Payment</field>
+            <field name="note">Cash Payment</field>
+        </record>
+
+        <record id="account_payment_term_line_cash" model="account.payment.term.line">
+            <field name="value">balance</field>
+            <field eval="0" name="days"/>
+            <field eval="0" name="days2"/>
+            <field eval="account_payment_term_cash" name="payment_id"/>
+        </record>
+        
+        <record id="account_payment_term_30day_end_month" model="account.payment.term">
+            <field name="name">30 days end of month</field>
+            <field name="note">30 days end of month</field>
+        </record>
+
+        <record id="account_payment_term_line_30day_end_month" model="account.payment.term.line">
+            <field name="value">balance</field>
+            <field eval="0" name="days"/>
+            <field eval="-1" name="days2"/>
+            <field eval="account_payment_term_30day_end_month" name="payment_id"/>
+        </record>
+
+        <record id="account_payment_term_30day_end_month10" model="account.payment.term">
+            <field name="name">30 days end of month the 10th</field>
+            <field name="note">30 days end of month the 10th</field>
+        </record>
+
+        <record id="account_payment_term_line_30day_end_month10" model="account.payment.term.line">
+            <field name="value">balance</field>
+            <field eval="0" name="days"/>
+            <field eval="10" name="days2"/>
+            <field eval="account_payment_term_30day_end_month10" name="payment_id"/>
+        </record>
+
+        <record id="account_payment_term_60days" model="account.payment.term">
+            <field name="name">60 net days</field>
+            <field name="note">60 net days</field>
+        </record>
+
+        <record id="account_payment_term_line_60days" model="account.payment.term.line">
+            <field name="value">balance</field>
+            <field eval="60" name="days"/>
+            <field eval="0" name="days2"/>
+            <field eval="account_payment_term_60days" name="payment_id"/>
+        </record>
+        
+        <record id="account_payment_term_60days_end_month" model="account.payment.term">
+            <field name="name">60 days end of month</field>
+            <field name="note">60 days end of month</field>
+        </record>
+
+        <record id="account_payment_term_line_60days" model="account.payment.term.line">
+            <field name="value">balance</field>
+            <field eval="60" name="days"/>
+            <field eval="-1" name="days2"/>
+            <field eval="account_payment_term_60days_end_month" name="payment_id"/>
+        </record>
+
+        <record id="account_payment_term_45days_end_month" model="account.payment.term">
+            <field name="name">45 days end of month</field>
+            <field name="note">45 days end of month</field>
+        </record>
+
+        <record id="account_payment_term_line_45days" model="account.payment.term.line">
+            <field name="value">balance</field>
+            <field eval="45" name="days"/>
+            <field eval="-1" name="days2"/>
+            <field eval="account_payment_term_45days_end_month" name="payment_id"/>
+        </record>
+
+        <record id="account_payment_term_45days" model="account.payment.term">
+            <field name="name">45 net days</field>
+            <field name="note">45 net days</field>
+        </record>
+
+        <record id="account_payment_term_line_45days" model="account.payment.term.line">
+            <field name="value">balance</field>
+            <field eval="45" name="days"/>
+            <field eval="0" name="days2"/>
+            <field eval="account_payment_term_45days" name="payment_id"/>
+        </record>      
+        
+    </data>
+</openerp>

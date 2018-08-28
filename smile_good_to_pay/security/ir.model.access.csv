@@ -1,0 +1,14 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+
+"access_baper_invoice","account.invoice write","account.model_account_invoice","group_baper_invoices",1,1,0,0
+"access_baper_invoice_line","account.invoice.line write","account.model_account_invoice_line","group_baper_invoices",1,1,0,0
+"access_baper_tax","account.invoice.tax read","account.model_account_invoice_tax","group_baper_invoices",1,0,0,0
+"access_baper_acc_move","account.move write","account.model_account_move","group_baper_invoices",1,1,0,0
+"access_baper_acc_reconcile","account.move.reconcile write","account.model_account_move_reconcile","group_baper_invoices",1,1,0,0
+"access_baper_period","account.period read","account.model_account_period","group_baper_invoices",1,0,0,0
+
+"access_rejection_cause","rejection.cause read","model_rejection_cause","group_baper_invoices",1,1,1,1
+
+
+
+

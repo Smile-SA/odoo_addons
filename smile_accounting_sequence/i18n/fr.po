@@ -1,0 +1,77 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_accounting_sequence
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-02-25 11:26+0000\n"
+"PO-Revision-Date: 2015-02-25 11:26+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_accounting_sequence
+#: model:ir.model,name:smile_accounting_sequence.model_account_move
+msgid "Account Entry"
+msgstr "Pièce comptable"
+
+#. module: smile_accounting_sequence
+#: code:addons/smile_accounting_sequence/models/account.py:41
+#: code:addons/smile_accounting_sequence/models/account.py:59
+#, python-format
+msgid "Error!"
+msgstr "Erreur !"
+
+#. module: smile_accounting_sequence
+#: code:addons/smile_accounting_sequence/models/ir_sequence.py:89
+#, python-format
+msgid "Invalid prefix or suffix for sequence '%s'"
+msgstr "Invalid prefix or suffix for sequence '%s'"
+
+#. module: smile_accounting_sequence
+#: view:ir.sequence:smile_accounting_sequence.sequence_view_inv_count_inherit
+msgid "Month of the period: %(pmonth)s"
+msgstr "Mois de la période: %(pmonth)s"
+
+#. module: smile_accounting_sequence
+#: view:ir.sequence:smile_accounting_sequence.sequence_view_inv_count_inherit
+msgid "Number of invoice by period: %(pcount)s"
+msgstr "Nombre de facture par période: %(pcount)s"
+
+#. module: smile_accounting_sequence
+#: code:addons/smile_accounting_sequence/models/account.py:59
+#, python-format
+msgid "Please define a sequence on the journal."
+msgstr "Please define a sequence on the journal."
+
+#. module: smile_accounting_sequence
+#: code:addons/smile_accounting_sequence/models/ir_sequence.py:89
+#, python-format
+msgid "Warning"
+msgstr "Warning"
+
+#. module: smile_accounting_sequence
+#: view:ir.sequence:smile_accounting_sequence.sequence_view_inv_count_inherit
+msgid "Year of the period Without Century: %(py)s"
+msgstr "Année de la période sans les siècles: %(py)s"
+
+#. module: smile_accounting_sequence
+#: view:ir.sequence:smile_accounting_sequence.sequence_view_inv_count_inherit
+msgid "Year of the period: %(pyear)s"
+msgstr "Année de la période: %(pyear)s"
+
+#. module: smile_accounting_sequence
+#: code:addons/smile_accounting_sequence/models/account.py:41
+#, python-format
+msgid "You cannot validate a non-balanced entry.\n"
+"Make sure you have configured payment terms properly.\n"
+"The latest payment term line should be of the \"Balance\" type."
+msgstr "You cannot validate a non-balanced entry.\n"
+"Make sure you have configured payment terms properly.\n"
+"The latest payment term line should be of the \"Balance\" type."
+

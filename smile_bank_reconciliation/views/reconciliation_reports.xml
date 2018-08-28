@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report 
+            id="report_bank_reconciliation"
+            string="Reconciliation"
+            model="account.bank.reconciliation" 
+            report_type="qweb-pdf"
+            file="smile_bank_reconciliation.report_bank_reconciliations" 
+            name="smile_bank_reconciliation.report_bank_reconciliations" 
+        />
+    </data>
+</openerp>

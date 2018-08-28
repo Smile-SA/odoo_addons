@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+
+        <record id="good_to_pay_invoice_supplier_form" model="ir.ui.view">
+            <field name="name">good_to_pay.account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="priority" eval="500"/>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/header/button[@name='invoice_open']" position="replace">
+	                <button name="invoice_open" states="draft,proforma2" string="Genereate accounting entries" class="oe_highlight" groups="account.group_account_invoice"/>
+	                <button name="button_open_invoice" type="object" states="wait" string="BAP" class="oe_highlight" groups="smile_good_to_pay.group_baper_invoices"/>
+	                <button name="button_no_bap_invoice_wizard" type="object" states="wait" string="NO BAP" class="oe_highlight" groups="smile_good_to_pay.group_baper_invoices"/>
+                </xpath>
+                <xpath expr="/form/header/button[@name='invoice_cancel']" position="replace">
+                        <button name="invoice_cancel" states="draft,proforma2,wait" string="Cancel Invoice" groups="account.group_account_invoice"/>
+                </xpath>
+                
+                <xpath expr="/form/header/field[@name='state']" position="replace">
+                    <field name="state" widget="statusbar" statusbar_visible="draft,wait,no_bap,open,paid" statusbar_colors="{&quot;proforma&quot;:&quot;blue&quot;,&quot;proforma2&quot;:&quot;blue&quot;}"/>
+                </xpath>
+               
+                <xpath expr="/form/header/button[@name='%(account.action_account_invoice_refund)d']" position="attributes">
+                    <attribute name="states">no_bap,open,paid</attribute>
+                </xpath>
+
+               <xpath expr="/form/header/button[@name='invoice_pay_customer']" position="replace">
+                       <button name="invoice_pay_customer" type="object" string="Pay" states="open" class="oe_highlight" groups="base.group_user"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='date_invoice']" position="after">
+	                <field name="reception_date" attrs="{'readonly':[('state', '=', 'paid')]}"/>
+	                <field name="accounting_date" />
+	                <field name="approval_date" />
+	                <field name="approval_user_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                </xpath>
+                <xpath expr="//page[@string='Other Info']/group" position="inside">
+	                <group string="NO BAP Infos" attrs="{'invisible': [('state', '!=', 'no_bap')]}">
+		                <field name="rejection_cause_id"/>
+		                <field name="rejection_date" />
+		                <field name="rejection_note" />
+	                </group>
+                </xpath>
+            </field>
+        </record>
+        
+
+        <record id="good_to_pay_invoice_tree" model="ir.ui.view">
+            <field name="name">good_to_pay.account.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="priority" eval="502"/>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                        <field name="approval_user_id" />
+                </xpath>
+            </field>
+        </record>
+        
+       <record id="good_to_pay_invoice_filter" model="ir.ui.view">
+            <field name="name">good_to_pay.account.invoice.filter</field>
+            <field name="model">account.invoice</field>
+            <field name="priority" eval="502"/>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                        <field name="approval_user_id" />
+                </xpath>
+                <xpath expr="//filter[@name='unpaid']" position="after">
+                        <filter name="validator" string="Invoices to validate" domain="[('approval_user_id','=',uid)]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

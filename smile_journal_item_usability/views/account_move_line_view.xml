@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+    
+        <record id="view_move_line_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.line.form.inherit</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <field name='account_id' position="replace">
+                    <field name="account_id" domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]" on_change="onchange_account_id(account_id, partner_id, context)"/>
+                </field>
+                <field name='reconcile_ref' position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_move_line_tree_2" model="ir.ui.view">
+            <field name="name">account.move.line.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" editable="top">
+                    <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
+                    <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="statement_id" invisible="1"/>
+                    <field name="partner_id"
+                        domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                        on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
+                    <field name="account_id" domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]" on_change="onchange_account_id(account_id, partner_id, context)"/>
+                    <field name="account_tax_id" options='{"no_open":True}' invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund','general']"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
+                    <field name="move_id" required="0"/>
+                    <field name="debit" sum="Total Debit"/>
+                    <field name="credit" sum="Total Credit"/>
+                    <field name="date_maturity"/>
+                    <field name="date_created" string="Entry date"/>
+                    <field name="reconcile_ref" string="Ref."/>
+                    <field name="reconcile_partial_id"/>
+                    <field name="invoice" invisible="1"/>
+                    <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
+                    <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
+                    <field name="state" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_view_account_moves_all_a" model="ir.actions.act_window">
+            <field name="context">{'display_account_code': True, 'journal_type':'general'}</field>
+            <field name="name">Journal Items View</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_2"/>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Select the period and the journal you want to fill.
+              </p><p>
+                This view can be used by accountants in order to quickly record
+                entries in Odoo. If you want to record a supplier invoice,
+                start by recording the line of the expense account. Odoo
+                will propose to you automatically the Tax related to this
+                account and the counterpart "Account Payable".
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            action="action_view_account_moves_all_a"
+            icon="STOCK_JUSTIFY_FILL"
+            id="menu_action_view_account_moves_all"
+            parent="account.menu_finance_entries"
+            sequence="2"
+            groups="account.group_account_user"
+        />
+
+        <!-- Add MY Filter -->
+        <record id="view_account_move_line_filter_my_moves_inherit" model="ir.ui.view">
+            <field name="name">account.move.line.my.moves.search</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='next_partner']" position="after">
+                    <separator/>
+                    <filter string="My items" name="my_move_lines" domain="[('create_uid','=',uid)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account.action_account_moves_all_a" model="ir.actions.act_window">
+            <field name="context">{'journal_type':'general', 'display_account_code': True, 'search_default_my_move_lines':1}</field>
+        </record>
+
+        <!-- Supplier Due Date Payments-->
+        <record id="view_account_move_line_filter_groupby_inherit" model="ir.ui.view">
+            <field name="name">account.move.line.search</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/filter[@string='Period']" position="after">
+                    <filter string="Maturity Date" name="date_maturity" domain="[]" context="{'group_by':'date_maturity'}"/>
+                    <filter string="Account move" name="acc_move" domain="[]" context="{'group_by':'move_id'}"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="action_view_account_moves_supplier_due_date" model="ir.actions.act_window">
+            <field name="context">{'journal_type':'general', 'display_account_code': True,'search_default_date_maturity': 1}</field>
+            <field name="name">Payment due date</field>
+            <field name="res_model">account.move.line</field>
+            <field name="domain">[('account_id.type','=','payable'), ('reconcile_id','=',False), '|', ('journal_id.type','=','purchase'), ('journal_id.type','=','purchase_refund')]</field>
+            <field name="view_id" ref="account.view_move_line_tree"/>
+            <field name="view_mode">tree_account_move_line_quickadd,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Select the period and the journal you want to fill.
+              </p><p>
+                This view can be used by accountants in order to quickly record
+                entries in Odoo. If you want to record a supplier invoice,
+                start by recording the line of the expense account. Odoo
+                will propose to you automatically the Tax related to this
+                account and the counterpart "Account Payable".
+              </p>
+            </field>
+        </record>
+        
+        <menuitem
+            action="action_view_account_moves_supplier_due_date"
+            icon="STOCK_JUSTIFY_FILL"
+            id="menu_employee_account_moves_expenses"
+            parent="account.menu_finance_payables"
+            sequence="101"
+            groups="account.group_account_user"
+        />
+
+    </data>
+</openerp>

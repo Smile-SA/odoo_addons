@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="paper_format_landscape" model="report.paperformat">
+            <field name="name">Landscape format</field>
+            <field name="orientation">Landscape</field>
+        </record>
+
+        <report
+            id="unpaid_invoice_report_id"
+            string="Unpaid invoice"
+            model="account.invoice"
+            report_type="qweb-pdf"
+            file="smile_account_followup.report_unpaid_invoice" 
+            name="smile_account_followup.report_unpaid_invoice"
+            menu="False"
+        />
+        
+       <record id="unpaid_invoice_report_id" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="paper_format_landscape"/>
+        </record>
+    </data>
+</openerp>

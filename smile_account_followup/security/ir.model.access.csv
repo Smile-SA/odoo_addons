@@ -1,0 +1,15 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+
+"level_reminder_type_reader","level.reminder.type read","model_level_reminder_type","group_read_recovery",1,0,0,0
+"level_reminder_reader","level.reminder read","model_level_reminder","group_read_recovery",1,0,0,0
+"action_reminder_reader","action.reminder read","model_action_reminder","group_read_recovery",1,0,0,0
+
+"level_reminder_type_manager","level.reminder.type read","model_level_reminder_type","group_manage_recovery",1,1,1,1
+"level_reminder_manager","level.reminder read","model_level_reminder","group_manage_recovery",1,1,1,1
+"action_reminder_manager","action.reminder read","model_action_reminder","group_manage_recovery",1,1,1,1
+
+"account_invoice_reader","account.invoice read","account.model_account_invoice","group_read_recovery",1,0,0,0
+"account_invoice_line_reader","account.invoice.line read","account.model_account_invoice_line","group_read_recovery",1,0,0,0
+"account_invoice_tax_reader","account.invoice.tax read","account.model_account_invoice_tax","group_read_recovery",1,0,0,0
+"account_move_line_reader","account.move.line read","account.model_account_move_line","group_read_recovery",1,0,0,0
+"res_users_reader","res.users read","base.model_res_users","group_read_recovery",1,0,0,0

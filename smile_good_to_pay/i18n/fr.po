@@ -1,0 +1,273 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_good_to_pay
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-25 15:00+0000\n"
+"PO-Revision-Date: 2015-05-25 15:00+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_good_to_pay
+#: field:account.invoice.rejection.cause,invoice_id:0
+msgid "Account invoice"
+msgstr "Facture"
+
+#. module: smile_good_to_pay
+#: field:account.invoice,accounting_date:0
+msgid "Accounting date"
+msgstr "Date de comptabilisation"
+
+#. module: smile_good_to_pay
+#: field:res.users,amount_limit:0
+msgid "Amount Limit"
+msgstr "Montant maximal de validation"
+
+#. module: smile_good_to_pay
+#: code:addons/smile_good_to_pay/models/account.py:112
+#, python-format
+msgid "Amount!"
+msgstr "Montant !"
+
+#. module: smile_good_to_pay
+#: field:account.invoice,approval_date:0
+msgid "Approval date"
+msgstr "Date d’approbation"
+
+#. module: smile_good_to_pay
+#: field:account.invoice,approval_user_id:0
+#: field:procurement.order,approval_user_id:0
+#: field:purchase.order,approval_user_id:0
+#: field:stock.picking,approval_user_id:0
+msgid "Approval user"
+msgstr "Valideur"
+
+#. module: smile_good_to_pay
+#: view:account.invoice:smile_good_to_pay.good_to_pay_invoice_supplier_form
+msgid "Ask Refund"
+msgstr "Demander un avoir"
+
+#. module: smile_good_to_pay
+#: view:account.invoice:smile_good_to_pay.good_to_pay_invoice_supplier_form
+msgid "BAP"
+msgstr "BAP"
+
+#. module: smile_good_to_pay
+#: model:res.groups,name:smile_good_to_pay.group_baper_invoices
+msgid "BAPER invoices"
+msgstr "BAPER les factures"
+
+#. module: smile_good_to_pay
+#: view:account.invoice.rejection.cause:smile_good_to_pay.wizard_invoice_rejection_cause_view_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_good_to_pay
+#: view:account.invoice:smile_good_to_pay.good_to_pay_invoice_supplier_form
+msgid "Cancel Invoice"
+msgstr "Annuler la facture"
+
+#. module: smile_good_to_pay
+#: field:account.invoice.rejection.cause,create_uid:0
+#: field:rejection.cause,create_uid:0
+msgid "Created by"
+msgstr "Created by"
+
+#. module: smile_good_to_pay
+#: field:account.invoice.rejection.cause,create_date:0
+#: field:rejection.cause,create_date:0
+msgid "Created on"
+msgstr "Created on"
+
+#. module: smile_good_to_pay
+#: view:account.invoice:smile_good_to_pay.good_to_pay_invoice_supplier_form
+msgid "Genereate accounting entries"
+msgstr "Comptabiliser"
+
+#. module: smile_good_to_pay
+#: field:account.invoice.rejection.cause,id:0
+#: field:rejection.cause,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_good_to_pay
+#: model:ir.model,name:smile_good_to_pay.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: smile_good_to_pay
+#: code:addons/smile_good_to_pay/models/wizard_invoice_rejection_cause.py:38
+#, python-format
+msgid "Invoice is required!"
+msgstr "La facture est obligatoire !"
+
+#. module: smile_good_to_pay
+#: view:account.invoice:smile_good_to_pay.good_to_pay_invoice_filter
+msgid "Invoices to validate"
+msgstr "Factures à valider"
+
+#. module: smile_good_to_pay
+#: field:account.invoice.rejection.cause,write_uid:0
+#: field:rejection.cause,write_uid:0
+msgid "Last Updated by"
+msgstr "Last Updated by"
+
+#. module: smile_good_to_pay
+#: field:account.invoice.rejection.cause,write_date:0
+#: field:rejection.cause,write_date:0
+msgid "Last Updated on"
+msgstr "Last Updated on"
+
+#. module: smile_good_to_pay
+#: view:account.invoice:smile_good_to_pay.good_to_pay_invoice_supplier_form
+msgid "NO BAP"
+msgstr "No BAP"
+
+#. module: smile_good_to_pay
+#: view:account.invoice:smile_good_to_pay.good_to_pay_invoice_supplier_form
+msgid "NO BAP Infos"
+msgstr "No BAP informations"
+
+#. module: smile_good_to_pay
+#: field:rejection.cause,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_good_to_pay
+#: view:account.invoice.rejection.cause:smile_good_to_pay.wizard_invoice_rejection_cause_view_form
+#: field:account.invoice.rejection.cause,note:0
+#: field:rejection.cause,note:0
+msgid "Note"
+msgstr "Note"
+
+#. module: smile_good_to_pay
+#: code:addons/smile_good_to_pay/models/wizard_invoice_rejection_cause.py:42
+#, python-format
+msgid "Note is required!"
+msgstr "La Note est obligatoire !"
+
+#. module: smile_good_to_pay
+#: view:res.users:smile_good_to_pay.view_users_form
+msgid "Other"
+msgstr "Autre"
+
+#. module: smile_good_to_pay
+#: view:account.invoice:smile_good_to_pay.good_to_pay_invoice_supplier_form
+msgid "Pay"
+msgstr "Payer"
+
+#. module: smile_good_to_pay
+#: model:ir.model,name:smile_good_to_pay.model_stock_picking
+msgid "Picking List"
+msgstr "Opération de manutention"
+
+#. module: smile_good_to_pay
+#: model:ir.model,name:smile_good_to_pay.model_procurement_order
+msgid "Procurement"
+msgstr "Approvisionnement"
+
+#. module: smile_good_to_pay
+#: model:ir.model,name:smile_good_to_pay.model_purchase_order
+msgid "Purchase Order"
+msgstr "Bon de commande"
+
+#. module: smile_good_to_pay
+#: view:res.users:smile_good_to_pay.view_users_form
+msgid "Purchases"
+msgstr "Achats"
+
+#. module: smile_good_to_pay
+#: field:account.invoice,reception_date:0
+msgid "Reception date"
+msgstr "Date de réception"
+
+#. module: smile_good_to_pay
+#: view:account.invoice.rejection.cause:smile_good_to_pay.wizard_invoice_rejection_cause_view_form
+msgid "Reject"
+msgstr "Refuser"
+
+#. module: smile_good_to_pay
+#: field:account.invoice,rejection_note:0
+msgid "Reject Note"
+msgstr "Note de rejet"
+
+#. module: smile_good_to_pay
+#: model:ir.model,name:smile_good_to_pay.model_rejection_cause
+msgid "Reject reason"
+msgstr "Motif de rejet"
+
+#. module: smile_good_to_pay
+#: field:account.invoice,rejection_cause_id:0
+#: view:account.invoice.rejection.cause:smile_good_to_pay.wizard_invoice_rejection_cause_view_form
+#: field:account.invoice.rejection.cause,rejection_cause_id:0
+#: code:addons/smile_good_to_pay/models/account.py:86
+#: view:rejection.cause:smile_good_to_pay.view_rejection_cause_form
+#, python-format
+msgid "Rejection cause"
+msgstr "Motif de rejet"
+
+#. module: smile_good_to_pay
+#: code:addons/smile_good_to_pay/models/wizard_invoice_rejection_cause.py:40
+#, python-format
+msgid "Rejection cause is required!"
+msgstr "Le motif de rejet est obligatoire !"
+
+#. module: smile_good_to_pay
+#: model:ir.actions.act_window,name:smile_good_to_pay.action_rejection_cause
+#: model:ir.ui.menu,name:smile_good_to_pay.menu_rejection_cause
+#: view:rejection.cause:smile_good_to_pay.view_rejection_cause_tree
+msgid "Rejection causes"
+msgstr "Motifs de rejet"
+
+#. module: smile_good_to_pay
+#: field:account.invoice,rejection_date:0
+msgid "Rejection date"
+msgstr "Date de rejet"
+
+#. module: smile_good_to_pay
+#: code:addons/smile_good_to_pay/models/wizard_invoice_rejection_cause.py:38
+#: code:addons/smile_good_to_pay/models/wizard_invoice_rejection_cause.py:40
+#: code:addons/smile_good_to_pay/models/wizard_invoice_rejection_cause.py:42
+#, python-format
+msgid "Required data!"
+msgstr "Donnée obligatoire!"
+
+#. module: smile_good_to_pay
+#: sql_constraint:rejection.cause:0
+msgid "The name must be unique!"
+msgstr "Le nom doit être unique !"
+
+#. module: smile_good_to_pay
+#: model:ir.model,name:smile_good_to_pay.model_res_users
+msgid "Users"
+msgstr "Utilisateurs"
+
+#. module: smile_good_to_pay
+#: selection:account.invoice,state:0
+msgid "Wait"
+msgstr "En attente de validation"
+
+#. module: smile_good_to_pay
+#: selection:account.invoice,state:0
+msgid "NO BAP"
+msgstr "BAP refusé"
+
+#. module: smile_good_to_pay
+#: code:addons/smile_good_to_pay/models/account.py:112
+#, python-format
+msgid "You are not authorized to validate this invoice !"
+msgstr "Vous n'avez pas les droits pour valider le BAP car le seuil de validation est dépassé.\n"
+"Merci de voir avec votre responsable pour valider le BAP.\n"
+""
+
+#. module: smile_good_to_pay
+#: view:account.invoice.rejection.cause:smile_good_to_pay.wizard_invoice_rejection_cause_view_form
+msgid "or"
+msgstr "Ou"

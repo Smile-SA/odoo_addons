@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_unpaid_invoice">
+            <t t-call="report.html_container">
+                <t t-call="report.internal_layout">
+                            <div class="page">
+                                <h2 class="text-center">
+                                    <u>
+                                        <span >Monitoring unpaid invoices</span>
+                                    </u>
+                                </h2>
+                                <br/>
+                                <table width="100%">
+                                        <tr>
+                                            <td class="text-left" width="40%"><strong>Invoices date</strong></td>
+                                            <td class="text-left" width="30%">
+                                                <strong>From:</strong><span t-esc="formatLang(data['form']['start_invoice_date'], date=True)"/>
+                                            </td>
+                                            <td class="text-left" width="30%">
+                                                <strong>To:</strong><span t-esc="formatLang(data['form']['stop_invoice_date'], date=True)"/>
+                                            </td>
+                                        </tr>
+                                         <tr>
+                                            <td class="text-left" width="40%"><strong>Due date</strong></td>
+                                            <td class="text-left" width="30%">
+                                                <strong>From:</strong><span t-esc="formatLang(data['form']['start_due_date'], date=True)"/>
+                                            </td>
+                                            <td class="text-left" width="30%">
+                                                <strong>To:</strong><span t-esc="formatLang(data['form']['stop_due_date'], date=True)"/>
+                                            </td>
+                                        </tr>
+                                </table>
+                                <br/>
+                                <t t-foreach="data['form']['result']" t-as="partner_info">
+                                    <t t-set="total_amount_sum" t-value="0"/>
+                                    <t t-set="paid_amount_sum" t-value="0"/>
+                                    <t t-set="unpaid_amount_sum" t-value="0"/>
+                                   <table class="table table-striped" >
+                                        <tr>
+                                            <td ><strong><p t-esc="partner_info[0]"/></strong></td>
+                                            <td class="text-right"><strong>Ref:</strong></td>
+                                            <td class="text-left">
+                                                <p t-esc="partner_info[1]"/>
+                                            </td>
+                                            <td class="text-right"><strong>Phone:</strong></td>
+                                            <td class="text-left">
+                                                <p t-esc="partner_info[2]"/>
+                                            </td>
+                                            <td class="text-right"><strong>Mobile:</strong></td>
+                                            <td class="text-left">
+                                                <p t-esc="partner_info[3]"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                        <table class="table table-condensed">
+                                            <tr style="background-color:#edeff1;">
+                                                <th width="10%" >Date</th>
+                                                <th width="10%">Reference</th>
+                                                <th width="10%" >Due date</th>
+                                                <th width="10%" class="text-center">Amount</th>
+                                                <th width="10%" class="text-center">Payed amount</th>
+                                                <th width="10%" class="text-center">Real amount</th>
+                                                <td width="0.5%"></td>
+                                                <th width="39.5%" class="text-center">Monitoring actions</th>
+                                            </tr>
+
+                                            <tbody>
+                                                    <tr t-foreach="partner_info[4]" t-as="invoice_id">
+<!--                                                        Totals : amount/paid/unpaid                       -->
+                                                        <t t-set="total_amount_sum" t-value="total_amount_sum+_get_invoice_data(invoice_id)['invoice_amount']"/>
+                                                        <t t-set="paid_amount_sum" t-value="paid_amount_sum+_get_invoice_data(invoice_id)['paid_amount']"/>
+                                                        <t t-set="unpaid_amount_sum" t-value="unpaid_amount_sum+_get_invoice_data(invoice_id)['unpaid_amount']"/>
+<!--                                                         Invoives-->
+                                                        <td width="10%"><p t-esc="formatLang(_get_invoice_data(invoice_id)['invoice_date'], date=True)"/></td>
+                                                        <td width="10%"><p t-esc="_get_invoice_data(invoice_id)['number']"/></td>
+                                                        <td width="10%"><p t-esc="formatLang(_get_invoice_data(invoice_id)['due_date'], date=True)"/></td>
+                                                        <td width="10%" class="text-right"><span t-att-style="style" t-esc="formatLang(_get_invoice_data(invoice_id)['invoice_amount'], currency_obj=res_company.currency_id)"/></td>
+                                                        <td width="10%" class="text-right"><span t-att-style="style" t-esc="formatLang(_get_invoice_data(invoice_id)['paid_amount'], currency_obj=res_company.currency_id)"/></td>
+                                                        <td width="10%" class="text-right"><span t-att-style="style" t-esc="formatLang(_get_invoice_data(invoice_id)['unpaid_amount'], currency_obj=res_company.currency_id)"/></td>
+                                                        <td width="0.5%"/>
+                                                        <td width="39.5%">
+<!--                                                        Actions-->
+                                                            <t t-foreach="_get_invoice_data(invoice_id)['action_reminder_ids']" t-as="action_id">
+                                                                <table>
+                                                                    <tr>
+                                                                        <td width="5%">
+                                                                            <t t-if="_get_invoice_action(action_id)['action_done'] == 1">
+                                                                                <input type="checkbox" checked="checked" />
+                                                                            </t>
+                                                                            <t t-if="_get_invoice_action(action_id)['action_done'] == 0">
+                                                                                <input type="checkbox"/>
+                                                                            </t>
+                                                                        </td>
+                                                                        <td width="3%"/>
+                                                                        <td class="text-left">
+                                                                            <p t-esc="_get_invoice_action(action_id)['action']"/>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                        <table  class="table table-condensed">
+                                            <tr >
+                                                <td width="10%"></td>
+                                                <td width="10%"></td>
+                                                <td class="text-right" style="width:10%"><strong>Total:</strong></td>
+                                                <td class="text-right" style="background-color:#e5e4e2;width:10%">
+                                                    <t t-esc="formatLang(total_amount_sum, currency_obj=res_company.currency_id)"/>
+                                                </td>
+                                                <td class="text-right"  style="background-color:#00ff00;width:10%" >
+                                                    <t t-esc="formatLang(paid_amount_sum, currency_obj=res_company.currency_id)"/>
+                                                </td>
+                                                <td class="text-right"  style="background-color:#f4b400;width:10%">
+                                                    <t t-esc="formatLang(unpaid_amount_sum, currency_obj=res_company.currency_id)"/>
+                                                </td>
+                                                <td width="0.5%"></td>
+                                                <td width="39.5%"></td>
+                                            </tr>
+                                        </table>
+                                        <t t-if="data['form']['page_peer_partner'] == True">
+                                            <p style="page-break-after:always;">   </p>
+                                        </t>
+                                </t>
+                            </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

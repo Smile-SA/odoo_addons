@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="sequence_view_inv_count_inherit" model="ir.ui.view">
+            <field name="name">ir.sequence.form.inherit</field>
+            <field name="model">ir.sequence</field>
+            <field name="inherit_id" ref="base.sequence_view"/>
+            <field name="arch" type="xml">
+		        <xpath expr="//group[@string='Legend (for prefix, suffix)']" position="inside">
+		            <group>
+		                <label colspan="2" string="Number of invoice by period: %%(pcount)s"/>
+		                <label colspan="2" string="Year of the period: %%(pyear)s"/>
+                        <label colspan="2" string="Year of the period Without Century: %%(py)s"/>
+		                <label colspan="2" string="Month of the period: %%(pmonth)s"/>
+		            </group>
+		        </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

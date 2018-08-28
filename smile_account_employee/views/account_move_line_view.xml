@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="action_employee_account_moves_expenses" model="ir.actions.act_window">
+            <field name="context">{'journal_type':'general'}</field>
+            <field name="name">Employees Expenses</field>
+            <field name="res_model">account.move.line</field>
+            <field name="domain">[('partner_id.employee','=',1)]</field>
+            <field name="view_id" ref="account.view_move_line_tree"/>
+            <field name="view_mode">tree_account_move_line_quickadd,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Select the period and the journal you want to fill.
+              </p><p>
+                This view can be used by accountants in order to quickly record
+                entries in Odoo.
+              </p>
+            </field>
+        </record>
+        <menuitem
+            action="action_employee_account_moves_expenses"
+            icon="STOCK_JUSTIFY_FILL"
+            id="menu_employee_account_moves_expenses"
+            parent="menu_finance_employees"
+            sequence="2"
+            groups="account.group_account_user"
+        />
+
+    </data>
+</openerp>

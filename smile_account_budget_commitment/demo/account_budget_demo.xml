@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record id="commitment_limit0" model="account.budget.post.commitment_limit">
+            <field name="budget_post_id" ref="account_budget.account_budget_post_purchase0"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="amount_limit">1000.0</field>
+        </record>
+
+	</data>
+</openerp>
