@@ -45,7 +45,7 @@ class Blog(models.Model):
         return tag_by_blog
 
 
-class Blog(models.Model):
+class BlogPost(models.Model):
     _name = 'blog.post'
     _inherit = 'blog.post'
 
