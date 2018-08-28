@@ -16,6 +16,7 @@ Add feature to have private blogs and post, visible only for certain security gr
 Origine from https://github.com/OpenSur/Odoo_addons#8.0 convert to > 10
         """,
     'author': 'OpenSur, Smile SA',
+    'license': 'AGPL-3',
     'depends': ['website_blog'],
     'data': [
         'data/access_rules.xml',
