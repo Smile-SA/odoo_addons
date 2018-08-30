@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2013-Today OpenSur.
 # (C) 2015 Smile (<http://www.smile.fr>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
@@ -12,7 +11,7 @@
     'description': """
 Smile Multi Website
 ====================
-Add access to the website model with a new menu.
+Add access to the website model with a new menu for the community version. It allready exist for the enterprise.
 Check the readme for the configuration and usage.
         """,
     'author': 'Smile SA',
