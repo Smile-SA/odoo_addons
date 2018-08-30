@@ -11,7 +11,7 @@
     'description': """
 Smile Multi Website
 ====================
-Add access to the website model with a new menu for the community version. It allready exist for the enterprise.
+Add access to the website model with a new menu for the community version. It already exists in enterprise version.
 Check the readme for the configuration and usage.
         """,
     'author': 'Smile SA',
