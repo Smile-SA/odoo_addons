@@ -4,6 +4,7 @@
 
 import logging
 import psutil
+import shlex
 from subprocess import PIPE, Popen
 import time
 
@@ -100,7 +101,8 @@ class TalendJobLogs(models.Model):
 
     @api.one
     def _execute(self):
-        proc = Popen(self.job_id.command, stdout=PIPE, stderr=PIPE)
+        args = shlex.split(self.job_id.command)
+        proc = Popen(args, stdout=PIPE, stderr=PIPE)
         self.pid = proc.pid
         while proc.poll() is None:
             # INFO: communicate returns (outs, errors)
