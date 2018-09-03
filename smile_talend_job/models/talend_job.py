@@ -105,26 +105,48 @@ class TalendJob(models.Model):
 
     @api.multi
     def run(self):
-        jobs = self
-        while jobs.mapped('child_ids'):
-            self |= jobs.mapped('child_ids')
-            jobs = jobs.mapped('child_ids')
-        self.run_only()
+        return self._run()
 
     @api.multi
     def run_only(self):
-        if self.mapped('log_ids').filtered(lambda log: log.state == 'running'):
-            raise UserError(_('Execution already in progress'))
+        return self._run(depth=1)
+
+    @api.multi
+    def _run(self, depth=-1):
+        queue = []
+        self._build_queue(queue, depth)
         if self._context.get('in_new_thread', True):
             thread = threading.Thread(
-                target=self.filtered('archive')._run)
+                target=self._process_queue, args=(queue,))
             thread.start()
         else:
-            self.filtered('archive')._run()
+            self._process_queue(queue)
         return True
 
-    @api.one
-    def _run(self):
+    @api.multi
+    def _build_queue(self, queue, depth=-1):
+        if depth:
+            depth -= 1
+            self._check_execution()
+            for job in self:
+                if job.archive:
+                    queue.append(job.id)
+                job.child_ids._build_queue(queue, depth)
+
+    @api.multi
+    def _check_execution(self):
+        if self.mapped('log_ids').filtered(lambda log: log.state == 'running'):
+            raise UserError(_('Execution already in progress'))
+
+    @api.model
+    def _process_queue(self, queue):
+        queue.reverse()
+        while queue:
+            job_id = queue.pop()
+            self._process_job(job_id)
+
+    @api.model
+    def _process_job(self, job_id):
         with api.Environment.manage():
             with registry(self._cr.dbname).cursor() as auto_cr:
                 # autocommit: each insert/update request
@@ -133,7 +155,7 @@ class TalendJob(models.Model):
                 # a running Talend job logs
                 self = self.with_env(self.env(cr=auto_cr))
                 self._cr.autocommit(True)
-                self.log_ids.create({'job_id': self.id})
+                self.env['talend.job.logs'].create({'job_id': job_id})
 
     @api.multi
     def _get_zipfile(self):
