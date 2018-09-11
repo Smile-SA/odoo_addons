@@ -75,7 +75,7 @@
 				<search string="Talend Jobs">
 					<field name="name"/>
                     <field name="version"/>
-                    <filter name="main_jobs" string="Main Jobs" domain="[('parent_id', '=', False)]"/>
+                    <filter name="main_jobs" string="Main Jobs" domain="['|', ('parent_id', '=', False), ('archive', '=', False)]"/>
 				</search>
 			</field>
 		</record>
