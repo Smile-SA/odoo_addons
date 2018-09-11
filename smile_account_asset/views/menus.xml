@@ -27,12 +27,16 @@
             action="action_account_asset_asset_sale_tree"
             sequence="80"/>
 
+        <menuitem id="menu_account_asset_settings"
+            parent="account.menu_finance_configuration"
+            name="Assets"
+            sequence="4"/>
         <menuitem id="menu_account_asset_depreciation_methods"
-            parent="account.account_management_menu"
+            parent="menu_account_asset_settings"
             action="action_account_asset_depreciation_methods"
             sequence="91"/>
         <menuitem id="menu_account_asset_categories"
-            parent="account.account_management_menu"
+            parent="menu_account_asset_settings"
             action="action_account_asset_categories"
             sequence="92"/>
 

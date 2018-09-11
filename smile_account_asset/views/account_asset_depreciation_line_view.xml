@@ -15,7 +15,10 @@
                     <filter string="Accounting" name="accounting" domain="[('depreciation_type','=','accounting')]"/>
                     <filter string="Fiscal" domain="[('depreciation_type','=','fiscal')]"/>
                     <separator/>
-                    <filter string="This Year" domain="[('year','=',time.strftime('%%Y'))]"/>
+                    <filter string="This fiscal year" domain="[('year','=',time.strftime('%%Y'))]"/>
+                    <separator/>
+					<filter string="This month" context="{'search_in_current_month': True}"/>
+					<filter string="The last 3 months" name="three_month" context="{'search_in_three_months': True}"/>
                     <separator/>
                     <filter string="Unposted" domain="[('is_posted','=',False)]"/>
                     <filter string="Posted" domain="[('is_posted','=',True)]"/>
