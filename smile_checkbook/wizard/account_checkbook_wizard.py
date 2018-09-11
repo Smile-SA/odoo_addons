@@ -16,11 +16,14 @@ class AccountCheckbookWizard(models.TransientModel):
     to_number = fields.Integer('To Number')
     quantity = fields.Integer('Quantity')
 
-    @api.onchange('from_number', 'quantity', 'to_number')
+    @api.onchange('from_number', 'quantity')
     def onchange_range_of_numbers(self):
         if self.quantity:
             self.to_number = self.from_number + self.quantity - 1
-        elif self.to_number:
+
+    @api.onchange('to_number')
+    def onchange_to_number(self):
+        if self.to_number:
             self.quantity = self.to_number - self.from_number + 1
 
     @api.onchange('partner_id')

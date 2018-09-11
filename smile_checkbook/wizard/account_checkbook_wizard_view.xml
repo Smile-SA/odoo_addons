@@ -15,15 +15,16 @@
                                 <field name="company_id"/>
                             </group>
                             <group>
-                                <field name="quantity"/>
                                 <field name="from_number"/>
                                 <field name="to_number"/>
+                                <field name="quantity"/>
                             </group>
                         </group>
                     </sheet>
                     <footer>
                         <button name="generate_checks" type="object" string="Generate checks"
-                            class="oe_highlight"/> - <button special="cancel" string="Cancel"/>
+                            class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
                     </footer>
                 </form>
             </field>
