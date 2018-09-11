@@ -26,7 +26,11 @@ def audit_decorator(method):
             else result
         rule = get_audit_rule(self, 'create')
         if rule:
-            new_values = record.read(load='_classic_write')
+            try:
+                new_values = record.read(load='_classic_write')
+            # To contourn a native bug with the last version of Odoo
+            except KeyError:
+                new_values = record.read(load='_classic_write')
             rule.log('create', new_values=new_values)
         return result
 
