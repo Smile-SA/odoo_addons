@@ -5,7 +5,6 @@
 from functools import partial
 
 from odoo import api, models
-from odoo.tools.translate import translate
 
 
 class IrModelAccess(models.Model):
@@ -18,18 +17,17 @@ class IrModelAccess(models.Model):
         res = super(IrModelAccess, self).group_names_with_access(
             model_name=model_name, access_mode=access_mode)
         lang = self._context.get('lang') or self.env.user.lang
-        source_type = 'model'
         translated_res = []
         translate_group = partial(
-            translate, self._cr, False, source_type, lang)
+            self.env['ir.translation']._get_source, None, 'model', lang)
         for complete_name in res:
             if '/' in complete_name:
                 category_name, group_name = complete_name.split('/')
                 translated_name = "{}/{}".format(
-                    translate_group(category_name),
-                    translate_group(group_name))
+                    translate_group(category_name) or category_name,
+                    translate_group(group_name) or group_name)
             else:
                 translated_name = '%s'.format(
-                    translate_group(complete_name))
+                    translate_group(complete_name) or complete_name)
             translated_res.append(translated_name)
         return translated_res
