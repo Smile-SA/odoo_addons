@@ -26,6 +26,7 @@ class TalendJob(models.Model):
     _order = 'sequence, id'
 
     name = fields.Char(required=True)
+    active = fields.Boolean(default=True)
     sequence = fields.Integer('Priority', required=True, default=15)
     archive = fields.Binary()
     context = fields.Text()
