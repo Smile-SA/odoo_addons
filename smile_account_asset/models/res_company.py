@@ -91,9 +91,9 @@ class ResCompany(models.Model):
 
     @api.multi
     def write(self, vals):
+        fnames = list(vals.keys())
         for company in self:
-            old_vals = company.read(list(vals.keys()),
-                                    load='_classic_write')[0]
+            old_vals = company.read(fnames, load='_classic_write')[0]
             if 'id' not in vals:
                 del old_vals['id']
             self.env['account.asset.asset'].change_accounts(
