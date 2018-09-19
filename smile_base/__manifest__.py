@@ -47,6 +47,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         "data/im_odoo_support.yml",
         "data/ir_module_menu.yml",
         "data/warning_data.xml",
+        "views/ir_actions_view.xml",
         "views/template.xml",
     ],
     "qweb": [
