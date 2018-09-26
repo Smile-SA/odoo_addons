@@ -9,13 +9,21 @@ from odoo.exceptions import UserError
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    state = fields.Selection(
-        selection_add=[('progress_paid', 'Scheduled Payment')])
     partner_bank_required = fields.Boolean(
         related='partner_id.payment_method_id.partner_bank_required',
         readonly=True, store=True)
     partner_bank_id = fields.Many2one(
         states={'draft': [('readonly', False)], 'open': [('readonly', False)]})
+
+    @api.model
+    def _setup_fields(self):
+        super(AccountInvoice, self)._setup_fields()
+        states = self._fields['state'].selection
+        if 'progress_paid' not in dict(states):
+            states.insert(
+                states.index(('paid', 'Paid')),
+                ('progress_paid', 'Scheduled Payment'))
+        self._fields['state'].selection = states
 
     @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
