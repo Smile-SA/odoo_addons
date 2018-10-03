@@ -22,6 +22,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "category": 'Accounting & Finance',
     "sequence": 20,
     "data": [
+        "security/security.xml",
         "views/account_analytic_view.xml",
         "views/account_budget_view.xml",
     ],
