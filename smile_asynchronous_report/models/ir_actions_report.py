@@ -62,20 +62,18 @@ class IrActionsReport(models.Model):
     @api.multi
     def render_qweb_pdf(self, res_ids=None, data=None):
         if not self._context.get('force_render_qweb_pdf'):
-            content = self.render_in_asynchronous_mode(res_ids, data)
-            if content:
-                return content, 'pdf'
+            self._render_in_asynchronous_mode(res_ids, data)
         return super(IrActionsReport, self).render_qweb_pdf(res_ids, data)
 
-    @api.multi
-    def render_in_asynchronous_mode(self, res_ids, data):
-        self.ensure_one()
+    @api.one
+    def _render_in_asynchronous_mode(self, res_ids, data):
         if self.execution_mode == 'async':
             with registry(self._cr.dbname).cursor() as new_cr:
                 self = self.with_env(self.env(cr=new_cr))
                 self._check_execution(res_ids, data)
-            raise UserError(_('Printing in progress. '
-                              'You will be notified as soon as done.'))
+            raise UserError(
+                _("Printing in progress. "
+                    "You will be notified as soon as done."))
 
     @api.one
     def _check_execution(self, res_ids, data):
