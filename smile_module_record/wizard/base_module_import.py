@@ -27,9 +27,13 @@ class BaseModuleImport(models.TransientModel):
     def _check_module_name(self):
         invalid_characters = re.findall(r'[^A-Za-z0-9_\-]', self.module_name)
         if invalid_characters:
-            raise UserError(_("Invalid characters in module name: '%s'") % "', '".join(invalid_characters))
-        if self.env['ir.module.module'].search_count([('name', '=', self.module_name)]):
-            raise UserError(_("The module '%s' already exists") % self.module_name)
+            raise UserError(
+                _("Invalid characters in module name: '%s'") %
+                "', '".join(invalid_characters))
+        if self.env['ir.module.module'].search_count(
+                [('name', '=', self.module_name)]):
+            raise UserError(
+                _("The module '%s' already exists") % self.module_name)
 
     @api.one
     @api.constrains('file')
@@ -48,7 +52,8 @@ class BaseModuleImport(models.TransientModel):
     @api.multi
     def _get_module_path(self):
         self.ensure_one()
-        module_path = modules.get_module_path('', downloaded=True, display_warning=False)
+        module_path = modules.get_module_path(
+            '', downloaded=True, display_warning=False)
         return os.path.join(module_path, self.module_name)
 
     @api.multi
@@ -61,7 +66,8 @@ class BaseModuleImport(models.TransientModel):
     @api.multi
     def install(self):
         self.ensure_one()
-        modules = self.env['ir.module.module'].sudo().search([('name', '=', self.module_name)])
+        modules = self.env['ir.module.module'].sudo().search(
+            [('name', '=', self.module_name)])
         return modules.button_immediate_install()
 
     @api.multi

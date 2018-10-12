@@ -21,14 +21,16 @@ class BaseModuleExport(models.TransientModel):
         ('draft', 'Draft'),
         ('done', 'Done')
     ], readonly=True, default='draft')
-    start_date = fields.Datetime('Records from', required=True,
-                                 default=lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'))
+    start_date = fields.Datetime(
+        'Records from', required=True,
+        default=lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'))
     date_filter = fields.Selection([
         ('create', 'created'),
         ('write', 'modified'),
         ('create_write', 'created or modified'),
     ], 'Records only', required=True, default='create_write')
-    model_ids = fields.Many2many('ir.model', string='Models', domain=[('transient', '=', False)])
+    model_ids = fields.Many2many(
+        'ir.model', string='Models', domain=[('transient', '=', False)])
     file = fields.Binary(filename='filename', readonly=True)
     filename = fields.Char(size=64, required=True, default='data_module.zip')
     filetype = fields.Selection([
@@ -39,8 +41,9 @@ class BaseModuleExport(models.TransientModel):
     def _get_models(self):
         models = self.model_ids
         if not models:
-            models = [model for model in self.env['ir.model'].search([('transient', '=', False)])
-                      if self.env[model.model]._auto]
+            models = [model for model in self.env['ir.model'].search(
+                [('transient', '=', False)])
+                if self.env[model.model]._auto]
         return models
 
     def _get_domain(self):
@@ -59,8 +62,12 @@ class BaseModuleExport(models.TransientModel):
         property_obj = self.env['ir.property']
         properties = property_obj.browse()
         for model in models:
-            res_ids = [False] + ['%s,%s' % (model, res_id) for res_id in res_ids_by_model[model.model]]
-            properties |= property_obj.search([('fields_id.model_id', '=', model.id), ('res_id', 'in', res_ids)])
+            res_ids = [False] + ['%s,%s' % (model, res_id)
+                                 for res_id in res_ids_by_model[model.model]]
+            properties |= property_obj.search([
+                ('fields_id.model_id', '=', model.id),
+                ('res_id', 'in', res_ids),
+            ])
         if not properties:
             return []
         fields_to_export = property_obj.get_fields_to_export()
@@ -74,11 +81,15 @@ class BaseModuleExport(models.TransientModel):
         model_data_obj = self.env['ir.model.data']
         model_data = model_data_obj.browse()
         for model in models:
-            domain = [('model', '=', model.model), ('res_id', 'in', res_ids_by_model[model.model])]
+            domain = [
+                ('model', '=', model.model),
+                ('res_id', 'in', res_ids_by_model[model.model]),
+            ]
             model_data |= model_data_obj.search(domain)
         if not model_data:
             return []
-        fields_to_export = model_data_obj.get_fields_to_export() + ['complete_name']
+        fields_to_export = model_data_obj.get_fields_to_export() + \
+            ['complete_name']
         for field in ('id', 'noupdate'):
             del fields_to_export[fields_to_export.index(field)]
         rows = [fields_to_export + ['noupdate']]
@@ -103,7 +114,8 @@ class BaseModuleExport(models.TransientModel):
             rows.extend(recs.export_data(fields_to_export)['datas'])
             datas[index] = (model, rows)
         datas.extend(self._export_ir_properties(models, res_ids_by_model))
-        datas = self._export_ir_model_data(models, res_ids_by_model, False) + datas
+        datas = self._export_ir_model_data(
+            models, res_ids_by_model, False) + datas
         datas += self._export_ir_model_data(models, res_ids_by_model, True)
         return datas
 
@@ -144,7 +156,9 @@ class BaseModuleExport(models.TransientModel):
                     field_elem.set('eval', '%s' % value)
                     continue
                 if not field_name.endswith(':id'):
-                    if field.type == 'selection':  # Contrary to CSV import, XML import requires key instead of value
+                    if field.type == 'selection':
+                        # Contrary to CSV import, XML import requires key
+                        # instead of value
                         for item in field._description_selection(self.env):
                             if item[1] == value:
                                 field_elem.text = '%s' % item[0]
@@ -152,11 +166,15 @@ class BaseModuleExport(models.TransientModel):
                         field_elem.text = '%s' % value
                 else:
                     if field.type == 'many2one':
-                        field_elem.set(value and 'ref' or 'eval', value or 'False')
+                        field_elem.set(
+                            value and 'ref' or 'eval', value or 'False')
                     elif field.type == 'many2many':
-                        field_elem.set('eval', '[(6, 0, %s)]' % map(lambda s: "ref('%s')" % s,
-                                                                    (value or '').split(',')))
-        rough_string = etree.tostring(odoo_elem, encoding='utf-8', xml_declaration=True)
+                        field_elem.set(
+                            'eval', '[(6, 0, %s)]' % map(
+                                lambda s: "ref('%s')" % s,
+                                (value or '').split(',')))
+        rough_string = etree.tostring(
+            odoo_elem, encoding='utf-8', xml_declaration=True)
         reparsed = minidom.parseString(rough_string)
         return reparsed.toprettyxml(indent='  ', encoding='utf-8')
 

@@ -14,11 +14,13 @@
     This module built and test on Odoo.
 
     Features
-        * Export data in CSV or XML through a new module compatible with import (i.e. data files are ordered and splitted if necessary)
+        * Export data in CSV or XML through a new module compatible
+            with import (i.e. data files are ordered and splitted if necessary)
         * Export automatically properties linked to selected models
 
     TODO
-        * Manage workflow - Eg.: export a validated invoice and import it at this same state, in particular if account moves were exported
+        * Manage workflow - Eg.: export a validated invoice and import it
+            at this same state, in particular if account moves were exported
 
     Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
