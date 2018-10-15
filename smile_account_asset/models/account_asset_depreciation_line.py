@@ -43,7 +43,7 @@ CREATE AGGREGATE public.last (
         ('exceptional', 'Exceptional'),
     ], 'Type', required=True, index=True, default='exceptional')
     depreciation_date = fields.Date(
-        'Date', required=True, default=fields.Date.today)
+        'Date', required=True, default=fields.Date.context_today)
     active = fields.Boolean(default=True)
     company_id = fields.Many2one(
         related='asset_id.company_id', store=True,

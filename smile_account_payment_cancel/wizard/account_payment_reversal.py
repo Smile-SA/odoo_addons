@@ -10,7 +10,7 @@ class AccountPaymentReversal(models.TransientModel):
     _description = 'Account Payment Reversal'
 
     reversal_date = fields.Date(
-        'Date of reversals', required=True, default=fields.Date.today,
+        'Date of reversals', required=True, default=fields.Date.context_today,
         help="Enter the date of the reversal journal entries.")
 
     @api.multi

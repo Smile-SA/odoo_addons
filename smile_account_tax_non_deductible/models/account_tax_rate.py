@@ -18,7 +18,7 @@ class AccountTaxRate(models.Model):
         ('taxation', 'Taxation'),
     ], required=True)
     start_date = fields.Date(
-        default=fields.Date.today, required=True)
+        default=fields.Date.context_today, required=True)
     value = fields.Float(digits=(5, 4))
     industry_id = fields.Many2one(
         'res.partner.industry', 'Industry')
