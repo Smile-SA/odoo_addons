@@ -23,5 +23,6 @@ class AccountCheck(models.Model):
         'State', required=True, readonly=False)
 
     _sql_constraints = [
-        ('uniq_number', 'unique(number, partner_id)', 'Check number must be unique per partner'),
+        ('uniq_number', 'unique(number, partner_id)',
+         'Check number must be unique per partner'),
     ]

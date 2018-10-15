@@ -9,6 +9,7 @@ from . import fetchmail
 from . import ir_actions
 from . import ir_config_parameter
 from . import ir_mail_server
+from . import ir_model
 from . import ir_module_module
 from . import language
 from . import mail_mail

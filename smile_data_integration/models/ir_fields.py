@@ -14,3 +14,9 @@ class IrFieldsConverter(models.AbstractModel):
             return value, []
         return super(IrFieldsConverter, self)._str_to_boolean(
             model, field, value)
+
+    @api.model
+    def db_id_for(self, model, field, subfield, value):
+        self = self.with_context(active_test=False)
+        return super(IrFieldsConverter, self).db_id_for(
+            model, field, subfield, value)

@@ -11,7 +11,8 @@ class TestExport(TransactionCase):
     def setUp(self):
         super(TestExport, self).setUp()
         self.start_date = fields.Datetime.now()
-        self.env['res.partner'].bulk_create([{'name': 'Toto %d' % x} for x in range(5)])
+        self.env['res.partner'].bulk_create(
+            [{'name': 'Toto %d' % x} for x in range(5)])
         self.vals = {
             'model_ids': [(6, 0, self.env.ref('base.model_res_partner').ids)],
             'start_date': self.start_date,
@@ -21,7 +22,8 @@ class TestExport(TransactionCase):
         """
         Check that file is generated when exporting partners as XML
         """
-        wizard = self.env['base.module.export'].create(dict(self.vals, filetype='xml'))
+        wizard = self.env['base.module.export'].create(
+            dict(self.vals, filetype='xml'))
         self.assertFalse(bool(wizard.file))
         wizard.create_module()
         self.assertTrue(bool(wizard.file))
@@ -30,7 +32,8 @@ class TestExport(TransactionCase):
         """
         Check that file is generated when exporting partners as CSV
         """
-        wizard = self.env['base.module.export'].create(dict(self.vals, filetype='csv'))
+        wizard = self.env['base.module.export'].create(
+            dict(self.vals, filetype='csv'))
         self.assertFalse(bool(wizard.file))
         wizard.create_module()
         self.assertTrue(bool(wizard.file))

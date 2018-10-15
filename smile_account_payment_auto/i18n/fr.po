@@ -54,6 +54,11 @@ msgid "Do not authorize deduction"
 msgstr "Ne plus autoriser la déduction"
 
 #. module: smile_account_payment_auto
+#: model:ir.ui.view,arch_db:smile_account_payment_auto.invoice_supplier_form
+msgid "Do not pay at due date"
+msgstr "Ne plus payer à la date d'échéance"
+
+#. module: smile_account_payment_auto
 #: model:ir.actions.server,name:smile_account_payment_auto.ir_cron_generate_payments_ir_actions_server
 #: model:ir.cron,cron_name:smile_account_payment_auto.ir_cron_generate_payments
 #: model:ir.cron,name:smile_account_payment_auto.ir_cron_generate_payments

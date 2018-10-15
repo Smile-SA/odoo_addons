@@ -39,3 +39,8 @@ msgstr "Disponible prévisionnel"
 #: model:ir.model.fields,field_description:smile_commitment_forecast.field_crossovered_budget_lines_forecast_commitment_amount
 msgid "Forecast Commitment Amount"
 msgstr "Engagé prévisionnel"
+
+#. module: smile_commitment_forecast
+#: model:res.groups,name:smile_commitment_forecast.group_budget_forecast
+msgid "Budget Forecasting"
+msgstr "Prévisionnel budgétaire"

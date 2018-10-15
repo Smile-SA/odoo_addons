@@ -10,7 +10,7 @@ class ResPartnerIndustry(models.Model):
     _order = 'sequence asc, name asc'
 
     name = fields.Char(required=True)
-    full_name = fields.Char(required=True)
+    full_name = fields.Char('Code', required=True)
     company_id = fields.Many2one('res.company', 'Company')
     sequence = fields.Integer(default=15)
     taxation_rate_ids = fields.One2many(

@@ -38,7 +38,7 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                         dict(config['init']), dict(config['update'])
                     if not upgrade_manager.db_in_creation:
                         upgrade_manager.pre_load()
-                        config['update'].update({
+                        config['init'].update({
                             module: True for module in
                             upgrade_manager.modules_to_upgrade
                         })
@@ -47,7 +47,7 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                             module: True for module in
                             upgrade_manager.modules_to_install_at_creation
                         })
-                    native_new(db_name, force_demo, status, update_module)
+                    native_new(db_name, force_demo, status, True)
                     config['init'], config['update'] = init, update
                     upgrade_manager.post_load()
                     upgrade_manager.reload_translations()

@@ -405,3 +405,32 @@ CREATE AGGREGATE public.last (
                 vals['line_ids'] = new_line_vals
                 moves |= moves.create(vals)
         return moves.post() if moves else True
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False,
+                access_rights_uid=None):
+        args = args or []
+        first_day_of_current_month = fields.Date.from_string(
+            fields.Date.today()) + relativedelta(day=1)
+        if self._context.get('search_in_current_month'):
+            first_day_of_next_month = first_day_of_current_month + \
+                relativedelta(months=1)
+            args = [
+                '&',
+                ('depreciation_date', '>=', fields.Date.to_string(
+                    first_day_of_current_month)),
+                ('depreciation_date', '<', fields.Date.to_string(
+                    first_day_of_next_month)),
+            ] + args
+        if self._context.get('search_in_current_month'):
+            first_day_of_three_months_before = first_day_of_current_month - \
+                relativedelta(months=3)
+            args = [
+                '&',
+                ('depreciation_date', '>=', fields.Date.to_string(
+                    first_day_of_three_months_before)),
+                ('depreciation_date', '<', fields.Date.to_string(
+                    first_day_of_current_month)),
+            ] + args
+        return super(AccountAssetDepreciationLine, self)._search(
+            args, offset, limit, order, count, access_rights_uid)

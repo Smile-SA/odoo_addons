@@ -13,6 +13,8 @@
                     	attrs="{'invisible':['|','|','|',('type','!=','in_invoice'),('state','!=','open'),('residual','=',0.0)]}"/>
 	            	<button name="set_to_progress_paid" type="object" string="Authorize deduction"
 	            		attrs="{'invisible': ['!','&amp;',('type','=','in_refund'),('state','=','open')]}"/>
+                    <button name="set_to_open" type="object" string="Do not pay at due date"
+                        attrs="{'invisible': ['!','&amp;',('type','=','in_invoice'),('state','=','progress_paid')]}"/>
 	            	<button name="set_to_open" type="object" string="Do not authorize deduction"
 	            		attrs="{'invisible': ['!','&amp;',('type','=','in_refund'),('state','=','progress_paid')]}"/>
                 </button>

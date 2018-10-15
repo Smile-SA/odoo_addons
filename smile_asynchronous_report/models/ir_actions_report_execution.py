@@ -6,7 +6,7 @@ import base64
 import logging
 import time
 
-from odoo import api, fields, models, registry, SUPERUSER_ID, _
+from odoo import api, fields, models, registry, _
 from odoo.tools.misc import unquote
 from odoo.tools.safe_eval import safe_eval
 
@@ -20,6 +20,7 @@ class IrActionsReportExecution(models.TransientModel):
     _rec_name = 'create_date'
     _order = 'create_date desc'
 
+    create_uid = fields.Many2one('res.users', 'Created by', readonly=True)
     create_date = fields.Datetime('Created on', readonly=True)
     report_id = fields.Many2one(
         'ir.actions.report', 'Report', required=True, ondelete='cascade',
@@ -46,7 +47,7 @@ class IrActionsReportExecution(models.TransientModel):
     @api.model
     def auto_print_report(self):
         for execution in self.search([('state', '=', 'draft')]):
-            execution.print_report()
+            execution.sudo(self.create_uid).print_report()
         return True
 
     @api.multi
@@ -56,10 +57,12 @@ class IrActionsReportExecution(models.TransientModel):
         args = safe_eval(self.arguments)
         ctx = self._eval_context()
         ctx['force_render_qweb_pdf'] = True
+        attachments = None
         t0 = time.time()
         try:
             content, ext = report.with_context(ctx).render_qweb_pdf(*args)
-            self._add_attachment(content)
+            attachments = [(report.name, content)]
+            self.sudo()._add_attachment(content)
             msg = _('%s report available') % report.name
         except Exception as e:
             _logger.error(e)
@@ -75,7 +78,7 @@ class IrActionsReportExecution(models.TransientModel):
                     'time': time.time() - t0,
                     'state': 'done',
                 })
-                self._send_notification(msg)
+                self.sudo()._send_notification(msg, attachments)
             return True
 
     @api.multi
@@ -85,14 +88,13 @@ class IrActionsReportExecution(models.TransientModel):
             'active_id': unquote("active_id"),
             'active_ids': unquote("active_ids"),
             'active_model': unquote("active_model"),
-            'uid': self._uid,
+            'uid': self.create_uid.id,
             'context': self._context,
         }
         return safe_eval(self.context, eval_dict)
 
-    @api.multi
+    @api.one
     def _add_attachment(self, content):
-        self.ensure_one()
         report = self.report_id
         res_ids = safe_eval(self.arguments)[0]
         name = report.name
@@ -109,31 +111,36 @@ class IrActionsReportExecution(models.TransientModel):
         })
 
     @api.one
-    def _send_notification(self, msg):
-        self.ensure_one()
-        author = self.env['res.users'].browse(SUPERUSER_ID).partner_id
-        kwargs = {
-            'author_id': author.id,
+    def _send_notification(self, msg, attachments=None):
+        kwargs = self._get_message_post_arguments(msg, attachments)
+        for user in self.create_uid | self.user_ids:
+            self._get_channel(user).message_post(**kwargs)
+
+    @api.multi
+    def _get_message_post_arguments(self, msg, attachments):
+        superuser = self.env.user
+        return {
+            'author_id': superuser.partner_id.id,
             'email_from': False,  # To avoid to get author from email data
             'body': msg,
             'message_type': 'comment',
             'subtype': 'mail.mt_comment',
             'content_subtype': 'plaintext',
+            'attachments': attachments,
         }
-        if self.attachment_id:
-            kwargs['attachment_ids'] = self.attachment_id.ids
-        self._get_channel().message_post(**kwargs)
 
     @api.multi
-    def _get_channel(self):
+    def _get_channel(self, user):
         self.ensure_one()
-        partners = self.env.user.partner_id | \
-            self.env['res.users'].browse(SUPERUSER_ID).partner_id
-        channel = self.env['mail.channel'].search([
+        domain = [
             ('channel_type', '=', 'chat'),
             ('public', '=', 'private'),
-            ('channel_partner_ids', 'in', partners.ids),
-        ], limit=1)
+        ]
+        superuser = self.env.user
+        partners = (user | superuser).mapped('partner_id')
+        for partner in partners:
+            domain.append(('channel_partner_ids', 'in', partner.id))
+        channel = self.env['mail.channel'].search(domain, limit=1)
         if not channel:
             channel = channel.create({
                 'name': ', '.join(partners.mapped('name')),

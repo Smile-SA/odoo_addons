@@ -24,7 +24,6 @@ class Base(models.AbstractModel):
         name = self._get_attachments_field_name()
         setattr(self, name, False)
 
-
     def _search_attachments(self, operator, value):
         domain = [
             ('res_model', '=', self._name),
