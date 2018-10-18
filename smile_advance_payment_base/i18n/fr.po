@@ -138,7 +138,7 @@ msgstr "Paiements"
 #: code:addons/smile_advance_payment_base/models/account_payment.py:26
 #, python-format
 msgid "Please don't select an advance payment journal"
-msgstr "Merce de ne pas sélectionner un journal d'acompte"
+msgstr "Merci de ne pas sélectionner un journal d'acompte"
 
 #. module: smile_advance_payment_base
 #: code:addons/smile_advance_payment_base/models/account_payment.py:53
