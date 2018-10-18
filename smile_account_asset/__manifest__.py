@@ -47,10 +47,14 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         "views/account_invoice_line_view.xml",
         "views/res_company_view.xml",
         "views/menus.xml",
+        "views/webclient_template.xml",
 
         "wizard/account_asset_split_wizard_view.xml",
     ],
     "demo": [],
+    'qweb': [
+        'static/src/xml/account_asset.xml',
+    ],
     'test': [],
     "auto_install": False,
     "installable": True,

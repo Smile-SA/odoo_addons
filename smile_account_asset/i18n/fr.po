@@ -1874,3 +1874,10 @@ msgstr "Vous devez indiquer une valeur résiduelle positive inférieure à la va
 #, python-format
 msgid "You must specify a salvage value lower than gross value!"
 msgstr "Vous devez indiquer une valeur résiduelle inférieure à la valeur brute !"
+
+#. module: smile_account_asset
+#. openerp-web
+#: code:addons/smile_account_asset/static/src/xml/account_asset.xml:6
+#, python-format
+msgid "Create an asset"
+msgstr "Créer une immobilisation"
