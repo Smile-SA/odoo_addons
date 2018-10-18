@@ -407,9 +407,10 @@ msgstr "Historique des immobilisations"
 #. module: smile_account_asset
 #: model:ir.actions.act_window,name:smile_account_asset.action_account_asset_asset_form
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_asset_ids
+#: model:ir.ui.menu,name:smile_account_asset.menu_account_asset_settings
 #: model:ir.ui.menu,name:smile_account_asset.menu_account_assets
 #: model:ir.ui.menu,name:smile_account_asset.menu_account_assets_management
-#: model:ir.ui.menu,name:smile_account_asset.menu_account_asset_settings
+#: model:ir.ui.menu,name:smile_account_asset.menu_account_assets_parent
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_search
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_tree
 msgid "Assets"

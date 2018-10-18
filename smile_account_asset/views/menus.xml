@@ -2,30 +2,36 @@
 <odoo>
     <data>
 
+        <menuitem id="menu_account_assets_parent"
+            name="Assets"
+            parent="account.menu_finance"
+            groups="account.group_account_user"
+            sequence="4"/>
+
         <menuitem id="menu_account_assets_management"
             name="Assets"
-            parent="account.menu_finance_entries"/>
+            parent="menu_account_assets_parent"/>
 
         <menuitem id="menu_account_assets"
             parent="menu_account_assets_management"
             action="action_account_asset_asset_form"
             groups="account.group_account_user"
-            sequence="50"/>
+            sequence="10"/>
 
         <menuitem id="menu_account_invoice_lines"
             parent="menu_account_assets_management"
             action="action_account_invoice_line"
-            sequence="60"/>
+            sequence="20"/>
 
         <menuitem id="menu_account_asset_depreciation_lines"
             parent="menu_account_assets_management"
             action="action_account_asset_depreciation_line"
-            sequence="70"/>
+            sequence="30"/>
 
         <menuitem id="menu_account_asset_sales"
             parent="menu_account_assets_management"
             action="action_account_asset_asset_sale_tree"
-            sequence="80"/>
+            sequence="40"/>
 
         <menuitem id="menu_account_asset_settings"
             parent="account.menu_finance_configuration"
