@@ -47,7 +47,7 @@ class IrActionsReportExecution(models.TransientModel):
     @api.model
     def auto_print_report(self):
         for execution in self.search([('state', '=', 'draft')]):
-            execution.sudo(self.create_uid).print_report()
+            execution.sudo(execution.create_uid).print_report()
         return True
 
     @api.multi
