@@ -55,7 +55,7 @@ class AnalyticLine(models.Model):
                       "for the budget line '%s'")
                     % (abs(self.budget_line_id.available_amount),
                        self.budget_line_id.company_id.currency_id.symbol,
-                       self.display_name))
+                       self.budget_line_id.display_name))
 
     @api.one
     @api.constrains('user_id', 'amount', 'account_id',
