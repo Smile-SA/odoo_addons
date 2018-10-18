@@ -32,6 +32,9 @@
             <field name="model">account.invoice.line</field>
             <field name="inherit_id" ref="account.view_invoice_line_tree"/>
             <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="create">false</attribute>
+                </tree>
                 <field name="name" position="replace"/>
                 <field name="account_id" position="before">
                     <field name="invoice_id" string="Number" readonly="1"/>
@@ -80,7 +83,7 @@
             <field name="model">account.invoice.line</field>
             <field name="priority">50</field>
             <field name="arch" type="xml">
-                <form string="Invoice Line">
+                <form string="Invoice Line" create="false" edit="false">
                     <group>
                         <field name="product_id" readonly="1"/>
                         <field name="name" readonly="1"/>
