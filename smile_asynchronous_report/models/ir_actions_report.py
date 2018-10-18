@@ -68,12 +68,14 @@ class IrActionsReport(models.Model):
     @api.one
     def _render_in_asynchronous_mode(self, res_ids, data):
         if self.execution_mode == 'async':
+            # Translate message before creating a new cursor,
+            # to avoid error caused by cursor closed
+            msg = _(
+                "Printing in progress. You will be notified as soon as done.")
             with registry(self._cr.dbname).cursor() as new_cr:
                 self = self.with_env(self.env(cr=new_cr))
                 self._check_execution(res_ids, data)
-            raise UserError(
-                _("Printing in progress. "
-                    "You will be notified as soon as done."))
+            raise UserError(msg)
 
     @api.one
     def _check_execution(self, res_ids, data):
