@@ -17,7 +17,7 @@ Example:
         ('line_ids.product_id.name', '=', 'My product'),
     ])
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "website": "http://www.smile.fr",
     'category': 'Tools',
