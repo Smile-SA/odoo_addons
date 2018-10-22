@@ -10,13 +10,7 @@
     "author": "Smile",
     "license": 'AGPL-3',
     "website": 'http://www.smile.fr',
-    "description": """
-Features
-
-    * Allows to search in attachments (for all models)
-
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
-    """,
+    "description": """""",
     "depends": ["document"],
     "data": [],
     'installable': True,
