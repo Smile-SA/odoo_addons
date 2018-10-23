@@ -1,11 +1,17 @@
-.. image:: https://img.shields.io/badge/licence-GPL--3-blue.svg
+.. |badge1| image:: https://img.shields.io/badge/licence-GPL--3-blue.svg
     :alt: License: GPL-3
+
+.. |badge2| image:: https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github
+    :target: https://git.smile.fr/erp/odoo_addons/tree/11.0/smile_upgrade
+    :alt: Smile-SA/odoo_addons
+
+|badge1| |badge2|
 
 ================
 Database Upgrade
 ================
 
-This module helps you to upgrade automatically database
+This module helps you upgrade database automatically
 after code update and server restarting.
 
 **Table of contents**
@@ -17,7 +23,7 @@ after code update and server restarting.
 Requirements
 ============
 
-No requirement to use this module.
+There are no requirements to use this module.
 
 
 Usage
@@ -52,11 +58,11 @@ Configure the version
 Fill the file *__upgrade__.py* with following options:
 
 * `version`
-* `databases`: let's empty if valid for all databases
+* `databases`: let empty if valid for all databases
 * `translations_to_reload`: language codes list to reload in post-load
 * `description`
 * `modules_to_install_at_creation`: modules list to install at database creation
-* `modules_to_upgrade`: modules list to update or install
+* `modules_to_upgrade`: modules list to update or to install
 * `pre-load`: list of .sql files
 * `post-load`: list with .sql, .yml, .csv and .xml files
     * `.../filename` (depending on option `upgrades_path`) or
@@ -93,6 +99,9 @@ To execute an upgrade, you need to launch server with the following command::
 Additional features
 -------------------
 
+Specify error management
+^^^^^^^^^^^^^^^^^^^^^^^^
+
 In `post-load`, you can replace filename string by tuple to specify error management.
 
 Available options are:
@@ -106,6 +115,12 @@ Example::
     'post-load': [
         ('post-load/fix_product_pricelist.yml', 'rollback_and_continue'),
     ],
+
+
+Log fields.function on errors
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In .yml files, add `context['store\_in\_secure\_mode'] = True` if you want to compute fields.function (*store*\ set\_values) by catching errors and logging them {record\_id: error}
 
 
 Bug Tracker
@@ -125,9 +140,11 @@ Credits
 Contributors
 ------------
 
-* Corentin POUHET-BRUNERIE <corentin.pouhet-brunerie@smile.fr>
+* Corentin POUHET-BRUNERIE
 
 Maintainer
 ----------
 
 This module is maintained by Smile SA.
+
+Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.

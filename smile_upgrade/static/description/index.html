@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.15b.dev: http://docutils.sourceforge.net/" />
+<title>README.rst</title>
+<link rel="stylesheet" href="../../../../docutils-code-r8228-trunk/docutils/docutils/writers/html4css1/html4css1.css" type="text/css" />
+</head>
+<body>
+<div class="document">
+
+
+<p><object data="https://img.shields.io/badge/licence-GPL--3-blue.svg" type="image/svg+xml">License: GPL-3</object> <a class="reference external" href="https://git.smile.fr/erp/odoo_addons/tree/11.0/smile_upgrade"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
+<div class="section" id="database-upgrade">
+<h1>Database Upgrade</h1>
+<p>This module helps you upgrade database automatically
+after code update and server restarting.</p>
+<p><strong>Table of contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#requirements" id="id1">Requirements</a></li>
+<li><a class="reference internal" href="#usage" id="id2">Usage</a><ul>
+<li><a class="reference internal" href="#configuration" id="id3">Configuration</a><ul>
+<li><a class="reference internal" href="#upgrade-tree-view" id="id4">Upgrade tree view</a></li>
+<li><a class="reference internal" href="#configure-the-version" id="id5">Configure the version</a></li>
+<li><a class="reference internal" href="#configure-the-version-to-load" id="id6">Configure the version to load</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#execute-an-upgrade" id="id7">Execute an upgrade</a><ul>
+<li><a class="reference internal" href="#odoo-configuration" id="id8">Odoo configuration</a></li>
+<li><a class="reference internal" href="#execute-upgrade" id="id9">Execute upgrade</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-features" id="id10">Additional features</a><ul>
+<li><a class="reference internal" href="#specify-error-management" id="id11">Specify error management</a></li>
+<li><a class="reference internal" href="#log-fields-function-on-errors" id="id12">Log fields.function on errors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bug-tracker" id="id13">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="id14">Credits</a><ul>
+<li><a class="reference internal" href="#contributors" id="id15">Contributors</a></li>
+<li><a class="reference internal" href="#maintainer" id="id16">Maintainer</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="requirements">
+<h2><a class="toc-backref" href="#id1">Requirements</a></h2>
+<p>There are no requirements to use this module.</p>
+</div>
+<div class="section" id="usage">
+<h2><a class="toc-backref" href="#id2">Usage</a></h2>
+<div class="section" id="configuration">
+<h3><a class="toc-backref" href="#id3">Configuration</a></h3>
+<div class="section" id="upgrade-tree-view">
+<h4><a class="toc-backref" href="#id4">Upgrade tree view</a></h4>
+<p>Upgrades directory must be structured like this:</p>
+<pre class="literal-block">
+project
+├── upgrades
+|   ├── 1.1
+|   |   ├── __upgrade__.py
+|   |   ├── *.sql
+|   |   ├── *.yml  # only for post-load
+|   |   ├── *.csv  # only for post-load
+|   |   ├── *.xml  # only for post-load
+|   ├── 1.2
+|   |   ├── __upgrade__.py
+|   |   ├── *.sql
+|   ├── upgrade.conf
+</pre>
+<p>You can find an example of upgrade in <a class="reference external" href="smile_upgrade/demo">demo directory</a> of this module.</p>
+</div>
+<div class="section" id="configure-the-version">
+<h4><a class="toc-backref" href="#id5">Configure the version</a></h4>
+<p>Fill the file <em>__upgrade__.py</em> with following options:</p>
+<ul class="simple">
+<li><cite>version</cite></li>
+<li><cite>databases</cite>: let empty if valid for all databases</li>
+<li><cite>translations_to_reload</cite>: language codes list to reload in post-load</li>
+<li><cite>description</cite></li>
+<li><cite>modules_to_install_at_creation</cite>: modules list to install at database creation</li>
+<li><cite>modules_to_upgrade</cite>: modules list to update or to install</li>
+<li><cite>pre-load</cite>: list of .sql files</li>
+<li><dl class="first docutils">
+<dt><cite>post-load</cite>: list with .sql, .yml, .csv and .xml files</dt>
+<dd><ul class="first last">
+<li><cite>.../filename</cite> (depending on option <cite>upgrades_path</cite>) or</li>
+<li><cite>module_name/.../filename</cite></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="configure-the-version-to-load">
+<h4><a class="toc-backref" href="#id6">Configure the version to load</a></h4>
+<p>The upgrade version to load is set in file <em>upgrade.conf</em>, at the root of the <em>upgrades</em> directory, with this content (replace the version by your version number):</p>
+<pre class="literal-block">
+[options]
+version=1.2
+</pre>
+</div>
+</div>
+<div class="section" id="execute-an-upgrade">
+<h3><a class="toc-backref" href="#id7">Execute an upgrade</a></h3>
+<div class="section" id="odoo-configuration">
+<h4><a class="toc-backref" href="#id8">Odoo configuration</a></h4>
+<p>Update your Odoo configuration file with the following options:</p>
+<ul class="simple">
+<li><cite>upgrades_path</cite> (required): path to the upgrades directory</li>
+<li><cite>stop_after_upgrades</cite> (default: False): stop server after upgrades if True</li>
+</ul>
+</div>
+<div class="section" id="execute-upgrade">
+<h4><a class="toc-backref" href="#id9">Execute upgrade</a></h4>
+<p>To execute an upgrade, you need to launch server with the following command:</p>
+<pre class="literal-block">
+odoo.py -c &lt;config_file&gt; -d &lt;db_name&gt; --load=web,smile_upgrade
+</pre>
+</div>
+</div>
+<div class="section" id="additional-features">
+<h3><a class="toc-backref" href="#id10">Additional features</a></h3>
+<div class="section" id="specify-error-management">
+<h4><a class="toc-backref" href="#id11">Specify error management</a></h4>
+<p>In <cite>post-load</cite>, you can replace filename string by tuple to specify error management.</p>
+<p>Available options are:</p>
+<ul class="simple">
+<li><cite>raise</cite> (default value): if an error is raised, stop upgrade execution by raising the error</li>
+<li><cite>rollback_and_continue</cite>: if an error is raised, rollback to the savepoint set before the file execution and continue with the other files of the list</li>
+<li><cite>not_rollback_and_continue</cite>: if an error is raised, no rollback is done and continue with the other files of the list</li>
+</ul>
+<p>Example:</p>
+<pre class="literal-block">
+'post-load': [
+    ('post-load/fix_product_pricelist.yml', 'rollback_and_continue'),
+],
+</pre>
+</div>
+<div class="section" id="log-fields-function-on-errors">
+<h4><a class="toc-backref" href="#id12">Log fields.function on errors</a></h4>
+<p>In .yml files, add <cite>context['store_in_secure_mode'] = True</cite> if you want to compute fields.function (<em>store</em>set_values) by catching errors and logging them {record_id: error}</p>
+</div>
+</div>
+</div>
+<div class="section" id="bug-tracker">
+<h2><a class="toc-backref" href="#id13">Bug Tracker</a></h2>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
+<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_upgrade%0Aversion:%211.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
+<p>Do not contact contributors directly about support or help with technical issues.</p>
+</div>
+<div class="section" id="credits">
+<h2><a class="toc-backref" href="#id14">Credits</a></h2>
+<div class="section" id="contributors">
+<h3><a class="toc-backref" href="#id15">Contributors</a></h3>
+<ul class="simple">
+<li>Corentin POUHET-BRUNERIE</li>
+</ul>
+</div>
+<div class="section" id="maintainer">
+<h3><a class="toc-backref" href="#id16">Maintainer</a></h3>
+<p>This module is maintained by Smile SA.</p>
+<p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
