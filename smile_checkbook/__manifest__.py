@@ -26,7 +26,7 @@ Manually follow your checks by updating status:
 * Destroyed
 * Stolen
 
-Suggestions & Feedback to: isabelle.richard@smile.fr
+Suggestions & Feedback to: Isabelle RICHARD
 """,
     "depends": ['web'],
     "data": [
