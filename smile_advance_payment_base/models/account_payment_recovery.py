@@ -9,6 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 class AccountPaymentRecovery(models.Model):
     _name = 'account.payment.recovery'
     _description = 'Advance payment recovery'
+    _rec_name = 'payment_id'
 
     payment_id = fields.Many2one(
         'account.payment', 'Advance payment',
