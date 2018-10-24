@@ -11,7 +11,7 @@
                     <field name="is_advance_payment" invisible="1"/>
                 </field>
                 <field name="journal_id" position="attributes">
-                    <attribute name="domain">[('company_id', '=', parent.company_id), ('type', 'in', ('bank', 'cash')), ('is_advance_payment', '=', is_advance_payment)]</attribute>
+                    <attribute name="domain">[('type', 'in', ('bank', 'cash')), ('is_advance_payment', '=', is_advance_payment)]</attribute>
                     <attribute name="widget"></attribute>
                 </field>
             </field>
