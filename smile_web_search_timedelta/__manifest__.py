@@ -12,7 +12,7 @@
 Allows to search in timedelta
 =============================
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "summary": "",
     "website": "http://www.smile.fr",
