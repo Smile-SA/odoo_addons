@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-                    <page string="Advance payments"
+                    <page string="Advance payments" name="advance_payments"
                       attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve'))]}">
                         <field name="advance_payment_ids"
                             context="{'tree_view_ref': 'account.view_account_supplier_payment_tree',
