@@ -16,7 +16,7 @@
 2. Indicate invoices to pay
 3. A scheduled action, generate payments at due date
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "website": "http://www.smile.fr",
     "category": "Accounting & Finance",
