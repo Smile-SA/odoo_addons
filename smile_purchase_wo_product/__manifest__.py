@@ -9,8 +9,9 @@
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """Make product not required on a purchase order line
+    This option is useful to organize the purchase order on sections.
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "website": "http://www.smile.fr",
     "category": "Purchases",
