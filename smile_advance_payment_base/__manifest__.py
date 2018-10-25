@@ -10,7 +10,7 @@
     "author": "Smile",
     "description": """Supplier Advance Payments Management
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "website": "http://www.smile.fr",
     "category": "Accounting & Finance",
