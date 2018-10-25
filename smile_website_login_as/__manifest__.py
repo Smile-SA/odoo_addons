@@ -28,9 +28,10 @@
     "category": "Tools",
     "description": """
 Allows to login as another user in website
+For example, this option could be useful to check what's displayed for your customers.
 ==========================================
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & victor.bahl@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie & Victor Bahl
 """,
     "depends": ['website'],
     "data": [
