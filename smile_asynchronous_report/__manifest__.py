@@ -17,7 +17,7 @@ Features
     * Allows to launch report generation in background
     * Notify users from instant messaging
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "depends": [
         "mail",
