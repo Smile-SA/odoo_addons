@@ -10,9 +10,13 @@
 
     "license": 'AGPL-3',
 
-    "category": "Tools",
+    "description": """
+A snippet implementing jquery fancybox
 
-    'summary': 'A snippet implementing jquery fancybox',
+Suggestions & Feedback to: Youssef ECHCHERIFELKETTANI
+    """,
+
+    "category": "Tools",
 
     'depends': ['website'],
 
