@@ -14,7 +14,7 @@ Add access rules for import / export features
 
 For each user, you can indicate if it can export / import data
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "summary": "",
     "website": "http://www.smile.fr",
