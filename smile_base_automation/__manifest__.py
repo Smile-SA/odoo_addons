@@ -26,7 +26,7 @@ Additional features
         * Force execution even if records list is empty
         * Execute in asynchronous mode
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "summary": "",
     "website": "http://www.smile.fr",
