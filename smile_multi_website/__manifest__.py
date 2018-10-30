@@ -13,6 +13,8 @@ Smile Multi Website
 ====================
 Add access to the website model with a new menu for the community version. It already exists in enterprise version.
 Check the readme for the configuration and usage.
+
+Suggestions & Feedback to: Jonathan Dhosy
         """,
     'author': 'Smile SA',
     'license': 'AGPL-3',
