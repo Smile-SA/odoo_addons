@@ -13,7 +13,9 @@
 OpenERP Blog Private
 ====================
 Add feature to have private blogs and post, visible only for certain security groups
-Origine from https://github.com/OpenSur/Odoo_addons#8.0 convert to > 10
+Origin from https://github.com/OpenSur/Odoo_addons#8.0 migrated to > 10
+
+Suggestions & Feedback to: Jonathan Dhosy
         """,
     'author': 'OpenSur, Smile SA',
     'license': 'AGPL-3',
