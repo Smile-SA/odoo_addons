@@ -41,7 +41,7 @@ There are URIs available:
 
 WARNING: before calling /api/auth, call /web?db=*** otherwise web service is not found.
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin POUHET-BRUNERIE
     """,
     "depends": [
         'base',
