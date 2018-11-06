@@ -36,7 +36,7 @@ class BudgetLine(models.Model):
                           date_from, date_to, acc_ids,)
                 self.env.cr.execute(
                     self._get_sql_query(forecast=True) +
-                    "AND general_account_id=ANY(%s)", params)
+                    "AND commitment_account_id=ANY(%s)", params)
                 forecast_commitment_amount = self.env.cr.fetchone()[0] or 0.0
             line.forecast_commitment_amount = forecast_commitment_amount + \
                 line.commitment_amount

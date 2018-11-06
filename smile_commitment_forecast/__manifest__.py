@@ -13,9 +13,9 @@
     "description": """
 Features
 
-    * Allow to follow commitment forecast per budget line
+    * Allow to follow commitment & available forecast per budget line
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "summary": "",
     "website": "http://www.smile.fr",
