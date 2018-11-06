@@ -20,7 +20,8 @@ Todo
 
     * Add tolerance percentage or fixed amount for over budget commitment
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie &
+Isabelle RICHARD
     """,
     "summary": "",
     "website": "http://www.smile.fr",
