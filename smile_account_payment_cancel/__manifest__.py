@@ -6,6 +6,7 @@
     "name": "Smile Payment Cancellation Management",
     "version": "0.1",
     "license": 'AGPL-3',
+    "depends": ["account_cancel"],
     "category": "Generic Modules/Accounting",
     "author": "Smile",
     "website": 'http://www.smile.fr',
@@ -14,6 +15,8 @@
     Instead of deleting account move when you cancel a payment,
     this module reserves it if this journal entry was validated,
     removes it otherwise.
+    
+    Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "depends": [
         'account',
