@@ -22,7 +22,7 @@
         * Manage workflow - Eg.: export a validated invoice and import it
             at this same state, in particular if account moves were exported
 
-    Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+    Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "website": "http://www.smile.fr",
     "category": 'Tools',
