@@ -21,7 +21,7 @@ Example:
 
 To work, this module must be defined as a wide module.
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "website": "http://www.smile.fr",
     'category': 'Tools',
