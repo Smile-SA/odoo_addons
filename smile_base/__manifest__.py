@@ -32,7 +32,7 @@ Execution
 
     odoo.py -c rcfile -d db_name --load=web,smile_base
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "summary": "",
     "website": "http://www.smile.fr",
