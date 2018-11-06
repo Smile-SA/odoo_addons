@@ -14,7 +14,6 @@
 
 This module allows to manage:
 * assets and categories
-* decomposable assets
 * amortizations (ie periodic depreciations) and depreciations (exceptional)
 * accounting and fiscal depreciation methods
 * assets sale/scrapping
@@ -27,7 +26,7 @@ This module allows to manage:
 WARNING: This module is not compatible with account_asset, so uninstall it
 before installing this one.
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
     "website": "http://www.smile.fr",
     "category": "Accounting & Finance",
