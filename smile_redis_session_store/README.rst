@@ -1,5 +1,12 @@
-.. image:: https://img.shields.io/badge/licence-GPL--3-blue.svg
+.. |badge1| image:: https://img.shields.io/badge/licence-GPL--3-blue.svg
     :alt: License: GPL-3
+
+.. |badge2| image:: https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github
+    :target: https://git.smile.fr/erp/odoo_addons/tree/11.0/smile_redis_session_store
+    :alt: Smile-SA/odoo_addons
+
+|badge1| |badge2|
+
 
 Redis Session Store
 ===================
@@ -7,6 +14,9 @@ Redis Session Store
 This module allows you to use a Redis database to manage sessions,
 instead of classic filesystem storage.
 
+Redis is an open source, in-memory data structure store, used as a database, cache and message broker.
+
+It is useful for load balancing because session's directory may not be shared.
 
 Requirements
 ============
@@ -18,14 +28,14 @@ You need to install package `python-redis`::
 
     apt-get install python-redis
 
-.. _`Redis website`: http://redis.io/topics/quickstart 
+.. _`Redis website`: http://redis.io/topics/quickstart
 
 
 Usage
 =====
 
 To use Redis, install this module and please add `enable_redis = True` option
-in configuration file. 
+in configuration file.
 
 Available options
 -----------------
@@ -51,9 +61,11 @@ Credits
 Contributors
 ------------
 
-* Isabelle RICHARD <isabelle.richard@smile.fr>
+* Isabelle RICHARD
 
 Maintainer
 ----------
 
 This module is maintained by Smile SA.
+
+Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.

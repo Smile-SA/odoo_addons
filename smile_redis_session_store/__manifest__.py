@@ -27,7 +27,7 @@
     "license": 'AGPL-3',
     "description": """Use Redis Session instead of File system
 
-    Suggestions & Feedback to: isabelle.richard@smile.fr
+    Suggestions & Feedback to: Isabelle Richard
     """,
     "summary": "",
     "website": "http://www.smile.fr",
