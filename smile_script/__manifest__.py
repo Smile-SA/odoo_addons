@@ -9,13 +9,7 @@
     "website": 'http://www.smile.fr',
     "category": "Tools",
     "license": 'AGPL-3',
-    "description": """
-Features
-
-    * Log scripts run on the database
-
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
-    """,
+    "description": """""",
     "depends": ['smile_log'],
     "data": [
         "security/smile_script_security.xml",
