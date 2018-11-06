@@ -32,8 +32,8 @@ with field 'Update users' in profiles.
 NB : to test your profile, you need to set him as « active »,
 which will be disabled afterwards at the next update.
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr &
-matthieu.choplin@smile.fr
+Suggestions & Feedback to: Corentin Pouhet-Brunerie &
+Matthieu Choplin
 """,
     "depends": ['base'],
     "data": [
