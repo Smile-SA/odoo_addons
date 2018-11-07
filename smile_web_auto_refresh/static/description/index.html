@@ -360,7 +360,6 @@ ul.auto-toc {
 <body>
 <p><embed src="https://img.shields.io/badge/licence-GPL--3-blue.svg%0A%20:alt:%20License:%20GPL-3" /></p>
 <h1 id="web-auto-refresh">Web Auto Refresh</h1>
-<p>This module (using javascript) allows you to refresh the page for all users at the same time as you make a change.</p>
 <p>Features :</p>
 <p>This module is a fork of web_auto_refresh developped by Fisher Yu on Odoo v10. This fork works with all non-edited views, not only with kanban and list views.</p>
 <p>To test this module, you need to:</p>
@@ -370,15 +369,18 @@ ul.auto-toc {
 <blockquote>
 <p>This automated action can be applied(when to run) to creation, update or delete per your requirement model.env['bus.bus'].sendone('auto_refresh', model._name)</p>
 </blockquote></li>
+<li><p>It is also possible to force the opening of a page by indicating #action.</p>
+<blockquote>
+<p>For example: an automatic return to the home page is done by executing the code: model.env ['bus.bus'].sendone ('auto_refresh', '#home')</p>
+</blockquote></li>
 </ol>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#usage" id="id1">Usage</a></li>
 <li><a class="reference internal" href="#bug-tracker" id="id2">Bug Tracker</a></li>
-<li><a class="reference internal" href="#GDPR" id="id3">GDPR / EU Privacy</a></li>
-<li><a class="reference internal" href="#credits" id="id4">Credits</a></li>
-<li><a class="reference internal" href="#maintainer" id="id5">Maintainer</a></li>
+<li><a class="reference internal" href="#credits" id="id3">Credits</a></li>
+<li><a class="reference internal" href="#maintainer" id="id4">Maintainer</a></li>
 </ul>
 </div>
 <h2 id="usage">Usage</h2>
@@ -393,7 +395,7 @@ ul.auto-toc {
 </ol>
 <p><img src="automated_action.png" /></p>
 <ol start="4" style="list-style-type: decimal">
-<li>Then the Administrator goes to edit a Transfert :</li>
+<li>Then the Administrator go to edit a Transfert :</li>
 </ol>
 <p><img src="stock_admin1.png" /></p>
 <p><img src="stock_admin2.png" /></p>
@@ -404,8 +406,6 @@ ul.auto-toc {
 <h2 id="bug-tracker">Bug Tracker</h2>
 <p>Bugs are tracked on <a href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>. In case of trouble, please check there if your issue has already been reported. If you spotted it first, help us smashing it by providing a detailed and welcomed feedback <a href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_audit%0Aversion:%2011.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
 <p>Do not contact contributors directly about support or help with technical issues.</p>
- <h2 id="GDPR">GDPR / EU Privacy</h2>
-<p>This addons does not collect any data and does not set any browser cookies.</p>
 <h2 id="credits">Credits</h2>
 <h3 id="authors">Authors</h3>
 <p>Smile SA</p>

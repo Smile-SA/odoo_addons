@@ -4,7 +4,6 @@
 ================
 Web Auto Refresh
 ================
-This module (using javascript) allows you to refresh the page for all users at the same time as you make a change.
 
 Features :
 
@@ -18,6 +17,9 @@ To test this module, you need to:
 
     This automated action can be applied(when to run) to creation, update or delete per your requirement
     model.env['bus.bus'].sendone('auto_refresh', model._name)
+3. It is also possible to force the opening of a page by indicating #action.
+
+    For example: an automatic return to the home page is done by executing the code: model.env ['bus.bus'].sendone ('auto_refresh', '#home')
 
 **Table of contents**
 
@@ -43,7 +45,7 @@ To add the automated action for the target model :
    :alt: Automated Actions
    :width: 100%
 
-4. Then the Administrator goes to edit a Transfert :
+4. Then the Administrator go to edit a Transfert :
 
 .. figure:: static/description/stock_admin1.png
    :alt: Transfert
@@ -70,10 +72,6 @@ If you spotted it first, help us smashing it by providing a detailed and welcome
 `here <https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_audit%0Aversion:%2011.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
-
-GDPR / EU Privacy
-=================
-This addons does not collect any data and does not set any browser cookies.
 
 Credits
 =======
