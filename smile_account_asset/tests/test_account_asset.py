@@ -111,11 +111,12 @@ class AccountAssetTest(SingleTransactionCase):
         lines = self.digital_asset.account_move_line_ids.filtered(
             lambda line: line.account_id == old_account)
         balance = sum(lines.mapped('debit')) - sum(lines.mapped('credit'))
-        self.assertEquals(balance, 0.0)
+        self.assertTrue(tools.float_is_zero(balance, 2))
         lines = self.digital_asset.account_move_line_ids.filtered(
             lambda line: line.account_id == new_account)
-        self.assertEquals(sum(lines.mapped('debit')),
-                          sum(lines.mapped('asset_id.purchase_value')))
+        self.assertEquals(tools.float_compare(
+            sum(lines.mapped('debit')),
+            sum(lines.mapped('asset_id.purchase_value')), 2), 0)
 
         new_account = self.env['account.account'].search([
             ('code', '=', 'A281'),
@@ -126,7 +127,9 @@ class AccountAssetTest(SingleTransactionCase):
             lambda line: line.account_id == new_account)
         depreciation_value = self.digital_asset. \
             accounting_depreciation_line_ids[0].depreciation_value
-        self.assertEquals(sum(lines.mapped('credit')), depreciation_value)
+        self.assertEquals(tools.float_compare(
+            sum(lines.mapped('credit')),
+            depreciation_value, 2), 0)
 
         new_account = self.env['account.account'].search([
             ('code', '=', 'A291'),
@@ -138,7 +141,9 @@ class AccountAssetTest(SingleTransactionCase):
             lambda line: line.account_id == new_account)
         depreciation_value = self.digital_asset. \
             fiscal_depreciation_line_ids[0].accelerated_value
-        self.assertEquals(sum(lines.mapped('credit')), depreciation_value)
+        self.assertEquals(tools.float_compare(
+            sum(lines.mapped('credit')),
+            depreciation_value, 2), 0)
 
     @staticmethod
     def _save_record(new_record):
@@ -213,7 +218,7 @@ class AccountAssetTest(SingleTransactionCase):
         self.assertEquals(new_asset.state, 'cancel')
         lines = new_asset.account_move_line_ids
         balance = sum(lines.mapped('debit')) - sum(lines.mapped('credit'))
-        self.assertEquals(balance, 0.0)
+        self.assertTrue(tools.float_is_zero(balance, 2))
 
     def test_080_account_asset_split(self):
         """
@@ -259,8 +264,8 @@ class AccountAssetTest(SingleTransactionCase):
             depreciation_value = sum([
                 nline[amount_field]
                 for nline in line.move_id.asset_depreciation_line_ids])
-            self.assertEquals(round(line.move_id.amount, 2),
-                              round(depreciation_value, 2))
+            self.assertEquals(tools.float_compare(
+                line.move_id.amount, depreciation_value, 2), 0)
 
     def test_090_account_asset_modification(self):
         """
@@ -300,7 +305,7 @@ class AccountAssetTest(SingleTransactionCase):
         result = self.digital_asset.sale_result - \
             sum(self.digital_asset.fiscal_depreciation_line_ids.
                 mapped('accelerated_value'))
-        self.assertEquals(round(result, 2), round(balance, 2))
+        self.assertEquals(tools.float_compare(result, balance, 2), 0)
 
     def test_110_account_asset_sale_cancellation(self):
         """
@@ -337,8 +342,8 @@ class AccountAssetTest(SingleTransactionCase):
         self.assertEquals(self.digital_asset.state, 'close')
         self.digital_asset.output()
         self.assertTrue(
-            not self.digital_asset.company_id.convert_book_value_if_scrapping or
-            not self.digital_asset.book_value)
+            not self.digital_asset.company_id.convert_book_value_if_scrapping
+            or not self.digital_asset.book_value)
 
     def test_130_account_asset_auto_creation(self):
         """
