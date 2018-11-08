@@ -1,9 +1,0 @@
--
-  I remove the menus "Module Updates" and "Apps".
--
-  !python {model: ir.ui.menu}: |
-    for menu_id in ('base.module_mi', 'base.menu_module_updates'):
-      try:
-        self.env.ref(menu_id).unlink()
-      except:
-        pass

@@ -1,5 +1,0 @@
--
-  I add act_window_id in context for each window action
--
-  !python {model: ir.actions.act_window}: |
-    self.with_context(active_test=False).search([])._update_context()

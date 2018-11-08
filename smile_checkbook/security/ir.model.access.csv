@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_account_check_user,access_account_check_user,model_account_check,group_account_check_user,1,1,0,0
-access_account_check_manager,access_account_check_manager,model_account_check,group_account_check_manager,1,1,1,1
