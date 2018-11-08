@@ -16,9 +16,9 @@ Features:
 
 * Creation of discount contract templates which can be used in different discount contracts.
 * Possibility to add a parent template ( the parent template's rules will be added to the template rules ).
-* Customization of discount rules ,products applied to ,type of contract ( sale ,purchase )...
+* Customization of discount rules, products applied to, type of contract ( sale ,purchase )...
 * Auto-calculation of contract's end date depending on the start date and the number of months specified in the contract's template.
-* auto-renew if the self-renewal checkbox is checked otherwise its manually updated by clicking on ``Update``.
+* Auto-renew if the self-renewal checkbox is checked otherwise its manually updated by clicking on ``Update``.
 * Computation of the due amount based on the customer invoices.
 * Generation of refunds.
 
