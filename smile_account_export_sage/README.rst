@@ -54,10 +54,6 @@ Screenshots
    :alt: account_export_sage_tree
    :width: 100%
 
-Known Issues
-============
----
-
 Bug Tracker
 ===========
 
