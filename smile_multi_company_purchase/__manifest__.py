@@ -11,12 +11,7 @@
     ],
     "author": "Smile",
     "license": 'AGPL-3',
-    "description": """
-Multi-company Purchases
-=======================
-
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
-    """,
+    "description": """""",
     "summary": "",
     "website": "http://www.smile.fr",
     "category": 'Hidden',
