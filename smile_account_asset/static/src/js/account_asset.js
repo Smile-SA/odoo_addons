@@ -28,7 +28,7 @@ odoo.define('smile_account_asset.create_asset', function (require) {
             if (this.modelName === 'account.invoice.line' &&
                     this.getParent().action.xml_id === "smile_account_asset.action_account_invoice_line") {
                 this.$buttons.on('click', '.o_list_button_create_asset', create_asset.bind(this));
-            } else {
+            } else if (this.$buttons != undefined) {
                 this.$buttons.find('.btn.btn-primary.btn-sm.o_list_button_create_asset').hide();
             }
         },
