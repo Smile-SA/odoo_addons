@@ -1,0 +1,53 @@
+-
+  I create an audit rule on partners
+-
+  !python {model: audit.rule}: |
+    rule = self.search([('model_id.model', '=', 'res.partner')], limit=1)
+    if not rule:
+      rule = self.create({'name': 'Audit rule on partners', 'model_id': ref('base.model_res_partner')})
+    self.env['ir.model.data'].create({'name': 'rule_partners', 'module': 'smile_audit', 'model': 'res.partner', 'res_id': rule.id})
+-
+  As demo user, I create a new partner
+-
+  !record {model: res.partner, id: res_partner_test, view: False}:
+    name: Test
+-
+  I check if an audit log is created after creation
+-
+  !python {model: audit.log}: |
+    domain = [
+      ('model_id', '=', ref('base.model_res_partner')),
+      ('method', '=', 'create'),
+      ('res_id', '=', ref('smile_audit.res_partner_test')),
+    ]
+    assert self.search(domain, limit=1), 'No audit log after user creation'
+-
+  As demo user, I update contact name
+-
+  !record {model: res.partner, id: res_partner_test, view: False}:
+    name: Test 2
+-
+  I check if an audit log is created after update
+-
+  !python {model: audit.log}: |
+    domain = [
+      ('model_id', '=', ref('base.model_res_partner')),
+      ('method', '=', 'write'),
+      ('res_id', '=', ref('smile_audit.res_partner_test')),
+    ]
+    assert self.search(domain, limit=1), 'No audit log after user update'
+-
+  As demo user, I delete this address
+-
+  !python {model: res.partner}: |
+    self.env.ref('smile_audit.res_partner_test').unlink()
+-
+  I check if an audit log is created after deletion
+-
+  !python {model: audit.log}: |
+    domain = [
+      ('model_id', '=', ref('base.model_res_partner')),
+      ('method', '=', 'unlink'),
+      ('res_id', '=', ref('smile_audit.res_partner_test')),
+    ]
+    assert self.search(domain, limit=1), 'No audit log after user deletion'

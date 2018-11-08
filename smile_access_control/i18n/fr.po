@@ -1,0 +1,153 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_access_control
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-08 19:31+0000\n"
+"PO-Revision-Date: 2016-05-08 19:31+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_access_control
+#: model:ir.model,name:smile_access_control.model_res_groups
+msgid "Access Groups"
+msgstr "Groupes"
+
+#. module: smile_access_control
+#: model:ir.model.fields,field_description:smile_access_control.field_res_groups_active
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_access_control
+#: model:ir.model.fields,field_description:smile_access_control.field_ir_model_attachment_ids
+#: model:ir.model.fields,field_description:smile_access_control.field_ir_ui_menu_attachment_ids
+#: model:ir.model.fields,field_description:smile_access_control.field_res_groups_attachment_ids
+msgid "Attachments"
+msgstr "Pièces jointes"
+
+#. module: smile_access_control
+#: model:ir.ui.view,arch_db:smile_access_control.view_res_group_form
+msgid "Complete Access Controls"
+msgstr "Compléter la liste des contrôles d'accès"
+
+#. module: smile_access_control
+#: model:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: smile_access_control
+#: model:ir.model.fields,field_description:smile_access_control.field_res_users_payment_method_count
+msgid "Count Payment Method"
+msgstr "Nombre de méthodes de paiement"
+
+#. module: smile_access_control
+#: model:ir.model.fields,field_description:smile_access_control.field_res_users_field_ids
+msgid "Fields to update"
+msgstr "Champs à mettre à jour"
+
+#. module: smile_access_control
+#: model:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
+msgid "Fields to update for linked users"
+msgstr "Champs à mettre à jour au niveau des utilisateurs associés"
+
+#. module: smile_access_control
+#: model:ir.model.fields,help:smile_access_control.field_res_users_is_update_users
+msgid "If non checked, users associated to this profile will not be updated after creation"
+msgstr "Si non coché, les utilisateurs associés au profil ne seront pas mis à jour après création"
+
+#. module: smile_access_control
+#: model:ir.model.fields,field_description:smile_access_control.field_res_users_is_user_profile
+msgid "Is User Profile"
+msgstr "Correspond à un profil utilisateur"
+
+#. module: smile_access_control
+#: model:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
+msgid "Linked users"
+msgstr "Utilisateurs associés"
+
+#. module: smile_access_control
+#: model:ir.model,name:smile_access_control.model_ir_model
+msgid "Models"
+msgstr "Modèles"
+
+#. module: smile_access_control
+#: model:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
+msgid "Options"
+msgstr "Options"
+
+#. module: smile_access_control
+#: model:ir.model.fields,field_description:smile_access_control.field_res_users_payment_method_ids
+msgid "Payment Methods"
+msgstr "Méthode de paiement"
+
+#. module: smile_access_control
+#: model:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
+msgid "Profile ..."
+msgstr "Profil ..."
+
+#. module: smile_access_control
+#: sql_constraint:res.users:0
+msgid "Profile users cannot be linked to a profile!"
+msgstr "Les profils utilisateurs ne peuvent pas être liées à un profil !"
+
+#. module: smile_access_control
+#: model:ir.actions.server,name:smile_access_control.action_server_superadmin
+#: model:ir.ui.menu,name:smile_access_control.menu_action_superadmin
+msgid "Administrator"
+msgstr "Administrateur"
+
+#. module: smile_access_control
+#: sql_constraint:res.users:0
+msgid "The user with id = 1 must always be active!"
+msgstr "L'utilisateur ayant 1 pour id doit toujours être actif !"
+
+#. module: smile_access_control
+#: model:ir.model.fields,field_description:smile_access_control.field_res_users_is_update_users
+msgid "Update users after creation"
+msgstr "Mettre à jour les utilisateurs après création"
+
+#. module: smile_access_control
+#: model:ir.model.fields,field_description:smile_access_control.field_res_users_user_profile_id
+msgid "User Profile"
+msgstr "Profil utilisateur"
+
+#. module: smile_access_control
+#: model:ir.actions.act_window,name:smile_access_control.action_res_user_profiles
+#: model:ir.ui.menu,name:smile_access_control.menu_action_res_user_profiles
+msgid "User Profiles"
+msgstr "Profils utilisateurs"
+
+#. module: smile_access_control
+#: model:ir.model,name:smile_access_control.model_res_users
+msgid "Users"
+msgstr "Utilisateurs"
+
+#. module: smile_access_control
+#: code:addons/smile_access_control/models/res_users.py:73
+#, python-format
+msgid "You can't use %s as user profile !"
+msgstr "Vous ne pouvez pas utiliser %s comme profil utilisateur !"
+
+#. module: smile_access_control
+#: code:addons/smile_access_control/models/res_users.py:86
+#, python-format
+msgid "_update_from_profile accepts only users linked to a same profile"
+msgstr "_update_from_profile accepte uniquement des utilisateurs liés à un même profil"
+
+#. module: smile_access_control
+#: code:addons/smile_access_control/models/res_users.py:102
+#, python-format
+msgid "_update_from_profile doesn't manage fields.One2many"
+msgstr "_update_from_profile ne gère pas les fields.One2many"
+
+#. module: smile_access_control
+#: model:ir.model,name:smile_access_control.model_ir_ui_menu
+msgid "ir.ui.menu"
+msgstr "ir.ui.menu"

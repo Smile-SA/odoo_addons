@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record model="ir.ui.menu" id="base.menu_action_res_company_form">
+      <field name="sequence">100</field>
+    </record>
+
+  </data>
+</odoo>
