@@ -14,6 +14,7 @@
                             <field name="category_id"/>
                             <field name="purchase_value"/>
                             <field name="salvage_value"/>
+                            <field name="purchase_date" invisible="1" readonly="0"/>
                             <field name="in_service_date"
                                 invisible="not context.get('asset_validation', False)"
                                 required="context.get('asset_validation', False)"/>
