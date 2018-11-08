@@ -46,10 +46,6 @@ Screenshots
    :alt: account_export_tree
    :width: 100%
 
-Known Issues
-============
----
-
 Bug Tracker
 ===========
 
