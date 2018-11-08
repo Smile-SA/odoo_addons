@@ -202,6 +202,6 @@ class TalendJob(models.Model):
     @api.multi
     def propagate_context(self):
         for job in self:
-            children = job._get_all_children()
+            children = job.with_context(active_test=False)._get_all_children()
             children.write({'context': job.context})
         return True
