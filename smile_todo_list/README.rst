@@ -43,10 +43,10 @@ To add a todo list :
    :alt: Filter creation
    :width: 900px
 
-From the To-do list view:
+From the To-do kanban view:
 
 
-.. figure:: static/description/Todo_view.png
+.. figure:: static/description/to_do_kanban.png
    :alt: Todo View
    :width: 900px
 
