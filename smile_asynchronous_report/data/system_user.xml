@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="res.users" id="user_system">
+            <field name="name">System</field>
+            <field name="login">system</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="customer" eval="False"/>
+            <field name="email">root@example.com</field>
+            <field name="active" eval="False"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="company_ids" eval="[(4, ref('base.main_company'))]"/>
+            <field name="signature"><![CDATA[<span>-- <br/>
+System</span>]]></field>
+        </record>
+
+    </data>
+</odoo>

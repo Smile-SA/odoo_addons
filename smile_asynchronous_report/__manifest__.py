@@ -23,6 +23,7 @@ Suggestions & Feedback to: Corentin Pouhet-Brunerie
         "mail",
     ],
     "data": [
+        "data/system_user.xml",
         "views/ir_actions_report.xml",
     ],
     'installable': True,

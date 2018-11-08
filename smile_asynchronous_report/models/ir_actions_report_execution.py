@@ -116,11 +116,17 @@ class IrActionsReportExecution(models.TransientModel):
         for user in self.create_uid | self.user_ids:
             self._get_channel(user).message_post(**kwargs)
 
+    @api.model
+    def _get_system_user(self):
+        """ Return system user used to send notification.
+        """
+        return self.env.ref('smile_asynchronous_report.user_system')
+
     @api.multi
     def _get_message_post_arguments(self, msg, attachments):
-        superuser = self.env.user
+        system_user = self._get_system_user()
         return {
-            'author_id': superuser.partner_id.id,
+            'author_id': system_user.partner_id.id,
             'email_from': False,  # To avoid to get author from email data
             'body': msg,
             'message_type': 'comment',
@@ -136,8 +142,8 @@ class IrActionsReportExecution(models.TransientModel):
             ('channel_type', '=', 'chat'),
             ('public', '=', 'private'),
         ]
-        superuser = self.env.user
-        partners = (user | superuser).mapped('partner_id')
+        system_user = self._get_system_user()
+        partners = (user | system_user).mapped('partner_id')
         for partner in partners:
             domain.append(('channel_partner_ids', 'in', partner.id))
         channel = self.env['mail.channel'].search(domain, limit=1)
