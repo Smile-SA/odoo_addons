@@ -11,7 +11,7 @@
 Account Export
 ====================
 
-This module allows you to export accounting entries relating to a provider, an accounting journal, an accounting account, and to log exports in order to be able to execute them again later.
+This module allows you to export accounting entries relatif to a provider, accounting journals, accounting accounts, and to log exports in order to be able to execute them again later.
 
 Installation
 ============
@@ -42,7 +42,7 @@ Screenshots
 
 **Tree view**
 
-.. figure:: static/description/account_export_tree
+.. figure:: static/description/account_export_tree.png
    :alt: account_export_tree
    :width: 100%
 
