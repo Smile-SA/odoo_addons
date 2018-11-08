@@ -45,7 +45,7 @@
                     </sheet>
                     <footer>
                         <button type="object" name="button_validate" string="Validate" class="oe_highlight"/>
-                        <button special="cancel" string="Cancel" class="oe_cancel"/>
+                        <button special="cancel" string="Cancel"/>
                     </footer>
 	            </form>
 	        </field>
