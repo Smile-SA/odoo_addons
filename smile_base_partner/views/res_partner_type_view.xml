@@ -89,5 +89,10 @@
       <field name="view_mode">tree,form</field>
     </record>
 
+    <menuitem id="menu_account_payment_method"
+        sequence="50"
+        parent="contacts.res_partner_menu_config"
+        action="action_partner_types"/>
+
   </data>
 </odoo>
