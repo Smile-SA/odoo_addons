@@ -34,7 +34,6 @@ Mail - QWeb Editor
 
 Replace native editor by QWeb editor for the body of mail template and mail composer.
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "website": "http://www.smile.fr",
     "sequence": 0,
