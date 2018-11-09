@@ -1,16 +1,34 @@
-.. image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
-    :alt: License: AGPL-3
+.. |badge1| image:: https://img.shields.io/badge/licence-GPL--3-blue.svg
+    :alt: License: GPL-3
+
+.. |badge2| image:: https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github
+    :target: https://git.smile.fr/erp/odoo_addons/tree/11.0/smile_checkbook
+    :alt: Smile-SA/odoo_addons
+
+|badge1| |badge2|
+
 
 Checkbook Management
 ====================
 
 Generate and follow checkbooks
 
+A cheque, or check (US) is a document that orders a bank to pay a specific amount of money from a person's account to the person in whose name the cheque has been issued.A chequebook, or checkbook (US) is a set of cheque."
 
 Usage
 =====
 
-You can create checkbook by:
+Once installed, the module adds a new menu on the dashboard "Checkbooks".
+
+From here you can create a checkbook by clicking on "Generate checks".
+
+You will be prompted the following wizard:
+
+.. figure:: static/description/generate_checks.png
+   :alt: Generate Checks Wizard
+   :width: 100%
+
+In this wizard you can:
 
 * specify a range of numbers
 * specify a quantity and a start number
@@ -23,6 +41,20 @@ Manually follow your checks by updating status:
 * Destroyed
 * Stolen
 
+
+Screenshots
+===========
+
+**Tree view**
+
+.. figure:: static/description/checkbook_tree.png
+   :alt: checkbook_tree
+   :width: 100%
+
+Known Issues
+============
+
+This addon only works with Odoo Community Edition
 
 Bug Tracker
 ===========
@@ -39,9 +71,11 @@ Credits
 Contributors
 ------------
 
-* Isabelle RICHARD <isabelle.richard@smile.fr>
+* Isabelle RICHARD
 
 Maintainer
 ----------
 
 This module is maintained by Smile SA.
+
+Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.
