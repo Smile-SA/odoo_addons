@@ -1,75 +1,91 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.15b.dev: http://docutils.sourceforge.net/" />
-<title>README.rst</title>
-<link rel="stylesheet" href="../../../../../../../Bureau/docutils-code-r8228-trunk/docutils/docutils/writers/html4css1/html4css1.css" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="generator" content="Docutils 0.15b.dev: http://docutils.sourceforge.net/"/>
+    <title>README.rst</title>
+    <link rel="stylesheet"
+          href="../../../../../../../Bureau/docutils-code-r8228-trunk/docutils/docutils/writers/html4css1/html4css1.css"
+          type="text/css"/>
 </head>
 <body>
 <div class="document">
 
 
-<p><object data="https://img.shields.io/badge/licence-GPL--3-blue.svg" type="image/svg+xml">License: GPL-3</object> <a class="reference external" href="https://git.smile.fr/erp/odoo_addons/tree/10.0/smile_account_export_yellodit"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
-<div class="section" id="account-export-yellodit">
-<h1>Account Export yellodit</h1>
-<p>It is based on the behavior of the smile_account_export module, and adds Yellodit as a provider</p>
-<p>It therefore offers the possibility to filter on Yellodit's specific records</p>
-</div>
-<div class="section" id="installation">
-<h1>Installation</h1>
-<p>This module requires the smile_account_export module to work.</p>
-</div>
-<div class="section" id="usage">
-<h1>Usage</h1>
-<p>Once installed, the module Adds Yellodit to provider.</p>
-<p>From here you can create a new export with Yellodit as provider, and filter on its move lines.</p>
-<p>You will be prompted the following form:</p>
-<div class="figure">
-<img alt="Create account export form" src="static/description/account_export_yellodit_form.png" style="width: 50%;" />
-</div>
-<p>The module generates an export csv file, as an attachment to the form.</p>
-<p>Example :</p>
-<p>Code journal;Date écriture;Numéro de pièce;Code compte;Libellé écriture;Débit origine;Crédit origine;Axe 1 analytique;Axe 2 analytique;Axe 3 analytique</p>
-<p>FAC;2018-11-08;FAC/2018/0001;411100;/;120,00;0,00;;;</p>
-<p>FAC;2018-11-08;FAC/2018/0001;445711;TVA collectée (vente) 20,0%;0,00;20,00;;;</p>
-<p>FAC;2018-11-08;FAC/2018/0001;707100;Article test;0,00;100,00;;;</p>
-</div>
-<div class="section" id="screenshots">
-<h1>Screenshots</h1>
-<p><strong>Tree view</strong></p>
-<div class="figure">
-<img alt="account_export_yellodit_tree" src="static/description/account_export_yellodit_tree.png" style="width: 100%;" />
-</div>
-</div>
-<div class="section" id="bug-tracker">
-<h1>Bug Tracker</h1>
-<p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
-In case of trouble, please check there if your issue has already been reported.
-If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
-<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_checkbook%0Aversion:%2010.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
-</div>
-<div class="section" id="credits">
-<h1>Credits</h1>
-<div class="section" id="contributors">
-<h2>Contributors</h2>
-<ul class="simple">
-<li>Isabelle RICHARD</li>
-</ul>
-</div>
-<div class="section" id="maintainer">
-<h2>Maintainer</h2>
-<p>This module is maintained by Smile SA.</p>
-<p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
-</div>
-</div>
+    <p>
+        <object data="https://img.shields.io/badge/licence-GPL--3-blue.svg" type="image/svg+xml">License: GPL-3</object>
+        <a class="reference external"
+           href="https://git.smile.fr/erp/odoo_addons/tree/10.0/smile_account_export_yellodit"><img
+                alt="Smile-SA/odoo_addons"
+                src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github"/></a></p>
+    <div class="section" id="account-export-yellodit">
+        <h1>Account Export yellodit</h1>
+        <p>It is based on the behavior of the smile_account_export module, and adds Yellodit as a provider</p>
+        <p>It therefore offers the possibility to filter on Yellodit's specific records</p>
+    </div>
+    <div class="section" id="installation">
+        <h1>Installation</h1>
+        <p>This module requires the smile_account_export module to work.</p>
+    </div>
+    <div class="section" id="usage">
+        <h1>Usage</h1>
+        <p>Once installed, the module Adds Yellodit to provider.</p>
+        <p>From here you can create a new export with Yellodit as provider, and filter on its move lines.</p>
+        <p>You will be prompted the following form:</p>
+        <div class="figure">
+            <img alt="Create account export form" src="static/description/account_export_yellodit_form.png"
+                 style="width: 50%;"/>
+        </div>
+        <p>The module generates an export csv file, as an attachment to the form.</p>
+        <p>Example :</p>
+        <p>Code journal;Date écriture;Numéro de pièce;Code compte;Libellé écriture;Débit origine;Crédit origine;Axe 1
+            analytique;Axe 2 analytique;Axe 3 analytique</p>
+        <p>FAC;2018-11-08;FAC/2018/0001;411100;/;120,00;0,00;;;</p>
+        <p>FAC;2018-11-08;FAC/2018/0001;445711;TVA collectée (vente) 20,0%;0,00;20,00;;;</p>
+        <p>FAC;2018-11-08;FAC/2018/0001;707100;Article test;0,00;100,00;;;</p>
+    </div>
+    <div class="section" id="screenshots">
+        <h1>Screenshots</h1>
+        <p><strong>Tree view</strong></p>
+        <div class="figure">
+            <img alt="account_export_yellodit_tree" src="static/description/account_export_yellodit_tree.png"
+                 style="width: 100%;"/>
+        </div>
+    </div>
+    <div class="section" id="bug-tracker">
+        <h1>Bug Tracker</h1>
+        <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub
+            Issues</a>.
+            In case of trouble, please check there if your issue has already been reported.
+            If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
+            <a class="reference external"
+               href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_checkbook%0Aversion:%2010.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.
+        </p>
+    </div>
+    <div class="section" id="credits">
+        <h1>Credits</h1>
+        <div class="section" id="contributors">
+            <h2>Contributors</h2>
+            <ul class="simple">
+                <li>Corentin POUHET-BRUNERIE</li>
+            </ul>
+        </div>
+        <div class="section" id="maintainer">
+            <h2>Maintainer</h2>
+            <p>This module is maintained by Smile SA.</p>
+            <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source
+                solutions.</p>
+        </div>
+    </div>
 </div>
 <div class="footer">
-<hr class="footer" />
-<a class="reference external" href="../../README.rst">View document source</a>.
-Generated on: 2018-11-08 16:44 UTC.
-Generated by <a class="reference external" href="http://docutils.sourceforge.net/">Docutils</a> from <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> source.
+    <hr class="footer"/>
+    <a class="reference external" href="../../README.rst">View document source</a>.
+    Generated on: 2018-11-09 14:01 UTC.
+    Generated by <a class="reference external" href="http://docutils.sourceforge.net/">Docutils</a> from <a
+        class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> source.
 
 </div>
 </body>
