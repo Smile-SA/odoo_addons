@@ -56,6 +56,8 @@ Contributors
 ------------
 
 * Isabelle RICHARD
+* Corentin POUHET-BRUNERIE
+* Matthieu JOOSSEN
 
 Maintainer
 ----------
