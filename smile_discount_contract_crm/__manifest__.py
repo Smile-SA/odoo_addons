@@ -31,7 +31,7 @@ Discount Contract CRM
     'website': 'http://www.smile.fr',
     'images': [],
     'depends': [
-        'col_discount_contract',
+        'smile_discount_contract',
         'crm',
     ],
     'data': [
