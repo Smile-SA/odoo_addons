@@ -69,7 +69,7 @@ Credits
 Contributors
 ------------
 
-* Isabelle RICHARD
+* Corentin POUHET-BRUNERIE
 
 Maintainer
 ----------
