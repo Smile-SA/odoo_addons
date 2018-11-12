@@ -18,10 +18,10 @@
             <field name="condition">True</field>
             <field name="model_id" ref="base.model_ir_module_module"/>
             <field name="code">domain = [('state', 'in', ('installed', 'to upgrade', 'to remote'))]
-module_ids = pool['ir.module.module'].search(cr, uid, domain, context=context)
-action_id = pool['ir.model.data'].get_object_reference(cr, uid, 'smile_module_graph', 'action_ir_module_graph_wizard')[1]
-action = pool['ir.actions.act_window'].read(cr, uid, action_id, context=context)
-action['context'] = {'active_ids': module_ids, 'default_stream': 'up-down', 'hide_stream': True}</field>
+module_ids = env['ir.module.module'].search(domain)
+action_id = env['ir.model.data'].get_object_reference('smile_module_graph', 'action_ir_module_graph_wizard')[1]
+action = env['ir.actions.act_window'].browse(action_id).read()[0]
+action['context'] = {'active_ids': module_ids.ids, 'default_stream': 'up-down', 'hide_stream': True}</field>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>
         </record>
