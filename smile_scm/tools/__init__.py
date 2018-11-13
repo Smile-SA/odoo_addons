@@ -2,3 +2,4 @@
 
 from .misc import *
 from .osutil import *
+from .exceptions import *
