@@ -6,7 +6,7 @@ import os.path
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
-from odoo.addons.smile_docker.tools import get_exception_message
+from ..tools import get_exception_message
 
 _logger = logging.getLogger(__name__)
 
