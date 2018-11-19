@@ -1,4 +1,4 @@
-.. |badge1| image:: https://img.shields.io/badge/licence-GPL--3-blue.svg
+.. |badge1| image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
     :alt: License: AGPL-3
 
 .. |badge2| image:: https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github
