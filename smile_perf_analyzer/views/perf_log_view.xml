@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_ir_logging_perf_log_search" model="ir.ui.view">
+      <field name="name">ir.logging.perf.log.search</field>
+      <field name="model">ir.logging.perf.log</field>
+      <field name="arch" type="xml">
+        <search string="Performance Logs">
+          <field name="path"/>
+          <field name="model"/>
+          <field name="method"/>
+          <field name="user_id"/>
+          <group expand="0" string="Group By">
+            <filter name="groupby_model" string="Model" context="{'group_by':'model'}"/>
+            <filter name="groupby_method" string="Method" context="{'group_by':'method'}"/>
+            <filter name="groupby_date" string="Date" context="{'group_by':'date:day'}"/>
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <record id="view_ir_logging_perf_log_tree" model="ir.ui.view">
+      <field name="name">ir.logging.perf.log.tree</field>
+      <field name="model">ir.logging.perf.log</field>
+      <field name="arch" type="xml">
+        <tree string="Performance Logs" create="false" colors="red: bool(error) is True;">
+          <field name="date"/>
+          <field name="path"/>
+          <field name="model"/>
+          <field name="method"/>
+          <field name="user_id"/>
+          <field name="total_time" sum="Total"/>
+          <field name="db_time" sum="Total"/>
+          <field name="db_count" sum="Total"/>
+          <field name="error" invisible="1"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_ir_logging_perf_log_form" model="ir.ui.view">
+      <field name="name">ir.logging.perf.log.form</field>
+      <field name="model">ir.logging.perf.log</field>
+      <field name="arch" type="xml">
+        <form string="Performance Log" create="false" edit="false">
+          <sheet>
+            <group>
+              <group>
+                <field name="path"/>
+                <field name="model"/>
+                <field name="method"/>
+                <field name="user_id"/>
+                <field name="date"/>
+                <field name="total_time"/>
+              </group>
+              <group>
+                <field name="args"/>
+                <field name="result"/>
+                <field name="error"/>
+              </group>
+            </group>
+            <notebook>
+              <page string="Python" attrs="{'invisible': [('stats', '=', False), ('slow_recomputation', '=', '[]')]}">
+                <field name="stats" attrs="{'invisible': [('stats', '=', False)]}"/>
+                <label for="slow_recomputation_html" attrs="{'invisible': [('slow_recomputation', '=', '[]')]}"/>
+                <field name="slow_recomputation_html" attrs="{'invisible': [('slow_recomputation', '=', '[]')]}"/>
+              </page>
+              <page string="SQL">
+                <group>
+                  <group>
+                    <field name="db_time"/>
+                  </group>
+                  <group>
+                    <field name="db_count"/>
+                  </group>
+                </group>
+                <group attrs="{'invisible': [('db_stats', '=', '{}')]}">
+                  <field name="db_stats_html" nolabel="1"/>
+                  <label for="db_stats_html" string="* Only the statements SELECT / INSERT / UPDATE / DELETE appear in the previous table" colspan="4"/>
+                </group>
+                <field name="slow_queries_html" attrs="{'invisible': [('slow_queries', '=', '[]')]}"/>
+              </page>
+            </notebook>
+            <field name="db_stats" invisible="1"/>
+            <field name="slow_queries" invisible="1"/>
+            <field name="slow_recomputation" invisible="1"/>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_ir_logging_perf_log" model="ir.actions.act_window">
+      <field name="name">Logs</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">ir.logging.perf.log</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="limit">20</field>
+      <field name="context">{'active_test': False}</field>
+      <field name="help" type="html">
+        <p>
+          Create rules to get data.
+        </p>
+      </field>
+    </record>
+    <menuitem parent="menu_ir_logging_perf" id="menu_ir_logging_perf_log"
+      action="action_ir_logging_perf_log"/>
+
+  </data>
+</odoo>
