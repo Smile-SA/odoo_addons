@@ -1,5 +1,5 @@
-.. |badge1| image:: https://img.shields.io/badge/licence-GPL--3-blue.svg
-    :alt: License: GPL-3
+.. |badge1| image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
+    :alt: License: AGPL-3
 
 .. |badge2| image:: https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github
     :target: https://git.smile.fr/erp/odoo_addons/tree/11.0/smile_upgrade
