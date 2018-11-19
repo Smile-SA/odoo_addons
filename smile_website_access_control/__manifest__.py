@@ -30,7 +30,6 @@
 Add access controls on website menus and pages
 ==============================================
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr & julien.drecq@smile.fr
 """,
     "depends": ['website'],
     "data": [
