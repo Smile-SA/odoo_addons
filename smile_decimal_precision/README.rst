@@ -1,5 +1,5 @@
-.. image:: https://img.shields.io/badge/licence-GPL--3-blue.svg
-    :alt: License: GPL-3
+.. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
+    :alt: License: AGPL-3
 
 =========================
 Display Decimal Precision
