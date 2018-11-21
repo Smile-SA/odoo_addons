@@ -51,9 +51,9 @@ class AnalyticLine(models.Model):
             sign = copysign(1, self.budget_line_id.planned_amount)
             if self.budget_line_id.available_amount * sign < 0.0:
                 raise UserError(
-                    _("Available amount [%s%s] is exceeded "
-                      "for the budget line '%s'")
-                    % (abs(self.budget_line_id.available_amount),
+                    _("Planned amount is exceeded (available amount equals "
+                      "to %s%s) for the budget line %s")
+                    % (self.budget_line_id.available_amount * sign,
                        self.budget_line_id.company_id.currency_id.symbol,
                        self.budget_line_id.display_name))
 

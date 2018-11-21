@@ -45,8 +45,8 @@ msgstr "Disponible"
 #. module: smile_commitment_base
 #: code:addons/smile_commitment_base/models/analytic.py:52
 #, python-format
-msgid "Available amount [%s%s] is exceeded for the budget line '%s'"
-msgstr "Le montant disponible [%s%s] est dépassé pour la ligne de budget '%s'"
+msgid "Planned amount is exceeded (available amount equals to %s%s) for the budget line %s"
+msgstr "Le montant planifié est dépassé (montant disponible égal à %s%s) pour la ligne de budget %s"
 
 #. module: smile_commitment_base
 #: model:ir.ui.view,arch_db:smile_commitment_base.view_crossovered_budget_line_search
