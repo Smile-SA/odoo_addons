@@ -3,9 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.15b.dev: http://docutils.sourceforge.net/" />
-<title>BIC</title>
+<meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
+<title>Logging in database</title>
 <style type="text/css">
+
 /*
 :Author: David Goodger (goodger@python.org)
 :Id: $Id: html4css1.css 7952 2016-07-26 18:15:59Z milde $
@@ -355,70 +356,136 @@ h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
 
 ul.auto-toc {
   list-style-type: none }
+
 </style>
 </head>
 <body>
-<p><embed src="https://img.shields.io/badge/licence-AGPL--3-blue.svg%0A%20:alt:%20License:%20AGPL-3" /></p>
-<h1 id="logging-in-database">Logging in database</h1>
-<p>This module is used to create, save and view logs in the database, for an action or actions that can be added to our module</p>
+<div class="document" id="logging-in-database">
+<h1 class="title">Logging in database</h1>
+
+<p><a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external" href="https://git.smile.fr/erp/odoo_addons/tree/11.0/smile_log"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
+<p>This module adds a logs handler writing to database.</p>
+<p>Notice</p>
+<blockquote>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Following code will create a log in db with a unique pid per logger:</dt>
+<dd>import logging
+logger = SmileLogger(dbname, model_name, res_id, uid)
+logger.info(your_message)</dd>
+</dl>
+</li>
+</ul>
+</blockquote>
 <p>Features :</p>
-<ol style="list-style-type: decimal">
+<ol class="arabic simple">
 <li>Firstly :</li>
 </ol>
-<ul>
-<li>The Developer adds Smile Log to his model</li>
-<li>The Developer specifies the DB, model, res_id, uid, and the message to display</li>
+<ul class="simple">
+<li>The developer adds Smile Log to his model.</li>
+<li>The developer specifies the DB, model, res_id, uid, and the message to display.</li>
 </ul>
-<ol start="2" style="list-style-type: decimal">
+<ol class="arabic simple" start="2">
 <li>Secondly :</li>
 </ol>
-<ul>
-<li>The administrator does the action</li>
-<li>The administrator can see the logs saved in DB for the action</li>
+<ul class="simple">
+<li>The administrator does the action.</li>
+<li>The administrator can see the logs saved in DB for the action.</li>
+<li>The administrator can gives access right to users, to see logs, by checking <tt class="docutils literal">Smile Logs / User</tt>.</li>
+<li>The administrator must create a <tt class="docutils literal">Scheduled Action</tt> to call the function <tt class="docutils literal">archive_and_delete_old_logs</tt>, configure archiving path and the number of days to archive and delete logs.</li>
 </ul>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#usage" id="id1">Usage</a></li>
 <li><a class="reference internal" href="#bug-tracker" id="id2">Bug Tracker</a></li>
-<li><a class="reference internal" href="#GDPR" id="id3">GDPR / EU Privacy</a></li>
-<li><a class="reference internal" href="#credits" id="id4">Credits</a></li>
-<li><a class="reference internal" href="#maintainer" id="id5">Maintainer</a></li>
+<li><a class="reference internal" href="#gdpr-eu-privacy" id="id3">GDPR / EU Privacy</a></li>
+<li><a class="reference internal" href="#credits" id="id4">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="id5">Authors</a></li>
+<li><a class="reference internal" href="#maintainer" id="id6">Maintainer</a></li>
+</ul>
+</li>
 </ul>
 </div>
-<h2 id="usage">Usage</h2>
+<div class="section" id="usage">
+<h1><a class="toc-backref" href="#id1">Usage</a></h1>
 <p>To add Smile Log to an action :</p>
-<ol style="list-style-type: decimal">
+<ol class="arabic simple">
 <li>Import SmileDBLogger to inherited action (Ex. validate button of account.invoice) :</li>
 </ol>
-<p><img src="inherit_and_import_smile_log.png" /></p>
-<ol start="2" style="list-style-type: decimal">
+<div class="figure">
+<img alt="Import SmileDBLogger" src="inherit_and_import_smile_log.png" style="width: 850px;" />
+</div>
+<ol class="arabic simple" start="2">
 <li>Add the module to your depends in manifest :</li>
 </ol>
-<p><img src="manifest.png" /></p>
-<ol start="3" style="list-style-type: decimal">
+<div class="figure">
+<img alt="Depends manifest" src="manifest.png" style="width: 850px;" />
+</div>
+<ol class="arabic simple" start="3">
 <li>Go click to your button action (button validate in our case)</li>
 </ol>
-<p><img src="button_validation.png" /></p>
-<ol start="4" style="list-style-type: decimal">
-<li>Go to <code>Settings &gt; Technical &gt; Logging</code>&gt; Logs menu.</li>
+<div class="figure">
+<img alt="Button validate" src="button_validation.png" style="width: 850px;" />
+</div>
+<ol class="arabic simple" start="4">
+<li>Go to <tt class="docutils literal">Settings &gt; Technical &gt; Logging</tt>&gt; Logs menu.</li>
 </ol>
-<p><img src="logs.png" /></p>
-<p>But before all of this, make sure that "Smile Logs / users" box is already checked.</p>
-<p><img src="smile_logs_user.png" /></p>
-<h2 id="bug-tracker">Bug Tracker</h2>
-<p>Bugs are tracked on <a href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>. In case of trouble, please check there if your issue has already been reported. If you spotted it first, help us smashing it by providing a detailed and welcomed feedback <a href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_audit%0Aversion:%2011.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
+<div class="figure">
+<img alt="Logs" src="logs.png" style="width: 850px;" />
+</div>
+<p>Administrator can give access right to users, to see logs, by checking <tt class="docutils literal">Smile Logs / User</tt>.</p>
+<div class="figure">
+<img alt="Smile Logs" src="smile_logs_user.png" style="width: 850px;" />
+</div>
+<dl class="docutils">
+<dt>To create the scheduled action:</dt>
+<dd><ol class="first arabic simple">
+<li>Go to <tt class="docutils literal">Settings &gt; Technical &gt; Automation &gt; Scheduled Actions</tt> and fill fields as follow:</li>
+</ol>
+<div class="figure">
+<img alt="Schedules Action" src="scheduled_action.png" style="width: 850px;" />
+</div>
+<p><tt class="docutils literal">(Make sure that the given folder has a write access!)</tt></p>
+<ol class="arabic simple" start="2">
+<li>After running the action, the extracted logs file in csv format is as shown in next figure:</li>
+</ol>
+<div class="last figure">
+<img alt="Smile Logs" src="exported_log.png" style="width: 380px;" />
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="bug-tracker">
+<h1><a class="toc-backref" href="#id2">Bug Tracker</a></h1>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
+<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_log%0Aversion:%2011.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
 <p>Do not contact contributors directly about support or help with technical issues.</p>
-<h2 id="GDPR">GDPR / EU Privacy</h2>
+</div>
+<div class="section" id="gdpr-eu-privacy">
+<h1><a class="toc-backref" href="#id3">GDPR / EU Privacy</a></h1>
 <p>This addons does not collect any data and does not set any browser cookies.</p>
-<h2 id="credits">Credits</h2>
-<h3 id="authors">Authors</h3>
-<p>Smile SA</p>
-<h3 id="maintainer">Maintainer</h3>
+</div>
+<div class="section" id="credits">
+<h1><a class="toc-backref" href="#id4">Credits</a></h1>
+<div class="section" id="authors">
+<h2><a class="toc-backref" href="#id5">Authors</a></h2>
+<ul class="simple">
+<li>Corentin POUHET-BRUNERIE</li>
+<li>Xavier FERNANDEZ</li>
+</ul>
+</div>
+<div class="section" id="maintainer">
+<h2><a class="toc-backref" href="#id6">Maintainer</a></h2>
 <p>This module is maintained by the Smile SA.</p>
 <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
-<p><a href="http://smile.fr"><img src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" alt="Smile SA" /></a></p>
-<p>This module is part of the <a href="https://github.com/Smile-SA/odoo_addons">odoo-addons</a> project on GitHub.</p>
+<a class="reference external image-reference" href="http://smile.fr"><img alt="Smile SA" src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" /></a>
+<p>This module is part of the <a class="reference external" href="https://github.com/Smile-SA/odoo_addons">odoo-addons</a> project on GitHub.</p>
 <p>You are welcome to contribute.</p>
+</div>
+</div>
+</div>
 </body>
 </html>

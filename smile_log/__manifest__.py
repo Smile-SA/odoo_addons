@@ -9,19 +9,7 @@
     "website": 'http://www.smile.fr',
     "category": "Tools",
     "license": 'AGPL-3',
-    "description": """
-Logs handler writing to database
-
-Notice
-
-    * Following code will create a log in db with a unique pid per logger:
-        import logging
-        logger = SmileLogger(dbname, model_name, res_id, uid)
-        logger.info(your_message)
-
-Suggestions & Feedback to: xavier.fernandez@smile.fr,
-corentin.pouhet-brunerie@smile.fr
-""",
+    "description": """""",
     "depends": ['base'],
     "data": [
         "security/smile_log_security.xml",
