@@ -28,7 +28,7 @@
     'odoo_extra_npm_packages': branch.npm_packages and branch.npm_packages.split(' ') or [],
 }</field>
             <field name="vcs_id" ref="smile_scm.git"/>
-            <field name="url">git@git.smile.fr:erp/ansible-odoo-deploy.git</field>
+            <field name="url">git@git.smile.fr:erp/devops/ansible-odoo-deploy.git</field>
             <field name="branch"></field>
         </record>
         <record id="ansible_role_postgresql" model="ansible.role">
