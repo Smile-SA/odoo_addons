@@ -422,7 +422,7 @@ CREATE AGGREGATE public.last (
                 ('depreciation_date', '<', fields.Date.to_string(
                     first_day_of_next_month)),
             ] + args
-        if self._context.get('search_in_current_month'):
+        if self._context.get('search_in_three_months'):
             first_day_of_three_months_before = first_day_of_current_month - \
                 relativedelta(months=3)
             args = [
