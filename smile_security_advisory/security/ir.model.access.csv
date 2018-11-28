@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+scm_security_advisory_reader,Security Advisory,model_scm_security_advisory,smile_scm.group_scm_reader,1,0,0,0
+scm_security_advisory_manager,Security Advisory,model_scm_security_advisory,smile_scm.group_scm_manager,1,1,1,1
+scm_repository_branch_security_advisory_reader,Security Advisory status by branch,model_scm_repository_branch_security_advisory,smile_scm.group_scm_reader,1,0,0,0
+scm_repository_branch_security_advisory_user,Security Advisory status by branch,model_scm_repository_branch_security_advisory,smile_scm.group_scm_user,1,1,0,0
+scm_repository_branch_security_advisory_manager,Security Advisory status by branch,model_scm_repository_branch_security_advisory,smile_scm.group_scm_manager,1,1,1,1

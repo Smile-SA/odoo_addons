@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="view_security_advisory_search" model="ir.ui.view">
+      <field name="name">scm.security_advisory.search</field>
+      <field name="model">scm.security_advisory</field>
+      <field name="arch" type="xml">
+        <search>
+          <field name="name"/>
+          <field name="severity_level"/>
+          <field name="version_ids" widget="many2many_tags"/>
+        </search>
+      </field>
+    </record>
+    <record id="view_security_advisory_tree" model="ir.ui.view">
+      <field name="name">scm.security_advisory.list</field>
+      <field name="model">scm.security_advisory</field>
+      <field name="arch" type="xml">
+        <tree colors="red:severity_level in ('critical', 'high');orange:severity_level in ('medium', 'low')">
+          <field name="name"/>
+          <field name="severity_level"/>
+          <field name="version_ids"/>
+        </tree>
+      </field>
+    </record>
+    <record id="view_security_advisory_form" model="ir.ui.view">
+      <field name="name">scm.security_advisory.form</field>
+      <field name="model">scm.security_advisory</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <div class="oe_button_box" name="button_box">
+              <button class="oe_stat_button" name="%(action_repository_branch_security_advisory2)d"
+                type="action" icon="fa-sitemap"
+                attrs="{'invisible': [('branches_count', '=', 0)]}">
+                <field string="Affected branches" name="branches_count" widget="statinfo"/>
+              </button>
+            </div>
+            <div class="oe_title">
+              <h1>
+                <field name="name" placeholder="Name"/>
+              </h1>
+              <field name="version_ids" widget="many2many_tags" placeholder="Affected versions..."/>
+            </div>
+            <notebook>
+              <page string="Details">
+                <group>
+                  <field name="severity_level"/>
+                </group>
+                <field name="description" placeholder="Description..."/>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_security_advisory">
+      <field name="name">Security Advisories</field>
+      <field name="res_model">scm.security_advisory</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_security_advisory" parent="smile_scm.menu_scm_config_params"
+      action="action_security_advisory" sequence="17"/>
+
+  </data>
+</odoo>

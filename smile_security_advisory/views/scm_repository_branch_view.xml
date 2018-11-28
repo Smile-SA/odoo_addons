@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record model="ir.actions.act_window" id="action_repository_branch_security_advisory">
+      <field name="name">Security Advisories</field>
+      <field name="res_model">scm.repository.branch.security_advisory</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('branch_id', '=', active_id)]</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_repository_branch_security_advisory2">
+      <field name="name">Branches</field>
+      <field name="res_model">scm.repository.branch.security_advisory</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('security_advisory_id', '=', active_id)]</field>
+    </record>
+
+    <record id="view_repository_branch_form" model="ir.ui.view">
+      <field name="name">scm.repository.branch.form</field>
+      <field name="model">scm.repository.branch</field>
+      <field name="inherit_id" ref="smile_scm.view_repository_branch_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//div[hasclass('oe_title')]" position="before">
+          <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
+              attrs="{'invisible': [('security_advisories_to_apply_count', '=', 0)]}">
+            <p>Please find above several important security advisories to apply to your version of Odoo server.</p>
+          </div>
+          <field name="security_advisories_to_apply_count" invisible="1"/>
+          <field name="security_advisories_count" invisible="1"/>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+          <button class="oe_stat_button" name="%(action_repository_branch_security_advisory)d"
+            type="action" icon="fa-life-ring"
+            attrs="{'invisible': [('security_advisories_count', '=', 0)]}">
+            <field string="Security Advisories to apply" name="security_advisories_to_apply_ratio" widget="statinfo"/>
+          </button>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="view_repository_branch_security_advisory_tree" model="ir.ui.view">
+      <field name="name">scm.repository.branch.security_advisory.list</field>
+      <field name="model">scm.repository.branch.security_advisory</field>
+      <field name="arch" type="xml">
+        <tree colors="blue:applied;red:not applied">
+          <field name="branch_id"/>
+          <field name="security_advisory_id"/>
+          <field name="applied" widget="toggle_button"/>
+        </tree>
+      </field>
+    </record>
+    <record id="view_repository_branch_security_advisory_form" model="ir.ui.view">
+      <field name="name">scm.repository.branch.security_advisory.form</field>
+      <field name="model">scm.repository.branch.security_advisory</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+						<div class="oe_button_box" name="button_box">
+              <button class="oe_stat_button" name="toggle_apply" type="object" icon="fa-toggle-on">
+                <field name="applied" widget="boolean_button" options='{"terminology": {"string_true": "Applied", "string_false": "To apply"}}'/>
+              </button>
+            </div>
+            <group>
+              <field name="branch_id"/>
+              <field name="security_advisory_id"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+  </data>
+</odoo>
