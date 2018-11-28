@@ -7,3 +7,7 @@
 *.pyc
 *.pyo
 *~
+
+# Docker files
+Dockerfile
+datadir
