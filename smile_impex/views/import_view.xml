@@ -21,8 +21,8 @@
 						<notebook colspan="4">
 							<page string="Imports">
 								<br/>
-								<button type="object" name="create_import" string="New Import" colspan="4" context="{'new_thread':True}" class="oe_highlight"/>
-								<button type="object" name="create_import" string="Test Import" colspan="4" context="{'test_mode':True}" class="oe_link"/>
+								<button type="object" name="create_import" string="New Import" colspan="4" context="{'new_thread':True, 'force_use_new_cursor': True}" class="oe_highlight"/>
+								<button type="object" name="create_import" string="Test Import" colspan="4" context="{'test_mode':True, 'force_use_new_cursor': True}" class="oe_link"/>
 								<field name="import_ids" nolabel="1" colspan="4" readonly="1" context="{'import_template_form_view': True}" />
 							</page>
 							<page string="Triggers">
