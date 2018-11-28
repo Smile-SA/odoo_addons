@@ -25,7 +25,7 @@ To configure this module, you need to:
 
 #. Go to new menu **Settings > Technical > Security > Record Rules** and specify error message.
     .. figure:: static/description/menu_ir_rule.png
-        :alt: Models menu
+        :alt: Record Rule menu
         :width: 850px
 
 Usage
@@ -33,12 +33,12 @@ Usage
 
 #. Before configuration of error message, Odoo display this message:
     .. figure:: static/description/native_error_message.png
-       :alt: Models menu
+       :alt: Native error message
        :width: 850px
 
 #. After configuration of error message, Odoo display this message:
     .. figure:: static/description/improved_error_message.png
-       :alt: Models menu
+       :alt: Improved error message
        :width: 850px
 
 Bug Tracker
