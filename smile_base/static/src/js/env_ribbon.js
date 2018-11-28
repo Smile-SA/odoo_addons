@@ -13,7 +13,7 @@ odoo.define('add_environment_ribbon', function (require) {
                 model: 'ir.env_ribbon',
                 method: 'get_values',
             }).then(function(env_ribbon) {
-                self.$el.html(env_ribbon[0].toUpperCase());
+                self.$el.html(env_ribbon[0]);
                 self.$el.css({'background-color': env_ribbon[1]});
             });
             return self._super();
