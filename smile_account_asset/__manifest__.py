@@ -8,6 +8,7 @@
     "license": 'AGPL-3',
     "depends": [
         "account",
+        "smile_api_depends_filter",
     ],
     "author": "Smile",
     "description": """Financial and accounting asset management

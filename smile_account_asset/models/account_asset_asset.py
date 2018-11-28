@@ -306,17 +306,15 @@ class AccountAssetAsset(models.Model):
         self.sale_tax_amount = res['total_included'] - res['total_excluded']
 
     @api.one
-    @api.depends('category_id')
+    @api.depends(('category_id', [('state', 'in', ('draft', 'confirm'))]))
     def _get_asset_account(self):
-        if self.state in ('draft', 'confirm'):
-            self.asset_account_id = self.category_id.asset_account_id
+        self.asset_account_id = self.category_id.asset_account_id
 
     @api.one
-    @api.depends('category_id')
+    @api.depends(('category_id', [('state', 'in', ('close', 'cancel'))]))
     def _get_sale_receivable_account(self):
-        if self.state not in ('close', 'cancel'):
-            self.sale_receivable_account_id = \
-                self.category_id.sale_receivable_account_id
+        self.sale_receivable_account_id = \
+            self.category_id.sale_receivable_account_id
 
     @api.one
     @api.depends('purchase_value', 'salvage_value',
