@@ -14,6 +14,7 @@ class VersionControlSystem(models.Model):
     cmd_clone = fields.Char('Clone', required=True)
     cmd_pull = fields.Char('Pull', required=True)
     cmd_list = fields.Char('List branches', required=False)
+    cmd_switch_url = fields.Char('Switch URL')
     default_branch = fields.Char('Default branch')
 
     _sql_constraints = [
@@ -45,3 +46,10 @@ class VersionControlSystem(models.Model):
         if '' in result:
             result.remove('')
         return result
+
+    @api.multi
+    def switch_url(self, directory, url):
+        self.ensure_one()
+        cmd = self.cmd_switch_url % {'url': url}
+        call(cmd, directory)
+        return True

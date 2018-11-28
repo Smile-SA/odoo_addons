@@ -12,6 +12,7 @@
             		<field name="cmd_clone"/>
             		<field name="cmd_pull"/>
             		<field name="cmd_list"/>
+                    <field name="cmd_switch_url"/>
             		<field name="default_branch"/>
             	</tree>
             </field>

@@ -45,6 +45,11 @@
             <field name="model">scm.repository</field>
             <field name="arch" type="xml">
             	<form string="Repository">
+					<header>
+						<button string="Switch URL" name="open_switch_url_popup" type="object"
+						  attrs="{'invisible': ['|', ('has_branch_done', '=', False), ('can_switch_url', '=', False)]}"/>
+						<field name="can_switch_url" invisible="1"/>
+					</header>
 	                <sheet string="Repository">
 						<div class="oe_button_box" name="button_box">
 							<button class="oe_stat_button" name="%(action_repository_branches)d" type="action" icon="fa-sitemap">
@@ -82,6 +87,24 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_repository_tree"/>
             <field name="search_view_id" ref="view_repository_search"/>
+        </record>
+
+		<record id="view_repository_swith_url_popup" model="ir.ui.view">
+			<field name="name">scm.repository.form</field>
+			<field name="model">scm.repository</field>
+			<field name="arch" type="xml">
+				<form string="Switch URL">
+					<sheet>
+						<group>
+							<field name="new_url" required="1"/>
+						</group>
+					</sheet>
+					<footer>
+						<button string="Validate" class="oe_highlight" name="close_popup" type="object"/>
+						<button string="Discard" special="cancel"/>
+					</footer>
+				</form>
+			</field>
         </record>
 
 	</data>

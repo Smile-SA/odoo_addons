@@ -10,7 +10,7 @@
       <field name="numbercall">-1</field>
       <field eval="False" name="doall"/>
       <field eval="'scm.repository'" name="model"/>
-      <field eval="'check_branches'" name="function"/>
+      <field eval="'auto_check_branches'" name="function"/>
       <field eval="'()'" name="args"/>
     </record>
 
