@@ -40,7 +40,7 @@ class Branch(models.Model):
         for inventory_type in self.ansible_inventory_type_ids:
             inventories = self.ansible_inventory_ids.filtered(
                 lambda inventory:
-                inventory.inventory_type_id == inventory_type)
+                    inventory.inventory_type_id == inventory_type)
             existing_roles = inventories.mapped('role_id')
             roles_to_add = []
             package = self.version_id.package_ids.filtered(

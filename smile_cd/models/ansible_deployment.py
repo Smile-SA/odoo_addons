@@ -204,8 +204,9 @@ class AnsibleDeployment(models.Model):
             else:
                 raise UserError(_('Deployment already in progress'))
         revno = '#%s' % self.build_id.id if self.build_id else self.revno
-        _logger.info('Deploying %s %s...' %
-                     (self.branch_id.display_name, revno))
+        _logger.info('Deploying %s %s on %s...' %
+                     (self.branch_id.display_name, revno,
+                      self.inventory_type_id.name))
         self._make_directory()
         playbook = self._generate_ansible_playbook()
         inventory = self._generate_ansible_inventory()
@@ -350,7 +351,7 @@ class AnsibleDeployment(models.Model):
         template = self.env.ref('smile_cd.mail_template_deployment_result')
         self.with_context(
             deployment_url=deployment_url).message_post_with_template(
-            template.id)
+                template.id)
 
     @api.model
     def auto_run(self):

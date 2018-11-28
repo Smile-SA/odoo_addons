@@ -49,7 +49,7 @@
       <field name="name">ansible.deployment.tree</field>
       <field name="model">ansible.deployment</field>
       <field name="arch" type="xml">
-        <tree string="Deployments" colors="blue: state=='draft'; red: result=='failure'; grey: result=='killed'" create="false">
+        <tree string="Deployments" colors="blue: result=='success'; red: result=='failure'; grey: result=='killed'" create="false">
           <field name="branch_id"/>
           <field name="build_id"/>
           <field name="revno"/>
@@ -58,6 +58,7 @@
           <field name="state" invisible="1"/>
           <field name="result"/>
           <field name="date_planned"/>
+          <field name="date_start"/>
           <field name="time_human"/>
           <field name="age_human"/>
         </tree>
@@ -73,6 +74,7 @@
           <field name="build_id"/>
           <field name="revno"/>
           <field name="inventory_type_id"/>
+          <filter name="my" string="My" domain="[('branch_id.user_ids', 'in', uid)]"/>
         </search>
       </field>
     </record>
@@ -82,7 +84,7 @@
       <field name="model">ansible.deployment</field>
       <field name="priority">10</field>
       <field name="arch" type="xml">
-        <form string="Deployment">
+        <form string="Deployment" create="false">
           <header>
             <button class="btn-primary" name="run" type="object" string="Run immediately" states="draft"/>
             <button class="btn-info" name="refresh_logs" type="object" string="Refresh logs" states="in_progress"/>
@@ -156,6 +158,29 @@
       </field>
     </record>
 
+    <record id="view_ansible_deployment_graph" model="ir.ui.view">
+      <field name="name">ansible.deployment.graph</field>
+      <field name="model">ansible.deployment</field>
+      <field name="arch" type="xml">
+        <graph string="Deployments" type="line">
+          <field name="branch_id" type="row" />
+          <field name="result" type="row" />
+        </graph>
+      </field>
+    </record>
+
+    <record  id="view_ansible_deployment_pivot" model="ir.ui.view">
+        <field name="name">ansible.deployment.pivot</field>
+        <field name="model">ansible.deployment</field>
+        <field name="arch" type="xml">
+          <pivot string="Deployments">
+            <field name="branch_id" type="row" />
+            <field name="inventory_type_id" type="col"/>
+            <field name="result" type="col"/>
+          </pivot>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_branch_deployments">
       <field name="name">Deployments</field>
       <field name="res_model">ansible.deployment</field>
@@ -164,6 +189,15 @@
       <field name="view_id" ref="view_ansible_deployment_kanban"/>
       <field name="search_view_id" ref="view_ansible_deployment_search"/>
       <field name="domain">[('branch_id', '=', active_id)]</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_branch_deployments2">
+      <field name="name">Deployments</field>
+      <field name="res_model">ansible.deployment</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,kanban,form,pivot,graph</field>
+      <field name="view_id" ref="view_ansible_deployment_tree"/>
+      <field name="search_view_id" ref="view_ansible_deployment_search"/>
     </record>
 
   </data>

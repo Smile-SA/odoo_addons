@@ -51,10 +51,11 @@
               <field name="use_branch_tmpl_to_deploy"/>
             </group>
             <group col="4" attrs="{'invisible': [('branch_tmpl_id', '!=', False), ('use_branch_tmpl_to_deploy', '=', True)]}">
-              <field name="ansible_inventory_type_ids" class="oe_inline"
-                widget="many2many_tags" options="{'no_create': True}"/>
-              <button class="oe_edit_only" name="update_ansible_inventories"
-                string="Update inventories" type="object"/>
+              <div class="alert alert-info" role="alert" style="margin-bottom:0px;" colspan="4">
+                  <p>Ansible roles documentation: <a href="https://git.smile.fr/erp/devops/ansible-odoo-deploy" target="_blank">Ansible Odoo Deploy</a> and <a href="https://git.smile.fr/erp/devops/ansible-odoo" target="_blank">Ansible Odoo</a></p>
+              </div>
+              <field name="ansible_inventory_type_ids" class="oe_inline" widget="many2many_tags" options="{'no_create': True}"/>
+              <button class="oe_edit_only" name="update_ansible_inventories" string="Update inventories" type="object"/>
               <field name="ansible_inventory_ids" nolabel="1" colspan="4">
                 <tree editable="top">
                   <field name="inventory_type_id" readonly="True"/>

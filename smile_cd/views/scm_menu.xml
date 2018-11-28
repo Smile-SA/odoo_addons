@@ -2,6 +2,8 @@
 <odoo>
   <data noupdate="0">
 
+    <menuitem id="menu_ansible_deployment" parent="smile_scm.menu_main_scm" action="action_branch_deployments2" sequence="15" groups="smile_cd.group_cd_reader"/>
+
     <!-- Sub-menus of Configuration/Parameters -->
     <menuitem id="menu_ansible_inventory_type" parent="smile_scm.menu_scm_config_params" action="action_ansible_inventory_type" sequence="-2" groups="smile_cd.group_cd_manager"/>
     <menuitem id="menu_ansible_role" parent="smile_scm.menu_scm_config_params" action="action_ansible_role" sequence="-1" groups="smile_cd.group_cd_manager"/>
