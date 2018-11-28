@@ -19,4 +19,4 @@
 #
 ##############################################################################
 
-from decorator import audit_decorator
+from .decorator import audit_decorator

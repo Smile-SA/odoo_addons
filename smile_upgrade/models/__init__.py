@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import config
-import registry
+from . import config
+from . import registry

@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-from decimal_precision import DecimalPrecision
-import fields
+from .decimal_precision import DecimalPrecision
+from . import fields

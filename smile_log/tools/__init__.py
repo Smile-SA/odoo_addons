@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-from db_handler import *
-from db_logger import *
+from .db_handler import *
+from .db_logger import *

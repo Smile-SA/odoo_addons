@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import ir_attachment
-import models
+from . import ir_attachment
+from . import models

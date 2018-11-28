@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import models
-import tools
+from . import models
+from . import tools

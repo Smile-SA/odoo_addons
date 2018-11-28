@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import report_sxw
-import ir_qweb
+from . import report_sxw
+from . import ir_qweb

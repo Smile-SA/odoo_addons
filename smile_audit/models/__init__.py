@@ -19,6 +19,6 @@
 #
 ##############################################################################
 
-import audit_log
-import audit_rule
-import models
+from . import audit_log
+from . import audit_rule
+from . import models
