@@ -13,6 +13,7 @@
                 <field name="name" position="after">
                     <field name="server_cmd"/>
                     <field name="web_included"/>
+                    <field name="user_uid"/>
                 </field>
             </field>
         </record>
@@ -33,6 +34,7 @@
                             <field name="server_cmd"/>
                             <field name="standard_xmlrpc"/>
                             <field name="web_included"/>
+                            <field name="user_uid"/>
                         </group>
                         <field name="package_ids">
                             <tree editable="top">

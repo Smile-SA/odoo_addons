@@ -23,6 +23,7 @@ ENV LANG en_US.UTF-8
 RUN apt-get install -y %(system_packages)s
 
 # Install PyPI requirements
+RUN pip install -q --upgrade setuptools
 RUN pip install -q %(pip_packages)s
 
 # Install Node.js requirements

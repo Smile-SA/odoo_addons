@@ -75,7 +75,7 @@
       <field name="name">scm.repository.branch.build.form</field>
       <field name="model">scm.repository.branch.build</field>
       <field name="arch" type="xml">
-        <form string="Build">
+        <form string="Build" create="false" edit="false">
           <header>
             <field name="is_killable" invisible="1"/>
             <field name="is_last" invisible="1"/>

@@ -19,6 +19,7 @@ RUN dnf install -y %(system_packages)s
 RUN pip install -q %(pip_packages)s
 
 # Install Node.js requirements
+RUN npm config set registry http://registry.npmjs.org/
 RUN npm install -g %(npm_packages)s
 
 # Create Odoo user and sources directory

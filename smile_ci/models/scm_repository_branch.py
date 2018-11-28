@@ -90,10 +90,6 @@ class Branch(models.Model):
         ], limit=1, order='id desc')
         self.last_build_result = last_build and last_build.result or 'unknown'
 
-    @api.model
-    def _get_default_os(self):
-        return self.env['scm.os'].sudo().search([], limit=1)
-
     @api.multi
     def _create_postgres_link(self, image):
         self.ensure_one()
@@ -142,7 +138,7 @@ class Branch(models.Model):
         image = ''.join(
             char if char.isalnum() else '_'
             for char in (self.display_name or '').lower()).replace(
-            '__', '_').rstrip('_')
+                '__', '_').rstrip('_')
         self.docker_image = '%s:base' % image
 
     @api.one
@@ -178,7 +174,7 @@ class Branch(models.Model):
         'scm.repository.branch', 'Template', auto_join=True,
         domain=[('branch_tmpl_id', '=', False)])
     os_id = fields.Many2one(
-        'scm.os', 'Operating System', default=_get_default_os)
+        'scm.os', 'Operating System')
     postgres_id = fields.Many2one(
         'docker.image', 'Database Management System',
         domain=[('is_postgres', '=', True)],
@@ -210,7 +206,7 @@ class Branch(models.Model):
         help="Exclusively run tests of modules defined inside these paths.\n"
              "If empty, all modules installed will be tested.")
     workers = fields.Integer('Workers', default=0, required=True)
-    user_uid = fields.Integer('Admin id', default=1, required=True)
+    user_uid = fields.Integer(related='version_id.user_uid', readonly=True)
     user_passwd = fields.Char('Admin password', default='admin', required=True)
     lang = fields.Selection('_get_lang', 'Language',
                             default='en_US', required=True)
@@ -223,7 +219,7 @@ class Branch(models.Model):
     npm_packages = fields.Text('Node.js packages')
     additional_server_options = fields.Char(
         'Additional server options',
-        default="--load=web,smile_test,smile_upgrade")
+        default="--load=base,web,smile_test,smile_upgrade")
     additional_options = fields.Text('Additional configuration options')
 
     # Branches merge options
@@ -294,6 +290,13 @@ class Branch(models.Model):
     def _search_users(self, operator, operand):
         return self._search_followers(operator, operand, 'partner_id.user_ids')
 
+    @api.model
+    def create(self, vals):
+        if vals.get('version_id') and not vals.get('os_id'):
+            vals['os_id'] = self.env['scm.version'].browse(
+                vals['version_id']).default_os_id.id
+        return super(Branch, self).create(vals)
+
     @api.multi
     def copy_data(self, default=None):
         default = default or {}
@@ -317,14 +320,13 @@ class Branch(models.Model):
     def _onchange_branch_dependency_ids(self):
         self.has_branch_dependencies = bool(self.branch_dependency_ids)
 
-    @api.onchange('version_id', 'os_id')
+    @api.onchange('version_id')
     def _onchange_version(self):
         os_ids = self.env['scm.version.package'].search([
             ('version_id', '=', self.version_id.id),
         ]).mapped('os_id.id')
         if self.os_id.id not in os_ids:
-            self.os_id = False
-        return {'domain': {'os_id': [('id', 'in', os_ids)]}}
+            self.os_id = self.version_id.default_os_id
 
     @api.one
     @api.constrains('use_in_ci', 'os_id', 'branch_tmpl_id')
@@ -480,7 +482,7 @@ class Branch(models.Model):
             return False
         date = datetime.strptime(
             last_creation_date, DATETIME_FORMAT) + relativedelta(
-            **{age_type: -age_number})
+                **{age_type: -age_number})
         return date.strftime(DATETIME_FORMAT)
 
     @api.one
@@ -635,7 +637,18 @@ class Branch(models.Model):
                 [('branch_id', 'in', self.ids), ('state', '=', 'testing')]):
             raise UserError(
                 _('You cannot delete a branch with a testing build'))
+        self._remove_images_in_registry()
         return super(Branch, self.sudo()).unlink()
+
+    @api.one
+    def _remove_images_in_registry(self):
+        """ Remove all tags of image in registry.
+        """
+        image = self.docker_image.split(':')[0]
+        registry = self.docker_registry_id
+        tags = registry.get_image_tags(image)
+        for tag in tags:
+            registry.delete_image(image, tag)
 
     @api.model
     def _get_images_to_store_domain(self):
@@ -709,7 +722,8 @@ class Branch(models.Model):
     @api.multi
     def get_docker_compose_content(self, tag='latest', port=8069):
         ports = ['%s:8069' % port, '%s:8072' % (int(port) + 3)]
-        services = self.get_service_infos(tag=tag, ports=ports)
+        services = self.get_service_infos(
+            tag=tag, ports=ports, suffix=format_image(self.docker_image))
         return yaml.dump(yaml.load(json.dumps(
             {'version': '2.1', 'services': services})))
 

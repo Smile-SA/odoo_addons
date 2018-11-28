@@ -158,9 +158,8 @@ class Build(models.Model):
     def _get_is_last(self):
         if self.result in ('stable', 'unstable'):
             for build in self.branch_id.build_ids:
-                if build.result == self.result:
-                    self.is_last = self == build
-                    break
+                self.is_last = self == build
+                break
 
     @api.one
     def _get_last_server_logs(self):
@@ -453,13 +452,12 @@ class Build(models.Model):
             new_thread.start()
 
     @api.one
-    @with_new_cursor(False)
     def _set_to_failed(self, e):
         if self.result == 'killed':
             return
         msg = get_exception_message(e)
         _logger.error(msg)
-        self.write({
+        self.write_with_new_cursor({
             'state': 'done',
             'result': 'failed',
             'port': '',
@@ -467,9 +465,6 @@ class Build(models.Model):
             'error': '...%s' % msg[-77:],
         })
         self.with_context(build_error=msg)._send_build_result('Failed')
-        if not isinstance(e, UserError):
-            self.post_alert("Something wrong has happened with Docker API "
-                            "during build creation:\n{}".format(msg))
 
     @api.one
     @with_new_cursor(False)
@@ -481,7 +476,8 @@ class Build(models.Model):
         self._set_build_result()
         if self.result in ('unstable', 'stable') and \
                 self.docker_registry_id.active:
-            self.store_in_registry(['latest', self.result])
+            self.delete_from_registry()
+            self.store_in_registry()
             self.branch_id.generate_docker_compose_attachment(
                 force_recreate=True, ignore_exceptions=True)
 
@@ -562,9 +558,16 @@ class Build(models.Model):
                           (self.docker_container, logs))
             raise
 
+    @property
+    def starting_timeout(self):
+        return int(self.env['ir.config_parameter'].get_param(
+            'ci.odoo_starting_timeout', '60'))
+
     @api.one
     def _check_if_running(self):
-        _logger.info('Check if container is running...')
+        _logger.info('Check if container %s is running...'
+                     % self.docker_container)
+        timeout = self.starting_timeout
         t0 = time.time()
         sock_db = self._connect('db')
         while True:
@@ -572,7 +575,7 @@ class Build(models.Model):
                 sock_db.server_version()
                 break
             except Exception:
-                if time.time() - t0 >= 60:
+                if time.time() - t0 >= timeout:
                     _logger.error(
                         'Container %s exposed on port %s is not answering...'
                         % (self.docker_container, self.port))
@@ -824,8 +827,8 @@ class Build(models.Model):
                 lambda log: log.type == 'test' and log.result == 'error')),
             'test_count': len(self.log_ids.filtered(
                 lambda log: log.type == 'test' and log.result != 'ignored')),
-            'coverage_avg': lines_count and
-            covered_lines_count / lines_count or 0.0,
+            'coverage_avg':
+                lines_count and covered_lines_count / lines_count or 0.0,
             'result': self.log_ids.filtered(
                 lambda log: log.result == 'error') and 'unstable' or 'stable',
         })
@@ -1038,7 +1041,10 @@ class Build(models.Model):
             'port': port,
         })
         super(Build, self).start_container_from_registry(
-            self.result, ['%s:8069' % port])
+            # tag=self.result,
+            # The previous line has been commented since we gave up
+            # tagging the images to store in registry
+            ports=['%s:8069' % port])
         return self.write_with_new_cursor({'state': 'running'})
 
     # Logs

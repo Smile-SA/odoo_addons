@@ -9,10 +9,11 @@ MAINTAINER Smile <erp@smile.fr>
 # * download and install wkhtmltopdf
 # * configure locale
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends python-pip npm cloc python-coverage python-flake8 python-unittest2 \
+    && apt-get install -y --no-install-recommends python-pip cloc python-coverage python-flake8 python-unittest2 \
     wget fontconfig libfontconfig1 libfreetype6 libpng12-0 libjpeg62-turbo libx11-6 libxext6 libxrender1 xfonts-base xfonts-75dpi \
     && apt-get install -fy \
-    && ln -s /usr/bin/nodejs /usr/bin/node \
+    && cd /tmp && wget -qO- https://deb.nodesource.com/setup_8.x | bash - \
+    && apt-get install -y nodejs \
     && cd /tmp && wget http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessie-amd64.deb \
     && dpkg --force-depends -i wkhtmltox*.deb \
     && apt-get -y install locales \
@@ -26,6 +27,7 @@ ENV LANG en_US.UTF-8
 RUN apt-get install -y %(system_packages)s
 
 # Install PyPI requirements
+RUN pip install -q --upgrade setuptools
 RUN pip install -q %(pip_packages)s
 
 # Install Node.js requirements
@@ -42,4 +44,4 @@ RUN apt-get install -y %(specific_system_packages)s
 RUN pip install -q %(specific_pip_packages)s
 
 # Install specific Node.js requirements
-RUN npm install -g %(specific_npm_packages)s
+# RUN npm install -g %(specific_npm_packages)s

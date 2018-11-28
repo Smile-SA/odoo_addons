@@ -122,7 +122,6 @@
               </group>
               <group>
                 <field name="install_demo_data"/>
-                <field name="user_uid"/>
                 <field name="user_passwd"/>
                 <field name="lang"/>
                 <field name="country_id" widget="selection"/>
@@ -135,7 +134,7 @@
           <page string="Advanced" attrs="{'invisible': [('branch_tmpl_id', '!=', False)]}">
             <group>
               <group>
-                <field name="os_id" attrs="{'required': [('use_in_ci', '=', True)]}" options="{'no_create': True}"/>
+                <field name="os_id" attrs="{'required': [('use_in_ci', '=', True)]}" domain="[('package_ids.version_id', '=', version_id)]" options="{'no_create': True}"/>
                 <field name="postgres_id" attrs="{'required': [('use_in_ci', '=', True)]}" options="{'no_create': True}"/>
                 <field name="other_link_ids">
                   <tree editable="top">
@@ -155,8 +154,8 @@
                 <field name="subfolder" attrs="{'required': [('has_branch_dependencies', '=', True)]}"/>
                 <field name="branch_dependency_ids" nolabel="1" colspan="2" context="{'parent_id': active_id}">
                   <tree editable="top">
-                    <field name="merge_with_branch_id" options="{'no_create': True}" domain="[('id', '!=', context.get('parent_id'))]"/>
-                    <field name="merge_subfolder" placeholder="e.g. branch-addons"/>
+                    <field name="merge_with_branch_id" options="{'no_create': True}" domain="[('id', '!=', context.get('parent_id'))]" required="1"/>
+                    <field name="merge_subfolder" placeholder="e.g. branch-addons" required="1"/>
                   </tree>
                 </field>
                 <field name="has_branch_dependencies" invisible="1"/>

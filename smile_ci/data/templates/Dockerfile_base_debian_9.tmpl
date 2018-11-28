@@ -9,12 +9,18 @@ MAINTAINER Smile <erp@smile.fr>
 # * download and install wkhtmltopdf
 # * configure locale
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends python-pip npm cloc python-coverage python-flake8 python-unittest2 \
-    wget fontconfig libfontconfig1 libfreetype6 libpng12-0 libjpeg62-turbo libx11-6 libxext6 libxrender1 xfonts-base xfonts-75dpi \
+    && apt-get install -y --no-install-recommends python-pip cloc python-coverage python-flake8 python-unittest2 \
+    wget curl sudo software-properties-common gnupg fontconfig libfontconfig1 libfreetype6 libjpeg62-turbo \
+    libx11-6 libxext6 libxrender1 xfonts-base xfonts-75dpi libssl1.0-dev xz-utils \
     && apt-get install -fy \
-    && ln -s /usr/bin/nodejs /usr/bin/node \
-    && cd /tmp && wget http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessie-amd64.deb \
-    && dpkg --force-depends -i wkhtmltox*.deb \
+    && curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - \
+    && apt-get install -y nodejs \
+    && curl -o wkhtmltox.tar.xz -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
+    && echo '3f923f425d345940089e44c1466f6408b9619562 wkhtmltox.tar.xz' | sha1sum -c - \
+    && tar xvf wkhtmltox.tar.xz \
+    && cp wkhtmltox/lib/* /usr/local/lib/ \
+    && cp wkhtmltox/bin/* /usr/local/bin/ \
+    && cp -r wkhtmltox/share/man/man1 /usr/local/share/man/ \
     && apt-get -y install locales \
     && sed -i '/en_US.UTF-8 UTF-8/s/^#//g' /etc/locale.gen \
     && locale-gen en_US.UTF-8
