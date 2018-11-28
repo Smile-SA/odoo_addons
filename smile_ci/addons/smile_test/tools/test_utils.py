@@ -7,6 +7,7 @@ import inspect
 import logging
 import os
 from six import string_types
+import tempfile
 import time
 import traceback
 import unittest2
@@ -20,7 +21,7 @@ except ImportError:
     from xmlrpc.client import Fault
 
 try:
-    # For Odoo 10.0
+    # For Odoo 10.0-higher
     from odoo import release, sql_db, tools
     from odoo.modules.module import get_module_path, \
         load_information_from_description_file
@@ -84,10 +85,16 @@ def _get_exception_message(e):
     return tools.ustr(e)
 
 
-def create_logfile():
+def _get_logfile():
     filename = tools.config.get('test_logfile')
     if not filename:
-        return
+        tempdir = tempfile.gettempdir()
+        filename = os.path.join(tempdir, 'odoo_test_logs.csv')
+    return filename
+
+
+def create_logfile():
+    filename = _get_logfile()
     if os.path.exists(filename):
         os.remove(filename)
     with open(filename, 'w') as f:
@@ -96,18 +103,14 @@ def create_logfile():
 
 
 def _write_log(vals):
-    filename = tools.config.get('test_logfile')
-    if not filename:
-        return
+    filename = _get_logfile()
     with open(filename, 'a') as f:
         writer = csv.writer(f)
         writer.writerow([tools.ustr(vals.get(key, '')) for key in KEYS])
 
 
 def read_logs():
-    filename = tools.config.get('test_logfile')
-    if not filename or not os.path.exists(filename):
-        return "Please indicate a test_logfile in odoo config file"
+    filename = _get_logfile()
     data, errors = [], []
     tests_count = failed_tests_count = duration = 0
     with open(filename) as f:
@@ -129,6 +132,7 @@ def read_logs():
     data.append("Ran %s tests in %ss" % (tests_count, round(duration, 3)))
     if failed_tests_count:
         data.append("\nFAILED (failures=%s)" % failed_tests_count)
+    data.append("\nLogfile: %s" % filename)
     return '\n'.join(data)
 
 
@@ -245,9 +249,11 @@ def run_other_tests(dbname, modules):
                     'module': module,
                     'file': filename,
                 }
-                if filename in ignored_files\
-                        or not _file_in_requested_directories(
-                            get_module_path(module)):
+                if filename in ignored_files or \
+                        not _file_in_requested_directories(
+                            get_module_path(module)) or \
+                        LooseVersion(
+                            release.major_version) >= LooseVersion('12.0'):
                     vals['result'] = 'ignored'
                     _write_log(vals)
                     continue
@@ -357,6 +363,9 @@ def get_unit_test_docstrings(modules):
 
 
 def get_yaml_test_comments(modules):
+    if LooseVersion(release.major_version) >= LooseVersion('12.0'):
+        # YAML tests are not yet supported since version 12.0
+        return {}
     ignore = eval(tools.config.get('ignored_tests') or '{}')
     test_comments_by_module = {}
     tests_by_module = _get_test_files_by_module(modules)
