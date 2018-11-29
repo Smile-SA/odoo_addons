@@ -24,3 +24,17 @@ As soon as `README.md` is finished, run the following command
 at the root of the module::
 
     rst2html.py README.rst static/description/index.html
+    sed -i 's/static\/description\///g' static/description/index.html
+
+
+To update `index.html` of all modules, run the following command
+at the root of the repository::
+
+    for module in $(echo smile_*)
+    do
+        if [ -p "$module"/README.rst ]
+        then
+            rst2html "$module"/README.rst "$module"/static/description/index.html
+            sed -i 's/static\/description\///g' "$module"/static/description/index.html
+        fi
+    done
