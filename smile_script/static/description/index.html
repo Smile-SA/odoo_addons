@@ -3,9 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.15b.dev: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
 <title>Maintenance scripts</title>
 <style type="text/css">
+
 /*
 :Author: David Goodger (goodger@python.org)
 :Id: $Id: html4css1.css 7952 2016-07-26 18:15:59Z milde $
@@ -355,6 +356,7 @@ h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
 
 ul.auto-toc {
   list-style-type: none }
+
 </style>
 </head>
 <body>
@@ -365,7 +367,7 @@ ul.auto-toc {
 <p>This module allows user to create and run maintenance scripts. After each script's run, interventions will be logged in database.</p>
 <p>Features:</p>
 <ul class="simple">
-<li>Add access right to the user by checking <cite>Smile Script</cite> and <cite>Smile Logs</cite> rights.</li>
+<li>Add access right to the user by checking <tt class="docutils literal">Smile Script</tt> and <tt class="docutils literal">Smile Logs</tt> rights.</li>
 <li>Create maintenance script by specifying the name of script, description, the type (Python or SQL or XML), write the code of the script using the following variables: self, fields, logger, tools. To display a result, use the variable &quot;result&quot;.</li>
 <li>Test the code and display results in intervention line with test mode checked.</li>
 <li>Validate a script, then run it. A new intervention will automatically be created.</li>
@@ -401,8 +403,8 @@ ul.auto-toc {
 </div>
 <p>To create, test and validate a maintenance script:</p>
 <ol class="arabic simple">
-<li>Go to <tt class="docutils literal">Settings &gt; Technical &gt; Maintenance &gt; Scripts</tt>, press <cite>Create</cite> button and fill the fields: Name, description, the type and the code of your script</li>
-<li>Press <cite>Save</cite> and <cite>Test</cite> buttons.</li>
+<li>Go to <tt class="docutils literal">Settings &gt; Technical &gt; Maintenance &gt; Scripts</tt>, press <tt class="docutils literal">Create</tt> button and fill the fields: Name, description, the type and the code of your script</li>
+<li>Press <tt class="docutils literal">Save</tt> and <tt class="docutils literal">Test</tt> buttons.</li>
 <li>If result is well displayed in interventions lines, press Validate button.</li>
 </ol>
 <div class="figure">
@@ -410,7 +412,7 @@ ul.auto-toc {
 </div>
 <p>To execute a script and display results:</p>
 <ol class="arabic simple">
-<li>Press the red button <cite>Run</cite>.</li>
+<li>Press the red button <tt class="docutils literal">Run</tt>.</li>
 <li>Go to <tt class="docutils literal">Settings &gt; Technical &gt; Maintenance &gt; Interventions</tt>.</li>
 </ol>
 <div class="figure">

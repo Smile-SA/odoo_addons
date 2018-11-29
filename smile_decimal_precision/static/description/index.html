@@ -3,9 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.15b.dev: http://docutils.sourceforge.net/" />
-<title>BIC</title>
+<meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
+<title>README.rst</title>
 <style type="text/css">
+
 /*
 :Author: David Goodger (goodger@python.org)
 :Id: $Id: html4css1.css 7952 2016-07-26 18:15:59Z milde $
@@ -355,15 +356,21 @@ h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
 
 ul.auto-toc {
   list-style-type: none }
+
 </style>
 </head>
 <body>
-<p><embed src="https://img.shields.io/badge/licence-AGPL--3-blue.svg%0A%20:alt:%20License:%20AGPL-3" /></p>
-<h1 id="display-decimal-precision">Display Decimal Precision</h1>
-<p>This module allows to distinguish computation digits and display digits in decimal precision.</p>
-<p>It is also possible to manage a number of decimal places to display on devices.</p>
+<div class="document">
+
+
+<object data="https://img.shields.io/badge/licence-AGPL--3-blue.svg" type="image/svg+xml">
+License: AGPL-3</object>
+<div class="section" id="display-decimal-precision">
+<h1>Display Decimal Precision</h1>
+<p>This module allows to distinguish computation digits and display digits in decimal precision.
+It is also possible to manage a number of decimal places to display on devices.</p>
 <p>Features:</p>
-<ul>
+<ul class="simple">
 <li>The administrator edit the decimal precision by specifying the name of digits parameter.</li>
 <li>He put the number of digits he want to compute.</li>
 <li>He put the number of digits he want to display.</li>
@@ -376,35 +383,68 @@ ul.auto-toc {
 <ul class="simple">
 <li><a class="reference internal" href="#usage" id="id1">Usage</a></li>
 <li><a class="reference internal" href="#bug-tracker" id="id2">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="id3">Credits</a></li>
-<li><a class="reference internal" href="#maintainer" id="id4">Maintainer</a></li>
+<li><a class="reference internal" href="#credits" id="id3">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="id4">Authors</a></li>
+<li><a class="reference internal" href="#maintainer" id="id5">Maintainer</a></li>
+</ul>
+</li>
 </ul>
 </div>
-<h2 id="usage">Usage</h2>
-<p href="#id2">To edit a decimal precision :</p>
-<ol>
+<div class="section" id="usage">
+<h2><a class="toc-backref" href="#id1">Usage</a></h2>
+<p>To edit a decimal precision :</p>
+<ol class="arabic simple">
 <li>Choose a field that you want to edit its decimal accuracy (Ex. Product Price) :</li>
-<p><img src="choose_field.png" style="width: 100%;"/></p>
-<li>Go to <code>Settings &gt; Technical &gt; Database Structure</code>&gt; <b>Decimal accuracy</b> menu.</li>
+</ol>
+<div class="figure">
+<img alt="Choose field" src="choose_field.png" style="width: 100%;" />
+</div>
+<ol class="arabic simple" start="2">
+<li>Go to <tt class="docutils literal">Settings &gt; Technical &gt; Database Structure</tt>&gt; Decimal accuracy menu.</li>
 <li>Select Decimal accuracy corresponding to field.</li>
-<img src="select_decimal_accuracy.png" style="width: 100%;"/>
-<li><p>Then edit the value of digits you want to compute, and the number of digits you want to display.</p>
-<p>In this example we put 3 digits to display and 5 to compute</p></li>
-<img src="edit_decimal_accuracy.png" style="width: 100%;"/>
+</ol>
+<div class="figure">
+<img alt="Select Decimal accuracy" src="select_decimal_accuracy.png" style="width: 100%;" />
+</div>
+<ol class="arabic" start="4">
+<li><p class="first">Then edit the value of digits you want to compute, and the number of digits you want to display.</p>
+<p>In this example we put 3 digits to display and 5 to compute</p>
+</li>
+</ol>
+<div class="figure">
+<img alt="Decimal accuracy edited" src="edit_decimal_accuracy.png" style="width: 100%;" />
+</div>
+<ol class="arabic simple" start="5">
 <li>Now, go back to your interface to see the new decimal accuracy :</li>
 </ol>
-<p><img src="new_decimal_accuracy.png" style="width: 100%;" alt="" /></p>
-<h2 id="bug-tracker">Bug Tracker</h2>
-<p>Bugs are tracked on <a href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>. In case of trouble, please check there if your issue has already been reported. If you spotted it first, help us smashing it by providing a detailed and welcomed feedback <a href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_audit%0Aversion:%2011.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
+<div class="figure">
+<img alt="New decimal accuracy" src="new_decimal_accuracy.png" style="width: 100%;" />
+</div>
+</div>
+<div class="section" id="bug-tracker">
+<h2><a class="toc-backref" href="#id2">Bug Tracker</a></h2>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
+<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_decimal_precision%0Aversion:%2011.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
 <p>Do not contact contributors directly about support or help with technical issues.</p>
-<h2 id="credits">Credits</h2>
-<h3 id="authors">Authors</h3>
+</div>
+<div class="section" id="credits">
+<h2><a class="toc-backref" href="#id3">Credits</a></h2>
+<div class="section" id="authors">
+<h3><a class="toc-backref" href="#id4">Authors</a></h3>
 <p>Smile SA</p>
-<h3 id="maintainer">Maintainer</h3>
+</div>
+<div class="section" id="maintainer">
+<h3><a class="toc-backref" href="#id5">Maintainer</a></h3>
 <p>This module is maintained by the Smile SA.</p>
 <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
-<p><a href="http://smile.fr"><img src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" alt="Smile SA" /></a></p>
-<p>This module is part of the <a href="https://github.com/Smile-SA/odoo_addons">odoo-addons</a> project on GitHub.</p>
+<a class="reference external image-reference" href="http://smile.fr"><img alt="Smile SA" src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" /></a>
+<p>This module is part of the <a class="reference external" href="https://github.com/Smile-SA/odoo_addons">odoo-addons</a> project on GitHub.</p>
 <p>You are welcome to contribute.</p>
+</div>
+</div>
+</div>
+</div>
 </body>
 </html>

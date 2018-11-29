@@ -3,9 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.15b.dev: http://docutils.sourceforge.net/" />
-<title>BIC</title>
+<meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
+<title>README.rst</title>
 <style type="text/css">
+
 /*
 :Author: David Goodger (goodger@python.org)
 :Id: $Id: html4css1.css 7952 2016-07-26 18:15:59Z milde $
@@ -355,14 +356,20 @@ h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
 
 ul.auto-toc {
   list-style-type: none }
+
 </style>
 </head>
 <body>
-<p><embed src="https://img.shields.io/badge/licence-AGPL--3-blue.svg%0A%20:alt:%20License:%20AGPL-3" /></p>
-<h1 id="access-control-period">Access Control Period</h1>
+<div class="document">
+
+
+<object data="https://img.shields.io/badge/licence-AGPL--3-blue.svg" type="image/svg+xml">
+License: AGPL-3</object>
+<div class="section" id="access-control-period">
+<h1>Access Control Period</h1>
 <p>This module add possibility to restrict access rules by user profile for a given period</p>
 <p>Features :</p>
-<ul>
+<ul class="simple">
 <li>The administrator creates User Profiles</li>
 <li>The administrator assigns profiles to users</li>
 <li>The administrator adds &quot;read only period&quot;</li>
@@ -373,47 +380,77 @@ ul.auto-toc {
 <ul class="simple">
 <li><a class="reference internal" href="#usage" id="id1">Usage</a></li>
 <li><a class="reference internal" href="#bug-tracker" id="id2">Bug Tracker</a></li>
-<li><a class="reference internal" href="#GDPR" id="id3">GDPR / EU Privacy</a></li>
-<li><a class="reference internal" href="#credits" id="id4">Credits</a></li>
-<li><a class="reference internal" href="#maintainer" id="id5">Maintainer</a></li>
+<li><a class="reference internal" href="#gdpr-eu-privacy" id="id3">GDPR / EU Privacy</a></li>
+<li><a class="reference internal" href="#credits" id="id4">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="id5">Authors</a></li>
+<li><a class="reference internal" href="#maintainer" id="id6">Maintainer</a></li>
+</ul>
+</li>
 </ul>
 </div>
-<h2 id="usage">Usage</h2>
+<div class="section" id="usage">
+<h2><a class="toc-backref" href="#id1">Usage</a></h2>
 <p>To add User Profiles :</p>
-<ol style="list-style-type: decimal">
-<li>Go to <code>Settings &gt; Users &amp; Companies</code>&gt; User Profiles menu.</li>
+<ol class="arabic simple">
+<li>Go to <tt class="docutils literal">Settings &gt; Users &amp; Companies</tt>&gt; User Profiles menu.</li>
 <li>Create new User Profiles</li>
 </ol>
-<p><img src="users_profiles.png" /></p>
-<ol start="3" style="list-style-type: decimal">
+<div class="figure">
+<img alt="users profiles" src="users_profiles.png" style="width: 100%;" />
+</div>
+<ol class="arabic simple" start="3">
 <li>Go to users &gt; choose one &gt; assign the user profile to user</li>
 </ol>
-<p><img src="assigns.png" /></p>
-<ol start="4" style="list-style-type: decimal">
+<div class="figure">
+<img alt="assigns" src="assigns.png" style="width: 100%;" />
+</div>
+<ol class="arabic simple" start="4">
 <li>Determine the period of read only</li>
 </ol>
-<p><img src="read_only_period.png" /></p>
-<ol start="5" style="list-style-type: decimal">
+<div class="figure">
+<img alt="read only period" src="read_only_period.png" style="width: 100%;" />
+</div>
+<ol class="arabic simple" start="5">
 <li>When the user goes to create or edit something, he cannot (no create button, no edit button) :</li>
 </ol>
-<p><img src="no_create_no_edit.png" /></p>
-<ol start="6" style="list-style-type: decimal">
+<div class="figure">
+<img alt="no create no edit" src="no_create_no_edit.png" style="width: 100%;" />
+</div>
+<ol class="arabic simple" start="6">
 <li>Also when he goes to click validate button, a Access error message will pop up :</li>
 </ol>
-<p><img src="raise.png" /></p>
-<h2 id="bug-tracker">Bug Tracker</h2>
-<p>Bugs are tracked on <a href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>. In case of trouble, please check there if your issue has already been reported. If you spotted it first, help us smashing it by providing a detailed and welcomed feedback <a href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_audit%0Aversion:%2011.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
+<div class="figure">
+<img alt="raise message" src="raise.png" style="width: 100%;" />
+</div>
+</div>
+<div class="section" id="bug-tracker">
+<h2><a class="toc-backref" href="#id2">Bug Tracker</a></h2>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
+<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_access_control%0Aversion:%2011.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
 <p>Do not contact contributors directly about support or help with technical issues.</p>
-<h2 id="GDPR">GDPR / EU Privacy</h2>
+</div>
+<div class="section" id="gdpr-eu-privacy">
+<h2><a class="toc-backref" href="#id3">GDPR / EU Privacy</a></h2>
 <p>This addons does not collect any data and does not set any browser cookies.</p>
-<h2 id="credits">Credits</h2>
-<h3 id="authors">Authors</h3>
+</div>
+<div class="section" id="credits">
+<h2><a class="toc-backref" href="#id4">Credits</a></h2>
+<div class="section" id="authors">
+<h3><a class="toc-backref" href="#id5">Authors</a></h3>
 <p>Smile SA</p>
-<h3 id="maintainer">Maintainer</h3>
+</div>
+<div class="section" id="maintainer">
+<h3><a class="toc-backref" href="#id6">Maintainer</a></h3>
 <p>This module is maintained by the Smile SA.</p>
 <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
-<p><a href="http://smile.fr"><img src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" alt="Smile SA" /></a></p>
-<p>This module is part of the <a href="https://github.com/Smile-SA/odoo_addons">odoo-addons</a> project on GitHub.</p>
+<a class="reference external image-reference" href="http://smile.fr"><img alt="Smile SA" src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" /></a>
+<p>This module is part of the <a class="reference external" href="https://github.com/Smile-SA/odoo_addons">odoo-addons</a> project on GitHub.</p>
 <p>You are welcome to contribute.</p>
+</div>
+</div>
+</div>
+</div>
 </body>
 </html>
