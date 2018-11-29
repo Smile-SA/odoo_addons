@@ -21,14 +21,14 @@ You need to install package `python-docutils`::
 At the root of your module, define a file `README.md`.
 
 As soon as `README.md` is finished, run the following command
-at the root of the module::
+at the root of the module:
 
-    rst2html.py README.rst static/description/index.html
+    rst2html README.rst static/description/index.html
     sed -i 's/static\/description\///g' static/description/index.html
 
 
 To update `index.html` of all modules, run the following command
-at the root of the repository::
+at the root of the repository:
 
     for module in $(echo smile_*)
     do
