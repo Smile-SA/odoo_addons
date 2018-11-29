@@ -32,7 +32,7 @@ at the root of the repository::
 
     for module in $(echo smile_*)
     do
-        if [ -p "$module"/README.rst ]
+        if [ -f "$module"/README.rst ]
         then
             rst2html "$module"/README.rst "$module"/static/description/index.html
             sed -i 's/static\/description\///g' "$module"/static/description/index.html
