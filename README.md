@@ -12,7 +12,7 @@ Requirements
 
 ## Requirements
 
-You need to install package `python-docutils`::
+You need to install package `python-docutils`:
 
     apt install python-docutils
 
