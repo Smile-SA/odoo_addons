@@ -363,7 +363,7 @@ ul.auto-toc {
 <div class="document" id="logging-in-database">
 <h1 class="title">Logging in database</h1>
 
-<p><a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external" href="https://git.smile.fr/erp/odoo_addons/tree/12.0/smile_log"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
+<p><a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/12.0/smile_log"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
 <p>This module adds a logs handler writing to database.</p>
 <p>Notice</p>
 <blockquote>
@@ -403,12 +403,9 @@ logger.info(your_message)</dd>
 <li>Developer adds <tt class="docutils literal">import logging</tt> to his python file.</li>
 <li>Developer must add following code to his action and specify the database, the model name, the res_id, and uid. Then give a message to log for information:</li>
 </ul>
-<pre class="literal-block">
-.. code-block:: python
-
-  logger = SmileLogger(dbname, model_name, res_id, uid)
-  logger.info(your_message)
-
+<pre class="code python literal-block">
+<span class="name">logger</span> <span class="operator">=</span> <span class="name">SmileLogger</span><span class="punctuation">(</span><span class="name">dbname</span><span class="punctuation">,</span> <span class="name">model_name</span><span class="punctuation">,</span> <span class="name">res_id</span><span class="punctuation">,</span> <span class="name">uid</span><span class="punctuation">)</span>
+<span class="name">logger</span><span class="operator">.</span><span class="name">info</span><span class="punctuation">(</span><span class="name">your_message</span><span class="punctuation">)</span>
 </pre>
 <ul class="simple">
 <li>Administrator must create a <tt class="docutils literal">Scheduled Action</tt> to call the function <tt class="docutils literal">archive_and_delete_old_logs</tt>, configure archiving path and the number of days to archive and delete logs.</li>

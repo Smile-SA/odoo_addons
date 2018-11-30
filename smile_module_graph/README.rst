@@ -6,7 +6,7 @@ Modules Graph
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github
-    :target: https://git.smile.fr/erp/odoo_addons/tree/12.0/smile_module_graph
+    :target: https://github.com/Smile-SA/odoo_addons/tree/12.0/smile_module_graph
     :alt: Smile-SA/odoo_addons
 
 |badge2| |badge3|
