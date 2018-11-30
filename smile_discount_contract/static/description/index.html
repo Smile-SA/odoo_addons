@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>README.rst</title>
+<title>Discount Contract</title>
 <style type="text/css">
 
 /*
@@ -360,61 +360,129 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document">
+<div class="document" id="discount-contract">
+<h1 class="title">Discount Contract</h1>
 
-
-<p><object data="https://img.shields.io/badge/licence-AGPL--3-blue.svg" type="image/svg+xml">License: AGPL-3</object> <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/10.0/smile_website_access_control"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
-<div class="section" id="website-access-control">
-<h1>Website Access Control</h1>
-<p>This module is used to hide website menus depending on whether the user is part of a group or not.</p>
+<p><a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/10.0/smile_discount_contract"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
+<p>This module offers the possibility to create and manage discount contracts .</p>
+<p>Features:</p>
+<ul class="simple">
+<li>Creation of discount contract templates which can be used in different discount contracts.</li>
+<li>Possibility to add a parent template ( the parent template's rules will be added to the template rules ).</li>
+<li>Customization of discount rules, products applied to, type of contract ( sale ,purchase )...</li>
+<li>Auto-calculation of contract's end date depending on the start date and the number of months specified in the contract's template.</li>
+<li>Auto-renew if the self-renewal checkbox is checked otherwise its manually updated by clicking on <tt class="docutils literal">Update</tt>.</li>
+<li>Computation of the due amount based on the customer invoices.</li>
+<li>Generation of refunds.</li>
+</ul>
+<p><strong>Table of contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#usage" id="id1">Usage</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="id2">Bug Tracker</a></li>
+<li><a class="reference internal" href="#gdpr-eu-privacy" id="id3">GDPR / EU Privacy</a></li>
+<li><a class="reference internal" href="#credits" id="id4">Credits</a><ul>
+<li><a class="reference internal" href="#contributors" id="id5">Contributors</a></li>
+<li><a class="reference internal" href="#maintainer" id="id6">Maintainer</a></li>
+</ul>
+</li>
+</ul>
 </div>
 <div class="section" id="usage">
-<h1>Usage</h1>
-<p>Once installed, the module creates a list on the groups where you can add the menus of the website, if the connected user has this group, he will have access or not to the menu.</p>
-<p>Example :</p>
-<ul class="simple">
-<li>I create a test web page</li>
-<li>I create a user test with 'Hidden features' group</li>
-<li>Add the webpage 'test' to the group</li>
-</ul>
-<p>If I am connected with the user &quot;test&quot; on the website, I have access to the test menu, but it disappears if I disconnect</p>
-<p>Add user to group:</p>
+<h1><a class="toc-backref" href="#id1">Usage</a></h1>
+<p>To create a new discount contract template:</p>
+<ol class="arabic">
+<li><p class="first">Go to <tt class="docutils literal">Accounting &gt; Discounts &gt; Discount contract templates</tt> menu .</p>
+</li>
+<li><p class="first">Insert the template's  informations and rules to apply .</p>
+<blockquote>
 <div class="figure">
-<img alt="Add user to group" src="add_user_to_group.png" style="width: 50%;" />
+<img alt="Discount contract template creation" src="discount_template_creation.png" style="width: 900px;" />
 </div>
-<p>Add menu to group:</p>
+</blockquote>
+<p>Rule creation :</p>
+<blockquote>
 <div class="figure">
-<img alt="Add menu to group" src="add_menu_to_group.png" style="width: 50%;" />
+<img alt="Discount rule creation" src="discount_rule_creation.png" style="width: 900px;" />
 </div>
-<p>Example without user logged in :</p>
+</blockquote>
+</li>
+</ol>
+<p>To create a new discount contract :</p>
+<ol class="arabic">
+<li><p class="first">Go to <tt class="docutils literal">Accounting &gt; Discounts &gt; Discount contracts</tt> menu .</p>
+</li>
+<li><p class="first">Select the template to use and the partner .</p>
+</li>
+<li><p class="first">Save and validate the contract .</p>
+<blockquote>
 <div class="figure">
-<img alt="website_without_user_test.png:alt:Examplewithoutuserloggedin:width:50%" src="website_without_user_test.png:alt:Examplewithoutuserloggedin:width:50%" />
-<p class="caption">Without having the rights on the menu, you can't access it, even by typing the url directly.</p>
+<img alt="Discount contract creation" src="discount_contract_creation.png" style="width: 900px;" />
 </div>
-<p>Example with user logged in:</p>
+</blockquote>
+</li>
+<li><p class="first">after the creation of a customer invoice ( the invoice date should be included in the discount contract period ) click on update .</p>
+<blockquote>
 <div class="figure">
-<img alt="Example without user logged in" src="website_with_user_test.png" style="width: 50%;" />
+<img alt="Updating the contract" src="contract_updating.png" style="width: 900px;" />
 </div>
+</blockquote>
+</li>
+</ol>
+<p>The due will be apdated .</p>
+<blockquote>
+<div class="figure">
+<img alt="Due apdated" src="due_updating.png" style="width: 900px;" />
+</div>
+</blockquote>
+<p>A Discount contract line will be generated.</p>
+<blockquote>
+<p>Click on the smart button <tt class="docutils literal">Due</tt> .</p>
+<div class="figure">
+<img alt="Discount contract line generation" src="discount_contract_line_generation.png" style="width: 900px;" />
+</div>
+</blockquote>
+<p>Click on <tt class="docutils literal">Generate refund</tt> button .</p>
+<blockquote>
+<div class="figure">
+<img alt="refund updated" src="refund_generated.png" style="width: 900px;" />
+</div>
+</blockquote>
+<p>A customer invoice will be generated</p>
+<p>Click on the smart button <tt class="docutils literal">Invoiced</tt>.</p>
+<blockquote>
+<div class="figure">
+<img alt="Invoice generated" src="invoices_refund_generated.png" style="width: 900px;" />
+</div>
+</blockquote>
 </div>
 <div class="section" id="bug-tracker">
-<h1>Bug Tracker</h1>
+<h1><a class="toc-backref" href="#id2">Bug Tracker</a></h1>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
-<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_website_access_control%0Aversion:%2010.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
+<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_discount_contract%0Aversion:%2011.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
+<p>Do not contact contributors directly about support or help with technical issues.</p>
+</div>
+<div class="section" id="gdpr-eu-privacy">
+<h1><a class="toc-backref" href="#id3">GDPR / EU Privacy</a></h1>
+<p>This addons does not collect any data and does not set any browser cookies.</p>
 </div>
 <div class="section" id="credits">
-<h1>Credits</h1>
+<h1><a class="toc-backref" href="#id4">Credits</a></h1>
 <div class="section" id="contributors">
-<h2>Contributors</h2>
+<h2><a class="toc-backref" href="#id5">Contributors</a></h2>
 <ul class="simple">
 <li>Corentin POUHET-BRUNERIE</li>
 </ul>
 </div>
 <div class="section" id="maintainer">
-<h2>Maintainer</h2>
+<h2><a class="toc-backref" href="#id6">Maintainer</a></h2>
 <p>This module is maintained by Smile SA.</p>
 <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
+<a class="reference external image-reference" href="http://smile.fr"><img alt="Smile SA" src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" /></a>
+<p>This module is part of the <a class="reference external" href="https://github.com/Smile-SA/odoo_addons">odoo-addons</a> project on GitHub.</p>
+<p>You are welcome to contribute.</p>
 </div>
 </div>
 </div>

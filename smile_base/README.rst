@@ -36,18 +36,16 @@ Usage
 
 Add this module to your addons, it will auto install.
 
-To enable email sending, add in your configuration file :
-::
-  enable_email_sending = True
+To enable email sending, add in your configuration file ::
 
-To enable email fetching, add in your configuration file :
-::
-  enable_email_fetching = True
+    enable_email_sending = True
 
-To add a colored ribbon, definied with RGBa, add in your configuration file :
-::
-  server.environment = dev
-  server.environment.ribbon_color = rgba(255, 0, 255, .6)
+To enable email fetching, add in your configuration file ::
+    enable_email_fetching = True
+
+To add a colored ribbon, definied with RGBa, add in your configuration file ::
+    server.environment = dev
+    server.environment.ribbon_color = rgba(255, 0, 255, .6)
 
 
 Bug Tracker

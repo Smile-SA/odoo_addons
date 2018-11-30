@@ -363,37 +363,34 @@ ul.auto-toc {
 <div class="document">
 
 
-<p><object data="https://img.shields.io/badge/licence-AGPL--3-blue.svg" type="image/svg+xml">License: AGPL-3</object> <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/10.0/smile_website_access_control"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
-<div class="section" id="website-access-control">
-<h1>Website Access Control</h1>
-<p>This module is used to hide website menus depending on whether the user is part of a group or not.</p>
+<object data="https://img.shields.io/badge/licence-AGPL--3-blue.svg" type="image/svg+xml">
+License: AGPL-3</object>
+<div class="section" id="redis-session-store">
+<h1>Redis Session Store</h1>
+<p>This module allows you to use a Redis database to manage sessions,
+instead of classic filesystem storage.</p>
+</div>
+<div class="section" id="requirements">
+<h1>Requirements</h1>
+<p>You need to install and to start a Redis server to use this module.
+Documentation is available on <a class="reference external" href="http://redis.io/topics/quickstart">Redis website</a>.</p>
+<p>You need to install package <cite>python-redis</cite>:</p>
+<pre class="literal-block">
+apt-get install python-redis
+</pre>
 </div>
 <div class="section" id="usage">
 <h1>Usage</h1>
-<p>Once installed, the module creates a list on the groups where you can add the menus of the website, if the connected user has this group, he will have access or not to the menu.</p>
-<p>Example :</p>
+<p>To use Redis, install this module and please add <cite>enable_redis = True</cite> option
+in configuration file.</p>
+<div class="section" id="available-options">
+<h2>Available options</h2>
 <ul class="simple">
-<li>I create a test web page</li>
-<li>I create a user test with 'Hidden features' group</li>
-<li>Add the webpage 'test' to the group</li>
+<li><cite>redis_host</cite> (default: localhost): Redis host</li>
+<li><cite>redis_port</cite> (default: 6379): Redis port</li>
+<li><cite>redis_dbindex</cite> (default: 1): Redis database index</li>
+<li><cite>redis_pass</cite> (default: None): Redis password</li>
 </ul>
-<p>If I am connected with the user &quot;test&quot; on the website, I have access to the test menu, but it disappears if I disconnect</p>
-<p>Add user to group:</p>
-<div class="figure">
-<img alt="Add user to group" src="add_user_to_group.png" style="width: 50%;" />
-</div>
-<p>Add menu to group:</p>
-<div class="figure">
-<img alt="Add menu to group" src="add_menu_to_group.png" style="width: 50%;" />
-</div>
-<p>Example without user logged in :</p>
-<div class="figure">
-<img alt="website_without_user_test.png:alt:Examplewithoutuserloggedin:width:50%" src="website_without_user_test.png:alt:Examplewithoutuserloggedin:width:50%" />
-<p class="caption">Without having the rights on the menu, you can't access it, even by typing the url directly.</p>
-</div>
-<p>Example with user logged in:</p>
-<div class="figure">
-<img alt="Example without user logged in" src="website_with_user_test.png" style="width: 50%;" />
 </div>
 </div>
 <div class="section" id="bug-tracker">
@@ -401,20 +398,19 @@ ul.auto-toc {
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
-<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_website_access_control%0Aversion:%2010.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
+<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_redis_session_store%0Aversion:%208.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
 </div>
 <div class="section" id="credits">
 <h1>Credits</h1>
 <div class="section" id="contributors">
 <h2>Contributors</h2>
 <ul class="simple">
-<li>Corentin POUHET-BRUNERIE</li>
+<li>Isabelle RICHARD &lt;<a class="reference external" href="mailto:isabelle.richard&#64;smile.fr">isabelle.richard&#64;smile.fr</a>&gt;</li>
 </ul>
 </div>
 <div class="section" id="maintainer">
 <h2>Maintainer</h2>
 <p>This module is maintained by Smile SA.</p>
-<p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
 </div>
 </div>
 </div>
