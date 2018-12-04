@@ -1,0 +1,32 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_record_rule_error
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-04 09:44+0000\n"
+"PO-Revision-Date: 2018-12-04 09:44+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_record_rule_error
+#: model:ir.model,name:smile_record_rule_error.model_base
+msgid "Base"
+msgstr "Base"
+
+#. module: smile_record_rule_error
+#: model:ir.model.fields,field_description:smile_record_rule_error.field_ir_rule__error_message
+#: model_terms:ir.ui.view,arch_db:smile_record_rule_error.view_rule_form
+msgid "Error Message"
+msgstr "Message d'erreur"
+
+#. module: smile_record_rule_error
+#: model:ir.model,name:smile_record_rule_error.model_ir_rule
+msgid "Record Rule"
+msgstr "Règles sur les enregistrements"
