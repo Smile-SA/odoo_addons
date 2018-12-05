@@ -31,9 +31,13 @@ class TestAccountCheck(TransactionCase):
         }
         wizard = self.env['account.checkbook.wizard'].sudo(
             self.check_manager).create(vals)
-        wizard.sudo(self.check_manager).onchange_range_of_numbers()
+        self._run_onchange(wizard.sudo(self.check_manager))
         wizard.sudo(self.check_manager).generate_checks()
         return self.env['account.check'].search([]).sorted(key='number')
+
+    def _run_onchange(self, wizard):
+        wizard.onchange_range_of_numbers()
+        wizard.onchange_to_number()
 
     def test_onchange_on_checkbook_wizard(self):
         """ As account manager, I open wizard to generate a checkbook.
@@ -51,7 +55,7 @@ class TestAccountCheck(TransactionCase):
         }
         wizard = self.env['account.checkbook.wizard'].sudo(
             self.check_manager).create(vals)
-        wizard.sudo(self.check_manager).onchange_range_of_numbers()
+        self._run_onchange(wizard.sudo(self.check_manager))
         self.assertEquals(10, wizard.quantity)
         self.assertEquals(1802838, wizard.from_number)
         self.assertEquals(1802847, wizard.to_number)
@@ -64,7 +68,7 @@ class TestAccountCheck(TransactionCase):
             'from_number': 123638,
             'to_number': 123657,
         })
-        wizard.sudo(self.check_manager).onchange_range_of_numbers()
+        self._run_onchange(wizard.sudo(self.check_manager))
         self.assertEquals(20, wizard.quantity)
         self.assertEquals(123638, wizard.from_number)
         self.assertEquals(123657, wizard.to_number)
@@ -84,7 +88,7 @@ class TestAccountCheck(TransactionCase):
         }
         wizard = self.env['account.checkbook.wizard'].sudo(
             self.check_manager).create(vals)
-        wizard.sudo(self.check_manager).onchange_range_of_numbers()
+        self._run_onchange(wizard.sudo(self.check_manager))
         wizard.sudo(self.check_manager).generate_checks()
         checks = self.env['account.check'].search([]).sorted(key='number')
         self.assertEquals(10, len(checks))
