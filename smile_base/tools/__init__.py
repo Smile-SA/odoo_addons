@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-from misc import *
-from sql import *
+from .misc import *
+from .sql import *

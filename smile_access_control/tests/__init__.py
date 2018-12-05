@@ -19,6 +19,6 @@
 #
 ##############################################################################
 
-import test_access_control
-import test_users
-import test_groups
+from . import test_access_control
+from . import test_users
+from . import test_groups

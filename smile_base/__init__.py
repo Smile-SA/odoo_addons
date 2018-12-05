@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import controllers
-import models
-import tools
-import wizard
+from . import controllers
+from . import models
+from . import tools
+from . import wizard

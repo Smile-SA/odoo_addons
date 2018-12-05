@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-import fetchmail
-import ir_actions
-import ir_config_parameter
-import ir_mail_server
-import ir_values
-import language
-import mail_mail
-import mail_template
-import models
-import module
-import registry
-import update
+from . import fetchmail
+from . import ir_actions
+from . import ir_config_parameter
+from . import ir_mail_server
+from . import ir_values
+from . import language
+from . import mail_mail
+from . import mail_template
+from . import models
+from . import module
+from . import registry
+from . import update
