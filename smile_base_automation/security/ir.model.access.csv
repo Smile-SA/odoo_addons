@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ir_model_methods,ir.model.methods,model_ir_model_methods,,1,0,0,0
+access_ir_model_methods_config,ir.model.methods config,model_ir_model_methods,base.group_system,1,1,1,1
+access_base_automation_category,base.automation.category,model_base_automation_category,,1,0,0,0
+access_base_automation_category_config,base.automation.category config,model_base_automation_category,base.group_system,1,1,1,1
+access_base_automation_execution,base.automation.execution,model_base_automation_execution,,1,0,0,0
+access_base_automation_execution_config,base.automation.execution config,model_base_automation_execution,base.group_system,1,1,1,1
+access_ir_actions_server_execution,ir.actions.server.execution,model_ir_actions_server_execution,,1,0,0,0

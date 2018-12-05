@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_base_automation_form" model="ir.ui.view">
+            <field name="name">base.automation.form</field>
+            <field name="model">base.automation</field>
+            <field name="inherit_id" ref="base_automation.view_base_automation_form"/>
+            <field name="arch" type="xml">
+                <field name="model_id" position="after">
+                	<field name="category_id"/>
+                </field>
+                <field name="trigger" position="after">
+                	<field name="method_id" domain="[('model_id', '=', model_id)]" options="{'no_create': True}"
+                		attrs="{'invisible': [('trigger', '!=', 'on_other_method')], 'required': [('trigger', '=', 'on_other_method')]}"/>
+                </field>
+                <field name="filter_pre_domain" position="attributes">
+                	<attribute name="attrs">{'invisible': [('trigger', 'not in', ['on_write','on_create_or_write','on_other_method'])]}</attribute>
+                </field>
+                <!--field name="sequence" position="after">
+                    <field name="max_executions"/>
+                    <field name="force_actions_execution"/>
+                </field>
+                <notebook position="inside">
+                    <page string="Exceptions">
+                        <group colspan="4" col="4">
+                            <field name="exception_handling"/>
+                            <field name="exception_warning" attrs="{'invisible': [('exception_handling', '!=', 'rollback')]}"/>
+                            <field name="exception_message" colspan="4" attrs="{'invisible': ['|', ('exception_handling', '!=', 'rollback'), ('exception_warning', '!=', 'custom')]}"/>
+                        </group>
+                    </page>
+                    <page string="Logs">
+                    	<field name="log_ids"/>
+                    </page>
+                </notebook-->
+            </field>
+        </record>
+
+    </data>
+</odoo>

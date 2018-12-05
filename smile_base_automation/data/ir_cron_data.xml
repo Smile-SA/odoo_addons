@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="1">
+
+		<record forcecreate="True" id="ir_cron_server_action_execution" model="ir.cron">
+			<field name="name">Launch server actions execution</field>
+			<field name="model_id" ref="model_ir_actions_server_execution" />
+			<field name="state">code</field>
+			<field name="code">model.execute()</field>
+			<field name="user_id" ref="base.user_root" />
+			<field name="active" eval="True" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">minutes</field>
+			<field name="numbercall">-1</field>
+			<field name="doall" eval="False" />
+			<field name="priority">0</field>
+		</record>
+
+	</data>
+</odoo>
