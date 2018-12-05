@@ -25,10 +25,7 @@
     "depends": ["base"],
     "author": "Smile",
     "license": 'AGPL-3',
-    "description": """Use Redis Session instead of File system
-
-    Suggestions & Feedback to: isabelle.richard@smile.fr
-    """,
+    "description": """""",
     "summary": "",
     "website": "http://www.smile.fr",
     "category": 'Tools',
