@@ -49,7 +49,7 @@ class MailTemplate(models.Model):
             return multi_mode and results or results[res_ids[0]]
 
         # prepare template variables
-        records = self.env[model].browse(filter(None, res_ids))  # filter to avoid browsing [None]
+        records = self.env[model].browse(list(filter(None, res_ids)))  # filter to avoid browsing [None]
         res_to_rec = dict.fromkeys(res_ids, None)
         for record in records:
             res_to_rec[record.id] = record

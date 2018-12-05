@@ -47,7 +47,7 @@ def _validate_fields(self, fields_to_validate):
     if not self._context.get('no_validate'):
         try:
             native_validate_fields(self, fields_to_validate)
-        except ValidationError, e:
+        except ValidationError as e:
             name = e.name.replace("%s\n\n" % _("Error while validating constraint"), "").replace("\nNone", "")
             raise ValidationError(name)
 
@@ -169,7 +169,7 @@ def _compare(self, other):
 def _get_comparison_logs(self, other):
 
     def get_values(items):
-        return map(lambda item: item and item[1], items)
+        return list(map(lambda item: item and item[1], items))
 
     diff = self._compare(other)
     logs = []

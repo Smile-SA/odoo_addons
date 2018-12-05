@@ -54,7 +54,7 @@ class MailComposeMessage(models.TransientModel):
         message = self.with_context(active_ids=None).create({
             'model': model,
             'composition_mode': composition_mode,
-            'partner_ids': [(6, 0, filter(None, partner_ids or []))],
+            'partner_ids': [(6, 0, list(filter(None, partner_ids or [])))],
             'template_id': template_id,
             'notify': True,
             'res_id': res_id,
