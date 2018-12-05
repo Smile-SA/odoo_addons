@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>README.rst</title>
+<title>Web Auto Refresh</title>
 <style type="text/css">
 
 /*
@@ -360,79 +360,90 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document">
+<div class="document" id="web-auto-refresh">
+<h1 class="title">Web Auto Refresh</h1>
 
-
-<object data="https://img.shields.io/badge/licence-AGPL--3-blue.svg" type="image/svg+xml">
-License: AGPL-3</object>
-<div class="section" id="web-auto-refresh">
-<h1>Web Auto Refresh</h1>
-<p>Features :</p>
+<p><a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external" href="https://git.smile.fr/erp/odoo_addons/tree/11.0/smile_web_auto_refresh"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
 <p>This module is a fork of web_auto_refresh developped by Fisher Yu on Odoo v10.
 This fork works with all non-edited views, not only with kanban and list views.</p>
-<p>To test this module, you need to:</p>
-<ol class="arabic">
-<li><p class="first">Go to Setting &gt; Technical &gt; Actions &gt; Window Actions, find the desired action, activate the auto search Check box</p>
-</li>
-<li><p class="first">Add one automated action for the target model, add the following python code,</p>
-<blockquote>
-<p>This automated action can be applied(when to run) to creation, update or delete per your requirement
-model.env['bus.bus'].sendone('auto_refresh', model._name)</p>
-</blockquote>
-</li>
-<li><p class="first">It is also possible to force the opening of a page by indicating #action.</p>
-<blockquote>
-<p>For example: an automatic return to the home page is done by executing the code: model.env ['bus.bus'].sendone ('auto_refresh', '#home')</p>
-</blockquote>
-</li>
-</ol>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#usage" id="id1">Usage</a></li>
-<li><a class="reference internal" href="#bug-tracker" id="id2">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="id3">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="id4">Authors</a></li>
-<li><a class="reference internal" href="#maintainer" id="id5">Maintainer</a></li>
+<li><a class="reference internal" href="#configuration" id="id1">Configuration</a></li>
+<li><a class="reference internal" href="#usage" id="id2">Usage</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="id3">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="id4">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="id5">Authors</a></li>
+<li><a class="reference internal" href="#maintainer" id="id6">Maintainer</a></li>
 </ul>
 </li>
 </ul>
 </div>
+<div class="section" id="configuration">
+<h1><a class="toc-backref" href="#id1">Configuration</a></h1>
+<p>To configure this module, you need to:</p>
+<ol class="arabic simple">
+<li>Go to <tt class="docutils literal">Setting &gt; Technical &gt; Actions &gt; Window Actions</tt>, find the desired action, activate the auto search Check box.</li>
+<li>Add one automated action for the target model,  in the linked automated action add the following python code:</li>
+</ol>
+<pre class="literal-block">
+.. code-block:: python
+
+    model.env['bus.bus'].sendone('auto_refresh', model._name).
+
+   This automated action can be applied (when to run) to creation, update or delete per your requirement.
+
+</pre>
+<ol class="arabic" start="3">
+<li><p class="first">It is also possible to force the opening of a page by indicating #action.</p>
+<blockquote>
+<p>For example: an automatic return to the home page is done by executing the code:</p>
+</blockquote>
+</li>
+</ol>
+
+<pre class="literal-block">
+.. code-block:: python
+
+    model.env ['bus.bus'].sendone ('auto_refresh', '#home')
+
+</pre>
+</div>
 <div class="section" id="usage">
-<h2><a class="toc-backref" href="#id1">Usage</a></h2>
+<h1><a class="toc-backref" href="#id2">Usage</a></h1>
 <p>(We will take stock.picking as a example model)
 To activate the auto search :</p>
 <ol class="arabic simple">
-<li>Go to <tt class="docutils literal">Settings &gt; Technical &gt; Actions</tt>&gt; Window Actions menu :</li>
+<li>Go to <tt class="docutils literal">Settings &gt; Technical &gt; Actions &gt; Window Actions</tt> menu :</li>
 </ol>
 <div class="figure">
-<img alt="Window Actions" src="window_action.png" style="width: 100%;" />
+<img alt="Window Actions" src="window_action.png" style="width: 850px;" />
 </div>
 <p>To add the automated action for the target model :</p>
 <ol class="arabic simple" start="2">
-<li>Go to <tt class="docutils literal">Settings &gt; Technical &gt; automation</tt>&gt; Automated Actions menu :</li>
+<li>Go to <tt class="docutils literal">Settings &gt; Technical &gt; automation &gt; Automated Actions</tt> menu :</li>
 </ol>
 <div class="figure">
-<img alt="Automated Actions" src="automated_action.png" style="width: 100%;" />
+<img alt="Automated Actions" src="automated_action.png" style="width: 850px;" />
 </div>
 <ol class="arabic simple" start="4">
 <li>Then the Administrator go to edit a Transfert :</li>
 </ol>
 <div class="figure">
-<img alt="Transfert" src="stock_admin1.png" style="width: 100%;" />
+<img alt="Transfert" src="stock_admin1.png" style="width: 850px;" />
 </div>
 <div class="figure">
-<img alt="Transfert edited" src="stock_admin2.png" style="width: 100%;" />
+<img alt="Transfert edited" src="stock_admin2.png" style="width: 850px;" />
 </div>
 <ol class="arabic simple" start="5">
 <li>In the same time the modification will refresh for the other users :</li>
 </ol>
 <div class="figure">
-<img alt="Demo user" src="demo_user.png" style="width: 100%;" />
+<img alt="Demo user" src="demo_user.png" style="width: 850px;" />
 </div>
 </div>
 <div class="section" id="bug-tracker">
-<h2><a class="toc-backref" href="#id2">Bug Tracker</a></h2>
+<h1><a class="toc-backref" href="#id3">Bug Tracker</a></h1>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
@@ -440,19 +451,20 @@ If you spotted it first, help us smashing it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h2><a class="toc-backref" href="#id3">Credits</a></h2>
+<h1><a class="toc-backref" href="#id4">Credits</a></h1>
 <div class="section" id="authors">
-<h3><a class="toc-backref" href="#id4">Authors</a></h3>
-<p>Smile SA</p>
+<h2><a class="toc-backref" href="#id5">Authors</a></h2>
+<ul class="simple">
+<li>Corentin POUHET-BRUNERIE</li>
+</ul>
 </div>
 <div class="section" id="maintainer">
-<h3><a class="toc-backref" href="#id5">Maintainer</a></h3>
+<h2><a class="toc-backref" href="#id6">Maintainer</a></h2>
 <p>This module is maintained by the Smile SA.</p>
 <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
 <a class="reference external image-reference" href="http://smile.fr"><img alt="Smile SA" src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" /></a>
 <p>This module is part of the <a class="reference external" href="https://github.com/Smile-SA/odoo_addons">odoo-addons</a> project on GitHub.</p>
 <p>You are welcome to contribute.</p>
-</div>
 </div>
 </div>
 </div>
