@@ -1,4 +1,11 @@
 -
+  I force the installation of French language
+-
+  !python {model: base.language.install}: |
+    language = self.env['res.lang'].search([('code', '=', 'fr_FR')], limit=1)
+    if not language:
+      self.create({'lang': 'fr_FR'}).lang_install()
+-
   I make French as default language if installed
 -
   !python {model: res.lang}: |
