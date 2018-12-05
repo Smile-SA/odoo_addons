@@ -1,65 +1,80 @@
-.. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-    :alt: License: AGPL-3
-
 ================
 Web Auto Refresh
 ================
 
-Features :
+.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
+    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+    :alt: License: AGPL-3
+.. |badge3| image:: https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github
+    :target: https://git.smile.fr/erp/odoo_addons/tree/11.0/smile_web_auto_refresh
+    :alt: Smile-SA/odoo_addons
+
+|badge2| |badge3|
 
 This module is a fork of web_auto_refresh developped by Fisher Yu on Odoo v10.
 This fork works with all non-edited views, not only with kanban and list views.
-
-To test this module, you need to:
-
-1. Go to Setting > Technical > Actions > Window Actions, find the desired action, activate the auto search Check box
-2. Add one automated action for the target model, add the following python code,
-
-    This automated action can be applied(when to run) to creation, update or delete per your requirement
-    model.env['bus.bus'].sendone('auto_refresh', model._name)
-3. It is also possible to force the opening of a page by indicating #action.
-
-    For example: an automatic return to the home page is done by executing the code: model.env ['bus.bus'].sendone ('auto_refresh', '#home')
 
 **Table of contents**
 
 .. contents::
    :local:
 
+Configuration
+=============
+
+To configure this module, you need to:
+
+1. Go to ``Setting > Technical > Actions > Window Actions``, find the desired action, activate the auto search Check box.
+2. Add one automated action for the target model,  in the linked automated action add the following python code:
+
+.. code-block:: python
+
+    model.env['bus.bus'].sendone('auto_refresh', model._name).
+
+   This automated action can be applied (when to run) to creation, update or delete per your requirement.
+
+3. It is also possible to force the opening of a page by indicating #action.
+
+    For example: an automatic return to the home page is done by executing the code:
+
+.. code-block:: python
+
+    model.env ['bus.bus'].sendone ('auto_refresh', '#home')
+
 Usage
 =====
 (We will take stock.picking as a example model)
 To activate the auto search :
 
-1. Go to ``Settings > Technical > Actions``> Window Actions menu :
+1. Go to ``Settings > Technical > Actions > Window Actions`` menu :
 
 .. figure:: static/description/window_action.png
    :alt: Window Actions
-   :width: 100%
+   :width: 850px
 
 To add the automated action for the target model :
 
-2. Go to ``Settings > Technical > automation``> Automated Actions menu :
+2. Go to ``Settings > Technical > automation > Automated Actions`` menu :
 
 .. figure:: static/description/automated_action.png
    :alt: Automated Actions
-   :width: 100%
+   :width: 850px
 
 4. Then the Administrator go to edit a Transfert :
 
 .. figure:: static/description/stock_admin1.png
    :alt: Transfert
-   :width: 100%
+   :width: 850px
 
 .. figure:: static/description/stock_admin2.png
    :alt: Transfert edited
-   :width: 100%
+   :width: 850px
 
 5. In the same time the modification will refresh for the other users :
 
 .. figure:: static/description/demo_user.png
    :alt: Demo user
-   :width: 100%
+   :width: 850px
 
 
 
@@ -79,7 +94,7 @@ Credits
 Authors
 -------
 
-Smile SA
+* Corentin POUHET-BRUNERIE
 
 Maintainer
 ----------
