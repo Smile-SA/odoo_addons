@@ -28,12 +28,7 @@
     ],
     "author": "Smile",
     "license": 'AGPL-3',
-    "description": """
-Multi-company Invoicing
-=======================
-
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
-    """,
+    "description": """""",
     "summary": "",
     "website": "http://www.smile.fr",
     "category": 'Hidden',
