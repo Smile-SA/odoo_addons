@@ -1,0 +1,101 @@
+.app-drawer-nav {
+    background: linear-gradient(45deg, #77717e, #c9a8a9);
+    a, a:hover {
+        color: @odoo-menu-color;
+        cursor: pointer;
+        font-weight: 100;
+        outline: none;
+    }
+    .app-drawer-title {
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 100;
+        margin-top: 8px;
+    }
+    .panel-body {
+        margin-top: 8px;
+        padding-top: 84px;
+        > ul {
+            max-width: 80%;
+            margin: auto;
+        }
+    }
+}
+
+.panel-default > .panel-heading {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.drawer--left .drawer-nav {
+    -webkit-transition: left .01s cubic-bezier(0.190, 1.000, 0.220, 1.000);
+    transition: left .01s cubic-bezier(0.190, 1.000, 0.220, 1.000);
+}
+
+#appDrawerAppPanelBody {
+    @media (min-width: @screen-sm-min) {
+        width: 70%;
+        margin-left: 15%;
+    }
+}
+
+#appDrawerMenuSearch {
+    .panel {
+        background: none;
+        border: none;
+        box-shadow: none;
+        font-weight: normal;
+    }
+    .panel-info > .panel-heading {
+        background: none;
+        border: none;
+        color: @odoo-menu-color;
+        .menu-search-icon {
+            font-size: 28px;
+            padding: 6px 12px;
+            position: absolute;        }
+    }
+}
+
+#appDrawerSearchInput {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.1);
+    font-size: initial;
+    font-weight: normal;
+    outline: none;
+    padding: 12px 12px 12px 50px;
+    width: 100%;
+}
+#appDrawerSearchInput::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+#appDrawerSearchInput::-moz-placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+#appDrawerSearchInput:-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#appDrawerSearchResults {
+    .menu-search-element {
+        font-size: initial;
+        font-weight: normal;
+        margin: 12px;
+        a {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .web-responsive-focus {
+            outline: none;
+            color:white;
+        }
+    }
+    h2 {
+        font-weight: normal;
+    }
+}
+
+.app-drawer-panel-title span {
+    color: white;
+}

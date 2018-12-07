@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <template id="assets_backend" inherit_id="web.assets_backend">
+    <xpath expr=".">
+      <script type="text/javascript" src="/smile_web/static/src/js/app_drawer.js"/>
+      <script type="text/javascript" src="/smile_web/static/src/js/pager.js"/>
+      <link rel="stylesheet" href="/smile_web/static/src/less/app_drawer.less"/>
+      <link rel="stylesheet" href="/smile_web/static/src/less/bootstrap.less"/>
+      <link rel="stylesheet" href="/smile_web/static/src/less/form_view.less"/>
+      <link rel="stylesheet" href="/smile_web/static/src/less/kanban_view.less"/>
+      <link rel="stylesheet" href="/smile_web/static/src/less/list_view.less"/>
+      <link rel="stylesheet" href="/smile_web/static/src/less/mail_chat.less"/>
+      <link rel="stylesheet" href="/smile_web/static/src/less/navbar.less"/>
+      <link rel="stylesheet" href="/smile_web/static/src/less/navs.less"/>
+      <link rel="stylesheet" href="/smile_web/static/src/less/variables.less"/>
+    </xpath>
+  </template>
+
+  <template id="app-drawer-menu-search" inherit_id="web_responsive.menu">
+    <xpath expr="//div[hasclass('app-drawer-search-panel')]/div[hasclass('panel-heading')]" position="replace">
+      <div class="panel-heading">
+        <h2>
+            <span class="fa fa-search fa-2x menu-search-icon"></span>
+            <input id="appDrawerSearchInput" class="menu-search-query" placeholder="Search for menus..."/>
+        </h2>
+      </div>
+    </xpath>
+  </template>
+
+</odoo>
