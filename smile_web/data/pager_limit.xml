@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="pager_limit" model="ir.config_parameter">
+            <field name="key">pager.limit</field>
+            <field name="value">1000</field>
+        </record>
+
+    </data>
+</odoo>
