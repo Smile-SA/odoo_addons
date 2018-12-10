@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_assets_in_progress_report_view" model="ir.ui.view">
+            <field name="name">Assets in progress report</field>
+            <field name="model">account.assets.in.progress.report</field>
+            <field name="inherit_id" ref="account_asset_common_report_view"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_to']" position="before">
+                     <field name="date_from"/>
+                 </xpath>
+            </field>
+        </record>
+
+        <record id="action_account_assets_in_progress_report" model="ir.actions.act_window">
+            <field name="name">Assets in progress</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.assets.in.progress.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_assets_in_progress_report_view"/>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="account.model_account_invoice_line" />
+            <field name="binding_type">report</field>
+        </record>
+
+        <menuitem
+            id="menu_account_assets_in_progress"
+            name="Assets in progress"
+            parent="menu_finance_reports_account_assets"
+            sequence="50"
+            action="action_account_assets_in_progress_report"/>
+
+   </data>
+</odoo>

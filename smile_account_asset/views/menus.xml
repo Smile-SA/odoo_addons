@@ -2,6 +2,8 @@
 <odoo>
     <data>
 
+        <!-- Assets main menu -->
+
         <menuitem id="menu_account_assets_parent"
             name="Assets"
             parent="account.menu_finance"
@@ -32,6 +34,15 @@
             parent="menu_account_assets_management"
             action="action_account_asset_asset_sale_tree"
             sequence="40"/>
+
+        <!-- Assets reporting -->
+
+        <menuitem parent="account.menu_finance_reports"
+            id="menu_finance_reports_account_assets"
+            name="Assets"
+            sequence="5"/>
+
+        <!-- Assets configuration -->
 
         <menuitem id="menu_account_asset_settings"
             parent="account.menu_finance_configuration"

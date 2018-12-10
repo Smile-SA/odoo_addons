@@ -385,11 +385,12 @@ This module is not compatible with account_asset, so uninstall it before install
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#usage" id="id1">Usage</a></li>
-<li><a class="reference internal" href="#bug-tracker" id="id2">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="id3">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="id4">Authors</a></li>
-<li><a class="reference internal" href="#contributors" id="id5">Contributors</a></li>
-<li><a class="reference internal" href="#maintainers" id="id6">Maintainers</a></li>
+<li><a class="reference internal" href="#financial-reporting" id="id2">Financial reporting</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="id3">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="id4">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="id5">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="id6">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="id7">Maintainers</a></li>
 </ul>
 </li>
 </ul>
@@ -409,8 +410,71 @@ This module is not compatible with account_asset, so uninstall it before install
 <img alt="invoice" src="asset.png" style="width: 100%;" />
 </div>
 </div>
+<div class="section" id="financial-reporting">
+<h1><a class="toc-backref" href="#id2">Financial reporting</a></h1>
+<p>The following part is described in French, as this is only available for France.</p>
+<p>Cinq rapports ont été implémentés :</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Bilan :</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>Retourne les immobilisations :</dt>
+<dd><ul class="first last">
+<li>acquises définitivement antérieurement à la date de fin</li>
+<li>non cédée à la date de fin ou cédée depuis le début de l'exercice  fiscal courant à la date de fin</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Plus ou moins-values fiscales :</dt>
+<dd><ul class="first last">
+<li>Retourne les immobilisations cédées au cours de la période</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Situation des dotations :</dt>
+<dd><ul class="first last">
+<li>Retourne les immobilisations en service sur la période du rapport</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Déductions fiscales :</dt>
+<dd><ul class="first last">
+<li>Retourne les immobilisations bénéficiant d'une déduction fiscale en service à la date de fin ou cédée dans l'exercice de la date de fin</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Immobilisations en cours :</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>Retourne les lignes de facture associées à</dt>
+<dd><ul class="first last">
+<li>une immobilisation en cours à la date de fin</li>
+<li>aucune immobilisation mais liée à une catégorie d'immobilisation en cours</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
 <div class="section" id="bug-tracker">
-<h1><a class="toc-backref" href="#id2">Bug Tracker</a></h1>
+<h1><a class="toc-backref" href="#id3">Bug Tracker</a></h1>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
@@ -418,21 +482,21 @@ If you spotted it first, help us smashing it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h1><a class="toc-backref" href="#id3">Credits</a></h1>
+<h1><a class="toc-backref" href="#id4">Credits</a></h1>
 <div class="section" id="authors">
-<h2><a class="toc-backref" href="#id4">Authors</a></h2>
+<h2><a class="toc-backref" href="#id5">Authors</a></h2>
 <ul class="simple">
 <li>Smile SA</li>
 </ul>
 </div>
 <div class="section" id="contributors">
-<h2><a class="toc-backref" href="#id5">Contributors</a></h2>
+<h2><a class="toc-backref" href="#id6">Contributors</a></h2>
 <ul class="simple">
 <li>Corentin Pouhet-Brunerie</li>
 </ul>
 </div>
 <div class="section" id="maintainers">
-<h2><a class="toc-backref" href="#id6">Maintainers</a></h2>
+<h2><a class="toc-backref" href="#id7">Maintainers</a></h2>
 <p>This module is maintained by the Smile SA.</p>
 <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
 <a class="reference external image-reference" href="http://smile.fr"><img alt="Smile SA" src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" /></a>

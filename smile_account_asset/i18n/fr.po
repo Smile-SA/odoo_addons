@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* smile_account_asset
+#   * smile_account_asset
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0-20180819\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-30 15:07+0000\n"
-"PO-Revision-Date: 2018-08-30 15:07+0000\n"
+"POT-Creation-Date: 2018-12-06 17:24+0000\n"
+"PO-Revision-Date: 2018-12-06 17:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgid " Cancellation"
 msgstr " Annulation"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:274
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:275
 #, python-format
 msgid "%s Amortization"
 msgstr "Amortissement %s"
@@ -77,9 +77,51 @@ msgid "Account"
 msgstr "Compte"
 
 #. module: smile_account_asset
+#: model:ir.model,name:smile_account_asset.model_account_asset_common_report
+msgid "Account Asset Common Report"
+msgstr "Rapport des immobilisations"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+msgid "Account Asset Sales"
+msgstr "Plus ou moins-values fiscales"
+
+#. module: smile_account_asset
+#: model:ir.actions.report,name:smile_account_asset.action_report_account_assets
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+msgid "Account Assets"
+msgstr "Immobilisations"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
+msgid "Account Assets Fiscal Deductions"
+msgstr "Déductions fiscales"
+
+#. module: smile_account_asset
 #: model:ir.model,name:smile_account_asset.model_account_move
 msgid "Account Entry"
 msgstr "Écriture comptable"
+
+#. module: smile_account_asset
+#: model:ir.actions.report,name:smile_account_asset.action_report_account_asset_sales
+msgid "Account asset sales"
+msgstr "Plus ou moins-values fiscales"
+
+#. module: smile_account_asset
+#: model:ir.actions.act_window,name:smile_account_asset.action_asset_sales_report
+#: model:ir.model,name:smile_account_asset.model_account_asset_sales_report
+#: model:ir.ui.menu,name:smile_account_asset.menu_account_asset_sales_report
+msgid "Account asset sales report"
+msgstr "Plus ou moins-values fiscales"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
+msgid "Account:"
+msgstr "Compte :"
 
 #. module: smile_account_asset
 #: selection:account.asset.depreciation.line,depreciation_type:0
@@ -90,6 +132,7 @@ msgid "Accounting"
 msgstr "Comptable"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_category_form
 #: model:ir.ui.view,arch_db:smile_account_asset.view_company_form
 msgid "Accounting"
@@ -162,6 +205,16 @@ msgid "Accounting date for sale"
 msgstr "Date de comptabilisation de la cession"
 
 #. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_account_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_account_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_account_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_account_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_account_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_account_ids
+msgid "Accounts"
+msgstr "Comptes"
+
+#. module: smile_account_asset
 #: code:addons/smile_account_asset/models/account_asset_category.py:140
 #, python-format
 msgid "Accounts and journals must be linked to the same company as asset category"
@@ -174,8 +227,15 @@ msgstr "Amortissement cumulé"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_accumulated_value
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
 msgid "Accumulated Depreciation"
 msgstr "Amortissement cumulé"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
+msgid "Accumulated Depreciation<br/><i>Non Ded. Part</i>"
+msgstr "Amortissement cumulé<br/><i>Part Non Déd.</i>"
 
 #. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_search
@@ -192,6 +252,11 @@ msgstr "Acquise ou en cours"
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_active
 msgid "Active"
 msgstr "Actif/ve"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+msgid "Additional"
+msgstr "TVA à reverser"
 
 #. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_form
@@ -265,6 +330,7 @@ msgstr "Condition d'application"
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_asset_id
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_invoice_line_asset_id
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_move_line_asset_id
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_category_form
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_depreciation_line_search
@@ -335,6 +401,7 @@ msgid "Asset Disposals"
 msgstr "Cessions/mises au rebut"
 
 #. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_asset_in_progress
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_asset_in_progress
 msgid "Asset In Progress"
 msgstr "En-cours"
@@ -400,6 +467,24 @@ msgid "Asset Update"
 msgstr "Mise à jour de l'immobilisation"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+msgid "Asset and Depreciation"
+msgstr "Amortissement et Dépréciation"
+
+#. module: smile_account_asset
+#: model:ir.actions.report,name:smile_account_asset.action_report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+msgid "Asset depreciations"
+msgstr "Situations des dotations"
+
+#. module: smile_account_asset
+#: model:ir.actions.act_window,name:smile_account_asset.action_asset_depreciations_report
+#: model:ir.model,name:smile_account_asset.model_account_asset_depreciations_report
+#: model:ir.ui.menu,name:smile_account_asset.menu_account_asset_depreciations_report
+msgid "Asset depreciations report"
+msgstr "Situations des dotations"
+
+#. module: smile_account_asset
 #: model:ir.model,name:smile_account_asset.model_account_asset_history
 msgid "Asset history"
 msgstr "Historique des immobilisations"
@@ -411,10 +496,40 @@ msgstr "Historique des immobilisations"
 #: model:ir.ui.menu,name:smile_account_asset.menu_account_assets
 #: model:ir.ui.menu,name:smile_account_asset.menu_account_assets_management
 #: model:ir.ui.menu,name:smile_account_asset.menu_account_assets_parent
+#: model:ir.ui.menu,name:smile_account_asset.menu_finance_reports_account_assets
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_search
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_tree
 msgid "Assets"
 msgstr "Immobilisations"
+
+#. module: smile_account_asset
+#: model:ir.actions.act_window,name:smile_account_asset.action_account_asset_report
+#: model:ir.model,name:smile_account_asset.model_account_asset_report
+#: model:ir.ui.menu,name:smile_account_asset.menu_account_asset_report
+msgid "Assets Report"
+msgstr "Bilan"
+
+#. module: smile_account_asset
+#: model:ir.actions.act_window,name:smile_account_asset.action_account_assets_in_progress_report
+#: model:ir.actions.report,name:smile_account_asset.action_report_account_assets_in_progress
+#: model:ir.ui.menu,name:smile_account_asset.menu_account_assets_in_progress
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+msgid "Assets in progress"
+msgstr "Immobilisations en cours"
+
+#. module: smile_account_asset
+#: model:ir.model,name:smile_account_asset.model_account_assets_in_progress_report
+msgid "Assets in progress report"
+msgstr "Rapport des immobilisations en cours"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
+msgid "At"
+msgstr "Au"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_attachment_ids
@@ -463,6 +578,8 @@ msgstr "Bimensuelle"
 #: selection:account.asset.depreciation.method,base_value:0
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_book_value
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_book_value_sign
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
 msgid "Book Value"
 msgstr "Valeur nette"
 
@@ -478,13 +595,18 @@ msgid "Book value at end without exceptional"
 msgstr "VNC hors dépréciation"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:196
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:197
 #, python-format
 msgid "Book value with exceptional depreciations cannot be superior to book value without exceptional depreciations, nor inferior to salvage value!"
 msgstr "La valeur nette avec dépréciations exeptionnelles ne peut pas être supérieure à la valeur nette sans dépréciation exeptionnelle, et/ou inférieure à la valeur résiduelle !"
 
 #. module: smile_account_asset
-#: selection:account.asset.asset,state:0
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
+msgid "CO2 Rate"
+msgstr "Taux de CO2"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.account_asset_common_report_view
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_sale_form
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_depreciation_line_form2
@@ -497,6 +619,21 @@ msgstr "Annuler"
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_form
 msgid "Cancel disposal"
 msgstr "Annuler la cession"
+
+#. module: smile_account_asset
+#: selection:account.asset.asset,state:0
+msgid "Cancelled"
+msgstr "Annulée"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_category_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_category_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_category_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_category_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_category_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_category_ids
+msgid "Categories"
+msgstr "Catégories"
 
 #. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_form
@@ -527,8 +664,14 @@ msgstr "Sociétés"
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_company_id
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_company_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_company_id
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_company_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_company_id
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_company_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_company_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_company_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_company_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_company_id
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_sale_search
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_search
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_category_search
@@ -564,22 +707,41 @@ msgid "Convert book value to exceptional depreciation if scrapping"
 msgstr "Convertir la valeur brute en dépréciation exceptionnelle en cas de mise au rebut"
 
 #. module: smile_account_asset
+#. openerp-web
+#: code:addons/smile_account_asset/static/src/xml/account_asset.xml:5
+#, python-format
+msgid "Create an asset"
+msgstr "Créer une immobilisation"
+
+#. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_create_uid
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_create_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_create_uid
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_create_uid
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_create_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_create_uid
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_create_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_create_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_create_uid
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_create_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_create_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_create_uid
 msgid "Created by"
 msgstr "Créé par"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_create_date
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_create_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_create_date
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_create_date
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_create_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_create_date
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_create_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_create_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_create_date
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_create_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_create_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_create_date
 msgid "Created on"
 msgstr "Créé le"
 
@@ -594,6 +756,15 @@ msgstr "Créé le"
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_depreciation_line_search
 msgid "Currency"
 msgstr "Devise"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
+msgid "Currency:"
+msgstr "Devise :"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_current_year_accumulated_value
@@ -613,14 +784,31 @@ msgstr "Client"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_depreciation_date
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_sale_form
 msgid "Date"
 msgstr "Date "
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+msgid "Date sale/disposal"
+msgstr "Date cession/rebut"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+msgid "Date start"
+msgstr "Date début"
+
+#. module: smile_account_asset
 #: selection:account.asset.category,tax_regularization_base:0
 msgid "Deducted"
 msgstr "Déduite"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_purchase_tax_amount
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_purchase_tax_amount
+msgid "Deductible tax amount"
+msgstr "Montant de TVA déductible"
 
 #. module: smile_account_asset
 #: model:account.asset.depreciation.method,name:smile_account_asset.depreciation_method_fiscal_degressive
@@ -710,7 +898,12 @@ msgid "Depreciation Type"
 msgstr "Type d'amortissement"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:193
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+msgid "Depreciation of type accounting"
+msgstr "Amortissement de type comptable"
+
+#. module: smile_account_asset
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:194
 #, python-format
 msgid "Depreciation value cannot be bigger than gross value!"
 msgstr "La dépréciation ne peut être supérieure à la valeur brute de l'immobilisation"
@@ -721,13 +914,30 @@ msgid "Depreciations"
 msgstr "Amortissements"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+msgid "Description"
+msgstr "Description"
+
+#. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_abstract_asset_display_name
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_display_name
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_display_name
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_display_name
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_display_name
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_mixin_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_display_name
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_asset_depreciations_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_asset_sales_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_assets_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_assets_in_progress_display_name
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_fiscal_deductions_display_name
 msgid "Display Name"
 msgstr "Nom à afficher"
 
@@ -775,7 +985,32 @@ msgid "Draft"
 msgstr "Brouillon"
 
 #. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_dummy
+msgid "Dummy"
+msgstr "Dummy"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+msgid "Duration"
+msgstr "Durée"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
+msgid "Edition date:"
+msgstr "Date d'édition :"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_date_to
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_depreciation_stop_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_date_to
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_date_to
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_date_to
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_date_to
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_date_to
 msgid "End Date"
 msgstr "Date de fin"
 
@@ -790,7 +1025,7 @@ msgid "Exceptional"
 msgstr "Exceptionnel"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:276
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:277
 #, python-format
 msgid "Exceptional Amortization"
 msgstr "Amortissement exceptionnel"
@@ -840,6 +1075,7 @@ msgstr "Premier jour du mois de l'acquisition"
 #. module: smile_account_asset
 #: selection:account.asset.depreciation.line,depreciation_type:0
 #: selection:account.asset.depreciation.method,depreciation_type:0
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_depreciation_line_search
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_depreciation_method_search
 msgid "Fiscal"
@@ -876,6 +1112,7 @@ msgstr "Annuités fiscales"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_fiscal_book_value
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
 msgid "Fiscal Book Value"
 msgstr "Valeur Nette Fiscale"
 
@@ -935,6 +1172,18 @@ msgid "Fiscal Method"
 msgstr "Méthode fiscale"
 
 #. module: smile_account_asset
+#: model:ir.actions.act_window,name:smile_account_asset.action_account_asset_fiscal_deductions_report
+#: model:ir.actions.report,name:smile_account_asset.action_report_fiscal_deductions
+#: model:ir.ui.menu,name:smile_account_asset.menu_account_assets_fiscal_deductions
+msgid "Fiscal deductions"
+msgstr "Déductions fiscales"
+
+#. module: smile_account_asset
+#: model:ir.model,name:smile_account_asset.model_fiscal_deductions_report
+msgid "Fiscal deductions report"
+msgstr "Rapport des déductions fiscales"
+
+#. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_res_company_fiscalyear_start_day
 msgid "Fiscalyear Start Day"
 msgstr "Début de l'année fiscale"
@@ -945,13 +1194,26 @@ msgid "Force Benefit Accelerated Depreciation"
 msgstr "Force le bénéfice d'un amortissement dérogatoire"
 
 #. module: smile_account_asset
+#: code:addons/smile_account_asset/report/account_asset_report_mixin.py:14
+#, python-format
+msgid "Form content is missing, this report cannot be printed."
+msgstr "Le contenu du formulaire est manquant, le rapport ne peut pas être imprimé."
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+msgid "From"
+msgstr "Du"
+
+#. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_form
 msgid "General"
 msgstr "Général"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:318
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:328
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:319
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:329
 #, python-format
 msgid "Go to company configuration screen"
 msgstr "Allez sur l'écran de configuration de la société"
@@ -962,10 +1224,21 @@ msgstr "Allez sur l'écran de configuration de la société"
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_purchase_value
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_purchase_value_sign
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_purchase_value
-#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_initial_purchase_value
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_purchase_value_sign
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_purchase_value
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
 msgid "Gross Value"
 msgstr "Valeur brute"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_purchase_value
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_initial_purchase_value
+msgid "Gross value including non deductible tax"
+msgstr "Valeur brute TTCnd"
 
 #. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_category_search
@@ -987,6 +1260,11 @@ msgid "Halfyearly"
 msgstr "Semestrielle"
 
 #. module: smile_account_asset
+#: model:account.asset.category,name:smile_account_asset.account_asset_category_fixedassets
+msgid "Hardware - 5 Years"
+msgstr "Matériel - 5 Ans"
+
+#. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_asset_history_ids
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_form
 msgid "History"
@@ -996,10 +1274,22 @@ msgstr "Historique"
 #: model:ir.model.fields,field_description:smile_account_asset.field_abstract_asset_id
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_id
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_id
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_id
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_id
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_mixin_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_id
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_asset_depreciations_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_asset_sales_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_assets_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_assets_in_progress_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_fiscal_deductions_id
 msgid "ID"
 msgstr "ID"
 
@@ -1057,11 +1347,6 @@ msgid "Invoice"
 msgstr "Facture"
 
 #. module: smile_account_asset
-#: model:ir.model.fields,field_description:smile_account_asset.field_account_invoice_line_date_invoice
-msgid "Invoice Date"
-msgstr "Date de facture"
-
-#. module: smile_account_asset
 #: model:ir.model,name:smile_account_asset.model_account_invoice_line
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_invoice_line_form2
 msgid "Invoice Line"
@@ -1078,6 +1363,7 @@ msgstr "Lignes de facture"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_sale_invoice_number
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
 msgid "Invoice Number"
 msgstr "Numéro de facture"
 
@@ -1090,6 +1376,16 @@ msgstr "Sortie du patrimoine"
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_is_posted_forced
 msgid "Is Posted Forced"
 msgstr "Comptabilisé hors outil"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_is_posted
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_is_posted
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_is_posted
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_is_posted
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_is_posted
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_is_posted
+msgid "Is posted"
+msgstr "Comptabilisé"
 
 #. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_category_form
@@ -1124,38 +1420,69 @@ msgstr "A laisser vide pour utiliser un unique journal pour les immobilisations 
 #. module: smile_account_asset
 #: model:ir.model.fields,help:smile_account_asset.field_account_asset_asset_purchase_account_date
 #: model:ir.model.fields,help:smile_account_asset.field_account_asset_asset_sale_account_date
-#: model:ir.model.fields,help:smile_account_asset.field_account_invoice_line_date_invoice
 msgid "Keep empty to use the current date"
 msgstr "Laisser vide pour utiliser la date courante"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_write_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_write_uid
+msgid "Last Contributor"
+msgstr "Dernier contributeur"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_write_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_write_date
+msgid "Last Modification date"
+msgstr "Dernière modification le"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_abstract_asset___last_update
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset___last_update
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report___last_update
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line___last_update
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report___last_update
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_mixin___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report___last_update
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_asset_depreciations___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_asset_sales___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_assets___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_account_assets_in_progress___last_update
+#: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_fiscal_deductions___last_update
 msgid "Last Modified on"
 msgstr "Dernière modification le"
 
 #. module: smile_account_asset
-#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_write_uid
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_write_uid
-#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_write_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_write_uid
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_write_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_write_uid
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_write_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_write_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_write_uid
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_write_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_write_uid
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_write_uid
 msgid "Last Updated by"
 msgstr "Dernière mise à jour par"
 
 #. module: smile_account_asset
-#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_write_date
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_write_date
-#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_write_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_write_date
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_write_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_write_date
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_write_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_write_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_write_date
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_write_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_write_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
@@ -1199,6 +1526,11 @@ msgid "Manual Depreciation"
 msgstr "Amortissement manuel"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+msgid "Method"
+msgstr "Méthode"
+
+#. module: smile_account_asset
 #: sql_constraint:account.asset.depreciation.method:0
 msgid "Method code must be unique!"
 msgstr "Le code de la méthode doit être unique !"
@@ -1219,6 +1551,10 @@ msgstr "Mensuelle"
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_name
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_name
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_name
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
 msgid "Name"
 msgstr "Nom"
 
@@ -1238,7 +1574,7 @@ msgid "No Asset"
 msgstr "Non immobilisée"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_invoice_line.py:86
+#: code:addons/smile_account_asset/models/account_invoice_line.py:88
 #, python-format
 msgid "No asset to create from these invoice lines!"
 msgstr "Aucune immobilisation à créer à partir de ces lignes de facture"
@@ -1263,9 +1599,35 @@ msgid "Number"
 msgstr "Numéro"
 
 #. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_old_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_old_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_old_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_old_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_old_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_old_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_old_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_old_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_old_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_old_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_old_id
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_old_id
+msgid "Old"
+msgstr "Ancien"
+
+#. module: smile_account_asset
 #: model:ir.model.fields,help:smile_account_asset.field_account_asset_category_confirm_asset
 msgid "Only in automatic mode"
 msgstr "Seulement en mode automatique"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_only_total
+msgid "Only total"
+msgstr "Seulement les totaux"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+msgid "Origin"
+msgstr "Origine"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_origin_id
@@ -1305,25 +1667,30 @@ msgid "Period"
 msgstr "Délai de régularisation"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+msgid "Period Depreciation"
+msgstr "Dotation de la période"
+
+#. module: smile_account_asset
 #: code:addons/smile_account_asset/models/account_asset_asset.py:827
 #, python-format
 msgid "Please confirm this asset before validating it!"
 msgstr "Merci d'activer l'immobilisation avant de mettre en service celle-ci"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_invoice_line.py:107
+#: code:addons/smile_account_asset/models/account_invoice_line.py:114
 #, python-format
 msgid "Please indicate a parent asset in line %s"
 msgstr "Merci d'indiquer une immobilisation principale au niveau de la ligne de facture suivante : %s"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:325
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:326
 #, python-format
 msgid "Please indicate exceptional amortization accounts in company form!"
 msgstr "Merci d'indiquer les comptes d'amortissement exceptionnel sur la fiche société"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:315
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:316
 #, python-format
 msgid "Please indicate fiscal amortization accounts in company form!"
 msgstr "Merci d'indiquer les comptes d'amortissement dérogatoire sur la fiche société"
@@ -1346,10 +1713,20 @@ msgid "Posted Depreciation"
 msgstr "Comptabilisé"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+msgid "Previous Year Depreciation"
+msgstr "Amortissement Cumulé Année N-1"
+
+#. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_previous_years_accumulated_value
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_previous_years_accumulated_value_sign
 msgid "Previous Years Accumulated Depreciation"
 msgstr "Amortissement cumulé des années antérieures"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.account_asset_common_report_view
+msgid "Print"
+msgstr "Imprimer"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_prorata
@@ -1377,6 +1754,9 @@ msgstr "Pièce comptable d'annulation d'acquisition"
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_purchase_date
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_purchase_date
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
 msgid "Purchase Date"
 msgstr "Date d'acquisition"
 
@@ -1439,8 +1819,17 @@ msgstr "Créance"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_code
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
 msgid "Reference"
 msgstr "Référence"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.account_asset_common_report_view
+msgid "Report Options"
+msgstr "Options du rapport"
 
 #. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_sale_tree
@@ -1467,6 +1856,8 @@ msgstr "Pièce comptable d'annulation de la cession"
 #. module: smile_account_asset
 #: selection:account.asset.depreciation.method,depreciation_stop_date:0
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_sale_date
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
 msgid "Sale Date"
 msgstr "Date de cession"
 
@@ -1491,14 +1882,25 @@ msgid "Sale Result - Short Term"
 msgstr "Plus value à court terme"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+msgid "Sale Results"
+msgstr "Résultats de cession"
+
+#. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_sale_tax_ids
 msgid "Sale Taxes"
 msgstr "Taxes à la cession"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_sale_value
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
 msgid "Sale Value"
 msgstr "Moins Value"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+msgid "Sale/Disposal"
+msgstr "Vente/Mise au rebut"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_salvage_value
@@ -1506,8 +1908,10 @@ msgstr "Moins Value"
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_salvage_value
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_salvage_value_sign
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_salvage_value
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_salvage_value_sign
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_initial_salvage_value
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_split_wizard_salvage_value
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
 msgid "Salvage Value"
 msgstr "Valeur résiduelle"
 
@@ -1535,6 +1939,11 @@ msgid "Sell Or Scrap"
 msgstr "Céder ou mettre au rebut"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+msgid "Service Date"
+msgstr "Date de mise en service"
+
+#. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_sale_tree
 msgid "Short Term"
 msgstr "Court terme"
@@ -1543,6 +1952,11 @@ msgstr "Court terme"
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_category_confirm_asset
 msgid "Skip Draft State"
 msgstr "Sauter l'état brouillon"
+
+#. module: smile_account_asset
+#: model:account.asset.category,name:smile_account_asset.account_asset_category_digitalassets
+msgid "Software - 5 Years"
+msgstr "Logiciels - 5 Ans"
 
 #. module: smile_account_asset
 #: selection:account.asset.asset,state:0
@@ -1556,20 +1970,57 @@ msgid "Split"
 msgstr "Décomposer"
 
 #. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_date_from
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_depreciation_start_date
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_date_from
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_date_from
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_date_from
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_date_from
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_date_from
 msgid "Start Date"
 msgstr "Date de début"
 
 #. module: smile_account_asset
+#: code:addons/smile_account_asset/wizard/account_asset_report_common.py:58
+#, python-format
+msgid "Start date can't be greater than stop date"
+msgstr "La date de début ne peut pas être plus grande que la date de fin"
+
+#. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_state
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_state
-msgid "State"
-msgstr "Statut"
+msgid "Status"
+msgstr "État"
 
 #. module: smile_account_asset
 #: model:account.asset.depreciation.method,name:smile_account_asset.depreciation_method_accounting_softy
 msgid "Sum OF The Years"
 msgstr "Softy"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+msgid "Supplier"
+msgstr "Fournisseur"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_invoice_line_date_invoice
+msgid "Supplier date"
+msgstr "Date fournisseur"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_common_report_partner_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciations_report_partner_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_report_partner_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_sales_report_partner_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_assets_in_progress_report_partner_ids
+#: model:ir.model.fields,field_description:smile_account_asset.field_fiscal_deductions_report_partner_ids
+msgid "Suppliers"
+msgstr "Fournisseurs"
+
+#. module: smile_account_asset
+#: model:account.tax,name:smile_account_asset.account_tax_19_6_test
+msgid "TVA 19,6%"
+msgstr "TVA 19,6%"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_use_manual_rate
@@ -1643,10 +2094,25 @@ msgid "Taxes"
 msgstr "Taxes"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+msgid "Taxes To Pay"
+msgstr "TVA Complémentaire"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_depreciation_line_search
+msgid "The last 3 months"
+msgstr "Les 3 derniers mois"
+
+#. module: smile_account_asset
 #: code:addons/smile_account_asset/models/account_asset_depreciation_method.py:79
 #, python-format
 msgid "The method code %s doesn't exist!"
 msgstr "Le code de méthode %s n'existe pas !"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,help:smile_account_asset.field_account_asset_depreciation_method_rate_formula
+msgid "This expression is evaluated with length, annuity_number and rate (if depreciation rate indicated in asset) in localdict"
+msgstr "Cette expression est évaluée avec les paramètres suivants : longueur, nombre d'annuités et taux (si le taux d'amortissement est indiqué dans l'immobilisation)"
 
 #. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_depreciation_line_search
@@ -1659,16 +2125,11 @@ msgid "This month"
 msgstr "Ce mois"
 
 #. module: smile_account_asset
-#: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_depreciation_line_search
-msgid "The last 3 months"
-msgstr "Les 3 derniers mois"
-
-#. module: smile_account_asset
-#: model:ir.model.fields,help:smile_account_asset.field_account_asset_depreciation_method_rate_formula
-msgid "This expression is evaluated with length, annuity_number and rate (if depreciation rate indicated in asset) in localdict"
-msgstr "Cette expression est évaluée avec les paramètres suivants : longueur, nombre d'annuités et taux (si le taux d'amortissement est indiqué dans l'immobilisation)"
-
-#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_sale_tree
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_tree
@@ -1707,10 +2168,16 @@ msgid "Total tax regularization"
 msgstr "Total régularisationde taxe"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+msgid "Total:"
+msgstr "Total :"
+
+#. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_asset_type
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_asset_type
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_line_depreciation_type
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_depreciation_method_depreciation_type
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
 msgid "Type"
 msgstr "Type"
 
@@ -1751,6 +2218,11 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+msgid "VAT"
+msgstr "TVA"
+
+#. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_depreciation_line_form2
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_history_form
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_split_wizard_form
@@ -1776,9 +2248,34 @@ msgid "Year"
 msgstr "Année"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+msgid "Year &lt; N"
+msgstr "Année &lt; N"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+msgid "Year &lt;= N"
+msgstr "Année &lt;= N"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+msgid "Year Depreciation"
+msgstr "Dotation de l'année"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+msgid "Year N"
+msgstr "Année N"
+
+#. module: smile_account_asset
 #: selection:res.company,depreciation_period:0
 msgid "Yearly"
 msgstr "Annuelle"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
+msgid "Year Depreciation<br/><i>Non Ded. Part</i>"
+msgstr "Amortissement annuel<br/><i>Part Non Déd.</i>"
 
 #. module: smile_account_asset
 #: code:addons/smile_account_asset/models/account_asset_asset.py:774
@@ -1816,7 +2313,7 @@ msgid "You cannot dispose a %s asset"
 msgstr "Vous ne pouvez pas céder ou mettre au rebut l'immobilisation %s"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_invoice_line.py:102
+#: code:addons/smile_account_asset/models/account_invoice_line.py:109
 #, python-format
 msgid "You cannot not create an asset from invoice lines with different %s"
 msgstr "Vous ne pouvez pas créer d'immobilisation à partir de lignes de factures liées à différent %s"
@@ -1876,8 +2373,39 @@ msgid "You must specify a salvage value lower than gross value!"
 msgstr "Vous devez indiquer une valeur résiduelle inférieure à la valeur brute !"
 
 #. module: smile_account_asset
-#. openerp-web
-#: code:addons/smile_account_asset/static/src/xml/account_asset.xml:6
-#, python-format
-msgid "Create an asset"
-msgstr "Créer une immobilisation"
+#: model:ir.model,name:smile_account_asset.model_account_asset_report_mixin
+msgid "account.asset.report.mixin"
+msgstr "account.asset.report.mixin"
+
+#. module: smile_account_asset
+#: model:ir.model,name:smile_account_asset.model_report_smile_account_asset_report_account_asset_depreciations
+msgid "report.smile_account_asset.report_account_asset_depreciations"
+msgstr "report.smile_account_asset.report_account_asset_depreciations"
+
+#. module: smile_account_asset
+#: model:ir.model,name:smile_account_asset.model_report_smile_account_asset_report_account_asset_sales
+msgid "report.smile_account_asset.report_account_asset_sales"
+msgstr "report.smile_account_asset.report_account_asset_sales"
+
+#. module: smile_account_asset
+#: model:ir.model,name:smile_account_asset.model_report_smile_account_asset_report_account_assets
+msgid "report.smile_account_asset.report_account_assets"
+msgstr "report.smile_account_asset.report_account_assets"
+
+#. module: smile_account_asset
+#: model:ir.model,name:smile_account_asset.model_report_smile_account_asset_report_account_assets_in_progress
+msgid "report.smile_account_asset.report_account_assets_in_progress"
+msgstr "report.smile_account_asset.report_account_assets_in_progress"
+
+#. module: smile_account_asset
+#: model:ir.model,name:smile_account_asset.model_report_smile_account_asset_report_fiscal_deductions
+msgid "report.smile_account_asset.report_fiscal_deductions"
+msgstr "report.smile_account_asset.report_fiscal_deductions"
+
+#. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_depreciations
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_asset_sales
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets_in_progress
+msgid "to"
+msgstr "au"
+

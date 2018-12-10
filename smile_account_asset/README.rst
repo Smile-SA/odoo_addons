@@ -51,6 +51,28 @@ Usage
    :alt: invoice
    :width: 100%
 
+Financial reporting
+===================
+
+The following part is described in French, as this is only available for France.
+
+Cinq rapports ont été implémentés :
+
+* Bilan :
+    * Retourne les immobilisations :
+        * acquises définitivement antérieurement à la date de fin
+        * non cédée à la date de fin ou cédée depuis le début de l'exercice  fiscal courant à la date de fin
+* Plus ou moins-values fiscales :
+    * Retourne les immobilisations cédées au cours de la période
+* Situation des dotations :
+    * Retourne les immobilisations en service sur la période du rapport
+* Déductions fiscales :
+    * Retourne les immobilisations bénéficiant d'une déduction fiscale en service à la date de fin ou cédée dans l'exercice de la date de fin
+* Immobilisations en cours :
+    * Retourne les lignes de facture associées à
+        * une immobilisation en cours à la date de fin
+        * aucune immobilisation mais liée à une catégorie d'immobilisation en cours
+
 Bug Tracker
 ===========
 

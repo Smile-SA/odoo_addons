@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_account_asset_fiscal_deductions_report" model="ir.actions.act_window">
+            <field name="name">Fiscal deductions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fiscal.deductions.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_asset_common_report_view"/>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_account_asset_asset" />
+            <field name="binding_type">report</field>
+        </record>
+
+        <menuitem
+            id="menu_account_assets_fiscal_deductions"
+            name="Fiscal deductions"
+            parent="menu_finance_reports_account_assets"
+            sequence="40"
+            action="action_account_asset_fiscal_deductions_report"/>
+
+   </data>
+</odoo>

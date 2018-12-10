@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_account_assets">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-if="docs">
+
+                        <t t-set="company" t-value="docs[0].env.user.company_id"/>
+                        <t t-set="currency" t-value="company.currency_id"/>
+                        <t t-set="date_to" t-value="data['form']['date_to']"/>
+                        <t t-set="is_posted" t-value="data['form']['is_posted']"/>
+                        <t t-set="assets_grouped" t-value="group_by(docs, currency, date_to, is_posted)"/>
+
+                        <t t-set="purchase_company" t-value="0.0"/>
+                        <t t-set="salvage_company" t-value="0.0"/>
+                        <t t-set="previous_company" t-value="0.0"/>
+                        <t t-set="current_company" t-value="0.0"/>
+                        <t t-set="next_company" t-value="0.0"/>
+                        <t t-set="book_company" t-value="0.0"/>
+
+                        <!-- Main title -->
+                        <h1 class="text-center">Account Assets</h1>
+                        <h2 class="text-center">Depreciation of type accounting</h2>
+                        <h3 class="text-center">At <span t-esc="date_to" t-options='{"widget": "date"}'/></h3>
+                        <h3 class="text-center">Edition date: <span t-esc="time.strftime('%Y-%m-%d')" t-options='{"widget": "date"}'/></h3>
+
+                        <hr/>
+
+                        <h3>Currency: <span t-field="currency.name"/> <span t-field="currency.symbol"/></h3>
+
+                        <!-- Group assets by account -->
+                        <t t-foreach="assets_grouped" t-as="account_group">
+
+                            <t t-set="asset_account" t-value="account_group[0]"/>
+
+                            <t t-set="purchase_account" t-value="0.0"/>
+                            <t t-set="salvage_account" t-value="0.0"/>
+                            <t t-set="previous_account" t-value="0.0"/>
+                            <t t-set="current_account" t-value="0.0"/>
+                            <t t-set="next_account" t-value="0.0"/>
+                            <t t-set="book_account" t-value="0.0"/>
+
+                            <h3>Account: <span t-esc="asset_account.code.rjust(8, '0')"/> <span t-field="asset_account.name"/></h3>
+
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">Reference</th>
+                                        <th rowspan="2">Name</th>
+                                        <th colspan="4">Asset</th>
+                                        <th rowspan="2">Gross Value</th>
+                                        <th rowspan="2">Salvage Value</th>
+                                        <th colspan="3">Asset and Depreciation</th>
+                                        <th rowspan="2">Book Value</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Method</th>
+                                        <th>Date start</th>
+                                        <th>Duration</th>
+                                        <th>Date sale/disposal</th>
+                                        <th>Year &lt; N</th>
+                                        <th>Year N</th>
+                                        <th>Year &lt;= N</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="assets_grouped[account_group]" t-as="asset_group">
+                                        <!-- Infos of each asset of the account group -->
+                                        <t t-set="asset" t-value="asset_group[0]"/>
+                                        <t t-set="asset_infos" t-value="asset_group[1]"/>
+
+                                        <!-- Update account infos -->
+                                        <t t-set="purchase_account" t-value="purchase_account + asset_infos['purchase']"/>
+                                        <t t-set="salvage_account" t-value="salvage_account + asset_infos['salvage']"/>
+                                        <t t-set="previous_account" t-value="previous_account + asset_infos['previous']"/>
+                                        <t t-set="current_account" t-value="current_account + asset_infos['current']"/>
+                                        <t t-set="next_account" t-value="next_account + asset_infos['next']"/>
+                                        <t t-set="book_account" t-value="book_account + asset_infos['book']"/>
+
+                                        <tr>
+                                            <td class="text-left"><span t-field="asset.code"/></td>
+                                            <td class="text-left"><span t-field="asset.name"/></td>
+                                            <td class="text-center"><span t-field="asset.accounting_method"/></td>
+                                            <td class="text-center"><span t-field="asset.purchase_date"/></td>
+                                            <td class="text-left"><span t-field="asset.accounting_annuities"/></td>
+                                            <td class="text-center"><span t-field="asset.sale_date"/></td>
+                                            <td class="text-right" t-esc="asset_infos['purchase']"/>
+                                            <td class="text-right" t-esc="asset_infos['salvage']"/>
+                                            <td class="text-right" t-esc="asset_infos['previous']"/>
+                                            <td class="text-right" t-esc="asset_infos['current']"/>
+                                            <td class="text-right" t-esc="asset_infos['next']"/>
+                                            <td class="text-right" t-esc="asset_infos['book']"/>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <!-- Total infos of the account group -->
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2" colspan="6"/>
+                                        <th rowspan="2">Gross Value</th>
+                                        <th rowspan="2">Salvage Value</th>
+                                        <th colspan="3">Asset and Depreciation</th>
+                                        <th rowspan="2">Book Value</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Year &lt; N</th>
+                                        <th>Year N</th>
+                                        <th>Year &lt;= N</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" class="text-left">Total <span t-esc="asset_account.code.rjust(8, '0')"/> <span t-field="asset_account.name"/></td>
+                                        <td class="text-right" t-esc="purchase_account"/>
+                                        <td class="text-right" t-esc="salvage_account"/>
+                                        <td class="text-right" t-esc="previous_account"/>
+                                        <td class="text-right" t-esc="current_account"/>
+                                        <td class="text-right" t-esc="next_account"/>
+                                        <td class="text-right" t-esc="book_account"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Update company infos -->
+                            <t t-set="purchase_company" t-value="purchase_company + purchase_account"/>
+                            <t t-set="salvage_company" t-value="salvage_company + salvage_account"/>
+                            <t t-set="previous_company" t-value="previous_company + previous_account"/>
+                            <t t-set="current_company" t-value="current_company + current_account"/>
+                            <t t-set="next_company" t-value="next_company + next_account"/>
+                            <t t-set="book_company" t-value="book_company + book_account"/>
+
+                        </t>
+
+                        <!-- Main total of the document -->
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" colspan="6"/>
+                                    <th rowspan="2">Gross Value</th>
+                                    <th rowspan="2">Salvage Value</th>
+                                    <th colspan="3">Asset and Depreciation</th>
+                                    <th rowspan="2">Book Value</th>
+                                </tr>
+                                <tr>
+                                    <th>Year &lt; N</th>
+                                    <th>Year N</th>
+                                    <th>Year &lt;= N</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="text-left">Total <span t-field="company.name"/></td>
+                                    <td class="text-right" t-esc="purchase_company"/>
+                                    <td class="text-right" t-esc="salvage_company"/>
+                                    <td class="text-right" t-esc="previous_company"/>
+                                    <td class="text-right" t-esc="current_company"/>
+                                    <td class="text-right" t-esc="next_company"/>
+                                    <td class="text-right" t-esc="book_company"/>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </t>
+                </div>
+
+            </t>
+        </t>
+    </template>
+
+    <report
+        id="action_report_account_assets"
+        model="account.asset.report"
+        string="Account Assets"
+        report_type="qweb-pdf"
+        paperformat="paperformat_euro_landscape"
+        name="smile_account_asset.report_account_assets"
+        file="smile_account_asset.report_account_assets"/>
+
+</odoo>

@@ -1282,3 +1282,13 @@ class AccountAssetAsset(models.Model):
                 vals['line_ids'] = new_line_vals
                 moves |= moves.create(vals)
         return moves.post() if moves else True
+
+    @api.multi
+    def _get_last_depreciation(self, depreciation_date, is_posted=True):
+        self.ensure_one()
+        return self.env['account.asset.depreciation.line'].search([
+            ('asset_id', '=', self.id),
+            ('depreciation_type', '=', 'accounting'),
+            ('depreciation_date', '<=', depreciation_date),
+            ('is_posted', '=', is_posted),
+        ], limit=1, order='depreciation_date desc')

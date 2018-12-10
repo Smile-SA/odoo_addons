@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_asset_common_report_view" model="ir.ui.view">
+            <field name="name">Asset Common Report</field>
+            <field name="model">account.asset.common.report</field>
+            <field name="arch" type="xml">
+            <form string="Report Options">
+                <group col="4">
+                    <field name="date_to"/>
+                    <field name="company_id" invisible="1"/>
+                </group>
+                <group>
+                    <field name="category_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    <field name="partner_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    <field name="account_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                </group>
+                <footer>
+                    <button name="check_report" string="Print" type="object" class="oe_highlight"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
