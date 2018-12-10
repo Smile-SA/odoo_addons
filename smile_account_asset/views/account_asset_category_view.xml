@@ -112,7 +112,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Taxation">
+                            <page string="Taxation" attrs="{'invisible': [('asset_in_progress', '=', True)]}">
                                 <group>
                                     <group string="Fiscal Deduction">
                                         <field name="fiscal_deduction_limit" string="Limit"/>

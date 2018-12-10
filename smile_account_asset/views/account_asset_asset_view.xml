@@ -36,7 +36,9 @@
             <field name="name">account.asset.asset.tree</field>
             <field name="model">account.asset.asset</field>
             <field name="arch" type="xml">
-                <tree string="Assets" colors="blue:state == 'draft';black:state in ('confirm','open');gray:state == 'cancel'">
+                <tree string="Assets"
+						decoration-info="state=='draft'"
+						decoration-muted="state=='cancel'">
                     <field name="name"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="code"/>
@@ -81,6 +83,7 @@
                                 <field name="category_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="asset_in_progress" invisible="1"/>
                             </group>
                             <group>
                                 <field name="purchase_value" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
@@ -119,7 +122,8 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="depreciation_board" string="Depreciation Board">
+                            <page name="depreciation_board" string="Depreciation Board"
+                                    attrs="{'invisible': [('asset_in_progress', '=', True)]}">
                                 <group>
                                     <group name="accounting_depreciation" string="Accounting Depreciation">
                                         <field name="accounting_method" string="Computation Method"/>
@@ -142,7 +146,8 @@
                                     </group>
                                     <group>
                                         <field name="accounting_depreciation_line_ids" colspan="2" nolabel="1" mode="tree" attrs="{'invisible': [('accounting_method', '=', 'none')], 'readonly': [('accounting_method', '!=', 'manual')]}" context="{'default_is_manual': accounting_method == 'manual', 'default_depreciation_type': 'accounting'}">
-                                            <tree string="Accounting Depreciation Board" colors="blue:(is_posted == False);black:(is_posted != False)" editable="bottom">
+                                            <tree string="Accounting Depreciation Board"
+                                                    decoration-info="not is_posted" editable="bottom">
                                                 <field name="depreciation_date"/>
                                                 <field name="base_value"/>
                                                 <field name="depreciation_value" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}" string="Amortization"/>
@@ -156,20 +161,22 @@
                                                 <button name="post_depreciation_line" icon="fa-cogs" string="Post" type="object" attrs="{'invisible':['|',('move_id','!=',False),('state','!=','open')]}"/>
                                             </tree>
                                             <form string="Depreciation Line">
-                                                <field name="depreciation_date"/>
-                                                <field name="base_value"/>
-                                                <field name="depreciation_value" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}"/>
-                                                <field name="accumulated_value"/>
-                                                <field name="exceptional_value"/>
-                                                <field name="book_value"/>
-                                                <field name="is_manual" invisible="1"/>
-                                                <field name="depreciation_type" invisible="1"/>
+                                                <group>
+                                                    <field name="depreciation_date"/>
+                                                    <field name="base_value"/>
+                                                    <field name="depreciation_value" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}"/>
+                                                    <field name="accumulated_value"/>
+                                                    <field name="exceptional_value"/>
+                                                    <field name="book_value"/>
+                                                    <field name="is_manual" invisible="1"/>
+                                                    <field name="depreciation_type" invisible="1"/>
+                                                </group>
                                             </form>
                                         </field>
                                     </group>
                                     <group>
                                         <field name="fiscal_depreciation_line_ids" colspan="2" nolabel="1" mode="tree" attrs="{'invisible': [('fiscal_method', '=', 'none')], 'readonly': [('fiscal_method', '!=', 'manual')]}" context="{'default_is_manual': accounting_method == 'manual', 'default_depreciation_type': 'fiscal'}">
-                                            <tree string="Fiscal Depreciation Board" colors="blue:(is_posted == False);black:(is_posted != False)" editable="bottom">
+                                            <tree string="Fiscal Depreciation Board" decoration-info="not is_posted" editable="bottom">
                                                 <field name="depreciation_date"/>
                                                 <field name="depreciation_value" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}" string="Fiscal Depreciation"/>
                                                 <field name="accounting_value"/>
@@ -182,13 +189,15 @@
                                                 <button name="post_depreciation_line" icon="fa-cogs" string="Post" type="object" attrs="{'invisible':['|',('benefit_accelerated_depreciation','=',False),'|',('move_id','!=',False),('state','!=','open')]}"/>
                                             </tree>
                                             <form string="Depreciation Line">
-                                                <field name="depreciation_date"/>
-                                                <field name="base_value"/>
-                                                <field name="depreciation_value" string="Fiscal Depreciation" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}"/>
-                                                <field name="accounting_value"/>
-                                                <field name="accelerated_value" sum="Total"/>
-                                                <field name="is_manual" invisible="1"/>
-                                                <field name="depreciation_type" invisible="1"/>
+                                                <group>
+                                                    <field name="depreciation_date"/>
+                                                    <field name="base_value"/>
+                                                    <field name="depreciation_value" string="Fiscal Depreciation" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}"/>
+                                                    <field name="accounting_value"/>
+                                                    <field name="accelerated_value" sum="Total"/>
+                                                    <field name="is_manual" invisible="1"/>
+                                                    <field name="depreciation_type" invisible="1"/>
+                                                </group>
                                             </form>
                                         </field>
                                     </group>
@@ -320,7 +329,7 @@
             <field name="name">account.asset.asset.sale.tree</field>
             <field name="model">account.asset.asset</field>
             <field name="arch" type="xml">
-                <tree string="Asset Disposals" colors="grey:sale_type=='scrapping'">
+                <tree string="Asset Disposals" decoration-muted="sale_type=='scrapping'">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="category_id"/>

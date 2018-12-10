@@ -18,6 +18,7 @@
                             <field name="in_service_date"
                                 invisible="not context.get('asset_validation', False)"
                                 required="context.get('asset_validation', False)"/>
+                            <field name="dummy" invisible="1"/>
                         </group>
                         <newline/>
                         <group string="Accounting Depreciation">

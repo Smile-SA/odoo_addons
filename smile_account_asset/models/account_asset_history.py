@@ -29,11 +29,23 @@ class AccountAssetHistory(models.Model):
         related='asset_id.currency_id', readonly=True)
     purchase_value = fields.Monetary('Gross Value', required=True)
     salvage_value = fields.Monetary('Salvage Value')
+    purchase_value_sign = fields.Monetary(
+        'Gross Value', compute='_get_book_value', store=True)
+    salvage_value_sign = fields.Monetary(
+        'Salvage Value', compute='_get_book_value', store=True)
     purchase_tax_amount = fields.Monetary('Tax Amount', readonly=True)
     purchase_date = fields.Date(required=True, readonly=True)
     in_service_date = fields.Date('In-service Date')
     benefit_accelerated_depreciation = fields.Boolean(readonly=True)
     note = fields.Text('Reason')
+    dummy = fields.Boolean(store=False)
+
+    @api.one
+    @api.depends('purchase_value', 'salvage_value', 'asset_id.asset_type')
+    def _get_book_value(self):
+        sign = self.asset_id.asset_type == 'purchase_refund' and -1 or 1
+        self.purchase_value_sign = self.purchase_value * sign
+        self.salvage_value_sign = self.salvage_value * sign
 
     @api.model
     def _get_fields_to_read(self):
@@ -48,8 +60,11 @@ class AccountAssetHistory(models.Model):
 
     @api.onchange('category_id')
     def _onchange_category(self):
-        for field in self.asset_id._category_fields:
-            self[field] = self.category_id[field]
+        if self.dummy:
+            for field in self.asset_id._category_fields:
+                self[field] = self.category_id[field]
+        else:
+            self.dummy = True
 
     @api.model
     def create(self, vals):
@@ -71,7 +86,9 @@ class AccountAssetHistory(models.Model):
     @api.multi
     def validate(self):
         if self._context.get('asset_validation'):
-            self.mapped('asset_id').validate()
+            asset = self.mapped('asset_id')
+            asset.invalidate_cache()
+            asset.validate()
         return True
 
     @api.multi
