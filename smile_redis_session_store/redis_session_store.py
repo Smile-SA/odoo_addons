@@ -1,23 +1,6 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2016 Smile (<http://www.smile.fr>). All Rights Reserved
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# (C) 2018 Smile (<http://www.smile.fr>)
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 # Inspired by aek's Gist (<https://gist.github.com/aek/efb0f9dd8935471f9070>).
 
@@ -44,7 +27,9 @@ try:
     import redis
 except ImportError:
     if is_redis_session_store_activated():
-        raise ImportError('Please install package python-redis: apt-get install python-redis')
+        raise ImportError(
+            'Please install package python3-redis: '
+            'apt install python3-redis')
 
 
 class RedisSessionStore(werkzeug.contrib.sessions.SessionStore):
@@ -53,10 +38,11 @@ class RedisSessionStore(werkzeug.contrib.sessions.SessionStore):
         super(RedisSessionStore, self).__init__(*args, **kwargs)
         self.expire = kwargs.get('expire', SESSION_TIMEOUT)
         self.key_prefix = kwargs.get('key_prefix', '')
-        self.redis = redis.Redis(host=tools.config.get('redis_host', 'localhost'),
-                                 port=int(tools.config.get('redis_port', 6379)),
-                                 db=int(tools.config.get('redis_dbindex', 1)),
-                                 password=tools.config.get('redis_pass', None))
+        self.redis = redis.Redis(
+            host=tools.config.get('redis_host', 'localhost'),
+            port=int(tools.config.get('redis_port', 6379)),
+            db=int(tools.config.get('redis_dbindex', 1)),
+            password=tools.config.get('redis_pass', None))
         self._is_redis_server_running()
 
     def save(self, session):
@@ -96,7 +82,8 @@ if is_redis_session_store_activated():
     # Patch methods of openerp.http to use Redis instead of filesystem
 
     def session_gc(session_store):
-        # Override to ignore file unlink because sessions are not stored in files
+        # Override to ignore file unlink
+        # because sessions are not stored in files
         pass
 
     @lazy_property
