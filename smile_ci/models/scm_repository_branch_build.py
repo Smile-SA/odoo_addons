@@ -990,7 +990,7 @@ class Build(models.Model):
 
     @api.one
     def _kill_container(self, ignore_exceptions=True):
-        vals = {'state': 'done', 'port': False}
+        vals = {'state': 'done', 'port': False, 'is_to_keep': False}
         if self.state != 'running':
             vals['result'] = 'killed'
         self.write_with_new_cursor(vals)
