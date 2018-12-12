@@ -20,11 +20,13 @@ def _convert_values(self, vals):
 
 
 def _convert_domain(self, domain):
-    for condition in domain:
+    for index, condition in enumerate(domain):
         if isinstance(condition, (tuple, list)) and condition[2] and \
                 (isinstance(condition[2], string_types) or
                  (isinstance(condition[2], list) and
                   isinstance(condition[2][0], string_types))):
+            if isinstance(condition, tuple):
+                condition = list(condition)
             model = self
             for field_name in condition[0].split('.'):
                 field = model._fields.get(field_name)
@@ -45,6 +47,7 @@ def _convert_domain(self, domain):
                         ids.append(IrModelData.xmlid_to_res_id(
                             xmlid, raise_if_not_found=True))
                     condition[2] = ids
+            domain[index] = condition
 
 
 def call_kw_model(method, self, args, kwargs):
@@ -58,7 +61,9 @@ def call_kw_model(method, self, args, kwargs):
 def call_kw_multi(method, self, args, kwargs):
     if args:
         args = list(args)
-        old_ids = args[0] if hasattr(args[0], '__iter__') else [args[0]]
+        old_ids = args[0]
+        if not isinstance(args[0], (list, tuple, set)):
+            old_ids = [args[0]]
         new_ids = []
         for id_ in old_ids:
             if isinstance(id_, string_types):
