@@ -2,7 +2,7 @@
     :alt: License: AGPL-3
 
 .. |badge2| image:: https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github
-    :target: https://github.com/Smile-SA/odoo_addons/tree/11.0/smile_upgrade
+    :target: https://github.com/Smile-SA/odoo_addons/tree/10.0/smile_upgrade
     :alt: Smile-SA/odoo_addons
 
 |badge1| |badge2|
