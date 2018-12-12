@@ -35,7 +35,7 @@ ASSET_STATES = [
     ('confirm', 'Acquised Or In progress'),
     ('open', 'Into service'),
     ('close', 'Sold Or Scrapped'),
-    ('cancel', 'Cancel'),
+    ('cancel', 'Cancelled'),
 ]
 ASSET_TYPES = [
     ('purchase', 'Purchase'),
@@ -70,7 +70,7 @@ class AccountAssetAsset(models.Model):
         readonly=True, states={'draft': [('readonly', False)]})
     code = fields.Char('Reference', readonly=True, copy=False)
     state = fields.Selection(
-        ASSET_STATES, 'State', readonly=True, default='draft')
+        ASSET_STATES, 'Status', readonly=True, default='draft')
     parent_id = fields.Many2one(
         'account.asset.asset', 'Parent Asset',
         readonly=True, states={'draft': [('readonly', False)]},
@@ -86,6 +86,8 @@ class AccountAssetAsset(models.Model):
         'account.asset.category', 'Asset Category', required=True,
         readonly=True, states={'draft': [('readonly', False)]},
         ondelete='restrict')
+    asset_in_progress = fields.Boolean(
+        related='category_id.asset_in_progress', readonly=True)
     company_id = fields.Many2one(
         related='category_id.company_id', store=True, readonly=True)
     # CHANGE: allow to update anytime currency and offer a button
@@ -814,7 +816,7 @@ class AccountAssetAsset(models.Model):
 
     @api.one
     def _can_validate(self):
-        if self.category_id.asset_in_progress:
+        if self.asset_in_progress:
             raise UserError(
                 _('You cannot validate an asset in progress'))
         if not self.in_service_date:
@@ -1152,13 +1154,13 @@ class AccountAssetAsset(models.Model):
         if self.regularization_tax_amount:
             move_lines.extend(self._get_inventory_move_tax_lines())
         default = default or {}
-        for line in move_lines:
+        for index, line in enumerate(move_lines):
             if line['debit'] < 0 or line['credit'] < 0:
                 line['debit'], line['credit'] = \
                     abs(line['credit']), abs(line['debit'])
-            line.update(default or {})
             if (self.asset_type == 'purchase_refund') ^ reverse:
                 line['debit'], line['credit'] = line['credit'], line['debit']
+            line.update(default or {})
         return move_lines
 
     @api.multi
@@ -1180,6 +1182,8 @@ class AccountAssetAsset(models.Model):
 
     @api.model
     def change_accounts(self, relation, old_values, new_values):
+        if self._context.get('ignore_change_accounts'):
+            return True
         accounts_by_group = self._get_changed_accounts(old_values, new_values)
         relation_model, relation_id = relation.split(',')
         relation_id = int(relation_id)
@@ -1278,3 +1282,13 @@ class AccountAssetAsset(models.Model):
                 vals['line_ids'] = new_line_vals
                 moves |= moves.create(vals)
         return moves.post() if moves else True
+
+    @api.multi
+    def _get_last_depreciation(self, depreciation_date, is_posted=True):
+        self.ensure_one()
+        return self.env['account.asset.depreciation.line'].search([
+            ('asset_id', '=', self.id),
+            ('depreciation_type', '=', 'accounting'),
+            ('depreciation_date', '<=', depreciation_date),
+            ('is_posted', '=', is_posted),
+        ], limit=1, order='depreciation_date desc')

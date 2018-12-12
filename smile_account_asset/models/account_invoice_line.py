@@ -2,6 +2,8 @@
 # (C) 2013 Smile (<http://www.smile.fr>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from functools import partial
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -98,6 +100,11 @@ class AccountInvoiceLine(models.Model):
                     ('name', '=', field),
                     ('model', '=', self._name),
                 ], limit=1).field_description
+                lang = self._context.get('lang') or self.env.user.lang
+                translate = partial(
+                    self.env['ir.translation']._get_source,
+                    None, 'model', lang)
+                label = '{}'.format(translate(label) or label)
                 raise UserError(
                     _('You cannot not create an asset from invoice lines '
                       'with different %s') % label)

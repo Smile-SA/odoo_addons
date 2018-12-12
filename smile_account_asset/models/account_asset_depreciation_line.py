@@ -96,6 +96,7 @@ CREATE AGGREGATE public.last (
     accelerated_value = fields.Monetary(
         'Accelerated Depreciation',
         compute='_get_depreciation_values', store=True)
+    # TODO: store it not recomputed after line posting
     purchase_value = fields.Monetary(
         'Gross Value', related='asset_id.purchase_value',
         store=True, readonly=True)
@@ -434,3 +435,29 @@ CREATE AGGREGATE public.last (
             ] + args
         return super(AccountAssetDepreciationLine, self)._search(
             args, offset, limit, order, count, access_rights_uid)
+
+    @api.model
+    @api.returns('self', lambda records: records.ids)
+    def bulk_create(self, vals_list):
+        if not vals_list:
+            return self.browse()
+        context = dict(self._context)
+        if not self._context.get('force_store_function'):
+            # 'force_store_function' useful if model has workflow
+            # with transition condition
+            # based on function/compute fields
+            context['no_store_function'] = True
+            context['recompute'] = False
+        context['no_validate'] = True
+        context['defer_parent_store_computation'] = True
+        if not isinstance(vals_list, list):
+            vals_list = [vals_list]
+        records = self.browse()
+        for vals in vals_list:
+            records |= self.with_context(**context).create(vals)
+        if not self._context.get('force_store_function'):
+            records.modified(self._fields)
+            self.recompute()
+        self._parent_store_compute()
+        records._validate_fields(vals_list[0])
+        return records

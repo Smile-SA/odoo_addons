@@ -27,7 +27,7 @@ class IrModelAccess(models.Model):
                     translate_group(category_name) or category_name,
                     translate_group(group_name) or group_name)
             else:
-                translated_name = '%s'.format(
+                translated_name = '{}'.format(
                     translate_group(complete_name) or complete_name)
             translated_res.append(translated_name)
         return translated_res

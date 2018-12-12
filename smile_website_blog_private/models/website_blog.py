@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields
 
 
 class Blog(models.Model):
@@ -17,21 +17,22 @@ class Blog(models.Model):
         user = self.env['res.users'].browse(self._uid)
         group_ids = [g.id for g in user.groups_id]
         req = """
-            SELECT
-                p.blog_id, count(*), r.blog_tag_id
-            FROM
-                blog_post_blog_tag_rel r
-                    join blog_post p on r.blog_post_id=p.id
-                    join blog_blog b on p.blog_id=b.id
-            WHERE
-                p.blog_id in %s AND
-                (b.security_type = 'public' OR (b.security_type = 'private' AND b.id in (SELECT bg.blog_blog_id FROM blog_blog_res_groups_rel bg WHERE bg.res_groups_id IN %s ) ))
-
-            GROUP BY
-                p.blog_id,
-                r.blog_tag_id
-            ORDER BY
-                count(*) DESC
+            SELECT p.blog_id,
+                   count(*),
+                   r.blog_tag_id
+            FROM blog_post_blog_tag_rel r
+            JOIN blog_post p ON r.blog_post_id=p.id
+            JOIN blog_blog b ON p.blog_id=b.id
+            WHERE p.blog_id IN %s
+              AND (b.security_type = 'public'
+                   OR (b.security_type = 'private'
+                       AND b.id IN
+                         (SELECT bg.blog_blog_id
+                          FROM blog_blog_res_groups_rel bg
+                          WHERE bg.res_groups_id IN %s )))
+            GROUP BY p.blog_id,
+                     r.blog_tag_id
+            ORDER BY count(*) DESC
         """
         self._cr.execute(req, [tuple(self._ids), tuple(group_ids)])
         tag_by_blog = {i: [] for i in self._ids}

@@ -1,0 +1,81 @@
+.navbar-default {
+    background-color: @odoo-brand-primary;
+    border-color: @odoo-brand-primary;
+    color: @odoo-menu-color;
+    .navbar-header > a {
+        color: @odoo-menu-color;
+        &:hover, &:focus {
+            background-color: @odoo-menu-bg-primary;
+            border-color: @odoo-menu-bg-primary;
+            color: @odoo-menu-color;
+        }
+    }
+    .navbar-nav {
+        > li > a, > .active > a, > .open > a {
+            background-color: transparent;
+            border-color: transparent;
+            color: @odoo-menu-color;
+            @media (max-width: @screen-xs-max) {
+                font-size: @odoo-mobile-menu-size;
+                padding-top: @odoo-mobile-menu-padding;
+            }
+            &:hover, &:focus {
+                color: @odoo-menu-color;
+                @media (min-width: @screen-sm-min) {
+                    background-color: @odoo-menu-bg-primary;
+                    border-color: @odoo-menu-bg-primary;
+                }
+                @media (max-width: @screen-xs-max) {
+                    background-color: transparent;
+                }
+            }
+        }
+        .open {
+            > a {
+                @media (min-width: @screen-sm-min) {
+                    background-color: @odoo-menu-bg-primary;
+                    border-color: @odoo-menu-bg-primary;
+                }
+            }
+            .dropdown-menu {
+                > a, > .active > a {
+                    background-color: transparent;
+                    &:hover, &:focus {
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
+    }
+    .navbar-toggle {
+        &:hover, &:focus {
+            background-color: @odoo-menu-bg-primary;
+            border-color: @odoo-menu-bg-primary;
+        }
+    }
+}
+
+header > .main-nav > .container-fluid {
+    .o_sub_menu > .o_sub_menu_content > .oe_secondary_menu {
+        ul.dropdown-menu {
+            > li.dropdown-header {
+                @media (min-width: @screen-sm-min) {
+                    background-color: @odoo-menu-bg-secondary;
+                }
+                @media (max-width: @screen-xs-max) {
+                    background-color: transparent;
+                    font-size: @odoo-mobile-menu-size;
+                    padding-top: @odoo-mobile-menu-padding;
+                }
+            }
+            > li > a {
+                @media (max-width: @screen-xs-max) {
+                    padding-left: 32px;
+                    color: @odoo-menu-color;
+                    font-size: @odoo-mobile-menu-size;
+                    padding-top: @odoo-mobile-menu-padding;
+                }
+            }
+        }
+    }
+}

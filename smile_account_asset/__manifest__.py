@@ -38,6 +38,13 @@ Suggestions & Feedback to: Corentin Pouhet-Brunerie
 
         "data/account_asset_depreciation_methods.xml",
         "data/account_asset_sequence.xml",
+        "data/report_paperformat.xml",
+
+        "report/account_asset_depreciations_report.xml",
+        "report/account_asset_fiscal_deductions_report.xml",
+        "report/account_asset_in_progress_report.xml",
+        "report/account_asset_report.xml",
+        "report/account_asset_sales_report.xml",
 
         "views/account_asset_depreciation_method_view.xml",
         "views/account_asset_category_view.xml",
@@ -50,6 +57,12 @@ Suggestions & Feedback to: Corentin Pouhet-Brunerie
         "views/webclient_template.xml",
 
         "wizard/account_asset_split_wizard_view.xml",
+        "wizard/account_asset_report_common_view.xml",
+        "wizard/account_asset_depreciations_report_view.xml",
+        "wizard/account_asset_fiscal_deductions_report_view.xml",
+        "wizard/account_asset_in_progress_view.xml",
+        "wizard/account_asset_report_view.xml",
+        "wizard/account_asset_sales_report_view.xml",
     ],
     "demo": [],
     'qweb': [

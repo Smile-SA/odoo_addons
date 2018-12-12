@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_asset_depreciations_report_view" model="ir.ui.view">
+            <field name="name">Asset depreciations report</field>
+            <field name="model">account.asset.depreciations.report</field>
+            <field name="inherit_id" ref="account_asset_common_report_view"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_to']" position="before">
+                     <field name="date_from"/>
+                 </xpath>
+                <xpath expr="//field[@name='date_to']" position="after">
+                     <field name="is_posted"/>
+                     <field name="only_total"/>
+                 </xpath>
+            </field>
+        </record>
+
+        <record id="action_asset_depreciations_report" model="ir.actions.act_window">
+            <field name="name">Asset depreciations report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.asset.depreciations.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_asset_depreciations_report_view"/>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_account_asset_depreciation_line" />
+            <field name="binding_type">report</field>
+        </record>
+
+        <menuitem
+            id="menu_account_asset_depreciations_report"
+            name="Asset depreciations report"
+            parent="menu_finance_reports_account_assets"
+            sequence="30"
+            action="action_asset_depreciations_report"/>
+
+   </data>
+</odoo>

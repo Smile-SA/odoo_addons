@@ -38,7 +38,9 @@
 	        <field name="name">account.asset.depreciation.line.tree</field>
 	        <field name="model">account.asset.depreciation.line</field>
 	        <field name="arch" type="xml">
-	            <tree string="Depreciation Lines" colors="blue:is_posted==False;grey:depreciation_type=='fiscal' and benefit_accelerated_depreciation==False">
+	            <tree string="Depreciation Lines"
+						decoration-info="not is_posted"
+						decoration-muted="depreciation_type=='fiscal' and not benefit_accelerated_depreciation">
 	                <field name="year" invisible="1"/>
 	                <field name="depreciation_date"/>
 	                <field name="asset_id"/>
