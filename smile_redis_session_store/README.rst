@@ -16,7 +16,7 @@ Documentation is available on `Redis website`_.
 
 You need to install package `redis`::
 
-    pip3 install redis
+    pip install redis
 
 .. _`Redis website`: http://redis.io/topics/quickstart 
 
