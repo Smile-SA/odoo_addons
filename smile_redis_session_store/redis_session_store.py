@@ -48,7 +48,7 @@ class RedisSessionStore(werkzeug.contrib.sessions.SessionStore):
     def save(self, session):
         key = self._get_session_key(session.sid)
         data = cPickle.dumps(dict(session))
-        self.redis.setex(key, data, self.expire)
+        self.redis.setex(name=key, value=data, time=self.expire)
 
     def delete(self, session):
         key = self._get_session_key(session.sid)
@@ -64,7 +64,7 @@ class RedisSessionStore(werkzeug.contrib.sessions.SessionStore):
         key = self._get_session_key(sid)
         data = self.redis.get(key)
         if data:
-            self.redis.setex(key, data, self.expire)
+            self.redis.setex(name=key, value=data, time=self.expire)
             data = cPickle.loads(data)
         else:
             data = {}
