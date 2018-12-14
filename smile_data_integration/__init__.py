@@ -2,7 +2,7 @@
 
 from odoo import api, SUPERUSER_ID
 
-import models
+from . import models
 
 
 def _update_models(cr, registry):
