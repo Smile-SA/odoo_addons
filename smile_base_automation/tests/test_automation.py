@@ -11,7 +11,7 @@ class ActionRuleTest(TransactionCase):
         super(ActionRuleTest, self).setUp()
         self.model = self.env['ir.ui.menu']
         self.model_id = self.env['ir.model'].search(
-            [('name', '=', self.model._name)], limit=1).id
+            [('model', '=', self.model._name)], limit=1).id
         self.defaults = {
             'name': 'Test',
             'model_id': self.model_id,
