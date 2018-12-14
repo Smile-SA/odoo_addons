@@ -1,6 +1,6 @@
-========================
-Widgets Extension
-========================
+=============================
+Make many2many tags clickable
+=============================
 .. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
@@ -10,7 +10,7 @@ Widgets Extension
 
 |badge2| |badge3|
 
-This module Allows to open record from many2many_tags widget in a non editable view .
+This module allows to open record from many2many_tags widget in a non editable view .
 
 
 **Table of contents**
