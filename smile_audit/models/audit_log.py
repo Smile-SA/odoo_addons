@@ -51,22 +51,24 @@ class AuditLog(models.Model):
         self.ensure_one()
         if not value and field.type not in ('boolean', 'integer', 'float'):
             return ''
-        if field.type == 'selection':
+        if field.type == 'selection' and value != 'none':
             selection = field.selection
             if callable(selection):
                 selection = selection(self.env[self.model_id.model])
             return dict(selection).get(value, value)
         if field.type == 'many2one' and value:
-            return self.env[field.comodel_name].browse(value). \
-                exists().display_name or value
+            return self.env[field.comodel_name].browse(
+                value).exists().display_name or value
         if field.type == 'reference' and value:
             res_model, res_id = value.split(',')
-            return self.env[res_model].browse(int(res_id)).exists(). \
-                display_name or value
+            return self.env[res_model].browse(
+                int(res_id)).exists().display_name or value
         if field.type in ('one2many', 'many2many') and value:
-            return ', '.join([self.env[field.comodel_name].browse(rec_id).
-                              exists().display_name or str(rec_id)
-                              for rec_id in value])
+            values = ''.join(['<ul><li>' + self.env[field.comodel_name].browse(
+                                  rec_id).exists().display_name +
+                              '</li></ul>' or '<ul><li>' + str(rec_id) +
+                              '</li></ul>' for rec_id in value])
+            return values
         if field.type == 'binary' and value:
             return '&lt;binary data&gt;'
         if field.type == 'datetime':
