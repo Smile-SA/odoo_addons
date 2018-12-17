@@ -11,14 +11,7 @@
     ],
     "author": "Smile",
     "license": 'LGPL-3',
-    "description": """
-Web Gantt Extension
-===================
-
-* Allow to display weeks of year
-
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
-    """,
+    "description": """""",
     "website": "http://www.smile.fr",
     "sequence": 0,
     "data": [
