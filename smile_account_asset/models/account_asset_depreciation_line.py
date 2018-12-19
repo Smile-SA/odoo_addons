@@ -5,7 +5,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import RedirectWarning, ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 from .account_asset_asset import ACCOUNT_GROUPS
 
@@ -312,21 +312,17 @@ CREATE AGGREGATE public.last (
             if not self.company_id[expense_account_field] or \
                     not self.company_id[income_account_field] or \
                     not self.company_id[account_field]:
-                raise RedirectWarning(
+                raise UserError(
                     _('Please indicate fiscal amortization '
-                        'accounts in company form!'),
-                    self.env.ref('base.action_res_company_form').id,
-                    _('Go to company configuration screen'))
+                        'accounts in company form!'))
             amount = self.accelerated_value
             main_related_object = self.company_id
         if transfer:
             if not self.company_id[expense_account_field] or \
                     not self.company_id[income_account_field]:
-                raise RedirectWarning(
+                raise UserError(
                     _('Please indicate exceptional amortization '
-                        'accounts in company form!'),
-                    self.env.ref('base.action_res_company_form').id,
-                    _('Go to company configuration screen'))
+                        'accounts in company form!'))
             # INFO: always >= 0.0 by defintion, see French law
             amount = self.book_value_wo_exceptional - self.book_value
             second_related_object = self.company_id
