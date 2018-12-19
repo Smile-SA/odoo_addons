@@ -293,7 +293,7 @@
                     </group>
                     <footer>
                         <button name="button_confirm_asset_sale" type="object" string="Confirm Asset Sale" class="oe_highlight"/>
-                        <button special="cancel" string="Cancel" class="oe_cancel"/>
+                        <button special="cancel" string="Cancel"/>
                     </footer>
                 </form>
             </field>

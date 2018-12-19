@@ -126,7 +126,7 @@
                     <footer>
                         <button name="button_validate_exceptional_depreciation" string="Validate" type="object"
                             class="oe_highlight" attrs="{'readonly':[('move_id','!=',False)]}"/>
-                        <button special="cancel" string="Cancel" class="oe_cancel"/>
+                        <button special="cancel" string="Cancel"/>
                     </footer>
 	            </form>
 	        </field>
