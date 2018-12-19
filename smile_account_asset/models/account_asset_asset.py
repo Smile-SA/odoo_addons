@@ -168,7 +168,7 @@ class AccountAssetAsset(models.Model):
         'In-service Date', readonly=True, states={
             'draft': [('readonly', False)],
             'confirm': [('readonly', False)],
-        }, copy=False)
+        })
     depreciation_line_ids = fields.One2many(
         'account.asset.depreciation.line', 'asset_id',
         'Depreciation Lines', readonly=True, copy=False)
