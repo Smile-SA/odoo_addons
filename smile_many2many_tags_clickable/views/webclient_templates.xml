@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <template id="smile_many2many_tags_clickable" inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+      <script type="text/javascript" src="/smile_many2many_tags_clickable/static/src/js/form_relational_widgets.js"></script>
+    </xpath>
+  </template>
+
+</odoo>
