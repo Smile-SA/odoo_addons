@@ -34,6 +34,10 @@ Features :
 * The administrator can gives access right to users, to see logs, by checking ``Smile Logs / User``.
 * The administrator must create a ``Scheduled Action`` to call the function ``archive_and_delete_old_logs``, configure archiving path and the number of days to archive and delete logs.
 
+.. figure:: static/description/schema.png
+   :alt: schema
+   :width: 850px
+
 **Table of contents**
 
 .. contents::
