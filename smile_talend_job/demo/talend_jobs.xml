@@ -3,8 +3,8 @@
     <data noupdate="0">
 
         <record id="main_job" model="talend.job">
-            <field name="name">JobTest</field>
-            <field name="archive" type="base64" file="smile_talend_job/demo/JobTest_0.1.zip"/>
+            <field name="name">jobInfo</field>
+            <field name="archive" type="base64" file="smile_talend_job/demo/jobInfo_0.1.zip"/>
         </record>
 
     </data>

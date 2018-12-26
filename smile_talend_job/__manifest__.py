@@ -10,13 +10,7 @@
     ],
     "author": "Smile",
     "license": 'AGPL-3',
-    "description": """
-Features:
-* Execute Standalone Jobs
-* Display execution logs
-
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
-    """,
+    "description": """""",
     "summary": "",
     "website": "http://www.smile.fr",
     "category": 'Hidden',
