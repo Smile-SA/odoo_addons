@@ -26,12 +26,7 @@
     "author": "Smile",
     "license": 'AGPL-3',
     "summary": "",
-    "description": """
-Docker
-======
-
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
-    """,
+    "description": """""",
     "summary": "",
     "website": "http://www.smile.fr",
     "category": 'Tools',
