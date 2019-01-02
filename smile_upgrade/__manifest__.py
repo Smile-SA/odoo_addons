@@ -11,7 +11,7 @@
     "description": """""",
     "summary": "",
     "website": "http://www.smile.fr",
-    "category": 'Hidden',
+    "category": 'Tools',
     "sequence": 20,
     "data": [
         "views/webclient_templates.xml",
