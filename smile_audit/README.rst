@@ -110,6 +110,7 @@ Contributors
 ------------
 
 * Corentin POUHET-BRUNERIE
+* Majda ELMARIOULI
 
 Maintainer
 ----------
