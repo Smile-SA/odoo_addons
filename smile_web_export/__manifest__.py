@@ -34,7 +34,7 @@ For each user, you can indicate if it can export / import data
     """,
     "summary": "",
     "website": "http://www.smile.fr",
-    "category": 'Hidden',
+    "category": 'Tools',
     "sequence": 20,
     "data": [
         'security/web_export_security.xml',
