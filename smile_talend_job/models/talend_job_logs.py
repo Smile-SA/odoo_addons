@@ -128,3 +128,8 @@ class TalendJobLogs(models.Model):
             proc.kill()
         except psutil.NoSuchProcess:
             pass
+
+    @api.multi
+    def unlink(self):
+        self.filtered(lambda talend_log: talend_log.state == 'running').kill()
+        return super(TalendJobLogs, self).unlink()
