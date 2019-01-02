@@ -23,6 +23,11 @@ Features:
 * The module also allows a history revision of each operation.
 * The administrator can delete audit rules but logs can't be deleted.
 * Users can view a list of current model logs.
+* Following schema resume the functional process of this module:
+
+    .. figure:: static/description/functional_process.png
+       :alt: Functional process
+       :width: 900px
 
 **Table of contents**
 
@@ -96,6 +101,10 @@ This addons does not collect any data and does not set any browser cookies.
 
 Credits
 =======
+
+Author
+------
+* Smile SA
 
 Contributors
 ------------
