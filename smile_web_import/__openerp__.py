@@ -22,7 +22,7 @@
     "name": "Access rules for Import",
     "version": "0.1",
     "author": "Smile",
-    "category": 'Hidden',
+    "category": 'Tools',
     "description": """
 Add access rules for import features
 ====================================

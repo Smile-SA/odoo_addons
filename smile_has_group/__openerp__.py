@@ -22,7 +22,7 @@
     "name": "Smile has group",
     "version": "0.1",
     "author": "Smile",
-    "category": 'Hidden',
+    "category": 'Tools',
     "description": """
 Add method to test group for a user
 ====================================
