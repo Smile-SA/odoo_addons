@@ -34,7 +34,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "summary": "",
     "website": "http://www.smile.fr",
-    "category": 'Hidden',
+    "category": 'Tools',
     "sequence": 20,
     "data": [
         "security/ir.model.access.csv",
