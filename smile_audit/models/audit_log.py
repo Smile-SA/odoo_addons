@@ -64,11 +64,18 @@ class AuditLog(models.Model):
             return self.env[res_model].browse(
                 int(res_id)).exists().display_name or value
         if field.type in ('one2many', 'many2many') and value:
-            values = ''.join(['<ul><li>' + self.env[field.comodel_name].browse(
-                                  rec_id).exists().display_name +
-                              '</li></ul>' or '<ul><li>' + str(rec_id) +
-                              '</li></ul>' for rec_id in value])
-            return values
+            for rec_id in value:
+                if self.env[field.comodel_name].browse(rec_id).exists():
+                    values = ''.join(['<li>' + self.env[field.comodel_name].browse(
+                                          rec_id).display_name +
+                                      '</li>' or '<li>' + str(rec_id) +
+                                      '</li>'])
+                else:
+                    values = ''.join(['<li>' + str(self.env[field.comodel_name].browse(
+                                          rec_id).id) +
+                                      '</li>' or '<li>' + str(rec_id) +
+                                      '</li>'])
+            return '<ul>' + values + '</ul>'
         if field.type == 'binary' and value:
             return '&lt;binary data&gt;'
         if field.type == 'datetime':
