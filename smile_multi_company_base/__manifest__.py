@@ -13,7 +13,7 @@
     "description": """""",
     "summary": "",
     "website": "http://www.smile.eu",
-    "category": 'Hidden',
+    "category": 'Tools',
     "sequence": 20,
     "data": [
         'views/res_company_view.xml',
