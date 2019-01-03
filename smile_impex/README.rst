@@ -46,6 +46,15 @@ Usage
    :alt: Import
    :width: 100%
 
+Case of load balancing
+======================
+
+If Odoo runs with several servers, with load balancing, you need to set the option `hostname`
+inside the configuration file of each server (default: `localhost`).
+
+If you don't set it, as PID of process created on an host is not visible by the others,
+at each restart of one of the other host, the import/export process will be marked as *Killed*.
+
 Bug Tracker
 ===========
 

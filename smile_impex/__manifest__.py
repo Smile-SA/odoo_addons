@@ -4,7 +4,7 @@
 
 {
     "name": "Import / Export",
-    "version": "1.0",
+    "version": "1.1",
     "depends": ['smile_log'],
     "author": "Smile",
     "license": 'AGPL-3',

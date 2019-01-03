@@ -14,7 +14,7 @@ from odoo.tools.func import wraps
 from odoo.addons.smile_log.tools import SmileDBLogger
 
 from .impex_template import LOG_LEVELS
-from ..tools import s2human, with_impex_cursor
+from ..tools import get_hostname, s2human, with_impex_cursor
 
 _logger = logging.getLogger(__name__)
 
@@ -38,8 +38,15 @@ def state_cleaner(model):
                 cr.execute("select relname from pg_class "
                            "where relname='%s'" % model._table)
                 if cr.rowcount:
-                    impex_infos = Model.search_read(
-                        [('state', '=', 'running')], ['pid'], order='id')
+                    # Search all process created on this host and set them as
+                    # killed if they are not running anymore on the host
+                    hostname = get_hostname()
+                    impex_infos = Model.search_read([
+                        ('state', '=', 'running'),
+                        '|',
+                        ('hostname', '=', hostname),
+                        ('hostname', '=', False),
+                    ], ['pid'], order='id')
                     impex_ids = []
                     for impex in impex_infos:
                         if not psutil.pid_exists(impex['pid']):
@@ -84,6 +91,7 @@ class IrModelImpex(models.AbstractModel):
     state = fields.Selection(
         STATES, 'State', readonly=True, required=True, default='running')
     pid = fields.Integer('Process Id', readonly=True)
+    hostname = fields.Char('Hostname', readonly=True)
     args = fields.Text('Arguments', readonly=True)
     log_level = fields.Selection(LOG_LEVELS)
     log_returns = fields.Boolean('Log returns', readonly=True)
@@ -113,8 +121,9 @@ class IrModelImpex(models.AbstractModel):
         logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
         logger.setLevel(self.log_level)
         self = self.with_context(logger=logger)
+        hostname = get_hostname()
         self.write({'state': 'running', 'from_date': fields.Datetime.now(),
-                    'pid': os.getpid(), 'to_date': False})
+                    'pid': os.getpid(), 'hostname': hostname, 'to_date': False})
         try:
             result = self._execute()
             vals = {'state': 'done', 'to_date': fields.Datetime.now()}
