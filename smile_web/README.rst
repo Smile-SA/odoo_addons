@@ -1,9 +1,15 @@
-.. image:: https://img.shields.io/badge/licence-GPL--3-blue.svg
-    :alt: License: GPL-3
-
 =========================
 Smile Web
 =========================
+
+.. |badge1| image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
+    :alt: License: AGPL-3
+
+.. |badge2| image:: https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github
+    :target: https://github.com/Smile-SA/odoo_addons/tree/11.0/smile_web
+    :alt: Smile-SA/odoo_addons
+
+|badge1| |badge2|
 
 .. IMPORTANT::
    This module depends on web_responsive module that developed by OCA, you find a URL to download it, and then add to your addons.

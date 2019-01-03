@@ -1,3 +1,7 @@
+================
+Database Upgrade
+================
+
 .. |badge1| image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
     :alt: License: AGPL-3
 
@@ -6,10 +10,6 @@
     :alt: Smile-SA/odoo_addons
 
 |badge1| |badge2|
-
-================
-Database Upgrade
-================
 
 This module helps you upgrade database automatically
 after code update and server restarting.
