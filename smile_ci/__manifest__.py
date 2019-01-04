@@ -54,8 +54,6 @@ Features
     # Attach log / config / tests result / code coverage files to build
     # Parse build logs and store results in database
 
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr &
-isabelle.richard@smile.fr
     """,
     "website": "http://www.smile.fr",
     "category": 'Tools',
