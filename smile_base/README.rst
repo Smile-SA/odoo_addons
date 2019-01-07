@@ -3,20 +3,20 @@ Smile Base
 ==========
 
 .. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
-    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
-    :alt: License: AGPL-3
+   :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+   :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github
-    :target: https://github.com/Smile-SA/odoo_addons/tree/11.0/smile_base
-    :alt: Smile-SA/odoo_addons
+   :target: https://github.com/Smile-SA/odoo_addons/tree/11.0/smile_base
+   :alt: Smile-SA/odoo_addons
 
 |badge2| |badge3|
 
 * Install and make French the default language
-* Remove the scheduled action "Update Notification" which sends companies and users info to OpenERP S.A.
+* Disable the scheduled action "Update Notification" which sends companies and users info to Odoo S.A.
 * Activate access logs for ir.translation object
 * Correct date and time format for French language
 * Review the menu "Applications"
-* Remove the menu "Update modules" from apps.openerp.com
+* Remove the menu "Update modules" from apps.odoo.com
 * Add sequence and display window actions in IrValues
 * Force to call unlink method at removal of remote object linked by a fields.many2one with ondelete='cascade'
 * Add BaseModel.bulk_create, BaseModel.store_set_values and BaseModel._compute_store_set
@@ -27,22 +27,28 @@ Smile Base
 **Table of contents**
 
 .. contents::
-   :local:
+  :local:
 
 Usage
 =====
 
 Add this module to your addons, it will auto install.
 
-To enable email sending, add in your configuration file :
+To enable email sending, add in your configuration file:
     * enable_email_sending = True
 
-To enable email fetching, add in your configuration file :
+To enable email fetching, add in your configuration file:
     * enable_email_fetching = True
 
-To add a colored ribbon, definied with RGBa, add in your configuration file :
+To add a colored ribbon, definied with RGBa, add in your configuration file:
     * server.environment = dev
     * server.environment.ribbon_color = rgba(255, 0, 255, .6)
+
+To display database name inside the colored ribbon add in your configuration file:
+    * server.environment.display_dbname_in_ribbon = True
+
+To enable sending of companies and users info to Odoo S.A., add in your configuration file:
+    * enable_publisher_warranty_contract_notification = True
 
 
 Bug Tracker
@@ -75,8 +81,8 @@ This module is maintained by the Smile SA.
 Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.
 
 .. image:: https://avatars0.githubusercontent.com/u/572339?s=200&v=4
-   :alt: Smile SA
-   :target: http://smile.fr
+  :alt: Smile SA
+  :target: http://smile.fr
 
 This module is part of the `odoo-addons <https://github.com/Smile-SA/odoo_addons>`_ project on GitHub.
 

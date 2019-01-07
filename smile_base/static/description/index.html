@@ -366,11 +366,11 @@ ul.auto-toc {
 <p><a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/11.0/smile_base"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
 <ul class="simple">
 <li>Install and make French the default language</li>
-<li>Remove the scheduled action &quot;Update Notification&quot; which sends companies and users info to OpenERP S.A.</li>
+<li>Disable the scheduled action &quot;Update Notification&quot; which sends companies and users info to Odoo S.A.</li>
 <li>Activate access logs for ir.translation object</li>
 <li>Correct date and time format for French language</li>
 <li>Review the menu &quot;Applications&quot;</li>
-<li>Remove the menu &quot;Update modules&quot; from apps.openerp.com</li>
+<li>Remove the menu &quot;Update modules&quot; from apps.odoo.com</li>
 <li>Add sequence and display window actions in IrValues</li>
 <li>Force to call unlink method at removal of remote object linked by a fields.many2one with ondelete='cascade'</li>
 <li>Add BaseModel.bulk_create, BaseModel.store_set_values and BaseModel._compute_store_set</li>
@@ -395,20 +395,30 @@ ul.auto-toc {
 <h1><a class="toc-backref" href="#id1">Usage</a></h1>
 <p>Add this module to your addons, it will auto install.</p>
 <dl class="docutils">
-<dt>To enable email sending, add in your configuration file :</dt>
+<dt>To enable email sending, add in your configuration file:</dt>
 <dd><ul class="first last simple">
 <li>enable_email_sending = True</li>
 </ul>
 </dd>
-<dt>To enable email fetching, add in your configuration file :</dt>
+<dt>To enable email fetching, add in your configuration file:</dt>
 <dd><ul class="first last simple">
 <li>enable_email_fetching = True</li>
 </ul>
 </dd>
-<dt>To add a colored ribbon, definied with RGBa, add in your configuration file :</dt>
+<dt>To add a colored ribbon, definied with RGBa, add in your configuration file:</dt>
 <dd><ul class="first last simple">
 <li>server.environment = dev</li>
 <li>server.environment.ribbon_color = rgba(255, 0, 255, .6)</li>
+</ul>
+</dd>
+<dt>To display database name inside the colored ribbon add in your configuration file:</dt>
+<dd><ul class="first last simple">
+<li>server.environment.display_dbname_in_ribbon = True</li>
+</ul>
+</dd>
+<dt>To enable sending of companies and users info to Odoo S.A., add in your configuration file:</dt>
+<dd><ul class="first last simple">
+<li>enable_publisher_warranty_contract_notification = True</li>
 </ul>
 </dd>
 </dl>

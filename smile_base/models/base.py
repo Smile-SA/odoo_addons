@@ -55,6 +55,8 @@ class Base(models.AbstractModel):
 
     @api.multi
     def unlink(self):
+        # Force to call unlink method at removal of remote object linked
+        # by a fields.many2one with ondelete='cascade'
         if hasattr(self.pool[self._name], '_cascade_relations'):
             self = self.with_context(active_test=False)
             if 'unlink_in_cascade' not in self._context:

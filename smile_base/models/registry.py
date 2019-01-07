@@ -8,6 +8,8 @@ native_setup_models = Registry.setup_models
 
 
 def new_setup_models(self, cr):
+    # Force to call unlink method at removal of remote object linked
+    # by a fields.many2one with ondelete='cascade'
     native_setup_models(self, cr)
     for RecordModel in self.models.values():
         for fieldname, field in RecordModel._fields.items():
