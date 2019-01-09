@@ -60,13 +60,16 @@ class IrActionsReportExecution(models.TransientModel):
         attachments = None
         t0 = time.time()
         try:
+            lang = self._context.get('lang') or self.env.user.lang
+            report_name = self.env['ir.translation']._get_source(
+                None, 'model', lang, report.name)
             content, ext = report.with_context(ctx).render_qweb_pdf(*args)
-            attachments = [(report.name, content)]
+            attachments = [(report_name, content)]
             self.sudo()._add_attachment(content)
-            msg = _('%s report available') % report.name
+            msg = _('%s report available') % report_name
         except Exception as e:
             _logger.error(e)
-            msg = _('%s printing failed') % report.name
+            msg = _('%s printing failed') % report_name
         finally:
             # INFO: use a new cursor to:
             # 1. avoid concurrent updates
