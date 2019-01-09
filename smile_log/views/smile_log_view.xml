@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="0">
-                
+
         <record id="smile_log_tree_view" model="ir.ui.view">
             <field name="name">Smile Log - Tree</field>
             <field name="model">smile.log</field>
@@ -17,7 +17,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="smile_log_search_view" model="ir.ui.view">
             <field name="name">Smile Log - Search</field>
             <field name="model">smile.log</field>
@@ -41,8 +41,7 @@
                 </search>
             </field>
         </record>
-        
-        
+
         <record id="act_smile_log" model="ir.actions.act_window">
             <field name="name">Logs</field>
             <field name="type">ir.actions.act_window</field>
@@ -68,6 +67,25 @@
                 </tree>
             </field>
         </record>
-        
+
+        <record id="smile_log_simple_form_view" model="ir.ui.view">
+            <field name="name">Smile Log - Form</field>
+            <field name="model">smile.log</field>
+            <field name="type">tree</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <form string="Log">
+                    <sheet>
+                        <group>
+                            <field name="log_date"/>
+                            <field name="pid"/>
+                            <field name="level"/>
+                            <field name="message"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
     </data>
 </odoo>

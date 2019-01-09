@@ -54,7 +54,7 @@
 									<field name="log_level" />
 									<field name="log_returns" />
 								</group>
-								<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}" />
+								<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view', 'form_view_ref': 'smile_log.smile_log_simple_form_view'}" />
 							</page>
 							<page string="Advanced">
 								<group>
@@ -143,7 +143,7 @@
 						<page string="Logs">
 							<br/>
 							<button type="object" name="process" string="Regenerate" colspan="4" class="oe_highlight"/>
-							<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view'}" />
+							<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view', 'form_view_ref': 'smile_log.smile_log_simple_form_view'}" />
 						</page>
 						<page string="Returns" attrs="{'invisible': [('log_returns', '=', False)]}">
 							<field name="returns" colspan="4" nolabel="1" />
