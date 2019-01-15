@@ -28,16 +28,7 @@
     "author": "Smile",
     "license": 'AGPL-3',
     "summary": "Deploy your Odoo app",
-    "description": """
-Continuous Delivery
-===================
-
-Features
-
-    # Deploy your Odoo app thanks to Ansible
-
-Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
-    """,
+    "description": """""",
     "website": "http://www.smile.fr",
     "category": 'Tools',
     "sequence": 20,
