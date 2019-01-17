@@ -16,6 +16,7 @@ class DockerImage(models.Model):
     _name = 'docker.image'
     _description = 'Docker Image'
     _inherit = 'docker.build'
+    _order = 'sequence,id'
     _directory_prefix = 'image'
 
     @api.model
