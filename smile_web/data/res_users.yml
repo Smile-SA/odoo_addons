@@ -1,5 +1,0 @@
--
-  I force chatter position at right
--
-  !python {model: res.users}: |
-    self.env.ref('base.user_root').chatter_position = 'sided'

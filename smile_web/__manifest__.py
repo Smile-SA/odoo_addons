@@ -18,7 +18,6 @@
     ],
     'data': [
         'data/pager_limit.xml',
-        'data/res_users.yml',
         'views/webclient_templates.xml',
     ],
     'demo': [],
