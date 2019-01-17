@@ -9,19 +9,6 @@ from odoo.exceptions import UserError, ValidationError
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    @api.depends('groups_id')
-    def _compute_share(self):
-        for user in self:
-            user.share = user.is_user_profile or \
-                not user.has_group('base.group_user')
-
-    @api.model
-    def _get_default_field_ids(self):
-        return self.env['ir.model.fields'].search([
-            ('model', 'in', ('res.users', 'res.partner')),
-            ('name', 'in', ('action_id', 'menu_id', 'groups_id')),
-        ]).ids
-
     is_user_profile = fields.Boolean('Is User Profile', oldname='user_profile')
     user_profile_id = fields.Many2one(
         'res.users', 'User Profile',
@@ -38,7 +25,7 @@ class ResUsers(models.Model):
             ('ttype', 'not in', ('one2many',)),
             ('name', 'not in', ('is_user_profile', 'user_profile_id',
                                 'user_ids', 'field_ids', 'view'))],
-        default=_get_default_field_ids)
+        default=lambda self: self._get_default_field_ids())
     is_update_users = fields.Boolean(
         string="Update users after creation", default=lambda *a: True,
         help="If non checked, users associated to this profile "
@@ -54,6 +41,23 @@ class ResUsers(models.Model):
          'Profile users cannot be linked to a profile!'),
     ]
 
+    @api.model
+    def _get_default_field_ids(self):
+        return self.env['ir.model.fields'].search([
+            ('model', 'in', ('res.users', 'res.partner')),
+            ('name', 'in', ('action_id', 'menu_id', 'groups_id')),
+        ]).ids
+
+    @api.depends('groups_id')
+    def _compute_share(self):
+        for user in self:
+            user.share = user.is_user_profile or \
+                not user.has_group('base.group_user')
+
+    @api.one
+    def _compute_users_count(self):
+        self.users_count = len(self.user_ids)
+
     @api.one
     @api.constrains('user_profile_id')
     def _check_user_profile_id(self):
@@ -61,10 +65,6 @@ class ResUsers(models.Model):
         if self.user_profile_id == admin:
             raise ValidationError(
                 _("You can't use %s as user profile !") % admin.name)
-
-    @api.one
-    def _compute_users_count(self):
-        self.users_count = len(self.user_ids)
 
     @api.onchange('is_user_profile')
     def onchange_user_profile(self):
