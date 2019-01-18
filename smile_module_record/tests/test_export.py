@@ -11,7 +11,7 @@ class TestExport(TransactionCase):
     def setUp(self):
         super(TestExport, self).setUp()
         self.start_date = fields.Datetime.now()
-        self.env['res.partner'].bulk_create(
+        self.env['res.partner'].create(
             [{'name': 'Toto %d' % x} for x in range(5)])
         self.vals = {
             'model_ids': [(6, 0, self.env.ref('base.model_res_partner').ids)],
