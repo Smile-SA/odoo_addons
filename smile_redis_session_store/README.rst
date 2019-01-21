@@ -34,6 +34,8 @@ Available options
 * `redis_port` (default: 6379): Redis port
 * `redis_dbindex` (default: 1): Redis database index
 * `redis_pass` (default: None): Redis password
+* `sentinel_pool`: list of sentinel nodes, a pair like `(hostname, port)`
+* `master_name` (default: mymaster): Redis master name
 
 
 Bug Tracker

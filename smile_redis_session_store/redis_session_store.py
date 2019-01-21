@@ -37,6 +37,7 @@ def is_redis_session_store_activated():
 
 try:
     import redis
+    from redis.sentinel import Sentinel
 except ImportError:
     if is_redis_session_store_activated():
         raise ImportError('Please install package python-redis: apt-get install python-redis')
@@ -48,10 +49,22 @@ class RedisSessionStore(werkzeug.contrib.sessions.SessionStore):
         super(RedisSessionStore, self).__init__(*args, **kwargs)
         self.expire = kwargs.get('expire', SESSION_TIMEOUT)
         self.key_prefix = kwargs.get('key_prefix', '')
-        self.redis = redis.Redis(host=tools.config.get('redis_host', 'localhost'),
-                                 port=int(tools.config.get('redis_port', 6379)),
-                                 db=int(tools.config.get('redis_dbindex', 1)),
-                                 password=tools.config.get('redis_pass', None))
+        # sentinel pool mode
+        if tools.config.get('sentinel_pool', None):
+            sentinels = Sentinel(eval(tools.config.get('sentinel_pool')), socket_timeout=0.1)
+            self.redis = sentinels.master_for(
+                tools.config.get('master_name', 'mymaster'),
+                redis_class=redis.Redis,
+                socket_timeout=0.1,
+                db=int(tools.config.get('redis_dbindex', 1)),
+                password=tools.config.get('redis_pass', None))
+        else:
+            self.redis = redis.Redis(
+                host=tools.config.get('redis_host', 'localhost'),
+                port=int(tools.config.get('redis_port', 6379)),
+                db=int(tools.config.get('redis_dbindex', 1)),
+                password=tools.config.get('redis_pass', None))
+
         self._is_redis_server_running()
 
     def save(self, session):
