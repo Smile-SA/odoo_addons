@@ -26,7 +26,8 @@ class Base(models.AbstractModel):
 
         if self._uid == SUPERUSER_ID:
             return True
-        if operation in ('create', 'write', 'unlink'):
+        if self._name != 'res.users.log' and \
+                operation in ('create', 'write', 'unlink'):
             today = fields.Date.today()
             date_start, date_stop = self.env['res.users'].get_readonly_dates()
             if date_start and date_stop:
