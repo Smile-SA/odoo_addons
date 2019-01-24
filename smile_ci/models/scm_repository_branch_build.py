@@ -705,7 +705,7 @@ class Build(models.Model):
         for filepath in filepaths:
             try:
                 response = self.docker_host_id.get_archive(container, filepath)
-                filelike = StringIO.StringIO(response.read())
+                filelike = StringIO.StringIO(response.next())
                 tar = tarfile.open(fileobj=filelike)
                 content = tar.extractfile(os.path.basename(filepath)).read()
                 filename = os.path.basename(filepath)
@@ -721,6 +721,8 @@ class Build(models.Model):
             except Exception as e:
                 _logger.error('Error while attaching %s: %s' %
                               (filename, get_exception_message(e)))
+            finally:
+                filelike.close()
         if missing_files:
             _logger.info("The following files are missing: %s" % missing_files)
 
