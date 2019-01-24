@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class AccountAssetHistory(models.Model):
@@ -23,6 +24,8 @@ class AccountAssetHistory(models.Model):
     category_id = fields.Many2one(
         'account.asset.category', 'Asset Category',
         required=True, ondelete='restrict')
+    display_validation_warning = fields.Boolean(
+        compute='_compute_display_validation_warning')
     company_id = fields.Many2one(
         related='asset_id.company_id', readonly=True)
     currency_id = fields.Many2one(
@@ -46,6 +49,12 @@ class AccountAssetHistory(models.Model):
         sign = self.asset_id.asset_type == 'purchase_refund' and -1 or 1
         self.purchase_value_sign = self.purchase_value * sign
         self.salvage_value_sign = self.salvage_value * sign
+
+    @api.one
+    @api.depends('category_id.asset_in_progress')
+    def _compute_display_validation_warning(self):
+        self.display_validation_warning = self._context.get(
+            'asset_validation') and self.category_id.asset_in_progress
 
     @api.model
     def _get_fields_to_read(self):
@@ -84,14 +93,12 @@ class AccountAssetHistory(models.Model):
         return super(AccountAssetHistory, self).create(old_vals)
 
     @api.multi
-    def validate(self):
+    def button_validate(self):
         if self._context.get('asset_validation'):
             asset = self.mapped('asset_id')
-            asset.invalidate_cache()
-            asset.validate()
-        return True
-
-    @api.multi
-    def button_validate(self):
-        self.validate()
+            try:
+                asset.validate()
+            except UserError:
+                self.unlink()
+                return asset.button_put_into_service()
         return {'type': 'ir.actions.act_window_close'}

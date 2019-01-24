@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0-20180819\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-06 17:24+0000\n"
-"PO-Revision-Date: 2018-12-06 17:24+0000\n"
+"POT-Creation-Date: 2019-01-21 13:01+0000\n"
+"PO-Revision-Date: 2019-01-21 13:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgid " Cancellation"
 msgstr " Annulation"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:275
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:276
 #, python-format
 msgid "%s Amortization"
 msgstr "Amortissement %s"
@@ -595,7 +595,7 @@ msgid "Book value at end without exceptional"
 msgstr "VNC hors dépréciation"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:197
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:198
 #, python-format
 msgid "Book value with exceptional depreciations cannot be superior to book value without exceptional depreciations, nor inferior to salvage value!"
 msgstr "La valeur nette avec dépréciations exeptionnelles ne peut pas être supérieure à la valeur nette sans dépréciation exeptionnelle, et/ou inférieure à la valeur résiduelle !"
@@ -903,7 +903,7 @@ msgid "Depreciation of type accounting"
 msgstr "Amortissement de type comptable"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:194
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:195
 #, python-format
 msgid "Depreciation value cannot be bigger than gross value!"
 msgstr "La dépréciation ne peut être supérieure à la valeur brute de l'immobilisation"
@@ -940,6 +940,11 @@ msgstr "Description"
 #: model:ir.model.fields,field_description:smile_account_asset.field_report_smile_account_asset_report_fiscal_deductions_display_name
 msgid "Display Name"
 msgstr "Nom à afficher"
+
+#. module: smile_account_asset
+#: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_history_display_validation_warning
+msgid "Display Validation Warning"
+msgstr "Afficher l'avertissement avant mise en service"
 
 #. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_form
@@ -1025,7 +1030,7 @@ msgid "Exceptional"
 msgstr "Exceptionnel"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:277
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:278
 #, python-format
 msgid "Exceptional Amortization"
 msgstr "Amortissement exceptionnel"
@@ -1210,13 +1215,6 @@ msgstr "Du"
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_form
 msgid "General"
 msgstr "Général"
-
-#. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:319
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:329
-#, python-format
-msgid "Go to company configuration screen"
-msgstr "Allez sur l'écran de configuration de la société"
 
 #. module: smile_account_asset
 #: selection:account.asset.depreciation.method,base_value:0
@@ -1574,7 +1572,7 @@ msgid "No Asset"
 msgstr "Non immobilisée"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_invoice_line.py:88
+#: code:addons/smile_account_asset/models/account_invoice_line.py:89
 #, python-format
 msgid "No asset to create from these invoice lines!"
 msgstr "Aucune immobilisation à créer à partir de ces lignes de facture"
@@ -1672,25 +1670,30 @@ msgid "Period Depreciation"
 msgstr "Dotation de la période"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_history_form
+msgid "Please change asset category before validation."
+msgstr "Merci de changer la catégorie d'immobilisation avant la mise en service."
+
+#. module: smile_account_asset
 #: code:addons/smile_account_asset/models/account_asset_asset.py:827
 #, python-format
 msgid "Please confirm this asset before validating it!"
 msgstr "Merci d'activer l'immobilisation avant de mettre en service celle-ci"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_invoice_line.py:114
+#: code:addons/smile_account_asset/models/account_invoice_line.py:115
 #, python-format
 msgid "Please indicate a parent asset in line %s"
 msgstr "Merci d'indiquer une immobilisation principale au niveau de la ligne de facture suivante : %s"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:326
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:325
 #, python-format
 msgid "Please indicate exceptional amortization accounts in company form!"
 msgstr "Merci d'indiquer les comptes d'amortissement exceptionnel sur la fiche société"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:316
+#: code:addons/smile_account_asset/models/account_asset_depreciation_line.py:317
 #, python-format
 msgid "Please indicate fiscal amortization accounts in company form!"
 msgstr "Merci d'indiquer les comptes d'amortissement dérogatoire sur la fiche société"
@@ -2263,6 +2266,11 @@ msgid "Year Depreciation"
 msgstr "Dotation de l'année"
 
 #. module: smile_account_asset
+#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
+msgid "Year Depreciation<br/><i>Non Ded. Part</i>"
+msgstr "Amortissement annuel<br/><i>Part Non Déd.</i>"
+
+#. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
 msgid "Year N"
 msgstr "Année N"
@@ -2273,14 +2281,14 @@ msgid "Yearly"
 msgstr "Annuelle"
 
 #. module: smile_account_asset
-#: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
-msgid "Year Depreciation<br/><i>Non Ded. Part</i>"
-msgstr "Amortissement annuel<br/><i>Part Non Déd.</i>"
+#: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_history_form
+msgid "You can only validate assets not in progress."
+msgstr "Vous pouvez seulement mettre en service une immobilisation en cours."
 
 #. module: smile_account_asset
 #: code:addons/smile_account_asset/models/account_asset_asset.py:774
 #, python-format
-msgid "You cannot cancel a canceled asset!"
+msgid "You cannot cancel a cancelled asset!"
 msgstr "Vous ne pouvez pas annuler une immobilisation déjà annulée"
 
 #. module: smile_account_asset
@@ -2313,7 +2321,7 @@ msgid "You cannot dispose a %s asset"
 msgstr "Vous ne pouvez pas céder ou mettre au rebut l'immobilisation %s"
 
 #. module: smile_account_asset
-#: code:addons/smile_account_asset/models/account_invoice_line.py:109
+#: code:addons/smile_account_asset/models/account_invoice_line.py:110
 #, python-format
 msgid "You cannot not create an asset from invoice lines with different %s"
 msgstr "Vous ne pouvez pas créer d'immobilisation à partir de lignes de factures liées à différent %s"

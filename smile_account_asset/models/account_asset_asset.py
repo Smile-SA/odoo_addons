@@ -771,7 +771,7 @@ class AccountAssetAsset(models.Model):
     @api.one
     def _can_cancel_asset_purchase(self):
         if self.state == 'cancel':
-            raise UserError(_('You cannot cancel a canceled asset!'))
+            raise UserError(_('You cannot cancel a cancelled asset!'))
         if self.state == 'close':
             raise UserError(_('You cannot cancel a disposed asset!'))
 

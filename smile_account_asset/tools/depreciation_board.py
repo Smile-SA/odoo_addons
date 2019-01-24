@@ -421,6 +421,8 @@ class DepreciationBoardLine(object):
                 prorata_temporis_by_period)):
             readonly_depreciation_value, readonly = self._get_readonly_value(
                 board, depreciation_date)
+            exceptional_value = self._get_exceptional_value(
+                board, depreciation_date)
             depreciation_value = float_round(
                 self.depreciation_value *
                 prorata_temporis_by_period[depreciation_date] / total,
@@ -434,11 +436,11 @@ class DepreciationBoardLine(object):
             if depreciation_index + 1 == depreciation_number:
                 depreciation_value = self.depreciation_value - \
                     accumulated_value_in_period
+                if depreciation_value + exceptional_value > book_value:
+                    depreciation_value = book_value - exceptional_value
             else:
                 accumulated_value_in_period += depreciation_value
             accumulated_value += depreciation_value
-            exceptional_value = self._get_exceptional_value(
-                board, depreciation_date)
             book_value_wo_exceptional -= depreciation_value
             book_value -= depreciation_value + exceptional_value
             vals = {

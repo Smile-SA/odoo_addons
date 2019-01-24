@@ -9,6 +9,12 @@
 	            <form string="Asset Update">
                     <sheet>
                         <field name="asset_id" invisible="1"/>
+                        <field name="display_validation_warning" invisible="1"/>
+                        <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                            attrs="{'invisible': [('display_validation_warning', '=', False)]}">
+                            <p>You can only validate assets not in progress.</p>
+                            <p>Please change asset category before validation.</p>
+                        </div>
                         <group>
                             <field name="name"/>
                             <field name="category_id"/>

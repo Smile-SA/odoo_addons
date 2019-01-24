@@ -47,14 +47,14 @@
 	                <field name="category_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
 	                <field name="account_id" invisible="1"/>
-	                <field name="purchase_value_sign" sum="Total"/>
-	                <field name="salvage_value_sign" sum="Total"/>
+	                <field name="purchase_value_sign"/>
+	                <field name="salvage_value_sign"/>
 	                <field name="depreciation_type"/>
-	                <field name="previous_years_accumulated_value_sign" sum="Total"/>
+	                <field name="previous_years_accumulated_value_sign"/>
 	                <field name="depreciation_value_sign" string="Amortization" sum="Total"/>
 	                <field name="exceptional_value_sign" sum="Total"/>
-	                <field name="current_year_accumulated_value_sign" sum="Total"/>
-	                <field name="book_value_sign" sum="Total"/>
+	                <field name="current_year_accumulated_value_sign"/>
+	                <field name="book_value_sign"/>
 	                <field name="currency_id" groups="base.group_multi_currency"/>
 	                <field name="state" invisible="1"/>
 	                <field name="is_posted" invisible="1"/>

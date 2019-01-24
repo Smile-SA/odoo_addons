@@ -55,7 +55,8 @@ class AccountInvoiceLine(models.Model):
 
     @api.multi
     def write(self, vals):
-        self._update_vals(vals)
+        if self:
+            self._update_vals(vals)
         return super(AccountInvoiceLine, self).write(vals)
 
     @api.multi
