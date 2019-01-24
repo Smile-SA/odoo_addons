@@ -59,7 +59,7 @@
               <field name="ansible_inventory_ids" nolabel="1" colspan="4">
                 <tree editable="top">
                   <field name="inventory_type_id" readonly="True"/>
-                  <field name="role_id" readonly="True"/>
+                  <field name="role_id"/>
                   <field name="hosts"/>
                   <field name="role_vars"/>
                 </tree>

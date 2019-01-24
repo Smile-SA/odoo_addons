@@ -23,9 +23,8 @@ class AnsibleRole(models.Model):
     name = fields.Char(required=True)
     active = fields.Boolean(compute="_get_active", store=True)
     vcs_id = fields.Many2one(
-        "scm.vcs", "Version Control System", ondelete="restrict"
-    )  # required=True
-    url = fields.Char(size=256)  # required=True
+        "scm.vcs", "Version Control System", ondelete="restrict")
+    url = fields.Char(size=256)
     branch = fields.Char()
     directory = fields.Char(compute="_get_directory")
     vars = fields.Text("Default variables")
