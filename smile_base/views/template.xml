@@ -13,7 +13,7 @@
 
     <template id="smile_base_css" name="smile_base_css" inherit_id="web_editor.assets_backend">
       <xpath expr="." position="inside">
-        <link rel="stylesheet" href="/smile_base/static/src/css/base.css"/>
+        <link rel="stylesheet" type="text/less" href="/smile_base/static/src/less/base.less"/>
       </xpath>
     </template>
 
