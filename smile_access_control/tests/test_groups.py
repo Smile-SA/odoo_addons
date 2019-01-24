@@ -77,7 +77,7 @@ class TestGroups(TransactionCase):
         We also check we got correct rights (True,False,False,False)
         """
         expected_list_after_completion = [
-            'Models', 'ir.model.access', 'Fields', 'ir.ui.view', 'Users']
+            'Models', 'Model Access', 'Fields', 'View', 'Users']
         list_after_completion = []
         check_right = True
         self.group_completion.button_complete_access_controls()
