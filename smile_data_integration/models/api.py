@@ -12,11 +12,15 @@ native_call_kw_multi = api.call_kw_multi
 
 def _convert_values(self, vals):
     for field in vals:
-        if field in self._fields and \
-                isinstance(self._fields[field], fields.Many2one) and \
-                isinstance(vals[field], string_types):
-            vals[field] = self.env['ir.model.data'].xmlid_to_res_id(
-                vals[field], raise_if_not_found=True)
+        if field in self._fields and isinstance(vals[field], string_types):
+            if isinstance(self._fields[field], fields.Many2one):
+                vals[field] = self.env['ir.model.data'].xmlid_to_res_id(
+                    vals[field], raise_if_not_found=True)
+            elif isinstance(self._fields[field], fields.Many2many):
+                vals[field] = [
+                    self.env['ir.model.data'].xmlid_to_res_id(
+                        xml_id, raise_if_not_found=True)
+                    for xml_id in vals[field].replace(' ', '').split(',')]
 
 
 def _convert_domain(self, domain):
