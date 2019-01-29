@@ -19,7 +19,10 @@
             <field name="branch">9.0</field>
             <field name="version_id" ref="smile_scm.v90"/>
             <field name="use_in_ci" eval="True"/>
-            <field name="addons_path">server/addons,smile-addons</field>
+            <field name="os_id" ref="scm_os_debian_8"/>
+            <field name="postgres_id" ref="docker_image_postgresql_9_5"/>
+            <field name="pip_packages">num2words</field>
+            <field name="addons_path">server/openerp/addons,server/addons,smile-addons</field>
             <field name="code_path">smile-addons</field>
             <field name="test_path">smile-addons</field>
             <field name="modules_to_install">smile_base,smile_audit</field>
