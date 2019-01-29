@@ -433,6 +433,40 @@ class Branch(models.Model):
     def _create_build_locked(self, force):
         self._create_build(force)
 
+    @api.multi
+    def copy_branch_follower_to_build(self, force):
+        "Copy branch's follower to build"
+        build_env = self.env['scm.repository.branch.build']
+        foll_env = self.env['mail.followers']
+        followers = self.message_follower_ids.mapped('partner_id').ids
+        builds = build_env.search([('branch_id', '=', self.id)])
+        subtype = self.env.ref('smile_ci.subtype_build_result')
+        if builds:
+            for build in builds:
+                gen_list = []
+                for follower in followers:
+                    gen, part = foll_env._add_follower_command(
+                        build._name, [build.id],
+                        {follower: None}, {},
+                        force=force)
+                    gen_list.extend(gen)
+                build.write({
+                    'message_follower_ids': gen_list,
+                })
+                for follower in followers:
+                    subtypes = foll_env.search([('res_model', '=', self._name),
+                                                ('res_id', '=', self.id),
+                                                ('partner_id', '=', follower)
+                                                ]).subtype_ids
+                    if subtype in subtypes:
+                        foll = foll_env.search([('res_model', '=', build._name),
+                                                ('res_id', '=', build.id),
+                                                ('partner_id', '=', follower)
+                                                ])
+                        foll.update({
+                            'subtype_ids': [(4, subtype.id)]
+                        })
+
     @api.one
     def _create_build(self, force):
         try:
@@ -448,6 +482,7 @@ class Branch(models.Model):
                     'commit_logs': self.get_last_commits(),
                 }
                 self.env['scm.repository.branch.build'].create(vals)
+                self.copy_branch_follower_to_build(force)
         except Exception as e:
             msg = "Build creation failed"
             error = get_exception_message(e)

@@ -703,6 +703,7 @@ class Build(models.Model):
                 branch.os_id.odoo_dir, path, filename))
         missing_files = []
         for filepath in filepaths:
+            filelike = None
             try:
                 response = self.docker_host_id.get_archive(container, filepath)
                 filelike = StringIO.StringIO(response.next())
@@ -864,7 +865,18 @@ class Build(models.Model):
                 self._context['build_error'])
         template = self.env.ref('smile_ci.mail_template_build_result')
         self = self.with_context(**context)
-        self.message_post_with_template(template.id)
+        for build in self:
+            t_env = self.env['mail.template']
+            template = template.get_email_template(build.id)
+            body_html = t_env.render_template(template.body_html,
+                                              self._name, build.id)
+            subject = t_env.render_template(template.subject,
+                                            self._name, build.id)
+            build.message_post(
+                subject=subject,
+                body=body_html,
+                subtype='smile_ci.subtype_build_result',
+            )
         self._notify_slack()
 
     @api.one
