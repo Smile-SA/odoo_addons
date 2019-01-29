@@ -4,7 +4,7 @@ Budget Commitment Forecast
 
 .. |badge2| image:: https://img.shields.io/badge/licence-LGPL--3-blue.png
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
-    :alt: License: AGPL-3
+    :alt: License: LGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github
     :target: https://github.com/Smile-SA/odoo_addons/tree/12.0/smile_commitment_forecast
     :alt: Smile-SA/odoo_addons
