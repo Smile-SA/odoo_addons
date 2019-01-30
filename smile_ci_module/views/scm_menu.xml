@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <menuitem id="menu_scm_modules" name="Modules"
+            action="action_modules"
+            parent="smile_scm.menu_main_scm" sequence="90"
+            groups="smile_scm.group_scm_reader"/>
+
+	</data>
+</odoo>

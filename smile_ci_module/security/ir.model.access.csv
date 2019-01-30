@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+scm_repository_branch_module_reader,Branch modules,smile_ci_module.model_scm_repository_branch_module,smile_scm.group_scm_reader,1,0,0,0

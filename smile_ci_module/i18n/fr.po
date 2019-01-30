@@ -1,0 +1,271 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_ci_module
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-01-25 21:49+0000\n"
+"PO-Revision-Date: 2019-01-25 21:49+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_ci_module
+#: sql_constraint:scm.repository.branch.module:0
+msgid "A module must be unique per branch!"
+msgstr "Un module est unique pour une branche donnée !"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_create_date
+msgid "Added on"
+msgstr "Ajouté le"
+
+#. module: smile_ci_module
+#: selection:scm.repository.branch.module,license:0
+#: selection:scm.version,default_license:0
+msgid "Affero GPL-3"
+msgstr "Affero GPL-3"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_application
+msgid "Application"
+msgstr "Application"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_attachment_ids
+msgid "Attachments"
+msgstr "Pièces jointes"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_author
+msgid "Author"
+msgstr "Auteur"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_auto_install
+msgid "Automatic Installation"
+msgstr "Installation automatisée"
+
+#. module: smile_ci_module
+#: model:ir.model,name:smile_ci_module.model_scm_repository_branch
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_branch_id
+#: model:ir.ui.view,arch_db:smile_ci_module.view_repository_branch_module_search
+msgid "Branch"
+msgstr "Branche"
+
+#. module: smile_ci_module
+#: model:ir.model,name:smile_ci_module.model_scm_repository_branch_build
+msgid "Build"
+msgstr "Build"
+
+#. module: smile_ci_module
+#: model:ir.ui.view,arch_db:smile_ci_module.view_repository_branch_module_form
+msgid "By"
+msgstr "Par"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_contributors
+msgid "Contributors"
+msgstr "Contributeurs"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_version_default_license
+msgid "Default license"
+msgstr "Licence par défaut"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_description
+msgid "Description"
+msgstr "Description"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_description_html
+msgid "Description html"
+msgstr "Description HTML"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_ci_module
+#: selection:scm.repository.branch.module,license:0
+#: selection:scm.version,default_license:0
+msgid "GPL Version 2"
+msgstr "GPL Version 2"
+
+#. module: smile_ci_module
+#: selection:scm.repository.branch.module,license:0
+#: selection:scm.version,default_license:0
+msgid "GPL Version 3"
+msgstr "GPL Version 3"
+
+#. module: smile_ci_module
+#: selection:scm.repository.branch.module,license:0
+#: selection:scm.version,default_license:0
+msgid "GPL-2 or later version"
+msgstr "GPL-2 ou version ultérieure"
+
+#. module: smile_ci_module
+#: selection:scm.repository.branch.module,license:0
+#: selection:scm.version,default_license:0
+msgid "GPL-3 or later version"
+msgstr "GPL-3 ou version ultérieure"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_icon_image
+msgid "Icon"
+msgstr "Icône"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_icon_url
+msgid "Icon url"
+msgstr "URL de l'icône"
+
+#. module: smile_ci_module
+#: model:ir.ui.view,arch_db:smile_ci_module.view_repository_branch_module_form
+msgid "Informations"
+msgstr "Informations"
+
+#. module: smile_ci_module
+#: selection:scm.repository.branch.module,license:0
+#: selection:scm.version,default_license:0
+msgid "LGPL Version 3"
+msgstr "LGPL Version 3"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module___last_update
+msgid "Last Modified on"
+msgstr "Dernière Modification le"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_latest_version
+msgid "Latest version"
+msgstr "Dernière version"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_license
+msgid "License"
+msgstr "License"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_maintainer
+msgid "Maintainer"
+msgstr "Responsable"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_shortdesc
+msgid "Module Name"
+msgstr "Nom de Module"
+
+#. module: smile_ci_module
+#: model:ir.actions.act_window,name:smile_ci_module.action_branch_modules
+#: model:ir.actions.act_window,name:smile_ci_module.action_modules
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_ids
+#: model:ir.ui.menu,name:smile_ci_module.menu_scm_modules
+#: model:ir.ui.view,arch_db:smile_ci_module.view_repository_branch_form
+msgid "Modules"
+msgstr "Modules"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_modules_count
+msgid "Modules count"
+msgstr "Nombre de modules"
+
+#. module: smile_ci_module
+#: code:addons/smile_ci_module/models/scm_repository_branch_module.py:91
+#, python-format
+msgid "No build to run"
+msgstr "Aucun build en cours d'exécution"
+
+#. module: smile_ci_module
+#: model:ir.model,name:smile_ci_module.model_scm_repository_branch_module
+msgid "Odoo Addons by branch"
+msgstr "Modules par branche"
+
+#. module: smile_ci_module
+#: selection:scm.repository.branch.module,license:0
+#: selection:scm.version,default_license:0
+msgid "Odoo Enterprise Edition License v1.0"
+msgstr "Odoo Enterprise Edition License v1.0"
+
+#. module: smile_ci_module
+#: selection:scm.repository.branch.module,license:0
+#: selection:scm.version,default_license:0
+msgid "Odoo Proprietary License v1.0"
+msgstr "Odoo Proprietary License v1.0"
+
+#. module: smile_ci_module
+#: model:ir.model,name:smile_ci_module.model_scm_version
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_version_id
+#: model:ir.ui.view,arch_db:smile_ci_module.view_repository_branch_module_search
+msgid "Odoo Version"
+msgstr "Version d'Odoo"
+
+#. module: smile_ci_module
+#: selection:scm.repository.branch.module,license:0
+#: selection:scm.version,default_license:0
+msgid "Other OSI Approved License"
+msgstr "Autre license approuvée par l'OSI"
+
+#. module: smile_ci_module
+#: selection:scm.repository.branch.module,license:0
+#: selection:scm.version,default_license:0
+msgid "Other Proprietary License"
+msgstr "Autre licence propriétaire"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_summary
+msgid "Summary"
+msgstr "Résumé"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_name
+msgid "Technical Name"
+msgstr "Nom technique"
+
+#. module: smile_ci_module
+#: model:ir.ui.view,arch_db:smile_ci_module.view_repository_branch_module_search
+msgid "Technical name"
+msgstr "Nom technique"
+
+#. module: smile_ci_module
+#: model:ir.ui.view,arch_db:smile_ci_module.view_repository_branch_module_search
+msgid "Technical name > Odoo Version"
+msgstr "Nom technique > Version Odoo"
+
+#. module: smile_ci_module
+#: model:ir.ui.view,arch_db:smile_ci_module.view_repository_branch_module_form
+#: model:ir.ui.view,arch_db:smile_ci_module.view_repository_branch_module_kanban
+msgid "Try me"
+msgstr "Essaie moi"
+
+#. module: smile_ci_module
+#: model:ir.model.fields,field_description:smile_ci_module.field_scm_repository_branch_module_website
+msgid "Website"
+msgstr "Site Web"
