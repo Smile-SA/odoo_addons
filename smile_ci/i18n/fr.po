@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-14 11:40+0000\n"
-"PO-Revision-Date: 2016-12-14 11:40+0000\n"
+"POT-Creation-Date: 2019-01-25 21:29+0000\n"
+"PO-Revision-Date: 2019-01-25 21:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr "# Tests"
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_coverage_branch_count
 msgid "# conditionals"
-msgstr "# conditionnels"
+msgstr "# conditionals"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_coverage_line_count
@@ -70,56 +70,56 @@ msgstr "<br/>Tests en échec"
 
 #. module: smile_ci
 #: model:mail.template,body_html:smile_ci.mail_template_build_result
-msgid "<p><b><a href=\"${ctx.get('build_url', '')}\">${object.branch_id.name | safe} ${object.branch_id.branch} - Build ${object.id} - ${ctx.get('subject', '')}</a></b></p>\n"
+msgid "<p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\"><a href=\"${ctx.get('build_url', '')}\" style=\"text-decoration:none;color:rgb(33, 183, 153);background-color:transparent;\">${object.branch_id.name | safe} ${object.branch_id.branch} - Build ${object.id} - ${ctx.get('subject', '')}</a></b></p>\n"
 "% if object.result in ('stable', 'unstable'):\n"
-"  <ul>\n"
+"  <ul style=\"margin:0px 0 9px 0;\">\n"
 "    <li>${object.failed_test_ratio} failed tests</li>\n"
 "    <li>${object.quality_code_count} quality errors</li>\n"
-"    <li>${'{0:.2f}'.format(object.coverage_avg)}% coverage average</li>\n"
+"    <li>${'{0:.2f}'.format(object.coverage_avg)} coverage average</li>\n"
 "  </ul>\n"
 "% endif\n"
 "\n"
 "% if object.result == 'failed' and object.quality_code_count:\n"
-"  <ul>\n"
+"  <ul style=\"margin:0px 0 9px 0;\">\n"
 "    <li>${object.quality_code_count} quality errors</li>\n"
 "  </ul>\n"
 "% endif\n"
 "\n"
 "% if ctx.get('commit_logs'):\n"
-"  <p><b>Last commits:</b><br/>${ctx['commit_logs'] | safe}</p>\n"
+"  <p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\">Last commits:</b><br></p><p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">${ctx['commit_logs'] | safe}</p>\n"
 "% endif\n"
 "\n"
 "% if ctx.get('build_error'):\n"
-"  <p><b>Build creation failed</b></p>\n"
-"  <p><em>Error message:</em></p>\n"
+"  <p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\">Build creation failed</b></p>\n"
+"  <p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><em>Error message:</em></p>\n"
 "  ${ctx['build_error'] | safe}\n"
 "% endif\n"
-"      "
-msgstr "<p><b><a href=\"${ctx.get('build_url', '')}\">${object.branch_id.name | safe} ${object.branch_id.branch} - Build ${object.id} - ${ctx.get('subject', '')}</a></b></p>\n"
+"      <p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"></p>"
+msgstr "<p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\"><a href=\"${ctx.get('build_url', '')}\" style=\"text-decoration:none;color:rgb(33, 183, 153);background-color:transparent;\">${object.branch_id.name | safe} ${object.branch_id.branch} - Build ${object.id} - ${ctx.get('subject', '')}</a></b></p>\n"
 "% if object.result in ('stable', 'unstable'):\n"
-"  <ul>\n"
+"  <ul style=\"margin:0px 0 9px 0;\">\n"
 "    <li>${object.failed_test_ratio} tests en échec</li>\n"
-"    <li>${object.quality_code_count} erreurs de qualité</li>\n"
-"    <li>${'{0:.2f}'.format(object.coverage_avg)}% de couverture moyenne</li>\n"
+"    <li>${object.quality_code_count} erreurs de qualité de code</li>\n"
+"    <li>${'{0:.2f}'.format(object.coverage_avg)} de couverture de code</li>\n"
 "  </ul>\n"
 "% endif\n"
 "\n"
 "% if object.result == 'failed' and object.quality_code_count:\n"
-"  <ul>\n"
-"    <li>${object.quality_code_count} erreurs de qualité</li>\n"
+"  <ul style=\"margin:0px 0 9px 0;\">\n"
+"    <li>${object.quality_code_count} erreurs de qualité de code</li>\n"
 "  </ul>\n"
 "% endif\n"
 "\n"
 "% if ctx.get('commit_logs'):\n"
-"  <p><b>Dernier commits:</b><br/>${ctx['commit_logs'] | safe}</p>\n"
+"  <p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\">Last commits:</b><br></p><p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">${ctx['commit_logs'] | safe}</p>\n"
 "% endif\n"
 "\n"
 "% if ctx.get('build_error'):\n"
-"  <p><b>Echec de la création du build</b></p>\n"
-"  <p><em>Message d'erreur :</em></p>\n"
+"  <p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\">La création du build a échoué</b></p>\n"
+"  <p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><em>Message d'erreur :</em></p>\n"
 "  ${ctx['build_error'] | safe}\n"
 "% endif\n"
-"      "
+"      <p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"></p>"
 
 #. module: smile_ci
 #: model:ir.actions.act_window,help:smile_ci.action_branch_builds
@@ -133,9 +133,22 @@ msgid "A build can only be killed if its container is started"
 msgstr "Un build ne peut être tué qu'une fois démarré"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_version
+msgid "API version"
+msgstr "Version de l'API"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_active
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_active
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_active
 #: model:ir.model.fields,field_description:smile_ci.field_scm_os_active
 msgid "Active"
 msgstr "Actif"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "Add an incoming webhook"
+msgstr "Ajouter un webhook"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_additional_options
@@ -146,7 +159,6 @@ msgstr "Options additionnelles de configuration"
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_additional_server_options
 msgid "Additional server options"
 msgstr "Options additionnelles de serveur"
-
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_addons_path
@@ -167,6 +179,7 @@ msgstr "Chemin vers les modules à tester"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_user_uid
+#: model:ir.model.fields,field_description:smile_ci.field_scm_version_user_uid
 msgid "Admin id"
 msgstr "Id de l'administrateur"
 
@@ -203,6 +216,7 @@ msgstr "Tous les services liés"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_docker_host_attachment_ids
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_attachment_ids
 #: model:ir.model.fields,field_description:smile_ci.field_docker_image_attachment_ids
 #: model:ir.model.fields,field_description:smile_ci.field_docker_link_attachment_ids
 #: model:ir.model.fields,field_description:smile_ci.field_docker_registry_attachment_ids
@@ -219,13 +233,30 @@ msgstr "Pièces jointes"
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_auto_create_branches
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_auto_create_branches
 msgid "Auto create branches"
-msgstr "Auto create branches"
+msgstr "Créer automatiquement les branches"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch.py:499
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_auto_delete_unactive_branches
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_auto_delete_unactive_branches
+msgid "Auto delete unactive branches"
+msgstr "Supprimer automatiquement les branches inactives"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_auto_use_new_branch_in_ci
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_auto_use_new_branch_in_ci
+msgid "Auto use new branch in ci"
+msgstr "Intégrer automatiquement les branches"
+
+#. module: smile_ci
+#: code:addons/smile_ci/models/scm_repository_branch.py:697
 #, python-format
 msgid "Base image successfully created"
 msgstr "Image de base créée avec succès"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_base_url
+msgid "Base url"
+msgstr "URL de base"
 
 #. module: smile_ci
 #: model:ir.model,name:smile_ci.model_scm_repository_branch
@@ -242,7 +273,7 @@ msgid "Branch"
 msgstr "Branche"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch.py:268
+#: code:addons/smile_ci/models/scm_repository_branch.py:372
 #, python-format
 msgid "Branch deactivated because doesn't exist anymore\n"
 "\n"
@@ -256,12 +287,6 @@ msgstr "Branche désactivée puisque n'existe plus\n"
 #: model:ir.model.fields,field_description:smile_ci.field_scm_os_branch_ids
 msgid "Branches"
 msgstr "Branches"
-
-#. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository.py:18
-#, python-format
-msgid "Branches auto-creation requires to define a default branch template"
-msgstr "La création automatique des branches nécessite d'avoir défini au préalable une branche modèle"
 
 #. module: smile_ci
 #: model:ir.model,name:smile_ci.model_scm_repository_branch_build
@@ -280,10 +305,15 @@ msgid "Build base url"
 msgstr "URL de base d'un build"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch.py:310
-#, python-format
-msgid "Build creation already in progress for branch %s"
-msgstr "Création d'un build déjà en cours pour la branche %s"
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_build_directory
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_directory_2904
+msgid "Build directory"
+msgstr "Répertoire"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_build_on_the_fly
+msgid "Build on the fly"
+msgstr "Construire à la volée"
 
 #. module: smile_ci
 #: model:ir.actions.act_window,name:smile_ci.action_branch_builds
@@ -316,12 +346,27 @@ msgid "Builds host config"
 msgstr "Configuration du hôte des builds"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_tls_ca_cert
+msgid "CA certificate"
+msgstr "Certificat de l'AC"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_container
+msgid "CONTAINER"
+msgstr "CONTAINER"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_cpu_usage
+msgid "CPU %"
+msgstr "CPU %"
+
+#. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_is_killable
 msgid "Can be killed"
 msgstr "Peut être tué"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch_build.py:568
+#: code:addons/smile_ci/models/scm_repository_branch_build.py:647
 #, python-format
 msgid "Check external dependencies"
 msgstr "Vérifier les dépendences externes"
@@ -330,6 +375,16 @@ msgstr "Vérifier les dépendences externes"
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_log_code
 msgid "Class"
 msgstr "Class"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_tls_cert
+msgid "Client certificate"
+msgstr "Certificat"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_tls_key
+msgid "Client key"
+msgstr "Clé privée"
 
 #. module: smile_ci
 #: model:ir.ui.view,arch_db:smile_ci.view_build_show_server_logs
@@ -370,6 +425,11 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_configfile
+msgid "Configuration file"
+msgstr "Fichier de configuration"
+
+#. module: smile_ci
 #. openerp-web
 #: code:addons/smile_ci/static/src/xml/wizard.xml:14
 #, python-format
@@ -389,6 +449,11 @@ msgid "Copy to clipboard"
 msgstr "Copier dans le presse-papier"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_country_id
+msgid "Country"
+msgstr "Pays"
+
+#. module: smile_ci
 #: model:ir.actions.act_window,name:smile_ci.action_build_coverage
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_coverage_ids
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_coverage_graph
@@ -404,7 +469,9 @@ msgid "Coverage Analysis"
 msgstr "Analyse de la couverture"
 
 #. module: smile_ci
+#: code:addons/smile_ci/models/scm_repository_branch_build.py:924
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_coverage_avg
+#, python-format
 msgid "Coverage average"
 msgstr "Couverture moyenne"
 
@@ -419,6 +486,11 @@ msgid "Create a build if updates are available"
 msgstr "Créer un build uniquement si des mises à jour sont disponibles"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_create_uid
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_create_uid
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_create_uid
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_create_uid
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_create_uid
 #: model:ir.model.fields,field_description:smile_ci.field_scm_os_create_uid
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_coverage_create_uid
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_create_uid
@@ -429,6 +501,11 @@ msgid "Created by"
 msgstr "Créé par"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_create_date
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_create_date
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_create_date
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_create_date
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_create_date
 #: model:ir.model.fields,field_description:smile_ci.field_scm_os_create_date
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_abstract_log_create_date
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_coverage_create_date
@@ -447,6 +524,11 @@ msgid "DOCKER_OPTS=\"--insecure-registry"
 msgstr "DOCKER_OPTS=\"--insecure-registry"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_volume_from
+msgid "Data volume"
+msgstr "Volume de données"
+
+#. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_postgres_id
 msgid "Database Management System"
 msgstr "Base de données"
@@ -458,12 +540,27 @@ msgid "Default branch template"
 msgstr "Modèle de branche par défaut"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_default_environment
+msgid "Default environment"
+msgstr "Environnement par défaut"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_default_host_config
+msgid "Default host config"
+msgstr "Configuration par défaut de l'hôte"
+
+#. module: smile_ci
 #: model:ir.model.fields,help:smile_ci.field_scm_repository_auto_create_branches
 #: model:ir.model.fields,help:smile_ci.field_scm_repository_branch_auto_create_branches
 msgid "Define a default branch template to auto-create branches"
-msgstr "Define a default branch template to auto-create branches"
+msgstr "Définir une branche modèle pour celles auto-créées"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_display_name
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_display_name
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_display_name
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_display_name
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_display_name
 #: model:ir.model.fields,field_description:smile_ci.field_scm_os_display_name
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_abstract_log_display_name
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_coverage_display_name
@@ -477,7 +574,12 @@ msgstr "Nom affiché"
 #. module: smile_ci
 #: model:ir.model,name:smile_ci.model_docker_host
 msgid "Docker Host"
-msgstr "Docker Host"
+msgstr "Hôte Docker"
+
+#. module: smile_ci
+#: model:ir.model,name:smile_ci.model_docker_host_stats
+msgid "Docker Host Stats"
+msgstr "Stats de l'hôte Docker"
 
 #. module: smile_ci
 #: model:ir.ui.menu,name:smile_ci.menu_docker_host
@@ -487,7 +589,7 @@ msgstr "Hôtes Docker"
 #. module: smile_ci
 #: model:ir.model,name:smile_ci.model_docker_image
 msgid "Docker Image"
-msgstr "Docker Image"
+msgstr "Image Docker"
 
 #. module: smile_ci
 #: model:ir.ui.menu,name:smile_ci.menu_docker_image
@@ -497,7 +599,7 @@ msgstr "Images Docker"
 #. module: smile_ci
 #: model:ir.model,name:smile_ci.model_docker_link
 msgid "Docker Link"
-msgstr "Docker Link"
+msgstr "Lien Docker"
 
 #. module: smile_ci
 #: model:ir.ui.menu,name:smile_ci.menu_docker_registry
@@ -507,35 +609,51 @@ msgstr "Registres Docker"
 #. module: smile_ci
 #: model:ir.model,name:smile_ci.model_docker_registry
 msgid "Docker Registry"
-msgstr "Docker Registry"
+msgstr "Registre Docker"
 
 #. module: smile_ci
+#: model:ir.model,name:smile_ci.model_docker_registry_wizard
+msgid "Docker Registry Images"
+msgstr "Images du registre Docker"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_docker_container
+msgid "Docker container"
+msgstr "Conteneur Docker"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_docker_host_id
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_docker_host_id
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_docker_host_id
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_docker_host_id
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_docker_host_id
+msgid "Docker host"
+msgstr "Hôte Docker"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_docker_image
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_docker_image
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_docker_image
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_image_id
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_docker_image
 msgid "Docker image"
 msgstr "Image Docker"
 
 #. module: smile_ci
-#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_docker_in_docker
-msgid "Docker in docker"
-msgstr "Docker in docker"
-
-#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_docker_registry_id
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_docker_registry_id
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_docker_registry_id
 msgid "Docker registry"
 msgstr "Registre Docker"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_docker_registry_image
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_docker_registry_image
 msgid "Docker registry image"
-msgstr "Image au sein du registre Docker"
+msgstr "Image Docker"
 
 #. module: smile_ci
-#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_docker_tags
-msgid "Docker tags"
-msgstr "Tags Docker"
-
-#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_dockerfile
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_dockerfile
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_dockerfile
 msgid "Dockerfile"
@@ -600,14 +718,21 @@ msgid "End date"
 msgstr "Date de fin"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_environment
+msgid "Environment"
+msgstr "Environnement"
+
+#. module: smile_ci
+#: code:addons/smile_ci/models/scm_repository_branch_build.py:910
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_error
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_log_search
 #: selection:scm.repository.branch.build.log,result:0
+#, python-format
 msgid "Error"
 msgstr "Erreur"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch_build.py:569
+#: code:addons/smile_ci/models/scm_repository_branch_build.py:648
 #, python-format
 msgid "Error while modules installation\n"
 "\n"
@@ -619,7 +744,7 @@ msgstr "Erreur à l'installation des modules\n"
 #. module: smile_ci
 #: model:ir.model.fields,help:smile_ci.field_scm_repository_branch_ignored_tests
 msgid "Example: {'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"
-msgstr "Exemple: {'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"
+msgstr "Exemple : {'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_log_exception
@@ -642,8 +767,10 @@ msgid "Failed"
 msgstr "Echec"
 
 #. module: smile_ci
+#: code:addons/smile_ci/models/scm_repository_branch_build.py:920
 #: model:ir.actions.act_window,name:smile_ci.action_build_failed_test
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_form
+#, python-format
 msgid "Failed tests"
 msgstr "Tests en échec"
 
@@ -658,6 +785,11 @@ msgstr "Taux de tests en échec"
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_log_file
 msgid "File"
 msgstr "Fichier"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.report_tests
+msgid "File:"
+msgstr "Fichier :"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_user_ids
@@ -698,7 +830,7 @@ msgstr "Obtenir la révision courante"
 #: model:ir.actions.act_window,help:smile_ci.action_branch_builds
 #: model:ir.actions.act_window,help:smile_ci.action_repository_branch_build
 msgid "Got to \"Configuration &gt; Branches\" and force test."
-msgstr "Aller au menu \"Configuration &gt; Branches\" et forcer le test."
+msgstr "Se rendre au sein du menu \"Configuration &gt; Branches\" et forcer le test."
 
 #. module: smile_ci
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_coverage_search
@@ -713,6 +845,16 @@ msgid "Has branch dependencies"
 msgstr "Dépend d'autres branches"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_host_config
+msgid "Host config"
+msgstr "Configuration de l'hôte"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_id
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_id
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_id
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_id
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_id
 #: model:ir.model.fields,field_description:smile_ci.field_scm_os_id
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_abstract_log_id
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_coverage_id
@@ -740,11 +882,13 @@ msgid "Ignored"
 msgstr "Ignoré"
 
 #. module: smile_ci
-#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_image_to_recreate
-msgid "Image to recreate"
-msgstr "Image à recréer"
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_images
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_images_count
+msgid "Images in registry"
+msgstr "Images au sein du registre"
 
 #. module: smile_ci
+#: model:ir.model.fields,help:smile_ci.field_docker_host_timeout
 #: model:ir.model.fields,help:smile_ci.field_scm_repository_branch_build_log_duration
 msgid "In seconds"
 msgstr "En seconds"
@@ -807,7 +951,7 @@ msgstr "Arrêter"
 #: selection:scm.repository.branch,last_build_result:0
 #: selection:scm.repository.branch.build,result:0
 msgid "Killed"
-msgstr "Killed"
+msgstr "Tué"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_lang
@@ -815,6 +959,11 @@ msgid "Language"
 msgstr "Langue"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host___last_update
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats___last_update
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image___last_update
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link___last_update
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry___last_update
 #: model:ir.model.fields,field_description:smile_ci.field_scm_os___last_update
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build___last_update
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_abstract_log___last_update
@@ -826,6 +975,11 @@ msgid "Last Modified on"
 msgstr "Dernière Modification le"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_write_uid
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_write_uid
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_write_uid
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_write_uid
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_write_uid
 #: model:ir.model.fields,field_description:smile_ci.field_scm_os_write_uid
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_coverage_write_uid
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_log_write_uid
@@ -836,6 +990,11 @@ msgid "Last Updated by"
 msgstr "Dernière mise à jour par"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_write_date
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_write_date
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_write_date
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_write_date
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_write_date
 #: model:ir.model.fields,field_description:smile_ci.field_scm_os_write_date
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_coverage_write_date
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_log_write_date
@@ -861,14 +1020,24 @@ msgid "Last result"
 msgstr "Dernier résultat"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats
+msgid "Last stats"
+msgstr "Dernières stats"
+
+#. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_ppid
 msgid "Launcher Process Id"
 msgstr "Id du processus"
 
 #. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_build_show_server_logs
+msgid "Limit"
+msgstr "Limite"
+
+#. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_log_line
 msgid "Line"
-msgstr "Ligne"
+msgstr "Line"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_coverage_line_rate
@@ -876,6 +1045,12 @@ msgid "Lines rate"
 msgstr "Lines rate"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_linked_image_id
+msgid "Linked image"
+msgstr "Image liée"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_link_ids
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_other_link_ids
 msgid "Linked services"
 msgstr "Services liés"
@@ -901,12 +1076,37 @@ msgstr "S'identifier auprès du registre Docker ("
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_log_search
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_log_tree
 msgid "Logs"
-msgstr "Historiques"
+msgstr "Logs"
 
 #. module: smile_ci
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_log_pivot
 msgid "Logs Analysis"
 msgstr "Analyse des logs"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_mem_percent_max
+msgid "MAX %"
+msgstr "MAX %"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_mem_percent
+msgid "MEM %"
+msgstr "MEM %"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_mem_limit
+msgid "MEM LIMIT (MiB)"
+msgstr "MEM LIMIT (MiB)"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_mem_usage
+msgid "MEM USAGE (MiB)"
+msgstr "MEM USAGE (MiB)"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_base_image_id
+msgid "Main image"
+msgstr "Image principale"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_branch_dependency_ids
@@ -929,10 +1129,15 @@ msgid "Module"
 msgstr "Module"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch_build.py:559
+#: code:addons/smile_ci/models/scm_repository_branch_build.py:637
 #, python-format
 msgid "Module %s does not exist"
 msgstr "Le module %s n'existe pas"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.report_tests
+msgid "Module:"
+msgstr "Module :"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_modules_to_install
@@ -948,7 +1153,21 @@ msgid "My"
 msgstr "Mes projets"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_network_input
+msgid "NETWORK INPUT (MiB)"
+msgstr "NETWORK INPUT (MiB)"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_network_output
+msgid "NETWORK OUTPUT (MiB)"
+msgstr "NETWORK OUTPUT (MiB)"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_name
+#: model:ir.model.fields,field_description:smile_ci.field_docker_link_name
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_name
 #: model:ir.model.fields,field_description:smile_ci.field_scm_os_name
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_name
 msgid "Name"
 msgstr "Nom"
 
@@ -958,19 +1177,19 @@ msgid "Nextcall"
 msgstr "Prochain appel"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch.py:409
-#, python-format
-msgid "No Docker image pushed to %s for %s"
-msgstr "Aucune image Docker à poussée au sein de %s pour %s"
-
-#. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch_build.py:515
+#: code:addons/smile_ci/models/docker_host.py:74
 #, python-format
 msgid "No available ports"
-msgstr "Ports non libres"
+msgstr "Ports non disponibles"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch.py:218
+#: code:addons/smile_ci/models/scm_repository_branch.py:550
+#, python-format
+msgid "No image in %s"
+msgstr "Pas d'image au sein de %s"
+
+#. module: smile_ci
+#: code:addons/smile_ci/models/scm_repository_branch.py:316
 #, python-format
 msgid "No running build"
 msgstr "Aucun build actif"
@@ -980,6 +1199,11 @@ msgstr "Aucun build actif"
 #: model:ir.model.fields,field_description:smile_ci.field_scm_version_package_npm_packages
 msgid "Node.js packages"
 msgstr "Paquets Node.js"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.report_tests
+msgid "Non-regression Tests"
+msgstr "Tests de non-régression"
 
 #. module: smile_ci
 #. openerp-web
@@ -1015,7 +1239,7 @@ msgid "Open"
 msgstr "Ouvrir"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch_build.py:814
+#: code:addons/smile_ci/models/scm_repository_branch_build.py:1024
 #, python-format
 msgid "Open URL"
 msgstr "Ouvrir l'URL"
@@ -1023,13 +1247,14 @@ msgstr "Ouvrir l'URL"
 #. module: smile_ci
 #: model:ir.model,name:smile_ci.model_scm_os
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_os_id
+#: model:ir.model.fields,field_description:smile_ci.field_scm_version_default_os_id
 #: model:ir.model.fields,field_description:smile_ci.field_scm_version_package_os_id
 #: model:ir.ui.view,arch_db:smile_ci.view_scm_os_form
 msgid "Operating System"
 msgstr "Système d'exploitation"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch.py:239
+#: code:addons/smile_ci/models/scm_repository_branch.py:342
 #, python-format
 msgid "Operating System is mandatory if branch is used in CI"
 msgstr "Système d'exploitation obligatoire si la branche doit être intégrée en continue"
@@ -1058,6 +1283,16 @@ msgid "Packages by Odoo Version and Operating System"
 msgstr "Paquets par version d'Odoo et système d'exploitation"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_password
+msgid "Password"
+msgstr "Mot de passe"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "Paste the Webhook URL into the field below."
+msgstr "Coller l'URL du webhook URL dans le champ ci-dessous."
+
+#. module: smile_ci
 #: selection:scm.repository.branch.build,state:0
 msgid "Pending"
 msgstr "En attente"
@@ -1073,22 +1308,28 @@ msgid "Place merged sources in"
 msgstr "Placer les sources fusionnées au sein du répertoire"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/docker_link.py:13
+#: code:addons/smile_ci/models/docker_link.py:15
 #: sql_constraint:docker.link:0
 #, python-format
 msgid "Please specify a base image or a branch"
 msgstr "Merci de spécifier une image de base ou une branche"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch.py:247
+#: code:addons/smile_ci/models/scm_repository_branch.py:350
 #, python-format
 msgid "Please use a dict"
 msgstr "Merci d'utiliser un dictionnaire"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_port
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_port
 msgid "Port"
 msgstr "Port"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_port_range
+msgid "Port range"
+msgstr "Plage de ports"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_pip_packages
@@ -1097,9 +1338,16 @@ msgid "PyPI packages"
 msgstr "Paquets PyPI"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_pip_requirements
+msgid "PyPI requirements"
+msgstr "PyPI requirements"
+
+#. module: smile_ci
+#: code:addons/smile_ci/models/scm_repository_branch_build.py:928
 #: model:ir.actions.act_window,name:smile_ci.action_build_quality_code
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_form
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_kanban
+#, python-format
 msgid "Quality errors"
 msgstr "Erreurs de qualité"
 
@@ -1125,7 +1373,6 @@ msgstr "Répéter tous les x."
 
 #. module: smile_ci
 #: model:ir.model,name:smile_ci.model_scm_repository
-#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_repository_id
 msgid "Repository"
 msgstr "Dépôt"
 
@@ -1157,12 +1404,20 @@ msgid "Running build"
 msgstr "Build actif"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_containers
+msgid "Running containers"
+msgstr "Conteneurs démarrés"
+
+#. module: smile_ci
 #: model:ir.actions.act_window,name:smile_ci.action_ir_cron
 #: model:ir.ui.menu,name:smile_ci.menu_ir_cron
 msgid "Scheduled Actions"
 msgstr "Actions planifiées"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_sequence
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_sequence
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_sequence
 #: model:ir.model.fields,field_description:smile_ci.field_scm_os_sequence
 msgid "Sequence"
 msgstr "Séquence"
@@ -1183,6 +1438,11 @@ msgid "Server logs"
 msgstr "Logs du serveur"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_server_logs_length
+msgid "Server logs length"
+msgstr "Longueur des logs serveur"
+
+#. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_server_path
 msgid "Server path"
 msgstr "Chemin vers le serveur"
@@ -1193,6 +1453,31 @@ msgstr "Chemin vers le serveur"
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_tree
 msgid "Show logs"
 msgstr "Voir les logs"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "Slack Integration"
+msgstr "Slack Integration"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_slack_channel
+msgid "Slack channel"
+msgstr "Canal Slack"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_slack_integration
+msgid "Slack integration"
+msgstr "Intégration Slack"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_slack_username
+msgid "Slack username"
+msgstr "Identifiant Slack"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_slack_webhook
+msgid "Slack webhook"
+msgstr "Webhook Slack"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_code_path
@@ -1214,6 +1499,11 @@ msgstr "XML/RPC classique"
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_date_start
 msgid "Start date"
 msgstr "Date de début"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_stats_date
+msgid "Stats date"
+msgstr "Date des stats"
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_state
@@ -1262,6 +1552,11 @@ msgid "Test"
 msgstr "Tester"
 
 #. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.report_tests
+msgid "Test:"
+msgstr "Test :"
+
+#. module: smile_ci
 #: selection:scm.repository.branch.build,state:0
 msgid "Testing"
 msgstr "Test en cours"
@@ -1273,15 +1568,50 @@ msgid "Tests"
 msgstr "Tests"
 
 #. module: smile_ci
+#: model:ir.actions.report.xml,name:smile_ci.tests_report
+msgid "Tests Report"
+msgstr "Rapport de tests"
+
+#. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_ignored_tests
 msgid "Tests to ignore"
 msgstr "Tests à ignorer"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "The Channel name and Username fields are optional."
+msgstr "Le nom du canal et l'identifiant sont optionels."
+
+#. module: smile_ci
+#: model:ir.model.fields,help:smile_ci.field_res_users_website_url
+msgid "The full URL to access the document through the website."
+msgstr "Le lien complet afin d'accéder au document à travers le site web."
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.report_tests
+msgid "This document provides a detailed description of non-regression tests."
+msgstr "Ce document fournit une description détaillée des tests de non-régression."
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "This service sends notifications about projects events to Slack channels."
+msgstr "Ce service envoie des notifications concernant les événements projets vers le canal Slack."
 
 #. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_time
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_build_time_human
 msgid "Time"
 msgstr "Durée"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_timeout
+msgid "Timeout"
+msgstr "Délai d'attente"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_tls
+msgid "Tls"
+msgstr "TLS"
 
 #. module: smile_ci
 #. openerp-web
@@ -1312,6 +1642,11 @@ msgid "To run in a interactive mode, execute the following command lines:"
 msgstr "Pour utiliser le mode interactif, exécuter les commandes suivantes :"
 
 #. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "To set up this service:<br/>"
+msgstr "Mettre en place ce service :<br/>"
+
+#. module: smile_ci
 #. openerp-web
 #: code:addons/smile_ci/static/src/xml/wizard.xml:78
 #, python-format
@@ -1337,6 +1672,11 @@ msgstr "Pour utiliser le code source local en lieu et place de celui du conteneu
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_log_search
 msgid "Type"
 msgstr "Type"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_url
+msgid "URL"
+msgstr "URL"
 
 #. module: smile_ci
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_kanban
@@ -1387,9 +1727,29 @@ msgid "Used to build Build image"
 msgstr "Utilisée pour construire l'image du build"
 
 #. module: smile_ci
+#: model:ir.model.fields,help:smile_ci.field_scm_repository_branch_country_id
+msgid "Useful from Odoo 9.0"
+msgstr "Utile à partir de Odoo 9.0"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_registry_username
+msgid "Username"
+msgstr "Nom d’utilisateur"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_host_tls_verify
+msgid "Verify"
+msgstr "Vérifier"
+
+#. module: smile_ci
 #: model:ir.model,name:smile_ci.model_scm_vcs
 msgid "Version Control System"
 msgstr "Gestionnaire de sources"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_res_users_website_published
+msgid "Visible in Website"
+msgstr "Visible sur le site web"
 
 #. module: smile_ci
 #: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_build_log_search
@@ -1403,33 +1763,80 @@ msgid "Web Included"
 msgstr "Web inclus"
 
 #. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_res_users_website_description
+msgid "Website Partner Full Description"
+msgstr "Description complète du site web partenaire"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_res_users_website_short_description
+msgid "Website Partner Short Description"
+msgstr "Description courte du site web partenaire"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_res_users_website_url
+msgid "Website URL"
+msgstr "URL du site"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_res_users_website_meta_description
+msgid "Website meta description"
+msgstr "Méta description du site web"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_res_users_website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Mots clefs du site web"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_res_users_website_meta_title
+msgid "Website meta title"
+msgstr "Titre du site web"
+
+#. module: smile_ci
+#: model:ir.model.fields,field_description:smile_ci.field_docker_image_with_persistent_storage
+msgid "With persistent storage"
+msgstr "Avec stockage persistent"
+
+#. module: smile_ci
 #: model:ir.model.fields,field_description:smile_ci.field_scm_repository_branch_workers
 msgid "Workers"
 msgstr "Workers"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch_build.py:800
+#: code:addons/smile_ci/models/scm_repository_branch_build.py:1009
 #, python-format
 msgid "You can't kill a build if its container has not been started!"
 msgstr "Vous ne pouvez pas arrêter un build si le conteneur n'a pas encore démarré !"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch_dependency.py:20
+#: code:addons/smile_ci/models/scm_repository_branch_dependency.py:22
 #, python-format
 msgid "You can't merge the branch with itself!"
 msgstr "Vous ne pouvez pas fusionner une branche avec elle-même !"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/scm_repository_branch.py:487
+#: code:addons/smile_ci/models/scm_repository_branch.py:639
 #, python-format
 msgid "You cannot delete a branch with a testing build"
 msgstr "Vous ne pouvez pas supprimer une branche pour laquelle un build est en cours de test"
 
 #. module: smile_ci
-#: code:addons/smile_ci/models/docker_registry.py:15
+#: code:addons/smile_ci/models/scm_repository_branch_build.py:989
+#, python-format
+msgid "You cannot delete a non-killable testing build"
+msgstr "Vous ne pouvez pas supprimer un build en cours de construction"
+
+#. module: smile_ci
+#: code:addons/smile_ci/models/docker_registry.py:18
 #, python-format
 msgid "You cannot delete a registry linked to branches!"
 msgstr "Vous ne pouvez pas supprimer un registre auquel des branches sont liées !"
+
+#. module: smile_ci
+#: code:addons/smile_ci/models/scm_repository_branch.py:337
+#, python-format
+msgid "You cannot specify a template for a branch which is a template for others"
+msgstr "Vous ne pouvez pas spécifier un modèle pour une branche qui est elle-même un modèle pour d'autres"
 
 #. module: smile_ci
 #: model:mail.template,subject:smile_ci.mail_template_build_result
@@ -1444,14 +1851,9 @@ msgid "_db:"
 msgstr "_db:"
 
 #. module: smile_ci
-#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
-msgid "addons,project-addons,web/addons"
-msgstr "addons,project-addons,web/addons"
-
-#. module: smile_ci
-#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
-msgid "branch-addons"
-msgstr "branch-addons"
+#: model:ir.model,name:smile_ci.model_base
+msgid "base"
+msgstr "base"
 
 #. module: smile_ci
 #. openerp-web
@@ -1482,11 +1884,6 @@ msgstr "db:\n"
 "    image:"
 
 #. module: smile_ci
-#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
-msgid "debug_mode = True"
-msgstr "debug_mode = True"
-
-#. module: smile_ci
 #. openerp-web
 #: code:addons/smile_ci/static/src/xml/wizard.xml:22
 #, python-format
@@ -1508,6 +1905,62 @@ msgid "docker-compose up -d && docker exec -ti odoo bash"
 msgstr "docker-compose up -d && docker exec -ti odoo bash"
 
 #. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "e.g. #odoo-ci"
+msgstr "ex. #odoo-ci"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "e.g. addons,project-addons,web/addons"
+msgstr "ex. addons,project-addons,web/addons"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "e.g. branch-addons"
+msgstr "ex. branch-addons"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "e.g. debug_mode = True"
+msgstr "ex. debug_mode = True"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "e.g. https://hooks.slack.com/services/..."
+msgstr "ex. https://hooks.slack.com/services/..."
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "e.g. mrp,purchase"
+msgstr "ex. mrp,purchase"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "e.g. project-addons,smile-addons"
+msgstr "ex. project-addons,smile-addons"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "e.g. server"
+msgstr "ex. server"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "e.g. {'ENV_VAR': 'env_value'}"
+msgstr "ex. {'ENV_VAR': 'env_value'}"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "e.g. {'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"
+msgstr "ex. {'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"
+
+#. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_docker_host_form
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "e.g. {'mem_limit': '1G'}"
+msgstr "ex. {'mem_limit': '1G'}"
+
+#. module: smile_ci
 #: selection:scm.repository.branch,interval_type:0
 msgid "hours"
 msgstr "heures"
@@ -1520,11 +1973,16 @@ msgid "in docker-compose.yml:"
 msgstr "au sein de docker-compose.yml :"
 
 #. module: smile_ci
+#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
+msgid "in your Slack team. The default channel can be overridden for each event."
+msgstr "au sein de votre équipe Slack. Le canal par défaut peutêtre surchargé pour chaque événement."
+
+#. module: smile_ci
 #. openerp-web
 #: code:addons/smile_ci/static/src/xml/wizard.xml:42
 #, python-format
 msgid "latest"
-msgstr "latest"
+msgstr "dernier"
 
 #. module: smile_ci
 #: selection:scm.repository.branch,interval_type:0
@@ -1537,26 +1995,11 @@ msgid "months"
 msgstr "mois"
 
 #. module: smile_ci
-#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
-msgid "mrp,purchase"
-msgstr "mrp,purchase"
-
-#. module: smile_ci
 #. openerp-web
 #: code:addons/smile_ci/static/src/xml/wizard.xml:11
 #, python-format
 msgid "official documentation)"
 msgstr "documentation officielle)"
-
-#. module: smile_ci
-#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
-msgid "project-addons,smile-addons"
-msgstr "project-addons,smile-addons"
-
-#. module: smile_ci
-#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
-msgid "server"
-msgstr "server"
 
 #. module: smile_ci
 #. openerp-web
@@ -1644,19 +2087,3 @@ msgstr "années"
 #, python-format
 msgid "your_local_source_code"
 msgstr "your_local_source_code"
-
-#. module: smile_ci
-#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
-msgid "{'ENV_VAR': 'env_value'}"
-msgstr "{'ENV_VAR': 'env_value'}"
-
-#. module: smile_ci
-#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
-msgid "{'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"
-msgstr "{'account': ['test/account_bank_statement.yml'], 'sale': 'all'}"
-
-#. module: smile_ci
-#: model:ir.ui.view,arch_db:smile_ci.view_docker_host_form
-#: model:ir.ui.view,arch_db:smile_ci.view_repository_branch_form
-msgid "{'mem_limit': '1G'}"
-msgstr "{'mem_limit': '1G'}"

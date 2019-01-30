@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-02 14:44+0000\n"
-"PO-Revision-Date: 2016-12-02 14:44+0000\n"
+"POT-Creation-Date: 2019-01-25 21:56+0000\n"
+"PO-Revision-Date: 2019-01-25 21:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,25 +16,25 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: smile_scm
-#: code:addons/smile_scm/tools/osutil.py:58
+#: code:addons/smile_scm/tools/osutil.py:75
 #, python-format
 msgid "%s FAILED\n"
 "from %s\n"
 "\n"
-"%s"
+"(#%s) %s"
 msgstr "%s EN ECHEC\n"
 "depuis %s\n"
 "\n"
-"%s"
+"(#%s) %s"
 
 #. module: smile_scm
-#: code:addons/smile_scm/models/scm_repository.py:41
+#: code:addons/smile_scm/models/scm_repository.py:71
 #, python-format
 msgid "%s copy"
-msgstr "%s copy"
+msgstr "%s copie"
 
 #. module: smile_scm
-#: code:addons/smile_scm/models/scm_repository_branch.py:82
+#: code:addons/smile_scm/models/scm_repository_branch.py:103
 #, python-format
 msgid "%s doesn't exist or is not a directory"
 msgstr "%s n'existe pasou n'est pas un répertoire"
@@ -64,12 +64,6 @@ msgid "Attachments"
 msgstr "Pièces jointes"
 
 #. module: smile_scm
-#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_auto_create_branches
-#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_auto_create_branches
-msgid "Auto create branches"
-msgstr "Créer automatiquement les branches"
-
-#. module: smile_scm
 #: model:ir.model,name:smile_scm.model_scm_repository_branch
 #: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_branch
 #: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_form
@@ -77,7 +71,7 @@ msgid "Branch"
 msgstr "Branche"
 
 #. module: smile_scm
-#: code:addons/smile_scm/models/scm_repository_branch.py:115
+#: code:addons/smile_scm/models/scm_repository_branch.py:142
 #, python-format
 msgid "Branch cloned"
 msgstr "Branche clonée"
@@ -108,6 +102,12 @@ msgid "Builds"
 msgstr "Builds"
 
 #. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_can_switch_url
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_can_switch_url
+msgid "Can switch url"
+msgstr "Peut changer d'URL"
+
+#. module: smile_scm
 #: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_cmd_clone
 #: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_form
 #: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_simple_tree
@@ -121,7 +121,7 @@ msgid "Cloned"
 msgstr "Clonée"
 
 #. module: smile_scm
-#: code:addons/smile_scm/models/scm_repository_branch.py:98
+#: code:addons/smile_scm/models/scm_repository_branch.py:122
 #, python-format
 msgid "Cloning already in progress"
 msgstr "Clonage déjà en cours"
@@ -175,15 +175,14 @@ msgid "Default branch"
 msgstr "Branche par défaut"
 
 #. module: smile_scm
-#: model:ir.model.fields,help:smile_scm.field_scm_repository_auto_create_branches
-#: model:ir.model.fields,help:smile_scm.field_scm_repository_branch_auto_create_branches
-msgid "Define a default branch template to auto-create branches"
-msgstr "Définir une branche comme modèle par défaut afin de pouvoir créer automatiquement les autres branches"
-
-#. module: smile_scm
 #: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_directory
 msgid "Directory"
 msgstr "Répertoire"
+
+#. module: smile_scm
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_swith_url_popup
+msgid "Discard"
+msgstr "Annuler"
 
 #. module: smile_scm
 #: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_display_name
@@ -192,7 +191,7 @@ msgstr "Répertoire"
 #: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_display_name
 #: model:ir.model.fields,field_description:smile_scm.field_scm_version_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: smile_scm
 #: model:ir.actions.act_window,help:smile_scm.action_dashboard
@@ -227,8 +226,8 @@ msgstr "Information"
 
 #. module: smile_scm
 #: model:ir.ui.menu,name:smile_scm.menu_main_scm
-msgid "Source Code"
-msgstr "Code source"
+msgid "Integration"
+msgstr "Intégration"
 
 #. module: smile_scm
 #: model:ir.model.fields,field_description:smile_scm.field_scm_repository___last_update
@@ -284,6 +283,11 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: smile_scm
+#: model:ir.model.fields,field_description:smile_scm.field_scm_repository_new_url
+msgid "New url"
+msgstr "Nouvelle URL"
+
+#. module: smile_scm
 #: selection:scm.repository.branch,state:0
 msgid "Not cloned"
 msgstr "Non clonée"
@@ -336,7 +340,7 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: smile_scm
-#: code:addons/smile_scm/models/scm_repository_branch.py:101
+#: code:addons/smile_scm/models/scm_repository_branch.py:125
 #, python-format
 msgid "Please define a branch before cloning"
 msgstr "Merci de définir une branche avant le clonage"
@@ -363,7 +367,7 @@ msgid "Repositories"
 msgstr "Dépôts"
 
 #. module: smile_scm
-#: code:addons/smile_scm/models/scm_repository_branch.py:166
+#: code:addons/smile_scm/models/scm_repository_branch.py:200
 #: model:ir.model,name:smile_scm.model_scm_repository
 #: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_repository_id
 #: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_search
@@ -409,16 +413,25 @@ msgid "Status"
 msgstr "Statut"
 
 #. module: smile_scm
+#: code:addons/smile_scm/models/scm_repository.py:115
+#: model:ir.model.fields,field_description:smile_scm.field_scm_vcs_cmd_switch_url
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_form
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_swith_url_popup
+#, python-format
+msgid "Switch URL"
+msgstr "Changer d'URL"
+
+#. module: smile_scm
 #: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_tag_ids
 #: model:ir.model.fields,field_description:smile_scm.field_scm_repository_tag_ids
 msgid "Tags"
-msgstr "Etiquettes"
+msgstr "Étiquettes"
 
 #. module: smile_scm
 #: model:ir.ui.view,arch_db:smile_scm.view_repository_branch_form
 #: model:ir.ui.view,arch_db:smile_scm.view_repository_form
 msgid "Tags..."
-msgstr "Etiquettes..."
+msgstr "Étiquettes..."
 
 #. module: smile_scm
 #: model:ir.model.fields,help:smile_scm.field_scm_repository_branch_branch
@@ -429,7 +442,7 @@ msgstr "Nom technique de la branche"
 #: model:ir.model.fields,field_description:smile_scm.field_scm_repository_branch_url
 #: model:ir.model.fields,field_description:smile_scm.field_scm_repository_url
 msgid "Url"
-msgstr "Url"
+msgstr "URL"
 
 #. module: smile_scm
 #: model:res.groups,name:smile_scm.group_scm_user
@@ -440,6 +453,11 @@ msgstr "Utilisateur"
 #: sql_constraint:scm.vcs:0
 msgid "VCS must be unique"
 msgstr "Un gestionnaire de sources doit être unique"
+
+#. module: smile_scm
+#: model:ir.ui.view,arch_db:smile_scm.view_repository_swith_url_popup
+msgid "Validate"
+msgstr "Valider"
 
 #. module: smile_scm
 #: model:ir.model,name:smile_scm.model_scm_vcs
@@ -458,19 +476,19 @@ msgid "Version Control Systems"
 msgstr "Gestionnaires de sources"
 
 #. module: smile_scm
-#: code:addons/smile_scm/models/scm_repository_branch.py:103
+#: code:addons/smile_scm/models/scm_repository_branch.py:127
 #, python-format
 msgid "You cannot clone a branch already cloned"
 msgstr "Vous ne pouvez pas re-cloner une branche déjà clonée"
 
 #. module: smile_scm
-#: code:addons/smile_scm/models/scm_repository_branch.py:122
+#: code:addons/smile_scm/models/scm_repository_branch.py:150
 #, python-format
 msgid "You cannot pull a branch not cloned"
 msgstr "Vous ne pouvez pas mettre à jour une branche non clonée"
 
 #. module: smile_scm
-#: code:addons/smile_scm/models/scm_repository.py:48
+#: code:addons/smile_scm/models/scm_repository.py:81
 #, python-format
-msgid "You must define a first branch for repository %s before listing all of them"
-msgstr "Vous devez définir une première branche pour le dépôt %s avant de pouvoir lister l'ensemble d'entre elles"
+msgid "You must define and clone a first branch for repository %s before listing all of them"
+msgstr "Vous devez définir et cloner une première branche pour le dépôt %s avant de pouvoir répertorier toutes les branches de ce dernier"

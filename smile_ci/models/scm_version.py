@@ -11,7 +11,7 @@ class OdooVersion(models.Model):
         return self.env['scm.os'].sudo().search([], limit=1)
 
     server_cmd = fields.Char(
-        'Server command', required=True, default='odoo.py')
+        'Server command', required=True, default='odoo-bin')
     package_ids = fields.One2many(
         'scm.version.package', 'version_id', 'Packages')
     web_included = fields.Boolean('Web Included', default=True)

@@ -1147,18 +1147,21 @@ class Build(models.Model):
 
     @api.model
     def _remove_unknown_containers(self):
-        build_containers = set()
+        real_running_build_ids = []
         for docker_host in self.env['docker.host'].search([]):
             for container in docker_host.get_containers(all=True):
                 for name in container['Names']:
                     try:
                         build_id = int(name.split('_')[-1])
-                        build_containers.add(build_id)
+                        real_running_build_ids.append(build_id)
                     except Exception:
                         pass
-        virtual_running_build_ids = set(
-            self.search([('state', '=', 'running')]).ids)
-        containers_to_kill = build_containers - virtual_running_build_ids
+        real_running_builds = self.search(
+            [('id', 'in', real_running_build_ids)])
+        virtual_running_builds = self.search(
+            [('state', '=', 'running')])
+        containers_to_kill = set(real_running_builds.ids) - \
+            set(virtual_running_builds.ids)
         if containers_to_kill:
             _logger.info('Killing running containers %s' % containers_to_kill)
             for docker_host in self.env['docker.host'].search([]):

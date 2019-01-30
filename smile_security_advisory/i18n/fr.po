@@ -1,0 +1,201 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_security_advisory
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-01-25 22:07+0000\n"
+"PO-Revision-Date: 2019-01-25 22:07+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_branch_ids
+#: model:ir.ui.view,arch_db:smile_security_advisory.view_security_advisory_form
+msgid "Affected branches"
+msgstr "Branches concernées"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_version_ids
+msgid "Affected versions"
+msgstr "Versions affectées"
+
+#. module: smile_security_advisory
+#: model:ir.ui.view,arch_db:smile_security_advisory.view_security_advisory_form
+msgid "Affected versions..."
+msgstr "Versions affectées..."
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_applied
+msgid "Applied"
+msgstr "Appliqué"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_attachment_ids
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_attachment_ids
+msgid "Attachments"
+msgstr "Pièces jointes"
+
+#. module: smile_security_advisory
+#: model:ir.model,name:smile_security_advisory.model_scm_repository_branch
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_branch_id
+msgid "Branch"
+msgstr "Branche"
+
+#. module: smile_security_advisory
+#: model:ir.actions.act_window,name:smile_security_advisory.action_repository_branch_security_advisory2
+msgid "Branches"
+msgstr "Branches"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_branches_count
+msgid "Branches count"
+msgstr "Nombre de branches"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_create_uid
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_create_date
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_security_advisory
+#: selection:scm.security_advisory,severity_level:0
+msgid "Critical"
+msgstr "Critique"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_description
+msgid "Description"
+msgstr "Description"
+
+#. module: smile_security_advisory
+#: model:ir.ui.view,arch_db:smile_security_advisory.view_security_advisory_form
+msgid "Description..."
+msgstr "Description..."
+
+#. module: smile_security_advisory
+#: model:ir.ui.view,arch_db:smile_security_advisory.view_security_advisory_form
+msgid "Details"
+msgstr "Détails"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_display_name
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_security_advisory
+#: selection:scm.security_advisory,severity_level:0
+msgid "High"
+msgstr "Elevé"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_id
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory___last_update
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory___last_update
+msgid "Last Modified on"
+msgstr "Dernière Modification le"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_write_uid
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_write_date
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_security_advisory
+#: selection:scm.security_advisory,severity_level:0
+msgid "Low"
+msgstr "Bas"
+
+#. module: smile_security_advisory
+#: selection:scm.security_advisory,severity_level:0
+msgid "Medium"
+msgstr "Moyen"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_name
+#: model:ir.ui.view,arch_db:smile_security_advisory.view_security_advisory_form
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_security_advisory
+#: model:ir.ui.view,arch_db:smile_security_advisory.view_repository_branch_form
+msgid "Please find above several important security advisories to apply to your version of Odoo server."
+msgstr "Veuillez trouver ci-dessus plusieurs avis de sécurité importants à appliquer à votre version du serveur Odoo.."
+
+#. module: smile_security_advisory
+#: model:ir.actions.act_window,name:smile_security_advisory.action_repository_branch_security_advisory
+#: model:ir.actions.act_window,name:smile_security_advisory.action_security_advisory
+#: model:ir.ui.menu,name:smile_security_advisory.menu_security_advisory
+msgid "Security Advisories"
+msgstr "Avis de sécurité"
+
+#. module: smile_security_advisory
+#: model:ir.ui.view,arch_db:smile_security_advisory.view_repository_branch_form
+msgid "Security Advisories to apply"
+msgstr "Avis de sécurité à appliquer"
+
+#. module: smile_security_advisory
+#: model:ir.model,name:smile_security_advisory.model_scm_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_security_advisory_id
+msgid "Security Advisory"
+msgstr "Avis de sécurité"
+
+#. module: smile_security_advisory
+#: model:ir.model,name:smile_security_advisory.model_scm_repository_branch_security_advisory
+msgid "Security Advisory status by branch"
+msgstr "Etat de l'avis de sécurité par branche"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_ids
+msgid "Security advisories"
+msgstr "Avis de sécurité"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisories_count
+msgid "Security advisories count"
+msgstr "Nombre d'avis de sécurité"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisories_to_apply_count
+msgid "Security advisories to apply count"
+msgstr "Nombre d'avis de sécurité à appliquer"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisories_to_apply_ratio
+msgid "Security advisories to apply ratio"
+msgstr "Taux d'avis de sécurité à appliquer"
+
+#. module: smile_security_advisory
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_repository_branch_security_advisory_severity_level
+#: model:ir.model.fields,field_description:smile_security_advisory.field_scm_security_advisory_severity_level
+msgid "Severity level"
+msgstr "Niveau de sévérité"
+
+#. module: smile_security_advisory
+#: sql_constraint:scm.security_advisory:0
+msgid "The security advisory name must be unique"
+msgstr "Le nom d'un avis de sécurité doit être unique"
