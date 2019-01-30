@@ -5,7 +5,7 @@
     <record id="mail_template_build_result" model="mail.template">
       <field name="name">Send build result</field>
       <field name="model_id" ref="smile_ci.model_scm_repository_branch_build"/>
-      <field name="partner_to">${','.join(map(str, object.branch_id.partner_ids.ids))}</field>
+      <field name="partner_to">${','.join(map(str, ctx.get('partner_to_notify', [])))}</field>
       <field name="subject">[Odoo-CI] ${object.branch_id.name | safe} ${object.branch_id.branch} - Build ${object.id} - ${ctx.get('subject', '')}</field>
       <field name="body_html"><![CDATA[<p><b><a href="${ctx.get('build_url', '')}">${object.branch_id.name | safe} ${object.branch_id.branch} - Build ${object.id} - ${ctx.get('subject', '')}</a></b></p>
 % if object.result in ('stable', 'unstable'):

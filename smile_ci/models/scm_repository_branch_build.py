@@ -249,7 +249,6 @@ class Build(models.Model):
             'mail_create_nosubscribe': True,
         }
         build = super(Build, self.with_context(**context)).create(vals)
-        build._add_followers()
         build._copy_sources()
         return build
 
@@ -849,20 +848,17 @@ class Build(models.Model):
         elif self.result == 'unstable':
             self._send_build_result('Unstable')
 
-    @api.one
-    def _add_followers(self):
-        "Copy branch followers to build"
+    @api.multi
+    def _get_partners_to_notify(self):
+        "Get branch followers who checked the subtype 'Build results'"
+        self.ensure_one()
         subtype_id = self.env.ref('smile_ci.subtype_build_result').id
-        partner_data = {
-            partner_id: None for partner_id in
-            self.branch_id.message_follower_ids.filtered(
-                lambda follower: subtype_id in follower.subtype_ids.ids
-            ).mapped('partner_id').ids
-        }
-        generic, specific = self.message_follower_ids._add_follower_command(
-            self._name, self.ids, partner_data, {})
-        self.write({
-            'message_follower_ids': generic + specific.get(self.id, [])})
+        followers = self.env['mail.followers'].search([
+            ('res_model', '=', self.branch_id._name),
+            ('res_id', '=', self.branch_id.id),
+            ('subtype_ids', 'in', subtype_id),
+        ])
+        return followers.mapped('partner_id').ids
 
     @api.one
     def _send_build_result(self, short_message):
@@ -881,14 +877,11 @@ class Build(models.Model):
             context['build_error'] = tools.plaintext2html(
                 self._context['build_error'])
         template = self.env.ref('smile_ci.mail_template_build_result')
-        template = template.get_email_template(self.id)
-        body_html = template.render_template(template.body_html,
-                                             self._name, self.id)
-        subject = template.render_template(template.subject,
-                                           self._name, self.id)
         self = self.with_context(**context)
-        self.message_post(subject=subject, body=body_html,
-                          subtype='smile_ci.subtype_build_result')
+        partner_ids = self._get_partners_to_notify()
+        if partner_ids:
+            self.with_context(partner_to_notify=partner_ids). \
+                message_post_with_template(template.id)
         self._notify_slack()
 
     @api.one
