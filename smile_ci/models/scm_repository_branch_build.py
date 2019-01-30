@@ -852,10 +852,12 @@ class Build(models.Model):
     @api.one
     def _add_followers(self):
         "Copy branch followers to build"
-        subtype_ids = self.env.ref('smile_ci.subtype_build_result').ids
+        subtype_id = self.env.ref('smile_ci.subtype_build_result').id
         partner_data = {
-            partner_id: subtype_ids for partner_id in
-            self.branch_id.message_follower_ids.mapped('partner_id').ids
+            partner_id: None for partner_id in
+            self.branch_id.message_follower_ids.filtered(
+                lambda follower: subtype_id in follower.subtype_ids.ids
+            ).mapped('partner_id').ids
         }
         generic, specific = self.message_follower_ids._add_follower_command(
             self._name, self.ids, partner_data, {})
