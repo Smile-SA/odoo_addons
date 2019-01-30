@@ -774,14 +774,6 @@ class Branch(models.Model):
                 branch.repository_id.id in parent_follower_ids
 
     @api.multi
-    def message_subscribe_users(self, user_ids=None, subtype_ids=None):
-        if user_ids is None and subtype_ids is None and \
-                self._context.get('in_new_thread'):
-            subtype_ids = self.env.ref('smile_ci.subtype_build_result').ids
-        return super(Branch, self).message_subscribe_users(
-            user_ids, subtype_ids)
-
-    @api.multi
     def message_unsubscribe_users(self, user_ids=None):
         res = super(Branch, self).message_unsubscribe_users(user_ids)
         if user_ids:
