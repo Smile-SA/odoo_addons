@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-02 14:57+0000\n"
-"PO-Revision-Date: 2016-12-02 14:57+0000\n"
+"POT-Creation-Date: 2019-01-25 21:19+0000\n"
+"PO-Revision-Date: 2019-01-25 21:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,39 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: smile_cd
+#: model:mail.template,body_html:smile_cd.mail_template_deployment_result
+msgid "\n"
+"<p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\"><a href=\"${ctx.get('deployment_url', '')}\" style=\"text-decoration:none;color:rgb(33, 183, 153);background-color:transparent;\">${object.branch_id.name | safe} ${object.branch_id.branch} - Deployment ${object.revno} ${object.result}</a></b></p>\n"
+"<p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\">Logs:</b><br>${object.logs | safe}</p>\n"
+"% endif\n"
+"      "
+msgstr "\n"
+"<p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\"><a href=\"${ctx.get('deployment_url', '')}\" style=\"text-decoration:none;color:rgb(33, 183, 153);background-color:transparent;\">${object.branch_id.name | safe} ${object.branch_id.branch} - Deployment ${object.revno} ${object.result}</a></b></p>\n"
+"<p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\">Logs:</b><br>${object.logs | safe}</p>\n"
+"% endif\n"
+"      "
+
+#. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_active
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_active
 msgid "Active"
 msgstr "Actif"
 
 #. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_age
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_age_human
+msgid "Age"
+msgstr "Âge"
+
+#. module: smile_cd
 #: model:ir.model,name:smile_cd.model_ansible_deployment
 msgid "Ansible Deployment"
 msgstr "Déploiement Ansible"
+
+#. module: smile_cd
+#: model:ir.model,name:smile_cd.model_ansible_deployment_rule
+msgid "Ansible Deployment Rule"
+msgstr "Règle de déploiement Ansible"
 
 #. module: smile_cd
 #: model:ir.model,name:smile_cd.model_ansible_inventory_type
@@ -41,6 +66,16 @@ msgstr "Environnements Ansible"
 #: model:ir.model,name:smile_cd.model_ansible_inventory
 msgid "Ansible Inventory"
 msgstr "Inventaire Ansible"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_form
+msgid "Ansible Odoo"
+msgstr "Ansible Odoo"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_form
+msgid "Ansible Odoo Deploy"
+msgstr "Ansible Odoo Deploy"
 
 #. module: smile_cd
 #: model:ir.model,name:smile_cd.model_ansible_role
@@ -67,7 +102,13 @@ msgid "Ansible role name must be unique"
 msgstr "Le nom d'un rôle Ansible doit être unique"
 
 #. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_form
+msgid "Ansible roles documentation:"
+msgstr "Documentation des rôles Ansible :"
+
+#. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_attachment_ids
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_attachment_ids
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_attachment_ids
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_type_attachment_ids
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_attachment_ids
@@ -75,6 +116,22 @@ msgid "Attachments"
 msgstr "Pièces jointes"
 
 #. module: smile_cd
+#: code:addons/smile_cd/models/scm_repository_branch_build.py:26
+#, python-format
+msgid "Auto deployment failed\n"
+"\n"
+"%s"
+msgstr "Auto deployment failed\n"
+"\n"
+"%s"
+
+#. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_scm_repository_branch_ansible_deployment_rule_ids
+msgid "Automatic deployment rules"
+msgstr "Règles de déploiement automatique"
+
+#. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_ansible_inventory_type_ids
 #: model:ir.model.fields,field_description:smile_cd.field_scm_repository_branch_ansible_inventory_type_ids
 msgid "Available environments"
 msgstr "Environnements disponibles"
@@ -83,6 +140,7 @@ msgstr "Environnements disponibles"
 #: selection:ansible.inventory,origin_id:0
 #: model:ir.model,name:smile_cd.model_scm_repository_branch
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_branch_id
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_branch_id
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_branch_id
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_branch
 msgid "Branch"
@@ -93,6 +151,17 @@ msgstr "Branche"
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_build_id
 msgid "Build"
 msgstr "Build"
+
+#. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_build_result
+msgid "Build result"
+msgstr "Résultat du build"
+
+#. module: smile_cd
+#: model:ir.actions.act_window,help:smile_cd.action_branch_deployments
+#: model:ir.actions.act_window,help:smile_cd.action_branch_deployments2
+msgid "Click here to add new document"
+msgstr "Cliquer ici pour ajouter un nouveau document"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_type_color
@@ -106,6 +175,7 @@ msgstr "Livraison continue"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_create_uid
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_create_uid
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_create_uid
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_type_create_uid
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_create_uid
@@ -114,16 +184,12 @@ msgstr "Créé par"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_create_date
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_create_date
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_create_date
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_type_create_date
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_create_date
 msgid "Created on"
 msgstr "Créé le"
-
-#. module: smile_cd
-#: model:ir.model.fields,field_description:smile_cd.field_ansible_role_tags
-msgid "Default tags"
-msgstr "Tags par défaut"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_vars
@@ -132,6 +198,8 @@ msgstr "Variables par défaut"
 
 #. module: smile_cd
 #: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_build_form
+#: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_build_kanban
+#: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_build_tree
 #: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_form
 #: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_simple_tree
 #: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_tree
@@ -147,8 +215,35 @@ msgid "Deployment"
 msgstr "Déploiement"
 
 #. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_rule_form
+msgid "Deployment Rule"
+msgstr "Règle de déploiement"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_rule_search
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_rule_tree
+msgid "Deployment Rules"
+msgstr "Règles de déploiement"
+
+#. module: smile_cd
+#: code:addons/smile_cd/models/ansible_deployment.py:207
+#, python-format
+msgid "Deployment already in progress"
+msgstr "Déploiement déjà en cours"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_kanban
+msgid "Deployment on"
+msgstr "Déploiement sur"
+
+#. module: smile_cd
 #: model:ir.actions.act_window,name:smile_cd.action_branch_deployments
+#: model:ir.actions.act_window,name:smile_cd.action_branch_deployments2
 #: model:ir.model.fields,field_description:smile_cd.field_scm_repository_branch_ansible_deployment_ids
+#: model:ir.ui.menu,name:smile_cd.menu_ansible_deployment
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_graph
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_kanban
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_pivot
 #: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_search
 #: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_tree
 #: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_form
@@ -162,16 +257,18 @@ msgstr "Nombre de déploiements"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_directory
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_role_directory
 msgid "Directory"
 msgstr "Répertoire"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_display_name
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_display_name
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_display_name
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_type_display_name
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: smile_cd
 #: model:ir.model,name:smile_cd.model_docker_image
@@ -184,7 +281,23 @@ msgid "Done"
 msgstr "Terminé"
 
 #. module: smile_cd
+#: selection:ansible.deployment,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_vault_password_crypt
+msgid "Encrypted vault password"
+msgstr "Mot de passe Vault crypté"
+
+#. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_date_stop
+msgid "End date"
+msgstr "Date de fin"
+
+#. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_inventory_type_id
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_inventory_type_id
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_inventory_type_id
 msgid "Environment"
 msgstr "Environnement"
@@ -195,17 +308,13 @@ msgid "Environment name must be unique"
 msgstr "Le nom d'un environnement doit être unique"
 
 #. module: smile_cd
-#: selection:ansible.deployment,result:0
-msgid "Failed"
-msgstr "Echec"
-
-#. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_hosts
 msgid "Hosts"
 msgstr "Hôtes"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_id
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_id
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_id
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_type_id
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_id
@@ -218,6 +327,7 @@ msgid "In progress"
 msgstr "En cours"
 
 #. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_ansible_inventory_ids
 #: model:ir.model.fields,field_description:smile_cd.field_scm_repository_branch_ansible_inventory_ids
 msgid "Inventories"
 msgstr "Inventaires"
@@ -228,18 +338,13 @@ msgid "Is odoo"
 msgstr "Correspond à Odoo"
 
 #. module: smile_cd
-#: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_build_kanban
-#: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_build_tree
-msgid "Deploy"
-msgstr "Déployer"
-
-#. module: smile_cd
-#: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_build_kanban
-msgid "Keep alive"
-msgstr "Conserver en vie"
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_form
+msgid "Kill"
+msgstr "Arrêter"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment___last_update
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule___last_update
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory___last_update
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_type___last_update
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role___last_update
@@ -247,6 +352,7 @@ msgid "Last Modified on"
 msgstr "Dernière Modification le"
 
 #. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_write_uid
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_write_uid
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_type_write_uid
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_write_uid
@@ -255,6 +361,7 @@ msgid "Last Updated by"
 msgstr "Dernière mise à jour par"
 
 #. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_write_date
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_write_date
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_type_write_date
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_write_date
@@ -275,10 +382,20 @@ msgid "Manager"
 msgstr "Gestionnaire"
 
 #. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_search
+msgid "My"
+msgstr "Mes projets"
+
+#. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_type_name
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_name
 msgid "Name"
 msgstr "Nom"
+
+#. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_scm_repository_branch_new_url
+msgid "New url"
+msgstr "Nouvelle URL"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_origin_id
@@ -293,10 +410,30 @@ msgstr "Paquet"
 #. module: smile_cd
 #: model:ir.model,name:smile_cd.model_scm_version_package
 msgid "Packages by Odoo Version and Operating System"
-msgstr "Paquets par version d'Odoo et par système d'exploitation"
+msgstr "Paquets par version d'Odoo et système d'exploitation"
 
 #. module: smile_cd
-#: code:addons/smile_cd/models/scm_repository_branch.py:30
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_date_planned
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_date_planned
+msgid "Planned date"
+msgstr "Date planifiée"
+
+#. module: smile_cd
+#: code:addons/smile_cd/models/ansible_deployment_rule.py:33
+#, python-format
+msgid "Planned date is invalid\n"
+"\n"
+"%s\n"
+"\n"
+"You must specify a dictionary whose keys match relativedelta's arguments"
+msgstr "La date planifiée est invalide\n"
+"\n"
+"%s\n"
+"\n"
+"Vous devez spécifier un dictionnaire dont les clés correspondent aux arguments du paquet relativedelta"
+
+#. module: smile_cd
+#: code:addons/smile_cd/models/scm_repository_branch.py:39
 #, python-format
 msgid "Please indicate available environments"
 msgstr "Merci indiquer les environnements disponibles"
@@ -307,9 +444,20 @@ msgid "Priority"
 msgstr "Priorité"
 
 #. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_pid
+msgid "Process Id"
+msgstr "Process Id"
+
+#. module: smile_cd
 #: model:res.groups,name:smile_cd.group_cd_reader
 msgid "Reader"
 msgstr "Lecteur"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_form
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_popup
+msgid "Refresh logs"
+msgstr "Rafraîchir les logs"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_result
@@ -323,14 +471,25 @@ msgstr "Révision"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_docker_image_ansible_role_id
+#: model:ir.model.fields,field_description:smile_cd.field_scm_repository_branch_ansible_role_id
 msgid "Role"
 msgstr "Rôle"
 
 #. module: smile_cd
 #: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_form
 #: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_popup
-msgid "Run"
-msgstr "Lancer"
+msgid "Run immediately"
+msgstr "Lancer immédiatemment"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_popup
+msgid "Save"
+msgstr "Sauvegarder"
+
+#. module: smile_cd
+#: model:ir.actions.act_window,name:smile_cd.action_ir_cron
+msgid "Scheduled Actions"
+msgstr "Actions planifiées"
 
 #. module: smile_cd
 #: model:ir.ui.view,arch_db:smile_cd.view_ansible_role_form
@@ -338,14 +497,14 @@ msgid "Sources"
 msgstr "Sources"
 
 #. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_date_start
+msgid "Start date"
+msgstr "Date de début"
+
+#. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_state
 msgid "Status"
 msgstr "Statut"
-
-#. module: smile_cd
-#: selection:ansible.deployment,result:0
-msgid "Successful"
-msgstr "Succès"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_package_ids
@@ -354,11 +513,10 @@ msgid "Supported Odoo versions/Operating systems"
 msgstr "Versions d'Odoo supportées par système d'exploitation"
 
 #. module: smile_cd
-#: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_role_tags
-#: model:ir.model.fields,field_description:smile_cd.field_docker_image_ansible_role_tags
-#: model:ir.model.fields,field_description:smile_cd.field_scm_version_package_ansible_role_tags
-msgid "Tags"
-msgstr "Tags"
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_time
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_time_human
+msgid "Time"
+msgstr "Durée"
 
 #. module: smile_cd
 #: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_form
@@ -369,6 +527,11 @@ msgstr "Mettre à jour les inventaires"
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_url
 msgid "Url"
 msgstr "URL"
+
+#. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_scm_repository_branch_use_branch_tmpl_to_deploy
+msgid "Use template to deploy"
+msgstr "Utiliser un modèle pour le déploiement"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_scm_repository_branch_build_use_in_ci
@@ -383,11 +546,83 @@ msgstr "Utilisateur"
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_role_vars
 #: model:ir.model.fields,field_description:smile_cd.field_docker_image_ansible_role_vars
+#: model:ir.model.fields,field_description:smile_cd.field_scm_repository_branch_ansible_role_vars
 #: model:ir.model.fields,field_description:smile_cd.field_scm_version_package_ansible_role_vars
 msgid "Variables"
 msgstr "Variables"
 
 #. module: smile_cd
+#: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_vault_password
+msgid "Vault password"
+msgstr "Mot de passe Vault"
+
+#. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_vcs_id
 msgid "Version Control System"
-msgstr "Gestionnaire de sources"
+msgstr "Gestionnaire de versions"
+
+#. module: smile_cd
+#: model:mail.template,subject:smile_cd.mail_template_deployment_result
+msgid "[Odoo-CI] ${object.branch_id.name | safe} ${object.branch_id.branch} - Deployment ${object.revno} on ${object.inventory_type_id.name} ${object.result}"
+msgstr "[Odoo-CI] ${object.branch_id.name | safe} ${object.branch_id.branch} - Deployment ${object.revno} on ${object.inventory_type_id.name} ${object.result}"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_kanban
+msgid "ago"
+msgstr "il y a"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_form
+msgid "and"
+msgstr "et"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_kanban
+msgid "by"
+msgstr "par"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_rule_form
+msgid "e.g. {'days': 1, 'hour': 2, 'minute': 30}"
+msgstr "ex. {'days': 1, 'hour': 2, 'minute': 30}"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_rule_tree
+#: model:ir.ui.view,arch_db:smile_cd.view_repository_branch_form
+msgid "e.g. {'weekday': 0, 'hour': 2, 'minute': 30} for the next Monday at 2:30 am"
+msgstr "ex. {'weekday': 0, 'hour': 2, 'minute': 30} pour lundi prochain 02h30"
+
+#. module: smile_cd
+#: selection:ansible.deployment,result:0
+msgid "failed"
+msgstr "échoué"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_kanban
+msgid "in"
+msgstr "en"
+
+#. module: smile_cd
+#: selection:ansible.deployment,result:0
+msgid "killed"
+msgstr "tué"
+
+#. module: smile_cd
+#: model:ir.ui.view,arch_db:smile_cd.view_ansible_deployment_kanban
+msgid "planned on"
+msgstr "planifié le"
+
+#. module: smile_cd
+#: selection:ansible.deployment.rule,build_result:0
+msgid "stable"
+msgstr "stable"
+
+#. module: smile_cd
+#: selection:ansible.deployment.rule,build_result:0
+msgid "stable or unstable"
+msgstr "stable ou instable"
+
+#. module: smile_cd
+#: selection:ansible.deployment,result:0
+msgid "successful"
+msgstr "réussi"

@@ -22,6 +22,8 @@ from odoo.addons.smile_docker.tools import get_exception_message, \
     with_new_cursor
 from odoo.addons.smile_ci.tools import s2human
 
+from ..tools import AnsibleVault
+
 _logger = logging.getLogger(__name__)
 
 STATES = [
@@ -211,6 +213,10 @@ class AnsibleDeployment(models.Model):
         playbook = self._generate_ansible_playbook()
         inventory = self._generate_ansible_inventory()
         cmd = ['ansible-playbook', playbook, '-i', inventory, '--verbose']
+        for inventory in self.ansible_inventory_ids:
+            if inventory.vault_password_crypt:
+                passfile = inventory._get_vault_passfile(self.directory)
+                cmd += ['--vault-id', passfile]
         thread = Thread(target=self._execute_command, args=(cmd,))
         thread.start()
 

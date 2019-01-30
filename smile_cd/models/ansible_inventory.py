@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import os.path
+import tempfile
+
 from odoo import api, fields, models
+from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval
+
+from ..tools import AnsibleVault, password_generator
 
 
 class AnsibleInventory(models.Model):
@@ -22,6 +28,37 @@ class AnsibleInventory(models.Model):
     ], 'Origin')
     hosts = fields.Text()
     role_vars = fields.Text('Variables')
+    vault_password = fields.Char(
+        compute='_get_vault_password', inverse='_set_vault_password')
+    vault_password_crypt = fields.Char(
+        'Encrypted vault password', invisible=True, readonly=True)
+
+    @api.one
+    def _get_vault_password(self):
+        if self.vault_password_crypt:
+            self.vault_password = '*****'
+
+    @api.one
+    def _set_vault_password(self):
+        self.vault_password_crypt = self._get_ansible_vault_cli(). \
+            encrypt_string(self.vault_password)
+
+    @api.model
+    def _get_ansible_vault_cli(self):
+        passfile = config.get('vault_passfile')
+        if not passfile or not os.path.isfile(passfile):
+            passfile = os.path.join(tempfile.gettempdir, '.vault_pass')
+            with open(passfile, 'w') as f:
+                f.write(password_generator())
+        return AnsibleVault(passfile=passfile)
+
+    @api.multi
+    def _get_vault_passfile(self, directory):
+        self.ensure_one()
+        passfile = os.path.join(directory, '.vault_pass%s' % self.id)
+        self._get_ansible_vault_cli(). \
+            decrypt_string(self.vault_password_crypt, passfile)
+        return passfile
 
     @api.multi
     def get_role_vars(self):
