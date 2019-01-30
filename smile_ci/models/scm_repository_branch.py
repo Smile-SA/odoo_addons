@@ -443,19 +443,19 @@ class Branch(models.Model):
                 self.message_follower_ids._add_follower_command(
                     build._name, build.ids, {partner_id: None}, {}, force)[0])
         build.write({'message_follower_ids': generic_follower_vals})
-        subtype = self.env.ref('smile_ci.subtype_build_result')
+        subtype_id = self.env.ref('smile_ci.subtype_build_result').id
         specific_followers = self.message_follower_ids.search([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.id),
             ('partner_id', 'in', partner_ids),
-            ('subtype_ids', 'in', subtype.id),
+            ('subtype_ids', 'in', [subtype_id]),
         ])
         self.message_follower_ids.search([
             ('res_model', '=', build._name),
             ('res_id', '=', build.id),
             ('partner_id', 'in', specific_followers.mapped('partner_id').ids),
-            ('subtype_ids', 'not in', subtype.id),
-        ]).write({'subtype_ids': [(4, subtype.id)]})
+            ('subtype_ids', 'not in', [subtype_id]),
+        ]).write({'subtype_ids': [(4, subtype_id)]})
 
     @api.one
     def _create_build(self, force):
