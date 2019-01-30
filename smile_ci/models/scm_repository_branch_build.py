@@ -723,7 +723,8 @@ class Build(models.Model):
                 _logger.error('Error while attaching %s: %s' %
                               (filename, get_exception_message(e)))
             finally:
-                filelike.close()
+                if filelike is not None:
+                    filelike.close()
         if missing_files:
             _logger.info("The following files are missing: %s" % missing_files)
 
@@ -864,19 +865,14 @@ class Build(models.Model):
             context['build_error'] = tools.plaintext2html(
                 self._context['build_error'])
         template = self.env.ref('smile_ci.mail_template_build_result')
+        template = template.get_email_template(self.id)
+        body_html = template.render_template(template.body_html,
+                                             self._name, self.id)
+        subject = template.render_template(template.subject,
+                                           self._name, self.id)
         self = self.with_context(**context)
-        for build in self:
-            t_env = self.env['mail.template']
-            template = template.get_email_template(build.id)
-            body_html = t_env.render_template(template.body_html,
-                                              self._name, build.id)
-            subject = t_env.render_template(template.subject,
-                                            self._name, build.id)
-            build.message_post(
-                subject=subject,
-                body=body_html,
-                subtype='smile_ci.subtype_build_result',
-            )
+        self.message_post(subject=subject, body=body_html,
+                          subtype='smile_ci.subtype_build_result')
         self._notify_slack()
 
     @api.one
