@@ -62,6 +62,7 @@
                   <field name="role_id"/>
                   <field name="hosts"/>
                   <field name="role_vars"/>
+                  <field name="vault_password" password="True"/>
                 </tree>
               </field>
               <label for="ansible_deployment_rule_ids" colspan="4"/>
