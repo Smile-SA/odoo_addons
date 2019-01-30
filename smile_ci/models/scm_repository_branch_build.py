@@ -249,6 +249,7 @@ class Build(models.Model):
             'mail_create_nosubscribe': True,
         }
         build = super(Build, self.with_context(**context)).create(vals)
+        build._add_followers()
         build._copy_sources()
         return build
 
@@ -847,6 +848,18 @@ class Build(models.Model):
                 self._send_build_result('Back to stable')
         elif self.result == 'unstable':
             self._send_build_result('Unstable')
+
+    @api.one
+    def _add_followers(self):
+        "Copy branch followers to build"
+        subtype_ids = self.env.ref('smile_ci.subtype_build_result').ids
+        partner_data = {
+            partner_id: subtype_ids for partner_id in
+            self.branch_id.message_follower_ids.mapped('partner_id').ids
+        }
+        generic, specific = self.message_follower_ids._add_follower_command(
+            self._name, self.ids, partner_data, {})
+        self.write({'message_follower_ids': generic + specific})
 
     @api.one
     def _send_build_result(self, short_message):

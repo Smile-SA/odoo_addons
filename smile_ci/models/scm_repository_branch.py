@@ -433,30 +433,6 @@ class Branch(models.Model):
     def _create_build_locked(self, force):
         self._create_build(force)
 
-    @api.multi
-    def _copy_branch_followers_to_build(self, build, force):
-        "Copy branch's follower to build"
-        partner_ids = self.message_follower_ids.mapped('partner_id').ids
-        generic_follower_vals = []
-        for partner_id in partner_ids:
-            generic_follower_vals.extend(
-                self.message_follower_ids._add_follower_command(
-                    build._name, build.ids, {partner_id: None}, {}, force)[0])
-        build.write({'message_follower_ids': generic_follower_vals})
-        subtype_id = self.env.ref('smile_ci.subtype_build_result').id
-        specific_followers = self.message_follower_ids.search([
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.id),
-            ('partner_id', 'in', partner_ids),
-            ('subtype_ids', 'in', [subtype_id]),
-        ])
-        self.message_follower_ids.search([
-            ('res_model', '=', build._name),
-            ('res_id', '=', build.id),
-            ('partner_id', 'in', specific_followers.mapped('partner_id').ids),
-            ('subtype_ids', 'not in', [subtype_id]),
-        ]).write({'subtype_ids': [(4, subtype_id)]})
-
     @api.one
     def _create_build(self, force):
         try:
@@ -471,8 +447,7 @@ class Branch(models.Model):
                     'revno': self.get_revno(),
                     'commit_logs': self.get_last_commits(),
                 }
-                build = self.env['scm.repository.branch.build'].create(vals)
-                self._copy_branch_followers_to_build(build, force)
+                self.env['scm.repository.branch.build'].create(vals)
         except Exception as e:
             msg = "Build creation failed"
             error = get_exception_message(e)
