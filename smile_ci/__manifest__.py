@@ -68,6 +68,7 @@ Features
         "data/ir_config_parameter.xml",
         "data/ir_cron.xml",
         "data/mail_template.xml",
+        "data/mail_message_subtype.xml",
         "data/scm.vcs.csv",
         "data/scm.version.csv",
         "data/scm_os.xml",
