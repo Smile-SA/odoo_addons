@@ -859,7 +859,8 @@ class Build(models.Model):
         }
         generic, specific = self.message_follower_ids._add_follower_command(
             self._name, self.ids, partner_data, {})
-        self.write({'message_follower_ids': generic + specific})
+        self.write({
+            'message_follower_ids': generic + specific.get(self.id, [])})
 
     @api.one
     def _send_build_result(self, short_message):
