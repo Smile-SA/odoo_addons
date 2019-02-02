@@ -30,10 +30,12 @@ odoo.define('web_auto_refresh', function (require) {
             bus.bus.start_polling();
         },
         bus_notification: function(notification) {
-            var channel = notification[0][0];
-            if (this.known_bus_channels.indexOf(channel) != -1) {
-                var message = notification[0][1];
-                bus.bus.trigger(channel, message);
+            if (typeof(notification[0]) != 'undefined') {
+                var channel = notification[0][0];
+                if (this.known_bus_channels.indexOf(channel) != -1) {
+                    var message = notification[0][1];
+                    bus.bus.trigger(channel, message);
+                }
             }
         },
         bus_on: function(eventname, eventfunction) {
