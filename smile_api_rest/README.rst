@@ -39,9 +39,9 @@ URI                          Method  Description
 `/api/<model>`                GET     Read all (with optional domain, fields, offset, limit, order)
 `/api/<model>/<id>`           GET     Read one (with optional fields)
 `/api/<model>`                POST    Create a record
-`/api/<model>/<id>`           PUT     Update a record
+`/api/<model>/<id>`           PATCH   Update a record
 `/api/<model>/<id>`           DELETE  Delete a record
-`/api/<model>/<id>/<method>`  PUT     Call method (with optional parameters)
+`/api/<model>/<id>/<method>`  POST    Call method (with optional parameters)
 ============================ ======= ===============================================================
 
 **WARNING:** before calling `/api/auth`, call `/web?db=***` otherwise web service is not found.

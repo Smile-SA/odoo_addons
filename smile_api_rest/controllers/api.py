@@ -45,7 +45,7 @@ class RestApi(Controller):
         return request.env[model].create(**kwargs).id
 
     @route('/api/<string:model>/<int:id>', auth='user',
-           methods=["PUT"], csrf=False)
+           methods=["PATCH"], csrf=False)
     @make_response()
     def write(self, model, id, **kwargs):
         eval_request_params(kwargs)
@@ -58,7 +58,7 @@ class RestApi(Controller):
         return request.env[model].browse(id).unlink()
 
     @route('/api/<string:model>/<int:id>/<string:method>', auth='user',
-           methods=["PUT"], csrf=False)
+           methods=["POST"], csrf=False)
     @make_response()
     def custom_method(self, model, id, method, **kwargs):
         eval_request_params(kwargs)
