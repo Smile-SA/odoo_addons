@@ -12,9 +12,9 @@ class RestApi(Controller):
     /api/<model>                GET     - Read all (with optional domain, fields, offset, limit, order)
     /api/<model>/<id>           GET     - Read one (with optional fields)
     /api/<model>                POST    - Create one
-    /api/<model>/<id>           PUT     - Update one
+    /api/<model>/<id>           PATCH   - Update one
     /api/<model>/<id>           DELETE  - Delete one
-    /api/<model>/<id>/<method>  PUT     - Call method (with optional parameters)
+    /api/<model>/<id>/<method>  POST    - Call method (with optional parameters)
     """
 
     @route('/api/auth', auth='none', methods=["POST"])
@@ -45,7 +45,7 @@ class RestApi(Controller):
         return request.env[model].create(**kwargs).id
 
     @route('/api/<string:model>/<int:id>', auth='user',
-           methods=["PUT"], csrf=False)
+           methods=["PATCH"], csrf=False)
     @make_response()
     def write(self, model, id, **kwargs):
         eval_request_params(kwargs)
@@ -58,7 +58,7 @@ class RestApi(Controller):
         return request.env[model].browse(id).unlink()
 
     @route('/api/<string:model>/<int:id>/<string:method>', auth='user',
-           methods=["PUT"], csrf=False)
+           methods=["POST"], csrf=False)
     @make_response()
     def custom_method(self, model, id, method, **kwargs):
         eval_request_params(kwargs)

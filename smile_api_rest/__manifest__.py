@@ -35,9 +35,9 @@ There are URIs available:
 /api/<model>                GET     - Read all (with optional domain, fields, offset, limit, order)
 /api/<model>/<id>           GET     - Read one (with optional fields)
 /api/<model>                POST    - Create one
-/api/<model>/<id>           PUT     - Update one
+/api/<model>/<id>           PATCH   - Update one
 /api/<model>/<id>           DELETE  - Delete one
-/api/<model>/<id>/<method>  PUT     - Call method (with optional parameters)
+/api/<model>/<id>/<method>  POST    - Call method (with optional parameters)
 
 WARNING: before calling /api/auth, call /web?db=*** otherwise web service is not found.
 
