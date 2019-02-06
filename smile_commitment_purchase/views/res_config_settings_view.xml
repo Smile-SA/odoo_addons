@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_commitment" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.commitment</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="25"/>
+        <field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='purchase']" position="inside">
+                    <h2>Commitment</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="Make you able to choose if you want to enter budgets planned amount in a positive or negative form">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="planned_amount_sign"/>
+                                <div class="text-muted">
+                                    Make you able to choose if you want to enter budgets planned amount in a positive or negative form
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="planned_amount_sign" class="o_light_label" widget="radio"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

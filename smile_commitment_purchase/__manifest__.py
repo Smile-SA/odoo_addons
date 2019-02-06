@@ -15,7 +15,9 @@
     "website": "http://www.smile.fr",
     "category": 'Purchase Management',
     "sequence": 20,
-    "data": [],
+    "data": [
+            "views/res_config_settings_view.xml"
+    ],
     "auto_install": True,
     "installable": True,
     "application": False,
