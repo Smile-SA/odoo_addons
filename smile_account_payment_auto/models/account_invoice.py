@@ -11,7 +11,7 @@ class AccountInvoice(models.Model):
 
     partner_bank_required = fields.Boolean(
         related='partner_id.payment_method_id.partner_bank_required',
-        readonly=True, store=True)
+        readonly=True, store=False)
     partner_bank_id = fields.Many2one(
         states={'draft': [('readonly', False)], 'open': [('readonly', False)]})
 

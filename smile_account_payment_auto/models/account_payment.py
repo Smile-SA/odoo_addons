@@ -20,10 +20,13 @@ class AccountPayment(models.Model):
         'res.partner.bank', 'Bank Account', readonly=True,
         states={'draft': [('readonly', False)]})
 
-    @api.onchange('partner_id', 'payment_method_id')
-    def _onchange_partner_and_payment_method(self):
+    @api.onchange('partner_id')
+    def _onchange_partner(self):
         self.payment_mode = self.partner_id.payment_mode
         self.payment_method_id = self.partner_id.payment_method_id
+
+    @api.onchange('payment_method_id')
+    def _onchange_payment_method(self):
         if self.partner_bank_required:
             self.partner_bank_id = self.partner_id.bank_ids and \
                 self.partner_id.bank_ids[0]
