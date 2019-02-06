@@ -32,7 +32,8 @@ class PurchaseCommitmentTest(TransactionCase):
         self.user = self.env.ref('base.user_demo')
         self.user.commitment_global_limit = 1000
         self.budget_limit.amount_limit = 1000
-        self.env['ir.config_parameter'].sudo().set_param("planned_amount_sign", 'negative')
+        self.env['ir.config_parameter'].sudo().set_param(
+            "planned_amount_sign", 'negative')
         self.env['account.analytic.line'].search([]).unlink()
 
     def test_check_budget_available_and_commitment_limit(self):

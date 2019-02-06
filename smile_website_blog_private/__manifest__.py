@@ -9,14 +9,6 @@
     'website': 'https://www.smile.fr',
     'summary': 'Blogs and post private access',
     'version': '1.00',
-    'description': """
-OpenERP Blog Private
-====================
-Add feature to have private blogs and post, visible only for certain security groups
-Origin from https://github.com/OpenSur/Odoo_addons#8.0 migrated to > 10
-
-Suggestions & Feedback to: Jonathan Dhosy
-        """,
     'author': 'OpenSur, Smile SA',
     'license': 'AGPL-3',
     'depends': ['website_blog'],

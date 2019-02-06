@@ -73,12 +73,13 @@ class IrModuleModule(models.Model):
                                                    dependency_names)])
         elif stream == 'up':
             dependency_obj = self.env['ir.module.module.dependency']
-            dependencies = dependency_obj.search([('name', 'in', [m.name for m in self])])
+            dependencies = dependency_obj.search(
+                [('name', 'in', [m.name for m in self])])
             dependency_modules = self.browse([d.module_id.id
                                               for d in dependencies])
         if states:
             return dependency_modules and \
-                   dependency_modules.filtered(lambda a: a.state in states)
+                dependency_modules.filtered(lambda a: a.state in states)
         return dependency_modules
 
     @api.multi

@@ -9,7 +9,9 @@ class Blog(models.Model):
     _description = 'Blogs'
     _inherit = 'blog.blog'
 
-    security_type = fields.Selection((('public', 'Public'), ('private', 'Private')), 'Security type', required=True)
+    security_type = fields.Selection(
+        [('public', 'Public'), ('private', 'Private')],
+        'Security type', required=True)
     group_ids = fields.Many2many('res.groups', string="Authorized Groups")
 
     @api.multi
@@ -50,5 +52,7 @@ class BlogPost(models.Model):
     _name = 'blog.post'
     _inherit = 'blog.post'
 
-    security_type = fields.Selection((('public', 'Public'), ('private', 'Private')), 'Security type', required=True)
+    security_type = fields.Selection(
+        [('public', 'Public'), ('private', 'Private')],
+        'Security type', required=True)
     group_ids = fields.Many2many('res.groups', string="Authorized Groups")

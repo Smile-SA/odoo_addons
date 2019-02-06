@@ -26,13 +26,6 @@
     "website": 'http://www.smile.fr',
     "license": 'AGPL-3',
     "category": "Tools",
-    "description": """
-Allows to login as another user in website
-For example, this option could be useful to check what's displayed for your customers.
-==========================================
-
-Suggestions & Feedback to: Corentin Pouhet-Brunerie & Victor Bahl
-""",
     "depends": ['website'],
     "data": [
         "views/res_users_view.xml",

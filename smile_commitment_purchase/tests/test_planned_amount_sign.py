@@ -36,7 +36,8 @@ class PlannedAmountSignTest(TransactionCase):
 
         """
         self.env['res.config.settings'].create({})
-        self.env['ir.config_parameter'].sudo().set_param("planned_amount_sign", 'positive')
+        self.env['ir.config_parameter'].sudo().set_param(
+            "planned_amount_sign", 'positive')
         self.budget_line = self.env['crossovered.budget.lines'].create({
             'crossovered_budget_id': self.budget.id,
             'analytic_account_id': self.analytic_account.id,
@@ -55,7 +56,8 @@ class PlannedAmountSignTest(TransactionCase):
         self.purchase.button_cancel()
         self.assertEquals(self.budget_line.commitment_amount, 0.0)
         self.assertEquals(self.budget_line.available_amount, 1000.0)
-        self.env['ir.config_parameter'].sudo().set_param("planned_amount_sign", 'negative')
+        self.env['ir.config_parameter'].sudo().set_param(
+            "planned_amount_sign", 'negative')
         self.env['account.analytic.line'].search([]).unlink()
         self.purchase.order_line.write({
             'account_analytic_id': self.analytic_account.id,
