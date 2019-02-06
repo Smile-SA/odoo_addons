@@ -60,9 +60,7 @@ class IrActionsReportExecution(models.TransientModel):
         attachments = None
         t0 = time.time()
         try:
-            lang = self._context.get('lang') or self.env.user.lang
-            report_name = self.env['ir.translation']._get_source(
-                None, 'model', lang, report.name)
+            report_name = self._format_report_name(report.name)
             content, ext = report.with_context(ctx).render_qweb_pdf(*args)
             attachments = [(report_name, content)]
             self.sudo()._add_attachment(content)
@@ -100,18 +98,27 @@ class IrActionsReportExecution(models.TransientModel):
     def _add_attachment(self, content):
         report = self.report_id
         res_ids = safe_eval(self.arguments)[0]
-        name = report.name
+        report_name = report.name
         if report.attachment and res_ids and len(res_ids) == 1:
             record = self.env[report.model].browse(res_ids[0])
-            name = safe_eval(report.attachment,
-                             {'object': record, 'time': time}) or name
+            report_name = safe_eval(
+                report.attachment,
+                {'object': record, 'time': time}) or report_name
+        report_name = self._format_report_name(report_name)
         self.env['ir.attachment'].create({
-            'name': name,
+            'name': report_name,
             'datas': base64.encodestring(content),
-            'datas_fname': name,
+            'datas_fname': report_name,
             'res_model': self._name,
             'res_id': self.id,
         })
+
+    @api.model
+    def _format_report_name(self, report_name):
+        lang = self._context.get('lang') or self.env.user.lang
+        report_name = self.env['ir.translation']._get_source(
+            None, 'model', lang, report_name)
+        return '{}.pdf'.format(report_name)
 
     @api.one
     def _send_notification(self, msg, attachments=None):
