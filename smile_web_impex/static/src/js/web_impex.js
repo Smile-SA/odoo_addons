@@ -3,8 +3,31 @@ odoo.define('web_impex', function (require) {
 
     var core = require("web.core");
     var Sidebar = require('web.Sidebar');
+    var KanbanController = require('web.KanbanController');
     var ListController = require("web.ListController");
     var _t = core._t;
+
+    KanbanController.include({
+        /**
+         * Hide "Import" button if user has no Import group.
+         */
+        renderButtons: function () {
+            this._super.apply(this, arguments); // Sets this.$buttons
+
+            var has_import_group = false;
+            this.getSession().user_has_group('smile_web_impex.group_import').then(function(has_group) {
+                if(has_group) {
+                    has_import_group = true;
+                } else {
+                    has_import_group = false;
+                }
+            });
+
+            if (!has_import_group && this.$buttons != undefined) {
+                this.$buttons.find('.o_button_import').hide();
+            }
+        },
+    });
 
     ListController.include({
 
