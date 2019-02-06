@@ -10,10 +10,6 @@ class PurchaseOrderLine(models.Model):
 
     def _prepare_analytic_line(self, reverse=False):
         planned_amount_sign = self._get_settings_planned_amount_sign()
-        if planned_amount_sign:
-            settings_sign = 1
-        else:
-            settings_sign = -1
         sign = reverse and -1 or 1
         order = self.order_id
         # Get default account used to generate supplier invoice
@@ -25,7 +21,7 @@ class PurchaseOrderLine(models.Model):
             'account_id': self.account_analytic_id.id,
             'unit_amount': sign * self.product_qty,
             'product_uom_id': self.product_uom.id,
-            'amount': settings_sign * sign * order.currency_id.
+            'amount': planned_amount_sign * sign * order.currency_id.
             with_context(date=order.date_order).compute(
                 self.price_subtotal, order.company_id.currency_id),
             'commitment_account_id': account and account.id,
@@ -42,8 +38,7 @@ class PurchaseOrderLine(models.Model):
     @api.model
     def _get_settings_planned_amount_sign(self):
         res = self.env['res.config.settings'].get_values()
-        if res['planned_amount_sign'] == 'positive':
-            return True
+        return res.get('planned_amount_sign') == 'positive' and 1 or -1
 
 
 class PurchaseOrder(models.Model):

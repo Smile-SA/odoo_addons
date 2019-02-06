@@ -8,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
         ('positive', '+ '),
         ('negative', '-'),
     ], string="Planned Amount Sign", help="Make you able to choose if you want to enter budgets planned"
-                                         " amount in a positive or negative form .", default="negative")
+                                         " amount in a positive or negative form", default="negative")
 
     @api.multi
     def get_values(self):

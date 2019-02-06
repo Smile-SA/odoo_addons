@@ -18,17 +18,13 @@ msgstr ""
 #. module: smile_commitment_purchase
 #: model:ir.ui.view,arch_db:smile_commitment_purchase.res_config_settings_view_form_commitment
 msgid "Commitment"
-msgstr "engagement"
+msgstr "Engagement"
 
 #. module: smile_commitment_purchase
 #: model:ir.ui.view,arch_db:smile_commitment_purchase.res_config_settings_view_form_commitment
-msgid "Make you able to choose if you want to enter budgets planned amount in a positive or negative form"
-msgstr "permet de choisir si vous souhaitez saisir des montants prévus des lignes de budget positives ou négatives"
-
-#. module: smile_commitment_purchase
 #: model:ir.model.fields,help:smile_commitment_purchase.field_res_config_settings_planned_amount_sign
-msgid "Make you able to choose if you want to enter budgets planned amount in a positive or negative form ."
-msgstr "permet de choisir si vous souhaitez saisir des montants prévus des lignes de budget positives ou négatives"
+msgid "Make you able to choose if you want to enter budgets planned amount in a positive or negative form"
+msgstr "Permet de choisir si vous entrez les montants prévus en positif ou en négatif"
 
 #. module: smile_commitment_purchase
 #: model:ir.model.fields,field_description:smile_commitment_purchase.field_res_config_settings_planned_amount_sign

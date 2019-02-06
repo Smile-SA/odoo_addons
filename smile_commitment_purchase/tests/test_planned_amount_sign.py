@@ -24,15 +24,15 @@ class PlannedAmountSignTest(TransactionCase):
 
     def test_calculation_depends_planned_amount_sign(self):
         """
-        i create settings with planned_amount-sign positive
-        i create a budget line with a positive planned amount
+        I create settings with planned_amount-sign positive.
+        I create a budget line with a positive planned amount.
         I confirm a purchase order of 255.
         the commitment amount is 255 and the available amount is 745.
         I cancel the order.
         commitment amount is 0 and the available amount is 1000.
-        i update the settings to chosse a negative planned amount.
-        i reconfirm the purchase order.
-        the commitment amount is -255 and the available amount is -745.
+        I update the settings to chosse a negative planned amount.
+        I reconfirm the purchase order.
+        The commitment amount is -255 and the available amount is -745.
 
         """
         self.env['res.config.settings'].create({})

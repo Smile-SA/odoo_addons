@@ -10,7 +10,7 @@
             <xpath expr="//div[@data-key='purchase']" position="inside">
                     <h2>Commitment</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="Make you able to choose if you want to enter budgets planned amount in a positive or negative form ">
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="Make you able to choose if you want to enter budgets planned amount in a positive or negative form">
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
                                 <label for="planned_amount_sign"/>
