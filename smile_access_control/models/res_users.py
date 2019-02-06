@@ -121,7 +121,8 @@ class ResUsers(models.Model):
     def write(self, vals):
         if vals.get('user_profile_id'):
             users_to_update = self.filtered(
-                lambda user: user.user_profile_id.id != vals['user_profile_id'])
+                lambda user:
+                user.user_profile_id.id != vals['user_profile_id'])
         vals = self._remove_reified_groups(vals)
         res = super(ResUsers, self).write(vals)
         if vals.get('user_profile_id'):

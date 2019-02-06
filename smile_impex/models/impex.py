@@ -123,7 +123,8 @@ class IrModelImpex(models.AbstractModel):
         self = self.with_context(logger=logger)
         hostname = get_hostname()
         self.write({'state': 'running', 'from_date': fields.Datetime.now(),
-                    'pid': os.getpid(), 'hostname': hostname, 'to_date': False})
+                    'pid': os.getpid(), 'hostname': hostname,
+                    'to_date': False})
         try:
             result = self._execute()
             vals = {'state': 'done', 'to_date': fields.Datetime.now()}
