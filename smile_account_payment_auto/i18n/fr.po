@@ -67,6 +67,7 @@ msgstr "Générer les paiements"
 
 #. module: smile_account_payment_auto
 #: selection:account.payment,payment_mode:0
+#: model:ir.ui.view,arch_db:smile_account_payment_auto.view_account_payment_search
 #: selection:res.partner,payment_mode:0
 msgid "Grouped"
 msgstr "Groupé"
@@ -79,6 +80,7 @@ msgstr "Dispose de paiements en cours"
 
 #. module: smile_account_payment_auto
 #: selection:account.payment,payment_mode:0
+#: model:ir.ui.view,arch_db:smile_account_payment_auto.view_account_payment_search
 #: selection:res.partner,payment_mode:0
 msgid "Individual"
 msgstr "Individuel"

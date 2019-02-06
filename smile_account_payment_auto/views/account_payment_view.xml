@@ -32,6 +32,11 @@
                     <field name="partner_bank_id"/>
                     <field name="payment_mode"/>
                 </field>
+                <xpath expr="//separator[3]" position="after">
+                    <filter string="Individual" domain="[('payment_mode', '=', 'I')]"/>
+                    <filter string="Grouped" domain="[('payment_type', '=', 'G')]"/>
+                    <separator/>
+                </xpath>
             </field>
         </record>
         <record id="view_account_payment_form" model="ir.ui.view">
