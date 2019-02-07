@@ -46,7 +46,7 @@ Changes done at migration
 
 The feature adding a colored ribbon to make your environments recognisable at
 first glance was removed during migration to Odoo 12.0.
-We recommand to instead install module `server_environment_ir_config_parameter <https://apps.odoo.com/apps/modules/10.0/server_environment_ir_config_parameter/>`
+We recommand to instead install module `server_environment_ir_config_parameter <https://apps.odoo.com/apps/modules/10.0/server_environment_ir_config_parameter/>`_
 
 Bug Tracker
 ===========
