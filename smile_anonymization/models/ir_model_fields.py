@@ -87,7 +87,8 @@ class IrModelFields(models.Model):
 
     @api.multi
     def _get_anonymization_query(self):
-        query = ""
+        query = "DELETE FROM ir_attachment WHERE name ilike '/web/content/%'" \
+                "OR name ilike '%/static/%';\n"
         for field in self:
             if field.data_mask:
                 query += "UPDATE %s SET %s = %s;\n" % (
