@@ -15,4 +15,3 @@ class IrAttachment(models.Model):
     description = fields.Text(data_mask="NULL")
     res_name = fields.Char(data_mask="'record_' || res_id::text")
     db_datas = fields.Binary(data_mask=_DATA_MASK)
-    store_fname = fields.Char(data_mask=_DATA_MASK)
