@@ -10,11 +10,12 @@
                 <field name="compute" position="after">
                     <label for="data_mask"/>
                     <div>
-                        <field name="data_mask" widget="ace"/>
+                        <field name="data_mask" widget="ace"
+                            attrs="{'invisible': [('ttype', 'in', ('many2one', 'many2many', 'one2many'))]}"/>
                         <button name="toggle_data_mask_locked" type="object" icon="fa-unlock"
-                            attrs="{'invisible': [('data_mask_locked', '=', True)]}"/>
+                            attrs="{'invisible': ['|', ('data_mask_locked', '=', True), ('ttype', 'in', ('many2one', 'many2many', 'one2many'))]}"/>
                         <button name="toggle_data_mask_locked" type="object" icon="fa-lock"
-                            attrs="{'invisible': [('data_mask_locked', '=', False)]}"/>
+                            attrs="{'invisible': ['|', ('data_mask_locked', '=', False), ('ttype', 'in', ('many2one', 'many2many', 'one2many'))]}"/>
                         <field name="data_mask_locked" invisible="1"/>
                     </div>
                 </field>
