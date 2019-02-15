@@ -47,8 +47,6 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                     cls.signal_registry_change(db_name)
                     t0 = time.time()
                     _logger.info('loading %s upgrade...', upgrade_manager.code_version)
-                    max_cron_threads = config.get('max_cron_threads')
-                    config['max_cron_threads'] = 0
                     if not upgrade_manager.db_in_creation:
                         upgrade_manager.pre_load()
                         modules = upgrade_manager.modules_to_upgrade
@@ -60,7 +58,6 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                     native_new(db_name, force_demo, update_module=True)
                     upgrade_manager.post_load()
                     upgrade_manager.set_db_version()
-                    config['max_cron_threads'] = max_cron_threads
                     _logger.info('%s upgrade successfully loaded in %ss',
                                  upgrade_manager.code_version, time.time() - t0)
             registry = native_new(db_name, force_demo, update_module=update_module)
