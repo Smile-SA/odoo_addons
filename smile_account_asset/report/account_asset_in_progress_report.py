@@ -29,7 +29,7 @@ class ReportAccountAssetsInProgress(models.AbstractModel):
         date_to = form['date_to']
         invoice_lines = self.env['account.invoice.line'].search(domain)
         for invoice_line in invoice_lines[:]:
-            if not invoice_line.asset_id and \
+            if not invoice_line.asset_id and category_ids and \
                     invoice_line.asset_category_id.id not in category_ids:
                 invoice_lines -= invoice_line
             elif invoice_line.asset_id and \
@@ -39,6 +39,7 @@ class ReportAccountAssetsInProgress(models.AbstractModel):
                     if history.date_to > date_to:
                         asset_category = history.asset_category_id
                         if not asset_category.asset_in_progress or \
+                                category_ids and \
                                 asset_category.id not in category_ids:
                             invoice_lines -= invoice_line
                         break
