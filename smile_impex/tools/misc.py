@@ -19,6 +19,15 @@
 #
 ##############################################################################
 
+from odoo import tools
+
+
+def get_hostname():
+    """ Return hostname configured in Odoo configuration file.
+
+    """
+    return tools.config.get('hostname', 'localhost')
+
 
 def s2human(time):
     """Copy from https://github.com/odoo/odoo-extra/blob/master/runbot/runbot.py"""
