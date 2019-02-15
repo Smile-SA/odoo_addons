@@ -133,36 +133,6 @@ STATES = [
 ]
 
 
-def state_cleaner(model):
-    def decorator(method):
-        @wraps(method)
-        def wrapper(self, cr, *args, **kwargs):
-            res = method(self, cr, *args, **kwargs)
-            env = api.Environment(cr, SUPERUSER_ID, {})
-            if model._name in env.registry.models:
-                Model = env[model._name]
-                cr.execute("select relname from pg_class where relname='%s'" % model._table)
-                if cr.rowcount:
-                    # Search all process created on this host and set them as
-                    # killed if they are not running anymore on the host
-                    hostname = get_hostname()
-                    impex_infos = Model.search_read([
-                        ('state', '=', 'running'),
-                        '|',
-                        ('hostname', '=', hostname),
-                        ('hostname', '=', False),
-                    ], ['pid'], order='id')
-                    impex_ids = []
-                    for impex in impex_infos:
-                        if not psutil.pid_exists(impex['pid']):
-                            impex_ids.append(impex['id'])
-                    if impex_ids:
-                        Model.browse(impex_ids).write({'state': 'killed'})
-            return res
-        return wrapper
-    return decorator
-
-
 class IrModelImpex(models.AbstractModel):
     _name = 'ir.model.impex'
     _description = 'Import/Export'
@@ -247,3 +217,21 @@ class IrModelImpex(models.AbstractModel):
     @api.multi
     def _execute(self):
         raise NotImplementedError
+
+    @api.model
+    def _kill_impex(self):
+        # Search all process created on this host and set them as
+        # killed if they are not running anymore on the host
+        hostname = get_hostname()
+        impex_infos = self.search_read([
+            ('state', '=', 'running'),
+            '|',
+            ('hostname', '=', hostname),
+            ('hostname', '=', False),
+        ], ['pid'], order='id')
+        impex_ids = []
+        for impex in impex_infos:
+            if not psutil.pid_exists(impex['pid']):
+                impex_ids.append(impex['id'])
+        if impex_ids:
+            self.browse(impex_ids).write({'state': 'killed'})

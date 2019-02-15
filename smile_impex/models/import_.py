@@ -19,13 +19,14 @@
 #
 ##############################################################################
 
+import inspect
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import safe_eval as eval
 
 from odoo.addons.smile_log.tools import SmileDBLogger
-from odoo.addons.smile_impex.models.impex import state_cleaner
 
 from ..tools import with_impex_cursor
 
@@ -85,10 +86,6 @@ class IrModelImport(models.Model):
     _description = 'Import'
     _inherit = 'ir.model.impex'
 
-    def __init__(self, pool, cr):
-        super(IrModelImport, self).__init__(pool, cr)
-        setattr(Registry, 'setup_models', state_cleaner(pool[self._name])(getattr(Registry, 'setup_models')))
-
     import_tmpl_id = fields.Many2one('ir.model.import.template', 'Template', readonly=True, required=True,
                                      ondelete='cascade', index=True)
     log_ids = fields.One2many('smile.log', 'res_id', 'Logs', readonly=True,
@@ -104,3 +101,10 @@ class IrModelImport(models.Model):
         args = eval(self.args or '[]')
         kwargs = eval(self.import_tmpl_id.method_args or '{}')
         return getattr(model_obj, self.import_tmpl_id.method)(*args, **kwargs)
+
+    @api.model
+    def init(self):
+        super(IrModelImport, self).init()
+        callers = [frame[3] for frame in inspect.stack()]
+        if 'preload_registries' in callers:
+            self._kill_impex()
