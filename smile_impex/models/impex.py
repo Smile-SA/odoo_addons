@@ -28,7 +28,6 @@ from threading import Thread
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError
-from odoo.tools.func import wraps
 
 from odoo.addons.smile_log.tools import SmileDBLogger
 
