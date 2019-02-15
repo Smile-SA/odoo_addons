@@ -23,7 +23,6 @@ import inspect
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import safe_eval as eval
 
 from odoo.addons.smile_log.tools import SmileDBLogger
