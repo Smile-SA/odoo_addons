@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_model_form">
+            <field name="name">ir.model.fields</field>
+            <field name="model">ir.model</field>
+            <field name="inherit_id" ref="base.view_model_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='field_id']//field[@name='state']" position="after">
+                        <field name="data_mask" widget="ace"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
