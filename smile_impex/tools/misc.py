@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from odoo import tools
+from openerp import tools
 
 
 def get_hostname():
