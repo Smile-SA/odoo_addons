@@ -5,6 +5,7 @@ import docker
 from docker.tls import TLSConfig
 import logging
 import os.path
+from six import string_types
 import tempfile
 
 from odoo import api, fields, models, _
@@ -183,7 +184,7 @@ class DockerHost(models.Model):
         if kwargs.get('networking_config'):
             networking_config = {network: self._create_endpoint_config(
                 **endpoint_config) for network, endpoint_config
-                in kwargs['networking_config'].iteritems()}
+                in kwargs['networking_config'].items()}
             kwargs['networking_config'] = self._create_networking_config(
                 networking_config)
         _logger.debug(repr(kwargs))
@@ -220,9 +221,9 @@ class DockerHost(models.Model):
         # When we filter by name, we search if name contains search operand
         # So we need to filter manually search results
         containers = self.get_containers(all=True, filters={'name': container})
-        containers = map(
+        containers = list(map(
             lambda container: container['Names'][0].replace('/', ''),
-            containers)
+            containers))
         if 'v' not in kwargs:  # Remove the volumes associated to the container
             kwargs['v'] = True
         if container in containers:
@@ -254,7 +255,10 @@ class DockerHost(models.Model):
     def get_archive(self, container, path):
         self.ensure_one()
         _logger.info('Retrieving %s from container %s...' % (path, container))
-        strm, stat = self.client.get_archive(container, path)
+        kwargs = {}
+        if LooseVersion(docker.__version__) >= LooseVersion('3.1.0'):
+            kwargs['chunk_size'] = 1024 * 1024  # 1MB
+        strm, stat = self.client.get_archive(container, path, **kwargs)
         _logger.debug(stat)
         return strm
 
@@ -330,7 +334,7 @@ class DockerHost(models.Model):
     def tag_image(self, image, tags=None, **kwargs):
         self.ensure_one()
         tags = tags or 'latest'
-        if isinstance(tags, basestring):
+        if isinstance(tags, string_types):
             tags = [tags]
         kwargs['image'] = image
         if kwargs.get('repository'):
@@ -474,9 +478,9 @@ class DockerHost(models.Model):
                 '%.2f %%' % (stats['memory_stats']['max_usage'] * 100.0 /
                              stats['memory_stats']['limit']),
                 '%s / %s' % (b2human(sum(network['rx_bytes'] for network
-                                         in stats['networks'].itervalues())),
+                                         in stats['networks'].values())),
                              b2human(sum(network['tx_bytes'] for network
-                                         in stats['networks'].itervalues()))),
+                                         in stats['networks'].values()))),
             ]
         thead = """
 <thead>

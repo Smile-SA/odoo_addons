@@ -367,8 +367,8 @@ class AnsibleDeployment(models.Model):
         })
 
     @api.model
-    def init(self):
-        super(AnsibleDeployment, self).init()
+    def _setup_complete(self):
+        super(AnsibleDeployment, self)._setup_complete()
         callers = [frame[3] for frame in inspect.stack()]
         if 'preload_registries' in callers:
             try:

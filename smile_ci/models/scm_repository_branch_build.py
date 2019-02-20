@@ -1183,8 +1183,8 @@ class Build(models.Model):
             docker_host.clean_networks()
 
     @api.model
-    def init(self):
-        super(Build, self).init()
+    def _setup_complete(self):
+        super(Build, self)._setup_complete()
         callers = [frame[3] for frame in inspect.stack()]
         if 'preload_registries' in callers:
             try:

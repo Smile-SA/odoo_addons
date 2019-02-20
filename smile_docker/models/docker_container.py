@@ -8,9 +8,8 @@ import shutil
 from threading import Thread
 import yaml
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.func import wraps
 
 from ..tools import call, format_container, format_image, \
     get_exception_message, secure
@@ -28,10 +27,6 @@ class DockerContainer(models.AbstractModel):
     def _get_docker_container(self):
         name = format_image(self.docker_image)
         self.docker_container = format_container(name, self.id)
-
-    @api.model
-    def _get_default_docker_host(self):
-        return self.env['docker.host'].get_default_docker_host().id
 
     id = fields.Integer(readonly=True)
     docker_container = fields.Char(compute='_get_docker_container')
@@ -199,6 +194,7 @@ class DockerContainer(models.AbstractModel):
     @api.multi
     def start_container_from_registry(self, tag='', ports=None):
         for container in self:
+            _logger.info('Starting container %s...' % self.docker_container)
             container._make_directory()
             try:
                 filepath = os.path.join(
@@ -206,6 +202,7 @@ class DockerContainer(models.AbstractModel):
                 services = container.get_service_infos(tag, ports)
                 content = yaml.dump(yaml.load(json.dumps(
                     {'version': '2.1', 'services': services})))
+                _logger.debug(content)
                 with open(filepath, 'w') as f:
                     f.write(content)
                 try:
@@ -221,43 +218,26 @@ class DockerContainer(models.AbstractModel):
                 container._remove_directory()
         return True
 
-
-def container_start(model, msg="Checking auto-run containers are running"):
-    def decorator(setup_models):
-        @wraps(setup_models)
-        def new_setup_models(self, cr, *args, **kwargs):
-            res = setup_models(self, cr, *args, **kwargs)
-            callers = [frame[3] for frame in inspect.stack()]
-            if 'preload_registries' not in callers:
-                return res
+    @api.model
+    def _setup_complete(self):
+        super(DockerContainer, self)._setup_complete()
+        callers = [frame[3] for frame in inspect.stack()]
+        if 'preload_registries' in callers:
             try:
-                env = api.Environment(cr, SUPERUSER_ID, {})
-                if model in env.registry.models:
-                    Container = env[model]
-                    cr.execute(
-                        "select relname from pg_class where relname='%s'"
-                        % Container._table)
-                    if cr.rowcount:
-                        # Removing directories
-                        # if linked containers don't exist anymore
-                        directories = Container.search(
-                            []).mapped('build_directory')
-                        builds_path = env['docker.host'].builds_path
-                        for dirname in os.listdir(builds_path):
-                            dirpath = os.path.join(builds_path, dirname)
-                            if dirname.startswith(
-                                    Container._directory_prefix) and \
-                                    dirpath not in directories:
-                                _logger.info('Removing %s' % dirpath)
-                                thread = Thread(
-                                    target=shutil.rmtree, args=(dirpath,))
-                                thread.start()
-                        # Starting auto-run containers if not running
-                        _logger.info(msg)
-                        Container.search(
-                            [('auto_run', '=', True)]).start_container()
+                # Removing directories
+                # if linked containers don't exist anymore
+                directories = self.search([]).mapped('build_directory')
+                builds_path = self.env['docker.host'].builds_path
+                for dirname in os.listdir(builds_path):
+                    dirpath = os.path.join(builds_path, dirname)
+                    if dirname.startswith(self._directory_prefix) and \
+                            dirpath not in directories:
+                        _logger.info('Removing %s' % dirpath)
+                        thread = Thread(
+                            target=shutil.rmtree, args=(dirpath,))
+                        thread.start()
+                # Starting auto-run containers if not running
+                _logger.info("Checking registry containers are running")
+                self.search([('auto_run', '=', True)]).start_container()
             except Exception as e:
                 _logger.error(get_exception_message(e))
-            return res
-        return new_setup_models
-    return decorator

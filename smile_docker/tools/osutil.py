@@ -2,6 +2,7 @@
 
 from contextlib import contextmanager
 import logging
+from six import string_types
 import subprocess
 from subprocess import os
 from threading import Lock
@@ -44,17 +45,16 @@ def check_output_chain(args, stdin=None, stdout=None, stderr=None):
 
 def call(cmd, directory=None):
     with cd(directory):
-        command = cmd if isinstance(cmd, basestring) else ' '.join(cmd)
+        command = cmd if isinstance(cmd, string_types) else ' '.join(cmd)
         try:
             result = ''
             if isinstance(cmd, list):
                 cmd = ' '.join(cmd)
             for operator in (' ; ', ' && ', ' || '):
-                if isinstance(cmd, basestring):
+                if isinstance(cmd, string_types):
                     cmd = cmd.split(operator)
                 else:
-                    cmd = reduce(lambda x, y: x + y,
-                                 [item.split(operator) for item in cmd])
+                    cmd = sum([item.split(operator) for item in cmd], [])
             for subcmd in cmd:
                 subresult = ''
                 for subcmd2 in subcmd.split(' & '):
@@ -63,5 +63,5 @@ def call(cmd, directory=None):
             _logger.info('%s SUCCEEDED from %s' % (command, os.getcwd()))
             return result
         except subprocess.CalledProcessError as e:
-            raise UserError(_('%s FAILED\nfrom %s\n\n%s')
-                            % (command, os.getcwd(), e.output))
+            raise UserError(_('%s FAILED\nfrom %s (return code: %s)\n\n%s')
+                            % (command, os.getcwd(), e.returncode, e.output))

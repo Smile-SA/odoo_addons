@@ -56,9 +56,9 @@ class DockerHostStats(models.TransientModel):
                     100.0 / memory_total,
                     'network_input': compute_MiB(
                         sum(network['rx_bytes']
-                            for network in stats['networks'].itervalues())),
+                            for network in stats['networks'].values())),
                     'network_output': compute_MiB(
                         sum(network['tx_bytes']
-                            for network in stats['networks'].itervalues())),
+                            for network in stats['networks'].values())),
                 })
         return True

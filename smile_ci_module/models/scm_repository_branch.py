@@ -38,7 +38,7 @@ class ScmRepositoryBranch(models.Model):
                         break
         # Create new modules
         old_modules = self.module_ids.mapped('name')
-        for new_module, vals in new_modules.iteritems():
+        for new_module, vals in new_modules.items():
             if new_module not in old_modules:
                 self.module_ids.create(vals)
 

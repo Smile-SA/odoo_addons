@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import sys
 from threading import Thread
 
 from odoo import api, fields, models
@@ -8,6 +9,9 @@ from odoo.tools.safe_eval import safe_eval
 
 from ..tools import format_container, format_image, format_repository, \
     format_repository_and_tag, lock, with_new_cursor
+
+if sys.version_info > (3,):
+    long = int
 
 _logger = logging.getLogger(__name__)
 
@@ -246,9 +250,10 @@ class DockerImage(models.Model):
         infos['healthcheck'] = safe_eval(self.healthcheck) \
             if self.healthcheck else {'disable': True}
         if self.with_persistent_storage is with_persistent_storage and \
-                repository and tag:
-            infos['image'] = '%s_%s:%s' % (
-                format_repository(repository), name, tag)
+                repository:
+            infos['image'] = '%s_%s' % (format_repository(repository), name)
+            if tag:
+                infos['image'] += ':%s' % tag
         if ports:
             infos['ports'] = ports
         if 'links' in infos:

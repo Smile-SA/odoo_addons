@@ -30,7 +30,7 @@ class OdooSecurityAdvisory(models.Model):
     @api.one
     @api.depends('branch_ids')
     def _get_branches_count(self):
-        self.branches_count = len(self.branch_ids)        
+        self.branches_count = len(self.branch_ids) 
 
     @api.model
     def create(self, vals):

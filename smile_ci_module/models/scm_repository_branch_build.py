@@ -32,13 +32,15 @@ class ScmRepositoryBranchBuild(models.Model):
         self.ensure_one()
         _logger.info('Getting modules installed in %s...'
                      % self.docker_container)
-        fields_list = list(self.env['scm.repository.branch.module']._fields)
-        for field in models.LOG_ACCESS_COLUMNS:
-            if field in fields_list:
-                fields_list.remove(field)
         sock_exec = partial(self._connect('object').execute,
                             DBNAME, self.branch_id.user_uid,
                             self.branch_id.user_passwd)
+        fields_list = list(
+            set(self.env['scm.repository.branch.module']._fields) &
+            set(sock_exec('ir.module.module', 'fields_get')))
+        for field in models.LOG_ACCESS_COLUMNS:
+            if field in fields_list:
+                fields_list.remove(field)
         if LooseVersion(self.branch_id.version_id.name) >= LooseVersion('8.0'):
             modules_list = sock_exec('ir.module.module', 'search_read',
                                      [('state', '=', 'installed')],

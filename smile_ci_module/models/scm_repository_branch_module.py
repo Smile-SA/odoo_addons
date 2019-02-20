@@ -82,11 +82,7 @@ class ScmRepositoryBranchModule(models.Model):
         self.ensure_one()
         running_build = self.branch_id.running_build_id
         if not running_build:
-            build_to_run = self.env['scm.repository.branch.build'].search([
-                ('branch_id', '=', self.branch_id.id),
-                ('is_last', '=', True),
-                ('state', '=', 'done'),
-            ], limit=1)
+            build_to_run = self.branch_id.runnable_build_id
             if not build_to_run:
                 raise UserError(_("No build to run"))
             build_to_run.start_container_from_registry()

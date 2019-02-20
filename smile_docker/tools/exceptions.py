@@ -2,7 +2,12 @@
 
 from docker.errors import APIError
 import logging
-import xmlrpclib
+try:
+    # For Python 3
+    from xmlrpc.client import Fault
+except ImportError:
+    # For Python 2
+    from xmlrpclib import Fault
 
 from odoo import exceptions, tools
 from odoo.tools.func import wraps
@@ -14,7 +19,7 @@ def get_exception_message(e):
     msg = None
     if isinstance(e, exceptions.except_orm):
         msg = e.value or e.name
-    elif isinstance(e, xmlrpclib.Fault):
+    elif isinstance(e, Fault):
         msg = e.faultString
     elif isinstance(e, APIError):
         msg = str(e)

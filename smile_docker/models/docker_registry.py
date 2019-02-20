@@ -8,10 +8,7 @@ from urlparse import urljoin, urlparse
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.modules.registry import Registry
 from odoo.tools import config
-
-from .docker_container import container_start
 
 _logger = logging.getLogger(__name__)
 
@@ -21,15 +18,6 @@ class DockerRegistry(models.Model):
     _description = 'Docker Registry'
     _inherit = 'docker.container'
     _directory_prefix = 'registry'
-
-    def __init__(self, pool, cr):
-        super(DockerRegistry, self).__init__(pool, cr)
-        msg = "Checking registry containers are running"
-        if not getattr(Registry, '_registry_cleaner', False):
-            setattr(Registry, 'setup_models', container_start(
-                self._name, msg)(getattr(Registry, 'setup_models')))
-        else:
-            Registry._registry_cleaner = True
 
     @api.model
     def _get_default_url(self):

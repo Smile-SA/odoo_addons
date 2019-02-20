@@ -2,6 +2,7 @@
 
 from contextlib import contextmanager
 import logging
+from six import string_types
 import subprocess
 from subprocess import os
 from threading import Lock
@@ -52,18 +53,17 @@ def call(cmd, directory=None):
 
 
 def _call(cmd):
-    command = cmd if isinstance(cmd, basestring) else ' '.join(cmd)
+    command = cmd if isinstance(cmd, string_types) else ' '.join(cmd)
     _logger.debug('Calling command %s' % command)
     try:
         result = ''
         if isinstance(cmd, list):
             cmd = ' '.join(cmd)
         for operator in (' ; ', ' && ', ' || '):
-            if isinstance(cmd, basestring):
+            if isinstance(cmd, string_types):
                 cmd = cmd.split(operator)
             else:
-                cmd = reduce(lambda x, y: x + y,
-                             [item.split(operator) for item in cmd])
+                cmd = sum([item.split(operator) for item in cmd], [])
         for subcmd in cmd:
             subresult = ''
             for subcmd2 in subcmd.split(' & '):

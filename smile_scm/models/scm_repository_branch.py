@@ -74,14 +74,12 @@ class Branch(models.Model):
         data[0].update(repository_id=self.repository_id.id)
         return data
 
-    @api.multi
+    @api.one
     def name_get(self):
-        res = {}
-        for branch in self:
-            res[branch.id] = branch.name
-            if branch.branch:
-                res[branch.id] += ' (%s)' % branch.branch
-        return res.items()
+        name = self.name
+        if self.branch:
+            name += ' (%s)' % self.branch
+        return self.id, name
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):

@@ -823,8 +823,8 @@ class Branch(models.Model):
         return followers.mapped('partner_id').ids
 
     @api.model
-    def init(self):
-        super(Branch, self).init()
+    def _setup_complete(self):
+        super(Branch, self)._setup_complete()
         callers = [frame[3] for frame in inspect.stack()]
         if 'preload_registries' in callers:
             try:
