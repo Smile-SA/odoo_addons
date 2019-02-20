@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="view_repository_branch_module_form" model="ir.ui.view">
+            <field name="name">scm.repository.branch.module.form</field>
+            <field name="model">scm.repository.branch.module</field>
+            <field name="inherit_id" ref="smile_ci_module.view_repository_branch_module_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[1]/group[1]" position="after">
+                    <group>
+                        <field name="dependency_ids" widget="many2many_tags"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+	</data>
+</odoo>
