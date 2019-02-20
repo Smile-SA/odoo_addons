@@ -12,17 +12,13 @@ import tempfile
 from threading import Thread
 import yaml
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.modules.registry import Registry
 from odoo.tools import config
-from odoo.tools.func import wraps
 
 from odoo.addons.smile_docker.tools import get_exception_message, \
     with_new_cursor
 from odoo.addons.smile_ci.tools import s2human
-
-from ..tools import AnsibleVault
 
 _logger = logging.getLogger(__name__)
 
@@ -38,47 +34,12 @@ RESULTS = [
 ]
 
 
-def deployments_state_cleaner(setup_models):
-    @wraps(setup_models)
-    def new_setup_models(self, cr, *args, **kwargs):
-        res = setup_models(self, cr, *args, **kwargs)
-        callers = [frame[3] for frame in inspect.stack()]
-        if 'preload_registries' not in callers:
-            return res
-        try:
-            env = api.Environment(cr, SUPERUSER_ID, {})
-            if 'ansible.deployment' in env.registry.models:
-                Deployment = env['ansible.deployment']
-                cr.execute(
-                    "select relname from pg_class where relname='%s'"
-                    % Deployment._table)
-                if cr.rowcount:
-                    _logger.info(
-                        "Cleaning deployments in progress before restarting")
-                    deployments_in_progress = Deployment.search(
-                        [('state', '=', 'in_progress')])
-                    deployments_in_progress.write(
-                        {'state': 'done', 'result': 'killed'})
-        except Exception as e:
-            _logger.error(get_exception_message(e))
-        return res
-    return new_setup_models
-
-
 class AnsibleDeployment(models.Model):
     _name = 'ansible.deployment'
     _description = 'Ansible Deployment'
     _inherit = ['mail.thread']
     _rec_name = 'revno'
     _order = 'create_date desc'
-
-    def __init__(self, pool, cr):
-        super(AnsibleDeployment, self).__init__(pool, cr)
-        if getattr(Registry, '_deployments_state_cleaner', False):
-            setattr(Registry, 'setup_models', deployments_state_cleaner(
-                getattr(Registry, 'setup_models')))
-        else:
-            Registry._deployments_state_cleaner = True
 
     @property
     def deployments_path(self):
@@ -140,10 +101,7 @@ class AnsibleDeployment(models.Model):
     @api.one
     @api.depends('date_start', 'date_stop')
     def _get_time(self):
-        if not self.date_start or (
-                not self.date_stop and self.state in ('in_progress', 'done')):
-            self.time = 0
-        else:
+        if self.date_start:
             date_stop = self.date_stop or fields.Datetime.now()
             timedelta = fields.Datetime.from_string(date_stop) \
                 - fields.Datetime.from_string(self.date_start)
@@ -183,17 +141,8 @@ class AnsibleDeployment(models.Model):
     def run(self):
         self._run()
         if len(self.ids) == 1 and self._context.get('popin'):
-            return {
-                'name': self._description,
-                'type': 'ir.actions.act_window',
-                'res_model': self._name,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'view_id': False,
-                'res_id': self.id,
-                'target': 'new',
-                'context': self._context,
-            }
+            view_id = self.env.ref('smile_cd.view_ansible_deployment_popup').id
+            return self.open_wizard(view_id=view_id, context=self._context)
         return True
 
     @api.one
@@ -217,7 +166,7 @@ class AnsibleDeployment(models.Model):
             if inventory.vault_password_crypt:
                 passfile = inventory._get_vault_passfile(self.directory)
                 cmd += ['--vault-id', passfile]
-        thread = Thread(target=self._execute_command, args=(cmd,))
+        thread = Thread(target=self.sudo()._execute_command, args=(cmd,))
         thread.start()
 
     @api.model
@@ -264,7 +213,10 @@ class AnsibleDeployment(models.Model):
             self.logs = self._get_logs()
         except Exception:  # If subprocess is terminated
             pass
-        return self.open_wizard() if self._context.get('popin') else True
+        if self._context.get('popin'):
+            view_id = self.env.ref('smile_cd.view_ansible_deployment_popup').id
+            return self.open_wizard(view_id=view_id)
+        return True
 
     @api.multi
     def _get_logs(self):
@@ -354,10 +306,18 @@ class AnsibleDeployment(models.Model):
             'res_id': self.id, 'model': self._name, 'view_type': 'form',
             'action_id': self.env.ref('smile_cd.action_branch_deployments').id,
         })
+        branch_subtype_id = self.env.ref(
+            'smile_ci.subtype_deployment_result').id
+        repository_subtype_id = self.env.ref(
+            'smile_ci.subtype_deployment_result2').id
+        context = {
+            'deployment_url': deployment_url,
+            'partner_to_notify': self.branch_id.get_partners_to_notify(
+                branch_subtype_id, repository_subtype_id),
+        }
+        self = self.with_context(**context)
         template = self.env.ref('smile_cd.mail_template_deployment_result')
-        self.with_context(
-            deployment_url=deployment_url).message_post_with_template(
-                template.id)
+        self.message_post_with_template(template.id)
 
     @api.model
     def auto_run(self):
@@ -405,3 +365,18 @@ class AnsibleDeployment(models.Model):
             'date_stop': fields.Datetime.now(),
             'result': 'killed',
         })
+
+    @api.model
+    def init(self):
+        super(AnsibleDeployment, self).init()
+        callers = [frame[3] for frame in inspect.stack()]
+        if 'preload_registries' in callers:
+            try:
+                _logger.info(
+                    "Cleaning deployments in progress before restarting")
+                deployments_in_progress = self.search(
+                    [('state', '=', 'in_progress')])
+                deployments_in_progress.write(
+                    {'state': 'done', 'result': 'killed'})
+            except Exception as e:
+                _logger.error(get_exception_message(e))

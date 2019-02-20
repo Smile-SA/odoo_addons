@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <data noupdate="1">
+  <data noupdate="0">
 
     <record id="mail_template_deployment_result" model="mail.template">
       <field name="name">Send deployment result</field>
       <field name="model_id" ref="smile_cd.model_ansible_deployment"/>
-      <field name="partner_to">${','.join(map(str, object.branch_id.partner_ids.ids))}</field>
+      <field name="partner_to">${','.join(map(str, ctx.get('partner_to_notify', [])))}</field>
       <field name="subject">[Odoo-CI] ${object.branch_id.name | safe} ${object.branch_id.branch} - Deployment ${object.revno} on ${object.inventory_type_id.name} ${object.result}</field>
       <field name="body_html"><![CDATA[<p><b><a href="${ctx.get('deployment_url', '')}">${object.branch_id.name | safe} ${object.branch_id.branch} - Deployment ${object.revno} ${object.result}</a></b></p>
 <p><b>Logs:</b><br/>${object.logs | safe}</p>

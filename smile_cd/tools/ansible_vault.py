@@ -2,6 +2,7 @@
 
 import os
 from pexpect import spawn
+from six import string_types
 from subprocess import check_call
 import tempfile
 import time
@@ -12,7 +13,7 @@ class AnsibleVault():
     def __init__(self, password=None, passfile=None):
         if (not password and not passfile) or (password and passfile):
             raise ValueError('Please specify a password or a passfile')
-        if password and not isinstance(password, basestring):
+        if password and not isinstance(password, string_types):
             raise ValueError('password must be a string')
         if passfile and not os.path.isfile(passfile):
             raise ValueError('passfile must be a filepath')

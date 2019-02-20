@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 21:19+0000\n"
-"PO-Revision-Date: 2019-01-25 21:19+0000\n"
+"POT-Creation-Date: 2019-02-01 08:19+0000\n"
+"PO-Revision-Date: 2019-02-01 08:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,14 +17,12 @@ msgstr ""
 
 #. module: smile_cd
 #: model:mail.template,body_html:smile_cd.mail_template_deployment_result
-msgid "\n"
-"<p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\"><a href=\"${ctx.get('deployment_url', '')}\" style=\"text-decoration:none;color:rgb(33, 183, 153);background-color:transparent;\">${object.branch_id.name | safe} ${object.branch_id.branch} - Deployment ${object.revno} ${object.result}</a></b></p>\n"
-"<p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\">Logs:</b><br>${object.logs | safe}</p>\n"
+msgid "<p><b><a href=\"${ctx.get('deployment_url', '')}\">${object.branch_id.name | safe} ${object.branch_id.branch} - Deployment ${object.revno} ${object.result}</a></b></p>\n"
+"<p><b>Logs:</b><br/>${object.logs | safe}</p>\n"
 "% endif\n"
 "      "
-msgstr "\n"
-"<p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\"><a href=\"${ctx.get('deployment_url', '')}\" style=\"text-decoration:none;color:rgb(33, 183, 153);background-color:transparent;\">${object.branch_id.name | safe} ${object.branch_id.branch} - Deployment ${object.revno} ${object.result}</a></b></p>\n"
-"<p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><b style=\"font-weight:bold;\">Logs:</b><br>${object.logs | safe}</p>\n"
+msgstr "<p><b><a href=\"${ctx.get('deployment_url', '')}\">${object.branch_id.name | safe} ${object.branch_id.branch} - Deployment ${object.revno} ${object.result}</a></b></p>\n"
+"<p><b>Logs:</b><br/>${object.logs | safe}</p>\n"
 "% endif\n"
 "      "
 
@@ -32,7 +30,7 @@ msgstr "\n"
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_rule_active
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_active
 msgid "Active"
-msgstr "Actif"
+msgstr "Active"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_deployment_age
@@ -158,12 +156,6 @@ msgid "Build result"
 msgstr "Résultat du build"
 
 #. module: smile_cd
-#: model:ir.actions.act_window,help:smile_cd.action_branch_deployments
-#: model:ir.actions.act_window,help:smile_cd.action_branch_deployments2
-msgid "Click here to add new document"
-msgstr "Cliquer ici pour ajouter un nouveau document"
-
-#. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_type_color
 msgid "Color"
 msgstr "Couleur"
@@ -226,7 +218,7 @@ msgid "Deployment Rules"
 msgstr "Règles de déploiement"
 
 #. module: smile_cd
-#: code:addons/smile_cd/models/ansible_deployment.py:207
+#: code:addons/smile_cd/models/ansible_deployment.py:198
 #, python-format
 msgid "Deployment already in progress"
 msgstr "Déploiement déjà en cours"
@@ -391,11 +383,6 @@ msgstr "Mes projets"
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_role_name
 msgid "Name"
 msgstr "Nom"
-
-#. module: smile_cd
-#: model:ir.model.fields,field_description:smile_cd.field_scm_repository_branch_new_url
-msgid "New url"
-msgstr "Nouvelle URL"
 
 #. module: smile_cd
 #: model:ir.model.fields,field_description:smile_cd.field_ansible_inventory_origin_id
@@ -626,3 +613,9 @@ msgstr "stable ou instable"
 #: selection:ansible.deployment,result:0
 msgid "successful"
 msgstr "réussi"
+
+#. module: smile_cd
+#: model:mail.message.subtype,name:smile_cd.subtype_deployment_result
+#: model:mail.message.subtype,name:smile_cd.subtype_deployment_result2
+msgid "Deployments result"
+msgstr "Résultat des déploiements"

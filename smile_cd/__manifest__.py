@@ -39,6 +39,7 @@
         "data/scm_version_package.yml",
         "data/mail_template.xml",
         "data/ir_cron.xml",
+        "data/mail_message_subtype.xml",
 
         "security/cd_security.xml",
         "security/ir.model.access.csv",
