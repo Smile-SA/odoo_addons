@@ -126,7 +126,7 @@
               <group colspan="2">
                 <field name="revno"/>
                 <field name="commit_logs"/>
-                <field name="is_to_keep" attrs="{'invisible': [('state', '!=', 'running')]}"/>
+                <field name="is_to_keep" invisible="1"/>
               </group>
             </group>
           </sheet>

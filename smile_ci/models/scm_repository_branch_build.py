@@ -1,36 +1,47 @@
 # -*- coding: utf-8 -*-
 
 import base64
-import cStringIO
 import csv
 from dateutil.relativedelta import relativedelta
 from distutils.version import LooseVersion
 from docker.errors import APIError
 from functools import partial
 import inspect
+try:
+    # For Python 2
+    from cStringIO import StringIO
+except ImportError:
+    # For Python 3, warning: io.String exists in Py27
+    from io import StringIO
 import json
 import logging
 from lxml import etree
 import os
 import re
 import requests
+from six import string_types
 import shutil
-import StringIO
 import sys
 import tarfile
 from threading import Lock, Thread
 import time
-import xmlrpclib
+try:
+    # For Python 3
+    from xmlrpc.client import Fault, ServerProxy
+except ImportError:
+    # For Python 2
+    from xmlrpclib import Fault, ServerProxy
 
-from odoo import api, models, fields, SUPERUSER_ID, tools, _
+from odoo import api, models, fields, tools, _
 from odoo.exceptions import UserError
-from odoo.modules.registry import Registry
 import odoo.modules as addons
-from odoo.tools.func import wraps
 
 from odoo.addons.smile_docker.tools import \
     get_exception_message, with_new_cursor
 from ..tools import mergetree, s2human
+
+if sys.version_info > (3,):
+    long = int
 
 _logger = logging.getLogger(__name__)
 
@@ -54,34 +65,6 @@ TEST_MODULE = 'smile_test'
 DEBUGGER_ERROR_CODE = 'T002'
 
 
-def builds_state_cleaner(setup_models):
-    @wraps(setup_models)
-    def new_setup_models(self, cr, *args, **kwargs):
-        res = setup_models(self, cr, *args, **kwargs)
-        callers = [frame[3] for frame in inspect.stack()]
-        if 'preload_registries' not in callers:
-            return res
-        try:
-            env = api.Environment(cr, SUPERUSER_ID, {})
-            if 'scm.repository.branch.build' in env.registry.models:
-                Build = env['scm.repository.branch.build']
-                cr.execute(
-                    "select relname from pg_class where relname='%s'"
-                    % Build._table)
-                if cr.rowcount:
-                    _logger.info(
-                        "Cleaning testing/running builds before restarting")
-                    Build._remove_not_pending_build_directories()
-                    Build._recreate_testing_builds()
-                    Build._kill_not_really_running_builds()
-                    Build._remove_unknown_containers()
-                    Build._clean_networks()
-        except Exception as e:
-            _logger.error(get_exception_message(e))
-        return res
-    return new_setup_models
-
-
 class Build(models.Model):
     _name = 'scm.repository.branch.build'
     _description = 'Build'
@@ -94,11 +77,6 @@ class Build(models.Model):
         cls = type(self)
         cls._scheduler_lock = Lock()
         super(Build, self).__init__(pool, cr)
-        if getattr(Registry, '_builds_state_cleaner', False):
-            setattr(Registry, 'setup_models', builds_state_cleaner(
-                getattr(Registry, 'setup_models')))
-        else:
-            Registry._builds_state_cleaner = True
 
     @api.one
     @api.depends('docker_host_id.build_base_url', 'port')
@@ -153,13 +131,15 @@ class Build(models.Model):
         self.failed_test_ratio = '%s / %s' % (
             self.failed_test_count, self.test_count)
 
-    @api.one
+    @api.multi
     @api.depends('branch_id.build_ids.result')
     def _get_is_last(self):
-        if self.result in ('stable', 'unstable'):
-            for build in self.branch_id.build_ids:
-                self.is_last = self == build
-                break
+        for build in self:
+            if build.state in ('running', 'done') and \
+                    build.result in ('stable', 'unstable'):
+                build.is_last = build == build.branch_id.runnable_build_id
+            else:
+                build.is_last = False
 
     @api.one
     def _get_last_server_logs(self):
@@ -314,10 +294,9 @@ class Build(models.Model):
             'logfile': format_str(LOGFILE),
             'coveragefile': format_str(COVERAGEFILE),
             'flake8file': format_str(FLAKE8FILE),
-            'flake8_exclude_files': self.env['ir.config_parameter'].
-            get_param('ci.flake8.exclude_files'),
-            'flake8_max_line_length': self.env['ir.config_parameter'].
-            get_param('ci.flake8.max_line_length'),
+            'flake8_exclude_files': format_str(branch.flake8_exclude_files),
+            'flake8_ignore_codes': format_str(branch.flake8_ignore_codes),
+            'flake8_max_line_length': branch.flake8_max_line_length,
             'code_path': format_str(branch.code_path),
             'test_path': format_str(','.join(
                 [branch.test_path or '', 'ci-addons'])),
@@ -344,7 +323,7 @@ class Build(models.Model):
         filepath = os.path.join(self.build_directory, CONFIGFILE)
         with open(filepath, 'w') as cfile:
             cfile.write('[options]\n')
-            for k, v in options.iteritems():
+            for k, v in options.items():
                 cfile.write('%s = %s\n' % (k, v))
             if branch.additional_options:
                 cfile.write(branch.additional_options)
@@ -434,7 +413,7 @@ class Build(models.Model):
                 if not branch.install_modules_one_by_one:
                     modules_to_install = [modules_to_install]
                 for module in modules_to_install:
-                    if isinstance(module, basestring):
+                    if isinstance(module, string_types):
                         module = [module]
                     self._install_modules(module)
                     self._run_tests()
@@ -588,7 +567,7 @@ class Build(models.Model):
         if self.branch_id.version_id.standard_xmlrpc:
             xmlrpc = 'xmlrpc/2'
         url = '%s/%s/%s' % (self.url, xmlrpc, service)
-        return xmlrpclib.ServerProxy(url)
+        return ServerProxy(url)
 
     @api.one
     def _create_db(self):
@@ -641,7 +620,7 @@ class Build(models.Model):
                       module_ids_to_install)
             upgrade_id = sock_exec('base.module.upgrade', 'create', {})
             sock_exec('base.module.upgrade', 'upgrade_module', [upgrade_id])
-        except xmlrpclib.Fault as f:
+        except Fault as f:
             msg = f.faultString
             if msg == 'None':
                 msg = _('Check external dependencies')
@@ -703,13 +682,16 @@ class Build(models.Model):
                 branch.os_id.odoo_dir, path, filename))
         missing_files = []
         for filepath in filepaths:
+            filename = os.path.basename(filepath)
             filelike = None
             try:
-                response = self.docker_host_id.get_archive(container, filepath)
-                filelike = StringIO.StringIO(response.next())
+                filelike = StringIO()
+                for response in self.docker_host_id.get_archive(
+                        container, filepath):
+                    filelike.write(response)
+                filelike.seek(0)
                 tar = tarfile.open(fileobj=filelike)
                 content = tar.extractfile(os.path.basename(filepath)).read()
-                filename = os.path.basename(filepath)
                 self.env['ir.attachment'].create({
                     'name': filename,
                     'datas_fname': filename,
@@ -772,7 +754,7 @@ class Build(models.Model):
         _logger.info('Importing test logs for %s...' % self.docker_container)
         Log = self.env['scm.repository.branch.build.log']
         pattern = re.compile(r'([^:]+addons/)(?P<file>[^$]*)')
-        csv_input = cStringIO.StringIO(self._get_logs(TESTFILE))
+        csv_input = StringIO(self._get_logs(TESTFILE))
         reader = csv.DictReader(csv_input)
         for vals in reader:
             filepath = vals['file']
@@ -848,21 +830,10 @@ class Build(models.Model):
         elif self.result == 'unstable':
             self._send_build_result('Unstable')
 
-    @api.multi
-    def _get_partners_to_notify(self):
-        "Get branch followers who checked the subtype 'Build results'"
-        self.ensure_one()
-        subtype_id = self.env.ref('smile_ci.subtype_build_result').id
-        followers = self.env['mail.followers'].search([
-            ('res_model', '=', self.branch_id._name),
-            ('res_id', '=', self.branch_id.id),
-            ('subtype_ids', 'in', subtype_id),
-        ])
-        return followers.mapped('partner_id').ids
-
     @api.one
     def _send_build_result(self, short_message):
         "Send build result and error message to branch followers"
+        _logger.debug('Sending email for %s...' % self.docker_container)
         context = {
             'subject': short_message,
             'build_url': self._get_action_url(**{
@@ -876,22 +847,32 @@ class Build(models.Model):
         if 'build_error' in self._context:
             context['build_error'] = tools.plaintext2html(
                 self._context['build_error'])
-        template = self.env.ref('smile_ci.mail_template_build_result')
+        branch_subtype_id = self.env.ref(
+            'smile_ci.subtype_build_result').id
+        repository_subtype_id = self.env.ref(
+            'smile_ci.subtype_build_result2').id
+        context['partner_to_notify'] = self.branch_id.get_partners_to_notify(
+            branch_subtype_id, repository_subtype_id)
         self = self.with_context(**context)
-        partner_ids = self._get_partners_to_notify()
-        if partner_ids:
-            self.with_context(partner_to_notify=partner_ids). \
-                message_post_with_template(template.id)
+        template = self.env.ref('smile_ci.mail_template_build_result')
+        self.message_post_with_template(template.id)
         self._notify_slack()
 
     @api.one
     def _notify_slack(self):
         if self.branch_id.slack_integration and self.branch_id.slack_webhook:
+            _logger.debug('Sending Slack notification for %s...'
+                          % self.docker_container)
             payload = {
                 'text': self._get_slack_message(),
                 'attachments': self._get_slack_attachments(),
-                'icon_emoji': self._get_slack_icon_emoji(),
             }
+            icon_emoji = self._get_slack_icon_emoji()
+            if self.branch_id.slack_webhook.startswith(
+                    'https://hooks.slack.com/services'):  # Slack case
+                payload['icon_emoji'] = icon_emoji
+            else:  # Mattermost case
+                payload['text'] = '{} {}'.format(icon_emoji, payload['text'])
             if self.branch_id.slack_channel:
                 payload['channel'] = self.branch_id.slack_channel
             if self.branch_id.slack_username:
@@ -1200,3 +1181,19 @@ class Build(models.Model):
         # Try to remove all networks
         for docker_host in self.env['docker.host'].search([]):
             docker_host.clean_networks()
+
+    @api.model
+    def init(self):
+        super(Build, self).init()
+        callers = [frame[3] for frame in inspect.stack()]
+        if 'preload_registries' in callers:
+            try:
+                _logger.info(
+                    "Cleaning testing/running builds before restarting")
+                self._remove_not_pending_build_directories()
+                self._recreate_testing_builds()
+                self._kill_not_really_running_builds()
+                self._remove_unknown_containers()
+                self._clean_networks()
+            except Exception as e:
+                _logger.error(get_exception_message(e))

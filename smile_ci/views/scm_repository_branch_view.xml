@@ -35,6 +35,9 @@
       <field name="model">scm.repository.branch</field>
       <field name="inherit_id" ref="smile_scm.view_repository_branch_simple_tree"/>
       <field name="arch" type="xml">
+        <tree position="attributes">
+          <attribute name="colors">blue:last_build_result=='stable';orange:last_build_result=='unstable';red:last_build_result=='failed';grey:last_build_result=='killed'</attribute>
+        </tree>
         <field name="last_update" position="after">
           <field name="last_build_result"/>
           <field name="use_in_ci" invisible="1"/>
@@ -94,6 +97,9 @@
             attrs="{'invisible': ['|', ('use_in_ci', '=', False), ('state', '=', 'draft')]}"/>
           <button name="open" string="Open" type="object" class="btn-info"
             attrs="{'invisible': [('running_build_id', '=', False)]}"/>
+          <button name="start_container_from_registry" type="object" string="Restart" groups="smile_scm.group_scm_user"
+            attrs="{'invisible': [('running_build_id', '!=', False)]}"/>
+          <button name="duplicate" string="Duplicate" type="object" groups="smile_scm.group_scm_user"/>
           <button name="download_docker_image" string="Download Docker image" type="object" groups="smile_scm.group_scm_user"/>
         </button>
         <div class="oe_button_box" position="inside">
@@ -128,6 +134,11 @@
                 <field name="workers"/>
                 <field name="additional_server_options"/>
                 <field name="additional_options" placeholder="e.g. debug_mode = True"/>
+              </group>
+              <group>
+                <field name="flake8_max_line_length"/>
+                <field name="flake8_exclude_files" widget="char"/>
+                <field name="flake8_ignore_codes" widget="char"/>
               </group>
             </group>
           </page>

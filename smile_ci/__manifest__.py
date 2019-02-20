@@ -91,6 +91,7 @@ Features
         "views/scm_menu.xml",
         "views/webclient_templates.xml",
         "views/report_tests.xml",
+        "wizard/scm_repository_branch_copy_view.xml",
     ],
     "demo": [
         "demo/scm.repository.csv",

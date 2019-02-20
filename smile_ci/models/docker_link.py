@@ -6,7 +6,8 @@ from odoo import fields, models, _
 class DockerLink(models.Model):
     _inherit = "docker.link"
 
-    branch_id = fields.Many2one("scm.repository.branch", "Branch")
+    branch_id = fields.Many2one(
+        "scm.repository.branch", "Branch", ondelete="cascade")
 
     _sql_constraints = [
         (

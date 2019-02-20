@@ -7,6 +7,7 @@
             <field name="docker_image">postgres:9.1</field>
             <field name="is_postgres" eval="True"/>
             <field name="default_environment">{
+    'POSTGRES_DB': 'postgres',
     'POSTGRES_USER': 'odoo',
     'POSTGRES_PASSWORD': 'odoo',
     'PGDATA': '/var/lib/postgres/data',  # To store data in container
@@ -24,6 +25,7 @@
             <field name="docker_image">postgres:9.2</field>
             <field name="is_postgres" eval="True"/>
             <field name="default_environment">{
+    'POSTGRES_DB': 'postgres',
     'POSTGRES_USER': 'odoo',
     'POSTGRES_PASSWORD': 'odoo',
     'PGDATA': '/var/lib/postgres/data',  # To store data in container
@@ -41,6 +43,7 @@
             <field name="docker_image">postgres:9.3</field>
             <field name="is_postgres" eval="True"/>
             <field name="default_environment">{
+    'POSTGRES_DB': 'postgres',
     'POSTGRES_USER': 'odoo',
     'POSTGRES_PASSWORD': 'odoo',
     'PGDATA': '/var/lib/postgres/data',  # To store data in container
@@ -58,6 +61,7 @@
             <field name="docker_image">postgres:9.4</field>
             <field name="is_postgres" eval="True"/>
             <field name="default_environment">{
+    'POSTGRES_DB': 'postgres',
     'POSTGRES_USER': 'odoo',
     'POSTGRES_PASSWORD': 'odoo',
     'PGDATA': '/var/lib/postgres/data',  # To store data in container
@@ -69,6 +73,7 @@
             <field name="docker_image">postgres:9.5</field>
             <field name="is_postgres" eval="True"/>
             <field name="default_environment">{
+    'POSTGRES_DB': 'postgres',
     'POSTGRES_USER': 'odoo',
     'POSTGRES_PASSWORD': 'odoo',
     'PGDATA': '/var/lib/postgres/data',  # To store data in container
@@ -86,6 +91,7 @@
             <field name="docker_image">postgres:9.6</field>
             <field name="is_postgres" eval="True"/>
             <field name="default_environment">{
+    'POSTGRES_DB': 'postgres',
     'POSTGRES_USER': 'odoo',
     'POSTGRES_PASSWORD': 'odoo',
     'PGDATA': '/var/lib/postgres/data',  # To store data in container
@@ -103,6 +109,7 @@
             <field name="docker_image">mdillon/postgis:9.5</field>
             <field name="is_postgres" eval="True"/>
             <field name="environment">{
+    'POSTGRES_DB': 'postgres',
     'POSTGRES_USER': 'odoo',
     'POSTGRES_PASSWORD': 'odoo',
     'PGDATA': '/var/lib/postgres/data',  # To store data in container

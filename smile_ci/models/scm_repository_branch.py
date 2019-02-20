@@ -7,19 +7,22 @@ import inspect
 import json
 import logging
 import os
+from six import string_types
+import sys
 from threading import Thread
 import yaml
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.modules.registry import Registry
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
-from odoo.tools.func import wraps
 from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.smile_docker.tools import format_image, format_repository, \
     get_exception_message, lock, with_new_cursor
 from .scm_repository_branch_build import BUILD_RESULTS, CONFIGFILE
+
+if sys.version_info > (3,):
+    long = int
 
 _logger = logging.getLogger(__name__)
 
@@ -33,49 +36,10 @@ INTERVAL_TYPES = [
 ]
 
 
-def branches_in_registry_cleaner(setup_models):
-    @wraps(setup_models)
-    def new_setup_models(self, cr, *args, **kwargs):
-        res = setup_models(self, cr, *args, **kwargs)
-        callers = [frame[3] for frame in inspect.stack()]
-        if 'preload_registries' not in callers:
-            return res
-        try:
-            env = api.Environment(cr, SUPERUSER_ID, {})
-            if 'scm.repository.branch' in env.registry.models:
-                Branch = env['scm.repository.branch']
-                cr.execute(
-                    "select relname from pg_class where relname='%s'"
-                    % Branch._table)
-                if cr.rowcount:
-                    _logger.info(
-                        "Updating branches to find out which ones are "
-                        "in registry before restarting")
-                    for branch in Branch.search([]):
-                        base_branch = branch.branch_tmpl_id or branch
-                        image = format_image(base_branch.docker_image)
-                        is_in_registry = 'base' in branch.docker_registry_id. \
-                            get_image_tags(image)
-                        if branch.is_in_registry != is_in_registry:
-                            branch.is_in_registry = is_in_registry
-        except Exception as e:
-            _logger.error(get_exception_message(e))
-        return res
-    return new_setup_models
-
-
 class Branch(models.Model):
     _name = 'scm.repository.branch'
     _inherit = ['scm.repository.branch', 'docker.image']
     _directory_prefix = 'branch'
-
-    def __init__(self, pool, cr):
-        super(Branch, self).__init__(pool, cr)
-        if not getattr(Registry, '_branches_in_registry_cleaner', False):
-            setattr(Registry, 'setup_models', branches_in_registry_cleaner(
-                getattr(Registry, 'setup_models')))
-        else:
-            Registry._branches_in_registry_cleaner = True
 
     @api.model
     def _get_lang(self):
@@ -116,6 +80,13 @@ class Branch(models.Model):
         self.link_ids.filtered(lambda link: link.name == 'db').unlink()
         self._create_postgres_link(image_to_link)
 
+    def _search_postgres(self, operator, value):
+        images = self.env['docker.image'].sudo().search([
+            ('is_postgres', '=', True),
+            ('name', operator, value),
+        ])
+        return [('link_ids.linked_image_id', 'in', images.ids)]
+
     @api.one
     @api.depends('build_ids')
     def _get_builds_count(self):
@@ -128,9 +99,20 @@ class Branch(models.Model):
 
     @api.one
     def _get_running_build(self):
-        self.running_build_id = self.env['scm.repository.branch.build'].search(
-            [('branch_id', '=', self.id), ('state', '=', 'running')],
-            limit=1, order='date_start desc')
+        self.running_build_id = self.env['scm.repository.branch.build']. \
+            search([
+                ('branch_id', '=', self.id),
+                ('state', '=', 'running'),
+            ], order="id desc", limit=1)
+
+    @api.one
+    def _get_runnable_build(self):
+        self.runnable_build_id = self.env['scm.repository.branch.build']. \
+            search([
+                ('branch_id', '=', self.id),
+                ('state', 'in', ('running', 'done')),
+                ('result', 'in', ('stable', 'unstable')),
+            ], order="id desc", limit=1)
 
     @api.one
     @api.depends('repository_id.name', 'branch')
@@ -167,6 +149,9 @@ class Branch(models.Model):
     running_build_id = fields.Many2one(
         'scm.repository.branch.build', 'Running build',
         compute='_get_running_build', store=False)
+    runnable_build_id = fields.Many2one(
+        'scm.repository.branch.build', 'Runnable build',
+        compute='_get_runnable_build', store=False)
 
     # Build creation options
     use_in_ci = fields.Boolean('Used in Continuous Integration', copy=False)
@@ -178,7 +163,8 @@ class Branch(models.Model):
     postgres_id = fields.Many2one(
         'docker.image', 'Database Management System',
         domain=[('is_postgres', '=', True)],
-        compute='_get_postgres', inverse='_set_postgres')
+        compute='_get_postgres', inverse='_set_postgres',
+        search='_search_postgres')
     link_ids = fields.One2many(
         'docker.link', 'branch_id', 'All linked services')
     other_link_ids = fields.One2many(
@@ -221,6 +207,13 @@ class Branch(models.Model):
         'Additional server options',
         default="--load=base,web,smile_test,smile_upgrade")
     additional_options = fields.Text('Additional configuration options')
+
+    # flake8 options
+    flake8_max_line_length = fields.Integer(
+        'flake8 --max-line-length', default=79)
+    flake8_exclude_files = fields.Text(
+        'flake8 --exclude', default="__init__.py")
+    flake8_ignore_codes = fields.Text('flake8 --ignore')
 
     # Branches merge options
     subfolder = fields.Char('Place current sources in')
@@ -316,6 +309,18 @@ class Branch(models.Model):
             raise UserError(_('No running build'))
         return self.running_build_id.open()
 
+    @api.multi
+    def start_container_from_registry(self):
+        self.ensure_one()
+        last_build = self.env['scm.repository.branch.build'].search([
+            ('branch_id', '=', self.id),
+            ('state', '=', 'done'),
+            ('result', 'in', ('stable', 'unstable')),
+        ], limit=1)
+        if last_build:
+            return last_build.start_container_from_registry()
+        return True
+
     @api.onchange('branch_dependency_ids')
     def _onchange_branch_dependency_ids(self):
         self.has_branch_dependencies = bool(self.branch_dependency_ids)
@@ -352,10 +357,11 @@ class Branch(models.Model):
                   "unicode or list of str / unicode"
         for value in safe_eval(self.ignored_tests).values():
             if type(value) == list:
-                if list(filter(lambda element: type(element) not in
-                               (str, unicode), value)):
+                if list(filter(
+                        lambda element: not isinstance(element, string_types),
+                        value)):
                     raise ValidationError(_(message))
-            elif type(value) not in (str, unicode):
+            elif not isinstance(value, string_types):
                 raise ValidationError(_(message))
 
     @api.one
@@ -408,7 +414,8 @@ class Branch(models.Model):
         revnos = self.env['scm.repository.branch.build'].search(
             [('branch_id', '=', self.id)]).mapped('revno')
         if not revnos or \
-                tools.ustr(self.get_revno()) not in map(tools.ustr, revnos):
+                tools.ustr(self.get_revno()) not in \
+                list(map(tools.ustr, revnos)):
             return True
         return False
 
@@ -786,3 +793,50 @@ class Branch(models.Model):
                     other_branches = repository.branch_ids - self
                     other_branches.message_subscribe(subscribors.ids)
         return res
+
+    @api.multi
+    def duplicate(self):
+        self.ensure_one()
+        return self.env['scm.repository.branch.copy'].open_wizard(
+            context={'default_branch_id': self.id})
+
+    @api.multi
+    def get_partners_to_notify(
+            self, branch_subtype_id=None, repository_subtype_id=None):
+        self.ensure_one()
+        default_subtype_id = self.env.ref('mail.mt_comment').id
+        if branch_subtype_id is None:
+            branch_subtype_id = default_subtype_id
+        if repository_subtype_id is None:
+            repository_subtype_id = default_subtype_id
+        followers = self.env['mail.followers'].search([
+            '|',
+            '&', '&',
+            ('res_model', '=', self._name),
+            ('res_id', '=', self.id),
+            ('subtype_ids', 'in', branch_subtype_id),
+            '&', '&',
+            ('res_model', '=', self.repository_id._name),
+            ('res_id', '=', self.repository_id.id),
+            ('subtype_ids', 'in', repository_subtype_id),
+        ])
+        return followers.mapped('partner_id').ids
+
+    @api.model
+    def init(self):
+        super(Branch, self).init()
+        callers = [frame[3] for frame in inspect.stack()]
+        if 'preload_registries' in callers:
+            try:
+                _logger.info(
+                    "Updating branches to find out which ones are "
+                    "in registry before restarting")
+                for branch in self.search([]):
+                    base_branch = branch.branch_tmpl_id or branch
+                    image = format_image(base_branch.docker_image)
+                    is_in_registry = 'base' in branch.docker_registry_id. \
+                        get_image_tags(image)
+                    if branch.is_in_registry != is_in_registry:
+                        branch.is_in_registry = is_in_registry
+            except Exception as e:
+                _logger.error(get_exception_message(e))

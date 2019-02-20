@@ -10,6 +10,7 @@ from distutils.version import LooseVersion
 import logging
 import os
 import subprocess
+import sys
 import threading
 
 try:
@@ -111,20 +112,25 @@ class NewServices():
             _logger.warning(
                 'Incomplete config file: no code_path or no flake8file...')
             return False
-        max_line_length = config.get('flake8_max_line_length') or 79
-        exclude_files = config.get(
-            'flake8_exclude_files') or '.svn,CVS,.bzr,.hg,.git,__pycache__'
+        cmd = [sys.executable, '-m', 'flake8']
+        max_line_length = config.get('flake8_max_line_length')
+        if max_line_length:
+            cmd += ['--max-line-length=%s' % max_line_length]
+        exclude_files = config.get('flake8_exclude_files')
+        if exclude_files:
+            cmd += ['--exclude=%s' % exclude_files.replace(' ', '')]
+        ignore_codes = config.get('flake8_ignore_codes')
+        if ignore_codes:
+            cmd += ['--ignore=%s' % ignore_codes.replace(' ', '')]
+        cmd += config.get('code_path').split(',')
         with open(config.get('flake8file'), 'a') as f:
-            for path in config.get('code_path').replace(' ', '').split(','):
-                cmd = ['flake8', '--max-line-length=%s' % max_line_length,
-                       '--exclude=%s' % exclude_files.replace(' ', ''), path]
-                try:
-                    subprocess.check_output(cmd)
-                except subprocess.CalledProcessError as e:
-                    msg = e.output
-                    if isinstance(msg, bytes):
-                        msg = msg.decode("utf-8")
-                    f.write(msg)
+            try:
+                subprocess.check_output(cmd)
+            except subprocess.CalledProcessError as e:
+                msg = e.output
+                if isinstance(msg, bytes):
+                    msg = msg.decode("utf-8")
+                f.write(msg)
         return True
 
     @staticmethod
