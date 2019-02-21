@@ -9,6 +9,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     name = fields.Char(data_mask="'partner_' || id::text")
+    display_name = fields.Char(data_mask="'partner_' || id::text")
     parent_name = fields.Char(data_mask="NULL")
     birthdate = fields.Char(data_mask="NULL")
     function = fields.Char(data_mask="NULL")
