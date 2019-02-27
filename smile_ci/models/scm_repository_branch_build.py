@@ -294,8 +294,8 @@ class Build(models.Model):
             'logfile': format_str(LOGFILE),
             'coveragefile': format_str(COVERAGEFILE),
             'flake8file': format_str(FLAKE8FILE),
-            'flake8_exclude_files': format_str(branch.flake8_exclude_files),
-            'flake8_ignore_codes': format_str(branch.flake8_ignore_codes),
+            'flake8_exclude_files': branch.flake8_exclude_files,
+            'flake8_ignore_codes': branch.flake8_ignore_codes,
             'flake8_max_line_length': branch.flake8_max_line_length,
             'code_path': format_str(branch.code_path),
             'test_path': format_str(','.join(
@@ -1144,7 +1144,9 @@ class Build(models.Model):
             builds_to_kill._kill_container()
 
     @api.model
-    def _remove_unknown_containers(self):
+    def _remove_unknown_containers(self, states=None):
+        if not states:
+            states = ['testing', 'running']
         real_running_build_ids = []
         for docker_host in self.env['docker.host'].search([]):
             for container in docker_host.get_containers(all=True):
@@ -1154,12 +1156,10 @@ class Build(models.Model):
                         real_running_build_ids.append(build_id)
                     except Exception:
                         pass
-        real_running_builds = self.search(
-            [('id', 'in', real_running_build_ids)])
-        virtual_running_builds = self.search(
-            [('state', '=', 'running')])
-        containers_to_kill = set(real_running_builds.ids) - \
-            set(virtual_running_builds.ids)
+        containers_to_kill = self.search([
+            ('id', 'in', real_running_build_ids),
+            ('state', 'not in', states),
+        ]).ids
         if containers_to_kill:
             _logger.info('Killing running containers %s' % containers_to_kill)
             for docker_host in self.env['docker.host'].search([]):
@@ -1193,7 +1193,7 @@ class Build(models.Model):
                 self._remove_not_pending_build_directories()
                 self._recreate_testing_builds()
                 self._kill_not_really_running_builds()
-                self._remove_unknown_containers()
+                self._remove_unknown_containers(['running'])
                 self._clean_networks()
             except Exception as e:
                 _logger.error(get_exception_message(e))
