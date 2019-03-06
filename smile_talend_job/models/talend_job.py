@@ -3,12 +3,12 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import base64
+import binascii
 import codecs
 import csv
 import io
 import os
 import stat
-from six import string_types
 import sys
 import tempfile
 import threading
@@ -162,10 +162,12 @@ class TalendJob(models.Model):
     @api.multi
     def _get_zipfile(self):
         self.ensure_one()
-        bin_data = self.archive
-        if not isinstance(self.archive, string_types):
-            bin_data = base64.b64decode(self.archive)
-        f = io.BytesIO(bin_data)
+        data = self.archive
+        try:
+            data = base64.b64decode(data)
+        except binascii.Error:
+            pass
+        f = io.BytesIO(data)
         if not zipfile.is_zipfile(f):
             raise UserError(_('This module support only zipfiles'))
         return zipfile.ZipFile(f)
