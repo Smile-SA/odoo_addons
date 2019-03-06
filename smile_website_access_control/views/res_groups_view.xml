@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_groups_form" model="ir.ui.view">
+        <field name="name">res.groups.form</field>
+        <field name="model">res.groups</field>
+        <field name="inherit_id" ref="base.view_groups_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Website menus">
+                    <field name="website_menu_ids" context="{'hide_groups': True}"/>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>
