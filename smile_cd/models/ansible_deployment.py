@@ -165,7 +165,7 @@ class AnsibleDeployment(models.Model):
         for inventory in self.ansible_inventory_ids:
             if inventory.vault_password_crypt:
                 passfile = inventory._get_vault_passfile(self.directory)
-                cmd += ['--vault-id', passfile]
+                cmd += ['--vault-password-file', passfile]
         thread = Thread(target=self.sudo()._execute_command, args=(cmd,))
         thread.start()
 

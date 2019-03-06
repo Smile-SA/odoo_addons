@@ -31,9 +31,9 @@ class AnsibleVault():
         secretfile_to_remove = False
         if secretfile is None:
             secretfile = os.path.join(tempdir, 'secretfile_%s' % time.time())
-            with open(secretfile, 'w') as f:
-                f.write(secret)
             secretfile_to_remove = True
+        with open(secretfile, 'w') as f:
+            f.write(secret)
         try:
             if self._passfile:
                 self._execute_with_passfile(cmd, secretfile)

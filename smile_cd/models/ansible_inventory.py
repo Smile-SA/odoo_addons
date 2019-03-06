@@ -45,9 +45,9 @@ class AnsibleInventory(models.Model):
 
     @api.model
     def _get_ansible_vault_cli(self):
-        passfile = config.get('vault_passfile')
-        if not passfile or not os.path.isfile(passfile):
-            passfile = os.path.join(tempfile.gettempdir, '.vault_pass')
+        passfile = config.get('vault_passfile') or \
+            os.path.join(tempfile.gettempdir(), '.vault_pass')
+        if not os.path.isfile(passfile):
             with open(passfile, 'w') as f:
                 f.write(password_generator())
         return AnsibleVault(passfile=passfile)
