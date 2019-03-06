@@ -62,18 +62,3 @@ class SmileLog(models.Model):
             "WHERE log_date + interval '%s days' < NOW() at time zone 'UTC'",
             (nb_days,))
         return True
-
-    # @api.model
-    # def archive_and_delete_old_logs(self, archive_path=''):
-    #     # Thanks to transaction isolation, the COPY and DELETE will find
-    #     # the same smile_log records
-    #     import pdb
-    #     pdb.set_trace()
-    #     if archive_path:
-    #         file_name = time.strftime("%Y%m%d_%H%M%S.log.csv")
-    #         file_path = os.path.join(archive_path, file_name)
-    #         self.env.cr.execute("""COPY (SELECT * FROM smile_log
-    #                 WHERE log_date + interval'%s days' < NOW() at time zone 'UTC')
-    #                 TO %s
-    #                 WITH (FORMAT csv, ENCODING utf8)""", (file_path,))
-    #     return True

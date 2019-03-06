@@ -111,7 +111,8 @@ def setup_triggers(self, model):
     """ Add the necessary triggers to invalidate/recompute ``self``. """
     for model, field, path in self.resolve_deps(model):
         if self.store and not field.store:
-            _logger.info("Field %s depends on non-stored field %s", self, field)
+            _logger.info(
+                "Field %s depends on non-stored field %s", self, field)
         if field is not self:
             # Changed by Smile #
             if path is None:

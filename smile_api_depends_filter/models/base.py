@@ -47,8 +47,8 @@ class Base(models.AbstractModel):
                 ##################
                 # determine records of model_name linked by path to self
                 if path == 'id':
-                        # Modified by Smile #
-                        target0 = self.filtered_from_domain(domain)
+                    # Modified by Smile #
+                    target0 = self.filtered_from_domain(domain)
                 #####################
                 else:
                     Model = self.env[model_name]

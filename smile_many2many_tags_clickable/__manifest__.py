@@ -29,7 +29,7 @@
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """
-    
+
 Many2many Tags Clickable
 =================
 

@@ -30,4 +30,3 @@ class IrRule(models.AbstractModel):
         """.format(mode=mode)
         self._cr.execute(query, (model_name, self._uid))
         return [row[0] for row in self._cr.fetchall()]
-

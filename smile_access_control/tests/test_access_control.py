@@ -47,7 +47,8 @@ class TestAccessControl(TransactionCase):
             self.group2, self.user.groups_id,
             'The user has not the new dependence!')
 
-    def test_changing_user_profile_of_a_user_should_update_groups_of_user(self):
+    def test_changing_user_profile_of_a_user_should_update_groups_of_user(
+            self):
         """
             Add Group 2 to the dependencies of Group 1.
             Check that user has this new dependence.
