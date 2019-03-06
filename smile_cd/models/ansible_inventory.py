@@ -40,8 +40,11 @@ class AnsibleInventory(models.Model):
 
     @api.one
     def _set_vault_password(self):
-        self.vault_password_crypt = self._get_ansible_vault_cli(). \
-            encrypt_string(self.vault_password)
+        if self.vault_password:
+            self.vault_password_crypt = self._get_ansible_vault_cli(). \
+                encrypt_string(self.vault_password)
+        else:
+            self.vault_password_crypt = False
 
     @api.model
     def _get_ansible_vault_cli(self):
