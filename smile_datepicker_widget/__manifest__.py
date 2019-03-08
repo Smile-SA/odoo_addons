@@ -13,7 +13,6 @@
     "category": "Tools",
     "website": "http://www.smile.fr",
     "summary": "",
-    "website": "https://github.com/OCA/web",
     'sequence': 20,
     "data": [
         "views/assets.xml",
