@@ -9,7 +9,7 @@
     </record>
     <record model="checklist.task" id="checklist_task_4">
       <field name="mandatory" eval="True"/>
-      <field name="name">Mandatory Object</field>
+      <field name="name">Number of calls not null</field>
       <field name="sequence">15</field>
       <field name="checklist_id" ref="cron_checklist"/>
       <field name="active" eval="True"/>

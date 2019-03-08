@@ -10,10 +10,11 @@ class TestChecklist(TransactionCase):
     def test_create_cron(self):
         """
             This test relies on demo checklist smile_checklist.cron_checklist.
-            The checklist activates crons only if their model is filled.
-            I create a cron without model.
+            The checklist activates crons only if the number of calls 
+                is not null.
+            I create a cron with null number of calls.
             I check that the cron is inactive.
-            I assign a model to the cron.
+            I set a number of calls to the cron.
             I check that the cron is active.
         """
         cron = self.env['ir.cron'].create({
