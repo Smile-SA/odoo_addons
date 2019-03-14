@@ -10,7 +10,7 @@ _DATA_MASK = "NULL where res_model is not null and res_model != 'ir.ui.view'"
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
-    name = fields.Char(data_mask="'attachment_' || id::text WHERE name!='web_icon_data'")
+    name = fields.Char(data_mask="'attachment_' || id::text")
     datas_fname = fields.Char(data_mask="'attachment_' || id::text")
     description = fields.Text(data_mask="NULL")
     res_name = fields.Char(data_mask="'record_' || res_id::text")
