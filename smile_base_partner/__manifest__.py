@@ -35,7 +35,7 @@ Partner Organisation
 
 Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
-    "website": "http://www.smile.fr",
+    "website": "",
     'category': 'Organisation',
     "sequence": 0,
     "data": [

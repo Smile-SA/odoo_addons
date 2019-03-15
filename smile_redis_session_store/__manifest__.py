@@ -13,7 +13,7 @@
     Suggestions & Feedback to: Isabelle Richard
     """,
     "summary": "",
-    "website": "http://www.smile.fr",
+    "website": "",
     "category": 'Tools',
     "auto_install": False,
     "installable": True,

@@ -12,7 +12,7 @@
 This module allows to distinguish computation digits
 and display digits in decimal precision.
 """,
-    "website": "http://www.smile.fr",
+    "website": "",
     "category": "Hidden/Dependency",
     "sequence": 32,
     "data": [

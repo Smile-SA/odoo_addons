@@ -34,7 +34,7 @@ add "dbfilter = (?!.*_perf$)" in your config file.
 Suggestions & Feedback to: isabelle.richard@smile.fr &
 corentin.pouhet-brunerie@smile.fr
     """,
-    "website": "http://www.smile.fr",
+    "website": "",
     'category': 'Tools',
     "sequence": 0,
     "data": [

@@ -13,7 +13,7 @@
     "license": 'AGPL-3',
     "description": """""",
     "summary": "",
-    "website": "http://www.smile.fr",
+    "website": "",
     "category": 'Tools',
     "sequence": 20,
     "data": [],

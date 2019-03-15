@@ -37,7 +37,7 @@ Many2many Tags Clickable
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
-    "website": "http://www.smile.fr",
+    "website": "",
     "sequence": 0,
     "data": [
         "views/webclient_templates.xml",

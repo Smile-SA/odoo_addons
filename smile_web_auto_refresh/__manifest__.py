@@ -11,7 +11,7 @@
         'base_automation',
     ],
     'author': 'Fisher Yu, Smile',
-    'website': 'http://www.smile.fr',
+    'website': '',
     'license': 'AGPL-3',
     'description': """""",
     'category': 'Tools',

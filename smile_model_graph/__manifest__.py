@@ -9,7 +9,7 @@
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """""",
-    "website": "http://www.smile.fr",
+    "website": "",
     "category": "Hidden",
     "sequence": 32,
     "data": [

@@ -73,7 +73,7 @@ Additional features
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     """,
     "summary": "",
-    "website": "http://www.smile.fr",
+    "website": "",
     "category": 'Tools',
     "sequence": 20,
     "data": [

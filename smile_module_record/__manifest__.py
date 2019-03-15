@@ -24,7 +24,7 @@
 
     Suggestions & Feedback to: Corentin Pouhet-Brunerie
     """,
-    "website": "http://www.smile.fr",
+    "website": "",
     "category": 'Tools',
     "sequence": 20,
     "data": [
