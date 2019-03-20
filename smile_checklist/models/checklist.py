@@ -1,40 +1,31 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, SUPERUSER_ID, tools, _
+import inspect
+
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
-from odoo.modules.registry import Registry, RegistryManager
+from odoo.modules.registry import RegistryManager
 
 import checklist_decorators
-
-
-def update_checklists(method):
-    def wrapper(self, cr, *args, **kwargs):
-        res = method(self, cr, *args, **kwargs)
-        if self.get('checklist'):
-            cr.execute(
-                "select relname from pg_class "
-                "where relname='checklist'")
-            if cr.rowcount:
-                env = api.Environment(cr, SUPERUSER_ID, {})
-                env['checklist']._update_models()
-        return res
-    return wrapper
 
 
 class Checklist(models.Model):
     _name = 'checklist'
     _description = 'Checklist'
 
-    def __init__(self, pool, cr):
-        super(Checklist, self).__init__(pool, cr)
-        setattr(Registry, 'setup_models', update_checklists(
-            getattr(Registry, 'setup_models')))
+    @api.model
+    def _setup_complete(self):
+        super(Checklist, self)._setup_complete()
+        callers = [frame[3] for frame in inspect.stack()]
+        if 'preload_registries' in callers:
+            self._update_models()
 
     name = fields.Char(size=128, required=True, translate=True)
     model_id = fields.Many2one('ir.model', 'Model', required=True)
     model = fields.Char(related='model_id.model', readonly=True)
     active = fields.Boolean('Active', default=True)
-    active_field = fields.Boolean("Has an 'Active' field", compute='_get_active_field')
+    active_field = fields.Boolean(
+        "Has an 'Active' field", compute='_get_active_field')
     action_id = fields.Many2one('ir.actions.server', 'Action')
     act_window_ids = fields.Many2many(
         'ir.actions.act_window', 'checklist_act_window_rel',
@@ -147,7 +138,8 @@ class Checklist(models.Model):
     @api.model
     def create(self, vals):
         checklist = super(Checklist, self).create(vals)
-        self._update_models({self.env['ir.model'].browse(vals['model_id']): checklist})
+        self._update_models(
+            {self.env['ir.model'].browse(vals['model_id']): checklist})
         return checklist
 
     @api.multi
@@ -155,7 +147,8 @@ class Checklist(models.Model):
         if 'model_id' in vals or 'active' in vals:
             models = {}.fromkeys(self.mapped('model_id'), False)
             if vals.get('model_id'):
-                models.update({self.env['ir.model'].browse(vals['model_id']): self})
+                models.update(
+                    {self.env['ir.model'].browse(vals['model_id']): self})
         result = super(Checklist, self).write(vals)
         if 'model_id' in vals or 'active' in vals:
             self._update_models(models)
@@ -173,9 +166,11 @@ class Checklist(models.Model):
         if self._context.get('do_no_compute_progress_rates'):
             return
         if not records:
-            records = self.env[self.model].with_context(active_test=False).search([])
+            records = self.env[self.model].with_context(
+                active_test=False).search([])
         for record in records.with_context(active_test=True, no_checklist=True):
-            ctx = {'active_id': record.id, 'active_ids': [record.id], 'active_model': self.model}
+            ctx = {'active_id': record.id, 'active_ids': [
+                record.id], 'active_model': self.model}
             for task_inst in record.checklist_task_instance_ids:
                 old_progress_rate = task_inst.progress_rate
                 if task_inst.task_id.field_ids:
@@ -192,7 +187,8 @@ class Checklist(models.Model):
             vals = {'total_progress_rate': total_progress_rate}
             if self.active_field:
                 total_progress_rate_mandatory = 100.0
-                mandatory_inst = [i for i in record.checklist_task_instance_ids if i.mandatory]
+                mandatory_inst = [
+                    i for i in record.checklist_task_instance_ids if i.mandatory]
                 if mandatory_inst:
                     total_progress_rate_mandatory = sum(i.progress_rate for i in record.checklist_task_instance_ids if i.mandatory) \
                         / len(mandatory_inst)
