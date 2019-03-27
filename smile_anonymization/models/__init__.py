@@ -10,3 +10,4 @@ from . import res_partner_bank
 from . import res_partner_title
 from . import res_partner
 from . import res_users
+from . import mail_tracking_value
