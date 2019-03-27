@@ -5,6 +5,7 @@
         'web',
         'bus',
         'mail',
+        'base_automation'
     ],
     'author': 'Fisher Yu, Smile',
     'website': 'http://www.smile.fr',
