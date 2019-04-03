@@ -166,7 +166,8 @@ class Branch(models.Model):
         compute='_get_postgres', inverse='_set_postgres',
         search='_search_postgres')
     link_ids = fields.One2many(
-        'docker.link', 'branch_id', 'All linked services')
+        'docker.link', 'branch_id', 'All linked services',
+        copy=True)
     other_link_ids = fields.One2many(
         'docker.link', 'branch_id', 'Linked services',
         domain=[('name', '!=', 'db')])
@@ -218,7 +219,8 @@ class Branch(models.Model):
     # Branches merge options
     subfolder = fields.Char('Place current sources in')
     branch_dependency_ids = fields.One2many(
-        'scm.repository.branch.dependency', 'branch_id', 'Merge with')
+        'scm.repository.branch.dependency', 'branch_id', 'Merge with',
+        copy=True)
     has_branch_dependencies = fields.Boolean(
         readonly=True, compute='_get_is_filled_merge_with')
 
