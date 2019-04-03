@@ -7,8 +7,6 @@ from odoo import api, models, fields
 
 
 class Blog(models.Model):
-    _name = 'blog.blog'
-    _description = 'Blogs'
     _inherit = 'blog.blog'
 
     security_type = fields.Selection(
@@ -18,6 +16,11 @@ class Blog(models.Model):
 
     @api.multi
     def all_tags(self, min_limit=1):
+        """
+        we have rewritten the native method to add the notion of group filtering
+        :param min_limit:
+        :return:
+        """
         user = self.env['res.users'].browse(self._uid)
         group_ids = [g.id for g in user.groups_id]
         req = """
@@ -51,7 +54,6 @@ class Blog(models.Model):
 
 
 class BlogPost(models.Model):
-    _name = 'blog.post'
     _inherit = 'blog.post'
 
     security_type = fields.Selection(

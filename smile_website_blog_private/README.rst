@@ -6,14 +6,14 @@ Smile Blogs private
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github
-    :target: https://github.com/Smile-SA/odoo_addons/tree/11.0/smile_website_blog_private
+    :target: https://github.com/Smile-SA/odoo_addons/tree/12.0/smile_website_blog_private
     :alt: Smile-SA/odoo_addons
 
 |badge2| |badge3|
 
 This module adds feature to have private blogs and post, visible only for certain security groups.
 
-`Origin module <https://github.com/OpenSur/Odoo_addons#8.0>`_ migrated to > 10
+`Origin module <https://github.com/OpenSur/Odoo_addons#8.0>`_ migrated to > 12
 
 **Table of contents**
 
