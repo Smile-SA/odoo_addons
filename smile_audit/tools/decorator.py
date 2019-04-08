@@ -19,6 +19,16 @@ def audit_decorator(method):
             self._name, {}).get(method)
         return AuditRule.browse(rule_id) if rule_id else None
 
+    def get_new_values(self):
+        new_values = []
+        for record in self:
+            vals = {}
+            for fname in self._fields:
+                vals[fname] = self._fields[fname].convert_to_read(
+                    record[fname], record, use_name_get=False)
+            new_values.append(vals)
+        return new_values
+
     @api.model
     def audit_create(self, vals):
         result = audit_create.origin(self, vals)
@@ -26,7 +36,7 @@ def audit_decorator(method):
             else result
         rule = get_audit_rule(self, 'create')
         if rule:
-            new_values = record.read(load='_classic_write')
+            new_values = get_new_values(record)
             rule.log('create', new_values=new_values)
         return result
 
@@ -37,7 +47,7 @@ def audit_decorator(method):
             old_values = self.read(load='_classic_write')
         result = audit_write.origin(self, vals)
         if rule:
-            new_values = self.read(load='_classic_write')
+            new_values = get_new_values(self)
             rule.log('write', old_values, new_values)
         return result
 

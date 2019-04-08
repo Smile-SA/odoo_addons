@@ -87,7 +87,7 @@ class AuditLog(models.Model):
         RecordModel = self.env[self.model_id.model]
         for fname in set(data['new'].keys()) | set(data['old'].keys()):
             field = RecordModel._fields.get(fname)
-            if field:
+            if field and self.user_has_groups(groups=field.groups):
                 old_value = self._format_value(
                     field, data['old'].get(fname, ''))
                 new_value = self._format_value(

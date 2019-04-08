@@ -51,11 +51,3 @@ class Base(models.AbstractModel):
             for field in res:
                 res[field]['readonly'] = True
         return res
-
-    @api.multi
-    def read(self, fields=None, load='_classic_read'):
-        try:
-            return super(Base, self).read(fields, load)
-        # To contourn a native bug with the last version of Odoo
-        except KeyError:
-            return super(Base, self).read(fields, load)
