@@ -34,10 +34,17 @@ class Checklist(models.Model):
 
     @api.model
     def _setup_complete(self):
+        """ Patch all models having an active checklist
+        """
         super(Checklist, self)._setup_complete()
         callers = [frame[3] for frame in inspect.stack()]
-        if 'preload_registries' in callers:
-            self._update_models()
+        # Check if '_patch_model_decoration' is not present in callers,
+        # to prevent infinite recursion.
+        if '_patch_model_decoration' not in callers:
+            self._cr.execute(
+                "select relname from pg_class where relname='checklist'")
+            if self._cr.rowcount:
+                self._update_models()
 
     name = fields.Char(size=128, required=True, translate=True)
     model_id = fields.Many2one('ir.model', 'Model', required=True)

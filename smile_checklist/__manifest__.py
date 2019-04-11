@@ -41,11 +41,6 @@ Principle
     3. Server Action executed if the checklist is completed
         * all action types: email, sms, object creation/update, etc
 
-Configuration
-
-    * Please ensure that you launch server with option "-d" or checklist
-        fields will not correctly be loaded
-
 
 
 Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
