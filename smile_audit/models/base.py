@@ -3,6 +3,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 
 import datetime
+import inspect
 
 from odoo import api, fields, models
 from odoo.tools.safe_eval import safe_eval
@@ -59,6 +60,26 @@ class Base(models.AbstractModel):
         rule_id = AuditRule._check_audit_rule(group_ids).get(
             self._name, {}).get(method)
         return AuditRule.browse(rule_id) if rule_id else None
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        if not self._get_audit_rule('create') or not (
+                self.env.recompute and self._context.get('recompute', True)):
+            return super(Base, self).create(vals_list)
+        audit_ctx = dict(self._context)
+        audit_ctx.setdefault('do_not_recompute_for', [])
+        audit_ctx['do_not_recompute_for'].append(self._name)
+        records = super(Base, self.with_context(audit_ctx)).create(vals_list)
+        self.with_context({
+            'audit_rec_model': self._name,
+            'audit_rec_ids': records.ids,
+        }).recompute()
+        return records
+
+    @api.model
+    def recompute(self):
+        if self._name not in self._context.get('do_not_recompute_for', []):
+            super(Base, self).recompute()
 
     def concat(self, *args):
         records = super(Base, self).concat(*args)
