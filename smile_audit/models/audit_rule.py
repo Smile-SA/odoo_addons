@@ -75,7 +75,7 @@ class AuditRule(models.Model):
                 rule._deactivate()
         return True
 
-    _methods = ['create', '_write', 'unlink']
+    _methods = ['create', 'write', '_write', 'unlink']
 
     @api.model
     @tools.ormcache()

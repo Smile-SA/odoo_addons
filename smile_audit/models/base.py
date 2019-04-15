@@ -51,3 +51,40 @@ class Base(models.AbstractModel):
             for field in res:
                 res[field]['readonly'] = True
         return res
+
+    @api.model
+    def _get_audit_rule(self, method):
+        AuditRule = self.env['audit.rule']
+        group_ids = self.env.user.groups_id.ids
+        rule_id = AuditRule._check_audit_rule(group_ids).get(
+            self._name, {}).get(method)
+        return AuditRule.browse(rule_id) if rule_id else None
+
+    def concat(self, *args):
+        records = super(Base, self).concat(*args)
+        if args and args[0]._context.get('audit_rec_model') == self._name:
+            records = records.with_context({
+                'audit_rec_model': self._name,
+                'audit_rec_ids': records.ids,
+            })
+        return records
+
+    @api.model
+    def _create(self, data_list):
+        records = super(Base, self)._create(data_list)
+        if self._get_audit_rule('create'):
+            for data in data_list:
+                data['record'] = data['record'].with_context({
+                    'audit_rec_model': self._name,
+                    'audit_rec_ids': data['record'].ids,
+                })
+        return records
+
+    @api.multi
+    def write(self, vals):
+        if not self._get_audit_rule('write'):
+            return super(Base, self).write(vals)
+        return super(Base, self.with_context({
+            'audit_rec_model': self._name,
+            'audit_rec_ids': self.ids,
+        })).write(vals)
