@@ -1,0 +1,28 @@
+<odoo>
+  <data>
+
+    <record model="ir.ui.view" id="button_bank_statement_reconciliation">
+        <field name="name">button.bank.statement.reconciliation</field>
+        <field name="model">account.bank.statement</field>
+        <field name="inherit_id" ref="account.view_bank_statement_form"/>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='line_ids']/tree/field[@name='amount']" position="after" >
+              <button name="button_reconcile_line"
+                      string="Reconcile"
+                      type="object"
+                      attrs="{'invisible' : [('journal_entry_ids', '!=', [])] }"
+                      icon="fa-unlink"
+                      />
+          </xpath>
+      </field>
+    </record>
+
+    <template id="assets_backend" name="reconcile assets" inherit_id="web.assets_backend">
+           <xpath expr="." position="inside">
+               <script type="text/javascript" src="smile_reconciliation_by_line/static/src/js/reconciliation_model.js"></script>
+               <script type="text/javascript" src="smile_reconciliation_by_line/static/src/js/reconciliation_action.js"></script>
+           </xpath>
+    </template>
+
+  </data>
+</odoo>
