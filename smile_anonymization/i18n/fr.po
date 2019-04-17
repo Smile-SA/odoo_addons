@@ -1,0 +1,77 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_anonymization
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-01 10:33+0000\n"
+"PO-Revision-Date: 2019-03-01 10:33+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_anonymization
+#: model:ir.model,name:smile_anonymization.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Comptes bancaires"
+
+#. module: smile_anonymization
+#: model:ir.model,name:smile_anonymization.model_ir_model_fields
+msgid "Fields"
+msgstr "Champs"
+
+#. module: smile_anonymization
+#: model:ir.model,name:smile_anonymization.model_mail_message
+msgid "Message"
+msgstr "Message"
+
+#. module: smile_anonymization
+#: model:ir.model,name:smile_anonymization.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "Courriels à envoyer"
+
+#. module: smile_anonymization
+#: model:ir.model,name:smile_anonymization.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: smile_anonymization
+#: code:addons/smile_anonymization/models/models.py:91
+#, python-format
+msgid "Serialization field `%s` not found for sparse field `%s`!"
+msgstr "Serialization field `%s` not found for sparse field `%s`!"
+
+#. module: smile_anonymization
+#: model:ir.model,name:smile_anonymization.model_res_users
+msgid "Users"
+msgstr "Utilisateurs"
+
+#. module: smile_anonymization
+#: code:addons/smile_anonymization/models/ir_model_fields.py:38
+#: sql_constraint:ir.model.fields:0
+#, python-format
+msgid "You can not use an unsafe SQL keyword in a data mask"
+msgstr "Vous ne pouvez pas utiliser de mot clé SQL non sur dans un masque de données"
+
+#. module: smile_anonymization
+#: code:addons/smile_anonymization/models/ir_model_fields.py:42
+#: sql_constraint:ir.model.fields:0
+#, python-format
+msgid "You cannot use semicolumn character into a data mask"
+msgstr "Vous ne pouvez pas utiliser de point virgule dans un masque de données"
+
+#. module: smile_anonymization
+#: model:ir.model,name:smile_anonymization.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: smile_anonymization
+#: model:ir.model,name:smile_anonymization.model_res_partner_title
+msgid "res.partner.title"
+msgstr "res.partner.title"
+
