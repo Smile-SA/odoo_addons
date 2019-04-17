@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_account_assets_in_progress">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-if="docs">
+
+                        <t t-set="company" t-value="docs[0].env.user.company_id"/>
+                        <t t-set="currency" t-value="company.currency_id"/>
+                        <t t-set="date_to" t-value="data['form']['date_to']"/>
+                        <t t-set="date_from" t-value="data['form']['date_from']"/>
+                        <t t-set="invoice_lines_grouped" t-value="group_by(docs, currency, date_to)"/>
+
+                        <t t-set="purchase_company" t-value="0.0"/>
+
+                        <!-- Main title -->
+                        <h1 class="text-center">Assets in progress</h1>
+                        <t t-if="date_from">
+                            <h3 class="text-center">From <span t-esc="date_from" t-options='{"widget": "date"}'/> to <span t-esc="date_to" t-options='{"widget": "date"}'/></h3>
+                        </t>
+                        <t t-if="not date_from">
+                            <h3 class="text-center">At <span t-esc="date_to" t-options='{"widget": "date"}'/></h3>
+                        </t>
+                        <h3 class="text-center">Edition date: <span t-esc="time.strftime('%Y-%m-%d')" t-options='{"widget": "date"}'/></h3>
+
+                        <hr/>
+
+                        <h3>Currency: <span t-field="currency.name"/> <span t-field="currency.symbol"/></h3>
+
+                        <!-- Group invoice lines by account -->
+                        <t t-foreach="invoice_lines_grouped" t-as="account_group">
+
+                            <t t-set="account" t-value="account_group[0]"/>
+
+                            <t t-set="purchase_account" t-value="0.0"/>
+
+                            <h3>Account: <span t-esc="account.code.rjust(8, '0')"/> <span t-field="account.name"/></h3>
+
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Invoice Number</th>
+                                        <th>Supplier</th>
+                                        <th>Description</th>
+                                        <th>Purchase Date</th>
+                                        <th>Gross Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="invoice_lines_grouped[account]" t-as="line_infos">
+                                        <!-- Infos of each invoice line of the account group -->
+                                        <t t-set="line" t-value="line_infos[0]"/>
+                                        <t t-set="purchase" t-value="line_infos[1]['purchase']"/>
+                                        <t t-set="purchase_date" t-value="line_infos[1]['purchase_date']"/>
+
+                                        <!-- Update account infos -->
+                                        <t t-set="purchase_account" t-value="purchase_account + purchase"/>
+                                        <tr>
+                                            <td class="text-left"><span t-field="line.invoice_id.number"/></td>
+                                            <td class="text-left"><span t-field="line.partner_id.name"/></td>
+                                            <td class="text-center"><span t-field="line.name"/></td>
+                                            <td class="text-left"><span t-esc="purchase_date"/></td>
+                                            <td class="text-right"><span t-esc="purchase"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <!-- Total infos of the asset account group -->
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th colspan="4"/>
+                                        <th>Gross Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-left" colspan="4">Total <span t-field="account.name"/></td>
+                                        <td class="text-right" t-esc="purchase_account"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Update company infos -->
+                            <t t-set="purchase_company" t-value="purchase_company + purchase_account"/>
+                        </t>
+
+                        <!-- Main total of the document -->
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th colspan="4"/>
+                                    <th>Gross Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-left" colspan="4">Total <span t-field="company.name"/></td>
+                                    <td class="text-right" t-esc="purchase_company"/>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </t>
+                </div>
+
+            </t>
+        </t>
+    </template>
+
+    <report
+        id="action_report_account_assets_in_progress"
+        model="account.assets.in.progress.report"
+        string="Assets in progress"
+        report_type="qweb-pdf"
+        paperformat="paperformat_euro_landscape"
+        name="smile_account_asset.report_account_assets_in_progress"
+        file="smile_account_asset.report_account_assets_in_progress"/>
+
+</odoo>

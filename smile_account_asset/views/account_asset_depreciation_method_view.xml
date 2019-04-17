@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_account_asset_depreciation_method_search">
+            <field name="name">account.asset.depreciation.method.search</field>
+            <field name="model">account.asset.depreciation.method</field>
+            <field name="arch" type="xml">
+                <search string="Depreciation Methods">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <separator/>
+                    <filter name="accounting" string="Accounting" domain="[('depreciation_type','=','accounting')]"/>
+                    <filter name="fiscal" string="Fiscal" domain="[('depreciation_type','=','fiscal')]"/>
+                    <group string="Group By..." expand="0" groups="base.group_multi_company">
+                        <filter name="depreciation_type" string="Depreciation Type" context="{'group_by':'depreciation_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_depreciation_method_tree">
+            <field name="name">account.asset.depreciation.method.tree</field>
+            <field name="model">account.asset.depreciation.method</field>
+            <field name="arch" type="xml">
+                    <tree string="Depreciation Methods" editable="bottom">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="depreciation_type"/>
+                    <field name="base_value"/>
+                    <field name="use_salvage_value"/>
+                    <field name="depreciation_start_date"/>
+                    <field name="depreciation_stop_date"/>
+                    <field name="prorata"/>
+                    <field name="use_manual_rate"/>
+                    <field name="rate_formula"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_depreciation_method_form">
+            <field name="name">account.asset.depreciation.method.form</field>
+            <field name="model">account.asset.depreciation.method</field>
+            <field name="arch" type="xml">
+                <form string="Depreciation Method">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="depreciation_type"/>
+                            <field name="prorata"/>
+                            <field name="depreciation_start_date"/>
+                            <field name="depreciation_stop_date"/>
+                            <field name="base_value"/>
+                            <field name="use_salvage_value"/>
+                            <field name="use_manual_rate"/>
+                            <field name="rate_formula"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_account_asset_depreciation_methods">
+            <field name="name">Depreciation Methods</field>
+            <field name="res_model">account.asset.depreciation.method</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_asset_depreciation_method_tree"/>
+        </record>
+
+    </data>
+</odoo>

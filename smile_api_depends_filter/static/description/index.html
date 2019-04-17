@@ -367,12 +367,9 @@ ul.auto-toc {
 <p>This module allows to filter records to recompute by specifying a domain for a trigger.</p>
 <p>To work, this module must be defined as a wide module.</p>
 <p><strong>Example</strong></p>
-<pre class="literal-block">
-.. code-block:: python
-
-    &#64;api.depends(
-        ('product_id.lst_price', [('invoice_id.state', '=', 'draft')]))
-
+<pre class="code python literal-block">
+<span class="name decorator">&#64;api.depends</span><span class="punctuation">(</span>
+    <span class="punctuation">(</span><span class="literal string single">'product_id.lst_price'</span><span class="punctuation">,</span> <span class="punctuation">[(</span><span class="literal string single">'invoice_id.state'</span><span class="punctuation">,</span> <span class="literal string single">'='</span><span class="punctuation">,</span> <span class="literal string single">'draft'</span><span class="punctuation">)]))</span>
 </pre>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">

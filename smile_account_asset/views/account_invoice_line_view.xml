@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_account_invoice_line_search">
+            <field name="name">account.invoice.line.search</field>
+            <field name="model">account.invoice.line</field>
+            <field name="arch" type="xml">
+                <search string="Invoice Lines">
+                    <field name="invoice_id" string="Number"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="account_id" groups="account.group_account_user"/>
+                    <field name="asset_category_id"/>
+                    <field name="name"/>
+                    <field name="uom_id" groups="product.group_uom"/>
+                    <filter name="current_year" string="Current year" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%%Y-01-01 00:00:00'))]" />
+                    <separator />
+                    <filter name="no_asset" string="No Asset" domain="[('asset_id','=',False)]"/>
+                    <filter name="asset" string="Asset" domain="[('asset_id','!=',False)]"/>
+                    <group string="Group By..." expand="0">
+                        <filter name="company" string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter name="asset_category" string="Asset Category" context="{'group_by':'asset_category_id'}"/>
+                        <filter name="account" string="Account" context="{'group_by':'account_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_invoice_line_tree">
+            <field name="name">account.invoice.line.tree</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_tree"/>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="create">false</attribute>
+                </tree>
+                <field name="name" position="replace"/>
+                <field name="account_id" position="before">
+                    <field name="invoice_id" string="Number" readonly="1"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                    <field name="partner_id" string="Vendor" readonly="1"/>
+                    <field name="date_invoice"/>
+                </field>
+                <field name="account_id" position="after">
+                    <field name="asset_category_id" readonly="1"/>
+                    <field name="parent_id" attrs="{'readonly': [('asset_id', '!=', False)]}"/>
+                    <field name="asset_id" invisible="1"/>
+                    <field name="name" readonly="1"/>
+                </field>
+                <field name="quantity" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
+                <field name="account_id" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_invoice_line_form">
+            <field name="name">account.invoice.line.form</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="account_id" position="after">
+                        <field name="asset_category_id"/>
+                        <field name="parent_id" attrs="{'readonly': [('asset_id', '!=', False)]}"/>
+                        <field name="asset_id" invisible="1"/>
+                    </field>
+                    <field name="account_id" position="attributes">
+                        <attribute name="attrs">{'readonly': [('asset_category_id','!=',False)], 'required': [('asset_category_id','=',False)]}</attribute>
+                    </field>
+                    <field name="account_analytic_id" position="attributes">
+                        <attribute name="attrs">{'readonly': [('asset_category_id','!=',False)], 'required': [('asset_category_id','=',False)]}</attribute>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_supplier_account_invoice_form">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="after">
+                        <field name="asset_category_id"/>
+                        <field name="parent_id" attrs="{'readonly': [('asset_id', '!=', False)]}"/>
+                        <field name="asset_id" invisible="1"/>
+                    </xpath>
+                    <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('asset_category_id','!=',False)], 'required': [('asset_category_id','=',False)]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('asset_category_id','!=',False)], 'required': [('asset_category_id','=',False)]}</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_invoice_line_form2">
+            <field name="name">account.invoice.line.form</field>
+            <field name="model">account.invoice.line</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <form string="Invoice Line" create="false" edit="false">
+                    <group>
+                        <field name="product_id" readonly="1"/>
+                        <field name="name" readonly="1"/>
+                        <label for="quantity"/>
+                        <div class="o_row">
+                            <field name="quantity" readonly="1"/>
+                            <field name="uom_id" groups="product.group_uom" readonly="1" class="oe_inline"/>
+                        </div>
+                        <field name="price_unit" readonly="1"/>
+                        <field name="account_id" readonly="1"/>
+                        <field name="discount" readonly="1" groups="base.group_no_one"/>
+                        <field name="account_analytic_id" readonly="1" groups="analytic.group_analytic_accounting"/>
+                        <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                        <field name="asset_category_id" readonly="1"/>
+                        <field name="parent_id"/>
+                        <field name="invoice_line_tax_ids" widget="many2many_tags" readonly="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_account_invoice_line">
+            <field name="name">Invoice Lines</field>
+            <field name="res_model">account.invoice.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="account.view_invoice_line_tree"/>
+            <field name="search_view_id" ref="view_account_invoice_line_search"/>
+            <field name="domain">[('invoice_id.state', 'not in', ('draft', 'cancel')),('asset_category_id','!=',False),('invoice_id.journal_id.type', 'in',('purchase','purchase_refund'))]</field>
+            <field name="context">{'search_default_asset': True}</field>
+        </record>
+        <record id="action_account_invoice_line_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account.view_invoice_line_tree"/>
+            <field name="act_window_id" ref="action_account_invoice_line"/>
+        </record>
+        <record id="action_account_invoice_line_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_invoice_line_form2"/>
+            <field name="act_window_id" ref="action_account_invoice_line"/>
+        </record>
+
+    </data>
+</odoo>

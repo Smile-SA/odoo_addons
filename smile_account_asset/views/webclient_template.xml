@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <template id="smile_account_asset_backend" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/smile_account_asset/static/src/js/account_asset.js"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

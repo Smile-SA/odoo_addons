@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_account_asset_asset_search">
+            <field name="name">account.asset.asset.search</field>
+            <field name="model">account.asset.asset</field>
+            <field name="arch" type="xml">
+                <search string="Assets">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="number"/>
+                    <field name="category_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="asset_type"/>
+                    <field name="asset_account_id" string="Account"/>
+                    <field name="in_service_date"/>
+                    <separator/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="in_progress" string="In progress" domain="[('state','=','confirm'), ('category_id.asset_in_progress', '=', True)]"/>
+                    <filter name="acquised" string="Acquised" domain="[('state','=','confirm'), ('category_id.asset_in_progress', '=', False)]"/>
+                    <filter name="into_service" string="Into service" domain="[('state','=','open')]"/>
+                    <filter name="sold_or_scrapped" string="Sold Or Scrapped" domain="[('state','=','close')]"/>
+                    <group string="Group By..." expand="0">
+                        <filter name="company" string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter name="asset_category" string="Asset Category" domain="[('state', '!=', 'cancel')]" context="{'group_by':'category_id'}"/>
+                        <filter name="account" string="Account" context="{'group_by':'asset_account_id'}"/>
+                        <filter name="currency" string="Currency" context="{'group_by':'currency_id'}" groups="base.group_multi_currency"/>
+                        <filter name="main_asset" string="Main Asset" context="{'group_by':'parent_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_asset_tree">
+            <field name="name">account.asset.asset.tree</field>
+            <field name="model">account.asset.asset</field>
+            <field name="arch" type="xml">
+                <tree string="Assets"
+						decoration-info="state=='draft'"
+						decoration-muted="state=='cancel'">
+                    <field name="name"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="code"/>
+                    <field name="number"/>
+                    <field name="category_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="asset_account_id" string="Account" invisible="1"/>
+                    <field name="asset_type"/>
+                    <field name="in_service_date"/>
+                    <field name="purchase_value_sign" sum="Total"/>
+                    <field name="book_value_sign" sum="Total"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_asset_form">
+            <field name="name">account.asset.asset.form</field>
+            <field name="model">account.asset.asset</field>
+            <field name="arch" type="xml">
+                <form string="Asset">
+                    <header>
+                        <button name="button_confirm_asset_purchase" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                        <button name="button_put_into_service" states="confirm" string="Put into service" type="object" class="oe_highlight"/>
+                        <button name="button_sell" states="open" string="Sell Or Scrap" type="object" class="oe_highlight"/>
+                        <button name="button_output" string="Output" type="object" attrs="{'invisible': ['|', ('state', '!=', 'close'), ('is_out', '=', True)]}"/>
+                        <button name="button_cancel_asset_purchase" states="confirm,open" string="Cancel" type="object" class="oe_cancel" confirm="WARNING: this operation won't cancel invoice(s)!" />
+                        <button name="button_cancel_asset_sale" states="close" string="Cancel disposal" type="object" class="oe_cancel"/>
+                        <button name="button_modify" states="confirm,open" string="Modify" type="object"/>
+                        <button name="button_split" states="draft,confirm,open" string="Split" type="object"/>
+                        <button name="%(action_account_asset_depreciation_line_form)d" string="Depreciate Asset" type="action" context="{'default_asset_id': active_id}" attrs="{'invisible':[('state','in',('draft', 'close'))]}" colspan="2"/>
+                        <button name="compute_depreciation_board" string="Compute depreciation board" type="object" attrs="{'invisible':['|', ('state','=','close'), ('accounting_method', 'in', ('none', 'manual'))]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="confirm,open,close"/>
+                        <field name="is_out" invisible="1"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="category_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="asset_in_progress" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="purchase_value" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
+                                <field name="salvage_value"/>
+                                <field name="book_value"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="general" string="General">
+                                <group>
+                                    <group name="characteristics" string="Characteristics">
+                                        <field name="number" attrs="{'invisible': [('number', '=', False)]}"/>
+                                        <field name="parent_id" domain="[('id', '!=', active_id)]"
+                                            attrs="{'required': [('asset_type', '=', 'purchase_refund')]}"/>
+                                        <field name="asset_type"
+                                            attrs="{'readonly': ['|', ('parent_id', '=', False), ('state', '!=', 'draft')]}"/>
+                                        <field name="in_service_date"/>
+                                        <field name="in_service_account_date"/>
+                                    </group>
+                                    <group name="purchase" string="Purchase">
+                                        <field name="supplier_id"
+                                            attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
+                                        <field name="purchase_date"
+                                            attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
+                                        <field name="purchase_account_date"
+                                            string="Accounting Date" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
+                                        <label for="quantity"
+                                            attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
+                                        <div class="o_row" attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}">
+                                            <field name="quantity"/>
+                                            <field name="uom_id" class="oe_inline"/>
+                                        </div>
+                                        <field name="purchase_tax_ids" string="Taxes" widget="many2many_tags"
+                                            attrs="{'readonly': ['|', ('number', '!=', False), ('state', '!=', 'draft')]}"/>
+                                        <field name="purchase_tax_amount"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="depreciation_board" string="Depreciation Board"
+                                    attrs="{'invisible': [('asset_in_progress', '=', True)]}">
+                                <group>
+                                    <group name="accounting_depreciation" string="Accounting Depreciation">
+                                        <field name="accounting_method" string="Computation Method"/>
+                                        <field name="accounting_annuities" string="Annuities"
+                                            attrs="{'required': [('accounting_method', '!=', 'none')], 'invisible': [('accounting_method', '=', 'none')]}"/>
+                                        <field name="accounting_rate" string="Amortization Rate"
+                                            attrs="{'invisible': [('accounting_rate_visibility', '=', False)], 'required': [('accounting_rate_visibility', '=', True)]}"/>
+                                        <field name="accounting_rate_visibility" invisible="1"/>
+                                    </group>
+                                    <group name="fiscal_depreciation" string="Fiscal Depreciation">
+                                        <field name="fiscal_method" string="Computation Method"
+                                            attrs="{'readonly': ['|', ('accounting_method', '=', 'none'), ('state', 'not in', ('draft', 'confirm'))]}"/>
+                                        <field name="fiscal_annuities" string="Annuities"
+                                            attrs="{'required': [('fiscal_method', '!=', 'none')], 'invisible': [('fiscal_method', '=', 'none')]}"/>
+                                        <field name="fiscal_rate" string="Amortization Rate"
+                                            attrs="{'invisible': [('fiscal_rate_visibility', '=', False)], 'required': [('fiscal_rate_visibility', '=', True)]}"/>
+                                        <field name="benefit_accelerated_depreciation"
+                                            attrs="{'invisible': [('fiscal_method', '=', 'none')], 'readonly': [('fiscal_method', '!=', 'manual')]}"/>
+                                        <field name="fiscal_rate_visibility" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="accounting_depreciation_line_ids" colspan="2" nolabel="1" mode="tree" attrs="{'invisible': [('accounting_method', '=', 'none')], 'readonly': [('accounting_method', '!=', 'manual')]}" context="{'default_is_manual': accounting_method == 'manual', 'default_depreciation_type': 'accounting'}">
+                                            <tree string="Accounting Depreciation Board"
+                                                    decoration-info="not is_posted" editable="bottom">
+                                                <field name="depreciation_date"/>
+                                                <field name="base_value"/>
+                                                <field name="depreciation_value" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}" string="Amortization"/>
+                                                <field name="accumulated_value"/>
+                                                <field name="exceptional_value"/>
+                                                <field name="book_value"/>
+                                                <field name="move_id" invisible="1"/>
+                                                <field name="is_posted" invisible="1"/>
+                                                <field name="state" invisible="1"/>
+                                                <field name="is_manual" invisible="1"/>
+                                                <button name="post_depreciation_line" icon="fa-cogs" string="Post" type="object" attrs="{'invisible':['|',('move_id','!=',False),('state','!=','open')]}"/>
+                                            </tree>
+                                            <form string="Depreciation Line">
+                                                <group>
+                                                    <field name="depreciation_date"/>
+                                                    <field name="base_value"/>
+                                                    <field name="depreciation_value" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}"/>
+                                                    <field name="accumulated_value"/>
+                                                    <field name="exceptional_value"/>
+                                                    <field name="book_value"/>
+                                                    <field name="is_manual" invisible="1"/>
+                                                    <field name="depreciation_type" invisible="1"/>
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                    <group>
+                                        <field name="fiscal_depreciation_line_ids" colspan="2" nolabel="1" mode="tree" attrs="{'invisible': [('fiscal_method', '=', 'none')], 'readonly': [('fiscal_method', '!=', 'manual')]}" context="{'default_is_manual': accounting_method == 'manual', 'default_depreciation_type': 'fiscal'}">
+                                            <tree string="Fiscal Depreciation Board" decoration-info="not is_posted" editable="bottom">
+                                                <field name="depreciation_date"/>
+                                                <field name="depreciation_value" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}" string="Fiscal Depreciation"/>
+                                                <field name="accounting_value"/>
+                                                <field name="accelerated_value"/>
+                                                <field name="move_id" invisible="1"/>
+                                                <field name="is_posted" invisible="1"/>
+                                                <field name="state" invisible="1"/>
+                                                <field name="is_manual" invisible="1"/>
+                                                <field name="benefit_accelerated_depreciation" invisible="1"/>
+                                                <button name="post_depreciation_line" icon="fa-cogs" string="Post" type="object" attrs="{'invisible':['|',('benefit_accelerated_depreciation','=',False),'|',('move_id','!=',False),('state','!=','open')]}"/>
+                                            </tree>
+                                            <form string="Depreciation Line">
+                                                <group>
+                                                    <field name="depreciation_date"/>
+                                                    <field name="base_value"/>
+                                                    <field name="depreciation_value" string="Fiscal Depreciation" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}"/>
+                                                    <field name="accounting_value"/>
+                                                    <field name="accelerated_value" sum="Total"/>
+                                                    <field name="is_manual" invisible="1"/>
+                                                    <field name="depreciation_type" invisible="1"/>
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Disposal" attrs="{'invisible': [('state', '!=', 'close')]}">
+                                <group>
+                                    <field name="sale_date"/>
+                                    <field name="sale_account_date" string="Accounting Date"/>
+                                    <field name="sale_type"/>
+                                    <field name="customer_id" attrs="{'required': [('sale_type', '=', 'sale')], 'invisible': [('sale_type', '=', 'scrapping')]}"/>
+                                    <field name="sale_invoice_number" attrs="{'invisible': [('sale_type', '=', 'scrapping')]}"/>
+                                    <field name="sale_value" string="Amount Excl Tax"/>
+                                    <field name="sale_tax_ids" widget="many2many_tags" string="Taxes"/>
+                                    <field name="sale_tax_amount"/>
+                                    <field name="tax_regularization"/>
+                                    <field name="regularization_tax_amount"/>
+                                    <field name="sale_result"/>
+                                </group>
+                            </page>
+                            <page string="History" attrs="{'invisible': [('asset_history_ids', '=', False)]}">
+                                <field name="asset_history_ids">
+                                    <tree string="History">
+                                        <field name="date_to"/>
+                                        <field name="purchase_value"/>
+                                        <field name="salvage_value"/>
+                                        <field name="accounting_method"/>
+                                        <field name="accounting_annuities"/>
+                                        <field name="accounting_rate"/>
+                                        <field name="fiscal_method"/>
+                                        <field name="fiscal_annuities"/>
+                                        <field name="fiscal_rate"/>
+                                        <field name="note" string="Reason"/>
+                                    </tree>
+                                    <form string="History">
+                                        <field name="asset_id"/>
+                                        <field name="purchase_value"/>
+                                        <field name="salvage_value"/>
+                                        <group string="Accounting Depreciation">
+                                            <field name="accounting_method"/>
+                                            <field name="accounting_annuities"/>
+                                            <field name="accounting_rate" attrs="{'invisible': [('accounting_method', '!=', 'degressive')], 'required': [('accounting_method', '=', 'degressive')]}"/>
+                                        </group>
+                                        <group string="Fiscal Depreciation">
+                                            <field name="fiscal_method"/>
+                                            <field name="fiscal_annuities"/>
+                                            <field name="fiscal_rate" attrs="{'invisible': [('accounting_method', '!=', 'degressive')], 'required': [('accounting_method', '=', 'degressive')]}"/>
+                                        </group>
+                                        <separator string="Notes"/>
+                                        <field name="note" nolabel="1" colspan="2"/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Journal Entries" groups="account.group_account_user">
+                                <field name="account_move_line_ids" nolabel="1"/>
+                            </page>
+                        </notebook>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="activity_ids" widget="mail_activity"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_account_asset_asset_form">
+            <field name="name">Assets</field>
+            <field name="res_model">account.asset.asset</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_draft': 1}</field>
+            <field name="view_id" ref="view_account_asset_asset_tree"/>
+            <field name="search_view_id" ref="view_account_asset_asset_search"/>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_asset_sale_form">
+            <field name="name">account.asset.asset.sale.form</field>
+            <field name="model">account.asset.asset</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <form string="Asset Sale/Scrapping" col="2">
+                    <group>
+                        <field name="sale_date" required="1" string="Date"/>
+                        <field name="sale_account_date" string="Accounting Date"/>
+                        <field name="sale_type" required="1"/>
+                        <field name="customer_id" attrs="{'required': [('sale_type', '=', 'sale')], 'invisible': [('sale_type', '=', 'scrapping')]}"/>
+                        <field name="sale_invoice_number" attrs="{'invisible': [('sale_type', '=', 'scrapping')]}"/>
+                        <field name="sale_value" string="Amount Excl Tax" attrs="{'required': [('sale_type', '=', 'sale')], 'invisible': [('sale_type', '=', 'scrapping')]}"/>
+                        <field name="sale_tax_ids" string="Taxes" widget="many2many_tags" attrs="{'invisible': [('sale_type', '=', 'scrapping')]}"/>
+                        <field name="state" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="button_confirm_asset_sale" type="object" string="Confirm Asset Sale" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_asset_sale_search">
+            <field name="name">account.asset.asset.sale.search</field>
+            <field name="model">account.asset.asset</field>
+            <field name="arch" type="xml">
+                <search string="Asset Disposals">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="category_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="sale_receivable_account_id" string="Account"/>
+                    <field name="sale_date"/>
+                    <filter name="sale" string="Sale" domain="[('sale_type','=','sale')]"/>
+                    <filter name="scrapping" string="Scrapping" domain="[('sale_type','=','scrapping')]"/>
+                    <separator/>
+                    <filter name="in_heritage" string="In Heritage" domain="[('is_out','=',False)]"/>
+                    <filter name="out_of_heritage" string="Out Of Heritage" domain="[('is_out','=',True)]"/>
+                    <group string="Group By..." expand="0">
+                        <filter name="company" string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter name="asset_category" string="Asset Category" context="{'group_by':'category_id'}"/>
+                        <filter name="account" string="Account" context="{'group_by':'sale_receivable_account_id'}"/>
+                        <filter name="currency" string="Currency" context="{'group_by':'currency_id'}" groups="base.group_multi_currency"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_asset_sale_tree">
+            <field name="name">account.asset.asset.sale.tree</field>
+            <field name="model">account.asset.asset</field>
+            <field name="arch" type="xml">
+                <tree string="Asset Disposals" decoration-muted="sale_type=='scrapping'">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="category_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="sale_receivable_account_id" string="Account" invisible="1"/>
+                    <field name="sale_type"/>
+                    <field name="purchase_date"/>
+                    <field name="sale_date"/>
+                    <field name="purchase_value" sum="Total purchase value"/>
+                    <field name="regularization_tax_amount" sum="Total tax regularization"/>
+                    <field name="accumulated_amortization_value" sum="Total accumulated amortization"/>
+                    <field name="fiscal_book_value" sum="Total fiscal book"/>
+                    <field name="sale_value" sum="Total sale value"/>
+                    <field name="sale_result" sum="Total sale result"/>
+                    <field name="sale_result_short_term" string="Short Term" sum="Total"/>
+                    <field name="sale_result_long_term" string="Long Term" sum="Total"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="state" invisible="1"/>
+                    <field name="is_out" invisible="1"/>
+                    <button name="button_output" attrs="{'invisible': ['|', ('state', '!=', 'close'), ('is_out', '!=', False)]}" icon="fa-sign-out" string="Output" help="Retire" type="object"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_account_asset_asset_sale_tree">
+            <field name="name">Asset Disposals</field>
+            <field name="res_model">account.asset.asset</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'close')]</field>
+            <field name="view_id" ref="view_account_asset_asset_sale_tree"/>
+            <field name="search_view_id" ref="view_account_asset_asset_sale_search"/>
+        </record>
+
+    </data>
+</odoo>

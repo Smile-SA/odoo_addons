@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_account_asset_depreciation_line_search">
+            <field name="name">account.asset.depreciation.line.search</field>
+            <field name="model">account.asset.depreciation.line</field>
+            <field name="arch" type="xml">
+                <search string="Depreciation Lines">
+                    <field name="depreciation_date"/>
+                    <field name="asset_id"/>
+                    <field name="category_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="account_id"/>
+                    <filter name="accounting" string="Accounting" domain="[('depreciation_type','=','accounting')]"/>
+                    <filter name="fiscal" string="Fiscal" domain="[('depreciation_type','=','fiscal')]"/>
+                    <separator/>
+                    <filter name="this_fiscal_year" string="This fiscal year" domain="[('year','=',time.strftime('%%Y'))]"/>
+                    <separator/>
+                    <filter name="this_month" string="This month" context="{'search_in_current_month': True}"/>
+                    <filter name="three_month" string="The last 3 months" context="{'search_in_three_months': True}"/>
+                    <separator/>
+                    <filter name="unposted" string="Unposted" domain="[('is_posted','=',False)]"/>
+                    <filter name="posted" string="Posted" domain="[('is_posted','=',True)]"/>
+                    <group string="Group By..." expand="0">
+                        <filter name="three_month" string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter name="asset_category" string="Asset Category" context="{'group_by':'category_id'}"/>
+                        <filter name="asset" string="Asset" context="{'group_by':'asset_id'}"/>
+                        <filter name="account" string="Account" context="{'group_by':'account_id'}"/>
+                        <filter name="currency" string="Currency" context="{'group_by':'currency_id'}" groups="base.group_multi_currency"/>
+                        <filter name="year" string="Year" context="{'group_by':'year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_depreciation_line_tree">
+            <field name="name">account.asset.depreciation.line.tree</field>
+            <field name="model">account.asset.depreciation.line</field>
+            <field name="arch" type="xml">
+                <tree string="Depreciation Lines"
+                        decoration-info="not is_posted"
+                        decoration-muted="depreciation_type=='fiscal' and not benefit_accelerated_depreciation">
+                    <field name="year" invisible="1"/>
+                    <field name="depreciation_date"/>
+                    <field name="asset_id"/>
+                    <field name="category_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="account_id" invisible="1"/>
+                    <field name="purchase_value_sign"/>
+                    <field name="salvage_value_sign"/>
+                    <field name="depreciation_type"/>
+                    <field name="previous_years_accumulated_value_sign"/>
+                    <field name="depreciation_value_sign" string="Amortization" sum="Total"/>
+                    <field name="exceptional_value_sign" sum="Total"/>
+                    <field name="current_year_accumulated_value_sign"/>
+                    <field name="book_value_sign"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="state" invisible="1"/>
+                    <field name="is_posted" invisible="1"/>
+                    <field name="asset_type" invisible="1"/>
+                    <field name="benefit_accelerated_depreciation" invisible="1"/>
+                    <button name="post_depreciation_line" icon="fa-cogs" string="Post" type="object"
+                        attrs="{'invisible':['|','|',('is_posted','=',True),('state','!=','open'), '&amp;', ('depreciation_type', '=', 'fiscal'), ('benefit_accelerated_depreciation', '=', False)]}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_depreciation_line_form">
+            <field name="name">account.asset.depreciation.line.form</field>
+            <field name="model">account.asset.depreciation.line</field>
+            <field name="priority">0</field>
+            <field name="arch" type="xml">
+                <form string="Depreciation Line">
+                    <header>
+                        <button name="post_depreciation_line" class="oe_highlight" string="Post" type="object"
+                            attrs="{'invisible':['|','|',('is_posted','=',True),('state','!=','open'), '&amp;', ('depreciation_type', '=', 'fiscal'), ('benefit_accelerated_depreciation', '=', False)]}"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="asset_id" readonly="1" colspan="4"/>
+                            <field name="depreciation_type" readonly="1"/>
+                            <field name="depreciation_date" readonly="1"/>
+                            <field name="purchase_value"/>
+                            <field name="salvage_value"/>
+                            <field name="previous_years_accumulated_value"/>
+                            <field name="depreciation_value" readonly="1" string="Amortization"/>
+                            <field name="exceptional_value"/>
+                            <field name="current_year_accumulated_value"/>
+                            <field name="book_value"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="move_id" readonly="1" invisible="1"/>
+                            <field name="state" invisible="1"/>
+                            <field name="asset_type" invisible="1"/>
+                            <field name="is_posted" invisible="1"/>
+                            <field name="benefit_accelerated_depreciation" invisible="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_account_asset_depreciation_line">
+            <field name="name">Depreciation Lines</field>
+            <field name="res_model">account.asset.depreciation.line</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_account_asset_depreciation_line_tree"/>
+            <field name="context">{'search_default_three_month': 1, 'search_default_accounting': 1}</field>
+            <field name="search_view_id" ref="view_account_asset_depreciation_line_search"/>
+            <field name="domain">[('depreciation_type', '!=', 'exceptional')]</field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_depreciation_line_form2">
+            <field name="name">account.asset.depreciation.line.form</field>
+            <field name="model">account.asset.depreciation.line</field>
+            <field name="arch" type="xml">
+                <form string="Depreciation Line">
+                    <group>
+                        <field name="depreciation_date"
+                            attrs="{'required':[('move_id','=',False)], 'readonly':[('move_id','!=',False)]}"/>
+                        <field name="depreciation_value"
+                            attrs="{'required':[('move_id','=',False)], 'readonly':[('move_id','!=',False)]}"/>
+                        <field name="asset_id" invisible="1"/>
+                        <field name="move_id" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="button_validate_exceptional_depreciation" string="Validate" type="object"
+                            class="oe_highlight" attrs="{'readonly':[('move_id','!=',False)]}"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_account_asset_depreciation_line_form">
+            <field name="name">Depreciation Line</field>
+            <field name="res_model">account.asset.depreciation.line</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_account_asset_depreciation_line_form2"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

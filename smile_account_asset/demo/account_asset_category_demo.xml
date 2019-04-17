@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Asset Category -->
+
+        <record id="account_asset_category_fixedassets" model="account.asset.category">
+            <field name="name">Hardware - 5 Years</field>
+            <field name="code">Hardware-5Y</field>
+            <field name="asset_class">tangible</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="accounting_method">accounting_linear</field>
+            <field name="accounting_annuities">25</field>
+            <field name="fiscal_method">fiscal_linear</field>
+            <field name="fiscal_annuities">15</field>
+            <field name="asset_journal_id" model="account.journal" eval="obj().search([('type', '=', 'general'), ('company_id', '=', ref('base.main_company'))], limit=1).id"/>
+            <field name="asset_account_id" ref="account_asset_21"/>
+            <field name="accounting_depreciation_account_id" ref="account_asset_281"/>
+            <field name="accounting_depreciation_expense_account_id" ref="account_asset_6811"/>
+            <field name="accounting_depreciation_income_account_id" ref="account_asset_7811"/>
+            <field name="exceptional_depreciation_account_id" ref="account_asset_291"/>
+            <field name="exceptional_depreciation_expense_account_id" ref="account_asset_6816"/>
+            <field name="exceptional_depreciation_income_account_id" ref="account_asset_7816"/>
+            <field name="sale_receivable_account_id" ref="account_asset_462"/>
+            <field name="sale_expense_account_id" ref="account_asset_675"/>
+            <field name="sale_income_account_id" ref="account_asset_775"/>
+        </record>
+
+        <record id="account_asset_category_digitalassets" model="account.asset.category">
+            <field name="name">Software - 5 Years</field>
+            <field name="code">Software-5Y</field>
+            <field name="asset_class">intangible</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="accounting_method">accounting_linear</field>
+            <field name="accounting_annuities">5</field>
+            <field name="fiscal_method">fiscal_degressive</field>
+            <field name="fiscal_annuities">2</field>
+            <field name="fiscal_rate">50.0</field>
+            <field name="asset_journal_id" model="account.journal" eval="obj().search([('type', '=', 'general'), ('company_id', '=', ref('base.main_company'))], limit=1).id"/>
+            <field name="asset_account_id" ref="account_asset_20"/>
+            <field name="accounting_depreciation_account_id" ref="account_asset_280"/>
+            <field name="accounting_depreciation_expense_account_id" ref="account_asset_6811"/>
+            <field name="accounting_depreciation_income_account_id" ref="account_asset_7811"/>
+            <field name="exceptional_depreciation_account_id" ref="account_asset_290"/>
+            <field name="exceptional_depreciation_expense_account_id" ref="account_asset_6816"/>
+            <field name="exceptional_depreciation_income_account_id" ref="account_asset_7816"/>
+            <field name="sale_receivable_account_id" ref="account_asset_462"/>
+            <field name="sale_expense_account_id" ref="account_asset_675"/>
+            <field name="sale_income_account_id" ref="account_asset_775"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Account Groups -->
+
+        <record model="account.group" id="account_asset_1">
+            <field name="code_prefix">A1</field>
+            <field name="name">Capital</field>
+        </record>
+
+        <record model="account.group" id="account_asset_14">
+            <field name="code_prefix">A14</field>
+            <field name="name">Legal Provisions</field>
+            <field name="parent_id" ref="account_asset_1"/>
+        </record>
+
+        <record model="account.group" id="account_asset_2">
+            <field name="code_prefix">A2</field>
+            <field name="name">Assets</field>
+        </record>
+
+        <record model="account.group" id="account_asset_28">
+            <field name="code_prefix">A28</field>
+            <field name="name">Amortizations</field>
+            <field name="parent_id" ref="account_asset_2"/>
+        </record>
+        <record model="account.group" id="account_asset_29">
+            <field name="code_prefix">A29</field>
+            <field name="name">Depreciations</field>
+            <field name="parent_id" ref="account_asset_2"/>
+        </record>
+
+        <record model="account.group" id="account_asset_4">
+            <field name="code_prefix">A4</field>
+            <field name="name">Partner Accounts</field>
+        </record>
+
+        <record model="account.group" id="account_asset_6">
+            <field name="code_prefix">A6</field>
+            <field name="name">Expenses</field>
+        </record>
+
+        <record model="account.group" id="account_asset_68">
+            <field name="code_prefix">A68</field>
+            <field name="name">Provisions</field>
+            <field name="parent_id" ref="account_asset_6"/>
+        </record>
+
+        <record model="account.group" id="account_asset_7">
+            <field name="code_prefix">A7</field>
+            <field name="name">Incomes</field>
+        </record>
+
+        <record model="account.group" id="account_asset_78">
+            <field name="code_prefix">A78</field>
+            <field name="name">Reversals</field>
+            <field name="parent_id" ref="account_asset_7"/>
+        </record>
+
+        <!-- Accounts -->
+
+        <record model="account.account" id="account_asset_145">
+            <field name="code">A145</field>
+            <field name="name">Fiscal Amortizations</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_14"/>
+        </record>
+
+        <record model="account.account" id="account_asset_20">
+            <field name="name">Intangible Assets</field>
+            <field name="code">A20</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="group_id" ref="account_asset_2"/>
+        </record>
+
+        <record model="account.account" id="account_asset_21">
+            <field name="name">Tangible Assets</field>
+            <field name="code">A21</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="group_id" ref="account_asset_2"/>
+        </record>
+
+        <record model="account.account" id="account_asset_23">
+            <field name="name">In-progress Assets</field>
+            <field name="code">A23</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="group_id" ref="account_asset_2"/>
+        </record>
+
+        <record model="account.account" id="account_asset_280">
+            <field name="name">Amortizations for intangible assets</field>
+            <field name="code">A280</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="group_id" ref="account_asset_28"/>
+        </record>
+        <record model="account.account" id="account_asset_281">
+            <field name="name">Amortizations for tangible assets</field>
+            <field name="code">A281</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="group_id" ref="account_asset_28"/>
+        </record>
+
+        <record model="account.account" id="account_asset_290">
+            <field name="name">Depreciations for intangible assets</field>
+            <field name="code">A290</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="group_id" ref="account_asset_29"/>
+        </record>
+        <record model="account.account" id="account_asset_291">
+            <field name="name">Depreciations for tangible assets</field>
+            <field name="code">A291</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="group_id" ref="account_asset_29"/>
+        </record>
+
+        <record model="account.account" id="account_asset_44562">
+            <field name="code">A44562</field>
+            <field name="name">Taxes on assets</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_4"/>
+        </record>
+
+        <record model="account.account" id="account_asset_462">
+            <field name="name">Assets Sale</field>
+            <field name="code">A462</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="group_id" ref="account_asset_4"/>
+        </record>
+
+        <record model="account.account" id="account_asset_675">
+            <field name="code">A675</field>
+            <field name="name">Expenses of assets sale</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_6"/>
+        </record>
+
+        <record model="account.account" id="account_asset_6811">
+            <field name="code">A6811</field>
+            <field name="name">Provisions for accounting amortizations</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_68"/>
+        </record>
+        <record model="account.account" id="account_asset_6816">
+            <field name="code">A6816</field>
+            <field name="name">Provisions for depreciations</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_68"/>
+        </record>
+        <record model="account.account" id="account_asset_6871">
+            <field name="code">A6871</field>
+            <field name="name">Provisions for exceptional amortizations</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_68"/>
+        </record>
+        <record model="account.account" id="account_asset_6872">
+            <field name="code">A6872</field>
+            <field name="name">Provisions for fiscal amortizations</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_68"/>
+        </record>
+
+        <record model="account.account" id="account_asset_775">
+            <field name="code">A775</field>
+            <field name="name">Incomes of assets sale</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_7"/>
+        </record>
+        <record model="account.account" id="account_asset_7811">
+            <field name="code">A7811</field>
+            <field name="name">Reversals for accounting amortizations</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_78"/>
+        </record>
+        <record model="account.account" id="account_asset_7816">
+            <field name="code">A7816</field>
+            <field name="name">Reversals for depreciations</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_78"/>
+        </record>
+        <record model="account.account" id="account_asset_7872">
+            <field name="code">A7872</field>
+            <field name="name">Reversals for fiscal amortizations</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_78"/>
+        </record>
+        <record model="account.account" id="account_asset_7876">
+            <field name="code">A7876</field>
+            <field name="name">Reversals for exceptional amortizations</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="group_id" ref="account_asset_78"/>
+        </record>
+
+    </data>
+</odoo>

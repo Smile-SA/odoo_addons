@@ -386,13 +386,10 @@ This fork works with all non-edited views, not only with kanban and list views.<
 <li>Go to <tt class="docutils literal">Setting &gt; Technical &gt; Actions &gt; Window Actions</tt>, find the desired action, activate the auto search Check box</li>
 <li>Add one automated action for the target model,  in the linked automated action add the following python code:</li>
 </ol>
-<pre class="literal-block">
-.. code-block:: python
+<pre class="code python literal-block">
+ <span class="name">model</span><span class="operator">.</span><span class="name">env</span><span class="punctuation">[</span><span class="literal string single">'bus.bus'</span><span class="punctuation">]</span><span class="operator">.</span><span class="name">sendone</span><span class="punctuation">(</span><span class="literal string single">'auto_refresh'</span><span class="punctuation">,</span> <span class="name">model</span><span class="operator">.</span><span class="name">_name</span><span class="punctuation">)</span><span class="operator">.</span>
 
-    model.env['bus.bus'].sendone('auto_refresh', model._name).
-
-   This automated action can be applied (when to run) to creation, update or delete per your requirement.
-
+<span class="name">This</span> <span class="name">automated</span> <span class="name">action</span> <span class="name">can</span> <span class="name">be</span> <span class="name">applied</span> <span class="punctuation">(</span><span class="name">when</span> <span class="name">to</span> <span class="name">run</span><span class="punctuation">)</span> <span class="name">to</span> <span class="name">creation</span><span class="punctuation">,</span> <span class="name">update</span> <span class="operator word">or</span> <span class="name">delete</span> <span class="name">per</span> <span class="name">your</span> <span class="name">requirement</span><span class="operator">.</span>
 </pre>
 <ol class="arabic" start="3">
 <li><p class="first">It is also possible to force the opening of a page by indicating #action.</p>
@@ -401,11 +398,8 @@ This fork works with all non-edited views, not only with kanban and list views.<
 </blockquote>
 </li>
 </ol>
-<pre class="literal-block">
-.. code-block:: python
-
-    model.env ['bus.bus'].sendone ('auto_refresh', '#home')
-
+<pre class="code python literal-block">
+<span class="name">model</span><span class="operator">.</span><span class="name">env</span> <span class="punctuation">[</span><span class="literal string single">'bus.bus'</span><span class="punctuation">]</span><span class="operator">.</span><span class="name">sendone</span> <span class="punctuation">(</span><span class="literal string single">'auto_refresh'</span><span class="punctuation">,</span> <span class="literal string single">'#home'</span><span class="punctuation">)</span>
 </pre>
 </div>
 <div class="section" id="usage">

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record forcecreate="1" id="seq_account_asset" model="ir.sequence">
+            <field name="name">Account Asset</field>
+            <field name="code">account.asset.asset</field>
+            <field eval="4" name="padding"/>
+            <field name="prefix">%(year)s/</field>
+        </record>
+
+    </data>
+</openerp>

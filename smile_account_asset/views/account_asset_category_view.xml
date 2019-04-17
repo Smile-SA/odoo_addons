@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_account_asset_category_search">
+            <field name="name">account.asset.category.search</field>
+            <field name="model">account.asset.category</field>
+            <field name="arch" type="xml">
+                <search string="Asset Categories">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="accounting_method"/>
+                    <field name="fiscal_method"/>
+                    <group expand="0" string="Group By">
+                        <filter name="company" string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_category_tree">
+            <field name="name">account.asset.category.tree</field>
+            <field name="model">account.asset.category</field>
+            <field name="arch" type="xml">
+                <tree string="Asset Categories">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="accounting_method"/>
+                    <field name="fiscal_method"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_asset_category_form">
+            <field name="name">account.asset.category.form</field>
+            <field name="model">account.asset.category</field>
+            <field name="arch" type="xml">
+                <form string="Asset Category">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" groups="base.group_no_one">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="company_id" groups="base.group_multi_company"
+                                attrs="{'readonly': [('asset_ids', '!=', False)]}"/>
+                            <field name="asset_class"/>
+                            <field name="asset_in_progress"/>
+                            <field name="asset_creation"/>
+                            <field name="confirm_asset"
+                                attrs="{'invisible': [('asset_creation', '!=', 'auto')]}"/>
+                           <field name="asset_ids" invisible="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Depreciations"
+                                    attrs="{'invisible': [('asset_in_progress', '=', True)]}">
+                                <group>
+                                    <group string="Accounting Depreciation">
+                                        <field name="accounting_method" string="Computation Method"/>
+                                        <field name="accounting_annuities" string="Annuities"
+                                            attrs="{'required': [('accounting_method', '!=', 'none')], 'invisible': [('accounting_method', '=', 'none')]}"/>
+                                        <field name="accounting_rate" string="Amortization Rate"
+                                            attrs="{'invisible': [('accounting_rate_visibility', '=', False)], 'required': [('accounting_rate_visibility', '=', True)]}"/>
+                                        <field name="accounting_rate_visibility" invisible="1"/>
+                                    </group>
+                                    <group string="Fiscal Depreciation">
+                                        <field name="fiscal_method" string="Computation Method"
+                                            attrs="{'readonly': [('accounting_method', '=', 'none')]}"/>
+                                        <field name="fiscal_annuities" string="Annuities"
+                                            attrs="{'required': [('fiscal_method', '!=', 'none')], 'invisible': [('fiscal_method', '=', 'none')]}"/>
+                                        <field name="fiscal_rate" string="Amortization Rate"
+                                            attrs="{'invisible': [('fiscal_rate_visibility', '=', False)], 'required': [('fiscal_rate_visibility', '=', True)]}"/>
+                                        <field name="fiscal_rate_visibility" invisible="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Accounting">
+                                <group>
+                                    <group string="Asset">
+                                        <field name="asset_journal_id" string="Journal"/>
+                                        <field name="asset_account_id" string="Asset Account"/>
+                                        <field name="asset_analytic_account_id"/>
+                                    </group>
+                                    <group string="Disposal">
+                                        <field name="sale_journal_id" string="Journal"/>
+                                        <field name="sale_receivable_account_id" string="Receivable Account"/>
+                                        <field name="sale_analytic_account_id" string="Analytic Account"/>
+                                        <field name="sale_expense_account_id" string="Expense Account"/>
+                                        <field name="sale_income_account_id" string="Income Account"/>
+                                    </group>
+                                    <group string="Amortization">
+                                        <field name="accounting_depreciation_account_id" string="Amortization Account"
+                                            attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
+                                        <field name="accounting_depreciation_expense_account_id" string="Provision Account"
+                                            attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
+                                        <field name="accounting_depreciation_income_account_id" string="Reversal Account"
+                                            attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
+                                        <field name="depreciation_journal_id" string="Journal"/>
+                                    </group>
+                                    <group string="Exceptional Depreciation">
+                                        <field name="exceptional_depreciation_account_id" string="Depreciation Account"
+                                            attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
+                                        <field name="exceptional_depreciation_expense_account_id" string="Provision Account"
+                                            attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
+                                        <field name="exceptional_depreciation_income_account_id" string="Reversal Account"
+                                            attrs="{'required': ['|', ('accounting_method', '!=', 'none'), ('fiscal_method', '!=', 'none')]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Taxation" attrs="{'invisible': [('asset_in_progress', '=', True)]}">
+                                <group>
+                                    <group string="Fiscal Deduction">
+                                        <field name="fiscal_deduction_limit" string="Limit"/>
+                                    </group>
+                                    <group string="Tax Regularization">
+                                        <field name="tax_regularization_period" string="Period"/>
+                                        <field name="tax_regularization_base" string="Base"/>
+                                        <field name="tax_regularization_application" string="Application"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_account_asset_categories">
+            <field name="name">Asset Categories</field>
+            <field name="res_model">account.asset.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_asset_category_tree"/>
+        </record>
+
+    </data>
+</odoo>

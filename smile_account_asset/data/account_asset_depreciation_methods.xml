@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="depreciation_method_accounting_linear" model="account.asset.depreciation.method">
+            <field name="name">Linear</field>
+            <field name="code">accounting_linear</field>
+            <field name="depreciation_type">accounting</field>
+            <field name="base_value">purchase_value</field>
+            <field name="use_salvage_value" eval="True"/>
+            <field name="depreciation_start_date">in_service_date</field>
+            <field name="use_manual_rate" eval="False"/>
+            <field name="rate_formula">100 / length</field>
+            <field name="prorata" eval="True"/>
+            <field name="need_additional_annuity" eval="True"/>
+        </record>
+
+        <record id="depreciation_method_accounting_softy" model="account.asset.depreciation.method">
+            <field name="name">Sum OF The Years</field>
+            <field name="code">accounting_softy</field>
+            <field name="depreciation_type">accounting</field>
+            <field name="base_value">purchase_value</field>
+            <field name="use_salvage_value" eval="True"/>
+            <field name="depreciation_start_date">in_service_date</field>
+            <field name="use_manual_rate" eval="False"/>
+            <field name="rate_formula">2 * (length - annuity_number + 1) / (pow(length, 2) + length) * 100</field>
+            <field name="prorata" eval="False"/>
+            <field name="need_additional_annuity" eval="False"/>
+        </record>
+
+        <record id="depreciation_method_fiscal_linear" model="account.asset.depreciation.method">
+            <field name="name">Linear</field>
+            <field name="code">fiscal_linear</field>
+            <field name="depreciation_type">fiscal</field>
+            <field name="base_value">purchase_value</field>
+            <field name="use_salvage_value" eval="False"/>
+            <field name="depreciation_start_date">in_service_date</field>
+            <field name="use_manual_rate" eval="False"/>
+            <field name="rate_formula">100 / length</field>
+            <field name="prorata" eval="True"/>
+            <field name="need_additional_annuity" eval="True"/>
+        </record>
+
+        <record id="depreciation_method_fiscal_degressive" model="account.asset.depreciation.method">
+            <field name="name">Degressive</field>
+            <field name="code">fiscal_degressive</field>
+            <field name="depreciation_type">fiscal</field>
+            <field name="base_value">book_value</field>
+            <field name="use_salvage_value" eval="False"/>
+            <field name="depreciation_start_date">first_day_of_purchase_month</field>
+            <field name="use_manual_rate" eval="True"/>
+            <field name="rate_formula">max(rate, annuity_number &lt;= length and 100 / (length - annuity_number + 1) or 0)</field>
+            <field name="prorata" eval="True"/>
+            <field name="need_additional_annuity" eval="False"/>
+        </record>
+
+	</data>
+</odoo>

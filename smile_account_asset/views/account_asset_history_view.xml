@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+	    <record model="ir.ui.view" id="view_account_asset_history_form">
+	        <field name="name">account.asset.history.form</field>
+	        <field name="model">account.asset.history</field>
+	        <field name="arch" type="xml">
+	            <form string="Asset Update">
+                    <sheet>
+                        <field name="asset_id" invisible="1"/>
+                        <field name="display_validation_warning" invisible="1"/>
+                        <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                            attrs="{'invisible': [('display_validation_warning', '=', False)]}">
+                            <p>You can only validate assets not in progress.</p>
+                            <p>Please change asset category before validation.</p>
+                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name="category_id"/>
+                            <field name="purchase_value"/>
+                            <field name="salvage_value"/>
+                            <field name="purchase_date" invisible="1" readonly="0"/>
+                            <field name="in_service_date"
+                                invisible="not context.get('asset_validation', False)"
+                                required="context.get('asset_validation', False)"/>
+                            <field name="dummy" invisible="1"/>
+                        </group>
+                        <newline/>
+                        <group string="Accounting Depreciation">
+                            <field name="accounting_method"/>
+                            <field name="accounting_annuities"
+                                attrs="{'required': [('accounting_method', 'not in', ('none', 'manual'))], 'invisible': [('accounting_method', 'in', ('none', 'manual'))]}"/>
+                            <field name="accounting_rate"
+                                attrs="{'invisible': [('accounting_rate_visibility', '=', False)], 'required': [('accounting_rate_visibility', '=', True)]}"/>
+                            <field name="accounting_rate_visibility" invisible="1"/>
+                        </group>
+                        <group string="Fiscal Depreciation">
+                            <field name="fiscal_method"
+                                attrs="{'readonly': [('accounting_method', '=', 'none')]}"/>
+                            <field name="fiscal_annuities"
+                                attrs="{'required': [('fiscal_method', 'not in', ('none', 'manual'))], 'invisible': [('fiscal_method', 'in', ('none', 'manual'))]}"/>
+                            <field name="fiscal_rate"
+                                attrs="{'invisible': [('fiscal_rate_visibility', '=', False)], 'required': [('fiscal_rate_visibility', '=', True)]}"/>
+                            <field name="benefit_accelerated_depreciation"
+                                attrs="{'invisible': [('fiscal_method', '=', 'none')], 'readonly': [('fiscal_method', '!=', 'manual')]}"/>
+                            <field name="fiscal_rate_visibility" invisible="1"/>
+                        </group>
+                        <group string="Reason">
+                            <field name="note" required="not context.get('asset_validation')"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button type="object" name="button_validate" string="Validate" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+	            </form>
+	        </field>
+	    </record>
+
+	</data>
+</odoo>

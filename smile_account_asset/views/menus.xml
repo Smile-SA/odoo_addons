@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Assets main menu -->
+
+        <menuitem id="menu_account_assets_parent"
+            name="Assets"
+            parent="account.menu_finance"
+            groups="account.group_account_user"
+            sequence="4"/>
+
+        <menuitem id="menu_account_assets_management"
+            name="Assets"
+            parent="menu_account_assets_parent"/>
+
+        <menuitem id="menu_account_assets"
+            parent="menu_account_assets_management"
+            action="action_account_asset_asset_form"
+            groups="account.group_account_user"
+            sequence="10"/>
+
+        <menuitem id="menu_account_invoice_lines"
+            parent="menu_account_assets_management"
+            action="action_account_invoice_line"
+            sequence="20"/>
+
+        <menuitem id="menu_account_asset_depreciation_lines"
+            parent="menu_account_assets_management"
+            action="action_account_asset_depreciation_line"
+            sequence="30"/>
+
+        <menuitem id="menu_account_asset_sales"
+            parent="menu_account_assets_management"
+            action="action_account_asset_asset_sale_tree"
+            sequence="40"/>
+
+        <!-- Assets reporting -->
+
+        <menuitem parent="account.menu_finance_reports"
+            id="menu_finance_reports_account_assets"
+            name="Assets"
+            sequence="5"/>
+
+        <!-- Assets configuration -->
+
+        <menuitem id="menu_account_asset_settings"
+            parent="account.menu_finance_configuration"
+            name="Assets"
+            sequence="4"/>
+        <menuitem id="menu_account_asset_depreciation_methods"
+            parent="menu_account_asset_settings"
+            action="action_account_asset_depreciation_methods"
+            sequence="91"/>
+        <menuitem id="menu_account_asset_categories"
+            parent="menu_account_asset_settings"
+            action="action_account_asset_categories"
+            sequence="92"/>
+
+    </data>
+</odoo>

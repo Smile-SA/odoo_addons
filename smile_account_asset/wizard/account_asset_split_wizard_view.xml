@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+    	<!-- Asset Split Wizard -->
+	    <record model="ir.ui.view" id="view_account_asset_split_wizard_form">
+	        <field name="name">account.asset.split_wizard.form</field>
+	        <field name="model">account.asset.split_wizard</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form>
+                    <group>
+                        <group string="Parent Asset">
+                            <field name="initial_purchase_value"/>
+                            <field name="initial_salvage_value"/>
+                            <field name="initial_quantity"/>
+                        </group>
+                        <group string="Child Asset">
+                            <field name="purchase_value"/>
+                            <field name="salvage_value"/>
+                            <field name="quantity"/>
+                        </group>
+                        <field name="asset_id" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button type="object" name="button_validate" string="Validate" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+	            </form>
+	        </field>
+	    </record>
+
+	</data>
+</odoo>

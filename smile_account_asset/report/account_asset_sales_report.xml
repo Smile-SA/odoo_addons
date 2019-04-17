@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_account_asset_sales">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-if="docs">
+
+                        <t t-set="company" t-value="docs[0].env.user.company_id"/>
+                        <t t-set="currency" t-value="company.currency_id"/>
+                        <t t-set="date_to" t-value="data['form']['date_to']"/>
+                        <t t-set="date_from" t-value="data['form']['date_from']"/>
+                        <t t-set="is_posted" t-value="data['form']['is_posted']"/>
+
+                        <t t-set="group_by_result" t-value="group_by(docs, currency)"/>
+                        <t t-set="assets_grouped" t-value="group_by_result[0]"/>
+                        <t t-set="global_result" t-value="group_by_result[1]"/>
+
+                        <t t-set="purchase_company" t-value="0.0"/>
+                        <t t-set="amortization_company" t-value="0.0"/>
+                        <t t-set="book_company" t-value="0.0"/>
+                        <t t-set="sale_company" t-value="0.0"/>
+                        <t t-set="sale_result_company" t-value="0.0"/>
+
+                        <!-- Main title -->
+                        <h1 class="text-center">Account Asset Sales</h1>
+                        <t t-if="date_from">
+                            <h3 class="text-center">From <span t-esc="date_from" t-options='{"widget": "date"}'/> to <span t-esc="date_to" t-options='{"widget": "date"}'/></h3>
+                        </t>
+                        <t t-if="not date_from">
+                            <h3 class="text-center">At <span t-esc="date_to" t-options='{"widget": "date"}'/></h3>
+                        </t>
+                        <h3 class="text-center">Edition date: <span t-esc="time.strftime('%Y-%m-%d')" t-options='{"widget": "date"}'/></h3>
+
+                        <hr/>
+
+                        <h3>Currency: <span t-field="currency.name"/> <span t-field="currency.symbol"/></h3>
+
+                        <t t-foreach="assets_grouped" t-as="account_group">
+
+                            <t t-set="account" t-value="account_group[0]"/>
+
+                            <t t-set="purchase_account" t-value="0.0"/>
+                            <t t-set="amortization_account" t-value="0.0"/>
+                            <t t-set="book_account" t-value="0.0"/>
+                            <t t-set="sale_account" t-value="0.0"/>
+                            <t t-set="sale_result_account" t-value="0.0"/>
+
+                            <h3>Account: <span t-esc="account.code.rjust(8, '0')"/> <span t-field="account.name"/></h3>
+
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">Reference</th>
+                                        <th rowspan="2">Name</th>
+                                        <th rowspan="2">Purchase Date</th>
+                                        <th colspan="4">Sale/Disposal</th>
+                                        <th rowspan="2">Fiscal Book Value</th>
+                                        <th rowspan="2">Sale Value</th>
+                                        <th rowspan="2">Sale Results</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="1">Date</th>
+                                        <th colspan="1">Type</th>
+                                        <th colspan="1">Gross Value</th>
+                                        <th colspan="1">Accumulated Depreciation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="assets_grouped[account]" t-as="asset_group">
+                                        <t t-set="asset" t-value="asset_group[0]"/>
+                                        <t t-set="asset_infos" t-value="asset_group[1]"/>
+                                        <!-- Update account infos -->
+                                        <t t-set="purchase_account" t-value="purchase_account + asset_infos['purchase']"/>
+                                        <t t-set="amortization_account" t-value="amortization_account + asset_infos['amortization']"/>
+                                        <t t-set="book_account" t-value="book_account + asset_infos['book']"/>
+                                        <t t-set="sale_account" t-value="sale_account + asset_infos['sale']"/>
+                                        <t t-set="sale_result_account" t-value="sale_result_account + asset_infos['sale_result']"/>
+                                        <tr>
+                                            <td class="text-left" t-span="asset.code"/>
+                                            <td class="text-left"><span t-field="asset.name"/></td>
+                                            <td class="text-center"><span t-field="asset.purchase_date"/></td>
+                                            <td class="text-center"><span t-field="asset.sale_date"/></td>
+                                            <td class="text-left"><span t-field="asset.sale_type"/></td>
+                                            <td class="text-right" t-esc="asset_infos['purchase']"/>
+                                            <td class="text-right" t-esc="asset_infos['amortization']"/>
+                                            <td class="text-right" t-esc="asset_infos['book']"/>
+                                            <td class="text-right" t-esc="asset_infos['sale']"/>
+                                            <td class="text-right" t-esc="asset_infos['sale_result']"/>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <!-- Account total -->
+                            <t t-if="account_group_size > 1">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="5"/>
+                                            <th>Gross Value</th>
+                                            <th>Accumulated Depreciation</th>
+                                            <th>Fiscal Book Value</th>
+                                            <th>Sale Value</th>
+                                            <th>Sale Results</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5" class="text-left">
+                                                Total <span t-esc="account.code.rjust(8, '0')"/> <span t-field="account.name"/>
+                                            </td>
+                                            <td class="text-right"><span t-esc="purchase_account"/></td>
+                                            <td class="text-right"><span t-esc="amortization_account"/></td>
+                                            <td class="text-right"><span t-esc="book_account"/></td>
+                                            <td class="text-right"><span t-esc="sale_account"/></td>
+                                            <td class="text-right"><span t-esc="sale_result_account"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+
+                            <!-- Update company infos -->
+                            <t t-set="purchase_company" t-value="purchase_company + purchase_account"/>
+                            <t t-set="amortization_company" t-value="amortization_company + amortization_account"/>
+                            <t t-set="book_company" t-value="book_company + book_account"/>
+                            <t t-set="sale_company" t-value="sale_company + sale_account"/>
+                            <t t-set="sale_result_company" t-value="sale_result_company + sale_result_account"/>
+
+                        </t>
+
+                        <!-- Company total -->
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th colspan="5"/>
+                                    <th>Gross Value</th>
+                                    <th>Accumulated Depreciation</th>
+                                    <th>Fiscal Book Value</th>
+                                    <th>Sale Value</th>
+                                    <th>Sale Results</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" class="text-left">Total <span t-field="company.name"/></td>
+                                    <td class="text-right"><span t-esc="purchase_company"/></td>
+                                    <td class="text-right"><span t-esc="amortization_company"/></td>
+                                    <td class="text-right"><span t-esc="book_company"/></td>
+                                    <td class="text-right"><span t-esc="sale_company"/></td>
+                                    <td class="text-right"><span t-esc="sale_result_company"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Total: <span t-field="company.name"/></h3>
+
+                        <!-- Tax total -->
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">Sale Results</th>
+                                    <th colspan="3">VAT</th>
+                                </tr>
+                                <tr>
+                                    <th>Origin</th>
+                                    <th>Additional</th>
+                                    <th>Taxes To Pay</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-right"><span t-esc="global_result['sale_result']"/></td>
+                                    <td class="text-right"><span t-esc="global_result['tax_origin']"/></td>
+                                    <td class="text-right"><span t-esc="global_result['tax_to_pay']"/></td>
+                                    <td class="text-right"><span t-esc="global_result['tax_add']"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+
+            </t>
+        </t>
+    </template>
+
+    <report
+        id="action_report_account_asset_sales"
+        model="account.asset.sales.report"
+        string="Account asset sales"
+        report_type="qweb-pdf"
+        paperformat="paperformat_euro_landscape"
+        name="smile_account_asset.report_account_asset_sales"
+        file="smile_account_asset.report_account_asset_sales"/>
+
+</odoo>

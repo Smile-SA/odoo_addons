@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_fiscal_deductions">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-if="docs">
+
+                        <t t-set="company" t-value="docs[0].env.user.company_id"/>
+                        <t t-set="currency" t-value="company.currency_id"/>
+                        <t t-set="date_to" t-value="data['form']['date_to']"/>
+                        <t t-set="assets_grouped" t-value="group_by(docs, currency, date_to)"/>
+
+                        <t t-set="purchase_company" t-value="0.0"/>
+                        <t t-set="current_company" t-value="0.0"/>
+                        <t t-set="current_nd_company" t-value="0.0"/>
+                        <t t-set="accumulated_company" t-value="0.0"/>
+                        <t t-set="accumulated_nd_company" t-value="0.0"/>
+                        <t t-set="book_company" t-value="0.0"/>
+
+                        <!-- Main title -->
+                        <h1 class="text-center">Account Assets Fiscal Deductions</h1>
+                        <h3 class="text-center">At <span t-esc="date_to" t-options='{"widget": "date"}'/></h3>
+                        <h3 class="text-center">Edition date: <span t-esc="time.strftime('%Y-%m-%d')" t-options='{"widget": "date"}'/></h3>
+
+                        <hr/>
+
+                        <h3>Currency: <span t-field="currency.name"/> <span t-field="currency.symbol"/></h3>
+
+                        <!-- Group assets by asset account -->
+                        <t t-foreach="assets_grouped" t-as="asset_account_group">
+
+                            <t t-set="asset_account" t-value="asset_account_group[0]"/>
+
+                            <t t-set="purchase_account" t-value="0.0"/>
+                            <t t-set="current_account" t-value="0.0"/>
+                            <t t-set="current_nd_account" t-value="0.0"/>
+                            <t t-set="accumulated_account" t-value="0.0"/>
+                            <t t-set="accumulated_nd_account" t-value="0.0"/>
+                            <t t-set="book_account" t-value="0.0"/>
+
+                            <h3>Account: <span t-esc="asset_account.code.rjust(8, '0')"/> <span t-field="asset_account.name"/></h3>
+
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Name</th>
+                                        <th>CO2 Rate</th>
+                                        <th>Purchase Date</th>
+                                        <th>Sale Date</th>
+                                        <th>Gross Value</th>
+                                        <th>Year Depreciation<br/><i>Non Ded. Part</i></th>
+                                        <th>Accumulated Depreciation<br/><i>Non Ded. Part</i></th>
+                                        <th>Book Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="assets_grouped[asset_account]" t-as="asset_group">
+                                        <t t-set="asset" t-value="asset_group[0]"/>
+                                        <t t-set="asset_infos" t-value="asset_group[1]"/>
+                                        <!-- Update account infos -->
+                                        <t t-set="purchase_account" t-value="purchase_account + asset_infos['purchase']"/>
+                                        <t t-set="current_account" t-value="current_account + asset_infos['current']"/>
+                                        <t t-set="current_nd_account" t-value="current_nd_account + asset_infos['current_nd']"/>
+                                        <t t-set="accumulated_account" t-value="accumulated_account + asset_infos['accumulated']"/>
+                                        <t t-set="accumulated_nd_account" t-value="accumulated_nd_account + asset_infos['accumulated_nd']"/>
+                                        <t t-set="book_account" t-value="book_account + asset_infos['book']"/>
+                                        <tr>
+                                            <td class="text-left"><span t-field="asset.code"/></td>
+                                            <td class="text-left"><span t-field="asset.name"/></td>
+                                            <td class="text-center"><span/></td>
+                                            <td class="text-center"><span t-esc="asset_infos['purchase_date']"/></td>
+                                            <td class="text-center"><span t-esc="asset_infos['sale_date']"/></td>
+                                            <td class="text-center"><span t-esc="asset_infos['purchase']"/></td>
+                                            <td class="text-right"><span t-esc="asset_infos['current']"/><br/><i><span t-esc="asset_infos['current_nd']"/></i></td>
+                                            <td class="text-right"><span t-esc="asset_infos['accumulated']"/><br/><i><span t-esc="asset_infos['accumulated_nd']"/></i></td>
+                                            <td class="text-right"><span t-esc="asset_infos['book']"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <!-- Total infos of the asset account -->
+                            <t t-if="asset_account_group_size > 1">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="6"/>
+                                            <th>Year Depreciation<br/><i>Non Ded. Part</i></th>
+                                            <th>Accumulated Depreciation<br/><i>Non Ded. Part</i></th>
+                                            <th>Book Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5" class="text-left">Total <span t-esc="asset_account.code.rjust(8, '0')"/> <span t-field="asset_account.name"/></td>
+                                            <td class="text-right" t-esc="purchase_account"/>
+                                            <td class="text-right"><span t-esc="current_account"/><br/><i><span t-esc="current_nd_account"/></i></td>
+                                            <td class="text-right"><span t-esc="accumulated_account"/><br/><i><span t-esc="accumulated_nd_account"/></i></td>
+                                            <td class="text-right" t-esc="book_account"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+
+                            <!-- Update company infos -->
+                            <t t-set="purchase_company" t-value="purchase_company + purchase_account"/>
+                            <t t-set="current_company" t-value="current_company + current_account"/>
+                            <t t-set="current_nd_company" t-value="current_nd_company + current_nd_account"/>
+                            <t t-set="accumulated_company" t-value="accumulated_company + accumulated_account"/>
+                            <t t-set="accumulated_nd_company" t-value="accumulated_nd_company + accumulated_nd_account"/>
+                            <t t-set="book_company" t-value="book_company + book_account"/>
+                        </t>
+
+                        <!-- Main total of the document -->
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th colspan="6"/>
+                                    <th>Year Depreciation<br/><i>Non Ded. Part</i></th>
+                                    <th>Accumulated Depreciation<br/><i>Non Ded. Part</i></th>
+                                    <th>Book Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="text-left">Total <span t-field="company.name"/></td>
+                                    <td class="text-right" t-esc="purchase_company"/>
+                                    <td class="text-right"><span t-esc="current_company"/><br/><i><span t-esc="current_nd_company"/></i></td>
+                                    <td class="text-right"><span t-esc="accumulated_company"/><br/><i><span t-esc="accumulated_nd_company"/></i></td>
+                                    <td class="text-right" t-esc="book_company"/>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </t>
+                </div>
+
+            </t>
+        </t>
+    </template>
+
+    <report
+        id="action_report_fiscal_deductions"
+        model="account.asset.fiscal.deductions.report"
+        string="Fiscal deductions"
+        report_type="qweb-pdf"
+        paperformat="paperformat_euro_landscape"
+        name="smile_account_asset.report_fiscal_deductions"
+        file="smile_account_asset.report_fiscal_deductions"/>
+
+</odoo>

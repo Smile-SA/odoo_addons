@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>Record rule error</title>
+<title>Accounting Asset Management</title>
 <style type="text/css">
 
 /*
@@ -360,16 +360,32 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="record-rule-error">
-<h1 class="title">Record rule error</h1>
+<div class="document" id="accounting-asset-management">
+<h1 class="title">Accounting Asset Management</h1>
 
-<p><a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/12.0/smile_record_rule_error"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
-<p>This module allows to personalize error message raised by record rules.</p>
+<p><a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/12.0/smile_account_asset"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
+<dl class="docutils">
+<dt>This module allows to manage:</dt>
+<dd><ul class="first last simple">
+<li>Assets and categories</li>
+<li>Amortization (ie periodic depreciation) and depreciation (exceptional)</li>
+<li>Accounting and fiscal depreciation methods</li>
+<li>Assets sale/scrapping</li>
+<li>Out of heritage</li>
+<li>Asset decomposition</li>
+<li>Asset modification</li>
+<li>Reporting</li>
+<li>Transfer depreciation in amortization (French law)</li>
+</ul>
+</dd>
+</dl>
+<p><strong>WARNING:</strong>
+This module is not compatible with account_asset, so uninstall it before installing this one.</p>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#configuration" id="id1">Configuration</a></li>
-<li><a class="reference internal" href="#usage" id="id2">Usage</a></li>
+<li><a class="reference internal" href="#usage" id="id1">Usage</a></li>
+<li><a class="reference internal" href="#financial-reporting" id="id2">Financial reporting</a></li>
 <li><a class="reference internal" href="#bug-tracker" id="id3">Bug Tracker</a></li>
 <li><a class="reference internal" href="#credits" id="id4">Credits</a><ul>
 <li><a class="reference internal" href="#authors" id="id5">Authors</a></li>
@@ -379,44 +395,90 @@ ul.auto-toc {
 </li>
 </ul>
 </div>
-<div class="section" id="configuration">
-<h1><a class="toc-backref" href="#id1">Configuration</a></h1>
-<p>To configure this module, you need to:</p>
-<ol class="arabic">
-<li><p class="first">Go to new menu <strong>Settings &gt; Technical &gt; Security &gt; Record Rules</strong> and specify error message.</p>
-<blockquote>
-<div class="figure">
-<img alt="Error Message" src="Error_message.png" style="width: 850px;" />
-</div>
-</blockquote>
-</li>
-</ol>
-</div>
 <div class="section" id="usage">
-<h1><a class="toc-backref" href="#id2">Usage</a></h1>
-<ol class="arabic">
-<li><p class="first">Before configuration of error message, Odoo display this message:</p>
-<blockquote>
+<h1><a class="toc-backref" href="#id1">Usage</a></h1>
+<p><strong>Asset category configuration</strong></p>
 <div class="figure">
-<img alt="Native error message" src="native_error_message.png" style="width: 850px;" />
+<img alt="config" src="asset_categ.png" style="width: 100%;" />
 </div>
-</blockquote>
-</li>
-<li><p class="first">After configuration of error message, Odoo display this message:</p>
-<blockquote>
+<p><strong>Asset from invoice</strong></p>
 <div class="figure">
-<img alt="Improved error message" src="improved_error_message.png" style="width: 850px;" />
+<img alt="invoice" src="asset_invoice.png" style="width: 100%;" />
 </div>
-</blockquote>
+<p><strong>Asset</strong></p>
+<div class="figure">
+<img alt="invoice" src="asset.png" style="width: 100%;" />
+</div>
+</div>
+<div class="section" id="financial-reporting">
+<h1><a class="toc-backref" href="#id2">Financial reporting</a></h1>
+<p>The following part is described in French, as this is only available for France.</p>
+<p>Cinq rapports ont été implémentés :</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Bilan :</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>Retourne les immobilisations :</dt>
+<dd><ul class="first last">
+<li>acquises définitivement antérieurement à la date de fin</li>
+<li>non cédée à la date de fin ou cédée depuis le début de l'exercice  fiscal courant à la date de fin</li>
+</ul>
+</dd>
+</dl>
 </li>
-</ol>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Plus ou moins-values fiscales :</dt>
+<dd><ul class="first last">
+<li>Retourne les immobilisations cédées au cours de la période</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Situation des dotations :</dt>
+<dd><ul class="first last">
+<li>Retourne les immobilisations en service sur la période du rapport</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Déductions fiscales :</dt>
+<dd><ul class="first last">
+<li>Retourne les immobilisations bénéficiant d'une déduction fiscale en service à la date de fin ou cédée dans l'exercice de la date de fin</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Immobilisations en cours :</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>Retourne les lignes de facture associées à</dt>
+<dd><ul class="first last">
+<li>une immobilisation en cours à la date de fin</li>
+<li>aucune immobilisation mais liée à une catégorie d'immobilisation en cours</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </div>
 <div class="section" id="bug-tracker">
 <h1><a class="toc-backref" href="#id3">Bug Tracker</a></h1>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
-<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_record_rule_error%0Aversion:%2012.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_account_asset%0Aversion:%2012.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
@@ -431,7 +493,7 @@ If you spotted it first, help us smashing it by providing a detailed and welcome
 <h2><a class="toc-backref" href="#id6">Contributors</a></h2>
 <ul class="simple">
 <li>Corentin Pouhet-Brunerie</li>
-<li>Wafaa JAOUAHAR</li>
+<li>Martin Courtois</li>
 </ul>
 </div>
 <div class="section" id="maintainers">
