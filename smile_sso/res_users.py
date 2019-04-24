@@ -114,7 +114,7 @@ class ResUsers(orm.Model):
         cr = pooler.get_db(db).cursor()
         try:
             cr.autocommit(True)
-            if self._uid_cache.get(db, {}).get(uid) != passwd:
+            if self.__uid_cache.get(db, {}).get(uid) != passwd:
                 cr.execute("SELECT u.id, u.password FROM res_users u LEFT JOIN res_users_expiry e ON u.id = e.user_id "
                            "WHERE u.id=%s AND u.password=%s AND u.active=TRUE "
                            "AND (e.expiry_date IS NULL OR e.expiry_date>=now() AT TIME ZONE 'UTC') "
@@ -125,7 +125,7 @@ class ResUsers(orm.Model):
                     _logger.error(error_msg)
                     # auth_ldap module won't be able to log in if password entered doesn't match the user password in db.
                     # raise OpenERPException(error_msg, ('', '', ''))
-                self._uid_cache.setdefault(db, {}).update({uid: passwd})
+                self.__uid_cache.setdefault(db, {}).update({uid: passwd})
             expiry_date = self.pool.get('res.users.expiry').get_expiry_date()
             cr.execute("SELECT u.login, e.login, u.sso FROM res_users u LEFT JOIN res_users_expiry e ON u.id = e.user_id "
                        "WHERE u.id=%s LIMIT 1", (uid,))
