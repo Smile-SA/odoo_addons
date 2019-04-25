@@ -89,5 +89,7 @@
       <field name="view_mode">tree,form</field>
     </record>
 
+    <menuitem id="menu_partner_types" parent="contacts.res_partner_menu_config" sequence="2" action="action_partner_types"/>
+
   </data>
 </odoo>
