@@ -12,9 +12,9 @@
                     <div>
                         <field name="data_mask" widget="ace"
                             attrs="{'invisible': [('ttype', 'in', ('many2one', 'many2many', 'one2many'))]}"/>
-                        <button name="toggle_data_mask_locked" type="object" icon="fa-unlock"
+                        <button name="toggle_data_mask_locked" type="object" icon="fa-unlock" aria-label="Unlock" title="Unlock"
                             attrs="{'invisible': ['|', ('data_mask_locked', '=', True), ('ttype', 'in', ('many2one', 'many2many', 'one2many'))]}"/>
-                        <button name="toggle_data_mask_locked" type="object" icon="fa-lock"
+                        <button name="toggle_data_mask_locked" type="object" icon="fa-lock" aria-label="Lock" title="Lock"
                             attrs="{'invisible': ['|', ('data_mask_locked', '=', False), ('ttype', 'in', ('many2one', 'many2many', 'one2many'))]}"/>
                         <field name="data_mask_locked" invisible="1"/>
                     </div>
