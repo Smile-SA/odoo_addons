@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Top menu item -->
+        <menuitem name="Documents" id="menu_document" groups="base.group_system" sequence="116"/>
+        <menuitem name="Configuration" id="menu_document_configuration" parent="menu_document" sequence="50"/>
+        <menuitem name="Collaborative Content" id="menu_document2" parent="menu_document"/>
+        <menuitem name="Document Management" id="menu_document_management_config" parent="menu_document" sequence="10"/>
+
+        <menuitem action="action_document" id="menu_document_management_documents" parent="menu_document_management_config"/>
+        <menuitem action="action_document_type" id="menu_document_type" parent="menu_document_configuration" sequence="0"/>
+
+
+    </data>
+</odoo>
