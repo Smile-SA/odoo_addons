@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem name="Checklists" id="menu_checklists" sequence="90" parent="base.menu_custom"/>
+    <menuitem action="action_checklist" id="menu_checklist_checklist" parent="menu_checklists" sequence="80"/>
+
+</odoo>
