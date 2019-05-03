@@ -46,8 +46,8 @@ class ResUsers(models.Model):
     users_count = fields.Integer(compute='_compute_users_count')
 
     _sql_constraints = [
-        ('active_admin_check', 'CHECK (id = 1 AND active = TRUE OR id <> 1)',
-         'The user with id = 1 must always be active!'),
+        ('active_admin_check', 'CHECK (id = 2 AND active = TRUE OR id <> 2)',
+         'The user with id = 2 must always be active!'),
         ('profile_without_profile_id',
          'CHECK( (is_user_profile = TRUE AND user_profile_id IS NULL) OR '
          'is_user_profile = FALSE )',
