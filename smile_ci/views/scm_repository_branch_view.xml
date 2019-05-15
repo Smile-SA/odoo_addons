@@ -80,6 +80,11 @@
           </div>
           <field name="last_build_result" attrs="{'invisible': [('use_in_ci', '=', False)]}"/>
           <field name="nextcall" attrs="{'invisible': [('use_in_ci', '=', False)]}"/>
+          <label for="build_timeout" attrs="{'invisible': [('use_in_ci', '=', False)]}"/>
+          <div attrs="{'invisible': [('use_in_ci', '=', False)]}">
+            <field name="build_timeout" class="oe_inline"/>
+            <label string="minutes" class="oe_inline"/>
+          </div>
           <field name="running_build_id" invisible="1"/>
         </field>
         <button name="pull" position="attributes">

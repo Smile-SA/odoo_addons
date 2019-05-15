@@ -80,5 +80,18 @@
       <field eval="'()'" name="args"/>
     </record>
 
+    <!-- Auto-kill testing builds -->
+    <record id="ir_cron_kill_testing_build_after_timeout_action" model="ir.cron">
+      <field name="name">Auto kill testing builds</field>
+      <field name="user_id" ref="base.user_root"/>
+      <field name="interval_number">5</field>
+      <field name="interval_type">minutes</field>
+      <field name="numbercall">-1</field>
+      <field eval="False" name="doall"/>
+      <field eval="'scm.repository.branch.build'" name="model"/>
+      <field eval="'auto_kill_testing_build'" name="function"/>
+      <field eval="'()'" name="args"/>
+    </record>
+
   </data>
 </odoo>

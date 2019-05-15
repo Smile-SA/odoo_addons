@@ -138,6 +138,7 @@ class Branch(models.Model):
     id = fields.Integer(readonly=True)
     # Because inherits docker.image
     name = fields.Char(related='repository_id.name', readonly=True)
+    build_timeout = fields.Integer(default=60*3, help="in minutes")
     build_ids = fields.One2many(
         'scm.repository.branch.build', 'branch_id', 'Builds',
         readonly=True, copy=False)

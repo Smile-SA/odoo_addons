@@ -2,6 +2,7 @@
 
 import base64
 import csv
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from distutils.version import LooseVersion
 from docker.errors import APIError
@@ -397,8 +398,7 @@ class Build(models.Model):
         try:
             self._create_configfile()
             self.start_container()
-            # Ensure that Odoo is launched before calling services
-            time.sleep(5)
+            self._wait_odoo_module_launching()
             self._check_quality_code()
             self._count_lines_of_code()
             self._start_coverage()
@@ -416,6 +416,7 @@ class Build(models.Model):
                     if isinstance(module, string_types):
                         module = [module]
                     self._install_modules(module)
+                    self._wait_odoo_module_launching()
                     self._run_tests()
             else:  # E.g.: modules auto_install
                 self._run_tests()
@@ -429,6 +430,12 @@ class Build(models.Model):
             self._set_to_running()
             new_thread = Thread(target=self._check_running)
             new_thread.start()
+
+    @api.one
+    def _wait_odoo_module_launching(self):
+        """ Ensure that Odoo is launched before calling services
+        """
+        time.sleep(5)
 
     @api.one
     def _set_to_failed(self, e):
@@ -1008,6 +1015,16 @@ class Build(models.Model):
                   "if its container has not been started!"))
         self._kill_container(ignore_exceptions=False)
         return True
+
+    @api.model
+    def auto_kill_testing_build(self):
+        testing_builds = self.search([('state', '=', 'testing')])
+        for build in testing_builds:
+            min_date = fields.Datetime.to_string(
+                fields.Datetime.from_string(fields.Datetime.now()
+                ) - timedelta(minutes=build.branch_id.build_timeout))
+            if build.date_start < min_date:
+                build.kill_container()
 
     @api.multi
     def keep_alive(self):
