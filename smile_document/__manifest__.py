@@ -22,7 +22,7 @@
         'views/menus.xml',
         'security/document_security.xml',
         'security/ir.model.access.csv',
-        'data/alert_view.xml',
+        'data/ir_cron.xml',
     ],
     'demo_xml': [],
     'test': [],

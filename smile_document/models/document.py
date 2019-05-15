@@ -16,6 +16,7 @@ STATUS = [('valid', 'Valid'),
 
 class IrAttachementType(models.Model):
     _name = 'ir.attachment.type'
+    _description = "Document type"
 
     name = fields.Char(required=True, translate=True)
 
@@ -43,37 +44,46 @@ class IrAttachement(models.Model):
     _name = 'ir.attachment'
     _inherit = 'ir.attachment'
 
-    document_type_id = fields.Many2one('ir.attachment.type', string="Document Type")
+    document_type_id = fields.Many2one(
+        'ir.attachment.type', string="Document Type")
     document_date = fields.Date(default=lambda self: fields.Date.today())
-    expiry_date = fields.Datetime()
+    expiry_date = fields.Date()
     archived = fields.Boolean()
-    status = fields.Selection(STATUS, compute='_compute_document_status')
+    status = fields.Selection(STATUS, readonly=True)
 
     @api.multi
     def _compute_document_status(self):
+        today = fields.Date.today()
         for doc in self:
             status = 'valid'
-            today = fields.Datetime.now()
-            if doc.expiry_date:
-                if doc.expiry_date >= today and not doc.archived:
+            if doc.expiry_date and not doc.archived:
+                if doc.expiry_date >= today:
                     status = 'valid'
-                elif doc.expiry_date < today and not doc.archived:
+                elif doc.expiry_date < today:
                     status = 'expired'
             if doc.archived:
                 status = 'archived'
-                if doc.expiry_date > today:
+                if doc.expiry_date and doc.expiry_date > today:
                     doc.expiry_date = today
             if doc.status != status:
                 doc.status = status
 
     @api.model
     def create(self, values):
-        res = super(IrAttachement, self).create(values)
-        res._compute_document_status()
-        return res
+        record = super(IrAttachement, self).create(values)
+        record._compute_document_status()
+        return record
 
     @api.multi
     def write(self, values):
         res = super(IrAttachement, self).write(values)
         self._compute_document_status()
         return res
+
+    @api.model
+    def update_document_status(self):
+        today = fields.Date.today()
+        self.search([
+            ('expiry_date', '<', today),
+            ('archived', '=', False),
+        ])._compute_document_status()

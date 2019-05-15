@@ -97,6 +97,7 @@ msgstr "Gestion documentaire"
 #. module: smile_document
 #: model:ir.model.fields,field_description:smile_document.field_ir_attachment__document_type_id
 #: model_terms:ir.ui.view,arch_db:smile_document.view_document_search
+#: model:ir.model,name:smile_document.model_ir_attachment_type
 msgid "Document Type"
 msgstr "Types des documents"
 
@@ -225,11 +226,6 @@ msgstr "Valide"
 #: model_terms:ir.ui.view,arch_db:smile_document.view_document_tree
 msgid "Write Date"
 msgstr "Date de modification"
-
-#. module: smile_document
-#: model:ir.model,name:smile_document.model_ir_attachment_type
-msgid "ir.attachment.type"
-msgstr "ir.attachment.type"
 
 #. module: smile_document
 #: model_terms:ir.ui.view,arch_db:smile_document.view_attachment_form_inherit
