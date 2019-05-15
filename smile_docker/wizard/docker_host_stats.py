@@ -37,28 +37,30 @@ class DockerHostStats(models.TransientModel):
                 try:
                     pre_stats = stats_gen.next()
                     stats = stats_gen.next()
-                except Exception:
-                    continue
-                self.create({
-                    'docker_host_id': docker_host.id,
-                    'container': container,
-                    'cpu_usage': (
+                    system_cpu_usage = stats['cpu_stats'].get(
+                        'system_cpu_usage', 0.0) - pre_stats['cpu_stats'].get(
+                            'system_cpu_usage', 0.0)
+                    cpu_usage = system_cpu_usage and (
                         stats['cpu_stats']['cpu_usage']['total_usage'] -
                         pre_stats['cpu_stats']['cpu_usage']['total_usage']
-                    ) * 100.0 / (
-                        stats['cpu_stats'].get('system_cpu_usage', 0.0) -
-                        pre_stats['cpu_stats'].get('system_cpu_usage', 0.0)),
-                    'mem_usage': compute_MiB(stats['memory_stats']['usage']),
-                    'mem_limit': compute_MiB(stats['memory_stats']['limit']),
-                    'mem_percent': stats['memory_stats']['usage'] *
-                    100.0 / memory_total,
-                    'mem_percent_max': stats['memory_stats']['max_usage'] *
-                    100.0 / memory_total,
-                    'network_input': compute_MiB(
-                        sum(network['rx_bytes']
-                            for network in stats['networks'].values())),
-                    'network_output': compute_MiB(
-                        sum(network['tx_bytes']
-                            for network in stats['networks'].values())),
-                })
+                    ) * 100.0 / system_cpu_usage
+                    self.create({
+                        'docker_host_id': docker_host.id,
+                        'container': container,
+                        'cpu_usage': cpu_usage,
+                        'mem_usage': compute_MiB(stats['memory_stats']['usage']),
+                        'mem_limit': compute_MiB(stats['memory_stats']['limit']),
+                        'mem_percent': stats['memory_stats']['usage'] *
+                        100.0 / memory_total,
+                        'mem_percent_max': stats['memory_stats']['max_usage'] *
+                        100.0 / memory_total,
+                        'network_input': compute_MiB(
+                            sum(network['rx_bytes']
+                                for network in stats['networks'].values())),
+                        'network_output': compute_MiB(
+                            sum(network['tx_bytes']
+                                for network in stats['networks'].values())),
+                    })
+                except Exception:
+                    continue
         return True
