@@ -50,23 +50,42 @@ class ReportAccountAssetsInProgress(models.AbstractModel):
         form = data['form']
         date_from = form['date_from']
         date_to = form['date_to']
+        invoice_states = self._get_invoice_states()
         domain = [
             ('asset_category_id.asset_in_progress', '=', True),
-            '|',
-            '&', '&',
-            ('invoice_id.date', '!=', False),
-            ('invoice_id.date', '>=', date_from),
-            ('invoice_id.date', '<=', date_to),
-            '&', '&',
-            ('invoice_id.date', '=', False),
-            ('invoice_id.date_invoice', '>=', date_from),
-            ('invoice_id.date_invoice', '<=', date_to),
+            ('invoice_id.state', 'in', invoice_states),
         ]
+        if date_from:
+            domain += [
+                '|',
+                '&', '&',
+                ('invoice_id.date', '!=', False),
+                ('invoice_id.date', '>=', date_from),
+                ('invoice_id.date', '<=', date_to),
+                '&', '&',
+                ('invoice_id.date', '=', False),
+                ('invoice_id.date_invoice', '>=', date_from),
+                ('invoice_id.date_invoice', '<=', date_to),
+            ]
+        else:
+            domain += [
+                '|',
+                '&',
+                ('invoice_id.date', '!=', False),
+                ('invoice_id.date', '<=', date_to),
+                '&',
+                ('invoice_id.date', '=', False),
+                ('invoice_id.date_invoice', '<=', date_to),
+            ]
         if form['partner_ids']:
             domain += [('invoice_id.partner_id', 'in', form['partner_ids'])]
         if form['account_ids']:
             domain += [('account_id', 'in', form['account_ids'])]
         return domain
+
+    @api.model
+    def _get_invoice_states(self):
+        return ['open', 'paid']
 
     @api.model
     def group_by(self, invoice_lines, currency, date_to):
