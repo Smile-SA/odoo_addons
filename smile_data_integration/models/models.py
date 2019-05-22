@@ -3,7 +3,7 @@
 import logging
 import sys
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from .. import tools
 

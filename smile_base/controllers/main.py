@@ -51,7 +51,7 @@ class Download(http.Controller):
             self.ensure_one()
             return {
                 'type': 'ir.actions.act_url',
-                'url': '/download/saveas?model=%(model)s&record_id=%(record_id)s&method=%(method)s&filename=%(filename)s' % {
+                'url': '/download/saveas?model=%(model)s&record_id=%(record_id)s&method=%(method)s&filename=%(filename)s' % {# noqa
                     'filename': 'stock_infos.txt',
                     'model': self._name,
                     'record_id': self.id,

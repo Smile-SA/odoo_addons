@@ -27,7 +27,8 @@ from odoo import api
 def checklist_fields_view_get_decorator():
     @api.model
     def checklist_wrapper(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = checklist_wrapper.origin(self, view_id, view_type, toolbar, submenu)
+        res = checklist_wrapper.origin(
+            self, view_id, view_type, toolbar, submenu)
         checklist_obj = self.env['checklist']
         if hasattr(checklist_obj, '_get_checklist_by_model'):
             checklist_id = checklist_obj._get_checklist_by_model().get(self._name)
@@ -49,12 +50,14 @@ def checklist_fields_view_get_decorator():
                         """<field name="total_progress_rate" readonly="1" widget="progressbar"/>""",
                         arch[idx:],
                     ])
-                    res['fields'].update(self.fields_get(['total_progress_rate']))
+                    res['fields'].update(
+                        self.fields_get(['total_progress_rate']))
                 elif view_type == 'form':
                     root = etree.XML(res['arch'])
                     button_box = root.find(".//div[@class='oe_button_box']")
                     if button_box is None:
-                        button_box = etree.Element('div', attrib={'class': 'oe_button_box'})
+                        button_box = etree.Element(
+                            'div', attrib={'class': 'oe_button_box'})
                         sheet = root.find("sheet")
                         if not sheet:
                             sheet = etree.Element('sheet')
@@ -68,7 +71,8 @@ def checklist_fields_view_get_decorator():
                         <field string="%s" name="total_progress_rate" widget="percentpie"/>
                         <field name="checklist_task_instance_ids" invisible="1"/>
                     </button>""" % (checklist['name'],)))
-                    res['arch'], res['fields'] = self.env['ir.ui.view'].postprocess_and_fields(self._name, root, view_id)
+                    res['arch'], res['fields'] = self.env['ir.ui.view'].postprocess_and_fields(
+                        self._name, root, view_id)
         return res
     return checklist_wrapper
 

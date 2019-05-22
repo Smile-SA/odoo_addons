@@ -42,14 +42,17 @@ class MailTemplate(models.Model):
 
         # try to load the template
         try:
-            mako_env = mako_safe_template_env if self.env.context.get('safe') else mako_template_env
+            mako_env = mako_safe_template_env if self.env.context.get(
+                'safe') else mako_template_env
             template = mako_env.from_string(tools.ustr(template_txt))
         except Exception:
-            _logger.info("Failed to load template %r", template_txt, exc_info=True)
+            _logger.info("Failed to load template %r",
+                         template_txt, exc_info=True)
             return multi_mode and results or results[res_ids[0]]
 
         # prepare template variables
-        records = self.env[model].browse(list(filter(None, res_ids)))  # filter to avoid browsing [None]
+        # filter to avoid browsing [None]
+        records = self.env[model].browse(list(filter(None, res_ids)))
         res_to_rec = dict.fromkeys(res_ids, None)
         for record in records:
             res_to_rec[record.id] = record
@@ -57,7 +60,8 @@ class MailTemplate(models.Model):
             'format_date': lambda date, format=False, context=self._context: format_date(self.env, date, format),
             'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.env, dt, tz, format),
             'format_amount': lambda amount, currency, context=self._context: format_amount(self.env, amount, currency),
-            'format_numeric': lambda value, column, options=None: self.format_numeric(value, column, options),  # Added by Smile
+            # Added by Smile
+            'format_numeric': lambda value, column, options=None: self.format_numeric(value, column, options),
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
         }
@@ -66,8 +70,10 @@ class MailTemplate(models.Model):
             try:
                 render_result = template.render(variables)
             except Exception:
-                _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
-                raise UserError(_("Failed to render template %r using values %r") % (template, variables))
+                _logger.info("Failed to render template %r using values %r" % (
+                    template, variables), exc_info=True)
+                raise UserError(
+                    _("Failed to render template %r using values %r") % (template, variables))
             if render_result == u"False":
                 render_result = u""
             results[res_id] = render_result

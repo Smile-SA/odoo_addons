@@ -29,7 +29,8 @@ class ResUsers(models.Model):
     @api.depends('groups_id')
     def _compute_share(self):
         for user in self:
-            user.share = user.is_user_profile or not user.has_group('base.group_user')
+            user.share = user.is_user_profile or not user.has_group(
+                'base.group_user')
 
     @api.model
     def _get_default_field_ids(self):
@@ -40,9 +41,11 @@ class ResUsers(models.Model):
 
     is_user_profile = fields.Boolean('Is User Profile', oldname='user_profile')
     user_profile_id = fields.Many2one('res.users', 'User Profile',
-                                      domain=[('id', '!=', SUPERUSER_ID), ('is_user_profile', '=', True)],
+                                      domain=[('id', '!=', SUPERUSER_ID),
+                                              ('is_user_profile', '=', True)],
                                       context={'active_test': False})
-    user_ids = fields.One2many('res.users', 'user_profile_id', 'Users', domain=[('is_user_profile', '=', False)])
+    user_ids = fields.One2many('res.users', 'user_profile_id', 'Users', domain=[
+                               ('is_user_profile', '=', False)])
     field_ids = fields.Many2many('ir.model.fields', 'res_users_fields_rel', 'user_id', 'field_id', 'Fields to update',
                                  domain=[
                                      ('model', 'in', ('res.users', 'res.partner')),
@@ -50,8 +53,9 @@ class ResUsers(models.Model):
                                      ('name', 'not in', ('is_user_profile', 'user_profile_id',
                                                          'user_ids', 'field_ids', 'view'))],
                                  default=_get_default_field_ids)
-    is_update_users = fields.Boolean(string="Update users after creation", default=lambda *a: True,
-                                     help="If non checked, users associated to this profile will not be updated after creation")
+    is_update_users = fields.Boolean(
+        string="Update users after creation", default=lambda *a: True,
+        help="If non checked, users associated to this profile will not be updated after creation")
 
     _sql_constraints = [
         ('active_admin_check', 'CHECK (id = 1 AND active = TRUE OR id <> 1)',
@@ -66,7 +70,8 @@ class ResUsers(models.Model):
     def _check_user_profile_id(self):
         admin = self.env.ref('base.user_root')
         if self.user_profile_id == admin:
-            raise ValidationError(_("You can't use %s as user profile !") % admin.name)
+            raise ValidationError(
+                _("You can't use %s as user profile !") % admin.name)
 
     @api.onchange('is_user_profile')
     def onchange_user_profile(self):
@@ -79,7 +84,8 @@ class ResUsers(models.Model):
         if not self:
             return
         if len(self.mapped('user_profile_id')) != 1:
-            raise UserError(_("_update_from_profile accepts only users linked to a same profile"))
+            raise UserError(
+                _("_update_from_profile accepts only users linked to a same profile"))
         user_profile = self[0].user_profile_id
         if not fields:
             fields = user_profile.field_ids.mapped('name')
@@ -95,7 +101,8 @@ class ResUsers(models.Model):
                 elif field_type == 'many2many':
                     vals[field] = [(6, 0, value.ids)]
                 elif field_type == 'one2many':
-                    raise UserError(_("_update_from_profile doesn't manage fields.One2many"))
+                    raise UserError(
+                        _("_update_from_profile doesn't manage fields.One2many"))
                 else:
                     vals[field] = value
             if vals:
@@ -104,7 +111,8 @@ class ResUsers(models.Model):
     @api.multi
     def _update_users_linked_to_profile(self, fields=None):
         for user_profile in self.filtered(lambda user: user.is_user_profile and user.is_update_users):
-            user_profile.with_context(active_test=False).mapped('user_ids')._update_from_profile(fields)
+            user_profile.with_context(active_test=False).mapped(
+                'user_ids')._update_from_profile(fields)
 
     @api.model
     def create(self, vals):
@@ -116,7 +124,8 @@ class ResUsers(models.Model):
     @api.multi
     def write(self, vals):
         if vals.get('user_profile_id'):
-            users_to_update = self.filtered(lambda user: user.user_profile_id.id != vals['user_profile_id'])
+            users_to_update = self.filtered(
+                lambda user: user.user_profile_id.id != vals['user_profile_id'])
         vals = self._remove_reified_groups(vals)
         res = super(ResUsers, self).write(vals)
         if vals.get('user_profile_id'):

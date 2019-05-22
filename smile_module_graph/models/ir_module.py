@@ -79,7 +79,7 @@ class IrModuleModule(models.Model):
                                               for d in dependencies])
         if states:
             return dependency_modules and \
-                   dependency_modules.filtered(lambda a: a.state in states)
+                dependency_modules.filtered(lambda a: a.state in states)
         return dependency_modules
 
     @api.multi

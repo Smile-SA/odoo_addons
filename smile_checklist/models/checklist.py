@@ -216,7 +216,8 @@ class Checklist(models.Model):
                 mandatory_inst = [
                     i for i in record.checklist_task_instance_ids if i.mandatory]
                 if mandatory_inst:
-                    total_progress_rate_mandatory = sum(i.progress_rate for i in record.checklist_task_instance_ids if i.mandatory) \
+                    total_progress_rate_mandatory = sum(
+                        i.progress_rate for i in record.checklist_task_instance_ids if i.mandatory) \
                         / len(mandatory_inst)
                 vals['total_progress_rate_mandatory'] = total_progress_rate_mandatory
                 vals['active'] = total_progress_rate_mandatory == 100.0

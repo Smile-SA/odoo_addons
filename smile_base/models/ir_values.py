@@ -32,7 +32,8 @@ class IrValues(models.Model):
     @api.one
     @api.depends('window_action_ids')
     def _get_window_actions(self):
-        self.window_actions = ', %s, ' % ', '.join(map(str, self.window_action_ids.ids))
+        self.window_actions = ', %s, ' % ', '.join(
+            map(str, self.window_action_ids.ids))
 
     sequence = fields.Integer('Sequence')
     window_action_ids = fields.Many2many('ir.actions.act_window', 'ir_values_window_actions_rel',
@@ -57,7 +58,8 @@ class IrValues(models.Model):
                               OR v.window_actions = ', , '
                               OR v.window_actions like %s)
                     ORDER BY v.sequence, v.id"""
-        cr.execute(query, ('action', action_slot, model, res_id or None, '%%, %s, %%' % context.get('act_window_id', '')))
+        cr.execute(query, ('action', action_slot, model, res_id or None,
+                           '%%, %s, %%' % context.get('act_window_id', '')))
         ################
         results = {}
         for action in cr.dictfetchall():
@@ -70,7 +72,8 @@ class IrValues(models.Model):
                       if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
-                action_def = self.env[action_model].browse(int(action_id)).read(fields)
+                action_def = self.env[action_model].browse(
+                    int(action_id)).read(fields)
                 if action_def:
                     if isinstance(action_def, list):
                         action_def = action_def[0]
@@ -82,10 +85,12 @@ class IrValues(models.Model):
                                        (tuple(groups), uid))
                             if not cr.fetchone():
                                 if action['name'] == 'Menuitem':
-                                    raise UserError(_('You do not have the permission to perform this operation !!!'))
+                                    raise UserError(
+                                        _('You do not have the permission to perform this operation !!!'))
                                 continue
                 # keep only the first action registered for each action name
-                results[action['name']] = (action['id'], action['name'], action_def)
+                results[action['name']] = (
+                    action['id'], action['name'], action_def)
             except (except_orm, UserError):
                 continue
         return sorted(results.values())

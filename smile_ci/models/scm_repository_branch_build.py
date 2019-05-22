@@ -1021,8 +1021,8 @@ class Build(models.Model):
         testing_builds = self.search([('state', '=', 'testing')])
         for build in testing_builds:
             min_date = fields.Datetime.to_string(
-                fields.Datetime.from_string(fields.Datetime.now()
-                ) - timedelta(minutes=build.branch_id.build_timeout))
+                fields.Datetime.from_string(fields.Datetime.now()) - 
+                timedelta(minutes=build.branch_id.build_timeout))
             if build.date_start < min_date:
                 build.kill_container()
 
