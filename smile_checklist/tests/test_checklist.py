@@ -10,7 +10,7 @@ class TestChecklist(TransactionCase):
     def test_create_cron(self):
         """
             This test relies on demo checklist smile_checklist.cron_checklist.
-            The checklist activates crons only if the number of calls 
+            The checklist activates crons only if the number of calls
                 is not null.
             I create a cron with null number of calls.
             I check that the cron is inactive.

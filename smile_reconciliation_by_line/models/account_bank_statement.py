@@ -14,9 +14,12 @@ class AccountBankStatementLine(models.Model):
             Button to reconcile one bank statement line
         """
         self.ensure_one()
-        self = self.with_context(statement_ids=[self.statement_id.id], reconciliation_by_line_id=self.id)
+        self = self.with_context(
+            statement_ids=[self.statement_id.id],
+            reconciliation_by_line_id=self.id)
         return {
-            'name': _('Bank statement reconciliation for %s') % (self.partner_id.name or self.name),
+            'name': _('Bank statement reconciliation for %s') % (
+                self.partner_id.name or self.name),
             'type': 'ir.actions.client',
             'tag': 'bank_statement_reconciliation_byline_view',
             'context': self._context,
