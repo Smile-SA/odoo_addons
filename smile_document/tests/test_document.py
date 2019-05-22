@@ -24,7 +24,8 @@ class Testdocument(common.TransactionCase):
         today = fields.Datetime.now()
         # Create Valid Doc
         d1 = today + relativedelta(months=+2)
-        vals1 = {'name': 'Demo1', 'document_type_id': docType1.id, 'expiry_date': d1}
+        vals1 = {'name': 'Demo1',
+                 'document_type_id': docType1.id, 'expiry_date': d1}
         doc1 = self.ir_attachment.create(vals1)
         self.assertEquals('valid', doc1.status)
         # Archive Doc
@@ -32,7 +33,8 @@ class Testdocument(common.TransactionCase):
         self.assertEquals('archived', doc1.status)
         # Create Expired Doc
         d2 = today + relativedelta(days=-1)
-        vals2 = {'name': 'Demo2', 'document_type_id': docType1.id, 'expiry_date': d2}
+        vals2 = {'name': 'Demo2',
+                 'document_type_id': docType1.id, 'expiry_date': d2}
         doc2 = self.ir_attachment.create(vals2)
         self.assertEquals('expired', doc2.status)
 
@@ -42,7 +44,9 @@ class Testdocument(common.TransactionCase):
             I check that I can't unlink document type.
             I check that I can force to unlink document type.
         """
-        document_type = self.ir_attachment_type.create({'name': 'Doc Type Test 1'})
-        with self.assertRaisesRegexp(UserError, 'Attention : You cannot unlink document type!'):
+        document_type = self.ir_attachment_type.create(
+            {'name': 'Doc Type Test 1'})
+        with self.assertRaisesRegexp(
+                UserError, 'Attention : You cannot unlink document type!'):
             document_type.unlink()
         document_type.with_context(force_unlink_doc_type=True).unlink()

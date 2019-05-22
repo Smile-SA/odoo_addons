@@ -28,11 +28,14 @@ class Testdocumentaccess(TransactionCase):
         self.access_obj = self.env['ir.model.access']
 
         # Creation of a doc type
-        self.new_doc_type = self.doc_type_obj.create({'name': 'New Doc Type'})
+        self.new_doc_type = self.doc_type_obj.create(
+            {'name': 'New Doc Type'})
 
         # Creation of groups
-        self.group_can_create = self.group_obj.create({'name': 'Group can create'})
-        self.group_cannot_create = self.group_obj.create({'name': 'Group cannot create'})
+        self.group_can_create = self.group_obj.create(
+            {'name': 'Group can create'})
+        self.group_cannot_create = self.group_obj.create(
+            {'name': 'Group cannot create'})
 
         # Creation of access rights
         self.ir_model_access_test1 = self.env['ir.model.access'].create({
@@ -93,47 +96,55 @@ class Testdocumentaccess(TransactionCase):
             'name': 'Doc Test 1',
             'document_type_id': self.new_doc_type.id,
             'document_date': self.date_today,
-            'expiry_date': self.date_today.replace(year=self.date_today.year + 3)
+            'expiry_date': self.date_today.replace(
+                year=self.date_today.year + 3)
         })
 
         self.doc_values2 = ({
             'name': 'Doc Test 2',
             'document_type_id': self.new_doc_type.id,
             'document_date': self.date_today,
-            'expiry_date': self.date_today.replace(year=self.date_today.year + 3)
+            'expiry_date': self.date_today.replace(
+                year=self.date_today.year + 3)
         })
 
         self.doc_values3 = ({
             'name': 'Doc Test 3',
             'document_type_id': self.new_doc_type.id,
             'document_date': self.date_today,
-            'expiry_date': self.date_today.replace(year=self.date_today.year + 3)
+            'expiry_date': self.date_today.replace(
+                year=self.date_today.year + 3)
         })
 
         self.doc_3 = self.doc_obj.create(self.doc_values3)
 
     def test_create_document_acess(self):
-        """
-            We try to create a document with two different user with two different rights
-            One with perm_create = True, the other one with perm_create = False
-            The first one should be created while the second should fail
+        """ We try to create a document with two different user
+            with two different rights.
+        One with perm_create = True, the other one with perm_create = False.
+        The first one should be created while the second should fail.
         """
         if self.ir_model_access_test1.perm_create:
-            res_create_success = self.doc_obj.sudo(self.user_can_create).create(self.doc_values)
+            res_create_success = self.doc_obj.sudo(
+                self.user_can_create).create(self.doc_values)
             self.assertTrue(res_create_success)
 
-        if self.ir_model_access_test2.perm_write is False and self.ir_model_access_test2.perm_create is False:
+        if self.ir_model_access_test2.perm_write is False and \
+                self.ir_model_access_test2.perm_create is False:
             with self.assertRaises(AccessError):
-                self.doc_obj.sudo(self.user_cannot_create).create(self.doc_values2)
+                self.doc_obj.sudo(self.user_cannot_create).create(
+                    self.doc_values2)
 
     def test_write_document_access(self):
-        """
-            We try to create a document with two different user with two different rights
-            One with perm_write = True, the other one with perm_write = False
-            The first one should be created while the second should fail
+        """ We try to create a document with two different user
+            with two different rights.
+        One with perm_write = True, the other one with perm_write = False.
+        The first one should be created while the second should fail.
         """
         if self.ir_model_access_test1.perm_write:
-            self.assertTrue(self.doc_obj.browse(self.doc_3.id).sudo(self.user_can_create).write({'name': 'Doc 3 renamed success'}))
+            self.assertTrue(self.doc_obj.browse(self.doc_3.id).sudo(
+                self.user_can_create).write({'name': 'Doc 3 renamed success'}))
 
         with self.assertRaises(except_orm):
-            self.doc_obj.browse(self.doc_3.id).sudo(self.user_cannot_create).write({'name': 'Doc 3 renamed fail'})
+            self.doc_obj.browse(self.doc_3.id).sudo(
+                self.user_cannot_create).write({'name': 'Doc 3 renamed fail'})

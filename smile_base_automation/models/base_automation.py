@@ -141,7 +141,7 @@ class BaseAutomation(models.Model):
                 search(domain)
         return records
 
-    def _process(self, records):
+    def _process(self, records, domain_post=None):
         logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
         pid = os.getpid()
         params = [pid, self.name, self.model_id.model, tuple(records.ids)]
@@ -163,7 +163,7 @@ class BaseAutomation(models.Model):
                 logger.time_info('[%s] Successful action: %s - '
                                  'Records: %s%s' % tuple(params))
             else:
-                super(BaseAutomation, self)._process(records)
+                super(BaseAutomation, self)._process(records, domain_post)
                 # Update execution counters
                 if self.max_executions:
                     self._update_execution_counter(records)

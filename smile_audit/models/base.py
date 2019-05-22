@@ -3,7 +3,6 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 
 import datetime
-import inspect
 
 from odoo import api, fields, models
 from odoo.tools.safe_eval import safe_eval

@@ -16,8 +16,9 @@ class Blog(models.Model):
 
     @api.multi
     def all_tags(self, min_limit=1):
-        """
-        we have rewritten the native method to add the notion of group filtering
+        """ We have rewritten the native method
+        to add the notion of group filtering
+
         :param min_limit:
         :return:
         """

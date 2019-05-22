@@ -7,7 +7,6 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from dateutil.relativedelta import relativedelta
 
 STATUS = [('valid', 'Valid'),
           ('expired', 'Expired'),
@@ -21,7 +20,7 @@ class IrAttachementType(models.Model):
     name = fields.Char(required=True, translate=True)
 
     _sql_constraints = [
-        ('unique_name', 'UNIQUE (name)', _('Document type name must be unique')),
+        ('unique_name', 'UNIQUE (name)', 'Document type name must be unique'),
     ]
 
     @api.multi
