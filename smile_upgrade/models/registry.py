@@ -60,6 +60,8 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                                  time.time() - t0)
                 else:
                     _logger.info('no upgrade to load')
+            # Remove base from 'init', to avoid update of the module
+            config['init'].pop('base', None)
             registry = native_new(db_name, force_demo, status, update_module)
             if upgrades and config.get('stop_after_upgrades'):
                 _logger.info('Stopping Odoo server')
