@@ -176,5 +176,11 @@ class SmileScript(models.Model):
     @api.multi
     def _run_xml(self):
         self.ensure_one()
-        convert_xml_import(self._cr, __package__, StringIO(self.code))
+
+        # Patch StringIO object with missing name attribute
+        # The name attribute is required by the odoo function convert_xml_import
+        stringio = StringIO(self.code)
+        stringio.name = self.name
+
+        convert_xml_import(self._cr, __package__, stringio)
         return 'No expected result'
