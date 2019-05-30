@@ -1,0 +1,275 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_refund_event_registration
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-05-23 14:29+0000\n"
+"PO-Revision-Date: 2019-05-23 14:29+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_refund_event_registration
+#: model_terms:ir.ui.view,arch_db:smile_refund_event_registration.view_event_refund
+msgid "<span class=\"o_form_label\">Are you sure you want to cancel this event? All the linked attendees will be cancelled as well.</span>"
+msgstr "Etes-vous sûr que vous voulez annuler cet événement? Tous les participants liés seront également annulés."
+
+#. module: smile_refund_event_registration
+#: model:mail.template,body_html:smile_refund_event_registration.refund_event_registration
+msgid "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- HEADER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">Your registration(Refunded)</span><br/>\n"
+"                                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                                            ${object.name}\n"
+"                                        </span>\n"
+"                                    </td><td valign=\"middle\" align=\"right\">\n"
+"                                        <img src=\"${'/logo.png?company=%s' % object.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${'%s' % object.company_id.name}\"/>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- Refund Event Registration-->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                                        <div>\n"
+"                                            Hello ${object.name},<br/>\n"
+"                                            We're sorry to inform you that this event\n"
+"                                            % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                                                <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                                            % else:\n"
+"                                                <strong>${object.event_id.name}</strong>\n"
+"                                            % endif\n"
+"                                            on <strong>${object.get_date_range_str()}</strong> has been Refund.\n"
+"                                        </div>\n"
+"                                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                            <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a><br/>\n"
+"                                        </div>\n"
+"                                        % endif\n"
+"                                        <div>\n"
+"                                             Do not hesitate to contact us if you have any question. ,<br/>\n"
+"                                            <span style=\"color: #454748;\">\n"
+"                                            -- <br/>\n"
+"                                            % if object.event_id.organizer_id:\n"
+"                                                ${object.event_id.organizer_id.name}\n"
+"                                            % else:\n"
+"                                                The organizers.\n"
+"                                            % endif\n"
+"                                            </span>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            "
+msgstr "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- HEADER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">Votre inscription(Remboursé)</span><br/>\n"
+"                                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                                            ${object.name}\n"
+"                                        </span>\n"
+"                                    </td><td valign=\"middle\" align=\"right\">\n"
+"                                        <img src=\"${'/logo.png?company=%s' % object.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${'%s' % object.company_id.name}\"/>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- Refund Event Registration-->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                                        <div>\n"
+"                                            Bonjour ${object.name},<br/>\n"
+"                                            Nous sommes désolés de vous informer que cet événement\n"
+"                                            % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                                                <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                                            % else:\n"
+"                                                <strong>${object.event_id.name}</strong>\n"
+"                                            % endif\n"
+"                                            on <strong>${object.get_date_range_str()}</strong> a été remboursé.\n"
+"                                        </div>\n"
+"                                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                            <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a><br/>\n"
+"                                        </div>\n"
+"                                        % endif\n"
+"                                        <div>\n"
+"                                              N'hésitez pas à nous contacter si vous avez la moindre question.,<br/>\n"
+"                                            <span style=\"color: #454748;\">\n"
+"                                            -- <br/>\n"
+"                                            % if object.event_id.organizer_id:\n"
+"                                                ${object.event_id.organizer_id.name}\n"
+"                                            % else:\n"
+"                                                Les organisateurs.\n"
+"                                            % endif\n"
+"                                            </span>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            "
+
+#. module: smile_refund_event_registration
+#: selection:event.registration,state:0
+msgid "Attended"
+msgstr "Présent"
+
+#. module: smile_refund_event_registration
+#: model_terms:ir.ui.view,arch_db:smile_refund_event_registration.view_event_refund
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_refund_event_registration
+#: model_terms:ir.ui.view,arch_db:smile_refund_event_registration.registration_view_id
+msgid "Cancel and Refund"
+msgstr "Annuler et rembourser"
+
+#. module: smile_refund_event_registration
+#: model_terms:ir.ui.view,arch_db:smile_refund_event_registration.view_event_form
+msgid "Cancel and Refund Event"
+msgstr "Annuler et rembourser l'évenement"
+
+#. module: smile_refund_event_registration
+#: selection:event.registration,state:0
+msgid "Cancelled"
+msgstr "Annulé"
+
+#. module: smile_refund_event_registration
+#: model:ir.actions.act_window,name:smile_refund_event_registration.action_event_refund
+msgid "Confirmation"
+msgstr "Confirmation"
+
+#. module: smile_refund_event_registration
+#: selection:event.registration,state:0
+msgid "Confirmed"
+msgstr "Confirmé"
+
+#. module: smile_refund_event_registration
+#: model:ir.model.fields,field_description:smile_refund_event_registration.field_event_refund__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_refund_event_registration
+#: model:ir.model.fields,field_description:smile_refund_event_registration.field_event_refund__create_date
+msgid "Created on"
+msgstr "Nom affiché"
+
+#. module: smile_refund_event_registration
+#: model:ir.model.fields,field_description:smile_refund_event_registration.field_event_refund__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_refund_event_registration
+#: model:ir.model.fields,field_description:smile_refund_event_registration.field_event_refund__event_id
+msgid "Event"
+msgstr "Evènement"
+
+#. module: smile_refund_event_registration
+#: model_terms:ir.ui.view,arch_db:smile_refund_event_registration.view_event_refund
+msgid "Event Refund"
+msgstr "Evènement remboursé"
+
+#. module: smile_refund_event_registration
+#: model:ir.model,name:smile_refund_event_registration.model_event_registration
+msgid "Event Registration"
+msgstr "Inscription à l'évènement"
+
+#. module: smile_refund_event_registration
+#: code:addons/smile_refund_event_registration/models/event_registration.py:27
+#: model:ir.model,name:smile_refund_event_registration.model_event_refund
+#, python-format
+msgid "Event refund"
+msgstr "Remboursement"
+
+#. module: smile_refund_event_registration
+#: model:ir.model.fields,field_description:smile_refund_event_registration.field_event_refund__id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_refund_event_registration
+#: model:ir.model.fields,field_description:smile_refund_event_registration.field_event_refund____last_update
+msgid "Last Modified on"
+msgstr "Dernière Modification le"
+
+#. module: smile_refund_event_registration
+#: model:ir.model.fields,field_description:smile_refund_event_registration.field_event_refund__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_refund_event_registration
+#: model:ir.model.fields,field_description:smile_refund_event_registration.field_event_refund__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_refund_event_registration
+#: model_terms:ir.ui.view,arch_db:smile_refund_event_registration.view_event_refund
+msgid "Ok"
+msgstr "Ok"
+
+#. module: smile_refund_event_registration
+#: model_terms:ir.ui.view,arch_db:smile_refund_event_registration.view_event_refund
+msgid "Ok and Refund"
+msgstr "Ok et rembourser"
+
+#. module: smile_refund_event_registration
+#: selection:event.registration,state:0
+msgid "Refund"
+msgstr "Remboursé"
+
+#. module: smile_refund_event_registration
+#: model:mail.template,subject:smile_refund_event_registration.refund_event_registration
+msgid "Refund ${object.event_id.name}: ${object.get_date_range_str()}"
+msgstr "Remboursement ${object.event_id.name}: ${object.get_date_range_str()}"
+
+#. module: smile_refund_event_registration
+#: model:ir.model.fields,field_description:smile_refund_event_registration.field_event_registration__state
+msgid "Status"
+msgstr "Statuts"
+
+#. module: smile_refund_event_registration
+#: code:addons/smile_refund_event_registration/wizard/event_refund.py:31
+#, python-format
+msgid "There are already attendees who attended this event. Please reset it to draft if you want to cancel this event."
+msgstr "Il y a déjà des participants qui ont assisté à cet événement. S'il vous plaît réinitialiser le brouillon si vous voulez annuler cet événement"
+
+#. module: smile_refund_event_registration
+#: selection:event.registration,state:0
+msgid "Unconfirmed"
+msgstr "Non confirmé"
+

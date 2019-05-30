@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_event_refund" model="ir.ui.view">
+            <field name="name">Event Refund</field>
+            <field name="model">event.refund</field>
+            <field name="arch" type="xml">
+              <form string="Event Refund">
+                  <group>
+                      <field name="event_id" invisible="True" />
+                  </group>
+                  <span class="o_form_label">Are you sure you want to cancel this event? All the linked attendees will be cancelled as well.</span>
+                  <footer>
+                      <button string="Ok" name="button_cancel_with_refund"  type="object" class="btn-primary" />
+                      <button string="Ok and Refund" name="button_cancel_without_refund" type="object" class="btn-primary"/>
+                      <button string="Cancel" class="btn-secondary" special="cancel"/>
+
+                  </footer>
+              </form>
+            </field>
+        </record>
+
+
+        <record id="action_event_refund" model="ir.actions.act_window">
+            <field name="name">Confirmation</field>
+            <field name="res_model">event.refund</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_event_refund"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>
+

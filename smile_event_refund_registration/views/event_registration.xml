@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="registration_view_id">
+            <field name="name">event.registration.form.view</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_event_registration_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[@name='button_reg_cancel']" position="after">
+                    <button name="button_cancel_refund" string="Cancel and Refund" states="open" type="object"/>
+                </xpath>
+                <xpath expr="//header/field[@name='state']" position="attributes">
+                     <attribute name="statusbar_visible">draft,open,done,refund</attribute>
+                </xpath>
+
+           </field>
+        </record>
+
+
+       <record model="ir.ui.view" id="view_event_form">
+            <field name="name">event.event.form</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//header/button[@name='button_cancel']" position="after">
+                    <button name="%(action_event_refund)d" type="action" string="Cancel and Refund Event"
+                            context="{'default_event_id': active_id}"/>
+                 </xpath>
+                 <xpath expr="//header/button[@name='button_cancel'][1]" position="attributes">
+                         <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//header/button[@name='button_cancel'][2]" position="attributes">
+                         <attribute name="invisible">True</attribute>
+                </xpath>
+
+            </field>
+
+       </record>
+
+
+    </data>
+</odoo>
