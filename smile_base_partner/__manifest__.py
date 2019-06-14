@@ -25,6 +25,7 @@
     "name": "Partner Organisation",
     "version": "0.1",
     "depends": [
+        "contacts",
         "sales_team",
     ],
     "author": "Smile",
