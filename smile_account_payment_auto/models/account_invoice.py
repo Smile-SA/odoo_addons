@@ -124,4 +124,5 @@ class AccountInvoice(models.Model):
             'payment_type': payment_method.payment_type,
             'payment_method_id': payment_method.id,
             'payment_mode': self.mapped('partner_id').payment_mode,
+            'partner_bank_id': self.mapped('partner_bank_id').id,
         }
