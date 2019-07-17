@@ -34,7 +34,7 @@
                 </field>
                 <xpath expr="//separator[3]" position="after">
                     <filter string="Individual" domain="[('payment_mode', '=', 'I')]"/>
-                    <filter string="Grouped" domain="[('payment_type', '=', 'G')]"/>
+                    <filter string="Grouped" domain="[('payment_mode', '=', 'G')]"/>
                     <separator/>
                 </xpath>
             </field>
