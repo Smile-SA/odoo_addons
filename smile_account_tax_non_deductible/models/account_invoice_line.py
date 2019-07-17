@@ -29,12 +29,17 @@ class AccountInvoiceLine(models.Model):
     def _compute_price(self):
         super(AccountInvoiceLine, self)._compute_price()
         # TODO: deal with case of tax included in price
+        date = self._get_deduction_rate_application_date()
         self.deduction_rate = self.env['account.tax.rate']. \
             _compute_deduction_rate(
-                self.industry_id, self.product_id.product_tmpl_id,
-                self.invoice_id.date_invoice)
+                self.industry_id, self.product_id.product_tmpl_id, date)
         price_tax = self.price_total - self.price_subtotal
         currency = self.currency_id or self.company_id.currency_id
         self.price_tax_d = float_round(price_tax * self.deduction_rate,
                                        currency.decimal_places)
         self.price_total_nd = self.price_total - self.price_tax_d
+
+    @api.multi
+    def _get_deduction_rate_application_date(self):
+        self.ensure_one()
+        return self.invoice_id.date or fields.Date.today()
