@@ -80,7 +80,8 @@ class IrActionsReport(models.Model):
     @api.one
     def _check_execution(self, res_ids, data):
         arguments = repr((res_ids, data))
-        context = repr(self._context)
+        context = repr(dict(
+            self._context, company_id=self.env.user.company_id.id))
         execution = self.env['ir.actions.report.execution'].search([
             ('report_id', '=', self.id),
             ('arguments', '=', arguments),

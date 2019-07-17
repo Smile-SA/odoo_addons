@@ -63,7 +63,9 @@ class IrActionsReportExecution(models.TransientModel):
             report_name = self._format_report_name(report.name)
             content, ext = report.with_context(ctx).render_qweb_pdf(*args)
             attachments = [(report_name, content)]
-            self.sudo()._add_attachment(content)
+            self.sudo().with_context(
+                company_id=ctx.get('company_id', self.env.user.company_id.id)
+            )._add_attachment(content)
             msg = _('%s report available') % report_name
         except Exception as e:
             _logger.error(e)
@@ -111,6 +113,7 @@ class IrActionsReportExecution(models.TransientModel):
             'datas_fname': report_name,
             'res_model': self._name,
             'res_id': self.id,
+            'company_id': self._context.get('company_id'),
         })
 
     @api.model
