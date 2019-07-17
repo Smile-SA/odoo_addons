@@ -125,7 +125,7 @@ class ReportAccountAssetsInProgress(models.AbstractModel):
                                 history.category_id.purchase_value_sign,
                         }
                         break
-        elif not res:
+        if not res:
             res = {
                 'account': invoice_line.asset_id.asset_account_id,
                 'purchase_date': invoice_line.asset_id.purchase_date,
