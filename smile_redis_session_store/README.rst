@@ -41,7 +41,9 @@ Available options
 * `redis_port` (default: 6379): Redis port
 * `redis_dbindex` (default: 1): Redis database index
 * `redis_pass` (default: None): Redis password
+* `redis_socket` (default: None) :  unix socket path
 
+If `redis_socket` is used, both `redis_host` and `redis_port` should be None.
 
 Bug Tracker
 ===========
