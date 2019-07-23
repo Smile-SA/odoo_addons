@@ -51,7 +51,8 @@ class RedisSessionStore(werkzeug.contrib.sessions.SessionStore):
         self.redis = redis.Redis(host=tools.config.get('redis_host', 'localhost'),
                                  port=int(tools.config.get('redis_port', 6379)),
                                  db=int(tools.config.get('redis_dbindex', 1)),
-                                 password=tools.config.get('redis_pass', None))
+                                 password=tools.config.get('redis_pass', None),
+                                 unix_socket_path=tools.config.get('redis_socket', None))
         self._is_redis_server_running()
 
     def save(self, session):
