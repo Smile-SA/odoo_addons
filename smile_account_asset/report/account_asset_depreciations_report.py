@@ -38,7 +38,7 @@ class ReportAccountAssetDepreciations(models.AbstractModel):
             asset_infos = self._get_asset_infos(
                 asset, currency, date_to, date_from, is_posted)
             asset_account = asset.asset_account_id
-            group_by.setdefault(asset_account, {})
+            group_by.setdefault(asset_account, [])
             group_by[asset_account].append((asset, asset_infos))
         return group_by
 

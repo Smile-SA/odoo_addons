@@ -52,7 +52,7 @@ class ReportFiscalDeductions(models.AbstractModel):
         for asset in assets:
             asset_infos = self._get_asset_infos(asset, currency, date_to)
             asset_account = asset.asset_account_id
-            group_by.setdefault(asset_account, {})
+            group_by.setdefault(asset_account, [])
             group_by[asset_account].append((asset, asset_infos))
         return group_by
 

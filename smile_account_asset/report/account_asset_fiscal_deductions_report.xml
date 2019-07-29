@@ -47,7 +47,6 @@
                                     <tr>
                                         <th>Reference</th>
                                         <th>Name</th>
-                                        <th>CO2 Rate</th>
                                         <th>Purchase Date</th>
                                         <th>Sale Date</th>
                                         <th>Gross Value</th>
@@ -70,7 +69,6 @@
                                         <tr>
                                             <td class="text-left"><span t-field="asset.code"/></td>
                                             <td class="text-left"><span t-field="asset.name"/></td>
-                                            <td class="text-center"><span t-field="asset.co2_rate"/></td>
                                             <td class="text-center"><span t-esc="asset_infos['purchase_date']"/></td>
                                             <td class="text-center"><span t-esc="asset_infos['sale_date']"/></td>
                                             <td class="text-center"><span t-esc="asset_infos['purchase']"/></td>
