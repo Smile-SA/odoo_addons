@@ -4,6 +4,7 @@
 
         <record id="group_smile_script_user" model="res.groups">
             <field name="name">Smile Script / User</field>
+            <field name="implied_ids" eval="[(4, ref('smile_log.group_smile_log_user'))]"/>
         </record>
 
     </data>

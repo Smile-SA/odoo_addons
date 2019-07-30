@@ -67,3 +67,8 @@ msgstr "Date"
 #: field:smile.log,message:0
 msgid "Message"
 msgstr "Message"
+
+#. module: smile_log
+#: model:res.groups,name:smile_log.group_smile_log_user
+msgid "Smile Logs / User"
+msgstr "Smile Logs / Utilisateur"

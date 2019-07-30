@@ -13,6 +13,11 @@ Automated Actions
 
 This module extends base_automation.
 
+To be able to track logs of automated actions execution, make sure you give access rights to the user by adding him to the rule ``Smile Logs / User`` as follow:
+
+#. Go to ``Settings > Users & companies > Users`` menu and select the user.
+#. In ``Access Rights > Others`` check the rule ``Smile Logs / User``.
+
 **Table of contents**
 
 .. contents::

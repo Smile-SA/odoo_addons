@@ -32,11 +32,7 @@ Usage
 
 To give access right to user to create maintenance scripts:
 
-#. Go to ``Settings > Users & companies > Users`` menu, select the user and in ``Access Rights > Others`` check the rule ``Smile Script / User``.
-
-To give access right to user to track logs of script's operations:
-
-#. Go to ``Settings > Users & companies > Users`` menu, select the user and in ``Access Rights > Others`` check the rule ``Smile Logs / User``.
+#. Go to ``Settings > Users & companies > Users`` menu, select the user and in ``Access Rights > Others`` check the rule ``Smile Script / User``. The rule ``Smile Logs / User`` will automatically be checked and the user will be able to track logs of script's operations.
 
 .. figure:: static/description/add_access_rights.png
    :alt: Add Access Rights

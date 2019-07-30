@@ -15,6 +15,11 @@ This module allows to track and record logs during the execution of import/expor
 
 It could be useful especially during scheduled action, so instead of checking server logs, you could get the information from interface when actions successfully done or understand the main causes when things go wrong through logs.
 
+To be able to track logs of import/export operations, make sure you give access rights to the user by adding him to the rule ``Smile Logs / User`` as follow:
+
+#. Go to ``Settings > Users & companies > Users`` menu and select the user.
+#. In ``Access Rights > Others`` check the rule ``Smile Logs / User``.
+
 Features:
 
 * Define an import/export template:

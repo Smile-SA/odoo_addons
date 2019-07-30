@@ -17,7 +17,7 @@
                 <field name="filter_pre_domain" position="attributes">
                 	<attribute name="attrs">{'invisible': [('trigger', 'not in', ['on_write','on_create_or_write','on_other_method'])]}</attribute>
                 </field>
-                <!--field name="sequence" position="after">
+                <field name="execution_mode" position="after">
                     <field name="max_executions"/>
                     <field name="force_actions_execution"/>
                 </field>
@@ -32,7 +32,7 @@
                     <page string="Logs">
                     	<field name="log_ids"/>
                     </page>
-                </notebook-->
+                </notebook>
             </field>
         </record>
 

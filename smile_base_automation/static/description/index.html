@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
 <title>Automated Actions</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 7952 2016-07-26 18:15:59Z milde $
+:Id: $Id: html4css1.css 7614 2013-02-21 15:55:51Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -36,14 +36,6 @@ table.borderless td, table.borderless th {
 
 .hidden {
   display: none }
-
-.subscript {
-  vertical-align: sub;
-  font-size: smaller }
-
-.superscript {
-  vertical-align: super;
-  font-size: smaller }
 
 a.toc-backref {
   text-decoration: none ;
@@ -169,23 +161,18 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left, .figure.align-left, object.align-left, table.align-left {
+img.align-left, .figure.align-left, object.align-left {
   clear: left ;
   float: left ;
   margin-right: 1em }
 
-img.align-right, .figure.align-right, object.align-right, table.align-right {
+img.align-right, .figure.align-right, object.align-right {
   clear: right ;
   float: right ;
   margin-left: 1em }
 
 img.align-center, .figure.align-center, object.align-center {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-table.align-center {
   margin-left: auto;
   margin-right: auto;
 }
@@ -206,15 +193,6 @@ div.align-right {
 
 /* div.align-center * { */
 /*   text-align: left } */
-
-.align-top    {
-  vertical-align: top }
-
-.align-middle {
-  vertical-align: middle }
-
-.align-bottom {
-  vertical-align: bottom }
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -365,6 +343,11 @@ ul.auto-toc {
 
 <p><a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/11.0/smile_base_automation"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
 <p>This module extends base_automation.</p>
+<p>To be able to track logs of automated actions execution, make sure you give access rights to the user by adding him to the rule <tt class="docutils literal">Smile Logs / User</tt> as follow:</p>
+<ol class="arabic simple">
+<li>Go to <tt class="docutils literal">Settings &gt; Users &amp; companies &gt; Users</tt> menu and select the user.</li>
+<li>In <tt class="docutils literal">Access Rights &gt; Others</tt> check the rule <tt class="docutils literal">Smile Logs / User</tt>.</li>
+</ol>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
@@ -381,10 +364,10 @@ ul.auto-toc {
 <div class="section" id="features">
 <h1><a class="toc-backref" href="#id1">Features</a></h1>
 <blockquote>
-<ul class="simple">
+<ul>
 <li><dl class="first docutils">
 <dt>Extend automated actions to:</dt>
-<dd><ul class="first last">
+<dd><ul class="first last simple">
 <li>Trigger on other methods</li>
 <li>Limit executions per record</li>
 <li>Log executions for actions not on timed condition</li>
@@ -396,7 +379,7 @@ ul.auto-toc {
 </li>
 <li><dl class="first docutils">
 <dt>Extend server actions to:</dt>
-<dd><ul class="first last">
+<dd><ul class="first last simple">
 <li>Force execution even if records list is empty</li>
 <li>Execute in asynchronous mode</li>
 </ul>
