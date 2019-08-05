@@ -43,9 +43,9 @@ class Base(models.AbstractModel):
 
     @api.model
     def load(self, fields, data):
-        self = self.with_context(
+        res = super(Base, self.with_context(
             no_validate=True, defer_parent_store_computation=True)
-        res = super(Base, self).load(fields, data)
+        ).load(fields, data)
         ids = res['ids']
         if ids:
             recs = self.browse(ids)
