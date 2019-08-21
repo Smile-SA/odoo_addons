@@ -75,10 +75,9 @@ class AccountAssetAsset(models.Model):
         'account.asset.asset', 'Parent Asset',
         readonly=True, states={'draft': [('readonly', False)]},
         ondelete='restrict', index=True)
+    parent_path = fields.Char(index=True)
     child_ids = fields.One2many(
         'account.asset.asset', 'parent_id', 'Child Assets', copy=False)
-    parent_left = fields.Integer('Parent Left', readonly=True, index=True)
-    parent_right = fields.Integer('Parent Right', readonly=True, index=True)
     origin_id = fields.Many2one(
         'account.asset.asset', 'Origin Asset', copy=False,
         readonly=True, ondelete='restrict')
