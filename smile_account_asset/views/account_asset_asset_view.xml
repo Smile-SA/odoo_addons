@@ -147,7 +147,7 @@
                                     <group>
                                         <field name="accounting_depreciation_line_ids" colspan="2" nolabel="1" mode="tree" attrs="{'invisible': [('accounting_method', '=', 'none')], 'readonly': [('accounting_method', '!=', 'manual')]}" context="{'default_is_manual': accounting_method == 'manual', 'default_depreciation_type': 'accounting'}">
                                             <tree string="Accounting Depreciation Board"
-                                                    decoration-info="not is_posted" editable="bottom">
+                                                    decoration-success="is_posted" decoration-warning="not is_posted" editable="bottom">
                                                 <field name="depreciation_date"/>
                                                 <field name="base_value"/>
                                                 <field name="depreciation_value" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}" string="Amortization"/>
@@ -176,7 +176,8 @@
                                     </group>
                                     <group>
                                         <field name="fiscal_depreciation_line_ids" colspan="2" nolabel="1" mode="tree" attrs="{'invisible': [('fiscal_method', '=', 'none')], 'readonly': [('fiscal_method', '!=', 'manual')]}" context="{'default_is_manual': accounting_method == 'manual', 'default_depreciation_type': 'fiscal'}">
-                                            <tree string="Fiscal Depreciation Board" decoration-info="not is_posted" editable="bottom">
+                                            <tree string="Fiscal Depreciation Board"
+                                                    decoration-success="is_posted" decoration-warning="not is_posted" editable="bottom">
                                                 <field name="depreciation_date"/>
                                                 <field name="depreciation_value" attrs="{'readonly': [('is_manual', '=', False)], 'required': [('is_manual', '=', True)]}" string="Fiscal Depreciation"/>
                                                 <field name="accounting_value"/>
