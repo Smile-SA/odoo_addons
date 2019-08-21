@@ -13,7 +13,8 @@ from .account_asset_asset import ACCOUNT_GROUPS
 class AccountAssetDepreciationLine(models.Model):
     _name = 'account.asset.depreciation.line'
     _description = 'Asset Depreciation Line'
-    _order = 'depreciation_date'
+    _rec_name = 'depreciation_date'
+    _order = 'asset_id, depreciation_type, depreciation_date'
 
     @api.model_cr
     def init(self):
