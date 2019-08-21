@@ -11,8 +11,9 @@ require('bus.BusService');
             this.known_bus_events = [];
         },
         show_application: function() {
-            this._super();
+            var res = this._super();
             this.start_polling();
+            return res;
         },
         on_logout: function() {
             var self = this;
