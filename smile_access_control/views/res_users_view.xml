@@ -20,7 +20,7 @@
       </field>
     </record>
     <record id="base.action_res_users" model="ir.actions.act_window">
-      <field name="domain" eval="[('id', '!=', ref('base.user_root')), ('is_user_profile', '=', False)]"/>
+      <field name="domain" eval="[('id', '!=', ref('base.user_root')), ('id', '!=', ref('base.user_admin')), ('is_user_profile', '=', False)]"/>
     </record>
     <record id="base.action_res_users_view2" model="ir.actions.act_window.view">
       <field name="view_id" ref="view_res_user_form"/>
@@ -86,8 +86,7 @@
       <field name="view_type">form</field>
       <field name="view_id" ref="base.view_users_tree"/>
       <field name="search_view_id" ref="base.view_users_search"/>
-      <field name="domain">[('user_profile', '=', True)]</field>
-      <field name="domain" eval="[('id', '!=', ref('base.user_root')), ('is_user_profile', '=', True)]"/>
+      <field name="domain" eval="[('id', '!=', ref('base.user_root')), ('id', '!=', ref('base.user_admin')), ('is_user_profile', '=', True)]"/>
       <field name="context">{'active_test': False, 'default_active': False, 'default_is_user_profile': True, 'is_user_profile': True}</field>
       <field name="help"></field>
     </record>
@@ -122,22 +121,35 @@
         </data>
       </field>
     </record>
-    <record id="action_server_superadmin" model="ir.actions.server">
-      <field name="name">Administrator</field>
-      <field name="model_id" ref="base.model_res_users"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-        "type": "ir.actions.act_window",
-        "view_mode": "form",
-        "view_id": env.ref('smile_access_control.view_admin_form').id,
-        "res_model": "res.users",
-        "res_id": env.ref('base.user_admin').id,
-        }
-      </field>
+    <record id="action_administrators" model="ir.actions.act_window">
+      <field name="name">Administrators</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">res.users</field>
+      <field name="view_type">form</field>
+      <field name="view_id" ref="base.view_users_tree"/>
+      <field name="search_view_id" ref="base.view_users_search"/>
+      <field name="domain" eval="['|', ('id', '=', ref('base.user_root')), ('id', '=', ref('base.user_admin'))]"/>
+      <field name="context" eval="{'active_test': False}"/>
+      <field name="help"></field>
+    </record>
+    <record id="action_administrators_tree_view" model="ir.actions.act_window.view">
+      <field eval="1" name="sequence"/>
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="base.view_users_tree"/>
+      <field name="act_window_id" ref="action_administrators"/>
+    </record>
+    <record id="action_administrators_form_view" model="ir.actions.act_window.view">
+      <field eval="2" name="sequence"/>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="view_admin_form"/>
+      <field name="act_window_id" ref="action_administrators"/>
     </record>
 
-    <menuitem action="action_server_superadmin" id="menu_action_superadmin" parent="base.menu_users" sequence="50"/>
+    <menuitem action="action_administrators" id="menu_action_administrators" parent="base.menu_users" sequence="50"/>
+
+    <record id="base.menu_action_res_groups" model="ir.ui.menu">
+        <field name="sequence">60</field>
+    </record>
 
   </data>
 </odoo>
