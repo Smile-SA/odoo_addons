@@ -31,18 +31,18 @@ msgid "CSV"
 msgstr "CSV"
 
 #. module: smile_module_record
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_import_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_import_form
 msgid "Cancel"
 msgstr "Annuler"
 
 #. module: smile_module_record
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
 msgid "Close"
 msgstr "Fermer"
 
 #. module: smile_module_record
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
 msgid "Create Module"
 msgstr "Créer un module"
 
@@ -70,7 +70,7 @@ msgid "Done"
 msgstr "Réalisé"
 
 #. module: smile_module_record
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_import_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_import_form
 msgid "Download and install"
 msgstr "Télécharger et installer"
 
@@ -81,8 +81,8 @@ msgstr "Brouillon"
 
 #. module: smile_module_record
 #: code:addons/smile_module_record/wizard/base_module_export.py:250
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_import_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_import_form
 #, python-format
 msgid "Export Customizations as a Module"
 msgstr "Exporter les personnalisations sous forme de module"
@@ -96,7 +96,7 @@ msgstr "Exporter les données sous forme de module"
 #. module: smile_module_record
 #: model:ir.model.fields,field_description:smile_module_record.field_base_module_export_file
 #: model:ir.model.fields,field_description:smile_module_record.field_base_module_import_file
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
 msgid "File"
 msgstr "Fichier"
 
@@ -117,7 +117,7 @@ msgid "Filetype"
 msgstr "Type de fichier"
 
 #. module: smile_module_record
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
 msgid "Go back"
 msgstr "Précédent"
 
@@ -140,7 +140,7 @@ msgid "Invalid characters in module name: '%s'"
 msgstr "Caractères invalides dans le nom du module : '%s'"
 
 #. module: smile_module_record
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
 msgid "Keep empty to use all models"
 msgstr "Laisser vide pour utiliser l'ensemble des modèles"
 
@@ -180,12 +180,12 @@ msgid "Old"
 msgstr "Ancien"
 
 #. module: smile_module_record
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
 msgid "Options"
 msgstr "Options"
 
 #. module: smile_module_record
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
 msgid "Records"
 msgstr "Enregistrements"
 
@@ -231,7 +231,7 @@ msgid "created or modified"
 msgstr "créés ou modifiés"
 
 #. module: smile_module_record
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
 msgid "from"
 msgstr "à partir du"
 
@@ -246,8 +246,8 @@ msgid "modified"
 msgstr "modifiés"
 
 #. module: smile_module_record
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
-#: model:ir.ui.view,arch_db:smile_module_record.view_base_module_import_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_export_form
+#: model_terms:ir.ui.view,arch_db:smile_module_record.view_base_module_import_form
 msgid "or"
 msgstr "ou"
 

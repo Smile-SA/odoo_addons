@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: smile_perf_analyzer
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_form
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_form
 msgid "* Only the statements SELECT / INSERT / UPDATE / DELETE appear in the previous table"
 msgstr "* Seules les requêtes SELECT / INSERT / UPDATE / DELETE apparaissent dans le tableau ci-dessus"
 
@@ -64,7 +64,7 @@ msgstr "Créé le"
 
 #. module: smile_perf_analyzer
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_date
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
 msgid "Date"
 msgstr "Date "
 
@@ -93,7 +93,7 @@ msgid "Field"
 msgstr "Champ"
 
 #. module: smile_perf_analyzer
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
 msgid "Group By"
 msgstr "Regrouper par"
 
@@ -125,14 +125,14 @@ msgid "Log SQL requests"
 msgstr "Logguer les requêtes SQL"
 
 #. module: smile_perf_analyzer
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_form
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_form
 msgid "Logging Rule"
 msgstr "Règle de logs"
 
 #. module: smile_perf_analyzer
 #: model:ir.actions.act_window,name:smile_perf_analyzer.action_ir_logging_perf_rule
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_search
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_tree
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_search
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_tree
 msgid "Logging Rules"
 msgstr "Règles de logs"
 
@@ -144,7 +144,7 @@ msgstr "Logs"
 
 #. module: smile_perf_analyzer
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_method
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
 msgid "Method"
 msgstr "Méthode"
 
@@ -156,7 +156,7 @@ msgstr "Méthodes"
 #. module: smile_perf_analyzer
 #: code:addons/smile_perf_analyzer/models/perf_log.py:104
 #: model:ir.model.fields,field_description:smile_perf_analyzer.field_ir_logging_perf_log_model
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
 #, python-format
 msgid "Model"
 msgstr "Modèle"
@@ -194,13 +194,13 @@ msgid "Performance"
 msgstr "Performance"
 
 #. module: smile_perf_analyzer
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_form
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_form
 msgid "Performance Log"
 msgstr "Log de performance"
 
 #. module: smile_perf_analyzer
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_tree
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_search
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_tree
 msgid "Performance Logs"
 msgstr "Logs de performance"
 
@@ -216,7 +216,7 @@ msgid "Profile Python methods"
 msgstr "Méthodes Python"
 
 #. module: smile_perf_analyzer
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_form
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_form
 msgid "Python"
 msgstr "Python"
 
@@ -242,7 +242,7 @@ msgid "Rules"
 msgstr "Règles"
 
 #. module: smile_perf_analyzer
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_form
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_form
 msgid "SQL"
 msgstr "SQL"
 
@@ -316,7 +316,7 @@ msgid "Table"
 msgstr "Table"
 
 #. module: smile_perf_analyzer
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_tree
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_log_tree
 msgid "Total"
 msgstr "Total"
 
@@ -354,12 +354,12 @@ msgid "Users"
 msgstr "Utilisateurs"
 
 #. module: smile_perf_analyzer
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_form
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_form
 msgid "^(?!/longpolling)"
 msgstr "^(?!/longpolling)"
 
 #. module: smile_perf_analyzer
-#: model:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_form
+#: model_terms:ir.ui.view,arch_db:smile_perf_analyzer.view_ir_logging_perf_rule_form
 msgid "create,write"
 msgstr "create,write"
 

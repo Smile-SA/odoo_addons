@@ -26,7 +26,7 @@ msgid "Address Type"
 msgstr "Type d'adresse"
 
 #. module: smile_base_partner
-#: model:ir.ui.view,arch_db:smile_base_partner.view_partner_form
+#: model_terms:ir.ui.view,arch_db:smile_base_partner.view_partner_form
 msgid "Address type"
 msgstr "Type d'adresse"
 
@@ -43,7 +43,7 @@ msgid "Can have parent"
 msgstr "Peut avoir un parent"
 
 #. module: smile_base_partner
-#: model:ir.ui.view,arch_db:smile_base_partner.view_partner_type_form
+#: model_terms:ir.ui.view,arch_db:smile_base_partner.view_partner_type_form
 msgid "Characteristics"
 msgstr "Caractéristiques"
 
@@ -59,7 +59,7 @@ msgstr "Cocher cette case si ce contact est un fournisseur. Si elle n'est pas co
 
 #. module: smile_base_partner
 #: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_code
-#: model:ir.ui.view,arch_db:smile_base_partner.view_partner_type_form
+#: model_terms:ir.ui.view,arch_db:smile_base_partner.view_partner_type_form
 msgid "Code"
 msgstr "Code"
 
@@ -129,7 +129,7 @@ msgid "Fields to update in children"
 msgstr "Champs à mettre à jour sur les enfants"
 
 #. module: smile_base_partner
-#: model:ir.ui.view,arch_db:smile_base_partner.view_partner_type_form
+#: model_terms:ir.ui.view,arch_db:smile_base_partner.view_partner_type_form
 msgid "Fields to update in sub-companies"
 msgstr "Champs à mettre à jour sur les sous-sociétés"
 
@@ -176,7 +176,7 @@ msgstr "Dernière mise à jour le"
 
 #. module: smile_base_partner
 #: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_name
-#: model:ir.ui.view,arch_db:smile_base_partner.view_partner_type_form
+#: model_terms:ir.ui.view,arch_db:smile_base_partner.view_partner_type_form
 msgid "Name"
 msgstr "Nom"
 

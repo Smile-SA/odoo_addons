@@ -33,12 +33,12 @@ msgid "Attachments"
 msgstr "Pièces jointes"
 
 #. module: smile_access_control
-#: model:ir.ui.view,arch_db:smile_access_control.view_res_group_form
+#: model_terms:ir.ui.view,arch_db:smile_access_control.view_res_group_form
 msgid "Complete Access Controls"
 msgstr "Compléter la liste des contrôles d'accès"
 
 #. module: smile_access_control
-#: model:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
+#: model_terms:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
 msgid "Configuration"
 msgstr "Configuration"
 
@@ -53,7 +53,7 @@ msgid "Fields to update"
 msgstr "Champs à mettre à jour"
 
 #. module: smile_access_control
-#: model:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
+#: model_terms:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
 msgid "Fields to update for linked users"
 msgstr "Champs à mettre à jour au niveau des utilisateurs associés"
 
@@ -68,7 +68,7 @@ msgid "Is User Profile"
 msgstr "Correspond à un profil utilisateur"
 
 #. module: smile_access_control
-#: model:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
+#: model_terms:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
 msgid "Linked users"
 msgstr "Utilisateurs associés"
 
@@ -78,7 +78,7 @@ msgid "Models"
 msgstr "Modèles"
 
 #. module: smile_access_control
-#: model:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
+#: model_terms:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
 msgid "Options"
 msgstr "Options"
 
@@ -88,7 +88,7 @@ msgid "Payment Methods"
 msgstr "Méthode de paiement"
 
 #. module: smile_access_control
-#: model:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
+#: model_terms:ir.ui.view,arch_db:smile_access_control.view_user_profile_form
 msgid "Profile ..."
 msgstr "Profil ..."
 
