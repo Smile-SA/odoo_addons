@@ -62,7 +62,7 @@
                                             <td class="text-left"><span t-field="line.partner_id.name"/></td>
                                             <td class="text-center"><span t-field="line.name"/></td>
                                             <td class="text-left"><span t-esc="purchase_date"/></td>
-                                            <td class="text-right"><span t-esc="purchase"/></td>
+                                            <td class="text-right"><span t-esc="purchase" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
                                         </tr>
                                     </t>
                                 </tbody>
@@ -79,7 +79,7 @@
                                 <tbody>
                                     <tr>
                                         <td class="text-left" colspan="4">Total <span t-field="account.name"/></td>
-                                        <td class="text-right" t-esc="purchase_account"/>
+                                        <td class="text-right" t-esc="purchase_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
                                     </tr>
                                 </tbody>
                             </table>
@@ -99,7 +99,7 @@
                             <tbody>
                                 <tr>
                                     <td class="text-left" colspan="4">Total <span t-field="company.name"/></td>
-                                    <td class="text-right" t-esc="purchase_company"/>
+                                    <td class="text-right" t-esc="purchase_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
                                 </tr>
                             </tbody>
                         </table>

@@ -4,6 +4,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 
 ASSET_CLASSES = [
     ('tangible', 'Tangible'),
@@ -161,7 +162,9 @@ class AccountAssetCategory(models.Model):
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
-        domain = ['|', ('name', operator, name), ('code', operator, name)]
+        domain = [('name', operator, name), ('code', operator, name)]
+        if operator not in expression.NEGATIVE_TERM_OPERATORS:
+            domain = ['|'] + domain
         recs = self.search(domain + (args or []), limit=limit)
         return recs.name_get()
 

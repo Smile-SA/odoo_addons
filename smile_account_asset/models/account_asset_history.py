@@ -88,7 +88,7 @@ class AccountAssetHistory(models.Model):
             if field not in fields_to_read:
                 old_vals[field] = vals[field]
                 del vals[field]
-        asset.write(vals)
+        asset.with_context(from_history=True).write(vals)
         asset.compute_depreciation_board()
         return super(AccountAssetHistory, self).create(old_vals)
 

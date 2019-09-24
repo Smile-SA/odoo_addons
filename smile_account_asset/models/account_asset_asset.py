@@ -7,6 +7,8 @@ import time
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
+
 from odoo.tools.safe_eval import safe_eval
 
 from ..tools import get_period_stop_date
@@ -308,12 +310,19 @@ class AccountAssetAsset(models.Model):
         self.sale_tax_amount = res['total_included'] - res['total_excluded']
 
     @api.one
-    @api.depends(('category_id', [('state', 'in', ('draft', 'confirm'))]))
+    @api.depends('category_id.asset_account_id')
     def _get_asset_account(self):
-        self.asset_account_id = self.category_id.asset_account_id
+        if self.state not in ['draft', 'confirm'] and \
+                not self._context.get('from_history'):
+            # Keep current value
+            account_id = self.browse(self.id).read(
+                ['asset_account_id'])[0]['asset_account_id'][0]
+            self.asset_account_id = account_id
+        else:
+            self.asset_account_id = self.category_id.asset_account_id
 
     @api.one
-    @api.depends(('category_id', [('state', 'in', ('close', 'cancel'))]))
+    @api.depends(('category_id', [('state', 'not in', ('close', 'cancel'))]))
     def _get_sale_receivable_account(self):
         self.sale_receivable_account_id = \
             self.category_id.sale_receivable_account_id
@@ -414,10 +423,11 @@ class AccountAssetAsset(models.Model):
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
         args = [
-            '|',
             ('name', operator, name),
             ('code', operator, name),
         ] + (args or [])
+        if operator not in expression.NEGATIVE_TERM_OPERATORS:
+            args = ['|'] + args
         return self.search(args, limit=limit).name_get()
 
     @api.multi
@@ -1256,7 +1266,7 @@ class AccountAssetAsset(models.Model):
             analytic_field = 'sale_analytic_account_id'
         self = self.with_context(force_account_move_date=fields.Date.today())
         for asset in self:
-            vals = self._get_move_vals(accounts_group)
+            vals = asset._get_move_vals(accounts_group)
             new_line_vals = []
             for i, j, line_vals in vals['line_ids']:
                 for account, group in ACCOUNT_GROUPS.items():
