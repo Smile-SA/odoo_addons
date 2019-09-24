@@ -178,7 +178,7 @@ class SmileScript(models.Model):
         self.ensure_one()
 
         # Patch StringIO object with missing name attribute
-        # The name attribute is required by the odoo function convert_xml_import
+        # Name attribute is required by the odoo function convert_xml_import
         stringio = StringIO(self.code)
         stringio.name = self.name
 

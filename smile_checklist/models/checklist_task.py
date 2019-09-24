@@ -68,7 +68,9 @@ class ChecklistTask(models.Model):
                     sudo().with_context(active_test=False).search([])
             if 'x_checklist_task_instance_ids' not in _records._fields:
                 checklist._update_models()
-            self.filtered(lambda task: task.checklist_id == checklist)._update_task_instances_list(_records)
+            self.filtered(
+                lambda task: task.checklist_id == checklist
+            )._update_task_instances_list(_records)
             _records = _records.with_context(checklist_computation=True)
             checklist._compute_progress_rates(_records)
 

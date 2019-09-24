@@ -28,7 +28,7 @@ class TestBIC(TransactionCase):
         """
             Create a bank with grood bic
         """
-        bank = self.Bank.create({
+        self.Bank.create({
             'name': 'Test Bank wrong bic',
             'bic': 'AAAAAAAA',
         })

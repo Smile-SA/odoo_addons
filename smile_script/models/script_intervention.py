@@ -2,7 +2,6 @@
 # (C) 2019 Smile (<http://www.smile.fr>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-import inspect
 import logging
 
 from odoo import api, fields, models, SUPERUSER_ID, _
