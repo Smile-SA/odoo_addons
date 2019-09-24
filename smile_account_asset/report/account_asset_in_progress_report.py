@@ -77,6 +77,8 @@ class ReportAccountAssetsInProgress(models.AbstractModel):
         for invoice_line in invoice_lines:
             invoice_line_infos = self._get_invoice_line_infos(
                 invoice_line, currency, date_to)
+            if not invoice_line_infos:
+                continue
             invoice_line_account = invoice_line_infos['account']
             del invoice_line_infos['account']
             group_by.setdefault(invoice_line_account, [])
@@ -106,7 +108,7 @@ class ReportAccountAssetsInProgress(models.AbstractModel):
                                 history.category_id.purchase_value_sign,
                         }
                         break
-        elif not res:
+        if not res and invoice_line.asset_id.category_id.asset_in_progress:
             res = {
                 'account': invoice_line.asset_id.asset_account_id,
                 'purchase_date': invoice_line.asset_id.purchase_date,
