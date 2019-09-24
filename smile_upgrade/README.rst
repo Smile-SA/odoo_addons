@@ -43,6 +43,7 @@ Upgrades directory must be structured like this::
     |   |   ├── __upgrade__.py
     |   |   ├── *.sql
     |   |   ├── *.yml  # only for post-load
+    |   |   ├── *.py  # only for post-load
     |   |   ├── *.csv  # only for post-load
     |   |   ├── *.xml  # only for post-load
     |   ├── 1.2
@@ -64,9 +65,11 @@ Fill the file *__upgrade__.py* with following options:
 * `modules_to_install_at_creation`: modules list to install at database creation
 * `modules_to_upgrade`: modules list to update or to install
 * `pre-load`: list of .sql files
-* `post-load`: list with .sql, .yml, .csv and .xml files
+* `post-load`: list with .sql, .yml, .py, .csv and .xml files
     * `.../filename` (depending on option `upgrades_path`) or
     * `module_name/.../filename`
+
+* Each Python file in post-load must have a function post_load_hook(env)
 
 Configure the version to load
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -113,7 +116,7 @@ Available options are:
 Example::
 
     'post-load': [
-        ('post-load/fix_product_pricelist.yml', 'rollback_and_continue'),
+        ('post-load/fix_product_pricelist.py', 'rollback_and_continue'),
     ],
 
 

@@ -417,6 +417,7 @@ project
 |   |   ├── __upgrade__.py
 |   |   ├── *.sql
 |   |   ├── *.yml  # only for post-load
+|   |   ├── *.py  # only for post-load
 |   |   ├── *.csv  # only for post-load
 |   |   ├── *.xml  # only for post-load
 |   ├── 1.2
@@ -438,7 +439,7 @@ project
 <li><cite>modules_to_upgrade</cite>: modules list to update or to install</li>
 <li><cite>pre-load</cite>: list of .sql files</li>
 <li><dl class="first docutils">
-<dt><cite>post-load</cite>: list with .sql, .yml, .csv and .xml files</dt>
+<dt><cite>post-load</cite>: list with .sql, .yml, .py, .csv and .xml files</dt>
 <dd><ul class="first last">
 <li><cite>.../filename</cite> (depending on option <cite>upgrades_path</cite>) or</li>
 <li><cite>module_name/.../filename</cite></li>

@@ -34,6 +34,7 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.workflow.service import WorkflowService
 
 from config import configuration as upgrade_config
+import imp
 
 _logger = logging.getLogger(__package__)
 
@@ -187,7 +188,7 @@ class UpgradeManager(object):
 class Upgrade(object):
     """Upgrade
     * Pre-load: accept only .sql files
-    * Post-load: accept .sql and .yml files
+    * Post-load: accept .sql .yml and .py files
     """
 
     def __init__(self, dir_path, infos):
@@ -210,13 +211,21 @@ class Upgrade(object):
             if clean_query:
                 cr.execute(clean_query)
 
+    def _py_import(self, cr, f_obj):
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        module_name = os.path.basename(f_obj.name)
+        module = imp.load_source(module_name, f_obj.name)
+        module.post_load_hook(env)
+
     def _import_file(self, cr, mode, f_obj, module):
         root, ext = os.path.splitext(f_obj.name)
         if ext == '.sql':
             self._sql_import(cr, f_obj)
-        elif mode != 'pre-load' and ext in ('.yml', '.csv', '.xml'):
+        elif mode != 'pre-load' and ext in ('.yml','.py', '.csv', '.xml'):
             with api.Environment.manage():
-                if ext == '.yml':
+                if ext == '.py':
+                    self._py_import(cr, f_obj)
+                elif ext == '.yml':
                     tools.convert_yaml_import(cr, module, yamlfile=f_obj, kind=None, mode='upgrade')
                 elif ext == '.csv':
                     tools.convert_csv_import(cr, module, fname=f_obj.name, csvcontent=f_obj.read(), mode='upgrade')
