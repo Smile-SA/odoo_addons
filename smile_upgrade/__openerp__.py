@@ -45,6 +45,7 @@ Configuration
             |   |-- __upgrade__.py
             |   |-- *.sql
             |   |-- *.yml                   # only for post-load
+            |   |-- *.py                    # only for post-load
             |   |-- *.csv                   # only for post-load
             |   `-- *.xml                   # only for post-load
             |-- 1.2
@@ -65,10 +66,12 @@ Configuration
             * modules_to_install_at_creation: modules list to install at database creation
             * modules_to_upgrade: modules list to update or install
             * pre-load: list of .sql files
-            * post-load: list with .sql, .yml, .csv and .xml files
+            * post-load: list with .sql, .yml, .py, .csv and .xml files
                          with path .../filename (depending upgrades_path)
                          or module_name/.../filename
-
+                         
+    * Each Python file in post-load must have a function post_load_hook(env)
+    
     * OpenERP server configuration -- rcfile=~/.openerp_serverrc
         [options]
         server_wide_modules = web,smile_upgrade

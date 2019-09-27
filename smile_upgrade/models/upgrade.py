@@ -34,6 +34,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.workflow.service import WorkflowService
 
 from config import configuration as upgrade_config
+import imp
 
 _logger = logging.getLogger(__package__)
 
@@ -180,10 +181,19 @@ class Upgrade(object):
             if clean_query:
                 cr.execute(clean_query)
 
+    def _py_import(self, cr, f_obj):
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        module_name = os.path.basename(f_obj.name)
+        module = imp.load_source(module_name, f_obj.name)
+        module.post_load_hook(env)
+
     def _import_file(self, cr, mode, f_obj, module):
         root, ext = os.path.splitext(f_obj.name)
         if ext == '.sql':
             self._sql_import(cr, f_obj)
+        elif mode != 'pre-load' and ext == '.py':
+            with api.Environment.manage():
+                self._py_import(cr, f_obj)
         elif mode != 'pre-load' and ext == '.yml':
             with api.Environment.manage():
                 tools.convert_yaml_import(cr, module, f_obj, 'upgrade')
