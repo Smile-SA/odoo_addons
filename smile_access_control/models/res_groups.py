@@ -2,7 +2,7 @@
 # (C) 2011 Smile (<http://www.smile.fr>)
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class IrModel(models.Model):
