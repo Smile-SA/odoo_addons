@@ -37,7 +37,8 @@ class AccountInvoiceLine(models.Model):
         currency = self.currency_id or self.company_id.currency_id
         self.price_tax_d = float_round(price_tax * self.deduction_rate,
                                        currency.decimal_places)
-        self.price_total_nd = self.price_total - self.price_tax_d
+        self.price_total_nd = float_round(self.price_total - self.price_tax_d,
+                                          currency.decimal_places)
 
     @api.multi
     def _get_deduction_rate_application_date(self):
