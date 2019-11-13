@@ -315,9 +315,10 @@ class AccountAssetAsset(models.Model):
         if self.state not in ['draft', 'confirm'] and \
                 not self._context.get('from_history'):
             # Keep current value
-            account_id = self.browse(self.id).read(
-                ['asset_account_id'])[0]['asset_account_id'][0]
-            self.asset_account_id = account_id
+            account_ids = self.browse(self.id).read(
+                ['asset_account_id'])[0]['asset_account_id']
+            if account_ids:
+                self.asset_account_id = account_ids[0]
         else:
             self.asset_account_id = self.category_id.asset_account_id
 
