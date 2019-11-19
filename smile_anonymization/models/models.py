@@ -73,7 +73,8 @@ class Base(models.AbstractModel):
                                                                     [('model', '=', vals['model']),
                                                                      ('name', '=', f.serialization_field)])
                 if not serialization_field_id:
-                    raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
+                    raise UserError(
+                        _("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
                 vals['serialization_field_id'] = serialization_field_id[0]
 
             if k not in cols:
