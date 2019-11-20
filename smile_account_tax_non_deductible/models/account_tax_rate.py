@@ -52,7 +52,8 @@ class AccountTaxRate(models.Model):
             ('rate_type', 'in', self.mapped('rate_type')),
             ('start_date', '<=', date),
         ]
-        return self.search(domain, limit=1, order='start_date desc').value
+        rate = self.search(domain, limit=1, order='start_date desc')
+        return rate and rate.value or 1.0
 
     @api.model
     def _compute_deduction_rate(self, industry, product, date=None):
