@@ -374,8 +374,12 @@ CREATE AGGREGATE public.last (
             amount_field = 'depreciation_value'
             if depreciation_line.depreciation_type == 'fiscal':
                 amount_field = 'accelerated_value'
-            last_depreciation_line_by_asset[depreciation_line.asset_id] = \
-                depreciation_line, depreciation_line[amount_field]
+            last_depreciation_line_by_asset.setdefault(
+                depreciation_line.asset_id, [depreciation_line, 0.0])
+            last_depreciation_line_by_asset[depreciation_line.asset_id][
+                0] = depreciation_line
+            last_depreciation_line_by_asset[depreciation_line.asset_id][
+                1] += getattr(depreciation_line, amount_field)
         context = {'force_account_move_date': fields.Date.today()}
         for depreciation_line, amount in \
                 last_depreciation_line_by_asset.values():
