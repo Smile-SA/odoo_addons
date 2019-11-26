@@ -10,7 +10,7 @@ class MailMessage(orm.Model):
 
     _columns = {
         'subject': fields.char(data_mask="'subject_' || id::text"),
-        'body': fields.char(data_mask="'body_' || id::text"),
+        'body': fields.html(data_mask="'body_' || id::text"),
         'record_name': fields.char(data_mask="model || ',' || res_id::text"),
         'email_from': fields.char(data_mask="NULL"),
         'message_id': fields.char(data_mask="NULL"),
