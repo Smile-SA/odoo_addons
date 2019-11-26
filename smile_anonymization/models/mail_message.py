@@ -9,7 +9,7 @@ class MailMessage(models.Model):
     _inherit = 'mail.message'
 
     subject = fields.Char(data_mask="'message_' || id::text")
-    body = fields.Char(data_mask="'message_' || id::text")
+    body = fields.Html(data_mask="'message_' || id::text")
     record_name = fields.Char(data_mask="model || ',' || res_id::text")
     email_from = fields.Char(data_mask="NULL")
     reply_to = fields.Char(data_mask="NULL")
