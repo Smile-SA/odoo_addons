@@ -56,7 +56,8 @@ class IrFilters(models.Model):
     @api.one
     def _get_count(self):
         domain, context = self._get_domain_and_context()
-        self.count = self.env[self.model_id].with_context(context).search_count(domain)
+        self.count = self.env[self.model_id].with_context(
+            context).search_count(domain)
 
     name = fields.Char(translate=True)
     todo_list = fields.Boolean()
@@ -64,17 +65,21 @@ class IrFilters(models.Model):
     color = fields.Integer('Color Index')
     group_ids = fields.Many2many('res.groups', string='Groups')
     count = fields.Integer(compute='_get_count')
-    todo_action_id = fields.Many2one('ir.actions.act_window', 'Todo Action', ondelete='set null')
+    todo_action_id = fields.Many2one(
+        'ir.actions.act_window', 'Todo Action', ondelete='set null')
 
     @api.model
     def _get_action_domain(self, action_id=None):
-        return [('todo_list', '=', False)] + super(IrFilters, self)._get_action_domain(action_id)
+        return [('todo_list', '=', False)] + \
+            super(IrFilters, self)._get_action_domain(action_id)
 
     @api.model
     def create(self, values):
-        if values.get('todo_list') and not values.get('todo_action_id') and values.get('action_id'):
+        if values.get('todo_list') and not values.get('todo_action_id') and \
+                values.get('action_id'):
             act_window_obj = self.env['ir.actions.act_window']
-            values['todo_action_id'] = act_window_obj.search([('id', '=', values.get('action_id'))]).id or False
+            values['todo_action_id'] = act_window_obj.search(
+                [('id', '=', values.get('action_id'))]).id or False
         return super(IrFilters, self).create(values)
 
     @api.multi
@@ -100,12 +105,14 @@ class IrFilters(models.Model):
             'domain': domain,
             'context': context,
         }
-        return self.env[self.model_id].with_context(context).browse().open_wizard(**kwargs)
+        return self.env[self.model_id].with_context(
+            context).browse().open_wizard(**kwargs)
 
     @api.multi
     def _read_group_category_ids(self, domain, **kwargs):
         categories = self.env['ir.filters.category'].search([])
-        return categories.name_get(), {categ.id: categ.fold for categ in categories}
+        return categories.name_get(), \
+            {categ.id: categ.fold for categ in categories}
 
     _group_by_full = {
         'category_id': _read_group_category_ids,
