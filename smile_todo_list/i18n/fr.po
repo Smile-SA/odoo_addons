@@ -1,0 +1,183 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_todo_list
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-10-03 10:38+0000\n"
+"PO-Revision-Date: 2019-10-03 10:38+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_todo_list
+#. openerp-web
+#: code:addons/smile_todo_list/static/src/xml/search.xml:9
+#, python-format
+msgid "Add in todo list"
+msgstr "Ajouter à la Todo list"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters__color
+msgid "Color Index"
+msgstr "Couleur"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters__count
+msgid "Count"
+msgstr "Nombre d'éléments"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters_category__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters_category__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_todo_list
+#: model:ir.filters.category,name:smile_todo_list.ir_filters_categ_3
+msgid "Delegate"
+msgstr "Déléguer"
+
+#. module: smile_todo_list
+#: model_terms:ir.ui.view,arch_db:smile_todo_list.ir_filters_view_kanban
+msgid "Delete"
+msgstr "Supprimer"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters_category__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_todo_list
+#: model:ir.filters.category,name:smile_todo_list.ir_filters_categ_1
+msgid "Do First"
+msgstr "Faire en premier"
+
+#. module: smile_todo_list
+#: model:ir.filters.category,name:smile_todo_list.ir_filters_categ_4
+msgid "Don't"
+msgstr "Ne pas faire"
+
+#. module: smile_todo_list
+#: model_terms:ir.ui.view,arch_db:smile_todo_list.ir_filters_view_kanban
+msgid "Edit"
+msgstr "Modifier"
+
+#. module: smile_todo_list
+#. openerp-web
+#: code:addons/smile_todo_list/static/src/js/search.js:62
+#: code:addons/smile_todo_list/static/src/js/search.js:69
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters__name
+msgid "Filter Name"
+msgstr "Nom de Filtre"
+
+#. module: smile_todo_list
+#. openerp-web
+#: code:addons/smile_todo_list/static/src/js/search.js:62
+#, python-format
+msgid "Filter name is required."
+msgstr "Un libellé est obligatoire"
+
+#. module: smile_todo_list
+#. openerp-web
+#: code:addons/smile_todo_list/static/src/js/search.js:69
+#, python-format
+msgid "Filter with same name already exists."
+msgstr "Un filtre existe déjà avec ce même nom."
+
+#. module: smile_todo_list
+#: model:ir.model,name:smile_todo_list.model_ir_filters
+msgid "Filters"
+msgstr "Filtres"
+
+#. module: smile_todo_list
+#: model:ir.model,name:smile_todo_list.model_ir_filters_category
+msgid "Filters Category"
+msgstr "Catégorie de la todo list"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters_category__fold
+msgid "Folded by Default"
+msgstr "Plié par défaut"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters__group_ids
+msgid "Groups"
+msgstr "Groupes"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters_category__id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters_category____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters_category__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters_category__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters_category__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_todo_list
+#: model:ir.filters.category,name:smile_todo_list.ir_filters_categ_2
+msgid "Schedule"
+msgstr "Planifier"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters_category__sequence
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: smile_todo_list
+#: model:ir.actions.act_window,name:smile_todo_list.action_todo_list
+#: model:ir.ui.menu,name:smile_todo_list.menu_todo_list
+msgid "To-do"
+msgstr "Todo list"
+
+#. module: smile_todo_list
+#: model:ir.actions.act_window,name:smile_todo_list.ir_filters_category_action
+#: model:ir.ui.menu,name:smile_todo_list.ir_filters_category_menu
+#: model_terms:ir.ui.view,arch_db:smile_todo_list.ir_filters_category_view_tree
+msgid "To-do Categories"
+msgstr "Catégories de la Todo list"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters__todo_list
+msgid "Todo List"
+msgstr "Todo List"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters__category_id
+msgid "Todo category"
+msgstr "Catégorie de la Todo list"
+
+#. module: smile_todo_list
+#: model:ir.model.fields,field_description:smile_todo_list.field_ir_filters_todo_list
+msgid "Todo list"
+msgstr "Todo list"

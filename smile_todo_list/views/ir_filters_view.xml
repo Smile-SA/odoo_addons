@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="0">
+
+    <record id="ir_filters_view_form" model="ir.ui.view">
+      <field name="name">ir.filters.form</field>
+      <field name="model">ir.filters</field>
+      <field name="inherit_id" ref="base.ir_filters_view_form"/>
+      <field name="arch" type="xml">
+        <field name="action_id" position="after">
+          <field name="todo_list"/>
+          <label for="category_id" string="" colspan="2"/>
+          <field name="category_id" attrs="{'invisible': [('todo_list', '=', False)]}"/>
+        </field>
+        <field name="context" position="after">
+          <field name="group_ids" colspan="4"/>
+        </field>
+      </field>
+    </record>
+
+    <record id="ir_filters_view_search" model="ir.ui.view">
+      <field name="name">ir.filters.search</field>
+      <field name="model">ir.filters</field>
+      <field name="inherit_id" ref="base.ir_filters_view_search"/>
+      <field name="arch" type="xml">
+        <field name="name" position="after">
+          <field name="category_id"/>
+          <separator/>
+        </field>
+      </field>
+    </record>
+
+    <record id="ir_filters_view_kanban" model="ir.ui.view">
+      <field name="name">ir.filters.kanban</field>
+      <field name="model">ir.filters</field>
+      <field name="arch" type="xml">
+        <kanban default_group_by="category_id" create="false">
+          <field name="color"/>
+          <field name="name"/>
+          <field name="count"/>
+          <templates>
+            <t t-name="kanban-box" t-if="record.count.raw_value">
+              <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card oe_kanban_card_fancy">
+                <div class="o_dropdown_kanban dropdown">
+                  <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" role="button">
+                    <span class="fa fa-bars fa-lg" aria-label="" title=""/>
+                  </a>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <t t-if="widget.editable" groups="base.group_system"><li role="menuitem"><a type="edit">Edit</a></li></t>
+                    <t t-if="widget.deletable" groups="base.group_system"><li role="menuitem"><a type="delete">Delete</a></li></t>
+                    <li role="menuitem"><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                  </ul>
+                </div>
+                <div class="oe_kanban_content">
+                  <a name="view_details" type="object">
+                    <h4><field name="count" class="oe_inline"/> <field name="name"/></h4>
+                  </a>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+
+    <record id="action_todo_list" model="ir.actions.act_window">
+      <field name="name">To-do</field>
+      <field name="res_model">ir.filters</field>
+      <field name="domain">[('todo_list', '=', True)]</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">kanban,form</field>
+    </record>
+
+    <menuitem name="To-do" id="menu_todo_list" sequence="1" action="action_todo_list" web_icon="smile_todo_list,static/description/app_icon.png"/>
+
+    <record id="ir_filters_category_view_tree" model="ir.ui.view">
+      <field name="name">ir.filters.category.tree</field>
+      <field name="model">ir.filters.category</field>
+      <field name="arch" type="xml">
+        <tree editable="top" string="To-do Categories">
+          <field name="sequence" widget="handle"/>
+          <field name="name"/>
+          <field name="fold"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="ir_filters_category_action" model="ir.actions.act_window">
+      <field name="name">To-do Categories</field>
+      <field name="res_model">ir.filters.category</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+    <record id="ir_filters_category_menu" model="ir.ui.menu">
+      <field name="name">To-do Categories</field>
+      <field name="sequence">90</field>
+      <field name="action" ref="ir_filters_category_action"/>
+      <field name="parent_id" ref="base.next_id_2"/>
+    </record>
+
+  </data>
+</openerp>
