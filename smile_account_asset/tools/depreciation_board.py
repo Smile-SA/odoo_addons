@@ -423,10 +423,10 @@ class DepreciationBoardLine(object):
                 board, depreciation_date)
             exceptional_value = self._get_exceptional_value(
                 board, depreciation_date)
-            depreciation_value = float_round(
+            depreciation_value = total and float_round(
                 self.depreciation_value *
                 prorata_temporis_by_period[depreciation_date] / total,
-                precision_digits=board.rounding)
+                precision_digits=board.rounding) or 0.0
             if readonly:
                 gap += depreciation_value - readonly_depreciation_value
                 depreciation_value = readonly_depreciation_value
