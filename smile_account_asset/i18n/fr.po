@@ -87,12 +87,6 @@ msgid "Account Asset Sales"
 msgstr "Plus ou moins-values fiscales"
 
 #. module: smile_account_asset
-#: model:ir.actions.report,name:smile_account_asset.action_report_account_assets
-#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
-msgid "Account Assets"
-msgstr "Immobilisations"
-
-#. module: smile_account_asset
 #: model:ir.ui.view,arch_db:smile_account_asset.report_fiscal_deductions
 msgid "Account Assets Fiscal Deductions"
 msgstr "Déductions fiscales"
@@ -219,6 +213,15 @@ msgstr "Comptes"
 #, python-format
 msgid "Accounts and journals must be linked to the same company as asset category"
 msgstr "Les comptes et journaux doivent appartenir à la même société que celle de la catégorie"
+
+#. module: smile_account_asset
+#: model:ir.actions.act_window,name:smile_account_asset.action_account_asset_report
+#: model:ir.actions.report,name:smile_account_asset.action_report_account_assets
+#: model:ir.model,name:smile_account_asset.model_account_asset_report
+#: model:ir.ui.menu,name:smile_account_asset.menu_account_asset_report
+#: model:ir.ui.view,arch_db:smile_account_asset.report_account_assets
+msgid "Accounts result and depreciations"
+msgstr "Bilan et amortissements de l'exercice"
 
 #. module: smile_account_asset
 #: model:ir.model.fields,field_description:smile_account_asset.field_account_asset_asset_accumulated_amortization_value
@@ -501,13 +504,6 @@ msgstr "Historique des immobilisations"
 #: model:ir.ui.view,arch_db:smile_account_asset.view_account_asset_asset_tree
 msgid "Assets"
 msgstr "Immobilisations"
-
-#. module: smile_account_asset
-#: model:ir.actions.act_window,name:smile_account_asset.action_account_asset_report
-#: model:ir.model,name:smile_account_asset.model_account_asset_report
-#: model:ir.ui.menu,name:smile_account_asset.menu_account_asset_report
-msgid "Assets Report"
-msgstr "Bilan"
 
 #. module: smile_account_asset
 #: model:ir.actions.act_window,name:smile_account_asset.action_account_assets_in_progress_report

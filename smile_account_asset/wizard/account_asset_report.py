@@ -6,7 +6,7 @@ from odoo import models
 class AccountAssetReport(models.TransientModel):
     _name = 'account.asset.report'
     _inherit = 'account.asset.common.report'
-    _description = 'Assets Report'
+    _description = 'Accounts result and depreciations'
 
     def _print_report(self, data):
         return self.env.ref(

@@ -101,15 +101,15 @@
                                             <td class="text-left"><span t-field="asset.name"/></td>
                                             <td class="text-left"><span t-field="asset.in_service_date"/></td>
                                             <td class="text-left"><span t-field="asset.sale_date"/></td>
-                                            <td class="text-right"><span t-esc="asset_infos['purchase']"/></td>
-                                            <td class="text-right"><span t-esc="asset_infos['accounting_previous']"/></td>
-                                            <td class="text-right"><span t-esc="asset_infos['fiscal_previous']"/></td>
-                                            <td class="text-right"><span t-esc="asset_infos['accounting_period']"/></td>
-                                            <td class="text-right"><span t-esc="asset_infos['fiscal_period']"/></td>
-                                            <td class="text-right"><span t-esc="asset_infos['accounting_year']"/></td>
-                                            <td class="text-right"><span t-esc="asset_infos['fiscal_year']"/></td>
-                                            <td class="text-right"><span t-esc="asset_infos['accounting_total']"/></td>
-                                            <td class="text-right"><span t-esc="asset_infos['fiscal_total']"/></td>
+                                            <td class="text-right"><span t-esc="asset_infos['purchase']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                            <td class="text-right"><span t-esc="asset_infos['accounting_previous']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                            <td class="text-right"><span t-esc="asset_infos['fiscal_previous']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                            <td class="text-right"><span t-esc="asset_infos['accounting_period']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                            <td class="text-right"><span t-esc="asset_infos['fiscal_period']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                            <td class="text-right"><span t-esc="asset_infos['accounting_year']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                            <td class="text-right"><span t-esc="asset_infos['fiscal_year']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                            <td class="text-right"><span t-esc="asset_infos['accounting_total']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                            <td class="text-right"><span t-esc="asset_infos['fiscal_total']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
                                         </tr>
                                     </t>
                                 </tbody>
@@ -140,15 +140,15 @@
                                 <tbody>
                                     <tr>
                                         <td class="text-left" colspan="4">Total <span t-field="account.name"/></td>
-                                        <td class="text-right" t-esc="purchase_account"/>
-                                        <td class="text-right" t-esc="accounting_previous_account"/>
-                                        <td class="text-right" t-esc="fiscal_previous_account"/>
-                                        <td class="text-right" t-esc="accounting_period_account"/>
-                                        <td class="text-right" t-esc="fiscal_period_account"/>
-                                        <td class="text-right" t-esc="accounting_year_account"/>
-                                        <td class="text-right" t-esc="fiscal_year_account"/>
-                                        <td class="text-right" t-esc="accounting_total_account"/>
-                                        <td class="text-right" t-esc="fiscal_total_account"/>
+                                        <td class="text-right" t-esc="purchase_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="accounting_previous_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="fiscal_previous_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="accounting_period_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="fiscal_period_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="accounting_year_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="fiscal_year_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="accounting_total_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="fiscal_total_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
                                     </tr>
                                 </tbody>
                             </table>
@@ -190,15 +190,15 @@
                             <tbody>
                                 <tr>
                                     <td colspan="4" class="text-left">Total <span t-field="company.name"/></td>
-                                    <td class="text-right" t-esc="purchase_company"/>
-                                    <td class="text-right" t-esc="accounting_previous_company"/>
-                                    <td class="text-right" t-esc="fiscal_previous_company"/>
-                                    <td class="text-right" t-esc="accounting_period_company"/>
-                                    <td class="text-right" t-esc="fiscal_period_company"/>
-                                    <td class="text-right" t-esc="accounting_year_company"/>
-                                    <td class="text-right" t-esc="fiscal_year_company"/>
-                                    <td class="text-right" t-esc="accounting_total_company"/>
-                                    <td class="text-right" t-esc="fiscal_total_company"/>
+                                    <td class="text-right" t-esc="purchase_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="accounting_previous_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="fiscal_previous_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="accounting_period_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="fiscal_period_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="accounting_year_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="fiscal_year_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="accounting_total_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="fiscal_total_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
                                 </tr>
                             </tbody>
                         </table>

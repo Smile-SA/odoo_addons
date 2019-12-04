@@ -21,7 +21,7 @@
                         <t t-set="book_company" t-value="0.0"/>
 
                         <!-- Main title -->
-                        <h1 class="text-center">Account Assets</h1>
+                        <h1 class="text-center">Accounts result and depreciations</h1>
                         <h2 class="text-center">Depreciation of type accounting</h2>
                         <h3 class="text-center">At <span t-esc="date_to" t-options='{"widget": "date"}'/></h3>
                         <h3 class="text-center">Edition date: <span t-esc="time.strftime('%Y-%m-%d')" t-options='{"widget": "date"}'/></h3>
@@ -72,12 +72,12 @@
                                         <t t-set="asset_infos" t-value="asset_group[1]"/>
 
                                         <!-- Update account infos -->
-                                        <t t-set="purchase_account" t-value="purchase_account + asset_infos['purchase']"/>
-                                        <t t-set="salvage_account" t-value="salvage_account + asset_infos['salvage']"/>
-                                        <t t-set="previous_account" t-value="previous_account + asset_infos['previous']"/>
-                                        <t t-set="current_account" t-value="current_account + asset_infos['current']"/>
-                                        <t t-set="next_account" t-value="next_account + asset_infos['next']"/>
-                                        <t t-set="book_account" t-value="book_account + asset_infos['book']"/>
+                                        <t t-set="purchase_account" t-value="purchase_account + asset_infos['purchase']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <t t-set="salvage_account" t-value="salvage_account + asset_infos['salvage']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <t t-set="previous_account" t-value="previous_account + asset_infos['previous']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <t t-set="current_account" t-value="current_account + asset_infos['current']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <t t-set="next_account" t-value="next_account + asset_infos['next']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <t t-set="book_account" t-value="book_account + asset_infos['book']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
 
                                         <tr>
                                             <td class="text-left"><span t-field="asset.code"/></td>
@@ -86,12 +86,12 @@
                                             <td class="text-center"><span t-field="asset.purchase_date"/></td>
                                             <td class="text-left"><span t-field="asset.accounting_annuities"/></td>
                                             <td class="text-center"><span t-field="asset.sale_date"/></td>
-                                            <td class="text-right" t-esc="asset_infos['purchase']"/>
-                                            <td class="text-right" t-esc="asset_infos['salvage']"/>
-                                            <td class="text-right" t-esc="asset_infos['previous']"/>
-                                            <td class="text-right" t-esc="asset_infos['current']"/>
-                                            <td class="text-right" t-esc="asset_infos['next']"/>
-                                            <td class="text-right" t-esc="asset_infos['book']"/>
+                                            <td class="text-right" t-esc="asset_infos['purchase']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            <td class="text-right" t-esc="asset_infos['salvage']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            <td class="text-right" t-esc="asset_infos['previous']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            <td class="text-right" t-esc="asset_infos['current']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            <td class="text-right" t-esc="asset_infos['next']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            <td class="text-right" t-esc="asset_infos['book']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
                                         </tr>
                                     </t>
                                 </tbody>
@@ -116,23 +116,23 @@
                                 <tbody>
                                     <tr>
                                         <td colspan="6" class="text-left">Total <span t-esc="asset_account.code.rjust(8, '0')"/> <span t-field="asset_account.name"/></td>
-                                        <td class="text-right" t-esc="purchase_account"/>
-                                        <td class="text-right" t-esc="salvage_account"/>
-                                        <td class="text-right" t-esc="previous_account"/>
-                                        <td class="text-right" t-esc="current_account"/>
-                                        <td class="text-right" t-esc="next_account"/>
-                                        <td class="text-right" t-esc="book_account"/>
+                                        <td class="text-right" t-esc="purchase_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="salvage_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="previous_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="current_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="next_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        <td class="text-right" t-esc="book_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
                                     </tr>
                                 </tbody>
                             </table>
 
                             <!-- Update company infos -->
-                            <t t-set="purchase_company" t-value="purchase_company + purchase_account"/>
-                            <t t-set="salvage_company" t-value="salvage_company + salvage_account"/>
-                            <t t-set="previous_company" t-value="previous_company + previous_account"/>
-                            <t t-set="current_company" t-value="current_company + current_account"/>
-                            <t t-set="next_company" t-value="next_company + next_account"/>
-                            <t t-set="book_company" t-value="book_company + book_account"/>
+                            <t t-set="purchase_company" t-value="purchase_company + purchase_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                            <t t-set="salvage_company" t-value="salvage_company + salvage_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                            <t t-set="previous_company" t-value="previous_company + previous_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                            <t t-set="current_company" t-value="current_company + current_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                            <t t-set="next_company" t-value="next_company + next_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                            <t t-set="book_company" t-value="book_company + book_account" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
 
                         </t>
 
@@ -155,12 +155,12 @@
                             <tbody>
                                 <tr>
                                     <td colspan="6" class="text-left">Total <span t-field="company.name"/></td>
-                                    <td class="text-right" t-esc="purchase_company"/>
-                                    <td class="text-right" t-esc="salvage_company"/>
-                                    <td class="text-right" t-esc="previous_company"/>
-                                    <td class="text-right" t-esc="current_company"/>
-                                    <td class="text-right" t-esc="next_company"/>
-                                    <td class="text-right" t-esc="book_company"/>
+                                    <td class="text-right" t-esc="purchase_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="salvage_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="previous_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="current_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="next_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    <td class="text-right" t-esc="book_company" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
                                 </tr>
                             </tbody>
                         </table>
