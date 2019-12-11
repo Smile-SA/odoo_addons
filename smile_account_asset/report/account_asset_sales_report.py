@@ -17,6 +17,9 @@ class ReportAccountAssetSales(models.AbstractModel):
         # Supprime les immobilisations dont la cession a été annulée
         # entre la date de dernière cession et la date de fin
         for asset in assets[:]:
+            # We compare ids of moves because if sale move and sale cancel
+            # move were created at the same date, we have no way to know
+            # which one was created before the other.
             if asset.sale_cancel_move_id and \
                     asset.sale_move_id.id < asset.sale_cancel_move_id.id and \
                     asset.sale_cancel_move_id.date <= data['form']['date_to']:

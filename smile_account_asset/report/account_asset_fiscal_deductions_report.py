@@ -29,7 +29,7 @@ class ReportFiscalDeductions(models.AbstractModel):
             _get_records_to_display_domain(data) + [
                 ('state', 'not in', ('draft', 'confirm')),
                 ('parent_id', '=', False),
-                ('category_id.fiscal_deduction_limit', '!=', False),
+                ('category_id.fiscal_deduction_limit', '!=', 0),
                 '|',
                 ('in_service_account_date', '<=', date_to),
                 '&',
@@ -60,7 +60,7 @@ class ReportFiscalDeductions(models.AbstractModel):
     def _get_asset_infos(self, asset, to_currency, date_to):
         from_currency = asset.currency_id
         date_to_year = fields.Date.from_string(date_to).year
-        purchase = current = accumulated = 0.0
+        purchase = current = current_nd = accumulated = accumulated_nd = 0.0
         for asset_ in asset.child_ids | asset:
             purchase += asset_.purchase_value_sign or 0.0
             depreciation_lines = asset_.accounting_depreciation_line_ids. \
@@ -72,7 +72,8 @@ class ReportFiscalDeductions(models.AbstractModel):
                 accumulated += last_depreciation_line. \
                     previous_years_accumulated_value_sign + \
                     last_depreciation_line.current_year_accumulated_value_sign
-                if last_depreciation_line.year == date_to_year:
+                if last_depreciation_line.year and \
+                        int(last_depreciation_line.year) == date_to_year:
                     current += last_depreciation_line. \
                         current_year_accumulated_value_sign
         book = purchase - accumulated
