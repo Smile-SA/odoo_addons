@@ -192,7 +192,7 @@ msgstr "La quantité semble incohérente avec la plage de numéros"
 
 #. module: smile_checkbook
 #: model:ir.model.fields,field_description:smile_checkbook.field_account_check_state
-msgid "State"
+msgid "Status"
 msgstr "Statut"
 
 #. module: smile_checkbook

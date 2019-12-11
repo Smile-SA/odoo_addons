@@ -20,7 +20,7 @@ class AccountCheck(models.Model):
     state = fields.Selection(
         [('available', 'Available'), ('used', 'Used'), ('lost', 'Lost'),
          ('destroyed', 'Destroyed'), ('stolen', 'Stolen')],
-        'State', required=True, readonly=False)
+        'Status', required=True, readonly=False)
 
     _sql_constraints = [
         ('uniq_number', 'unique(number, partner_id)',
