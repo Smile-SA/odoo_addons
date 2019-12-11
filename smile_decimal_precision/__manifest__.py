@@ -18,6 +18,7 @@ and display digits in decimal precision.
     "data": [
         "views/decimal_precision_view.xml",
         "views/res_currency_view.xml",
+        "views/templates.xml",
     ],
     "auto_install": True,
     "installable": True,
