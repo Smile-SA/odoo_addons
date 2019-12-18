@@ -57,7 +57,8 @@ class AccountTaxRate(models.Model):
 
     @api.model
     def _compute_deduction_rate(self, industry, product, date=None):
-        taxation_rate = industry.taxation_rate_ids._compute_rate(date)
+        taxation_rate = industry.taxation_rate_ids._compute_rate(date) \
+            if industry else 0.0
         admission_rate = product.admission_rate_ids._compute_rate(date)
         subjugation_rate = product.subjugation_rate_ids._compute_rate(date)
         return taxation_rate * admission_rate * subjugation_rate
