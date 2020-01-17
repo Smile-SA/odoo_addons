@@ -9,7 +9,7 @@ class MailMail(orm.Model):
     _inherit = 'mail.mail'
 
     _columns = {
-        'body_html': fields.char(data_mask="'mail_' || id::text"),
-        'email_to': fields.char(data_mask="NULL"),
+        'body_html': fields.text(data_mask="'mail_' || id::text"),
+        'email_to': fields.text(data_mask="NULL"),
         'email_cc': fields.char(data_mask="NULL"),
     }
