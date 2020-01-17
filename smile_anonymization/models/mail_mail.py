@@ -8,6 +8,6 @@ from odoo import fields, models
 class MailMail(models.Model):
     _inherit = 'mail.mail'
 
-    body_html = fields.Char(data_mask="'mail_' || id::text")
-    email_to = fields.Char(data_mask="NULL")
+    body_html = fields.Text(data_mask="'mail_' || id::text")
+    email_to = fields.Text(data_mask="NULL")
     email_cc = fields.Char(data_mask="NULL")
