@@ -390,10 +390,11 @@ after code update and server restarting.</p>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#bug-tracker" id="id12">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="id13">Credits</a><ul>
-<li><a class="reference internal" href="#contributors" id="id14">Contributors</a></li>
-<li><a class="reference internal" href="#maintainer" id="id15">Maintainer</a></li>
+<li><a class="reference internal" href="#known-issues" id="id12">Known Issues</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="id13">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="id14">Credits</a><ul>
+<li><a class="reference internal" href="#contributors" id="id15">Contributors</a></li>
+<li><a class="reference internal" href="#maintainer" id="id16">Maintainer</a></li>
 </ul>
 </li>
 </ul>
@@ -495,8 +496,21 @@ odoo.py -c &lt;config_file&gt; -d &lt;db_name&gt; --load=web,smile_upgrade
 </div>
 </div>
 </div>
+<div class="section" id="known-issues">
+<h2><a class="toc-backref" href="#id12">Known Issues</a></h2>
+<p>Adding fields on models <cite>res.partner</cite> or <cite>res.users</cite> can result to a failure of
+the upgrade.</p>
+<p>To fix that, please add in <cite>pre-load</cite> a SQL file to add field on table <cite>res_partner</cite>
+or <cite>res_users</cite>, by defining the type and of column, constraint and set a default value
+on existing records:</p>
+<pre class="literal-block">
+ALTER TABLE res_users ADD COLUMN IF NOT EXISTS my_new_boolean BOOLEAN;
+UPDATE res_users SET my_new_boolean = TRUE;
+</pre>
+<p>These SQL requests are not required at database creation.</p>
+</div>
 <div class="section" id="bug-tracker">
-<h2><a class="toc-backref" href="#id12">Bug Tracker</a></h2>
+<h2><a class="toc-backref" href="#id13">Bug Tracker</a></h2>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
@@ -504,15 +518,15 @@ If you spotted it first, help us smashing it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h2><a class="toc-backref" href="#id13">Credits</a></h2>
+<h2><a class="toc-backref" href="#id14">Credits</a></h2>
 <div class="section" id="contributors">
-<h3><a class="toc-backref" href="#id14">Contributors</a></h3>
+<h3><a class="toc-backref" href="#id15">Contributors</a></h3>
 <ul class="simple">
 <li>Corentin POUHET-BRUNERIE</li>
 </ul>
 </div>
 <div class="section" id="maintainer">
-<h3><a class="toc-backref" href="#id15">Maintainer</a></h3>
+<h3><a class="toc-backref" href="#id16">Maintainer</a></h3>
 <p>This module is maintained by Smile SA.</p>
 <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
 </div>

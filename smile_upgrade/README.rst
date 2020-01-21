@@ -119,6 +119,23 @@ Example::
     ],
 
 
+Known Issues
+============
+
+Adding fields on models `res.partner` or `res.users` can result to a failure of
+the upgrade.
+
+To fix that, please add in `pre-load` a SQL file to add field on table `res_partner`
+or `res_users`, by defining the type and of column, constraint and set a default value
+on existing records::
+
+    ALTER TABLE res_users ADD COLUMN IF NOT EXISTS my_new_boolean BOOLEAN;
+    UPDATE res_users SET my_new_boolean = TRUE;
+
+These SQL requests are not required at database creation.
+
+
+
 Bug Tracker
 ===========
 
