@@ -7,7 +7,7 @@ import sys
 from odoo import api, models, tools, _
 from odoo.exceptions import UserError
 from odoo.addons.mail.models.mail_template import \
-     format_date,  mako_template_env, \
+    format_date, mako_template_env, \
     mako_safe_template_env, _logger
 
 if sys.version_info > (3,):

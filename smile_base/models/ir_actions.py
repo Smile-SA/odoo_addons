@@ -45,7 +45,7 @@ class IrActionsActions(models.Model):
                     actions, where the latter is given by calling the method
                     ``read`` on the action record.
         """
-        # DLE P19: Need to flush before doing the SELECT, which act as a search.
+        # DLE P19: Need to flush before doing the SELECT, which act as a search
         # Test `test_bindings`
         self.flush()
         cr = self.env.cr
