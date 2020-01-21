@@ -21,14 +21,18 @@ class IrActionsActions(models.Model):
 
     @api.depends('window_actions')
     def _get_window_action_ids(self):
-        ids = None
-        if self.window_actions:
-            ids = list(map(int, filter(bool, self.window_actions.split(','))))
-        self.window_action_ids = self.env['ir.actions.act_window'].browse(ids)
+        ActWindow = self.env['ir.actions.act_window']
+        for action in self:
+            ids = []
+            if action.window_actions:
+                ids = list(map(int, filter(
+                    bool, action.window_actions.split(','))))
+            action.window_action_ids = ActWindow.browse(ids)
 
     def _set_window_action_ids(self):
-        ids = self.window_action_ids.ids or []
-        self.window_actions = ',%s,' % ','.join(map(str, ids))
+        for action in self:
+            ids = action.window_action_ids.ids or []
+            action.window_actions = ',%s,' % ','.join(map(str, ids))
 
     @api.model
     @tools.ormcache_context(
@@ -41,6 +45,9 @@ class IrActionsActions(models.Model):
                     actions, where the latter is given by calling the method
                     ``read`` on the action record.
         """
+        # DLE P19: Need to flush before doing the SELECT, which act as a search.
+        # Test `test_bindings`
+        self.flush()
         cr = self.env.cr
         query = """ SELECT a.id, a.type, a.binding_type
                     FROM ir_actions a, ir_model m
@@ -82,10 +89,13 @@ class IrActionsActWindow(models.Model):
             'context': self._context,
         }
         try:
-            context = safe_eval(self.context or '{}', eval_dict) or {}
-            if 'act_window_id' not in context:
-                self.context = self.context[:1] + "'act_window_id': %s, " \
-                    % self.id + self.context[1:]
+            for act_window in self:
+                context = safe_eval(
+                    act_window.context or '{}', eval_dict) or {}
+                if 'act_window_id' not in context:
+                    act_window.context = act_window.context[:1] + \
+                        "'act_window_id': %s, " % act_window.id + \
+                        act_window.context[1:]
         except Exception:
             pass
 

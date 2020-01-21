@@ -11,5 +11,7 @@ class ResPartner(models.Model):
 
     @api.constrains('email')
     def _check_email_valid(self):
-        if self.email and not tools.single_email_re.match(self.email):
-            raise ValidationError(_('Email is invalid.'))
+        for partner in self:
+            if partner.email and \
+                    not tools.single_email_re.match(partner.email):
+                raise ValidationError(_('Email is invalid.'))
