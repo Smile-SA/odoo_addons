@@ -32,7 +32,8 @@ class AuditLog(models.Model):
     def _get_name(self):
         for rec in self:
             if rec.model_id and rec.res_id:
-                record = rec.env[rec.model_id.model].browse(rec.res_id).exists()
+                record = rec.env[rec.model_id.model].browse(
+                    rec.res_id).exists()
                 if record:
                     rec.name = record.display_name
                 else:
@@ -85,8 +86,8 @@ class AuditLog(models.Model):
         RecordModel = self.env[self.model_id.model]
         for fname in set(data['new'].keys()) | set(data['old'].keys()):
             field = RecordModel._fields.get(fname)
-            if field and (not field.groups or
-                          self.user_has_groups(groups=field.groups)):
+            if field and (not field.groups or self.user_has_groups(
+                    groups=field.groups)):
                 old_value = self._format_value(
                     field, data['old'].get(fname, ''))
                 new_value = self._format_value(
@@ -109,8 +110,9 @@ class AuditLog(models.Model):
                     row += '<td>%s</td>' % item
                 tbody += '<tr>%s</tr>' % row
             tbody = '<tbody>%s</tbody>' % tbody
-            rec.data_html = '<table class="o_list_view table table-condensed ' \
-                            'table-striped">%s%s</table>' % (thead, tbody)
+            rec.data_html = \
+                '<table class="o_list_view table table-condensed ' \
+                'table-striped">%s%s</table>' % (thead, tbody)
 
     def unlink(self):
         raise UserError(_('You cannot remove audit logs!'))

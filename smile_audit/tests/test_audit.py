@@ -24,23 +24,32 @@ class TestAudit(TransactionCase):
 
     def test_log_created_on_create(self):
         """ A log should be created on creating a partner"""
-        log = self.env['audit.log'].search(
-            [('model_id', '=', self.env.ref('base.model_res_partner').id), ('method', '=', 'create'),
-             ('res_id', '=', self.partner.id)], limit=1)
-        self.assertEqual(log.name, 'Partner', 'No audit log after partner creation')
+        log = self.env['audit.log'].search([
+            ('model_id', '=', self.env.ref('base.model_res_partner').id),
+            ('method', '=', 'create'),
+            ('res_id', '=', self.partner.id),
+        ], limit=1)
+        self.assertEqual(
+            log.name, 'Partner', 'No audit log after partner creation')
 
     def test_log_created_on_write(self):
         """ A log should be created on updating a partner"""
         self.partner.write({'name': 'Updated Partner'})
-        log = self.env['audit.log'].search(
-            [('model_id', '=', self.env.ref('base.model_res_partner').id), ('method', '=', 'write'),
-             ('res_id', '=', self.partner.id)])
-        self.assertEqual(log.res_id, self.partner.id, 'No audit log after partner updating')
+        log = self.env['audit.log'].search([
+            ('model_id', '=', self.env.ref('base.model_res_partner').id),
+            ('method', '=', 'write'),
+            ('res_id', '=', self.partner.id),
+        ])
+        self.assertEqual(
+            log.res_id, self.partner.id, 'No audit log after partner updating')
 
     def test_log_created_on_unlink(self):
         """ A log should be created on deleting a partner"""
         self.partner.unlink()
-        log = self.env['audit.log'].search(
-            [('model_id', '=', self.env.ref('base.model_res_partner').id), ('method', '=', 'unlink'),
-             ('res_id', '=', self.partner.id)])
-        self.assertEqual(log.name, 'Partner', 'No audit log after partner unlink')
+        log = self.env['audit.log'].search([
+            ('model_id', '=', self.env.ref('base.model_res_partner').id),
+            ('method', '=', 'unlink'),
+            ('res_id', '=', self.partner.id),
+        ])
+        self.assertEqual(
+            log.name, 'Partner', 'No audit log after partner unlink')
