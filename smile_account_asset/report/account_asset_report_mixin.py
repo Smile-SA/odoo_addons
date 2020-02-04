@@ -28,8 +28,8 @@ class AccountAssetReportMixin(models.AbstractModel):
 
     @api.model
     def _get_records_to_display_domain(self, data):
-        domain = []
         form = data['form']
+        domain = [('company_id', '=', form['company_id'])]
         if form['category_ids']:
             domain += [('category_id', 'in', form['category_ids'])]
         if form['partner_ids']:

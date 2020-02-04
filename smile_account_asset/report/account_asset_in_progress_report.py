@@ -52,6 +52,7 @@ class ReportAccountAssetsInProgress(models.AbstractModel):
         date_to = form['date_to']
         invoice_states = self._get_invoice_states()
         domain = [
+            ('company_id', '=', form['company_id']),
             ('asset_category_id.asset_in_progress', '=', True),
             ('invoice_id.state', 'in', invoice_states),
         ]
