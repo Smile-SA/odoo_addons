@@ -17,7 +17,8 @@ class TestAccessControlPeriod(TransactionCase):
             'name': 'Profile',
             'login': 'profile',
             'is_user_profile': True,
-            'groups_id': [(4, self.env.ref('sales_team.group_sale_manager').id)],
+            'groups_id': [
+                (4, self.env.ref('sales_team.group_sale_manager').id)],
         })
 
         self.user1 = self.env['res.users'].create({
@@ -44,15 +45,15 @@ class TestAccessControlPeriod(TransactionCase):
 
     def _write_sale_order(self, sale, user):
         return sale.with_user(user).write({
-            'payment_term_id': self.env.ref('account.account_payment_term_end_following_month').id,
+            'payment_term_id': self.env.ref(
+                'account.account_payment_term_end_following_month').id,
         })
 
     def test_Access_Control_Period(self):
-        """
-                    Check create user.
-                    Check create and edit sale order:
-                                   with user2 :the period of read only at 2020/01/29 to 2020/02/12
-                                   with user1 :the period of read only at 2019/1/29 to 2019/2/12 => error
+        """ Check create user.
+        Check create and edit sale order:
+        * with user2:t he period of RO at 2020/01/29 to 2020/02/12
+        * with user1 : the period of RO at 2019/1/29 to 2019/2/12 => error
 
         """
         self.assertTrue(self.user1.id)
@@ -61,4 +62,5 @@ class TestAccessControlPeriod(TransactionCase):
         self.assertTrue(self.sale.payment_term_id.id)
         with self.assertRaises(AccessError):
             self._create_sale_order(self.user1)
-            self._write_sale_order(self.env.ref('sale.sale_order_7'), self.user1)
+            self._write_sale_order(self.env.ref(
+                'sale.sale_order_7'), self.user1)
