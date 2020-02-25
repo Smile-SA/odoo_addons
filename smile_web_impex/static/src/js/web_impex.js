@@ -6,6 +6,7 @@ odoo.define('web_impex', function (require) {
     var KanbanController = require('web.KanbanController');
     var ListController = require("web.ListController");
     var _t = core._t;
+    var session = require("web.session");
 
     KanbanController.include({
         /**
@@ -14,16 +15,8 @@ odoo.define('web_impex', function (require) {
         renderButtons: function () {
             this._super.apply(this, arguments); // Sets this.$buttons
 
-            var has_import_group = false;
-            this.getSession().user_has_group('smile_web_impex.group_import').then(function(has_group) {
-                if(has_group) {
-                    has_import_group = true;
-                } else {
-                    has_import_group = false;
-                }
-            });
-
-            if (!has_import_group && this.$buttons != undefined) {
+            var has_import_group = session.has_group_smile_import;
+            if (!has_import_group && this.$buttons !== undefined) {
                 this.$buttons.find('.o_button_import').hide();
             }
         },
@@ -37,16 +30,8 @@ odoo.define('web_impex', function (require) {
         renderButtons: function () {
             this._super.apply(this, arguments); // Sets this.$buttons
 
-            var has_import_group = false;
-            this.getSession().user_has_group('smile_web_impex.group_import').then(function(has_group) {
-                if(has_group) {
-                    has_import_group = true;
-                } else {
-                    has_import_group = false;
-                }
-            });
-
-            if (!has_import_group && this.$buttons != undefined) {
+            var has_import_group = session.has_group_smile_import;
+            if (!has_import_group && this.$buttons !== undefined) {
                 this.$buttons.find('.o_button_import').hide();
             }
         },
@@ -56,18 +41,9 @@ odoo.define('web_impex', function (require) {
          */
         renderSidebar: function ($node) {
             if (this.hasSidebar && !this.sidebar) {
-
-                var has_export_group = false;
-                this.getSession().user_has_group('smile_web_impex.group_export').then(function(has_group) {
-                    if(has_group) {
-                        has_export_group = true;
-                    } else {
-                        has_export_group = false;
-                    }
-                });
-
                 var other = [];
 
+                var has_export_group = session.has_group_smile_export;
                 if (has_export_group) {
                     other.push({
                         label: _t("Export"),
