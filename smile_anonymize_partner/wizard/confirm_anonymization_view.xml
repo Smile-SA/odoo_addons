@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="confirm_anonymization_wizard" model="ir.ui.view">
+            <field name="name">confirm.anonymization.form</field>
+            <field name="model">confirm.anonymization</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form>
+                <h2>Be careful, this action is irreversible. Do you want to continue ?</h2>
+            </form>
+            <footer>
+                <button name="action_confirm" string="Yes" type="object" class="oe_highlight"/>
+                <button string="Cancel" special="cancel" class="oe_link"/>
+            </footer>
+            </field>
+        </record>
+
+    </data>
+</odoo>

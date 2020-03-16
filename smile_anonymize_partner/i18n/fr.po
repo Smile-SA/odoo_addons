@@ -1,0 +1,93 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_anonymize_partner
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-11-27 08:46+0000\n"
+"PO-Revision-Date: 2019-11-27 08:46+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_anonymize_partner
+#: model:res.groups,name:smile_anonymize_partner.group_anonymize_member
+msgid "Anonymize partner Infos"
+msgstr "Anonymiser les données personnelles des partenaires"
+
+#. module: smile_anonymize_partner
+#: model_terms:ir.ui.view,arch_db:smile_anonymize_partner.confirm_anonymization_wizard
+msgid "Be careful, this action is irreversible. Do you want to continue ?"
+msgstr "Attention, cette action est irréversible. Voulez vous continuer ?"
+
+#. module: smile_anonymize_partner
+#: model_terms:ir.ui.view,arch_db:smile_anonymize_partner.confirm_anonymization_wizard
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_anonymize_partner
+#: model:ir.model,name:smile_anonymize_partner.model_confirm_anonymization
+msgid "Confirm anonymization"
+msgstr "Confirmer l'anonymisation"
+
+#. module: smile_anonymize_partner
+#: model:ir.model,name:smile_anonymize_partner.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: smile_anonymize_partner
+#: model:ir.model.fields,field_description:smile_anonymize_partner.field_confirm_anonymization__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_anonymize_partner
+#: model:ir.model.fields,field_description:smile_anonymize_partner.field_confirm_anonymization__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_anonymize_partner
+#: model:ir.model.fields,field_description:smile_anonymize_partner.field_confirm_anonymization__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_anonymize_partner
+#: model:ir.model.fields,field_description:smile_anonymize_partner.field_confirm_anonymization__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_anonymize_partner
+#: model:ir.model.fields,field_description:smile_anonymize_partner.field_res_partner__is_anonymized
+#: model:ir.model.fields,field_description:smile_anonymize_partner.field_res_users__is_anonymized
+msgid "Is Anonymized"
+msgstr "Est anonymisé"
+
+#. module: smile_anonymize_partner
+#: model:ir.model.fields,field_description:smile_anonymize_partner.field_confirm_anonymization____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_anonymize_partner
+#: model:ir.model.fields,field_description:smile_anonymize_partner.field_confirm_anonymization__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_anonymize_partner
+#: model:ir.model.fields,field_description:smile_anonymize_partner.field_confirm_anonymization__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_anonymize_partner
+#: model_terms:ir.ui.view,arch_db:smile_anonymize_partner.confirm_anonymization_wizard
+msgid "Yes"
+msgstr "Oui"
+
+#. module: smile_anonymize_partner
+#: code:addons/smile_anonymize_partner/models/res_partner.py:23
+#, python-format
+msgid "You don't have access to do this action. Please contact your system administrator."
+msgstr "Vous n'avez pas les droits pour faire cette action. Veuillez contacter votre administrateur système."
