@@ -128,11 +128,3 @@ class ResUsers(models.Model):
         else:
             self._update_users_linked_to_profile(vals.keys())
         return res
-
-    def copy_data(self, cr, uid, user_id, default=None, context=None):
-        default = default.copy() if default else {}
-        default['user_ids'] = []
-        if self.read(cr, uid, user_id, ['is_user_profile'], context)['is_user_profile']:
-            default['is_user_profile'] = False
-            default['user_profile_id'] = user_id
-        return super(ResUsers, self).copy_data(cr, uid, user_id, default, context)
