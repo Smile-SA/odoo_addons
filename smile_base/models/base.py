@@ -66,9 +66,8 @@ class Base(models.AbstractModel):
                     [(fname, 'in', self._ids) for fname in fnames]
                 SubModel = self.env[model]
                 sub_models = SubModel.search(domain)
-                sub_model_ids = list(
-                    set(sub_models._ids) -
-                    set(self._context['unlink_in_cascade'].get(model, [])))
+                sub_model_ids = list(set(sub_models._ids) - set(
+                    self._context['unlink_in_cascade'].get(model, [])))
                 if sub_model_ids:
                     self._context['unlink_in_cascade'].setdefault(model, []). \
                         extend(sub_model_ids)
