@@ -89,8 +89,18 @@ class IrModelFields(models.Model):
     def _get_anonymization_query(self):
         query = "DELETE FROM ir_attachment WHERE name ilike '/web/content/%'" \
                 "OR name ilike '%/static/%';\n"
+        data = {}
         for field in self:
             if field.data_mask:
-                query += "UPDATE %s SET %s = %s;\n" % (
-                    self.env[field.model]._table, field.name, field.data_mask)
+                if self.env[field.model]._table not in data.keys():
+                    data[self.env[field.model]._table] = [
+                        "UPDATE %s SET %s = %s" % (self.env[field.model]._table, field.name, field.data_mask)]
+                else:
+                    if 'where'.lower() in field.data_mask.lower():
+                        data[self.env[field.model]._table].append(
+                            "UPDATE %s SET %s = %s" % (self.env[field.model]._table, field.name, field.data_mask))
+                    else:
+                        data[self.env[field.model]._table][0] += ",%s = %s" % (field.name, field.data_mask)
+        for val in data.values():
+            query += ";\n".join(val) + ";\n"
         return query
