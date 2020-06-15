@@ -31,6 +31,7 @@ class AnonymizeDatabase(Database):
             cr = pooler.get_db(anon_db_name).cursor()
             cr.execute(anon_query)
             cr.commit()
+            cr.close()
             backup_db = anon_db_name
         return backup_db, dbs
 

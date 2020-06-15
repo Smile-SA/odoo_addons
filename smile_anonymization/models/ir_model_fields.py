@@ -76,9 +76,21 @@ class IrModelFields(orm.Model):
         return self._get_anonymization_query(cr, uid, field_ids, context=context)
 
     def _get_anonymization_query(self, cr, uid, ids, context=None):
-        query = "DELETE FROM ir_attachment WHERE name ilike '/web/content/%'"\
+        query = "DELETE FROM ir_attachment WHERE name ilike '/web/content/%'" \
                 "OR name ilike '%/static/%';\n"
         # query = ''
+        data = {}
         for field in self.browse(cr, uid, ids, context=context):
-            query += "UPDATE %s SET %s = %s;\n" % (field.model_id.model.replace('.', '_'), field.name, field.data_mask)
+            if field.model_id.model.replace('.', '_') not in data.keys():
+                data[field.model_id.model.replace('.', '_')] = [
+                    "UPDATE %s SET %s = %s" % (field.model_id.model.replace('.', '_'), field.name, field.data_mask)]
+            else:
+                if 'where'.lower() in field.data_mask.lower():
+                    data[field.model_id.model.replace('.', '_')].append(
+                        "UPDATE %s SET %s = %s" % (field.model_id.model.replace('.', '_'), field.name, field.data_mask))
+                else:
+                    data[field.model_id.model.replace('.', '_')][0] += ",%s = %s" % (field.name, field.data_mask)
+        for val in data.values():
+            query += ";\n".join(val) + ";\n"
         return query
+
