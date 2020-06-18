@@ -7,6 +7,7 @@
     "version": "0.1",
     "depends": [
         "mail",
+        "web",
     ],
     "author": "Smile",
     "license": 'AGPL-3',
