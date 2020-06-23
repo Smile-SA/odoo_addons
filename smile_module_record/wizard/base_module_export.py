@@ -106,7 +106,8 @@ class BaseModuleExport(models.TransientModel):
         res_ids_by_model = {model.model: [] for model in models}
         for index, (model, fields_to_export) in enumerate(datas):
             res_obj = self.env[model]
-            recs = res_obj.search(res_obj._log_access and domain or [])
+            # make sure to copy domain so the array doesn't change between ticks
+            recs = res_obj.search(domain[:] if res_obj._log_access else [])
             if 'parent_left' in res_obj._fields:
                 recs = recs.sorted(key=lambda rec: rec.parent_left)
             res_ids_by_model[model] = recs.ids
