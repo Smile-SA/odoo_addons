@@ -16,12 +16,6 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: smile_base
-#: code:addons/smile_base/models/base.py:170
-#, python-format
-msgid "%s is not a stored compute/function field"
-msgstr "%s n'est pas un champ de calcul stocké / fonction stockée"
-
-#. module: smile_base
 #: model:ir.model,name:smile_base.model_ir_actions_act_window
 msgid "Action Window"
 msgstr "Action de fenêtre"
