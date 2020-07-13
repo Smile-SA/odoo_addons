@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="smile_log_tree_view" model="ir.ui.view">
+            <field name="name">Smile Log - Tree</field>
+            <field name="model">smile.log</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Logs">
+                    <field name="log_date"/>
+                    <field name="pid"/>
+                    <field name="model_name"/>
+                    <field name="res_id"/>
+                    <field name="level"/>
+                    <field name="message"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="smile_log_search_view" model="ir.ui.view">
+            <field name="name">Smile Log - Search</field>
+            <field name="model">smile.log</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Logs">
+                    <field name="log_date"/>
+                    <field name="pid"/>
+                    <field name="model_name"/>
+                    <field name="level"/>
+                    <field name="message"/>
+                    <field name="res_id"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="4">
+                        <filter string="Model" name="model_name" icon="terp-stage" domain="[]" context="{'group_by':'model_name'}"/>
+                        <filter string="PID" name="pid" icon="terp-account" domain="[]" context="{'group_by':'pid'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="act_smile_log" model="ir.actions.act_window">
+            <field name="name">Logs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">smile.log</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+		<menuitem id="menu_logging" parent="base.menu_custom" name="Logging" sequence="110"/>
+        <menuitem id="menu_smile_log" parent="menu_logging" name="Logs" action="act_smile_log"/>
+
+        <record id="smile_log_simple_tree_view" model="ir.ui.view">
+            <field name="name">Smile Log - Tree</field>
+            <field name="model">smile.log</field>
+            <field name="type">tree</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <tree string="Logs" editable="top" create="false">
+                    <field name="log_date"/>
+                    <field name="pid"/>
+                    <field name="level"/>
+                    <field name="message"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>
