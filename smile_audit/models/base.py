@@ -11,9 +11,8 @@ from odoo.tools.safe_eval import safe_eval
 class Base(models.AbstractModel):
     _inherit = "base"
 
-    def _read_from_database(self, field_names, inherited_field_names=[]):
-        super(Base, self)._read_from_database(
-            field_names, inherited_field_names)
+    def _read(self, field_names):
+        super(Base, self)._read(field_names)
         # Store history revision in cache
         if self._context.get('history_revision'):
             group_ids = self.env.user.groups_id.ids
@@ -39,9 +38,11 @@ class Base(models.AbstractModel):
                             vals.update(data.get('old', {}))
                     if 'message_ids' in self._fields:
                         vals['message_ids'] = record.message_ids.filtered(
-                            lambda msg: msg.date <= history_date)
-                    record._cache.update(record._convert_to_cache(
-                        vals, validate=False))
+                            lambda msg: msg.date <= history_date).ids
+                    if 'activity_ids' in self._fields:
+                        vals['activity_ids'] = record.activity_ids.filtered(
+                            lambda act: act.create_date <= history_date).ids
+                    record._cache.update(vals)
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
