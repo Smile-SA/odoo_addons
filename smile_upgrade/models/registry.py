@@ -40,7 +40,7 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                         dict(config['init']), dict(config['update'])
                     if not upgrade_manager.db_in_creation:
                         upgrade_manager.pre_load()
-                        config['init'].update({
+                        config['update'].update({
                             module: True for module in
                             upgrade_manager.modules_to_upgrade
                         })
