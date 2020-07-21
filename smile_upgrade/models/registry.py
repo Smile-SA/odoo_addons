@@ -44,7 +44,6 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
                             module: True for module in
                             upgrade_manager.modules_to_upgrade
                         }
-                        config['init'].update(modules_to_update)
                         config['update'].update(modules_to_update)
                     else:
                         config['init'].update({
