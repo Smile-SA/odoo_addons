@@ -67,14 +67,15 @@ class Base(models.AbstractModel):
                 domain = ['|'] * (len(fnames) - 1) + \
                     [(fname, 'in', self._ids) for fname in fnames]
                 SubModel = self.env[model]
-                sub_models = SubModel.search(domain)
-                sub_model_ids = list(
-                    set(sub_models._ids) -
-                    set(self._context['unlink_in_cascade'].get(model, [])))
-                if sub_model_ids:
-                    self._context['unlink_in_cascade'].setdefault(model, []). \
-                        extend(sub_model_ids)
-                    SubModel.browse(sub_model_ids).unlink()
+                if not SubModel._abstract:
+                    sub_models = SubModel.search(domain)
+                    sub_model_ids = list(
+                        set(sub_models._ids) -
+                        set(self._context['unlink_in_cascade'].get(model, [])))
+                    if sub_model_ids:
+                        self._context['unlink_in_cascade'].setdefault(model, []). \
+                            extend(sub_model_ids)
+                        SubModel.browse(sub_model_ids).unlink()
         if not self.exists():
             return True
         return super(Base, self).unlink()
