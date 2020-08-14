@@ -9,14 +9,13 @@ odoo.define('web_editor_always_display_code_view.field_html', function (require)
         * @override
         */
         _getWysiwygOptions: function () {
-            var self = this;
             var wysiwygOptions = this._super();
             var superGenerateOptions = wysiwygOptions.generateOptions;
             wysiwygOptions.generateOptions = function (options) {
-                var options = superGenerateOptions(options);
-                var toolbar = options.toolbar || options.airPopover || {};
+                var optionsSuper = superGenerateOptions(options);
+                var toolbar = optionsSuper.toolbar || optionsSuper.airPopover || {};
                 if (!config.isDebug()) {
-                    options.codeview = true;
+                    optionsSuper.codeview = true;
                     var view = _.find(toolbar, function (item) {
                         return item[0] === 'view';
                     });
@@ -28,8 +27,8 @@ odoo.define('web_editor_always_display_code_view.field_html', function (require)
                         toolbar.splice(-1, 0, ['view', ['codeview']]);
                     }
                 }
-                return options;
-            }
+                return optionsSuper;
+            };
             return wysiwygOptions;
         },
     });
