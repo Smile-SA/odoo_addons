@@ -477,6 +477,13 @@ class AccountAssetAsset(models.Model):
         # Create new lines
         line_infos = self.env['account.asset.depreciation.method']. \
             compute_depreciation_board(**kwargs)
+        # Round dot because of Python float limit decimal
+        rounding = self.currency_id.display_rounding
+        for line_info in line_infos:
+            for key, value in line_info.items():
+                if isinstance(value, (int, float)):
+                    value = int(value * (1 / rounding)) / (1 / rounding)
+                    line_info[key] = value
         return self._update_or_create_depreciation_lines(
             line_infos, depreciation_type)
 
