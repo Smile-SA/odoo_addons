@@ -22,7 +22,7 @@ class AuditLog(models.Model):
     model_id = fields.Many2one(
         'ir.model', 'Model', required=True, readonly=True)
     model = fields.Char(
-        related='model_id.model', store=True, readonly=True, index=True)
+        'Model Name', related='model_id.model', store=True, readonly=True, index=True)
     res_id = fields.Integer('Resource Id', readonly=True)
     method = fields.Char('Method', size=64, readonly=True)
     data = fields.Text('Data', readonly=True)
