@@ -28,7 +28,7 @@ class SmileLog(models.Model):
     def _get_res_name(self):
         for log in self:
             log.log_res_name = ""
-            res = self.env[self.model_name].browse(log.res_id)
+            res = self.env[log.model_name].browse(log.res_id)
             infos = res.name_get()
             if infos:
                 log.log_res_name = infos[0][1]
