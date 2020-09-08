@@ -133,6 +133,7 @@ class TalendJob(models.Model):
         for job in self:
             if job.archive:
                 queue.append((job.id, depth))
+            job.child_ids._build_queue(queue, depth)
 
     def _check_execution(self):
         if self.mapped('log_ids').filtered(lambda log: log.state == 'running'):
@@ -162,7 +163,8 @@ class TalendJob(models.Model):
                 log = self.env['talend.job.logs'].create({'job_id': job_id})
 
                 if log.state != 'done':
-                    msg = 'JOB<id={}, name={}> failed'.format(job_id, self.browse(job_id).name)
+                    msg = 'JOB<id={}, name={}> failed'.format(
+                        job_id, self.browse(job_id).name)
                     raise ExecutionError(msg)
 
     @api.model
@@ -208,9 +210,9 @@ class TalendJob(models.Model):
                 zf.extractall(rec._get_path())
             os.chmod(rec._get_exefile(),
                      # -rwxr-xr-x
-                     stat.S_IRWXU +
-                     stat.S_IRGRP + stat.S_IXGRP +
-                     stat.S_IROTH + stat.S_IXOTH)
+                     stat.S_IRWXU
+                     + stat.S_IRGRP + stat.S_IXGRP
+                     + stat.S_IROTH + stat.S_IXOTH)
 
     def refresh_logs(self):
         return True
