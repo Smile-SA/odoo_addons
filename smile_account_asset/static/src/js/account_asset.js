@@ -26,7 +26,7 @@ odoo.define('smile_account_asset.create_asset', function (require) {
         renderButtons: function ($node) {
             this._super.apply(this, arguments);
             var el = this;
-            var actions = this.getParent().actions;
+            var actions = this.getParent().actions || {};
             Object.keys(actions).forEach(function(key) {
                 var action = actions[key];
                 if (el.modelName === 'account.invoice.line' &&
