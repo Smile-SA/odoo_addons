@@ -524,8 +524,9 @@ class AccountAssetAsset(models.Model):
                     'last_day_of_previous_sale_month':
                 last_day_of_previous_sale_month = True
                 sale_date = fields.Date.to_string(
-                    fields.Date.from_string(sale_date, '%Y-%m-%d') +
-                    relativedelta(day=1) + relativedelta(days=-1))
+                    fields.Date.from_string(sale_date)
+                    + relativedelta(day=1)
+                    + relativedelta(days=-1))
         return {
             'code': method,
             'purchase_value': self.purchase_value,
