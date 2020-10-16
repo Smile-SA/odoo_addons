@@ -5,7 +5,7 @@
 import os
 import time
 
-from odoo import api, models, fields
+from odoo import api, fields, models
 
 
 class SmileLog(models.Model):
@@ -28,10 +28,11 @@ class SmileLog(models.Model):
     def _get_res_name(self):
         for log in self:
             log.log_res_name = ""
-            res = self.env[log.model_name].browse(log.res_id)
-            infos = res.name_get()
-            if infos:
-                log.log_res_name = infos[0][1]
+            if log.model_name:
+                res = self.env[log.model_name].browse(log.res_id)
+                infos = res.name_get()
+                if infos:
+                    log.log_res_name = infos[0][1]
 
     log_date = fields.Datetime('Date', readonly=True)
     log_uid = fields.Integer('User', readonly=True)

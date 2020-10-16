@@ -33,7 +33,7 @@ msgstr "Grouper par..."
 #. module: smile_log
 #: model:ir.model.fields,field_description:smile_log.field_smile_log__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: smile_log
 #: model:ir.model.fields,field_description:smile_log.field_smile_log____last_update
@@ -62,7 +62,7 @@ msgstr "Historiques"
 #. module: smile_log
 #: model:ir.model.fields,field_description:smile_log.field_smile_log__message
 msgid "Message"
-msgstr ""
+msgstr "Message"
 
 #. module: smile_log
 #: model_terms:ir.ui.view,arch_db:smile_log.smile_log_search_view
@@ -77,12 +77,12 @@ msgstr "Nom du modèle"
 #. module: smile_log
 #: model_terms:ir.ui.view,arch_db:smile_log.smile_log_search_view
 msgid "PID"
-msgstr ""
+msgstr "PID"
 
 #. module: smile_log
 #: model:ir.model.fields,field_description:smile_log.field_smile_log__pid
 msgid "Pid"
-msgstr ""
+msgstr "Pid"
 
 #. module: smile_log
 #: model:ir.model.fields,field_description:smile_log.field_smile_log__res_id
