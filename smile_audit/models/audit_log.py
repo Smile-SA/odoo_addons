@@ -3,11 +3,10 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 
 from dateutil import tz
-import datetime
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, datetime
 
 
 class AuditLog(models.Model):

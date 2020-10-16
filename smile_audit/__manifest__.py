@@ -16,7 +16,6 @@ all the objects of the system
     """,
     "depends": [
         'base',
-        'smile_test'
     ],
     "data": [
         'security/ir.model.access.csv',

@@ -40,13 +40,13 @@ def audit_decorator(method):
                  self.ids != self._context.get('audit_rec_ids'))):
             rule = self._get_audit_rule('write')
         if rule:
-            old_values = self.read(load='_classic_write')
+            old_values = self.sudo().read(load='_classic_write')
         result = audit_write.origin(self, vals)
         if rule:
             if audit_write.origin.__name__ == '_write':
                 new_values = get_new_values(self)
             else:
-                new_values = self.read(load='_classic_write')
+                new_values = self.sudo().read(load='_classic_write')
             rule.log('write', old_values, new_values)
         return result
 
