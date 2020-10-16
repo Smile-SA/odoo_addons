@@ -1,0 +1,295 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_base_automation
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-01 06:47+0000\n"
+"PO-Revision-Date: 2018-03-01 06:47+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_base_automation
+#: model:ir.model,name:smile_base_automation.model_base_automation_execution
+msgid "Automated Action Execution"
+msgstr "Execution de l'action automatisée"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_rule_id
+msgid "Automated Action"
+msgstr "Action automatisée"
+
+#. module: smile_base_automation
+#: selection:ir.actions.server,execution_mode:0
+msgid "Asynchronous"
+msgstr "Asynchrone"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_category_attachment_ids
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_attachment_ids
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_attachment_ids
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_model_methods_attachment_ids
+msgid "Attachments"
+msgstr "Pièces jointes"
+
+#. module: smile_base_automation
+#: model:ir.model,name:smile_base_automation.model_base_automation
+msgid "Automated Action"
+msgstr "Action automatisée"
+
+#. module: smile_base_automation
+#: model:ir.model,name:smile_base_automation.model_base_automation_category
+msgid "Automated Action Category"
+msgstr "Catégorie d'action automatisée"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_category_id_5506
+msgid "Category"
+msgstr "Catégorie"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_context
+msgid "Context"
+msgstr "Contexte"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_create_date
+msgid "Create Date"
+msgstr "Date de création"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_category_create_uid
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_create_uid
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_create_uid
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_model_methods_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_category_create_date
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_create_date
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_model_methods_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_base_automation
+#: selection:base.automation,exception_warning:0
+msgid "Custom"
+msgstr "Personnalisée"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_category_display_name
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_display_name
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_display_name
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_model_methods_display_name
+msgid "Display Name"
+msgstr "Nom à afficher"
+
+#. module: smile_base_automation
+#: selection:ir.actions.server.execution,state:0
+msgid "Done"
+msgstr "Terminé"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_exception_handling
+msgid "Exception Handling"
+msgstr "Traitement de l'exception"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_exception_message
+msgid "Exception Message"
+msgstr "Message d'alerte"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_exception_warning
+msgid "Exception Warning"
+msgstr "Type d'alerte"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_mode
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_mode
+msgid "Execution Mode"
+msgstr "Mode d'exécution"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_counter
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_ids
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_ids
+msgid "Executions"
+msgstr "Exécutions"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_force_actions_execution
+msgid "Force actions execution when records list is empty"
+msgstr "Forcer l'exécution des actions même quand la liste des enregistrements est vide"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_category_id
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_id
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_id
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_model_methods_id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_base_automation
+#: selection:base.automation,exception_handling:0
+msgid "Ignore actions in exception"
+msgstr "Ignorer les actions en exception"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_model_methods_is_public
+msgid "Is Public"
+msgstr "Est publique"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_category___last_update
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution___last_update
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution___last_update
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_model_methods___last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_category_write_uid
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_write_uid
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_write_uid
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_model_methods_write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_category_write_date
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_write_date
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_write_date
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_model_methods_write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_base_automation
+#: model:ir.actions.server,name:smile_base_automation.ir_cron_server_action_execution_ir_actions_server
+#: model:ir.cron,cron_name:smile_base_automation.ir_cron_server_action_execution
+#: model:ir.cron,name:smile_base_automation.ir_cron_server_action_execution
+msgid "Launch server actions execution"
+msgstr "Exécuter les actions serveur"
+
+#. module: smile_base_automation
+#: selection:ir.actions.server,execution_mode:0
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_locked
+msgid "Locked"
+msgstr "Verrouillé"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_log_ids
+msgid "Logs"
+msgstr "Historiques"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_max_executions
+msgid "Max executions"
+msgstr "Exécutions max."
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_method_id
+msgid "Method"
+msgstr "Méthode"
+
+#. module: smile_base_automation
+#: model:ir.actions.act_window,name:smile_base_automation.action_ir_model_methods_tree
+#: model:ir.ui.menu,name:smile_base_automation.menu_ir_model_methods_tree
+#: model:ir.ui.view,arch_db:smile_base_automation.view_ir_model_methods_search
+#: model:ir.ui.view,arch_db:smile_base_automation.view_ir_model_methods_tree
+msgid "Methods"
+msgstr "Méthodes"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_model_methods_model_id
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_base_automation
+#: model:ir.model,name:smile_base_automation.model_ir_model_methods
+msgid "Model Method"
+msgstr "Méthode"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_category_name
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_model_methods_name
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_base_automation
+#: selection:base.automation,exception_warning:0
+msgid "Native"
+msgstr "Native"
+
+#. module: smile_base_automation
+#: selection:base.automation,exception_warning:0
+msgid "None"
+msgstr "Aucune"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,help:smile_base_automation.field_base_automation_max_executions
+msgid "Number of time actions are runned"
+msgstr "Nombre de fois que l'action est exécutée"
+
+#. module: smile_base_automation
+#: model:ir.ui.view,arch_db:smile_base_automation.view_ir_model_methods_search
+msgid "Public methods"
+msgstr "Méthodes publiques"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_base_automation_execution_res_id
+msgid "Record"
+msgstr "Enregistrement"
+
+#. module: smile_base_automation
+#: selection:base.automation,exception_handling:0
+msgid "Rollback transaction"
+msgstr "Annuler la transaction"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_action_id
+msgid "Server Action"
+msgstr "Action serveur"
+
+#. module: smile_base_automation
+#: model:ir.model,name:smile_base_automation.model_ir_actions_server_execution
+msgid "Server Action Execution"
+msgstr "Exécution Action serveur"
+
+#. module: smile_base_automation
+#: model:ir.model.fields,field_description:smile_base_automation.field_ir_act_server_execution_state
+msgid "State"
+msgstr "Statut"
+
+#. module: smile_base_automation
+#: selection:ir.actions.server,execution_mode:0
+msgid "Synchronous"
+msgstr "Synchrone"
+
+#. module: smile_base_automation
+#: code:addons/smile_base_automation/models/ir_actions.py:93
+#, python-format
+msgid "This action is under execution!"
+msgstr "Cette action est en cours d'exécution !"
+
+#. module: smile_base_automation
+#: selection:ir.actions.server.execution,state:0
+msgid "To Do"
+msgstr "A effectuer"
+
+#. module: smile_base_automation
+#: model:ir.model,name:smile_base_automation.model_ir_actions_server
+msgid "Server Actions"
+msgstr "Actions serveur"
+
+#. module: smile_base_automation
+#: selection:base.automation,trigger:0
+msgid "On Other Method"
+msgstr "A l'appel d'une autre méthode"
