@@ -13,18 +13,12 @@ import sys
 import tempfile
 import threading
 import zipfile
-import logging
 
 from odoo import api, fields, models, registry, _
 from odoo.exceptions import UserError, ValidationError
 
 from .talend_job_logs import STATES
 
-
-_logger = logging.getLogger(__name__)
-
-
-class ExecutionError(Exception): pass
 
 class TalendJob(models.Model):
     _name = 'talend.job'
@@ -117,7 +111,7 @@ class TalendJob(models.Model):
 
     @api.multi
     def run_only(self):
-        return self._run(depth=0)
+        return self._run(depth=1)
 
     @api.multi
     def _run(self, depth=-1):
@@ -133,10 +127,13 @@ class TalendJob(models.Model):
 
     @api.multi
     def _build_queue(self, queue, depth=-1):
-        self._check_execution()
-        for job in self:
-            if job.archive:
-                queue.append((job.id, depth))
+        if depth:
+            depth -= 1
+            self._check_execution()
+            for job in self:
+                if job.archive:
+                    queue.append(job.id)
+                job.child_ids._build_queue(queue, depth)
 
     @api.multi
     def _check_execution(self):
@@ -145,14 +142,10 @@ class TalendJob(models.Model):
 
     @api.model
     def _process_queue(self, queue):
+        queue.reverse()
         while queue:
-            job_id, depth = queue.pop(0)
-            try:
-                self._process_job(job_id)
-            except ExecutionError as e:
-                pass
-            else:
-                self._add_child_jobs(job_id, depth, queue)
+            job_id = queue.pop()
+            self._process_job(job_id)
 
     @api.model
     def _process_job(self, job_id):
@@ -164,21 +157,7 @@ class TalendJob(models.Model):
                 # a running Talend job logs
                 self = self.with_env(self.env(cr=auto_cr))
                 self._cr.autocommit(True)
-                log = self.env['talend.job.logs'].create({'job_id': job_id})
-
-                if log.state != 'done':
-                    msg = 'JOB<id={}, name={}> failed'.format(job_id, self.browse(job_id).name)
-                    raise ExecutionError(msg)
-
-    @api.model
-    def _add_child_jobs(self, job_id, depth, queue):
-        if depth:
-            depth -= 1
-            with api.Environment.manage():
-                with registry(self._cr.dbname).cursor() as auto_cr:
-                    self = self.with_env(self.env(cr=auto_cr))
-                    for child in self.browse(job_id).child_ids:
-                        queue.append((child.id, depth))
+                self.env['talend.job.logs'].create({'job_id': job_id})
 
     @api.multi
     def _get_zipfile(self):

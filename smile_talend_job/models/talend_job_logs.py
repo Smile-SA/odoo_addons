@@ -20,7 +20,6 @@ STATES = [
     ('running', 'Running'),
     ('done', 'Done'),
     ('killed', 'Killed'),
-    ('failed', 'Failed'),
 ]
 
 
@@ -94,11 +93,7 @@ class TalendJobLogs(models.Model):
                 loop -= 1
         except Exception as e:
             self.logs += str(e)
-            self.write({
-                'end_date': fields.Datetime.now(),
-                'state': 'failed',
-            })
-        else:
+        finally:
             self.write({
                 'end_date': fields.Datetime.now(),
                 'state': 'done',
