@@ -120,8 +120,8 @@ class AccountInvoiceLine(models.Model):
         asset_type = 'purchase'
         amount = quantity = 0.0
         for line in self:
-            sign = line.invoice_id.journal_id.type == 'purchase_refund' and \
-                -1.0 or 1.0
+            sign = (line.invoice_id.journal_id.type == 'purchase'
+                    and line.invoice_id.type == 'in_refund') and -1.0 or 1.0
             amount += line.price_subtotal * sign
             quantity += line.quantity * sign
         if amount < 0.0:

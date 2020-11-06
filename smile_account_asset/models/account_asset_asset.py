@@ -477,13 +477,6 @@ class AccountAssetAsset(models.Model):
         # Create new lines
         line_infos = self.env['account.asset.depreciation.method']. \
             compute_depreciation_board(**kwargs)
-        # Round dot because of Python float limit decimal
-        rounding = self.currency_id.display_rounding
-        for line_info in line_infos:
-            for key, value in line_info.items():
-                if isinstance(value, (int, float)):
-                    value = int(value * (1 / rounding)) / (1 / rounding)
-                    line_info[key] = value
         return self._update_or_create_depreciation_lines(
             line_infos, depreciation_type)
 
@@ -533,8 +526,9 @@ class AccountAssetAsset(models.Model):
                     'last_day_of_previous_sale_month':
                 last_day_of_previous_sale_month = True
                 sale_date = fields.Date.to_string(
-                    fields.Date.from_string(sale_date, '%Y-%m-%d') +
-                    relativedelta(day=1) + relativedelta(days=-1))
+                    fields.Date.from_string(sale_date)
+                    + relativedelta(day=1)
+                    + relativedelta(days=-1))
         return {
             'code': method,
             'purchase_value': self.purchase_value,
@@ -706,6 +700,7 @@ class AccountAssetAsset(models.Model):
         lines = []
         if amount_excl_tax:
             debit, credit = abs(amount_excl_tax), 0.0
+            # TODO: fix journal type `purchase_refund` that is deprecated
             if (amount_excl_tax < 0.0) ^ (
                     journal_type in ('sale', 'purchase_refund')):
                 debit, credit = abs(credit), abs(debit)
@@ -739,6 +734,7 @@ class AccountAssetAsset(models.Model):
                         accounts['analytic_account_id'], default))
             if amount_excl_tax + tax_amount:
                 debit, credit = 0.0, abs(amount_excl_tax + tax_amount)
+                # TODO: fix journal type `purchase_refund` that is deprecated
                 if (amount_excl_tax + tax_amount < 0.0) ^ \
                         (journal_type in ('sale', 'purchase_refund')):
                     debit, credit = credit, debit

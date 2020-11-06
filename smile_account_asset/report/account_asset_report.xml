@@ -85,7 +85,7 @@
                                             <td class="text-center"><span t-field="asset.accounting_method"/></td>
                                             <td class="text-center"><span t-field="asset.purchase_date"/></td>
                                             <td class="text-left"><span t-field="asset.accounting_annuities"/></td>
-                                            <td class="text-center"><span t-field="asset.sale_date"/></td>
+                                            <td class="text-center"><span t-field="asset.sale_date" t-if="asset.state == 'close'"/></td>
                                             <td class="text-right" t-esc="asset_infos['purchase']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
                                             <td class="text-right" t-esc="asset_infos['salvage']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>
                                             <td class="text-right" t-esc="asset_infos['previous']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/>

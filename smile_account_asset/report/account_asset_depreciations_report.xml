@@ -100,7 +100,7 @@
                                             <td class="text-left"><span t-field="asset.code"/></td>
                                             <td class="text-left"><span t-field="asset.name"/></td>
                                             <td class="text-left"><span t-field="asset.in_service_date"/></td>
-                                            <td class="text-left"><span t-field="asset.sale_date"/></td>
+                                            <td class="text-left"><span t-field="asset.sale_date" t-if="asset.state == 'close'"/></td>
                                             <td class="text-right"><span t-esc="asset_infos['purchase']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
                                             <td class="text-right"><span t-esc="asset_infos['accounting_previous']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>
                                             <td class="text-right"><span t-esc="asset_infos['fiscal_previous']" t-esc-options='{"widget": "monetary", "display_currency": currency}'/></td>

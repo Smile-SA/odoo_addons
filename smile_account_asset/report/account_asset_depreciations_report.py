@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class ReportAccountAssetDepreciations(models.AbstractModel):
@@ -93,5 +93,42 @@ class ReportAccountAssetDepreciations(models.AbstractModel):
                     asset_infos['fiscal_total'] = last_fiscal_line. \
                     previous_years_accumulated_value_sign
                 asset_infos['fiscal_year'] = 0.0
+        self._adjust_previous_amounts(asset_infos, asset, date_to, is_posted)
         return self._convert_to_currency(
             asset_infos, from_currency, to_currency)
+
+    def _adjust_previous_amounts(self, asset_infos, asset, date_to, is_posted):
+        """
+        Ensure that depreciation lines having depreciation date on
+        a previous year but that related to an asset having Entry
+        into service date on the current year are displayed
+        with a null amount on the previous year.
+        """
+        DepreciationLine = self.env['account.asset.depreciation.line']
+        domain = [
+            ('asset_id', '=', asset.id),
+            ('depreciation_date', '<=', date_to),
+        ]
+        if is_posted:
+            domain += [('is_posted', '=', True)]
+        depreciation_lines = DepreciationLine.search(
+            domain, order='depreciation_date asc')
+        if not depreciation_lines:
+            return
+        in_service_account_date_year = fields.Date.from_string(
+            asset.in_service_account_date).year
+        first_line_year = fields.Date.from_string(
+            depreciation_lines[0].depreciation_date).year
+        date_to_year = fields.Date.from_string(date_to).year
+        if first_line_year == date_to_year - 1 and \
+                in_service_account_date_year == date_to_year:
+            accounting_total = asset_infos['accounting_total']
+            fiscal_total = asset_infos['fiscal_total']
+            asset_infos.update({
+                'accounting_previous': 0.0,
+                'fiscal_previous': 0.0,
+                'accounting_period': fiscal_total,
+                'fiscal_period': fiscal_total,
+                'accounting_year': accounting_total,
+                'fiscal_year': fiscal_total,
+            })

@@ -48,6 +48,7 @@
             <field name="base_value">book_value</field>
             <field name="use_salvage_value" eval="False"/>
             <field name="depreciation_start_date">first_day_of_purchase_month</field>
+            <field name="depreciation_stop_date">last_day_of_previous_sale_month</field>
             <field name="use_manual_rate" eval="True"/>
             <field name="rate_formula">max(rate, annuity_number &lt;= length and 100 / (length - annuity_number + 1) or 0)</field>
             <field name="prorata" eval="True"/>

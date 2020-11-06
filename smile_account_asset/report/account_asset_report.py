@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, models
+from odoo import api, fields, models
 
 from ..tools import get_fiscalyear_start_date
 
@@ -80,6 +80,10 @@ class ReportAccountAssets(models.AbstractModel):
                 current_year_accumulated_value_sign,
                 'book': depreciation_line.book_value_sign,
             }
+            # We only have to adjust amounts in this case, because
+            # when we read values inside asset history, previous value
+            # is already set to 0
+            self._adjust_previous_amounts(res, asset, date_to, is_posted)
         else:
             for history in asset.asset_history_ids.sorted('date_to'):
                 if history.date_to > date_to:
@@ -101,3 +105,34 @@ class ReportAccountAssets(models.AbstractModel):
                 }
         res['next'] = res['previous'] + res['current']
         return self._convert_to_currency(res, from_currency, to_currency)
+
+    def _adjust_previous_amounts(self, asset_infos, asset, date_to, is_posted):
+        """
+        Ensure that depreciation lines having depreciation date on
+        a previous year but that related to an asset having Entry
+        into service date on the current year are displayed
+        with a null amount on the previous year.
+        """
+        DepreciationLine = self.env['account.asset.depreciation.line']
+        domain = [
+            ('asset_id', '=', asset.id),
+            ('depreciation_date', '<=', date_to),
+        ]
+        if is_posted:
+            domain += [('is_posted', '=', True)]
+        depreciation_lines = DepreciationLine.search(
+            domain, order='depreciation_date asc')
+        if not depreciation_lines:
+            return
+        in_service_account_date_year = fields.Date.from_string(
+            asset.in_service_account_date).year
+        first_line_year = fields.Date.from_string(
+            depreciation_lines[0].depreciation_date).year
+        date_to_year = fields.Date.from_string(date_to).year
+        if first_line_year == date_to_year - 1 and \
+                in_service_account_date_year == date_to_year:
+            current = asset_infos['previous'] + asset_infos['current']
+            asset_infos.update({
+                'previous': 0.0,
+                'current': current,
+            })
