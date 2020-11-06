@@ -30,8 +30,10 @@ class AuditLog(models.Model):
 
     @api.one
     def _get_name(self):
+        # Use sudo because `compute_sudo = True` fails
         if self.model_id and self.res_id:
-            record = self.env[self.model_id.model].browse(self.res_id).exists()
+            record = self.env[self.model_id.model].sudo().browse(
+                self.res_id).exists()
             if record:
                 self.name = record.display_name
             else:
@@ -114,7 +116,8 @@ class AuditLog(models.Model):
             thead += '<th>%s</th>' % head
         thead = '<thead><tr>%s</tr></thead>' % thead
         tbody = ''
-        for line in self._get_content():
+        # Use sudo because `compute_sudo = True` fails
+        for line in self.sudo()._get_content():
             row = ''
             for item in line:
                 row += '<td>%s</td>' % item
