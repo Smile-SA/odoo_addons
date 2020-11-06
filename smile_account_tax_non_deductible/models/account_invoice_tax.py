@@ -12,8 +12,12 @@ class AccountInvoiceTax(models.Model):
 
     deduction_rate = fields.Float(
         digits=(13, 12))
+    # Store these 2 fields to ensure that adjustment done in
+    # AccountInvoice._adjust_non_deductible_amounts will stay
     amount_deductible = fields.Monetary(
-        compute='_compute_amount_total')
+        compute='_compute_amount_total', store=True)
+    amount_total = fields.Monetary(
+        store=True)
 
     @api.one
     @api.depends('amount', 'amount_rounding', 'deduction_rate')

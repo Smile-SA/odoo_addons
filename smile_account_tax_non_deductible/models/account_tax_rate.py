@@ -45,7 +45,7 @@ class AccountTaxRate(models.Model):
     @api.multi
     def _compute_rate(self, date=None):
         if not self:
-            return 1
+            return None
         date = date or fields.Date.today()
         domain = [
             ('id', 'in', self.ids),
@@ -53,12 +53,25 @@ class AccountTaxRate(models.Model):
             ('start_date', '<=', date),
         ]
         rate = self.search(domain, limit=1, order='start_date desc')
-        return rate and rate.value or 1.0
+        return rate.value
 
     @api.model
     def _compute_deduction_rate(self, industry, product, date=None):
+        """Compute 3 kinds of rates at the given date
+        - If none of the rates exist: return 0.0
+        - If one of the rates is equal to 0.0: return 0.0
+        - Otherwise, return the multiplication of the defined rates
+        """
         taxation_rate = industry.taxation_rate_ids._compute_rate(date) \
             if industry else 0.0
         admission_rate = product.admission_rate_ids._compute_rate(date)
         subjugation_rate = product.subjugation_rate_ids._compute_rate(date)
+        if all(rate is None for rate in (
+                taxation_rate, admission_rate, subjugation_rate)) or \
+            any(rate == 0.0 for rate in (
+                taxation_rate, admission_rate, subjugation_rate)):
+            return 0
+        taxation_rate = taxation_rate or 1.0
+        admission_rate = admission_rate or 1.0
+        subjugation_rate = subjugation_rate or 1.0
         return taxation_rate * admission_rate * subjugation_rate
