@@ -2,7 +2,7 @@
 # (C) 2020 Smile (<http://www.smile.eu>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class IrModelMethods(models.Model):

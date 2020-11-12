@@ -27,14 +27,13 @@ class ActionRuleTest(TransactionCase):
 
     def test_10_automation_on_create(self):
         self.create_trigger('on_create')
-        self.model.create({'name': 'testCreate'})
-        # record = self.model.create({'name': 'testCreate'})
-        # self.assertEquals(record.name, str(record.id))
+        record = self.model.create({'name': 'testCreate'})
+        self.assertEquals(record.name, str(record.id))
 
     def test_20_automation_on_write(self):
         self.create_trigger('on_write')
         record = self.model.create({'name': 'testWrite'})
-        record.write({'login': 'test2'})
+        record.write({'name': 'testWrite2'})
         self.assertEquals(record.name, str(record.id))
 
     def test_30_automation_on_other_method(self):
