@@ -7,8 +7,10 @@ from . import models
 from . import tools
 from . import wizard
 
+from dateutil.relativedelta import relativedelta
+
+from odoo import fields, tools as odoo_tools
 from odoo.api import Environment, SUPERUSER_ID
-from odoo import tools
 
 
 def pre_init_hook(cr):
@@ -27,18 +29,20 @@ def post_init_hook(cr, registry):
     correct_datetime_format_fr(cr)
     correct_datetime_format_eng(cr)
     remove_menus(cr)
+    prevent_expiration_database(cr)
 
 
 def add_act_window_id_in_context(cr):
     env = Environment(cr, SUPERUSER_ID, {})
-    env['ir.actions.act_window'].with_context(active_test=False).search([])._update_context()
+    env['ir.actions.act_window'].with_context(
+        active_test=False).search([])._update_context()
 
 
 def disable_update_notification_cron(cr):
     env = Environment(cr, SUPERUSER_ID, {})
     cron = env.ref('mail.ir_cron_module_update_notification', False)
     if cron:
-        cron.active = tools.config.get(
+        cron.active = odoo_tools.config.get(
             'enable_publisher_warranty_contract_notification', False)
 
 
@@ -46,7 +50,8 @@ def set_default_lang(cr):
     env = Environment(cr, SUPERUSER_ID, {})
     if env['res.lang'].search([('code', '=', 'fr_FR')], limit=1):
         partner_lang_field_id = env.ref('base.field_res_partner__lang').id
-        value = env['ir.default'].search([('field_id', '=', partner_lang_field_id)], limit=1)
+        value = env['ir.default'].search(
+            [('field_id', '=', partner_lang_field_id)], limit=1)
         vals = {
             'field_id': partner_lang_field_id,
             'json_value': '"fr_FR"',
@@ -92,3 +97,10 @@ def remove_menus(cr):
             pass
 
 
+def prevent_expiration_database(cr):
+    env = Environment(cr, SUPERUSER_ID, {})
+    if not env['ir.config_parameter'].search([('key', '=', 'database.expiration_date')]):
+        env['ir.config_parameter'].create({
+            'key': 'database.expiration_date',
+            'value': fields.Date.today() + relativedelta(years=10),
+        })
