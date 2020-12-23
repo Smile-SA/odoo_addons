@@ -76,9 +76,9 @@ class Base(models.AbstractModel):
             return True
         return super(Base, self).unlink()
 
-    def modified(self, fnames, create=False):
+    def modified(self, fnames, *args, **kwargs):
         if self._context.get('recompute', True):
-            super(Base, self).modified(fnames, create)
+            super(Base, self).modified(fnames, *args, **kwargs)
 
     def _try_lock(self, warning=None):
         try:
