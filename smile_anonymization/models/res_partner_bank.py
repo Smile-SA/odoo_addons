@@ -8,6 +8,6 @@ from odoo import fields, models
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    acc_type = fields.Char(data_mask="'bank'")
+    acc_type = fields.Selection(data_mask="'bank'")
     acc_number = fields.Char(data_mask="'acc_number_' || id::text")
     sanitized_acc_number = fields.Char(data_mask="'acc_number_' || id::text")
