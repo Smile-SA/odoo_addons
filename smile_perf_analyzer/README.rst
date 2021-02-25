@@ -82,6 +82,10 @@ To show the Logs :
    :alt: logs
    :width: 900 px
 
+Known Issues
+===========
+This module is incompatible with the module smile_data_integration. In order to still be able to install both, you must add "_old_id = False" to the class "IrLoggingPerfLog" in /models/perf_log.py
+
 Bug Tracker
 ===========
 
