@@ -33,7 +33,7 @@ class Base(models.AbstractModel):
     def _validate_fields(self, fields_to_validate, excluded_names=()):
         if not self._context.get('no_validate'):
             try:
-                super(Base, self)._validate_fields(fields_to_validate, excluded_names)
+                super()._validate_fields(fields_to_validate, excluded_names)
             except ValidationError as e:
                 name = e.name.replace(
                     "%s\n\n" % _("Error while validating constraint"), ""). \

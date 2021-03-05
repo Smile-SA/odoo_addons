@@ -52,7 +52,7 @@ class MailTemplate(models.Model):
 
         # try to load the template
         try:
-            mako_env = jinja_safe_template_env if self.env.context.get('safe') \
+            mako_env = jinja_safe_template_env if self._context.get('safe') \
                 else jinja_template_env
             template = mako_env.from_string(tools.ustr(template_txt))
         except Exception:

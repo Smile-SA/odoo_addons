@@ -30,7 +30,8 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     def _valid_field_parameter(self, field, name):
-        return name == 'data_mask' or super()._valid_field_parameter(field, name)
+        return name == 'data_mask' or super()._valid_field_parameter(
+            field, name)
 
 
 class IrModelFields(models.Model):
@@ -57,7 +58,8 @@ class IrModelFields(models.Model):
                             % unsafe_keyword)
 
     def _reflect_field_params(self, field, model_id):
-        vals = super(IrModelFields, self)._reflect_field_params(field, model_id)
+        vals = super(IrModelFields, self)._reflect_field_params(
+            field, model_id)
         vals['data_mask'] = getattr(field, 'data_mask', None)
         return vals
 
@@ -99,13 +101,20 @@ class IrModelFields(models.Model):
             if field.data_mask:
                 if self.env[field.model]._table not in data.keys():
                     data[self.env[field.model]._table] = [
-                        "UPDATE %s SET %s = %s" % (self.env[field.model]._table, field.name, field.data_mask)]
+                        "UPDATE %s SET %s = %s" % (
+                            self.env[field.model]._table,
+                            field.name, field.data_mask
+                        )]
                 else:
                     if 'where'.lower() in field.data_mask.lower():
                         data[self.env[field.model]._table].append(
-                            "UPDATE %s SET %s = %s" % (self.env[field.model]._table, field.name, field.data_mask))
+                            "UPDATE %s SET %s = %s" % (
+                                self.env[field.model]._table,
+                                field.name, field.data_mask
+                            ))
                     else:
-                        data[self.env[field.model]._table][0] += ",%s = %s" % (field.name, field.data_mask)
+                        data[self.env[field.model]._table][0] += ",%s = %s" % (
+                            field.name, field.data_mask)
         for val in data.values():
             query += ";\n".join(val) + ";\n"
         return query

@@ -8,12 +8,16 @@ class PopupMessage(models.Model):
     _rec_name = 'title'
     _description = 'Popup message'
 
-    model_id = fields.Many2one(comodel_name='ir.model', string='Model', required=True, ondelete='cascade')
+    model_id = fields.Many2one(
+        comodel_name='ir.model', string='Model', required=True,
+        ondelete='cascade')
     model = fields.Char(related='model_id.model')
-    field_ids = fields.Many2many(comodel_name='ir.model.fields', required=True, string='Fields')
+    field_ids = fields.Many2many(
+        comodel_name='ir.model.fields', required=True, string='Fields')
     field_name = fields.Char(compute='_compute_field_name')
-    popup_type = fields.Selection(string='Type', required=True, default='confirm',
-                                  selection=[('confirm', 'Confirmation'), ('alert', 'Alert')])
+    popup_type = fields.Selection(
+        string='Type', required=True, default='confirm',
+        selection=[('confirm', 'Confirmation'), ('alert', 'Alert')])
     title = fields.Char(string='Title')
     message = fields.Text(string='Message', required=True)
     active = fields.Boolean(string='Active', default=True)

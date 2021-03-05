@@ -66,17 +66,20 @@ class TalendJob(models.Model):
             if record.archive:
                 with record._get_zipfile() as zf:
                     filename = 'jobInfo.properties'
-                    # INFO: can't use configparser because this file has no section
+                    # INFO: can't use configparser because this file
+                    # has no section
                     with zf.open(filename) as f:
                         reader = csv.reader(
                             codecs.iterdecode(f.readlines(), 'utf-8'),
-                            delimiter='=', escapechar='\\', quoting=csv.QUOTE_NONE)
+                            delimiter='=', escapechar='\\',
+                            quoting=csv.QUOTE_NONE)
                         for row in reader:
                             if row[0] == 'jobVersion':
                                 record.version = row[1]
             else:
                 record.version = max(
-                    record._get_all_children().filtered('version').mapped('version'),
+                    record._get_all_children().filtered(
+                        'version').mapped('version'),
                     default='')
 
     def _get_all_children(self):

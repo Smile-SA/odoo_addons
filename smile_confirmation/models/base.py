@@ -14,17 +14,19 @@ class BaseModel(models.AbstractModel):
             - In create self is empty
             - In write self is not empty contains current ID
             :param values:
-                - In create dictionary contains all recording information self is False
+                - In create dictionary contains all recording
+                    information self is False
                 - In write we find only values changed
             :type values: dict
-            :return: return dict object popup.message (self.env['popup.message'].read())
+            :return: return dict object popup.message
+                (self.env['popup.message'].read())
         """
         return False
 
     def execute_processing(self, values=False):
         """
-            This function gives us the possibility to execute a specific treatment after
-            the confirmation of the message.
+            This function gives us the possibility to execute a
+                specific treatment after the confirmation of the message
             - In create self is empty
             - In write self is not empty contains current ID
             :param values : a list of dictionaries:
