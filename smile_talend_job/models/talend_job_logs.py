@@ -59,7 +59,7 @@ class TalendJobLogs(models.Model):
                 getattr(Registry, 'setup_models')))
 
     job_id = fields.Many2one(
-        'talend.job', 'Talend Job', require=True, ondelete='cascade')
+        'talend.job', 'Talend Job', required=True, ondelete='cascade')
     state = fields.Selection(
         STATES, 'Status', readonly=True, required=True, default='running')
     pid = fields.Integer('Process Id', readonly=True)
