@@ -9,7 +9,7 @@ from . import wizard
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, tools as odoo_tools
+from odoo import fields
 from odoo.api import Environment, SUPERUSER_ID
 
 
