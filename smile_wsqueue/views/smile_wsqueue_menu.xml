@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_wsqueue_jobs" name="Jobs" parent="base.menu_administration"/>
+    </data>
+</odoo>
