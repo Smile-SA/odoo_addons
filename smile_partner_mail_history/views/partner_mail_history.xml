@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="smile_partner_mail_history assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/smile_partner_mail_history/static/src/scss/partner_mail_history.scss"/>
+        </xpath>
+    </template>
+</odoo>

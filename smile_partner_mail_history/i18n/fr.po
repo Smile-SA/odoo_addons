@@ -1,0 +1,58 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_partner_mail_history
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-06 15:15+0000\n"
+"PO-Revision-Date: 2020-08-06 15:15+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_partner_mail_history
+#: model_terms:ir.ui.view,arch_db:smile_partner_mail_history.view_message_form_partner_mail_history
+msgid "Body"
+msgstr "Corps"
+
+#. module: smile_partner_mail_history
+#: model:ir.model,name:smile_partner_mail_history.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: smile_partner_mail_history
+#: model_terms:ir.ui.view,arch_db:smile_partner_mail_history.view_partner_form
+msgid "History"
+msgstr "Historique"
+
+#. module: smile_partner_mail_history
+#: model_terms:ir.ui.view,arch_db:smile_partner_mail_history.view_message_form_partner_mail_history
+msgid "Message"
+msgstr ""
+
+#. module: smile_partner_mail_history
+#: model_terms:ir.ui.view,arch_db:smile_partner_mail_history.view_message_tree_partner_mail_history
+msgid "Messages"
+msgstr ""
+
+#. module: smile_partner_mail_history
+#: model:ir.model.fields,field_description:smile_partner_mail_history.field_res_partner__messages_count
+#: model:ir.model.fields,field_description:smile_partner_mail_history.field_res_users__messages_count
+msgid "Messages Count"
+msgstr "Nombre de messages"
+
+#. module: smile_partner_mail_history
+#: model_terms:ir.ui.view,arch_db:smile_partner_mail_history.view_message_form_partner_mail_history
+msgid "Recipients"
+msgstr "Destinataires"
+
+#. module: smile_partner_mail_history
+#: code:addons/smile_partner_mail_history/models/res_partner.py:0
+#, python-format
+msgid "This partner %s does not have any messages history!"
+msgstr "Ce partenaire %s n'a pas d'historique de messages !"

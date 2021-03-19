@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- mail.message simple form -->
+        <record model="ir.ui.view" id="view_message_form_partner_mail_history">
+            <field name="name">mail.message.form.partner.mail.history</field>
+            <field name="model">mail.message</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <form string="Message" create="false" edit="false" delete="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="subject"/>
+                                <field name="date"/>
+                                <field name="email_from"/>
+                                <field name="author_id"/>
+                            </group>
+                            <group>
+                                <field name="message_type"/>
+                                <field name="subtype_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="body" string="Body">
+                                <field name="body" options="{'style-inline': true}" widget="html"/>
+                                <group>
+                                    <field nolabel="1" name="attachment_ids" widget="many2many_binary"/>
+                                </group>
+                            </page>
+                            <page name="recipients" string="Recipients">
+                                <group>
+                                    <group>
+                                        <field name="partner_ids" widget="many2many_tags"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="notification_ids">
+                                        <tree>
+                                            <field name="res_partner_id"/>
+                                            <field name="is_read"/>
+                                            <field name="notification_type"/>
+                                            <field name="notification_status"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- mail.message simple tree -->
+        <record model="ir.ui.view" id="view_message_tree_partner_mail_history">
+            <field name="name">mail.message.tree.partner.mail.history</field>
+            <field name="model">mail.message</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <tree string="Messages" create="false" edit="false" delete="false" class="mail_message_tree">
+                    <field name="date"/>
+                    <field name="subject"/>
+                    <field name="author_id"/>
+                    <field name="model"/>
+                    <field name="message_type"/>
+                    <field name="subtype_id"/>
+                    <field name="partner_ids" widget="many2many_tags"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>
