@@ -6,6 +6,7 @@ services:
           - HOST=db
           - USER=odoo
           - PASSWORD=odoo
+          - _JAVA_OPTIONS=-Xmx2048m -XX:CompressedClassSpaceSize=256m -Xmx300m
         build: .
         ports:
             - 8069:8069

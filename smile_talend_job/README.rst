@@ -14,20 +14,55 @@ This module allows the execution of Talend jobs , it is useful during data integ
 
 Features:
 
-* Execution of a Talend job by importing its archive .
+* Execution of a Talend job by importing its archive.
 * Visualization of the job's execution logs (creation date, end date, details, state, execution duration).
 * Offers the possibility to add context variables to manage various execution types (database to use, username, password, port, host...).
 * Definition of children jobs.
 * Definition of the parent job.
 * Passing a context environment to children jobs.
 * Control the allocated memory for the job execution (by specifying the argument in the args field).
-* Jobs and their executions logs storage .
+* Jobs and their executions logs storage.
 
 
 **Table of contents**
 
 .. contents::
    :local:
+
+Requirements
+============
+
+Install Java
+~~~~~~~~~~~~
+
+You need to install Java on the server hosting Odoo, to execute Talend jobs
+directly from Odoo.
+
+To install Java on Debian/Ubuntu:
+
+.. code-block::
+
+   sudo apt-get update
+   sudo apt-get install -y default-jdk
+   java --version
+
+Configure Java options
+~~~~~~~~~~~~~~~~~~~~~~
+
+If you encounter the following error during execution:
+
+.. code-block::
+
+   Could not allocate metaspace: 1073741824 bytes
+
+That means that Java is not allowed to use enough memory to execute
+your job.
+
+To increase memory that Java can use, set this option to your environment:
+
+.. code-block::
+
+   _JAVA_OPTIONS=-Xmx2048m -XX:CompressedClassSpaceSize=256m -Xmx300m
 
 
 Usage
@@ -38,7 +73,7 @@ To run a Talend job:
 #. Go to ``Settings > Talend Jobs`` menu.
 #. Press the button ``Create``.
 #. Insert the name of the job (the name should be the same name used for the job in Talend studio ).
-#. Upload the job's archive file (zip format) to ``archive field`` .
+#. Upload the job's archive file (zip format) to ``archive field``.
 #. Click on  ``Run`` button.
 #. Click on ``Refresh logs`` button.
 
@@ -48,7 +83,7 @@ To run a Talend job:
 
 To propagate a context environment to children jobs :
 
-#. Add the concerned children jobs to ``Children field`` .
+#. Add the concerned children jobs to ``Children field``.
 #. Click on ``Propagate context`` button.
 
 .. figure:: static/description/context_propagate.png
@@ -57,7 +92,7 @@ To propagate a context environment to children jobs :
 
 Parameters you can specify  :
 
-#. Path : to specify the path to the job's directory .
+#. Path : to specify the path to the job's directory.
 #. Args : add -Xms64M or -Xmx1024M to control the available memory for the job's execution.
 #. Loop : to specify the number of times the job will be executed.
 #. Parent : to indicate the parent job.
@@ -96,12 +131,12 @@ Credits
 =======
 
 Contributors
-------------
+~~~~~~~~~~~~
 
 * Corentin POUHET-BRUNERIE
 
 Maintainer
-----------
+~~~~~~~~~~
 
 This module is maintained by Smile SA.
 
