@@ -152,6 +152,17 @@ class Base(models.AbstractModel):
             logs.append('<b>%s</b>: %s' % (label, log))
         return logs
 
+    def recompute_fields(self, fnames):
+        for fname in fnames:
+            field = self._fields[fname]
+            if getattr(field, 'store') and getattr(field, 'compute'):
+                self.env.add_to_compute(field, self)
+            else:
+                raise UserError(_('%s is not a stored compute/function field')
+                                % fname)
+        self.recompute(fnames, self)
+        return True
+
     @api.model
     def _create_unique_index(self, column, where_clause=None):
         create_unique_index(self._cr, self._name, column, where_clause)
