@@ -50,7 +50,7 @@ class ConfigManager(object):
             return
         config = ConfigParser()
         try:
-            config.readfp(open(config_file))
+            config.read_file(open(config_file))
             for (key, value) in config.items('options'):
                 if value in ('True', 'False'):
                     value = safe_eval(value)
