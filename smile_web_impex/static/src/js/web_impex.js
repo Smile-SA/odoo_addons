@@ -17,10 +17,14 @@ odoo.define('web_impex', function (require) {
 
             this.getSession().user_has_group('smile_web_impex.group_import').then(function(has_group) {
                 if(!has_group) {
-                    self.$buttons.find('.o_button_import').hide();
+                    if (self.$buttons) {
+                        self.$buttons.find('.o_button_import').hide();
+                    }
                 }
                 else {
+                    if (self.$buttons) {
                       self.$buttons.find('.o_button_import').show();
+                    }
                 }
             });
         },
@@ -37,10 +41,14 @@ odoo.define('web_impex', function (require) {
 
             this.getSession().user_has_group('smile_web_impex.group_import').then(function(has_group) {
                 if(!has_group) {
-                      self.$buttons.find('.o_button_import').hide();
+                    if (self.$buttons) {
+                        self.$buttons.find('.o_button_import').hide();
+                    }
                 }
                 else {
-                      self.$buttons.find('.o_button_import').show();
+                    if (self.$buttons) {
+                        self.$buttons.find('.o_button_import').show();
+                    }
                 }
             });
 
