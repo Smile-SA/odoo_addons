@@ -12,15 +12,20 @@ odoo.define('web_impex', function (require) {
          * Hide "Import" button if user has no Import group.
          */
         renderButtons: function () {
-             var self = this;
+            var self = this;
             this._super.apply(this, arguments); // Sets this.$buttons
 
-            this.getSession().user_has_group('smile_web_impex.group_import').then(function(has_group) {
-                if(!has_group) {
-                    self.$buttons.find('.o_button_import').hide();
+            this.getSession().user_has_group('smile_web_impex.group_import').then(function (has_group) {
+                if (!has_group) {
+                    if (self.$buttons) {
+                        self.$buttons.find('.o_button_import').hide();
+                    }
                 }
                 else {
-                      self.$buttons.find('.o_button_import').show();
+                    if (self.$buttons) {
+                        self.$buttons.find('.o_button_import').show();
+                    }
+
                 }
             });
         },
@@ -35,29 +40,37 @@ odoo.define('web_impex', function (require) {
             var self = this;
             this._super.apply(this, arguments); // Sets this.$buttons
 
-            this.getSession().user_has_group('smile_web_impex.group_import').then(function(has_group) {
-                if(!has_group) {
-                      self.$buttons.find('.o_button_import').hide();
+            this.getSession().user_has_group('smile_web_impex.group_import').then(function (has_group) {
+                if (!has_group) {
+                    if (self.$buttons) {
+                        self.$buttons.find('.o_button_import').hide();
+                    }
                 }
                 else {
-                      self.$buttons.find('.o_button_import').show();
+                    if (self.$buttons) {
+                        self.$buttons.find('.o_button_import').show();
+                    }
                 }
             });
 
         },
 
-         _updateButtons: function (mode) {
+        _updateButtons: function (mode) {
             var self = this;
             this._super.apply(this, arguments);
-          this.getSession().user_has_group('smile_web_impex.group_export').then(function(has_group) {
-                if(!has_group) {
-                      self.$buttons.find('.o_list_export_xlsx').hide();
+            this.getSession().user_has_group('smile_web_impex.group_export').then(function (has_group) {
+                if (!has_group) {
+                    if (self.$buttons) {
+                        self.$buttons.find('.o_list_export_xlsx').hide();
+                    }
                 }
-                  else {
-                      self.$buttons.find('.o_list_export_xlsx').show();
+                else {
+                    if (self.$buttons) {
+                        self.$buttons.find('.o_list_export_xlsx').show();
+                    }
                 }
             });
-    },
+        },
 
         /**
          * Hide "Export" action if user has no Export group.
@@ -65,11 +78,11 @@ odoo.define('web_impex', function (require) {
         renderSidebar: async function ($node) {
             var self = this;
             if (this.hasSidebar && !this.sidebar) {
-            var other = [];
-            var has_export_group = false;
+                var other = [];
+                var has_export_group = false;
 
-            const group_export = await this.getSession().user_has_group('smile_web_impex.group_export').then(function(has_group) {
-                    if(has_group) {
+                const group_export = await this.getSession().user_has_group('smile_web_impex.group_export').then(function (has_group) {
+                    if (has_group) {
                         has_export_group = true;
                     } else {
                         has_export_group = false;
@@ -82,7 +95,7 @@ odoo.define('web_impex', function (require) {
                         callback: this._onExportData.bind(this)
                     }];
                 }
-                  if (this.archiveEnabled) {
+                if (this.archiveEnabled) {
                     other.push({
                         label: _t("Archive"),
                         callback: this._toggleArchiveState.bind(this, true)
@@ -100,19 +113,19 @@ odoo.define('web_impex', function (require) {
                     });
                 }
 
-             self.sidebar = new Sidebar(self, {
+                self.sidebar = new Sidebar(self, {
                     editable: self.is_action_enabled('edit'),
                     env: {
                         context: self.model.get(self.handle).getContext(),
                         activeIds: self.getSelectedIds(),
                         model: self.modelName,
                     },
-                    actions: _.extend(self.toolbarActions, {other: other}),
+                    actions: _.extend(self.toolbarActions, { other: other }),
                 });
 
-                  return self.sidebar.appendTo($node).then(function() {
-                   self._toggleSidebar();
-            });
+                return self.sidebar.appendTo($node).then(function () {
+                    self._toggleSidebar();
+                });
 
             }
             return Promise.resolve();
