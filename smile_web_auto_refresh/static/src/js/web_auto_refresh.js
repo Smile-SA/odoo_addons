@@ -64,7 +64,7 @@ require('bus.BusService');
                     } else if (typeof(widget.controllers) != 'undefined') {
                         var controller = widget.getCurrentController();
                         var action = widget.getCurrentAction();
-                        if (action.auto_search && controller.widget.modelName == message && controller.widget.mode != "edit") {
+                        if (action && action.auto_search && controller.widget.modelName == message && controller.widget.mode != "edit") {
                             controller.widget.reload();
                         }
                     }
