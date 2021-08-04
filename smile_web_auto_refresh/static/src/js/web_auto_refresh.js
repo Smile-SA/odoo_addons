@@ -1,8 +1,7 @@
 odoo.define('web_auto_refresh', function (require) {
 	"use strict";
     var WebClient = require('web.WebClient');
-//    var bus = require('bus.bus')
-require('bus.BusService');
+    require('bus.BusService');
 
     WebClient.include({
         init: function(parent, client_options){
@@ -41,7 +40,6 @@ require('bus.BusService');
             }
         },
         bus_on: function(eventname, eventfunction) {
-            console.log(eventname, eventfunction);
             this.call('bus_service', 'on', eventname, this, eventfunction);
             this.known_bus_events.push([eventname, eventfunction]);
         },
