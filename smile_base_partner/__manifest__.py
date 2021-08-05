@@ -46,7 +46,7 @@ Suggestions & Feedback to: Corentin Pouhet-Brunerie
         "data/res_partner_type_data.xml",
     ],
     "demo": [],
-    "auto_install": True,
+    "auto_install": False,
     "installable": True,
     "application": False,
 }

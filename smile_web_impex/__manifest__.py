@@ -24,7 +24,7 @@ Suggestions & Feedback to: Corentin Pouhet-Brunerie
         'security/web_impex_security.xml',
         'views/webclient_templates.xml',
     ],
-    "auto_install": True,
+    "auto_install": False,
     "installable": True,
     "application": False,
 }

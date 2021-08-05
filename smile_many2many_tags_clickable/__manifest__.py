@@ -43,7 +43,7 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
         "views/webclient_templates.xml",
     ],
     "demo": [],
-    "auto_install": True,
+    "auto_install": False,
     "installable": True,
     "application": False,
 }

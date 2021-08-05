@@ -19,7 +19,7 @@ and display digits in decimal precision.
         "views/decimal_precision_view.xml",
         "views/res_currency_view.xml",
     ],
-    "auto_install": True,
+    "auto_install": False,
     "installable": True,
     "application": False,
 }

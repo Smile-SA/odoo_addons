@@ -27,7 +27,7 @@
         "static/src/xml/base.xml",
     ],
     "post_init_hook": 'post_init_hook',
-    "auto_install": True,
+    "auto_install": False,
     "installable": True,
     "application": False,
 }

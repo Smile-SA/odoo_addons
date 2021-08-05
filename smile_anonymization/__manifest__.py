@@ -20,7 +20,7 @@
         "views/ir_model_fields_view.xml",
         "views/ir_model_view.xml",
     ],
-    "auto_install": True,
+    "auto_install": False,
     "installable": True,
     "application": False,
 }
