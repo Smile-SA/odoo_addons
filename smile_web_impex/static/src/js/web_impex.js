@@ -13,14 +13,15 @@ odoo.define('web_impex', function (require) {
          */
         renderButtons: function () {
              var self = this;
-            this._super.apply(this, arguments); // Sets this.$buttons
-
+            this._super.apply(this, arguments);
             this.getSession().user_has_group('smile_web_impex.group_import').then(function(has_group) {
-                if(!has_group) {
-                    self.$buttons.find('.o_button_import').hide();
-                }
-                else {
-                      self.$buttons.find('.o_button_import').show();
+                if (self.$buttons) {
+                    if (!has_group) {
+                        self.$buttons.find('.o_button_import').hide();
+                    }
+                    else {
+                        self.$buttons.find('.o_button_import').show();
+                    }
                 }
             });
         },
@@ -33,14 +34,15 @@ odoo.define('web_impex', function (require) {
          */
         renderButtons: function () {
             var self = this;
-            this._super.apply(this, arguments); // Sets this.$buttons
-
+            this._super.apply(this, arguments);
             this.getSession().user_has_group('smile_web_impex.group_import').then(function(has_group) {
-                if(!has_group) {
-                      self.$buttons.find('.o_button_import').hide();
-                }
-                else {
-                      self.$buttons.find('.o_button_import').show();
+                if (self.$buttons) {
+                    if (!has_group) {
+                        self.$buttons.find('.o_button_import').hide();
+                    }
+                    else {
+                        self.$buttons.find('.o_button_import').show();
+                    }
                 }
             });
 
@@ -49,12 +51,14 @@ odoo.define('web_impex', function (require) {
          _updateButtons: function (mode) {
             var self = this;
             this._super.apply(this, arguments);
-          this.getSession().user_has_group('smile_web_impex.group_export').then(function(has_group) {
-                if(!has_group) {
+            this.getSession().user_has_group('smile_web_impex.group_export').then(function(has_group) {
+                if (self.$buttons) {
+                    if (!has_group) {
                       self.$buttons.find('.o_list_export_xlsx').hide();
-                }
-                  else {
+                    }
+                    else {
                       self.$buttons.find('.o_list_export_xlsx').show();
+                    }
                 }
             });
     },
