@@ -4,7 +4,6 @@
 
 
 from odoo import fields, models, _
-from odoo.exceptions import UserError
 
 MAIL_MESSAGE_TYPES = ('email', 'comment', 'notification', 'user_notification')
 
@@ -27,17 +26,6 @@ class ResPartner(models.Model):
         Show all received mail.message for a specific partner
         """
         self.ensure_one()
-        Message = self.env['mail.message']
-        # Get messages sent to this partner
-        messages = Message.search([
-            ('message_type', 'in', MAIL_MESSAGE_TYPES),
-            ('partner_ids', 'in', self.id),
-        ])
-        if not messages:
-            raise UserError(
-                _('This partner %s does not have any messages history!')
-                % self.display_name)
-        # Build action to display all messages sent to this partner
         action = self.env.ref('mail.action_view_mail_message')
         result = action.read()[0]
         result['views'] = [
@@ -50,5 +38,8 @@ class ResPartner(models.Model):
                 'view_message_form_partner_mail_history').id,
                 'form'),
         ]
-        result['domain'] = [('id', 'in', messages.ids)]
+        result['domain'] = [
+            ('message_type', 'in', MAIL_MESSAGE_TYPES),
+            ('partner_ids', 'in', self.ids)
+        ]
         return result
