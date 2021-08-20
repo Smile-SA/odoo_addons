@@ -33,7 +33,15 @@ class ScmRepositoryBranch(models.Model):
                 # Update module installed yet in last build
                 vals = new_modules[old_module.name]
                 for field in vals:
-                    if vals[field] != old_module[field]:
+                    if isinstance(vals[field], models.Model):
+                        v_field = vals[field].id
+                    else:
+                        v_field = vals[field]
+                    if isinstance(old_module[field], models.Model):
+                        o_field = old_module[field].id
+                    else:
+                        o_field = old_module[field]
+                    if v_field != o_field:
                         old_module.write(vals)
                         break
         # Create new modules
