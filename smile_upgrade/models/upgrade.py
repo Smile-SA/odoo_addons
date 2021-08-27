@@ -242,8 +242,7 @@ class Upgrade(object):
                         module = fname.split('/')[0]
                         break
                 else:
-                    _logger.error("No such file: %s", fp)
-                    continue
+                    raise ValueError("No such file: %s", fp)
             with open(fp) as f_obj:
                 _logger.info('importing %s file...', fname)
                 cr.execute('SAVEPOINT smile_upgrades')
