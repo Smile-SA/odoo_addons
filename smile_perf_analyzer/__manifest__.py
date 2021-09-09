@@ -7,7 +7,6 @@
     "version": "0.3",
     "depends": [
         "base",
-        "smile_filtered_from_domain",
     ],
     "author": "Smile",
     "license": 'AGPL-3',
