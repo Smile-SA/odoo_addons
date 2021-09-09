@@ -18,10 +18,6 @@ Features:
 
 Execution:
 * odoo.py -c <config_file> -d <db_name> --load=web,smile_data_integration
-
-
-Suggestions & Feedback to: Corentin Pouhet-Brunerie
-    & Stéphane Salah
     """,
     "summary": "",
     "website": "http://www.smile.fr",
