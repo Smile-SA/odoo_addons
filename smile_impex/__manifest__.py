@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (C) 2020 Smile (<http://www.smile.fr>)
+# (C) 2020 Smile (<https://www.smile.eu>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 {
@@ -26,7 +26,7 @@ Suggestions & Feedback to: Corentin Pouhet-Brunerie
 & Isabelle Richard
     """,
     "summary": "",
-    "website": "http://www.smile.fr",
+    "website": "https://www.smile.eu",
     "category": 'Tools',
     "sequence": 20,
     "data": [

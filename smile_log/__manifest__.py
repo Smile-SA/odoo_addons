@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# (C) 2020 Smile (<http://www.smile.fr>)
+# (C) 2020 Smile (<https://www.smile.eu>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 {
     "name": "Logging in database",
     "version": "3.0",
     "author": "Smile",
-    "website": 'http://www.smile.fr',
+    "website": 'https://www.smile.eu',
     "category": "Tools",
     "license": 'AGPL-3',
     "description": """

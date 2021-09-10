@@ -118,7 +118,7 @@ Since 1991 Smile has been a pioneer of technology and also the European expert i
 
 .. image:: https://avatars0.githubusercontent.com/u/572339?s=200&v=4
    :alt: Smile SA
-   :target: http://smile.fr
+   :target: https://www.smile.eu
 
 This module is part of the `odoo-addons <https://github.com/Smile-SA/odoo_addons>`_ project on GitHub.
 

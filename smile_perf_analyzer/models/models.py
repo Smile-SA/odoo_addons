@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (C) 2018 Smile (<http://www.smile.fr>)
+# (C) 2018 Smile (<https://www.smile.eu>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from collections import defaultdict
@@ -74,7 +74,6 @@ def _recompute(self, field, recs):
     else:
         self.env.cache.invalidate([(field, recs._ids)])
         self.env.remove_to_compute(field, recs)
-
 
 
 models.BaseModel.recompute = recompute
