@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
     odoo:
         container_name: smile_addons_odoo

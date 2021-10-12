@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-talend_job_system,talend.job,smile_talend_job.model_talend_job,base.group_system,1,1,1,1
-talend_job_logs_system,talend.job.logs,smile_talend_job.model_talend_job_logs,base.group_system,1,1,1,1

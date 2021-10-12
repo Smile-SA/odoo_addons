@@ -6,7 +6,7 @@ This repository contains a collection of Odoo modules.
 Requirements
 ------------------------
 
-* Odoo 14.0
+* Odoo 15.0
 
 # How to documentate your module
 
