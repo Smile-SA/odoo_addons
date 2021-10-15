@@ -5,6 +5,7 @@
 import logging
 
 from odoo import registry
+from psycopg2 import OperationalError
 
 
 class SmileDBHandler(logging.Handler):
@@ -20,6 +21,11 @@ class SmileDBHandler(logging.Handler):
             cr.autocommit(True)
             self._dbname_to_cr[dbname] = cr
         return cr
+
+    def _close_cursor(self, dbname):
+        cr = self._dbname_to_cr.pop(dbname, False)
+        if cr and not cr.closed:
+            cr.close()
 
     def emit(self, record):
         if not (record.args and isinstance(record.args, dict)):
@@ -43,7 +49,13 @@ class SmileDBHandler(logging.Handler):
         except Exception:
             # retry
             cr = self._get_cursor(dbname)
-            cr.execute(request, params)
+            try:
+                cr.execute(request, params)
+            except OperationalError:
+                # Execution failing again might mean that our cursor is stuck
+                # in an unclosed but wrong state. Therefore we manually close
+                # it, so a new one will be created next time.
+                self._close_cursor(dbname)
         return True
 
     def close(self):
