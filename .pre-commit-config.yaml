@@ -3,13 +3,13 @@ default_language_version:
     python: python3
 repos:
 -   repo: https://gitlab.com/pycqa/flake8
-    rev: 3.7.9  # pick a git hash / tag to point to
+    rev: 3.9.2  # pick a git hash / tag to point to
     hooks:
     -   id: flake8
         additional_dependencies: [flake8-print]
-        args: ['--enable=T', '--max-line-length=79', '--select=E,W,F']
+        args: ['--enable=T', '--max-line-length=120', '--select=E,W,F']
         exclude: __init__.py
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v4.1.0
     hooks:
     -   id: debug-statements
