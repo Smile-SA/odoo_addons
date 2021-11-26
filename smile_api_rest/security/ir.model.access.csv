@@ -1,0 +1,12 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"ir_model_access_api_rest_version","Api REST Version","model_api_rest_version",,1,0,0,0
+"ir_model_access_api_rest_version_system","Api REST Version","model_api_rest_version","smile_api_rest.configuration_manager",1,1,1,1
+"ir_model_access_api_rest_path","Api REST Path","model_api_rest_path",,1,0,0,0
+"ir_model_access_api_rest_path_system","Api REST Path","model_api_rest_path","smile_api_rest.configuration_manager",1,1,1,1
+"ir_model_access_api_rest_field","Api REST Field","model_api_rest_field",,1,0,0,0
+"ir_model_access_api_rest_field_system","Api REST Field","model_api_rest_field","smile_api_rest.configuration_manager",1,1,1,1
+"ir_model_access_api_rest_tag","Api REST Tag","model_api_rest_tag",,1,0,0,0
+"ir_model_access_api_rest_tag_system","Api REST Tag","model_api_rest_tag","smile_api_rest.configuration_manager",1,1,1,1
+"ir_model_access_api_rest_function_parameter","Api REST Function Parameter","model_api_rest_function_parameter",,1,0,0,0
+"ir_model_access_api_rest_function_parameter_system","Api REST Function Parameter","model_api_rest_function_parameter","smile_api_rest.configuration_manager",1,1,1,1
+"ir_model_access_api_rest_log_system","Api REST Log","model_api_rest_log",,1,0,1,1
