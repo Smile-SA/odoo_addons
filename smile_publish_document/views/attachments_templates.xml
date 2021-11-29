@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <template id="attachment_template" name="Attachment Page">
+       <t t-call="website.layout">
+           <div id="wrap">
+               <div class="container"><br/>
+                   <div class="row">
+                       <t t-foreach="attachments" t-as="element">
+                           <strong><h4><t t-esc="element" style="font-weight: bold;"/></h4></strong>
+                           <ul style="width: 100%;text-align: left;line-height: 100%;">
+                            <br/>
+                            <t t-foreach="element_value" t-as="val">
+                                <li style="list-style-type:none;text-align: left;line-left: 50%;list-style-type: circle;">
+                                    <a t-attf-href="attachment/download?attachment_id=#{val.id}">
+                                        <span t-esc="val.name"/>
+                                    </a>
+                                </li>
+                                <br/>
+                            </t>
+                            </ul>
+                       </t>
+                   </div>
+               </div>
+           </div>
+       </t>
+   </template>
+</odoo>
