@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+base.access_ir_attachment_group_user,ir.attachment read,base.model_ir_attachment,base.group_user,1,0,0,0
+access_read_ir_attachment,ir.attachment read,base.model_ir_attachment,group_read_document,1,0,0,0
+access_read_ir_attachment_type,ir.attachment.type read,model_ir_attachment_type,group_read_document,1,0,0,0
+access_read_ir_attachment_create,ir.attachment create,base.model_ir_attachment,group_manage_document,1,1,1,1
+access_read_ir_attachment_type_create,ir.attachment.type create,model_ir_attachment_type,group_manage_document,1,1,1,1
+access_res_partner_reader,res.partner reader,base.model_res_partner,group_read_document,1,0,0,0

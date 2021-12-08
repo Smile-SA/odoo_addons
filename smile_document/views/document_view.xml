@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+	    
+	    <record id="view_attachment_form_inherit" model="ir.ui.view">
+	        <field name="name">Document</field>
+	        <field name="model">ir.attachment</field>
+	        <field name="inherit_id" ref="base.view_attachment_form"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="/form/sheet" position="before">
+                    <header>
+                        <field name="status" widget="statusbar" statusbar_visible="valid,expired,archived"/>
+                    </header>
+                </xpath>
+	            <field name="type" position="after">
+                    <field name="document_type_id" widget="selection"/>
+                    <field name="document_date"/>
+                    <field name="expiry_date"/>
+                    <field name="archived"/>
+                </field>
+	            <field name="res_model" position="replace"/>
+	            <field name="res_id" position="replace"/>
+	            <field name="res_name" position="replace"/>
+	            <field name="type" position="attributes">
+	                <attribute name="invisible">1</attribute>
+	            </field>
+
+	            <xpath expr="/form/sheet/group/group[3]" position="attributes">
+	                <attribute name="invisible">True</attribute>
+	            </xpath>
+	            <xpath expr="/form/sheet/group/group[@name='description_group']" position="attributes">
+	                <attribute name="invisible">True</attribute>
+	            </xpath>
+	            <xpath expr="/form/sheet/group/group[5]" position="attributes">
+	                <attribute name="invisible">True</attribute>
+	            </xpath>
+	            <xpath expr="/form/sheet/group" position="after">
+		            <notebook>
+		                <page string="Additional informations">
+	                        <group groups="smile_document.group_manage_document" string="History">
+	                            <label for="create_uid" string="Creation"/>
+	                            <div name="creation_div">
+	                                <field name="create_uid" readonly="1" class="oe_inline"/> on
+	                                <field name="create_date" readonly="1" class="oe_inline"/>
+	                            </div>
+				                <label for="write_uid" string="Modification"/>
+				                <div>
+				                    <field name="write_uid" readonly="1" class="oe_inline"/> on
+				                    <field name="write_date" readonly="1" class="oe_inline"/>
+				                </div>
+	                        </group>
+	                        <group name="description_group" string="Description" colspan="4">
+	                            <field name="description" nolabel="1"/>
+	                        </group>
+		                </page>
+		            </notebook>
+	            </xpath>
+	        </field>
+	    </record>
+
+	   <record id="view_document_tree" model="ir.ui.view">
+	       <field name="model">ir.attachment</field>
+	       <field name="priority">0</field>
+	       <field name="arch" type="xml">
+	           <tree string="Documents" decoration-danger="status=='expired'" decoration-success="status=='valid'">
+	               <field name="document_type_id"/>
+	               <field name="create_date"/>
+	               <field name="write_date" string="Write Date"/>
+	               <field name="document_date"/>
+	               <field name="expiry_date"/>
+	               <field name="status"/>
+	           </tree>
+	       </field>
+	   </record>
+
+        <record id="view_document_search" model="ir.ui.view">
+            <field name="name">Documents</field>
+            <field name="model">ir.attachment</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <search string="Documents">
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Document"/>
+                    <field name="create_date"/>
+                    <field name="type"/>
+                    <field name="index_content"/>
+                    <field name="document_type_id"/>
+                    <field name="status"/>
+                    <filter name="valid"
+                        string="Valid"
+                        domain="[('status','=','valid')]"/>
+                    <filter name="expired"
+                        string="Expired"
+                        domain="[('status','=','expired')]"/>
+                    <filter name="archived"
+                        string="Archived"
+                        domain="[('status','=','archived')]"/>
+                    <separator/>
+                    <filter name="my_documents_filter"
+                        string="My Document(s)"
+                        icon="terp-personal"
+                        domain="[('create_uid','=',uid)]"
+                        help="Filter on my documents"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Document Type" name="type" domain="[]" context="{'group_by':'document_type_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'status'}"/>
+                        <filter string="Expiration Month" name="expired_month" domain="[]" context="{'group_by':'expiry_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+	    <record id="action_document" model="ir.actions.act_window">
+	        <field name="name">Documents</field>
+	        <field name="type">ir.actions.act_window</field>
+	        <field name="res_model">ir.attachment</field>
+	        <field name="view_mode">tree,form</field>
+	        <field name="search_view_id" ref="view_document_search"/>
+	    </record>
+
+	    <record id="action_document_tree" model="ir.actions.act_window.view">
+	        <field eval="1" name="sequence"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_document_tree"/>
+	        <field name="act_window_id" ref="action_document"/>
+	    </record>
+	    <record id="action_document_form" model="ir.actions.act_window.view">
+	        <field eval="2" name="sequence"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="base.view_attachment_form"/>
+	        <field name="act_window_id" ref="action_document"/>
+	    </record>
+
+        <!-- Document Type -->
+
+        <record id="view_document_type_form" model="ir.ui.view">
+            <field name="name">ir.attachment.type.form</field>
+            <field name="model">ir.attachment.type</field>
+            <field name="arch" type="xml">
+                <form string="Document type">
+                    <sheet>
+						<group>
+							<group name ="data">
+								<field name="name"/>
+							</group>
+						</group>
+                    </sheet>
+                </form>
+           </field>
+        </record>
+
+        <record id="view_document_type_tree" model="ir.ui.view">
+            <field name="name">ir.attachment.type.tree</field>
+            <field name="model">ir.attachment.type</field>
+            <field name="arch" type="xml">
+                <tree string="Documents types">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_document_type_search" model="ir.ui.view">
+            <field name="name">ir.attachment.type.search</field>
+            <field name="model">ir.attachment.type</field>
+            <field name="arch" type="xml">
+                <search string="Document type">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_document_type" model="ir.actions.act_window">
+            <field name="name">Documents types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.attachment.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_document_type_search"/>
+        </record>
+
+    </data>
+</odoo>
