@@ -10,11 +10,11 @@ from ..tools import api_management, eval_request_params, RecordNotFoundError
 def _get_model_obj(model, kwargs):
     user = request.env['res.users'].sudo().get_api_rest_user(
         request.httprequest.headers.get('x-api-key'))
-    model_obj = request.env[model]
+    model_obj = request.env[model].with_user(user)
     # Used *in* of check kwargs to force remove
     # context when value {} is sending
     if 'context' in kwargs:
-        model_obj = model_obj.with_user(user).with_context(
+        model_obj = model_obj.with_context(
             **kwargs.get('context'))
         del kwargs['context']
     return model_obj

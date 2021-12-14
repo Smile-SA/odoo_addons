@@ -79,6 +79,7 @@ class ApiRestVersion(models.Model):
                 'description': self.get_swagger_description(),
             },
             'host': parsed_url.netloc,
+            'schemes': [parsed_url.scheme],
             'basePath': '/api/v{}'.format(self.name),
             'paths': swagger_paths,
             'tags': swagger_tags,
