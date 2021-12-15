@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="refund_event_registration" model="mail.template">
+            <field name="name">Event: Refund Registration</field>
+            <field name="model_id" ref="event.model_event_registration"/>
+            <field name="subject">Refund ${object.event_id.name}: ${object.get_date_range_str()}</field>
+            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
+            <field name="email_to">${('"%s" &lt;%s&gt;' % (object.partner_id.name or object.name, object.partner_id.email or object.email)) | safe}</field>
+            <field name="reply_to" eval="False"/>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0"  width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                    <tbody>
+                        <!-- HEADER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr><td valign="middle">
+                                        <span style="font-size: 10px;">Your registration(Refunded)</span><br/>
+                                        <span style="font-size: 20px; font-weight: bold;">
+                                            ${object.name}
+                                        </span>
+                                    </td><td valign="middle" align="right">
+                                        <img src="${'/logo.png?company=%s' % object.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${'%s' % object.company_id.name}"/>
+                                    </td></tr>
+                                    <tr><td colspan="2" style="text-align:center;">
+                                      <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                                    </td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- Refund Event Registration-->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr><td valign="top" style="font-size: 14px;">
+                                        <div>
+                                            Hello ${object.name},<br/>
+                                            We're sorry to inform you that this event
+                                            % if 'website_url' in object.event_id and object.event_id.website_url:
+                                                <a href="${object.event_id.website_url}" style="color:#875A7B;text-decoration:none;">${object.event_id.name}</a>
+                                            % else:
+                                                <strong>${object.event_id.name}</strong>
+                                            % endif
+                                            on <strong>${object.get_date_range_str()}</strong> has been Refund.
+                                        </div>
+                                        % if 'website_url' in object.event_id and object.event_id.website_url:
+                                        <div style="margin: 16px 0px 16px 0px;">
+                                            <a href="${object.event_id.website_url}"
+                                                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">View Event</a><br />
+                                        </div>
+                                        % endif
+                                        <div>
+                                             Do not hesitate to contact us if you have any question. ,<br/>
+                                            <span style="color: #454748;">
+                                            -- <br/>
+                                            % if object.event_id.organizer_id:
+                                                ${object.event_id.organizer_id.name}
+                                            % else:
+                                                The organizers.
+                                            % endif
+                                            </span>
+                                        </div>
+                                    </td></tr>
+                                    <tr><td style="text-align:center;">
+                                      <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                    </td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </field>
+        </record>
+    </data>
+</odoo>
