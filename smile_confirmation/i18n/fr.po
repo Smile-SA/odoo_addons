@@ -1,0 +1,110 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_confirmation
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-10-22 13:03+0000\n"
+"PO-Revision-Date: 2020-10-22 13:03+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__active
+msgid "Active"
+msgstr "Active"
+
+#. module: smile_confirmation
+#: model_terms:ir.actions.act_window,help:smile_confirmation.action_popup_message_view
+msgid "Add your pop-up!"
+msgstr "Ajoutez votre pop up!"
+
+#. module: smile_confirmation
+#: model:ir.model.fields.selection,name:smile_confirmation.selection__popup_message__type__alert
+msgid "Alert"
+msgstr "Alerte"
+
+#. module: smile_confirmation
+#: model_terms:ir.ui.view,arch_db:smile_confirmation.view_popup_message_form
+msgid "Archived"
+msgstr "Archivé"
+
+#. module: smile_confirmation
+#: model:ir.model,name:smile_confirmation.model_base
+msgid "Base"
+msgstr "Base"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__field_name
+msgid "Field Name"
+msgstr "Nom du champs"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__field_ids
+msgid "Fields"
+msgstr "Champs"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__message
+msgid "Message"
+msgstr "Message"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__model
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__model_id
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_confirmation
+#: model:ir.actions.act_window,name:smile_confirmation.action_popup_message_view
+#: model:ir.model,name:smile_confirmation.model_popup_message
+#: model:ir.ui.menu,name:smile_confirmation.menu_popup_message_categ
+#: model:ir.ui.menu,name:smile_confirmation.menu_popup_message_view
+msgid "Pop-up message"
+msgstr "Pop-up message"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__title
+msgid "Title"
+msgstr "Titre"
+
+#. module: smile_confirmation
+#: model:ir.model.fields,field_description:smile_confirmation.field_popup_message__type
+msgid "Type"
+msgstr "Type"

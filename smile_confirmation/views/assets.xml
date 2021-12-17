@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="assets_backend_extension"
+                  inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript"
+                        src="/smile_confirmation/static/src/js/smile_confirmation.js"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
