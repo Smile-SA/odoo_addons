@@ -5,7 +5,10 @@
 {
     "name": "Import / Export",
     "version": "1.2",
-    "depends": ['smile_log'],
+    "depends": [
+        'mail',
+        'smile_log',
+    ],
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """
@@ -31,6 +34,7 @@ Suggestions & Feedback to: Corentin Pouhet-Brunerie
     "sequence": 20,
     "data": [
         'security/ir.model.access.csv',
+        'data/ir_cron.xml',
         'views/export_view.xml',
         'views/import_view.xml',
         'views/menu_view.xml',

@@ -9,6 +9,7 @@ import sys
 from threading import Thread
 
 from odoo import api, fields, models
+from odoo.tools import date_utils
 
 from odoo.addons.smile_log.tools import SmileDBLogger
 
@@ -115,19 +116,27 @@ class IrModelImpex(models.AbstractModel):
         raise NotImplementedError
 
     @api.model
-    def _kill_impex(self):
+    def _kill_impex(self, hours=0):
         # Search all process created on this host and set them as
-        # killed if they are not running anymore on the host
+        # killed if they are not running anymore on the host.
+        # Argument `hours` allows to filter only records aged of
+        # more than X hours.
         hostname = get_hostname()
-        impex_infos = self.search_read([
+        domain = [
             ('state', '=', 'running'),
             '|',
             ('hostname', '=', hostname),
             ('hostname', '=', False),
-        ], ['pid'], order='id')
-        impex_ids = []
-        for impex in impex_infos:
-            if not psutil.pid_exists(impex['pid']):
-                impex_ids.append(impex['id'])
+        ]
+        if hours:
+            limit_date = date_utils.substract(
+                fields.Datetime.now(), hours=hours)
+            domain.append(('create_date', '<=', limit_date))
+        impex_infos = self.search_read(domain, ['pid'], order='id')
+        impex_ids = [
+            impex['id']
+            for impex in impex_infos
+            if not psutil.pid_exists(impex['pid'])
+        ]
         if impex_ids:
             self.browse(impex_ids).write({'state': 'killed'})
