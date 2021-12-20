@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="smile_web_hide_groups_assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/smile_web_hide_groups/static/src/scss/form_renderer.scss"/>
+            <script type="text/javascript" src="/smile_web_hide_groups/static/src/js/form_renderer.js"/>
+        </xpath>
+    </template>
+
+</odoo>
