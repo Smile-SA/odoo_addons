@@ -129,7 +129,7 @@ class IrModelImpex(models.AbstractModel):
             ('hostname', '=', False),
         ]
         if hours:
-            limit_date = date_utils.substract(
+            limit_date = date_utils.subtract(
                 fields.Datetime.now(), hours=hours)
             domain.append(('create_date', '<=', limit_date))
         impex_infos = self.search_read(domain, ['pid'], order='id')
