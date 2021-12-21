@@ -15,4 +15,3 @@ from . import mail_template
 from . import module
 from . import registry
 from . import sql_db
-from . import update
