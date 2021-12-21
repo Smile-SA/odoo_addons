@@ -30,4 +30,3 @@ from . import mail_template
 from . import models
 from . import module
 from . import registry
-from . import update
