@@ -30,4 +30,3 @@ import models
 import module
 import registry
 import sql_db
-import update
