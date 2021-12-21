@@ -25,5 +25,4 @@ import orm
 import registry
 import sql_db
 import tools
-import update
 import web_services
