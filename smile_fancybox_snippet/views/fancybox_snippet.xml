@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <template id="snippet_fancybox" name="Fancybox Snippet">
+            <section class="o_spc-medium fancybox_snippet">
+                <div class="container">
+                    <div class="alert alert-info css_editable_mode_display text-center" ><span class="o_add_images" style="cursor: pointer;"><i class="fa fa-plus-circle"/> Add Images</span></div>
+                </div>
+            </section>
+        </template>
+
+        <template id="fancybox_snippet_entry" inherit_id="website.snippets" name="Fancybox entry">
+            <xpath expr="//div[@id='snippet_structure']/div[@class='o_panel_body']" position="inside">
+                <t t-snippet="smile_fancybox_snippet.snippet_fancybox"
+                   t-thumbnail="/website/static/src/img/snippets_thumbs/s_image_gallery.svg"/>
+            </xpath>
+        </template>
+
+        <template id="fancybox_snippet_options" name="Fancybox Options" inherit_id="website.snippet_options">
+            <xpath expr="." position="inside">
+                <div data-selector=".fancybox_snippet" data-js="fancybox">
+                    <we-row string="Images">
+                        <we-button data-add-images="true" data-no-preview="true">Add</we-button>
+                        <we-button data-remove-all-images="true" data-no-preview="true">Remove all</we-button>
+                    </we-row>
+                </div>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
