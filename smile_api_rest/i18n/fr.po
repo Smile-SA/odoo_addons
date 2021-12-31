@@ -1,0 +1,695 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_api_rest
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-31 16:46+0000\n"
+"PO-Revision-Date: 2021-12-31 16:46+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copie)"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "(Maximum: {})"
+msgstr ""
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_version.py:0
+#, python-format
+msgid "<b>Others API available: </b>"
+msgstr "<b>Autres API disponibles: </b>"
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_version_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                    Go to <br/>API Docs</span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Aller vers <br/>API Docs</span>"
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_version_form
+msgid "API Informations"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.module.category,name:smile_api_rest.api_rest_category
+#: model:ir.ui.menu,name:smile_api_rest.menu_api_rest
+msgid "API REST"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:res.groups,name:smile_api_rest.configuration_manager
+msgid "API REST manager"
+msgstr "Gérer l'API REST"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__version_id
+msgid "API Version"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__active
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__active
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__active_log
+msgid "Active Log"
+msgstr "Activer les journaux"
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_form
+msgid "Add domain to filter result, example: [('name', '=', 'Test')]"
+msgstr ""
+"Ajouter un domain pour filtrer les résultats: example: [('name', '=', "
+"'Test')]"
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_form
+msgid "Additional Information"
+msgstr "Informations additionnelles"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_res_users__api_rest_key
+msgid "Api Rest Key"
+msgstr "Clé API Rest"
+
+#. module: smile_api_rest
+#: model:ir.model.fields.selection,name:smile_api_rest.selection__api_rest_function_parameter__type__array
+msgid "Array"
+msgstr "Tableau"
+
+#. module: smile_api_rest
+#: model:ir.model.fields.selection,name:smile_api_rest.selection__api_rest_function_parameter__type__boolean
+msgid "Boolean"
+msgstr "Booléen"
+
+#. module: smile_api_rest
+#: model:ir.ui.menu,name:smile_api_rest.menu_api_rest_configuration
+msgid "Configuration"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model.fields.selection,name:smile_api_rest.selection__api_rest_path__method__post
+msgid "Create"
+msgstr "Création"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__create_uid
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__create_uid
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log__create_uid
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__create_uid
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_tag__create_uid
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__create_uid
+msgid "Created by"
+msgstr "Créer par"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__create_date
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__create_date
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log__create_date
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__create_date
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_tag__create_date
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_api_rest
+#: model:ir.model.fields.selection,name:smile_api_rest.selection__api_rest_path__method__custom
+msgid "Custom function"
+msgstr "Fonction personnalisée"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__default_value
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__default_value
+msgid "Default Value"
+msgstr "Valeur par défaut"
+
+#. module: smile_api_rest
+#: model:ir.model.fields.selection,name:smile_api_rest.selection__api_rest_path__method__delete
+msgid "Delete"
+msgstr "Supression"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__deprecated
+msgid "Deprecated"
+msgstr "Obsolète"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__description
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__description
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__description
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_tag__description
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__description
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_form
+msgid "Description"
+msgstr ""
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Description of the error"
+msgstr "Description de l'erreur"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__display_name
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__display_name
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log__display_name
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__display_name
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_tag__display_name
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Error code"
+msgstr "Code d'erreur"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Example : `[1, 'Example']`"
+msgstr "Exemple : `[1, 'Example']`"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Example: `YYYY-MM-DD HH:MM:SS`"
+msgstr "Exemple: `YYYY-MM-DD HH:MM:SS`"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Example: `YYYY-MM-DD`"
+msgstr "Exemple: `YYYY-MM-DD`"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Example: `['id', 'name']`"
+msgstr "Exemple: `['id', 'name']`"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Example: `[('name', '=', 'Test')]`"
+msgstr "Exemple: `[('name', '=', 'Test')]`"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Example: `{\"lang\": \"fr_FR\"}`"
+msgstr "Exemple: `{\"lang\": \"fr_FR\"}`"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Example: {}"
+msgstr "Exemple: {}"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__field_id
+msgid "Field"
+msgstr "Champ"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__field_name
+msgid "Field Name"
+msgstr "Nom du champ"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__api_field_ids
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__field_ids
+msgid "Fields"
+msgstr "Champs"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__filter_domain
+msgid "Filter Domain"
+msgstr "Domaine du filtre"
+
+#. module: smile_api_rest
+#: model:ir.model.fields.selection,name:smile_api_rest.selection__api_rest_function_parameter__type__float
+msgid "Float"
+msgstr "Numérique"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__function
+msgid "Function"
+msgstr "Fonction"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__function_apply_on_record
+msgid "Function Apply On Record"
+msgstr "Fonction appliquée à un enregistrement"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__function_domain
+msgid "Function Domain"
+msgstr "Domaine pour la fonction s'appliquant à un enregistrement"
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_version_form
+msgid "Generate API Key"
+msgstr "Générer la clé d'API"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__id
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__id
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log__id
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__id
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_tag__id
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Identifier of the resource created."
+msgstr "Identifiant de la ressource crée."
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_form
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_version_form
+msgid "Inactive"
+msgstr "Inactif"
+
+#. module: smile_api_rest
+#: model:ir.model.fields.selection,name:smile_api_rest.selection__api_rest_function_parameter__type__integer
+msgid "Integer"
+msgstr "Entier"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field____last_update
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter____last_update
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log____last_update
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path____last_update
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_tag____last_update
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__write_uid
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__write_uid
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log__write_uid
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__write_uid
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_tag__write_uid
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__write_date
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__write_date
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log__write_date
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__write_date
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_tag__write_date
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__last_usage_date
+msgid "Last Usage Date"
+msgstr "Date de dernière utilisation"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__limit
+msgid "Limit of results"
+msgstr "Limite des résultats"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "List of fields to read. (Defaults to all fields)"
+msgstr "Liste des champs à lire. (Par défaut tous les champs) "
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_log_form
+msgid "Log"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__log_ids
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_log_tree
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_version_form
+msgid "Logs"
+msgstr "Journaux"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Maximum number of records to return. {}"
+msgstr "Nombre maximal d'enregistrements à renvoyer. {}"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__method
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_form
+msgid "Method"
+msgstr "Méthode"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__model_id
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__model
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__model_id
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_search
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__name
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__name
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_tag__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Name of error"
+msgstr "Nom de l'erreur"
+
+#. module: smile_api_rest
+#: model:ir.model.constraint,message:smile_api_rest.constraint_api_rest_path_name_uniq
+msgid "Name, Version, Method must be unique!"
+msgstr "Le nom, la version et la méthode doivent être uniques!"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__name
+msgid "Number Version"
+msgstr "Numéro version"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Number of records to skip. (Defaults to 0)"
+msgstr "Nombre d'enregistrements à ignorer. (Par défaut à 0) "
+
+#. module: smile_api_rest
+#: model:ir.model.fields.selection,name:smile_api_rest.selection__api_rest_function_parameter__type__object
+msgid "Object (Dictionnary)"
+msgstr "Objet (Dictionnaire)"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid ""
+"Param to sort result. (Defaults to no sort) \n"
+" Field name followed by the sort operator. (asc or desc)"
+msgstr ""
+"Paramètre pour trier le résultat. (Par défaut aucun tri) \n"
+" Nom du champ suivi de l'opérateur de tri. (asc ou desc)"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__function_parameter_ids
+msgid "Parameters"
+msgstr "Paramètres"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__path_id
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__path_id
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_form
+msgid "Path"
+msgstr "Chemin"
+
+#. module: smile_api_rest
+#: model:ir.actions.act_window,name:smile_api_rest.action_api_rest_path
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__path_ids
+#: model:ir.ui.menu,name:smile_api_rest.menu_action_api_rest_path
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_search
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_tree
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_version_form
+msgid "Paths"
+msgstr "Chemins"
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_form
+msgid ""
+"Please note, some required fields have not been added to the list of fields,"
+" creating or updating may not work."
+msgstr ""
+"Attention, certains champs requis n'ont pas été ajouté à la liste des "
+"champs, la création ou la mise à jour risque de ne pas fonctionner."
+
+#. module: smile_api_rest
+#: model:ir.model.fields.selection,name:smile_api_rest.selection__api_rest_path__method__get
+msgid "Read"
+msgstr "Lecture"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/controllers/api.py:0
+#: code:addons/smile_api_rest/controllers/api.py:0
+#: code:addons/smile_api_rest/controllers/api.py:0
+#: code:addons/smile_api_rest/controllers/api.py:0
+#, python-format
+msgid "Record not found"
+msgstr "Enregistrement introuvable"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log__request_data
+msgid "Request Data"
+msgstr "Données de la requête"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log__request_headers
+msgid "Request Headers"
+msgstr "En-tête de la requête"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log__request_url
+msgid "Request Url"
+msgstr "Url de la requête"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__force_required
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__required
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__required
+msgid "Required"
+msgstr "Requis"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/tools/http.py:0
+#: code:addons/smile_api_rest/tools/http.py:0
+#, python-format
+msgid "Resource not found or unavailable"
+msgstr "Ressource introuvable ou indisponible"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log__response_data
+msgid "Response Data"
+msgstr "Réponse de la requête"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Return a boolean if delete is a success."
+msgstr "Renvoie un booléen si la suppression est un succès."
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Return a boolean if update is a success."
+msgstr "Renvoie un booléen si la mise à jour est un succès."
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid ""
+"Return list with 2 element, first ID of ressource (integer), second Name of "
+"ressource (string)."
+msgstr ""
+"Renvoie une liste avec 2 éléments, en premier l'identifiant de la ressource "
+"(entier), en second le nom de la ressource (chaine)."
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid ""
+"Search domain to read. (Defaults to an empty domain that will match all "
+"records) <a "
+"href=\"https://www.odoo.com/documentation/14.0/fr/developer/reference/addons/orm.html#reference-"
+"orm-domains\" target=\"_blank\">Documentation</a>"
+msgstr ""
+"Domaine de recherche pour la lecture. (Par défaut un domaine à vide "
+"correspondra à tous les enregistrements) <a "
+"href=\"https://www.odoo.com/documentation/14.0/fr/developer/reference/addons/orm.html#reference-"
+"orm-domains\" target=\"_blank\">Documentation</a>"
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_version_form
+msgid "Security"
+msgstr "Sécurité"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_field__sequence
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__sequence
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_form
+msgid "Settings for create/update"
+msgstr "Paramètres pour la création/mise à jour"
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_form
+msgid "Settings for custom function"
+msgstr "Paramètres de la fonction personnalisée"
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_form
+msgid "Settings for read"
+msgstr "Paramètres pour la lecture"
+
+#. module: smile_api_rest
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_form
+msgid "Settings for unlink"
+msgstr "Paramètres pour la supression"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "Specific context to method"
+msgstr "Contexte spécifique à ajouter à la méthode"
+
+#. module: smile_api_rest
+#: model:ir.model.fields.selection,name:smile_api_rest.selection__api_rest_function_parameter__type__string
+msgid "String"
+msgstr "Chaine"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__tag_id
+msgid "Tag"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.actions.act_window,name:smile_api_rest.action_api_rest_tag
+#: model:ir.ui.menu,name:smile_api_rest.menu_action_api_rest_tag
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_tag_tree
+msgid "Tags"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_function_parameter__type
+msgid "Type"
+msgstr ""
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/tools/http.py:0
+#, python-format
+msgid "Unauthenticated user"
+msgstr "Utilisateur non authentifié"
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/tools/http.py:0
+#, python-format
+msgid "Unauthorized access"
+msgstr "Accès non autorisé"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__unlink_domain
+msgid "Unlink Domain"
+msgstr "Domaine pour la supression"
+
+#. module: smile_api_rest
+#: model:ir.model.fields.selection,name:smile_api_rest.selection__api_rest_path__method__put
+msgid "Update"
+msgstr "Mise à jour"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__update_domain
+msgid "Update Domain"
+msgstr "Domaine pour la mise à jour"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__url_api_docs
+msgid "Url Api Docs"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__url_swagger
+msgid "Url Swagger"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model,name:smile_api_rest.model_res_users
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_version__user_ids
+msgid "Users"
+msgstr "Utilisateurs"
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_log__version_id
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_path_search
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_version_form
+msgid "Version"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.actions.act_window,name:smile_api_rest.action_api_rest_version
+#: model:ir.ui.menu,name:smile_api_rest.menu_action_api_rest_version
+#: model_terms:ir.ui.view,arch_db:smile_api_rest.view_api_rest_version_tree
+msgid "Versions"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model.fields,field_description:smile_api_rest.field_api_rest_path__warning_required
+msgid "Warning Required"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model,name:smile_api_rest.model_api_rest_field
+msgid "api.rest.field"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model,name:smile_api_rest.model_api_rest_function_parameter
+msgid "api.rest.function.parameter"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model,name:smile_api_rest.model_api_rest_log
+msgid "api.rest.log"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model,name:smile_api_rest.model_api_rest_path
+msgid "api.rest.path"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model,name:smile_api_rest.model_api_rest_tag
+msgid "api.rest.tag"
+msgstr ""
+
+#. module: smile_api_rest
+#: model:ir.model,name:smile_api_rest.model_api_rest_version
+msgid "api.rest.version"
+msgstr ""
+
+#. module: smile_api_rest
+#: code:addons/smile_api_rest/models/api_rest_path.py:0
+#, python-format
+msgid "or"
+msgstr ""
+

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem id="menu_api_rest" name="API REST" sequence="100" groups="smile_api_rest.configuration_manager"
+              web_icon="smile_api_rest,static/description/odoo_icon.png"/>
+
+    <record model="ir.ui.view" id="view_api_rest_version_tree">
+        <field name="name">api.rest.version.tree</field>
+        <field name="model">api.rest.version</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Versions" decoration-muted="not active">
+                <field name="active"/>
+                <field name="name"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_api_rest_version_form">
+        <field name="name">api.rest.version.form</field>
+        <field name="model">api.rest.version</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Version">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" class="oe_stat_button"
+                                icon="fa-globe" name="go_to_api_docs">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">
+                                    Go to <br/>API Docs</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Inactive" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group string="API Informations">
+                        <field name="active" widget="boolean_toggle"/>
+                        <field name="description"/>
+                        <field name="active_log" widget="boolean_toggle"/>
+                        <field name="last_usage_date" readonly="1"
+                               attrs="{'invisible': [('active_log', '=', False)]}"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Paths">
+                            <field name="path_ids"
+                                   context="{'default_version_id': active_id}"
+                                   nolabel="1" />
+                        </page>
+                        <page string="Security">
+                            <field name="user_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="api_rest_key"/>
+                                    <button type="object" class="oe_highlight"
+                                            name="generate_api_rest_key"
+                                            string="Generate API Key"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="api_rest_key"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Logs"
+                              attrs="{'invisible': [('active_log', '=', False)]}">
+                            <field name="log_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_api_rest_version">
+        <field name="name">Versions</field>
+        <field name="res_model">api.rest.version</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_action_api_rest_version"
+              action="action_api_rest_version"
+              parent="menu_api_rest" sequence="10"/>
+
+</odoo>

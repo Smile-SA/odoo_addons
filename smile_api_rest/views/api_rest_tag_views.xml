@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_api_rest_tag_tree">
+        <field name="name">api.rest.tag.tree</field>
+        <field name="model">api.rest.tag</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Tags" editable="bottom">
+                <field name="name"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_api_rest_tag">
+        <field name="name">Tags</field>
+        <field name="res_model">api.rest.tag</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_api_rest_configuration" name="Configuration"
+              parent="menu_api_rest" sequence="100"/>
+
+    <menuitem id="menu_action_api_rest_tag"
+              action="action_api_rest_tag"
+              parent="menu_api_rest_configuration" sequence="10"/>
+
+</odoo>

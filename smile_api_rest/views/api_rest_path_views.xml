@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_api_rest_path_tree" model="ir.ui.view">
+        <field name="name">api.rest.path.tree</field>
+        <field name="model">api.rest.path</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Paths" decoration-muted="not active">
+                <field name="version_id"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="model_id"/>
+                <field name="method"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_api_rest_path_form" model="ir.ui.view">
+        <field name="name">api.rest.path.form</field>
+        <field name="model">api.rest.path</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Path">
+                <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <label for="model_id"/>
+                        <h3>
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="model" invisible="1"/>
+                        </h3>
+                        <label for="version_id"/>
+                        <h5>
+                            <field name="version_id" options="{'no_create': True}"/>
+                        </h5>
+                    </div>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                    <group>
+                        <group string="Additional Information">
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="deprecated" widget="boolean_toggle"/>
+                            <field name="tag_id" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Method">
+                            <field name="method" widget="radio"/>
+
+                        </group>
+                    </group>
+                    <group string="Settings for read"
+                           attrs="{'invisible': [('method', 'not in', ['get'])]}">
+                        <field name="limit" attrs="{'required': [('method', '=', 'get')]}"/>
+                        <field name="filter_domain" widget="domain" options="{'model': 'model', 'in_dialog': True}"
+                               placeholder="Add domain to filter result, example: [('name', '=', 'Test')]"/>
+                        <field name="field_ids" widget="many2many_tags"
+                               attrs="{'required': [('method', '=', 'get')]}"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <field name="warning_required" invisible="1"/>
+                    <group string="Settings for create/update" attrs="{'invisible': [('method', 'not in', ['post', 'put'])]}">
+                        <field name="update_domain" widget="domain" options="{'model': 'model', 'in_dialog': True}"
+                               attrs="{'invisible': [('method', 'not in', ['put'])]}"/>
+                        <div colspan="2" class="alert alert-danger text-center" role="alert"
+                             attrs="{'invisible': [('warning_required', '=', True)]}">
+                            Please note, some required fields have not been added to the list of fields, creating or updating may not work.
+                        </div>
+                        <field name="api_field_ids"
+                               context="{'default_path_id': active_id}">
+                            <tree editable="bottom" decoration-muted="default_value">
+                                <field name="model_id" invisible="1"/>
+                                <field name="path_id" invisible="1" />
+                                <field name="sequence" widget="handle"/>
+                                <field name="field_id" options="{'no_create': True}"/>
+                                <field name="description"/>
+                                <field name="default_value"/>
+                                <field name="force_required" invisible="1"/>
+                                <field name="required" attrs="{'readonly': [('default_value', 'not in', ['', False])]}"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Settings for unlink"
+                           attrs="{'invisible': [('method', 'not in', ['delete'])]}">
+                        <field name="unlink_domain" widget="domain" options="{'model': 'model', 'in_dialog': True}"/>
+                    </group>
+                    <group string="Settings for custom function"
+                           attrs="{'invisible': [('method', 'not in', ['custom'])]}">
+                        <field name="function_apply_on_record" attrs="{'required': [('method', '=', 'custom')]}"/>
+                        <field name="function_domain" widget="domain" options="{'model': 'model', 'in_dialog': True}"
+                               attrs="{'invisible': [('function_apply_on_record', '=', False)]}"/>
+                        <field name="function" attrs="{'required': [('method', '=', 'custom')]}"/>
+                        <field name="function_parameter_ids">
+                            <tree editable="bottom">
+                                <field name="path_id" invisible="1" />
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="type"/>
+                                <field name="description"/>
+                                <field name="default_value"/>
+                                <field name="required"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_api_rest_path_search" model="ir.ui.view">
+        <field name="name">api.rest.path.search</field>
+        <field name="model">api.rest.path</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Paths">
+                <filter string="Version" name="groupby_version"
+                        domain="[]" context="{'group_by': 'version_id'}"/>
+                <filter string="Model" name="groupby_model"
+                        domain="[]" context="{'group_by': 'model_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_api_rest_path">
+        <field name="name">Paths</field>
+        <field name="res_model">api.rest.path</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_api_rest_path_search"/>
+        <field name="context">{'search_default_groupby_model': True,
+            'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_action_api_rest_path" action="action_api_rest_path"
+              parent="menu_api_rest" sequence="20" />
+</odoo>
