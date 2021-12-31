@@ -20,9 +20,10 @@
         <template id="fancybox_snippet_options" name="Fancybox Options" inherit_id="website.snippet_options">
             <xpath expr="//div[@data-js='background']" position="after">
                 <div data-selector=".fancybox_snippet" data-js="fancybox">
-                    <li class="separator"/>
-                    <li data-add-images="true" data-no-preview="true"><a href="#"><i class="fa fa-plus-circle"/>Add images</a></li>
-                    <li data-remove-all-images="true" data-no-preview="true"><a href="#"><i class="fa fa-trash"/>Remove all images</a></li>
+                    <we-row string="Images">
+                        <we-button data-add-images="true" data-no-preview="true"><li>Add images</li></we-button>
+                        <we-button data-remove-all-images="true" data-no-preview="true"><li>Remove all images</li></we-button>
+                    </we-row>
                 </div>
             </xpath>
         </template>
