@@ -3,7 +3,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 {
     'name': 'Auto Refresh',
-    'version': '0.1',
+    'version': '12.0.1.0.1',
     'depends': [
         'web',
         'bus',

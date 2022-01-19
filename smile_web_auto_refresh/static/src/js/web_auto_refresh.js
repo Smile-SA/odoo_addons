@@ -62,7 +62,7 @@ odoo.define('web_auto_refresh', function (require) {
                     } else if (typeof(widget.controllers) != 'undefined') {
                         var controller = widget.getCurrentController();
                         var action = widget.getCurrentAction();
-                        if (action && action.auto_search && controller.widget.modelName == message && controller.widget.mode != "edit") {
+                        if (action && action.auto_search && controller.widget.modelName == message && controller.widget.mode != "edit" && controller.viewType !== 'form') {
                             controller.widget.reload();
                         }
                     }
