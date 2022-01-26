@@ -27,7 +27,15 @@
                         <field name="request_url"/>
                         <field name="request_headers"/>
                         <field name="request_data"/>
-                        <field name="response_data"/>
+                        <field name="summary_response_data"/>
+                        <field name="length_response_data" invisible="1"/>
+                        <field name="filename_response_data" invisible="1"/>
+                    </group>
+                    <group attrs="{'invisible': [('length_response_data', '&lt;=', 5000)]}">
+                        <field name="file_response_data"
+                               nolabel="1"
+                               filename="filename_response_data"
+                               class="mt-4 offset-5" readonly="1"/>
                     </group>
                 </sheet>
             </form>
