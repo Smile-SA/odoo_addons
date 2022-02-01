@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  (C) 2022 Smile (<https://www.smile.eu>)
+  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
 <odoo>
 
     <menuitem id="menu_api_rest" name="API REST" sequence="100" groups="smile_api_rest.configuration_manager"

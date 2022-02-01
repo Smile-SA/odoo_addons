@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Odoo, Open Source Management Solution
-#    Copyright (C) 2017 Smile (<http://www.smile.fr>). All Rights Reserved
+#    Copyright (C) 2022 Smile (<https://www.smile.eu>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -20,29 +20,20 @@
 ##############################################################################
 
 {
-    "name": "REST API",
-    "version": "0.1",
+    "name": "Smile API Rest",
+    "version": "1.0.0",
     "sequence": 100,
     "category": "Tools",
     "author": "Smile",
     "license": 'AGPL-3',
-    "website": 'http://www.smile.fr',
+    "website": 'https://www.smile.eu',
     "description": """
-# TODO
-There are URIs available:
+This module provisions you with an API which allows
+you to access models through HTTP requests.
+Documentation generate with Swagger OpenAPI
+Specification - Version 2.0 (https://swagger.io/specification/v2/)
 
-/api/<model>                GET     - Read all (with optional domain, fields,
-                                        offset, limit, order)
-/api/<model>/<id>           GET     - Read one (with optional fields)
-/api/<model>                POST    - Create one
-/api/<model>/<id>           PUT     - Update one
-/api/<model>/<id>           DELETE  - Delete one
-/api/<model>/<id>/<method>  PUT     - Call method (with optional parameters)
-
-WARNING: before calling /api/auth, call /web?db=***
-otherwise web service is not found.
-
-Suggestions & Feedback to: Corentin POUHET-BRUNERIE
+Suggestions & Feedback to: Corentin POUHET-BRUNERIE & Julien DRECQ
     """,
     "depends": [
         'base',
