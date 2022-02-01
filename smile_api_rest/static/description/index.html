@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>README.rst</title>
+<meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
+<title></title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 7952 2016-07-26 18:15:59Z milde $
+:Id: $Id: html4css1.css 7614 2013-02-21 15:55:51Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -36,14 +36,6 @@ table.borderless td, table.borderless th {
 
 .hidden {
   display: none }
-
-.subscript {
-  vertical-align: sub;
-  font-size: smaller }
-
-.superscript {
-  vertical-align: super;
-  font-size: smaller }
 
 a.toc-backref {
   text-decoration: none ;
@@ -169,23 +161,18 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left, .figure.align-left, object.align-left, table.align-left {
+img.align-left, .figure.align-left, object.align-left {
   clear: left ;
   float: left ;
   margin-right: 1em }
 
-img.align-right, .figure.align-right, object.align-right, table.align-right {
+img.align-right, .figure.align-right, object.align-right {
   clear: right ;
   float: right ;
   margin-left: 1em }
 
 img.align-center, .figure.align-center, object.align-center {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-table.align-center {
   margin-left: auto;
   margin-right: auto;
 }
@@ -206,15 +193,6 @@ div.align-right {
 
 /* div.align-center * { */
 /*   text-align: left } */
-
-.align-top    {
-  vertical-align: top }
-
-.align-middle {
-  vertical-align: middle }
-
-.align-bottom {
-  vertical-align: bottom }
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -364,22 +342,24 @@ ul.auto-toc {
 
 
 <p><object data="https://img.shields.io/badge/licence-AGPL--3-blue.svg" type="image/svg+xml">License: AGPL-3</object> <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/11.0/smile_api_rest"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
-<div class="section" id="api-rest">
-<h1>API Rest</h1>
+<div class="section" id="smile-api-rest">
+<h1>Smile API Rest</h1>
 <p>This module provisions you with an API which allows you to access models through HTTP requests.</p>
+<p>Documentation generate with Swagger OpenAPI Specification - Version 2.0 (<a class="reference external" href="https://swagger.io/specification/v2/">https://swagger.io/specification/v2/</a>)</p>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#requirements" id="id1">Requirements</a></li>
 <li><a class="reference internal" href="#usage" id="id2">Usage</a><ul>
-<li><a class="reference internal" href="#available-uris" id="id3">Available URIs</a></li>
-<li><a class="reference internal" href="#error-responses" id="id4">Error responses</a></li>
+<li><a class="reference internal" href="#documentation-uris" id="id3">Documentation URIs</a></li>
+<li><a class="reference internal" href="#api-uris" id="id4">API URIs</a></li>
+<li><a class="reference internal" href="#error-response" id="id5">Error response</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#bug-tracker" id="id5">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="id6">Credits</a><ul>
-<li><a class="reference internal" href="#contributors" id="id7">Contributors</a></li>
-<li><a class="reference internal" href="#maintainer" id="id8">Maintainer</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="id6">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="id7">Credits</a><ul>
+<li><a class="reference internal" href="#contributors" id="id8">Contributors</a></li>
+<li><a class="reference internal" href="#maintainer" id="id9">Maintainer</a></li>
 </ul>
 </li>
 </ul>
@@ -390,13 +370,35 @@ ul.auto-toc {
 </div>
 <div class="section" id="usage">
 <h2><a class="toc-backref" href="#id2">Usage</a></h2>
-<div class="section" id="available-uris">
-<h3><a class="toc-backref" href="#id3">Available URIs</a></h3>
+<div class="section" id="documentation-uris">
+<h3><a class="toc-backref" href="#id3">Documentation URIs</a></h3>
 <table border="1" class="docutils">
 <colgroup>
-<col width="29%" />
-<col width="7%" />
-<col width="64%" />
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">URI</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><cite>/&lt;api-docs&gt;/v&lt;api_version&gt;</cite></td>
+<td>API Documentation (generate with swagger)</td>
+</tr>
+<tr><td><cite>/&lt;api-docs&gt;/v&lt;api_version&gt;/swagger.json</cite></td>
+<td>Json Swagger</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="api-uris">
+<h3><a class="toc-backref" href="#id4">API URIs</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="6%" />
+<col width="54%" />
 </colgroup>
 <thead valign="bottom">
 <tr><th class="head">URI</th>
@@ -405,63 +407,50 @@ ul.auto-toc {
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td><cite>/api/auth</cite></td>
-<td>POST</td>
-<td>Login in Odoo and set cookies</td>
-</tr>
-<tr><td><cite>/api/&lt;model&gt;</cite></td>
+<tr><td><cite>/&lt;api&gt;/v&lt;api_version&gt;/&lt;api_name&gt;</cite></td>
 <td>GET</td>
 <td>Read all (with optional domain, fields, offset, limit, order)</td>
 </tr>
-<tr><td><cite>/api/&lt;model&gt;/&lt;id&gt;</cite></td>
+<tr><td><cite>/api/v&lt;api_version&gt;/&lt;api_name&gt;/&lt;id&gt;</cite></td>
 <td>GET</td>
 <td>Read one (with optional fields)</td>
 </tr>
-<tr><td><cite>/api/&lt;model&gt;</cite></td>
+<tr><td><cite>/api/v&lt;api_version&gt;/&lt;api_name&gt;</cite></td>
 <td>POST</td>
 <td>Create a record</td>
 </tr>
-<tr><td><cite>/api/&lt;model&gt;/&lt;id&gt;</cite></td>
+<tr><td><cite>/api/v&lt;api_version&gt;/&lt;api_name&gt;/&lt;id&gt;</cite></td>
 <td>PUT</td>
 <td>Update a record</td>
 </tr>
-<tr><td><cite>/api/&lt;model&gt;/&lt;id&gt;</cite></td>
+<tr><td><cite>/api/v&lt;api_version&gt;/&lt;api_name&gt;/&lt;id&gt;</cite></td>
 <td>DELETE</td>
 <td>Delete a record</td>
 </tr>
-<tr><td><cite>/api/&lt;model&gt;/&lt;id&gt;/&lt;method&gt;</cite></td>
+<tr><td><cite>/api/v&lt;api_version&gt;/&lt;api_name&gt;/custom</cite></td>
 <td>PUT</td>
 <td>Call method (with optional parameters)</td>
 </tr>
+<tr><td><cite>/api/v&lt;api_version&gt;/&lt;api_name&gt;/custom/&lt;id&gt;</cite></td>
+<td>PUT</td>
+<td>Call method on record (with optional parameters)</td>
+</tr>
 </tbody>
 </table>
-<p><strong>WARNING:</strong> before calling <cite>/api/auth</cite>, call <cite>/web?db=***</cite> otherwise web service is not found.</p>
 </div>
-<div class="section" id="error-responses">
-<h3><a class="toc-backref" href="#id4">Error responses</a></h3>
-<table border="1" class="docutils">
-<colgroup>
-<col width="42%" />
-<col width="58%" />
-</colgroup>
-<thead valign="bottom">
-<tr><th class="head">Error response</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr><td><cite>{&quot;error&quot;: &quot;u'&lt;model&gt;'&quot;}</cite></td>
-<td>&lt;model&gt; does not exist or has a typo.</td>
-</tr>
-<tr><td><cite>{&quot;error&quot;: &quot;&lt;error_message&gt;&quot;}</cite></td>
-<td>the python error message raised</td>
-</tr>
-</tbody>
-</table>
+<div class="section" id="error-response">
+<h3><a class="toc-backref" href="#id5">Error response</a></h3>
+<pre class="code literal-block">
+{
+    'code': &lt;code&gt;  # Error code,
+    'error': &lt;error&gt;  # Error name,
+    'description': &lt;description&gt;  # Description of the error,
+}
+</pre>
 </div>
 </div>
 <div class="section" id="bug-tracker">
-<h2><a class="toc-backref" href="#id5">Bug Tracker</a></h2>
+<h2><a class="toc-backref" href="#id6">Bug Tracker</a></h2>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
@@ -469,15 +458,16 @@ If you spotted it first, help us smashing it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h2><a class="toc-backref" href="#id6">Credits</a></h2>
+<h2><a class="toc-backref" href="#id7">Credits</a></h2>
 <div class="section" id="contributors">
-<h3><a class="toc-backref" href="#id7">Contributors</a></h3>
+<h3><a class="toc-backref" href="#id8">Contributors</a></h3>
 <ul class="simple">
 <li>Corentin POUHET-BRUNERIE</li>
+<li>Julien DRECQ</li>
 </ul>
 </div>
 <div class="section" id="maintainer">
-<h3><a class="toc-backref" href="#id8">Maintainer</a></h3>
+<h3><a class="toc-backref" href="#id9">Maintainer</a></h3>
 <p>This module is maintained by Smile SA.</p>
 <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
 </div>

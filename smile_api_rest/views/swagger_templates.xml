@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  (C) 2022 Smile (<https://www.smile.eu>)
+  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
 <odoo>
     <template id="openapi" name="OpenAPI">
         <t t-call="web.layout">
