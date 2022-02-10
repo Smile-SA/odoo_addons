@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  (C) 2022 Smile (<https://www.smile.eu>)
+  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
+<odoo noupdate="1">
+
+    <record id="ir_cron_clear_history" model="ir.cron">
+        <field name="name">Cleanup of scheduled actions history</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="active" eval="True"/>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="smile_cron_history.model_ir_cron_history"/>
+        <field name="code">model.cron_cleanup_cron_history(days=90)</field>
+        <field name="state">code</field>
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(day=1, months=1)).strftime('%Y-%m-%d 02:00:00')"/>
+    </record>
+
+</odoo>

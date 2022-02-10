@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  (C) 2022 Smile (<https://www.smile.eu>)
+  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+    <record id="view_ir_cron_history_tree" model="ir.ui.view">
+        <field name="name">view.ir.cron.history.tree</field>
+        <field name="model">ir.cron.history</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0" delete="0" editable="bottom"
+                  decoration-muted="state=='interrupted'"
+                  decoration-info="state=='in_progress'"
+                  decoration-danger="state=='error'">
+                <field name="action_name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state"/>
+                <field name="message_error"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_ir_cron_history" model="ir.actions.act_window">
+        <field name="name">Scheduled Actions History</field>
+        <field name="res_model">ir.cron.history</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="menu_ir_cron_history"
+              parent="base.menu_automation"
+              action="action_ir_cron_history"
+              sequence="30"/>
+
+</odoo>
