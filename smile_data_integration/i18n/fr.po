@@ -1,0 +1,89 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_data_integration
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-05-10 09:20+0000\n"
+"PO-Revision-Date: 2021-05-10 09:20+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_data_integration
+#: model:ir.model,name:smile_data_integration.model_base
+msgid "Base"
+msgstr ""
+
+#. module: smile_data_integration
+#: model:ir.model.fields,field_description:smile_data_integration.field_res_users__context_active_test
+msgid "Context Active Test"
+msgstr ""
+
+#. module: smile_data_integration
+#: model:ir.model.fields,field_description:smile_data_integration.field_res_users__context_data_integration
+msgid "Context Data Integration"
+msgstr ""
+
+#. module: smile_data_integration
+#: model:ir.model.fields,field_description:smile_data_integration.field_res_users__context_raise_load_exceptions
+msgid "Context Raise Load Exceptions"
+msgstr ""
+
+#. module: smile_data_integration
+#: model:ir.model.fields,field_description:smile_data_integration.field_ir_fields_converter__display_name
+#: model:ir.model.fields,field_description:smile_data_integration.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_data_integration
+#: model:ir.model,name:smile_data_integration.model_ir_fields_converter
+msgid "Fields Converter"
+msgstr "Convertisseur de champs"
+
+#. module: smile_data_integration
+#: model:ir.model.fields,field_description:smile_data_integration.field_ir_fields_converter__id
+#: model:ir.model.fields,field_description:smile_data_integration.field_res_users__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_data_integration
+#: model:ir.model.fields,field_description:smile_data_integration.field_ir_fields_converter____last_update
+#: model:ir.model.fields,field_description:smile_data_integration.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_data_integration
+#: code:addons/smile_data_integration/models/base.py:0
+#, python-format
+msgid "ID is not set!"
+msgstr "L'ID n'est pas défini!"
+
+#. module: smile_data_integration
+#: code:addons/smile_data_integration/models/base.py:0
+#, python-format
+msgid "Something wrong with values or fields!"
+msgstr "Quelque chose ne va pas avec les valeurs ou les champs !"
+
+#. module: smile_data_integration
+#: code:addons/smile_data_integration/models/base.py:0
+#, python-format
+msgid "This record not exist!"
+msgstr "Ce record n'existe pas!"
+
+#. module: smile_data_integration
+#: model:ir.model,name:smile_data_integration.model_res_users
+msgid "Users"
+msgstr "Utilisateurs"
+
+#. module: smile_data_integration
+#: code:addons/smile_data_integration/models/base.py:0
+#: code:addons/smile_data_integration/models/base.py:0
+#, python-format
+msgid "{} field(s) unknown."
+msgstr "{} Champ(s) inconnu(s)."

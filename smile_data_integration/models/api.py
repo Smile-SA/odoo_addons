@@ -2,7 +2,7 @@
 # (C) 2020 Smile (<https://www.smile.eu>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from inspect import getargspec
+from inspect import getfullargspec
 from six import string_types
 
 from odoo import api, fields
@@ -94,7 +94,7 @@ def split_context(method, args, kwargs):
     """ Extract the context from a pair of positional and keyword arguments.
         Return a triple ``context, args, kwargs``.
     """
-    pos = len(getargspec(method).args) - 1
+    pos = len(getfullargspec(method).args) - 1
     if pos < len(args):
         return args[pos], args[:pos], kwargs
     else:
