@@ -1,0 +1,36 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_oauth
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-12 11:02+0000\n"
+"PO-Revision-Date: 2021-04-12 11:02+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_oauth
+#: model:ir.model.fields,field_description:smile_oauth.field_auth_oauth_provider__proxies
+msgid "Call URLs via proxies"
+msgstr "Appeler les URLs via des proxys"
+
+#. module: smile_oauth
+#: model:ir.model.fields,field_description:smile_oauth.field_auth_oauth_provider__client_secret
+msgid "Client Secret"
+msgstr "Secret client"
+
+#. module: smile_oauth
+#: model:ir.model.fields,field_description:smile_oauth.field_auth_oauth_provider__use_authorization_code_flow
+msgid "Use Authorization Code Flow"
+msgstr "Utilisé le flux Authorization code"
+
+#. module: smile_oauth
+#: model:ir.model.fields,field_description:smile_oauth.field_auth_oauth_provider__use_pkce
+msgid "Use Pkce"
+msgstr "Utilisé le PKCE"

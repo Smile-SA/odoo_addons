@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  (C) 2022 Smile (<https://www.smile.eu>)
+  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+    <record id="view_oauth_provider_form" model="ir.ui.view">
+        <field name="name">auth.oauth.provider.form</field>
+        <field name="model">auth.oauth.provider</field>
+        <field name="inherit_id" ref="auth_oauth.view_oauth_provider_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="use_authorization_code_flow"/>
+                <field name="use_pkce" attrs="{'invisible': [('use_authorization_code_flow', '=', False)]}"/>
+            </field>
+            <field name="client_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+            <field name="client_id" position="after">
+                <field name="client_secret" attrs="{'invisible': [('use_authorization_code_flow', '=', False)]}"/>
+            </field>
+            <field name="data_endpoint" position="after">
+                <field name="proxies"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
