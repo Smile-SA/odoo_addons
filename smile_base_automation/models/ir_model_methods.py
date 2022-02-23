@@ -2,7 +2,7 @@
 # (C) 2020 Smile (<http://www.smile.eu>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class IrModelMethods(models.Model):
@@ -15,5 +15,7 @@ class IrModelMethods(models.Model):
                                required=True, index=True, ondelete='cascade')
     is_public = fields.Boolean(compute='_is_public', store=True)
 
+    @api.depends('name')
     def _is_public(self):
-        self.is_public = not self.name.startswith('_')
+        for method in self:
+            method.is_public = not method.name.startswith('_')
