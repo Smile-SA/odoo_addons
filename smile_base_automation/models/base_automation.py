@@ -85,15 +85,6 @@ class BaseAutomation(models.Model):
         for method_name in method_names:
             if method_name in existing_method_names or '__' in method_name:
                 continue
-            method = getattr(Model, method_name)
-            if getattr(method, '_api', False):
-                if method._api not in ('v8', 'multi', 'one') and \
-                        '_id' not in method._api:
-                    continue
-            method_args = inspect.getfullargspec(method)[0]
-            if not hasattr(method, '_api') and 'ids' not in method_args and \
-                    'id' not in method_args:
-                continue
             Method.create({'name': method_name, 'model_id': model.id})
 
     def _filter_pre(self, records):
