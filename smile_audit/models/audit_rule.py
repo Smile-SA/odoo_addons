@@ -105,6 +105,7 @@ class AuditRule(models.Model):
                 while hasattr(func, 'origin'):
                     if func.__name__.startswith('audit_'):
                         break
+                    func = func.origin
                 else:
                     RecordModel._patch_method(method, audit_decorator(method))
             updated = bool(ids)
