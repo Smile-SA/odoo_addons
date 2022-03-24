@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="SwitchCompanyMenu">
+        <t t-jquery="div[role='menu']" t-operation="append">
+            <div class="d-flex py-0 px-0" style="margin-top: 10px;">
+                <div role="menuitemcheckbox" class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 o_py">
+                    <span style="height: 2rem;">
+                        <i class="fa fa-fw fa-square-o pt-2 toggle_all_company"></i>
+                    </span>
+                </div>
+                <div role="button" tabindex="0" class="d-flex flex-grow-1 align-items-center py-0 pl-3 o_py">
+                    <button class="btn btn-primary validate-choices">
+                        Valider
+                    </button>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>
