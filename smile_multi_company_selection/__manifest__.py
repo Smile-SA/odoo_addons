@@ -26,6 +26,7 @@ the page will not be reloaded until the user click on validate button.
     "qweb": [
         'static/src/xml/switch_company_menu.xml',
     ],
+    "images": ['static/description/select_compagnies.png'],
     "auto_install": False,
     "installable": True,
     "application": False,
