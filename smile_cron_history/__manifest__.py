@@ -46,6 +46,7 @@ receive an alert when an action fails.
         'data/ir_cron_data.xml',
         'data/mail_template_data.xml',
         # Security
+        'security/groups.xml',
         'security/ir.model.access.csv',
         # Views
         'views/ir_cron_views.xml',

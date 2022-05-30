@@ -128,3 +128,8 @@ msgstr "Action du serveur"
 #: model:ir.model.fields,field_description:smile_cron_history.field_ir_cron_history__state
 msgid "Status"
 msgstr "Statut"
+
+#. module: smile_cron_history
+#: model:res.groups,name:smile_cron_history.group_write_ir_cron_history
+msgid "Write cron history"
+msgstr "Modification de l'historique des crons"
