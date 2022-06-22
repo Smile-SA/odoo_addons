@@ -9,6 +9,12 @@ from odoo.exceptions import UserError, ValidationError
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
+    def action_reset_password(self):
+        """ This method shouldnt be trigerred for User Profiles. """
+        if self.is_user_profile:
+            return
+        return super().action_reset_password()
+
     @api.depends('groups_id')
     def _compute_share(self):
         for user in self:

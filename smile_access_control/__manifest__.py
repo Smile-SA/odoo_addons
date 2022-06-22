@@ -9,7 +9,10 @@
     "license": 'LGPL-3',
     "category": "Tools",
     "description": "This module allows to manage users' rights using profiles.",
-    "depends": ['base'],
+    "depends": [
+        'base',
+        'auth_signup',
+    ],
     "data": [
         "data/res_users_data.xml",
         "views/res_users_view.xml",
