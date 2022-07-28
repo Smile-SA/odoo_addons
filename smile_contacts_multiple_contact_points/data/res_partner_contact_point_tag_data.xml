@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="email_tag_work" model="res.partner.contact_point.tag">
+        <field name="name">Work</field>
+        <field name="sequence">1</field>
+        <field name="contact_point_type" >email</field>
+        <field name="is_default" eval="True"/>
+    </record>
+    <record id="email_tag_home" model="res.partner.contact_point.tag">
+        <field name="name">Home</field>
+        <field name="sequence">2</field>
+        <field name="contact_point_type" >email</field>
+        <field name="is_default" eval="False"/>
+    </record>
+    <record id="email_tag_other" model="res.partner.contact_point.tag">
+        <field name="name">Other</field>
+        <field name="sequence">3</field>
+        <field name="contact_point_type" >email</field>
+        <field name="is_default" eval="False"/>
+    </record>
+
+    <record id="phone_tag_work" model="res.partner.contact_point.tag">
+        <field name="name">Work</field>
+        <field name="sequence">1</field>
+        <field name="contact_point_type" >phone</field>
+        <field name="is_default" eval="True"/>
+    </record>
+    <record id="phone_tag_home" model="res.partner.contact_point.tag">
+        <field name="name">Home</field>
+        <field name="sequence">2</field>
+        <field name="contact_point_type" >phone</field>
+        <field name="is_default" eval="False"/>
+    </record>
+    <record id="phone_tag_other" model="res.partner.contact_point.tag">
+        <field name="name">Other</field>
+        <field name="sequence">3</field>
+        <field name="contact_point_type" >phone</field>
+        <field name="is_default" eval="False"/>
+    </record>
+
+    <record id="mobile_tag_work" model="res.partner.contact_point.tag">
+        <field name="name">Work</field>
+        <field name="sequence">1</field>
+        <field name="contact_point_type" >mobile</field>
+        <field name="is_default" eval="True"/>
+    </record>
+    <record id="mobile_tag_home" model="res.partner.contact_point.tag">
+        <field name="name">Home</field>
+        <field name="sequence">2</field>
+        <field name="contact_point_type" >mobile</field>
+        <field name="is_default" eval="False"/>
+    </record>
+    <record id="mobile_tag_other" model="res.partner.contact_point.tag">
+        <field name="name">Other</field>
+        <field name="sequence">3</field>
+        <field name="contact_point_type" >mobile</field>
+        <field name="is_default" eval="False"/>
+    </record>
+
+</odoo>

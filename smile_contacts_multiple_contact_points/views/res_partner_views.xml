@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_form_view" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="email" position="before">
+                <button name="action_show_contact_points" type="object"
+                    icon="fa-plus-circle" class="text-primary" title="Add secondary email addresses"
+                    attrs="{'invisible': [('email', '=', False)]}"
+                    context="{'default_contact_point_type': 'email', 'default_partner_id': active_id}"/>
+            </field>
+            <field name="phone" position="before">
+                <button name="action_show_contact_points" type="object"
+                    icon="fa-plus-circle" class="text-primary" title="Add secondary phone numbers"
+                    attrs="{'invisible': [('phone', '=', False)]}"
+                    context="{'default_contact_point_type': 'phone', 'default_partner_id': active_id, 'default_country_id': country_id}"/>
+            </field>
+            <field name="mobile" position="before">
+                <button name="action_show_contact_points" type="object"
+                    icon="fa-plus-circle" class="text-primary" title="Add secondary phone numbers"
+                    attrs="{'invisible': [('mobile', '=', False)]}"
+                    context="{'default_contact_point_type': 'mobile', 'default_partner_id': active_id, 'default_country_id': country_id}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"ir_model_access_contact_point_tag_manager","Contact Point Tag Manager","model_res_partner_contact_point_tag","base.group_partner_manager",1,1,1,1
+"ir_model_access_contact_point_tag_user","Contact Point Tag User","model_res_partner_contact_point_tag","base.group_user",1,0,0,0
+"ir_model_access_contact_point_manager","Contact Point Manager","model_res_partner_contact_point","base.group_partner_manager",1,1,1,1
+"ir_model_access_contact_point_user","Contact Point User","model_res_partner_contact_point","base.group_user",1,0,0,0

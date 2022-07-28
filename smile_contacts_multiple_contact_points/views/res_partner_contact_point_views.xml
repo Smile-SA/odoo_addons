@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_contact_point_form_view" model="ir.ui.view">
+        <field name="name">res.partner.contact_point.form</field>
+        <field name="model">res.partner.contact_point</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <field name="contact_point_type" widget="radio" options="{'horizontal': true}"/>
+                        </div>
+                        <h1>
+                            <field name="name" placeholder="Address" widget="email" attrs="{'invisible': [('contact_point_type', '!=', 'email')]}"/>
+                            <field name="name" placeholder="Number" widget="phone" attrs="{'invisible': [('contact_point_type', 'not in', ('mobile', 'phone'))]}"/>
+                        </h1>
+                        <field name="country_id" attrs="{'invisible': [('contact_point_type', '=', 'email')]}"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="tag_id"/>
+                            <field name="is_default"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="res_partner_contact_point_list_view" model="ir.ui.view">
+        <field name="name">res.partner.contact_point.tree</field>
+        <field name="model">res.partner.contact_point</field>
+        <field name="arch" type="xml">
+            <tree editable="top" multi_edit="1">
+                <field name="sequence" widget="handle"/>
+                <field name="partner_id"/>
+                <field name="name"/>
+                <button name="exists" type="object" icon="fa-ban" class="text-danger"
+                    attrs="{'invisible': [('is_blacklisted', '=', False), ('phone_blacklisted', '=', False)]}"
+                    string="This email/phone is blacklisted for mass mailing"
+                    readonly="1" groups="base.group_user"/>
+                <field name="is_blacklisted" invisible="1"/>
+                <field name="phone_blacklisted" invisible="1"/>
+                <field name="contact_point_type"/>
+                <field name="tag_id" optional="show"/>
+                <field name="country_id" attrs="{'readonly': [('contact_point_type', '=', 'email')]}" optional="hide"/>
+                <field name="is_default" invisible="1"/>
+                <button name="exists" type="object" string="Is main" icon="fa-asterisk" attrs="{'invisible': [('is_default', '=', False)]}"/>
+                <button name="set_default" type="object" string="Make it main" attrs="{'invisible': [('is_default', '=', True)]}"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>
