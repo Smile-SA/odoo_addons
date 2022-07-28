@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="smile_fields_configuration assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/smile_fields_configuration/static/src/js/autocomplete_utils.js" />
+        </xpath>
+    </template>
+
+</odoo>

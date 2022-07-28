@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Referencial -->
+    <record id="ir_referencial_view_tree" model="ir.ui.view">
+        <field name="name">ir.referencial.view.tree</field>
+        <field name="model">ir.referencial</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ir_referencial_view_form" model="ir.ui.view">
+        <field name="name">ir.referencial.view.form</field>
+        <field name="model">ir.referencial</field>
+        <field name="arch" type="xml">
+            <form sample="1">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <field name="description"/>
+                        <field name="url_auth" widget="url"/>
+                        <field name="proxies_auth" placeholder="e.g. {'http': 'http://proxy-smile.net'}"/>
+                        <field name="url_api" widget="url"/>
+                        <field name="api_key"/>
+                        <field name="proxies" placeholder="e.g. {'http': 'http://proxy-smile.net'}"/>
+                        <field name="url_docs" widget="url"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_referencial_action" model="ir.actions.act_window">
+        <field name="name">Referencials</field>
+        <field name="res_model">ir.referencial</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="ir_referencial_menu" parent="base.next_id_9"
+              action="ir_referencial_action" sequence="11"/>
+
+    <!-- Referencial Line -->
+    <record id="ir_referencial_line_view_search" model="ir.ui.view">
+        <field name="name">ir.referencial.line.view.search</field>
+        <field name="model">ir.referencial.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="configuration_id"/>
+                <field name="referencial_id"/>
+                <separator/>
+                <filter name="is_referencial_key" string="Is referencial key" domain="[('is_referencial_key', '=', True)]"/>
+                <group expand="0" name="group_by" string="Group By">
+                    <filter name="group_referencial_id" string="Referencial"
+                            context="{'group_by': 'referencial_id'}" />
+                    <filter name="group_configuration_id" string="Configuration"
+                            context="{'group_by': 'configuration_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="ir_referencial_line_view_tree" model="ir.ui.view">
+        <field name="name">ir.referencial.line.view.tree</field>
+        <field name="model">ir.referencial.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="configuration_id"/>
+                <field name="referencial_id"/>
+                <field name="domain"/>
+                <field name="technical_model_name" invisible="1"/>
+                <field name="technical_field_name" invisible="1"/>
+                <field name="is_referencial_key"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ir_referencial_line_view_form" model="ir.ui.view">
+        <field name="name">ir.referencial.line.view.form</field>
+        <field name="model">ir.referencial.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="model" invisible="1"/>
+                    <group>
+                        <field name="configuration_id"/>
+                        <field name="referencial_id"
+                               options="{'no_create': True}"/>
+                        <field name="technical_model_name" invisible="1"/>
+                        <field name="technical_field_name" invisible="1"/>
+                        <field name="domain" widget="domain"
+                               options="{'model': 'model'}"/>
+                        <field name="is_referencial_key"/>
+                    </group>
+                    <notebook>
+                        <page string="Code">
+                            <field name="code" widget="ace" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_referencial_line_view_inherit_form" model="ir.ui.view">
+        <field name="name">ir.referencial.line.inherit.form</field>
+        <field name="model">ir.referencial.line</field>
+        <field name="inherit_id" ref="ir_referencial_line_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="configuration_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+    
+    <record id="ir_referencial_line_action" model="ir.actions.act_window">
+        <field name="name">Referencial mapping</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.referencial.line</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+      <record id="ir_referencial_line_action_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="ir_referencial_line_view_tree"/>
+        <field name="act_window_id" ref="ir_referencial_line_action"/>
+    </record>
+
+    <record id="ir_referencial_line_action_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="ir_referencial_line_view_form"/>
+        <field name="act_window_id" ref="ir_referencial_line_action"/>
+    </record>
+
+    <!-- wizard warning errors -->
+    <record id="ir_referencial_view_form_warning_error" model="ir.ui.view">
+        <field name="name">ir.referencial.view.form.warning.error</field>
+        <field name="model">ir.referencial</field>
+        <field name="arch" type="xml">
+            <form>
+                <label for="error_message"
+                string="Here is the list of fields with errors during synchronization:"/>
+                <field name="error_message"/>
+                <footer>
+                    <button string="Continue" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_ir_model_fields_configuration","ir.model.fields.configuration","model_ir_model_fields_configuration","base.group_user",1,0,0,0
+"access_ir_model_fields_configuration_system","ir.model.fields.configuration","model_ir_model_fields_configuration","base.group_system",1,1,1,1
+"access_ir_referencial","ir.referencial","model_ir_referencial","base.group_user",1,0,0,0
+"access_ir_referencial_system","ir.referencial","model_ir_referencial","base.group_system",1,1,1,1
+"access_ir_referencial_line","ir.referencial.line","model_ir_referencial_line","base.group_user",1,0,0,0
+"access_ir_referencial_line_system","ir.referencial.line","model_ir_referencial_line","base.group_system",1,1,1,1
+"access_collected_pivot_model_user","collected.pivot.model","model_collected_pivot_model","base.group_user",1,0,0,0
+"access_collected_pivot_model_system","collected.pivot.model","model_collected_pivot_model","base.group_system",1,1,1,1
+"access_collected_configuration_user","collected.configuration","model_collected_configuration","base.group_user",1,0,0,0
+"access_collected_configuration_system","collected.configuration","model_collected_configuration","base.group_system",1,1,1,1
+"access_distributed_configuration_user","distributed.configuration","model_distributed_configuration","base.group_user",1,0,0,0
+"access_distributed_configuration_system","distributed.configuration","model_distributed_configuration","base.group_system",1,1,1,1

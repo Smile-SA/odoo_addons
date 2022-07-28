@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="ir_field_configuration_view_search" model="ir.ui.view">
+       <field name="name"></field>
+        <field name="model">ir.model.fields.configuration</field>
+        <field name="arch" type="xml">
+            <search string="">
+                <field name="field_description"/>
+                <field name="field_id"/>
+                <field name="field_model_id"/>
+                <field name="field_type"/>
+                <field name="collected_column"/>
+                <field name="distributed_column"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="ir_field_configuration_view_tree" model="ir.ui.view">
+        <field name="name">ir.field.configuration.view.tree</field>
+        <field name="model">ir.model.fields.configuration</field>
+        <field name="arch" type="xml">
+            <tree multi_edit="1">
+                <field name="field_id"/>
+                <field name="field_description"/>
+                <field name="field_model_id"/>
+                <field name="field_type"/>
+                <field name="field_required"/>
+                <field name="field_readonly"/>
+                <field name="field_store"/>
+                <field name="collected_by_etl"/>
+	            <field name="collected_column"/>
+	            <field name="distributed_by_etl"/>
+	            <field name="distributed_column"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ir_model_fields_configuration_view_form" model="ir.ui.view">
+        <field name="name">ir.model.fields.configuration.view.form</field>
+        <field name="model">ir.model.fields.configuration</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="field_id"/>
+                        <h1><field name="field_id"/></h1>
+                    </div>
+                    <group string="Basic information">
+                        <group>
+                            <field name="field_name"/>
+                            <field name="field_description"/>
+                            <field name="field_model_id"/>
+                            <field name="field_type"/>
+                            <field name="field_relation"
+                                   attrs="{'invisible': [('field_type', 'not in', ['many2one', 'many2many',
+                                                                             'many2many_reference', 'one2many'])]}"/>
+                        </group>
+                        <group>
+                            <field name="field_help"/>
+                            <field name="field_required"/>
+                            <field name="field_readonly"/>
+                            <field name="field_store"/>
+                            <field name="field_modules" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Collection">
+                        <field name="model" invisible="1"/>
+                        <field name="collected_by_etl"/>
+                        <field name="separator" attrs="{'invisible': ['|', ('field_type', '!=', 'many2many'),
+                                                                        ('collected_by_etl', '=', False)],}"/>
+                        <field name="collected_configuration_ids"
+                               attrs="{'invisible': [('collected_by_etl', '=', False)]}"
+                               context="{'field_relation_model': field_relation,
+                                         'field_relation_modules': field_modules}">
+                            <tree editable="top" decoration-muted="default_value">
+                                <field name="field_relation" invisible="1"/>
+                                <field name="collected_pivot_model_id" domain="[('model', '=', parent.model)]"/>
+                                <field name="functional_name"/>
+                                <field name="default_value"/>
+                                <field name="insertion_type" attrs="{'required': [('field_relation', '!=', False)],
+                                                'readonly': [('field_relation', '=', False)]}"/>
+                                <field name="relation_field_id" attrs="{'required': [('field_relation', '!=', False)],
+                                                'readonly': [('field_relation', '=', False)]}"
+                                       context="{'field_relation_model': field_relation}"/>
+                                <field name="collected_unique_key"/>
+                            </tree>
+                        </field>
+                        <field name="collected_column" attrs="{'invisible': [('collected_by_etl', '=', False)]}"/>
+                        <field name="collected_extra_config" attrs="{'invisible': [('collected_by_etl', '=', False)]}"/>
+                    </group>
+                    <group string="Distribution">
+                        <field name="distributed_by_etl"/>
+                         <field name="separator" attrs="{'invisible': ['|', ('field_type', '!=', 'many2many'),
+                                                                        ('distributed_by_etl', '=', False)],}"/>
+                        <field name="distributed_pivot_model_ids"
+                               attrs="{'invisible': [('distributed_by_etl', '=', False)]}"
+                               context="{'default_field_configuration_id': active_id,
+                        'form_view_ref': 'smile_fields_configuration.distributed_configuration_inherit_view_form',
+                        'field_relation_model': field_relation, 'field_relation_modules': field_modules}">
+                            <tree editable="top" >
+                                <field name="field_relation" invisible="1"/>
+                                <field name="collected_pivot_model_id" domain="[('model', '=', parent.model)]"/>
+                                <field name="functional_name"/>
+                                <field name="relation_field_id"
+                                       attrs="{'required': [('field_relation', '!=', False)],
+                                               'readonly': [('field_relation', '=', False)]}"
+                                       context="{'field_relation_model': field_relation}"/>
+                                <field name="distributed_domain"/>
+                            </tree>
+                        </field>
+                        <field name="distributed_column" attrs="{'invisible': [('distributed_by_etl', '=', False)]}"/>
+                        <field name="distributed_extra_config" attrs="{'invisible': [('distributed_by_etl', '=', False)]}"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Referencial">
+                            <field name="referencial_ids" nolabel="1"
+                                   context="{'default_configuration_id': active_id,
+                                'form_view_ref': 'smile_fields_configuration.ir_referencial_line_view_inherit_form'}">
+                                <tree>
+                                    <field name="referencial_id"/>
+                                    <field name="domain"/>
+                                    <field name="technical_model_name" invisible="1"/>
+                                    <field name="technical_field_name" invisible="1"/>
+                                    <field name="is_referencial_key"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_field_configuration_action" model="ir.actions.act_window">
+        <field name="name">Field configurations</field>
+        <field name="res_model">ir.model.fields.configuration</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="ir_field_configuration_menu" parent="base.next_id_9"
+              action="ir_field_configuration_action" sequence="10"/>
+
+</odoo>

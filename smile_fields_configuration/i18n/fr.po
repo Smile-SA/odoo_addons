@@ -1,0 +1,520 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_fields_configuration
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-30 07:23+0000\n"
+"PO-Revision-Date: 2021-07-30 07:23+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_fields_configuration
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_model_fields_view_form
+msgid "<span class=\"o_stat_text\">Configuration</span>"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__api_key
+msgid "Api Key"
+msgstr "Clé d'API"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields.selection,name:smile_fields_configuration.selection__ir_model_fields__custom_group_operator__avg
+msgid "Average"
+msgstr "Moyenne"
+
+#. module: smile_fields_configuration
+#: model:ir.model,name:smile_fields_configuration.model_base_configuration
+msgid "Base configuration"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_model_fields_configuration_view_form
+msgid "Basic information"
+msgstr "Informations de base"
+
+#. module: smile_fields_configuration
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_referencial_line_view_form
+msgid "Code"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__collected_by_etl
+msgid "Collected By Etl"
+msgstr "Collecté par ETL"
+
+#. module: smile_fields_configuration
+#: model:ir.model,name:smile_fields_configuration.model_collected_pivot_model
+msgid "Collected Pivot Model"
+msgstr "Modèle pivot de collecte"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__collected_column
+msgid "Collected column"
+msgstr "Colonne à collecter"
+
+#. module: smile_fields_configuration
+#: model:ir.model,name:smile_fields_configuration.model_collected_configuration
+msgid "Collected configuration"
+msgstr "Configurationde collecte"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__collected_extra_config
+msgid "Collected extra config"
+msgstr "Extra config de collecte"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_base_configuration__collected_pivot_model_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__collected_pivot_model_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__collected_configuration_ids
+msgid "Collected pivot model"
+msgstr "Modèle pivot de collecte"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__collected_unique_key
+msgid "Collected unique key"
+msgstr "Clé unique de collecte"
+
+#. module: smile_fields_configuration
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_model_fields_configuration_view_form
+msgid "Collection"
+msgstr "Collecte"
+
+#. module: smile_fields_configuration
+#: code:addons/smile_fields_configuration/models/ir_model_fields.py:0
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__configuration_id
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_referencial_line_view_search
+#, python-format
+msgid "Configuration"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields__configuration_ids
+msgid "Configurations"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_referencial_view_form_warning_error
+msgid "Continue"
+msgstr "Continuer"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields.selection,name:smile_fields_configuration.selection__collected_configuration__insertion_type__create
+msgid "Create a new element if it doesn't exist"
+msgstr "Créer un nouvel élément s'il n'existe pas"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__create_uid
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_pivot_model__create_uid
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__create_uid
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__create_uid
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__create_uid
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__create_date
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_pivot_model__create_date
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__create_date
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__create_date
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__create_date
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__default_value
+msgid "Default value"
+msgstr "Valeur par défaut"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__field_description
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__description
+msgid "Description"
+msgstr "Étiquette de champ"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_base_configuration__display_name
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__display_name
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_pivot_model__display_name
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__display_name
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields__display_name
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__display_name
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__display_name
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__distributed_by_etl
+msgid "Distributed By Etl"
+msgstr "Distribué par ETL"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_pivot_model__distributed_domain
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__distributed_domain
+msgid "Distributed Domain"
+msgstr "Domaine lors de la distribution"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__distributed_column
+msgid "Distributed column"
+msgstr "Colonne cible"
+
+#. module: smile_fields_configuration
+#: model:ir.model,name:smile_fields_configuration.model_distributed_configuration
+msgid "Distributed configuration"
+msgstr "Configuration de distribution"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__distributed_extra_config
+msgid "Distributed extra config"
+msgstr "Extra config de distribution"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__distributed_pivot_model_ids
+msgid "Distributed pivot model"
+msgstr "Modèle pivot cible"
+
+#. module: smile_fields_configuration
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_model_fields_configuration_view_form
+msgid "Distribution"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__domain
+msgid "Domain"
+msgstr "Domaine"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields.selection,name:smile_fields_configuration.selection__collected_configuration__insertion_type__dont_create
+msgid "Don't create a new element if it doesn't exist"
+msgstr "Ne pas créer un nouvel élément s'il n'existe pas"
+
+#. module: smile_fields_configuration
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_referencial_line_view_form
+msgid ""
+"Enter Python code here. Help about Python expression is available in the "
+"help tab of this document."
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__error_message
+msgid "Error Message"
+msgstr "Message d'erreur"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_base_configuration__field_configuration_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__field_configuration_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__field_configuration_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__field_id
+msgid "Field"
+msgstr "Champ"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__field_type
+msgid "Field Type"
+msgstr "Type de champ"
+
+#. module: smile_fields_configuration
+#: model:ir.actions.act_window,name:smile_fields_configuration.ir_field_configuration_action
+#: model:ir.ui.menu,name:smile_fields_configuration.ir_field_configuration_menu
+msgid "Field configurations"
+msgstr "Configurations des champs"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_base_configuration__relation_field_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__relation_field_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__relation_field_id
+msgid "Field to display"
+msgstr "Champ à afficher"
+
+#. module: smile_fields_configuration
+#: model:ir.model,name:smile_fields_configuration.model_ir_model_fields
+msgid "Fields"
+msgstr "Champs"
+
+#. module: smile_fields_configuration
+#: model:ir.actions.act_window,name:smile_fields_configuration.collected_configuration_action
+msgid "Fields ETL collection"
+msgstr "Collecte ETL des champs"
+
+#. module: smile_fields_configuration
+#: model:ir.actions.act_window,name:smile_fields_configuration.distributed_configuration_action
+msgid "Fields ETL distribution"
+msgstr "Distribution ETL des champs"
+
+#. module: smile_fields_configuration
+#: model:ir.model,name:smile_fields_configuration.model_ir_model_fields_configuration
+msgid "Fields configuration"
+msgstr "Configuration des champs"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,help:smile_fields_configuration.field_base_configuration__field_relation
+#: model:ir.model.fields,help:smile_fields_configuration.field_collected_configuration__field_relation
+#: model:ir.model.fields,help:smile_fields_configuration.field_distributed_configuration__field_relation
+#: model:ir.model.fields,help:smile_fields_configuration.field_ir_model_fields_configuration__field_relation
+msgid "For relationship fields, the technical name of the target model"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_base_configuration__functional_name
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__functional_name
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_pivot_model__functional_name
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__functional_name
+msgid "Functional Name"
+msgstr "Nom fonctionnel"
+
+#. module: smile_fields_configuration
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_referencial_line_view_search
+msgid "Group By"
+msgstr "Grouper par"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields__custom_group_operator
+msgid "Group operator"
+msgstr "Opérateur de groupement (reporting)"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__field_help
+msgid "Help"
+msgstr "Champ d'aide"
+
+#. module: smile_fields_configuration
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_referencial_view_form_warning_error
+msgid "Here is the list of fields with errors during synchronization:"
+msgstr "Voici la liste des champs en erreur lors de la synchronisation :"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_base_configuration__id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_pivot_model__id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields__id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__field_modules
+msgid "In Apps"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_referencial_line_view_search
+msgid "Is referencial key"
+msgstr "Clé dans le ref"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__is_referencial_key
+msgid "Key in the ref"
+msgstr "Clé dans le réf"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_base_configuration____last_update
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration____last_update
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_pivot_model____last_update
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration____last_update
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields____last_update
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration____last_update
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial____last_update
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__write_uid
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_pivot_model__write_uid
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__write_uid
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__write_uid
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__write_uid
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__write_date
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_pivot_model__write_date
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__write_date
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__write_date
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__write_date
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,help:smile_fields_configuration.field_ir_model_fields_configuration__field_modules
+msgid "List of modules in which the field is defined"
+msgstr "Liste des modules pour lesquels le champ est défini"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_pivot_model__model
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__field_model_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__model
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__model_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__model
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__field_name
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__name
+msgid "Name"
+msgstr "Nom de champ"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__old_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_pivot_model__old_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__old_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__old_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__old_id
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__old_id
+msgid "Old"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model:ir.model.constraint,message:smile_fields_configuration.constraint_ir_model_fields_configuration_field_uniq
+msgid "Only one configuration per field!"
+msgstr "Une seule configuration par champ! "
+
+#. module: smile_fields_configuration
+#: model:ir.actions.act_window,name:smile_fields_configuration.collected_pivot_model_action
+#: model:ir.ui.menu,name:smile_fields_configuration.collected_pivot_model_menu
+msgid "Pivot models"
+msgstr "Modèles pivots"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__code
+msgid "Python Code"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__field_readonly
+msgid "Readonly"
+msgstr "Lecture seule"
+
+#. module: smile_fields_configuration
+#: model:ir.model,name:smile_fields_configuration.model_ir_referencial
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__referencial_id
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_model_fields_configuration_view_form
+#: model_terms:ir.ui.view,arch_db:smile_fields_configuration.ir_referencial_line_view_search
+msgid "Referencial"
+msgstr "Référentiel"
+
+#. module: smile_fields_configuration
+#: model:ir.model,name:smile_fields_configuration.model_ir_referencial_line
+msgid "Referencial line"
+msgstr "Ligne de référentiel"
+
+#. module: smile_fields_configuration
+#: model:ir.actions.act_window,name:smile_fields_configuration.ir_referencial_line_action
+msgid "Referencial mapping"
+msgstr "Mapping référentiel"
+
+#. module: smile_fields_configuration
+#: model:ir.actions.act_window,name:smile_fields_configuration.ir_referencial_action
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__referencial_ids
+#: model:ir.ui.menu,name:smile_fields_configuration.ir_referencial_menu
+msgid "Referencials"
+msgstr "Référentiels"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_base_configuration__field_relation
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__field_relation
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__field_relation
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__field_relation
+msgid "Relation"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__field_required
+msgid "Required"
+msgstr "Requis"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__separator
+msgid "Separator"
+msgstr "Séparateur"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__field_store
+msgid "Store"
+msgstr "Stocké en base de données"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields.selection,name:smile_fields_configuration.selection__ir_model_fields__custom_group_operator__sum
+msgid "Sum"
+msgstr "Somme"
+
+#. module: smile_fields_configuration
+#: code:addons/smile_fields_configuration/models/ir_referencial.py:0
+#, python-format
+msgid "Synchronization with errors"
+msgstr "Synchronisation avec erreurs"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_distributed_configuration__collected_pivot_model_id
+msgid "Target pivot model"
+msgstr "Modèle pivot cible"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__technical_field_name
+msgid "Technical Field Name"
+msgstr "Nom technique du champ"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial_line__technical_model_name
+msgid "Technical Model Name"
+msgstr "Nom technique du modèle"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,help:smile_fields_configuration.field_ir_model_fields_configuration__field_model_id
+#: model:ir.model.fields,help:smile_fields_configuration.field_ir_model_fields_configuration__model_id
+msgid "The model this field belongs to"
+msgstr ""
+
+#. module: smile_fields_configuration
+#: code:addons/smile_fields_configuration/models/collected_pivot_model.py:0
+#, python-format
+msgid "This pivot model already used for another model!"
+msgstr "Ce modèle pivot déjà utilisé pour un autre modèle !"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_model_fields_configuration__field_type
+msgid "Type"
+msgstr "Type de champ"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__url_api
+msgid "Url Api"
+msgstr "Url de l'API"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__url_auth
+msgid "Url Auth"
+msgstr "Url d'authentification"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_ir_referencial__url_docs
+msgid "Url Docs"
+msgstr "Url de la documentation"
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,help:smile_fields_configuration.field_ir_model_fields_configuration__field_store
+msgid "Whether the value is stored in the database."
+msgstr ""
+
+#. module: smile_fields_configuration
+#: model:ir.model.fields,field_description:smile_fields_configuration.field_collected_configuration__insertion_type
+msgid "insertion type"
+msgstr "Type insertion"

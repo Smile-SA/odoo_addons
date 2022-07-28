@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="collected_configuration_view_tree" model="ir.ui.view">
+            <field name="name">collected.configuration.tree</field>
+            <field name="model">collected.configuration</field>
+            <field name="arch" type="xml">
+                <tree multi_edit="1" decoration-muted="default_value">
+                    <field name="field_relation" invisible="1"/>
+                    <field name="field_configuration_id"/>
+                    <field name="field_type"/>
+                    <field name="collected_pivot_model_id"/>
+                    <field name="functional_name"/>
+                    <field name="default_value"/>
+                    <field name="insertion_type" attrs="{'required': [('field_relation', '!=', False)],
+                                                'readonly': [('field_relation', '=', False)]}"/>
+                    <field name="relation_field_id" attrs="{'required': [('field_relation', '!=', False)],
+                                                'readonly': [('field_relation', '=', False)]}"
+                           context="{'field_relation_model': field_relation}"/>
+                    <field name="collected_unique_key"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="collected_configuration_view_form" model="ir.ui.view">
+            <field name="name">collected.configuration.form</field>
+            <field name="model">collected.configuration</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="field_relation" invisible="1"/>
+                            <field name="field_configuration_id"/>
+                            <field name="field_type"/>
+                            <field name="collected_pivot_model_id"/>
+                            <field name="functional_name"/>
+                            <field name="default_value"/>
+                            <field name="insertion_type" attrs="{'required': [('field_relation', '!=', False)],
+                                                        'readonly': [('field_relation', '=', False)]}"/>
+                            <field name="relation_field_id" attrs="{'required': [('field_relation', '!=', False)],
+                                                        'readonly': [('field_relation', '=', False)]}"
+                                   context="{'field_relation_model': field_relation}"/>
+                            <field name="collected_unique_key"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="collected_pivot_model_view_form" model="ir.ui.view">
+            <field name="name">collected.pivot.model.form</field>
+            <field name="model">collected.pivot.model</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="functional_name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="collected_configuration_action" model="ir.actions.act_window">
+            <field name="name">Fields ETL collection</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">collected.configuration</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="distributed_configuration_view_tree" model="ir.ui.view">
+            <field name="name">distributed.configuration.tree</field>
+            <field name="model">distributed.configuration</field>
+            <field name="arch" type="xml">
+                <tree multi_edit="1">
+                    <field name="field_relation" invisible="1"/>
+                    <field name="field_configuration_id"/>
+                    <field name="collected_pivot_model_id"/>
+                    <field name="functional_name"/>
+                    <field name="relation_field_id"
+                           attrs="{'required': [('field_relation', '!=', False)],
+                                   'readonly': [('field_relation', '=', False)]}"
+                           context="{'field_relation_model': field_relation}"/>
+                    <field name="distributed_domain"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="distributed_configuration_view_form" model="ir.ui.view">
+            <field name="name">distributed.configuration.form</field>
+            <field name="model">distributed.configuration</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="field_relation" invisible="1"/>
+                            <field name="field_configuration_id"/>
+                            <field name="collected_pivot_model_id"/>
+                            <field name="functional_name"/>
+                            <field name="relation_field_id" attrs="{'required': [('field_relation', '!=', False)],
+                                                'readonly': [('field_relation', '=', False)]}"
+                                   context="{'field_relation_model': field_relation}"/>
+                            <field name="distributed_domain"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="distributed_configuration_inherit_view_form" model="ir.ui.view">
+            <field name="name">distributed.configuration.inherit.form</field>
+            <field name="model">distributed.configuration</field>
+            <field name="inherit_id" ref="distributed_configuration_view_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+
+                <field name="field_configuration_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+
+            </field>
+        </record>
+
+        <record id="distributed_configuration_action" model="ir.actions.act_window">
+            <field name="name">Fields ETL distribution</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">distributed.configuration</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="distributed_configuration_action_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="distributed_configuration_view_tree"/>
+            <field name="act_window_id" ref="distributed_configuration_action"/>
+        </record>
+
+        <record id="distributed_configuration_action_view_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="distributed_configuration_view_form"/>
+            <field name="act_window_id" ref="distributed_configuration_action"/>
+        </record>
+
+        <record id="collected_pivot_model_view_tree" model="ir.ui.view">
+            <field name="name">collected.pivot.model.tree</field>
+            <field name="model">collected.pivot.model</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="functional_name"/>
+                    <field name="model"/>
+                    <field name="distributed_domain"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="collected_pivot_model_view_form" model="ir.ui.view">
+            <field name="name">collected.pivot.model.form</field>
+            <field name="model">collected.pivot.model</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="functional_name"/>
+                            <field name="model"/>
+                            <field name="distributed_domain" widget="domain"
+                                   options="{'model': 'model'}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="collected_pivot_model_action" model="ir.actions.act_window">
+            <field name="name">Pivot models</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">collected.pivot.model</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="collected_pivot_model_menu"
+                  name="Pivot models"
+                  parent="base.next_id_9"
+                  action="collected_pivot_model_action"
+                  sequence="11"/>
+    </data>
+</odoo>
