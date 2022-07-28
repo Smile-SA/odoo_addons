@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="data_model"
+              name="Data model"
+              sequence="7"
+              groups="smile_customize_data.data_manager"
+              web_icon="smile_customize_data,static/description/icon.png"/>
+    <menuitem id="customize_ir_model_model_menu"
+              parent="data_model"
+              action="smile_customize_data.customize_action_model_model"
+              sequence="1"/>
+    <menuitem id="customize_ir_model_model_fields"
+              parent="data_model"
+              action="smile_customize_data.customize_action_model_fields"
+              sequence="2"/>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="fields_search_view_inherited" model="ir.ui.view">
+        <field name="model">ir.model.fields</field>
+        <field name="inherit_id" ref="base.view_model_fields_search"/>
+        <field name="arch" type="xml">
+            <field name="required" position="after">
+                <filter string="Customized model" name="is_customized_model" domain="[('model_id.is_customized_model', '=', True)]"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_model_fields_form_inherit" model="ir.ui.view">
+        <field name="model">ir.model.fields</field>
+        <field name="inherit_id" ref="base.view_model_fields_form"/>
+        <field name="arch" type="xml">
+            <field name="copied" position="after">
+                <field name="is_customized_field" invisible="1" force_save="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="customize_action_model_fields" model="ir.actions.act_window">
+        <field name="name">Fields</field>
+        <field name="res_model">ir.model.fields</field>
+        <field name="context">{'search_default_is_customized_model': 1, 'default_is_customized_field': True}</field>
+        <field name="view_id" ref="base.view_model_fields_tree"/>
+    </record>
+</odoo>

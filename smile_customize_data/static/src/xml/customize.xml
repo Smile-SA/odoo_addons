@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="CustomizeView">
+    <li class="o_customize_manager" role="menuitem">
+        <a role="button" href="#" >
+            <i class="fa fa-paint-brush"/>
+        </a>
+    </li>
+</t>
+
+<t t-name="CustomizeViewButton">
+    <button type="button" class="btn btn-primary o_button_customize">
+        <i class="fa fa-paint-brush"/>
+    </button>
+</t>
+
+</templates>

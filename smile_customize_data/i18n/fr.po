@@ -1,0 +1,260 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_customize_data
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-04 07:28+0000\n"
+"PO-Revision-Date: 2021-06-04 07:28+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_customize_data
+#: model_terms:ir.ui.view,arch_db:smile_customize_data.ir_ui_view_form_view_customize
+msgid ""
+"&lt;b&gt;1.&lt;/b&gt; Position &lt;b&gt;new_field&lt;/b&gt; after &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"after\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;field name=\"new_field\"/&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;&lt;br/&gt;\n"
+"\n"
+"                                &lt;b&gt;2.&lt;/b&gt; Position &lt;b&gt;new_field&lt;/b&gt; before &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"before\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;field name=\"new_field\"/&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;&lt;br/&gt;\n"
+"\n"
+"                                &lt;b&gt;3.&lt;/b&gt; Add attribute required or invisible to &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                (there is also the readonly attribute) &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"attributes\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;attribute name=\"required\"&amp;gt;1&amp;lt;/attribute&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"attributes\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;attribute name=\"invisible\"&amp;gt;1&amp;lt;/attribute&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;&lt;br/&gt;"
+msgstr ""
+"&lt;b&gt;1.&lt;/b&gt; Positionner le champ &lt;b&gt;new_field&lt;/b&gt; après &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"after\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;field name=\"new_field\"/&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;&lt;br/&gt;\n"
+"\n"
+"                                &lt;b&gt;2.&lt;/b&gt; Positionner le champ  &lt;b&gt;new_field&lt;/b&gt; avant &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"before\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;field name=\"new_field\"/&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;&lt;br/&gt;\n"
+"\n"
+"                                &lt;b&gt;3.&lt;/b&gt; Ajouter l'attribut requis ou invisible à &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                (il existe aussi l'attribut readonly) &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"attributes\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;attribute name=\"required\"&amp;gt;1&amp;lt;/attribute&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"attributes\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;attribute name=\"invisible\"&amp;gt;1&amp;lt;/attribute&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;&lt;br/&gt;"
+
+#. module: smile_customize_data
+#: model_terms:ir.ui.view,arch_db:smile_customize_data.ir_ui_view_form_view_customize
+msgid ""
+"&lt;b&gt;4.&lt;/b&gt; Add attribute readonly with condition to &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"attributes\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;attribute name=\"attrs\"&amp;gt;{'readonly': [('field1', '=', True)]}&amp;lt;/attribute&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;&lt;br/&gt;\n"
+"\n"
+"                                &lt;b&gt;5.&lt;/b&gt; Add attribute invisible with condition to &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"attributes\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;attribute name=\"attrs\"&amp;gt;{'invisible': [('partner_type', '=', 'site')]}&amp;lt;/attribute&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;&lt;br/&gt;\n"
+"\n"
+"                                &lt;b&gt;6.&lt;/b&gt; Add multi attributes with condition to &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"attributes\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;attribute name=\"attrs\"&amp;gt;{'readonly': [('field1', '=', True)], 'invisible': [('partner_type', '=', 'site')]}&amp;lt;/attribute&amp;gt; &lt;br/&gt;"
+msgstr ""
+"&lt;b&gt;4.&lt;/b&gt; Ajouter l'attribut lecture seule avec une condition à &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"attributes\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;attribute name=\"attrs\"&amp;gt;{'readonly': [('field1', '=', True)]}&amp;lt;/attribute&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;&lt;br/&gt;\n"
+"\n"
+"                                &lt;b&gt;5.&lt;/b&gt; Ajouter l'attribut invisible avec une condition à &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"attributes\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;attribute name=\"attrs\"&amp;gt;{'invisible': [('partner_type', '=', 'site')]}&amp;lt;/attribute&amp;gt; &lt;br/&gt;\n"
+"                                &amp;lt;/field&amp;gt; &lt;br/&gt;&lt;br/&gt;\n"
+"\n"
+"                                &lt;b&gt;6.&lt;/b&gt; Ajouter plusieurs attributs avec condition à &lt;b&gt;field1&lt;/b&gt; &lt;br/&gt;\n"
+"                                &amp;lt;field name=\"field1\" position=\"attributes\"&amp;gt; &lt;br/&gt;\n"
+"                                    &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;lt;attribute name=\"attrs\"&amp;gt;{'readonly': [('field1', '=', True)], 'invisible': [('partner_type', '=', 'site')]}&amp;lt;/attribute&amp;gt; &lt;br/&gt;"
+
+#. module: smile_customize_data
+#: model_terms:ir.ui.view,arch_db:smile_customize_data.export_customizations
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_customize_data
+#: model_terms:ir.ui.view,arch_db:smile_customize_data.ir_ui_view_form_view_customize
+msgid "Close"
+msgstr "Fermer"
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_export_customizations__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_export_customizations__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_customize_data
+#: model:ir.module.category,description:smile_customize_data.data_model_category
+msgid "Customization of the data model"
+msgstr "Personnalisation du modèle de données"
+
+#. module: smile_customize_data
+#: code:addons/smile_customize_data/models/ir_ui_view.py:0
+#, python-format
+msgid "Customize view"
+msgstr "Personnaliser la vue"
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_ir_model__is_customized_menu
+msgid "Customized menu"
+msgstr "Menu personnalisé"
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_ir_model__is_customized_model
+#: model_terms:ir.ui.view,arch_db:smile_customize_data.fields_search_view_inherited
+#: model_terms:ir.ui.view,arch_db:smile_customize_data.model_search_view_inherited
+msgid "Customized model"
+msgstr "Modèle personnalisé"
+
+#. module: smile_customize_data
+#: model:res.groups,name:smile_customize_data.data_manager
+msgid "Data manager"
+msgstr "Gestionnaire de données"
+
+#. module: smile_customize_data
+#: model:ir.module.category,name:smile_customize_data.data_model_category
+#: model:ir.ui.menu,name:smile_customize_data.data_model
+msgid "Data model"
+msgstr "Modèle de données"
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_export_customizations__display_name
+#: model:ir.model.fields,field_description:smile_customize_data.field_ir_model__display_name
+#: model:ir.model.fields,field_description:smile_customize_data.field_ir_ui_view__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: smile_customize_data
+#: model_terms:ir.ui.view,arch_db:smile_customize_data.ir_ui_view_form_view_customize
+msgid "Examples: <br/><br/>"
+msgstr "Exemples: <br/><br/>"
+
+#. module: smile_customize_data
+#: model:ir.model,name:smile_customize_data.model_export_customizations
+msgid "Export customizations"
+msgstr "Exporter la personnalisation"
+
+#. module: smile_customize_data
+#: model:ir.actions.act_window,name:smile_customize_data.export_customizations_action
+#: model:ir.ui.menu,name:smile_customize_data.export_customizations_menu
+msgid "Export the customizations"
+msgstr "Exporter la personnalisation"
+
+#. module: smile_customize_data
+#: model_terms:ir.ui.view,arch_db:smile_customize_data.export_customizations
+msgid "Validate"
+msgstr "Valider"
+
+#. module: smile_customize_data
+#: model:ir.actions.act_window,name:smile_customize_data.customize_action_model_fields
+#: model:ir.ui.menu,name:smile_customize_data.customize_ir_model_model_fields
+msgid "Fields"
+msgstr "Champs"
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_export_customizations__id
+#: model:ir.model.fields,field_description:smile_customize_data.field_ir_model__id
+#: model:ir.model.fields,field_description:smile_customize_data.field_ir_ui_view__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_ir_ui_view__is_view_customize
+msgid "Is View Customize"
+msgstr ""
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_export_customizations____last_update
+#: model:ir.model.fields,field_description:smile_customize_data.field_ir_model____last_update
+#: model:ir.model.fields,field_description:smile_customize_data.field_ir_ui_view____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_export_customizations__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_export_customizations__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_customize_data
+#: model_terms:ir.ui.view,arch_db:smile_customize_data.ir_ui_view_form_view_customize
+msgid "Link to"
+msgstr "Lien vers"
+
+#. module: smile_customize_data
+#: model:ir.actions.act_window,name:smile_customize_data.customize_action_model_model
+#: model:ir.model,name:smile_customize_data.model_ir_model
+#: model:ir.ui.menu,name:smile_customize_data.customize_ir_model_model_menu
+msgid "Models"
+msgstr "Modèles"
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_export_customizations__module_name
+msgid "Module name"
+msgstr "Nom du module"
+
+#. module: smile_customize_data
+#: model:ir.model.fields,field_description:smile_customize_data.field_export_customizations__path
+msgid "Path"
+msgstr "Chemin"
+
+#. module: smile_customize_data
+#: model_terms:ir.ui.view,arch_db:smile_customize_data.ir_ui_view_form_view_customize
+msgid "Save"
+msgstr "Enregistrer"
+
+#. module: smile_customize_data
+#: code:addons/smile_customize_data/models/ir_ui_view.py:0
+#, python-format
+msgid "The view was not found or could not be generated."
+msgstr "La vue n'a pas été trouvée ou n'a pas pu etre générée."
+
+#. module: smile_customize_data
+#: code:addons/smile_customize_data/wizard/export_customizations.py:0
+#, python-format
+msgid "This file already exists!"
+msgstr "Ce fichier existe déja!"
+
+#. module: smile_customize_data
+#: code:addons/smile_customize_data/wizard/export_customizations.py:0
+#, python-format
+msgid "This path does not exist!"
+msgstr "Ce chemin n'existe pas!"
+
+#. module: smile_customize_data
+#: model:ir.model,name:smile_customize_data.model_ir_ui_view
+msgid "View"
+msgstr "Vue"
+
+#. module: smile_customize_data
+#: model_terms:ir.ui.view,arch_db:smile_customize_data.ir_ui_view_form_view_customize
+msgid "official documentation"
+msgstr "la documentation officielle"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Create category-->
+    <record model="ir.module.category" id="data_model_category">
+        <field name="name">Data model</field>
+        <field name="description">Customization of the data model</field>
+        <field name="sequence">20</field>
+    </record>
+    <!--Create group-->
+    <record id="data_manager" model="res.groups">
+        <field name="name">Data manager</field>
+        <field name="category_id" ref="data_model_category"/>
+	<field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,37 @@
+<odoo>
+    <record id="export_customizations" model="ir.ui.view">
+        <field name="name">Export the customizations</field>
+        <field name="model">export.customizations</field>
+        <field name="arch" type="xml">
+        <form string="">
+            <sheet>
+                <group>
+                    <field name="module_name"/>
+                    <field name="path"/>
+                </group>
+                <footer>
+                    <button type="object" name="export_customizations"
+                            string="Validate" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </sheet>
+        </form>
+        </field>
+    </record>
+
+    <record id="export_customizations_action" model="ir.actions.act_window">
+        <field name="name">Export the customizations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">export.customizations</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="export_customizations"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="export_customizations_menu"
+              name="Export the customizations"
+              parent="smile_customize_data.data_model"
+              action="export_customizations_action"
+              sequence="10"/>
+</odoo>

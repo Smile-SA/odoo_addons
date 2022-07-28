@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="model_form_view_inherited" model="ir.ui.view">
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_form"/>
+        <field name="arch" type="xml">
+            <field name="transient" position="before">
+                <field name="is_customized_model"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="model_tree_view_inherited" model="ir.ui.view">
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_tree"/>
+        <field name="arch" type="xml">
+            <field name="transient" position="before">
+                <field name="is_customized_model"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="model_search_view_inherited" model="ir.ui.view">
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_search"/>
+        <field name="arch" type="xml">
+            <field name="model" position="before">
+                <filter string="Customized model" name="is_customized_model" domain="[('is_customized_model', '=', True)]"/>
+            </field>
+        </field>
+    </record>
+
+     <record id="customize_action_model_model" model="ir.actions.act_window">
+         <field name="name">Models</field>
+         <field name="res_model">ir.model</field>
+         <field name="context">{'search_default_is_customized_model': 1}</field>
+         <field name="view_id" ref="base.view_model_tree"/>
+     </record>
+</odoo>

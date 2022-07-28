@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="smile_customize_data assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/smile_customize_data/static/src/scss/customize.scss"/>
+            <script type="text/javascript" src="/smile_customize_data/static/src/js/customize.js" />
+        </xpath>
+    </template>
+
+</odoo>
