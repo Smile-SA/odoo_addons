@@ -14,6 +14,7 @@ RESPONSE_DATA_MAX_CHARACTERS = 5000
 class ApiRestLog(models.Model):
     _name = 'api.rest.log'
     _order = 'create_date desc'
+    _description = "Api Rest Log"
 
     version_id = fields.Many2one(
         'api.rest.version', required=True, ondelete='cascade')

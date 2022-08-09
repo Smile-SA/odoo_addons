@@ -10,6 +10,7 @@ from odoo.http import request
 
 class ApiRestVersion(models.Model):
     _name = 'api.rest.version'
+    _description = "Api Rest Version"
 
     name = fields.Char(string='Number Version', required=True)
     active = fields.Boolean(default=True)

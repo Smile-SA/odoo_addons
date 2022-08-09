@@ -46,6 +46,7 @@ class ApiRestPath(models.Model):
     _name = 'api.rest.path'
     _order = 'model_id'
     _rec_name = 'model_id'
+    _description = "Api Rest Path"
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)

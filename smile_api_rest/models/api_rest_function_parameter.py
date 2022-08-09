@@ -7,6 +7,7 @@ from odoo import fields, models, api
 
 class ApiRestFunctionParameter(models.Model):
     _name = 'api.rest.function.parameter'
+    _description = "Api Rest Function Parameter"
 
     path_id = fields.Many2one(
         'api.rest.path', required=True, ondelete='cascade')

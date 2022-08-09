@@ -9,6 +9,7 @@ class ApiRestField(models.Model):
     _name = 'api.rest.field'
     _order = 'sequence'
     _rec_name = 'field_name'
+    _description = "Api Rest Field"
 
     sequence = fields.Integer()
     path_id = fields.Many2one(
