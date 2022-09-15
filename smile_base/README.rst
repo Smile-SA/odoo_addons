@@ -37,9 +37,6 @@ To enable email sending, add in your configuration file:
 To enable email fetching, add in your configuration file:
     * enable_email_fetching = True
 
-To enable sending of companies and users info to Odoo S.A., add in your configuration file:
-    * enable_publisher_warranty_contract_notification = True
-
 Changes done at migration
 =========================
 
