@@ -12,7 +12,6 @@ Smile Base
 
 
 * Install and make French the default language
-* Remove the scheduled action "Update Notification" which sends companies and users info to OpenERP S.A.
 * Activate access logs for ir.translation object
 * Correct date and time format for French language
 * Review the menu "Applications"
