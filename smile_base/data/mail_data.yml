@@ -1,9 +1,0 @@
--
-  I enable or disable the cron of module update notification
--
-  !python {model: ir.cron}: |
-    from odoo import tools
-    cron = self.env.ref('mail.ir_cron_module_update_notification', False)
-    if cron:
-      cron.active = tools.config.get(
-        'enable_publisher_warranty_contract_notification', False)

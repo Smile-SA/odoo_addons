@@ -12,7 +12,6 @@ Smile Base
 |badge2| |badge3|
 
 * Install and make French the default language
-* Disable the scheduled action "Update Notification" which sends companies and users info to Odoo S.A.
 * Activate access logs for ir.translation object
 * Correct date and time format for French language
 * Review the menu "Applications"
