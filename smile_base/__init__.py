@@ -28,7 +28,6 @@ def post_init_hook(cr, registry):
     correct_datetime_format_fr(cr)
     correct_datetime_format_eng(cr)
     remove_menus(cr)
-    prevent_expiration_database(cr)
 
 
 def add_act_window_id_in_context(cr):
@@ -87,11 +86,3 @@ def remove_menus(cr):
         except ValueError:
             pass
 
-
-def prevent_expiration_database(cr):
-    env = Environment(cr, SUPERUSER_ID, {})
-    if not env['ir.config_parameter'].search([('key', '=', 'database.expiration_date')]):
-        env['ir.config_parameter'].create({
-            'key': 'database.expiration_date',
-            'value': fields.Date.today() + relativedelta(years=10),
-        })
