@@ -48,7 +48,6 @@
     "init_xml": [
         "security/base_security.xml",
         "security/res_users.yml",
-        "data/mail_data.xml",
         "data/ir_lang.yml",
         "data/ir_config_parameter.xml",
         "view/ir_values_view.xml",
