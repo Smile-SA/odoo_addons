@@ -46,9 +46,6 @@ To add a colored ribbon, definied with RGBa, add in your configuration file:
 To display database name inside the colored ribbon add in your configuration file:
     * server.environment.display_dbname_in_ribbon = True
 
-To enable sending of companies and users info to Odoo S.A., add in your configuration file:
-    * enable_publisher_warranty_contract_notification = True
-
 
 Bug Tracker
 ===========
