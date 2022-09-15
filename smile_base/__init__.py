@@ -13,7 +13,6 @@ from odoo import tools
 
 def post_init_hook(cr, registry):
     add_act_window_id_in_context(cr)
-    disable_update_notification_cron(cr)
     set_default_lang(cr)
     correct_datetime_format_fr(cr)
     correct_datetime_format_eng(cr)
@@ -23,14 +22,6 @@ def post_init_hook(cr, registry):
 def add_act_window_id_in_context(cr):
     env = Environment(cr, SUPERUSER_ID, {})
     env['ir.actions.act_window'].with_context(active_test=False).search([])._update_context()
-
-
-def disable_update_notification_cron(cr):
-    env = Environment(cr, SUPERUSER_ID, {})
-    cron = env.ref('mail.ir_cron_module_update_notification', False)
-    if cron:
-        cron.active = tools.config.get(
-            'enable_publisher_warranty_contract_notification', False)
 
 
 def set_default_lang(cr):
@@ -81,5 +72,4 @@ def remove_menus(cr):
             env.ref(menu_id).unlink()
         except ValueError:
             pass
-
 
