@@ -58,7 +58,6 @@ Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
     "data": [
         "security/base_security.xml",
         "data/act_actions_window.yml",
-        "data/mail_data.yml",
         "data/ir_lang.yml",
         "data/im_odoo_support.yml",
         "data/ir_module_menu.yml",
