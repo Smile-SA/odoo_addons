@@ -12,7 +12,6 @@ Smile Base
 |badge2| |badge3|
 
 * Make French the default language if installed
-* Disable the scheduled action "Update Notification" which sends companies and users info to Odoo S.A.
 * Correct date and time format for French language
 * Review the menu "Applications"
 * Remove the menu "App store" and "Update modules" from apps.odoo.com.
