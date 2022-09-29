@@ -20,6 +20,8 @@ Smile Base
 * Add BaseModel.store_set_values and BaseModel._compute_store_set
 * Improve BaseModel.load method performance
 * Disable email sending/fetching by default
+* Replace email_to in emails by email_to in configuration file
+* add a recompute_fields method that can be called via webservices
 
 **Table of contents**
 
