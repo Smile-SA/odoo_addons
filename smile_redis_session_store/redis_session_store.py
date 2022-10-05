@@ -48,10 +48,16 @@ class RedisSessionStore(werkzeug.contrib.sessions.SessionStore):
         super(RedisSessionStore, self).__init__(*args, **kwargs)
         self.expire = kwargs.get('expire', SESSION_TIMEOUT)
         self.key_prefix = kwargs.get('key_prefix', '')
+        _port = tools.config.get('redis_port', 6379)
+        try:
+            _port = int(_port)
+        except ValueError:
+            _port = None
         self.redis = redis.Redis(host=tools.config.get('redis_host', 'localhost'),
-                                 port=int(tools.config.get('redis_port', 6379)),
+                                 port=_port,
                                  db=int(tools.config.get('redis_dbindex', 1)),
-                                 password=tools.config.get('redis_pass', None))
+                                 password=tools.config.get('redis_pass', None),
+                                 unix_socket_path=tools.config.get('redis_socket', None))
         self._is_redis_server_running()
 
     def save(self, session):
