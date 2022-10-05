@@ -26,13 +26,13 @@ odoo.define('smile_account_asset.create_asset', function (require) {
         renderButtons: function ($node) {
             this._super.apply(this, arguments);
             var el = this;
-            var actions = this.getParent().actions;
+            var actions = this.getParent().actions || {};
             Object.keys(actions).forEach(function(key) {
                 var action = actions[key];
                 if (el.modelName === 'account.invoice.line' &&
                         action.xml_id === "smile_account_asset.action_account_invoice_line") {
                     el.$buttons.on('click', '.o_list_button_create_asset', create_asset.bind(el));
-                } else if (el.$buttons != undefined) {
+                } else if (el.$buttons !== undefined) {
                     el.$buttons.find('.btn.btn-primary.btn-sm.o_list_button_create_asset').hide();
                 }
             })
