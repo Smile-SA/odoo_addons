@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="smile_upgrade.DisplayCodeVersion" owl="1">
+        <div class="o_code_version">
+            <a href="#" title="Version">
+                <i class="fa fa-code-fork"/> <span t-esc="state.code_version"/>
+            </a>
+        </div>
+    </t>
+
+</templates>
+
