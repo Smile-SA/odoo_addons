@@ -1,5 +1,5 @@
 
-FROM odoo:15.0
+FROM odoo:16.0
 
 USER root
 
