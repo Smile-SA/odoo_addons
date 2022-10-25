@@ -1,0 +1,246 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* smile_checklist
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-05-07 10:24+0000\n"
+"PO-Revision-Date: 2019-05-07 10:24+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_checklist
+#: code:addons/smile_checklist/models/checklist.py:49
+#, python-format
+msgid "A checklist already exists for this model!"
+msgstr "Une checklist existe déjà pour ce modèle !"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__action_id
+msgid "Action"
+msgstr "Action"
+
+#. module: smile_checklist
+#: model:ir.model,name:smile_checklist.model_ir_actions_act_window
+msgid "Action Window"
+msgstr "Action Window"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__active
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__active
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__active
+msgid "Active"
+msgstr "Actif/ve"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__filter_domain
+msgid "Apply on"
+msgstr "Appliquée sur"
+
+#. module: smile_checklist
+#: model_terms:ir.ui.view,arch_db:smile_checklist.view_checklist_form
+msgid "Archived"
+msgstr "Archivé"
+
+#. module: smile_checklist
+#: code:addons/smile_checklist/models/base.py:35
+#: model:ir.actions.act_window,name:smile_checklist.action_checklist_task_instance
+#: model:ir.model,name:smile_checklist.model_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__checklist_id
+#: model_terms:ir.ui.view,arch_db:smile_checklist.view_checklist_form
+#, python-format
+msgid "Checklist"
+msgstr "Checklist"
+
+#. module: smile_checklist
+#: model:ir.model,name:smile_checklist.model_checklist_task
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__task_id
+msgid "Checklist Task"
+msgstr "Tâche"
+
+#. module: smile_checklist
+#: model:ir.model,name:smile_checklist.model_checklist_task_instance
+msgid "Checklist Task Instance"
+msgstr "Instance"
+
+#. module: smile_checklist
+#: model:ir.actions.act_window,name:smile_checklist.action_checklist
+#: model:ir.ui.menu,name:smile_checklist.menu_checklist_checklist
+#: model:ir.ui.menu,name:smile_checklist.menu_checklists
+#: model_terms:ir.ui.view,arch_db:smile_checklist.view_checklist_tree
+msgid "Checklists"
+msgstr "Checklists"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__complete
+msgid "Complete"
+msgstr "Complète"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__complete_domain
+msgid "Complete if"
+msgstr "Complète si"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__create_uid
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__create_uid
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__create_uid
+msgid "Created by"
+msgstr "Créée par"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__create_date
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__create_date
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__create_date
+msgid "Created on"
+msgstr "Créée le"
+
+#. module: smile_checklist
+#: model:checklist,name:smile_checklist.cron_checklist
+msgid "Cron checklist"
+msgstr "Checklist sur les cron"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__display_name
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__display_name
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__display_name
+msgid "Display Name"
+msgstr "Nom à afficher"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__active_field
+msgid "Field 'Active'"
+msgstr "Champ 'Actif'"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__active_field
+msgid "Has an 'Active' field"
+msgstr "A un champs 'Actif'"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__id
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__id
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist____last_update
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task____last_update
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__write_uid
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__write_uid
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__write_date
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__write_date
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_checklist
+#: model_terms:ir.ui.view,arch_db:smile_checklist.view_checklist_form
+msgid "Leave blank in order to this checklist appears in all model menus"
+msgstr "Laisser vide pour que cette checklist apparaisse sur tous les menus"
+
+#. module: smile_checklist
+#: model_terms:ir.ui.view,arch_db:smile_checklist.view_checklist_form
+msgid "Leave blank in order to this checklist appears in all model views"
+msgstr "Laisser vide pour que cette checklist apparaisse sur toutes les vues"
+
+#. module: smile_checklist
+#: model:checklist.task,name:smile_checklist.checklist_task_4
+msgid "Mandatory Object"
+msgstr "Modèle requis"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__act_window_ids
+msgid "Menus"
+msgstr "Menus"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__model
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__model_id
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__model
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__name
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__name
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_checklist
+#: model:checklist.task,name:smile_checklist.checklist_task_4
+msgid "Number of calls not null"
+msgstr "Le nombre d'appels est non nul"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__sequence
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__sequence
+msgid "Priority"
+msgstr "Prioritaire"
+
+#. module: smile_checklist
+#: code:addons/smile_checklist/models/checklist.py:0
+#, python-format
+msgid "Progress Rate"
+msgstr "Taux de progression"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task__mandatory
+msgid "Required to make active object"
+msgstr "Obligatoire pour rendre l'enregistrement actif"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__mandatory
+msgid "Required to make record active"
+msgstr "Obligatoire pour rendre l'enregistrement actif"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist_task_instance__res_id
+msgid "Resource ID"
+msgstr "Id de l'enregistrement"
+
+#. module: smile_checklist
+#: model:ir.model.fields,help:smile_checklist.field_checklist__action_id
+msgid "Run when checklist becomes complete"
+msgstr "Jouer dès que la checklist devient complète"
+
+#. module: smile_checklist
+#: model_terms:ir.ui.view,arch_db:smile_checklist.view_checklist_form
+#: model_terms:ir.ui.view,arch_db:smile_checklist.view_checklist_task_instance_form
+msgid "Task"
+msgstr "Tâche"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__task_ids
+#: model_terms:ir.ui.view,arch_db:smile_checklist.view_checklist_form
+#: model_terms:ir.ui.view,arch_db:smile_checklist.view_checklist_task_instance_tree
+msgid "Tasks"
+msgstr "Tâches"
+
+#. module: smile_checklist
+#: model:ir.model.fields,field_description:smile_checklist.field_checklist__view_ids
+msgid "Views"
+msgstr "Vues"
+
+#. module: smile_checklist
+#: model_terms:ir.ui.view,arch_db:smile_checklist.view_checklist_form
+msgid "Visibility"
+msgstr "Visibilité"

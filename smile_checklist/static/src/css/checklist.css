@@ -1,0 +1,56 @@
+.checklist_tasks_list {
+    list-style-type: none;
+
+}
+
+.checklist_task_complete {
+    color: #21b799;
+}
+
+.checklist_task_incomplete {
+}
+
+.checklist_task_mandatory {
+    list-style-type: none;
+    font-weight: bold;
+    margin-left: 55px;
+
+}
+
+.checklist_task_not_mandatory {
+    list-style-type: none;
+    font-weight: normal;
+    margin-left: 55px;
+}
+
+.checklist_task_field_filled {
+    color: #21b799;
+}
+
+.checklist_task_field_to_fill {
+}
+
+.checklist_task_fields_list {
+  display: inline;
+  list-style-type: none;
+  padding-left: 0px;
+}
+
+.checklist_task_fields_list li {
+  display: inline;
+  font-size: smaller;
+}
+
+.checklist_task_fields_list li:after {
+  content: ", ";
+}
+
+.checklist_task_fields_list li:first-child:before {
+  content: "(";
+  color: #666666;
+}
+
+.checklist_task_fields_list li:last-child:after {
+  content: ")";
+  color: #666666;
+}
