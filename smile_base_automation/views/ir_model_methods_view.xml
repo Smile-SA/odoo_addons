@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+        <record model="ir.ui.view" id="view_ir_model_methods_search">
+            <field name="name">ir.model.methods.search</field>
+            <field name="model">ir.model.methods</field>
+            <field name="arch" type="xml">
+                <search string="Methods">
+                	<field name="name"/>
+                	<field name="model_id"/>
+					<filter name="public" string="Public methods"
+					  domain="[('is_public', '=', True)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_ir_model_methods_tree">
+            <field name="name">ir.model.methods.list</field>
+            <field name="model">ir.model.methods</field>
+            <field name="arch" type="xml">
+                <tree string="Methods" editable="top">
+                	<field name="name"/>
+                	<field name="model_id"/>
+                	<field name="is_public"/>
+                </tree>
+            </field>
+        </record>
+
+	    <record model="ir.actions.act_window" id="action_ir_model_methods_tree">
+	        <field name="name">Methods</field>
+	        <field name="res_model">ir.model.methods</field>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_ir_model_methods_tree"/>
+			<field name="context">{'search_default_public': True}</field>
+	    </record>
+
+	    <menuitem id="menu_ir_model_methods_tree" parent="base.next_id_9"
+	    	action="action_ir_model_methods_tree" sequence="10"/>
+
+	</data>
+</odoo>
