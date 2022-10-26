@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <data>
+
+       <record id="alerte_document" model="ir.cron">
+           <field name="name">Alerte</field>
+           <field name="user_id" ref="base.user_root"/>
+           <field name="interval_number">1</field>
+           <field name="interval_type">minutes</field>
+           <field name="numbercall">-1</field>
+           <field name="priority">5</field>
+           <field name="model_id" ref="model_ir_attachment"/>
+           <field name="state">code</field>
+           <field name="code">model.update_document_status()</field>
+           <field eval="False" name="doall"/>
+       </record>
+
+  </data>
+</odoo>
