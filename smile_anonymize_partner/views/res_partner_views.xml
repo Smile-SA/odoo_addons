@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="partner_anonymization_action_server" model="ir.actions.server">
+            <field name="name">Anonymize Partner Infos</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_anonymization()</field>
+        </record>
+
+    </data>
+</odoo>
