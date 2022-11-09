@@ -28,9 +28,9 @@ msgstr "Secret client"
 #. module: smile_oauth
 #: model:ir.model.fields,field_description:smile_oauth.field_auth_oauth_provider__use_authorization_code_flow
 msgid "Use Authorization Code Flow"
-msgstr "Utilisé le flux Authorization code"
+msgstr "Utiliser le flux Authorization code"
 
 #. module: smile_oauth
 #: model:ir.model.fields,field_description:smile_oauth.field_auth_oauth_provider__use_pkce
 msgid "Use Pkce"
-msgstr "Utilisé le PKCE"
+msgstr "Utiliser le PKCE"
