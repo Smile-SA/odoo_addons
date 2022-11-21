@@ -18,7 +18,7 @@ class SmileDBHandler(logging.Handler):
         cr = self._dbname_to_cr.get(dbname)
         if not cr or (cr and cr.closed):
             cr = registry(dbname).cursor()
-            cr.autocommit(True)
+            cr.autocommit = True
             self._dbname_to_cr[dbname] = cr
         return cr
 

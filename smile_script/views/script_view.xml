@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+
+        <menuitem id="menu_interventions" parent="base.menu_custom"
+          name="Maintenance" sequence="25" groups="base.group_no_one"/>
+
+        <record id="smile_script_form_view" model="ir.ui.view">
+            <field name="name">Smile script - Form</field>
+            <field name="model">smile.script</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Script">
+                    <header>
+                        <button name="run_test" type="object" string="Test" class="oe_highlight"/>
+                        <button name="validate" type="object" string="Validate"
+                            class="btn-info" attrs="{'invisible': [('state', '=', 'validated')]}"/>
+                        <button name="run" type="object" string="Run" attrs="{'invisible': [('state', '=', 'draft')]}"
+                            class="btn-danger" confirm="Are you sure you want to perform a new intervention ?"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                        </div>
+                        <notebook>
+                            <page string="Script">
+                                <label for="description"/>
+                                <field name="description"/>
+                                <label for="type"/>
+                                <field name="type"/>
+                                <label for="code"/><span attrs="{'invisible': [('type', '!=', 'python')]}"><i>You can use the following variables: self, fields, logger, tools. To display a result, use the variable "result".</i></span>
+                                <field name="code" placeholder="result = 'String displayed in the result column of intervention'"/>
+                                <div attrs="{'invisible': [('type', '!=', 'sql')]}"><field name="expect_result"/><label for="expect_result"/></div>
+                                <label for="intervention_ids"/>
+                                <field name="intervention_ids" context="{'script_form_view': True}"/>
+                            </page>
+                            <page string="Infos">
+                                <group>
+                                    <group>
+                                        <field name="create_date"/>
+                                        <field name="create_uid"/>
+                                    </group>
+                                    <group attrs="{'invisible': [('state', '=', 'draft')]}">
+                                        <field name="validation_date"/>
+                                        <field name="validation_user_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="smile_script_tree_view" model="ir.ui.view">
+            <field name="name">Smile script - Tree</field>
+            <field name="model">smile.script</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Scripts">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="smile_script_search_view" model="ir.ui.view">
+            <field name="name">Smile script - Search</field>
+            <field name="model">smile.script</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Scripts">
+                    <filter name="draft" string="Draft" icon="terp-document-new" domain="[('state', '=', 'draft')]" />
+                    <filter name="validated" string="Validated" icon="terp-camera_test" domain="[('state', '=', 'validated')]" />
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="type"/>
+                    <newline/>
+                    <field name="description"/>
+                    <field name="code"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="act_smile_script" model="ir.actions.act_window">
+            <field name="name">Maintenance Scripts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">smile.script</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_smile_script" parent="menu_interventions" action="act_smile_script"
+            name="Scripts"
+        	groups="base.group_no_one"/>
+
+        <record id="smile_script_intervention_form_view" model="ir.ui.view">
+            <field name="name">Smile script intervention - Form</field>
+            <field name="model">smile.script.intervention</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Intervention">
+                    <sheet>
+                        <group col="6">
+                            <field name="script_id" invisible="context.get('script_form_view')"/>
+                            <field name="state"/>
+                            <field name="create_date"/>
+                            <field name="create_uid"/>
+                            <field name="test_mode"/>
+                            <field name="end_date"/>
+                            <separator string="Result" colspan="6"/>
+                            <field name="result" nolabel="1" colspan="6"/>
+                            <separator string="Logs" colspan="6"/>
+                            <field name="log_ids" colspan="6" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="smile_script_intervention_tree_view" model="ir.ui.view">
+            <field name="name">Smile script intervention - Tree</field>
+            <field name="model">smile.script.intervention</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Interventions"
+                decoration-muted="test_mode == True" decoration-success="state == 'done'" decoration-danger="state == 'exception'">
+                    <field name="script_id" invisible="context.get('script_form_view')"/>
+                    <field name="create_uid"/>
+                    <field name="create_date"/>
+                    <field name="end_date"/>
+                    <field name="state"/>
+                    <field name="test_mode"/>
+                    <field name="result"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="smile_script_intervention_search_view" model="ir.ui.view">
+            <field name="name">Smile script intervention - Search</field>
+            <field name="model">smile.script.intervention</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Interventions">
+                    <group>
+                        <filter name="running" string="Running" domain="[('state','=','running')]"/>
+                        <filter name="done" string="Done" domain="[('state','=','done')]"/>
+                        <filter name="exception" string="Exception" domain="[('state','=','exception')]"/>
+                        <separator orientation="vertical"/>
+                        <filter name="validated_script" string="Validated script" domain="[('test_mode','=',False)]"/>
+                        <separator orientation="vertical"/>
+                        <field name="script_id"/>
+                        <field name="result"/>
+                    </group>
+                    <newline/>
+                    <field name="create_uid"/>
+                    <field name="test_mode"/>
+                    <newline/>
+                    <group string="Group By..." expand="0">
+                        <filter name="script" string="Script" context="{'group_by':'script_id'}"/>
+                        <filter name="state" string="State" context="{'group_by':'state'}"/>
+                        <filter name="user" string="User" context="{'group_by':'create_uid'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="act_smile_script_intervention" model="ir.actions.act_window">
+            <field name="name">Maintenance Interventions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">smile.script.intervention</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="smile_script_intervention_search_view"/>
+            <field name="view_id" ref="smile_script_intervention_tree_view"/>
+            <field name="context">{'search_default_validated_script': True}</field>
+        </record>
+
+        <menuitem id="menu_smile_script_intervention" parent="menu_interventions"
+            name="Interventions"
+            action="act_smile_script_intervention" groups="base.group_no_one"/>
+
+    </data>
+</openerp>
