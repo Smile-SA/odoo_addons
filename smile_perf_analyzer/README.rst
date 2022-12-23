@@ -28,6 +28,29 @@ To hide the database _perf created during the installation :
 
 * add "dbfilter = (?!.*_perf$)" in your config file.
 
+The postgresql role used should be SUPERUSER, or the module installation will fail.
+If the postgresql role cannot be SUPERUSER for security reasons, comment the last lines of the init method perf_log.py :
+        cr.execute('DROP USER MAPPING IF EXISTS FOR %s SERVER perf_server'
+                   % db_user)
+        cr.execute('CREATE USER MAPPING FOR %s SERVER perf_server OPTIONS '
+                   '(user %%s, password %%s)'
+                   % db_user, (db_user, db_password))
+        cr.execute('DROP FOREIGN TABLE IF EXISTS %s' % (self._table,))
+        cr.execute('CREATE FOREIGN TABLE %s (%s) SERVER perf_server'
+                   % (self._table, ', '.join('%s %s' % c for c in columns)))
+
+And after installing the module, (if your postgres role name is not "odoo", modify it on the next SQL requests) :
+- With a SUPERUSER role :
+      GRANT USAGE ON FOREIGN SERVER perf_server TO odoo;
+- With your odoo role (change password if needed):
+		DROP USER MAPPING IF EXISTS FOR odoo SERVER perf_server;
+
+		CREATE USER MAPPING FOR odoo SERVER perf_server OPTIONS (user 'odoo', password 'odoo');
+
+		DROP FOREIGN TABLE IF EXISTS ir_logging_perf_log;
+
+		CREATE FOREIGN TABLE ir_logging_perf_log (path VARCHAR, date timestamp, uid int4, model VARCHAR, method VARCHAR, total_time numeric, db_time numeric, db_count int4, args text, result text, error text, stats text, db_stats text, slow_queries text, slow_recomputation text, id int4) SERVER perf_server;
+
 
 **Table of contents**
 
@@ -81,6 +104,17 @@ To show the Logs :
 .. figure:: static/description/logs.png
    :alt: logs
    :width: 900 px
+
+
+It can also be used to monitor crons (all crons will be monitored ; there is actually no way to specify a specific one):
+- path : ""
+- Modèle : ir.cron
+- Méthode : _callback
+
+Or button clicks (chose the right model and method), for example :
+- path : '/web/dataset/call_button'
+- model : ir.cron
+- method : method_direct_trigger
 
 Bug Tracker
 ===========
