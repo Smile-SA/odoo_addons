@@ -207,6 +207,7 @@ class Base(models.AbstractModel):
                 'type': field_type,
                 'display_format': display_formats[gb_function or 'month'],
                 'interval': time_intervals[gb_function or 'month'],
+                'granularity': gb_function or 'month',
                 'tz_convert': tz_convert,
                 'qualified_field': qualified_field,
             }
