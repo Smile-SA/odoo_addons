@@ -42,6 +42,9 @@ class ConfigManager(object):
             _logger.error(u"'upgrade.conf' doesn't exist in %s", upgrade_path)
             return
         self.options['config_file'] = config_file
+        self.options['force_reload_upgrade'] = config.get(
+            'force_reload_upgrade', False
+        )
 
     def load(self):
         config_file = self.options.get('config_file')
