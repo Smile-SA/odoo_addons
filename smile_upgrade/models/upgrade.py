@@ -29,6 +29,7 @@ class UpgradeManager(object):
         self.db = sql_db.db_connect(db_name)
         self.cr = self.db.cursor()
         self.cr._cnx.autocommit = True
+        self.force_reload = self._get_force_reload_param()
         self.upgrades = self._get_upgrades()
         self.modules_to_upgrade = list(set(sum(
             [upgrade.modules_to_upgrade for upgrade in self.upgrades], [])))
@@ -103,6 +104,9 @@ class UpgradeManager(object):
                 raise UserError(warning)
             raise
 
+    def _get_force_reload_param(self):
+        return upgrade_config.get('force_reload_upgrade')
+
     def _get_upgrades(self):
         upgrades_path = upgrade_config.get('upgrades_path')
         if not upgrades_path:
@@ -124,11 +128,13 @@ class UpgradeManager(object):
                     try:
                         upgrade_infos = safe_eval(f.read())
                         upgrade = Upgrade(dir_path, upgrade_infos)
-                        if (not upgrade.databases or
-                                self.db_name in upgrade.databases) \
+                        if (not upgrade.databases
+                                or self.db_name in upgrade.databases) \
                                 and parse_version(self.db_version) \
                                 < parse_version(upgrade.version) \
-                                <= parse_version(self.code_version):
+                                <= parse_version(self.code_version) \
+                                or (self.force_reload
+                                    and upgrade.version == self.code_version):
                             upgrades.append(upgrade)
                     except Exception as e:
                         _logger.error(
