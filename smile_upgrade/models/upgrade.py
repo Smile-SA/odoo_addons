@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# (C) 2019 Smile (<https://www.smile.eu>)
+# (C) 2023 Smile (<https://www.smile.eu>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import importlib.util
@@ -154,13 +153,11 @@ class UpgradeManager(object):
         for upgrade in self.upgrades:
             languages += upgrade.translations_to_reload
         if languages:
-            with api.Environment.manage():
-                with self.db.cursor() as cr:
-                    context = {'overwrite': True}
-                    env = api.Environment(cr, SUPERUSER_ID, context)
-                    for lang in languages:
-                        env['base.language.install'].create(
-                            {'lang': lang}).lang_install()
+            with self.db.cursor() as cr:
+                context = {'overwrite': True}
+                env = api.Environment(cr, SUPERUSER_ID, context)
+                lang_ids = env['res.lang'].search([('code', 'in', languages)]).ids
+                env['base.language.install'].create({'lang_ids': [(6, 0, lang_ids)]}).lang_install()
 
 
 class Upgrade(object):
@@ -210,16 +207,15 @@ class Upgrade(object):
         if ext == '.sql':
             self._sql_import(cr, f_obj)
         elif mode != 'pre-load' and ext in ('.py', '.csv', '.xml'):
-            with api.Environment.manage():
-                if ext == '.py':
-                    self._py_import(cr, f_obj)
-                elif ext == '.csv':
-                    tools.convert_csv_import(
-                        cr, module, fname=f_obj.name, csvcontent=f_obj.read(),
-                        mode='upgrade')
-                elif ext == '.xml':
-                    tools.convert_xml_import(
-                        cr, module, xmlfile=f_obj, mode='upgrade')
+            if ext == '.py':
+                self._py_import(cr, f_obj)
+            elif ext == '.csv':
+                tools.convert_csv_import(
+                    cr, module, fname=f_obj.name, csvcontent=f_obj.read(),
+                    mode='upgrade')
+            elif ext == '.xml':
+                tools.convert_xml_import(
+                    cr, module, xmlfile=f_obj, mode='upgrade')
         else:
             _logger.error(
                 '%s extension is not supported in upgrade %sing', ext, mode)
