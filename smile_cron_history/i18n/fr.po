@@ -1,0 +1,135 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_cron_history
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-25 13:26+0000\n"
+"PO-Revision-Date: 2023-01-25 13:26+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_cron_history
+#: model:mail.template,body_html:smile_cron_history.cron_failure_alert_mail_template
+msgid ""
+"\n"
+"            <div style=\"font-family: Helvetica; font-size: 14px;\">\n"
+"                <p>Hello,</p>\n"
+"                <p>Execution of cron <strong>${object.name}</strong> failed at ${'date' in ctx and ctx['date'] or ''}.</p>\n"
+"                <p><h4>Exception:</h4></p>\n"
+"                <p>${'exception' in ctx and ctx['exception'] or ''}.</p>\n"
+"            </div>\n"
+"        \n"
+"        "
+msgstr ""
+"\n"
+"            <div style=\"font-family: Helvetica; font-size: 14px;\">\n"
+"                <p>Bonjour,</p>\n"
+"                <p>L'exécution du cron <strong>${object.name}</strong> n'a pas abouti suite à une erreur à ${'date' in ctx and ctx['date'] or ''}.</p>\n"
+"                <p><h4>Erreur:</h4></p>\n"
+"                <p>${'exception' in ctx and ctx['exception'] or ''}.</p>\n"
+"            </div>\n"
+"        \n"
+"        "
+
+#. module: smile_cron_history
+#: model:ir.model.fields,field_description:smile_cron_history.field_ir_cron_history__action_name
+#: model:ir.model.fields,field_description:smile_cron_history.field_ir_cron_history__name
+msgid "Action Name"
+msgstr "Nom de l'action"
+
+#. module: smile_cron_history
+#: model:ir.model.fields,field_description:smile_cron_history.field_res_company__alert_failure_email
+msgid "Alert Failure email"
+msgstr "E-mail d'échec d'alerte"
+
+#. module: smile_cron_history
+#: model:ir.model.fields,help:smile_cron_history.field_res_company__alert_failure_email
+msgid "An alert will be sent to this email when a cron fails"
+msgstr "Une alerte sera envoyée à cet e-mail lorsque un cron échoue"
+
+#. module: smile_cron_history
+#: model:ir.actions.server,name:smile_cron_history.ir_cron_clear_history_ir_actions_server
+#: model:ir.cron,cron_name:smile_cron_history.ir_cron_clear_history
+#: model:ir.cron,name:smile_cron_history.ir_cron_clear_history
+msgid "Cleanup of scheduled actions history"
+msgstr "Nettoyage de l'historique des actions planifiées"
+
+#. module: smile_cron_history
+#: model:mail.template,subject:smile_cron_history.cron_failure_alert_mail_template
+msgid "Cron: ${object.name} failed"
+msgstr "Cron: ${object.name} a échoué"
+
+#. module: smile_cron_history
+#: model:ir.model.fields,field_description:smile_cron_history.field_ir_cron_history__date_end
+msgid "Date End"
+msgstr "Date de fin"
+
+#. module: smile_cron_history
+#: model:ir.model.fields,field_description:smile_cron_history.field_ir_cron_history__date_start
+msgid "Date Start"
+msgstr "Date de début"
+
+#. module: smile_cron_history
+#: model:ir.model.fields.selection,name:smile_cron_history.selection__ir_cron_history__state__done
+msgid "Done"
+msgstr "Terminée"
+
+#. module: smile_cron_history
+#: model:ir.model.fields,field_description:smile_cron_history.field_ir_cron__enable_history
+msgid "Enable History"
+msgstr "Activer l'historique"
+
+#. module: smile_cron_history
+#: model:ir.model.fields.selection,name:smile_cron_history.selection__ir_cron_history__state__error
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_cron_history
+#: model:ir.model.fields.selection,name:smile_cron_history.selection__ir_cron_history__state__in_progress
+msgid "In Progress"
+msgstr "En cours"
+
+#. module: smile_cron_history
+#: model:ir.model.fields.selection,name:smile_cron_history.selection__ir_cron_history__state__interrupted
+msgid "Interrupted"
+msgstr "Interrompu"
+
+#. module: smile_cron_history
+#: model:ir.model.fields,field_description:smile_cron_history.field_ir_cron_history__message_error
+msgid "Message Error"
+msgstr "Message d'erreur"
+
+#. module: smile_cron_history
+#: code:addons/smile_cron_history/models/ir_cron.py:0
+#, python-format
+msgid "No email configured to send Cron failure alert."
+msgstr "Aucun e-mail configuré pour envoyer une alerte d'échec Cron."
+
+#. module: smile_cron_history
+#: model:ir.actions.act_window,name:smile_cron_history.action_ir_cron_history
+#: model:ir.model,name:smile_cron_history.model_ir_cron_history
+#: model:ir.ui.menu,name:smile_cron_history.menu_ir_cron_history
+msgid "Scheduled Actions History"
+msgstr "Historique des actions planifiées"
+
+#. module: smile_cron_history
+#: model:ir.model.fields,field_description:smile_cron_history.field_ir_cron_history__ir_actions_server_id
+msgid "Server action"
+msgstr "Action du serveur"
+
+#. module: smile_cron_history
+#: model:ir.model.fields,field_description:smile_cron_history.field_ir_cron_history__state
+msgid "Status"
+msgstr "Statut"
+
+#. module: smile_cron_history
+#: model:res.groups,name:smile_cron_history.group_write_ir_cron_history
+msgid "Write cron history"
+msgstr "Modification de l'historique des crons"
