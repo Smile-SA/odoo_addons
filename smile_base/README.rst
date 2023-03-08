@@ -6,7 +6,7 @@ Smile Base
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github
-   :target: https://github.com/Smile-SA/odoo_addons/tree/13.0/smile_base
+   :target: https://github.com/Smile-SA/odoo_addons/tree/16.0/smile_base
    :alt: Smile-SA/odoo_addons
 
 |badge2| |badge3|
@@ -43,8 +43,8 @@ Changes done at migration
 =========================
 
 The feature adding a colored ribbon to make your environments recognisable at
-first glance was removed during migration to Odoo 12.0.
-We recommand to instead install modules `web_environment_ribbon <https://github.com/OCA/web/tree/12.0/web_environment_ribbon>`_ and `server_environment_ir_config_parameter <https://github.com/OCA/server-env/tree/12.0/server_environment_ir_config_parameter>`_.
+first glance was removed during migration to Odoo 16.0.
+We recommand to instead install modules `web_environment_ribbon <https://github.com/OCA/web/tree/16.0/web_environment_ribbon>`_ and `server_environment_ir_config_parameter <https://github.com/OCA/server-env/tree/16.0/server_environment_ir_config_parameter>`_.
 
 Bug Tracker
 ===========
@@ -52,7 +52,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/Smile-SA/odoo_addons/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
-`here <https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_base%0Aversion:%2012.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`here <https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_base%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 GDPR / EU Privacy
 =================
