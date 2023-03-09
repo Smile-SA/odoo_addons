@@ -14,10 +14,9 @@ class SmileAssetsVersionBundle(AssetsBundleMultiWebsite):
     @tools.func.lazy_property
     def checksum(self):
         def old_checksum():
-            check = u"%s%s" % (json.dumps(self.files, sort_keys=True),
-                               self.last_modified)
-            return hashlib.sha1(check.encode('utf-8')).hexdigest()
-        if tools.config.get('server.environment', False) in \
+            check = u"%s%s" % (json.dumps(self.files, sort_keys=True), self.last_modified)
+            return hashlib.sha512(check.encode('utf-8')).hexdigest()[:64]
+        if tools.config.get('server_environment', False) in \
                 ['preprod', 'prod']:
             code_version = \
                 self.env['ir.config_parameter'].sudo().get_param('code.version')
@@ -29,5 +28,5 @@ class SmileAssetsVersionBundle(AssetsBundleMultiWebsite):
 class QWeb(models.AbstractModel):
     _inherit = 'ir.qweb'
 
-    def get_asset_bundle(self, xmlid, files, env=None):
-        return SmileAssetsVersionBundle(xmlid, files, env=env)
+    def get_asset_bundle(self, xmlid, files, env=None, css=True, js=True):
+        return SmileAssetsVersionBundle(xmlid, files, env=env, css=css, js=js)
