@@ -4,7 +4,7 @@
 
 {
     "name": "Database Anonymization - HR",
-    "version": "0.1",
+    "version": "15.0.1.0.0",
     "depends": [
         "hr",
         "smile_anonymization",

@@ -4,7 +4,7 @@
 
 {
     "name": "Smile Access Control Period",
-    "version": "1.0",
+    "version": "15.0.1.0.0",
     "author": "Smile",
     "website": 'http://www.smile.fr',
     "category": "Tools",

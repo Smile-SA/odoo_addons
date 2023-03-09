@@ -11,7 +11,7 @@
     "license": 'LGPL-3',
     'website': "http://www.smile.eu",
     'category': 'tools',
-    'version': '0.1',
+    'version': '15.0.1.0.0',
 
     'depends': [
         'base',

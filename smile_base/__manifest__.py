@@ -4,7 +4,7 @@
 
 {
     "name": "Smile Base",
-    "version": "0.2.3",
+    "version": "15.0.1.0.0",
     "depends": [
         'mail',
         'web_editor',

@@ -342,7 +342,7 @@ class ApiRestPath(models.Model):
                 _('Search domain to read. ('
                   'Defaults to an empty domain '
                   'that will match all records) '
-                  '<a href="https://www.odoo.com/documentation/14.0/'
+                  '<a href="https://www.odoo.com/documentation/15.0/'
                   'fr/developer/reference/addons/'
                   'orm.html#reference-orm-domains" '
                   'target="_blank">Documentation</a>'),

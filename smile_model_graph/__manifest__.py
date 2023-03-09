@@ -4,7 +4,7 @@
 
 {
     "name": "Models Graph",
-    "version": "0.1",
+    "version": "15.0.1.0.0",
     "depends": ["base"],
     "author": "Smile",
     "license": 'AGPL-3',
