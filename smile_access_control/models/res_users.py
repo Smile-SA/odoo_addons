@@ -130,3 +130,12 @@ class ResUsers(models.Model):
         else:
             self._update_users_linked_to_profile(list(vals.keys()))
         return res
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        args = args or []
+        if ("is_user_profile", "=", True) in args:
+            # Force active_test to False inside context
+            self = self.with_context(active_test=False)
+        return super()._search(args, offset=offset, limit=limit, order=order, count=count,
+                               access_rights_uid=access_rights_uid)
