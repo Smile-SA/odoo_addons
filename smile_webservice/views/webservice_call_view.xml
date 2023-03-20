@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_webservice_call_tree" model="ir.ui.view">
+            <field name="name">view.webservice.call.tree</field>
+            <field name="model">webservice.call</field>
+            <field name="arch" type="xml">
+                <tree string="Webservice Calls" create="false" edit="false" default_order="create_date desc"
+                      decoration-danger="state == 'error'" decoration-info="state == 'in_progress'"
+                      decoration-muted="state == 'done'">
+                    <field name="create_date"/>
+                    <field name="name"/>
+		    <field name="type_request"/>
+                    <field name="webservice_type" optional="hide"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_webservice_call_form" model="ir.ui.view">
+            <field name="name">view.webservice.call.form</field>
+            <field name="model">webservice.call</field>
+            <field name="arch" type="xml">
+                <form string="Webservice Calls" create="false" edit="false">
+                    <header>
+                        <button string="Force call" type="object" name="action_re_try" states="draft"
+                                class="oe_highlight"/>
+                        <button string="Re-Try" type="object" name="action_re_try" states="error"
+                                class="oe_highlight"/>
+                        <button string="Reset to Draft" type="object" name="action_reset_to_draft" states="in_progress"
+                                class="oe_highlight"/>
+                        <button string="Force Done" type="object" name="action_force_done"
+                                states="draft,in_progress,error"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="webservice_type"/>
+                            <field name="name"/>
+                            <field name="header"/>
+                            <field name="type_request"/>
+                            <field name="webservice_based_on"/>
+                            <field name="url"/>
+                            <field name="is_verify_ssl"/>
+                            <field name="parameter"/>
+                            <field name="expected_response"
+                                   attrs="{'invisible':[('webservice_based_on','!=','xml')]}"/>
+                            <field name="xml_namespaces"
+                                   attrs="{'invisible':[('webservice_based_on','!=','xml')]}"/>
+                            <field name="response"/>
+                            <field name="converted_response"/>
+                        </group>
+
+                        <group string="Webservice errors" name="webservice_errors"
+                               attrs="{'invisible': [('state', '!=', 'error')]}">
+                            <field name="error_code"/>
+                            <field name="error_message"/>
+                        </group>
+
+                        <group col="4" string="Webservice informations" name="webservice_informations">
+                            <field name="create_uid"/>
+                            <field name="create_date"/>
+                            <field name="write_uid"/>
+                            <field name="duration"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_webservice_call_search" model="ir.ui.view">
+            <field name="name">view.webservice.call.search</field>
+            <field name="model">webservice.call</field>
+            <field name="arch" type="xml">
+                <search string="Webservice Calls">
+
+                    <field name="name"/>
+                    <field name="header"/>
+                    <field name="type_request"/>
+                    <field name="url"/>
+                    <field name="is_verify_ssl"/>
+                    <field name="parameter"/>
+                    <field name="response"/>
+                    <field name="state"/>
+
+                    <filter name="filter_state_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                    <filter name="filter_state_done" string="Done" domain="[('state', '=', 'done')]"/>
+                    <filter name="filter_state_error" string="Error" domain="[('state', '=', 'error')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Name" name="name" domain="[]" context="{'group_by': 'name'}"/>
+                        <filter string="Request type" name="type_request" domain="[]" context="{'group_by': 'type_request'}"/>
+                        <filter string="Status" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_webservice_call_view" model="ir.actions.act_window">
+            <field name="name">Webservice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">webservice.call</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="smile_webservice.view_webservice_call_search"/>
+        </record>
+
+        <menuitem id="menu_parent_webservice" groups="base.group_erp_manager" parent="base.menu_administration"
+                  name="Webservices" sequence="100"/>
+
+        <menuitem id="menu_webservice_view" name="Webservice Calls" parent="menu_parent_webservice"
+                  action="action_webservice_call_view" sequence="90"/>
+
+    </data>
+</odoo>

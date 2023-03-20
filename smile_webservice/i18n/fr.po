@@ -1,0 +1,289 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_webservice
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-28 14:40+0000\n"
+"PO-Revision-Date: 2023-02-28 14:40+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_webservice
+#: model:ir.model,name:smile_webservice.model_base
+msgid "Base"
+msgstr ""
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__webservice_based_on
+msgid "Based on"
+msgstr "Basé sur"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__converted_response
+msgid "Converted response"
+msgstr "Réponse convertie"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_webservice
+#: model:ir.model.fields.selection,name:smile_webservice.selection__webservice_call__type_request__delete
+msgid "DELETE"
+msgstr ""
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__display_name
+msgid "Display Name"
+msgstr "Nom"
+
+#. module: smile_webservice
+#: model:ir.model.fields.selection,name:smile_webservice.selection__webservice_call__state__done
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_search
+msgid "Done"
+msgstr "Terminé"
+
+#. module: smile_webservice
+#: model:ir.model.fields.selection,name:smile_webservice.selection__webservice_call__state__draft
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_search
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__duration
+msgid "Duration (s)"
+msgstr "Durée (s)"
+
+#. module: smile_webservice
+#: model:ir.model.fields.selection,name:smile_webservice.selection__webservice_call__state__error
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_search
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__error_code
+msgid "Error code"
+msgstr "Code d'erreur"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__error_message
+msgid "Error message"
+msgstr "Message d'erreur"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__expected_response
+msgid "Expected response"
+msgstr "Réponse attendue"
+
+#. module: smile_webservice
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_form
+msgid "Force Done"
+msgstr "Forcer le statut Terminé"
+
+#. module: smile_webservice
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_form
+msgid "Force call"
+msgstr "Forcer l'appel"
+
+#. module: smile_webservice
+#: model:ir.model.fields.selection,name:smile_webservice.selection__webservice_call__type_request__get
+msgid "GET"
+msgstr ""
+
+#. module: smile_webservice
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_search
+msgid "Group By"
+msgstr "Grouper par"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__header
+msgid "Header"
+msgstr "En-tête"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_webservice
+#: model:ir.model.fields.selection,name:smile_webservice.selection__webservice_call__state__in_progress
+msgid "In progress"
+msgstr "En cours"
+
+#. module: smile_webservice
+#: model:ir.model.fields.selection,name:smile_webservice.selection__webservice_call__webservice_based_on__json
+msgid "JSON"
+msgstr ""
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__write_uid
+msgid "Last Updated by"
+msgstr "Mis à jour par"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__write_date
+msgid "Last Updated on"
+msgstr "Mis à jour le"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__webservice_model
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__name
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_search
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_webservice
+#: model:ir.model.fields.selection,name:smile_webservice.selection__webservice_call__type_request__post
+msgid "POST"
+msgstr ""
+
+#. module: smile_webservice
+#: model:ir.model.fields.selection,name:smile_webservice.selection__webservice_call__type_request__put
+msgid "PUT"
+msgstr ""
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__parameter
+msgid "Parameter"
+msgstr "Paramètre"
+
+#. module: smile_webservice
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_form
+msgid "Re-Try"
+msgstr "Re-Tester"
+
+#. module: smile_webservice
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_search
+msgid "Request type"
+msgstr "Type de demande"
+
+#. module: smile_webservice
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_form
+msgid "Reset to Draft"
+msgstr "Remettre en brouillon"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__response
+msgid "Response"
+msgstr "Réponse"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__is_verify_ssl
+msgid "SSL verification ?"
+msgstr "Verification SSL?"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__state
+msgid "State"
+msgstr "Statut"
+
+#. module: smile_webservice
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_search
+msgid "Status"
+msgstr "Statut"
+
+#. module: smile_webservice
+#: code:addons/smile_webservice/models/webservice_call.py:0
+#, python-format
+msgid "The Webservice (id: %s) call failed."
+msgstr "L'appel au webservice (id : %s) a échoué."
+
+#. module: smile_webservice
+#: code:addons/smile_webservice/models/webservice_call.py:0
+#, python-format
+msgid "The expect response should be a dictionary"
+msgstr "La réponse attendue doit être un dictionnaire."
+
+#. module: smile_webservice
+#: code:addons/smile_webservice/models/webservice_call.py:0
+#, python-format
+msgid "The expected response should be a dictionary [%s, id:%s]"
+msgstr "La réponse attendue doit être un dictionnaire [%s, id:%s]"
+
+#. module: smile_webservice
+#: code:addons/smile_webservice/models/webservice_call.py:0
+#, python-format
+msgid "The xml namespaces should be a dictionary [%s, id:%s]"
+msgstr "Les xml namespaces doivent être un dictionnaire [%s, id:%s]"
+
+#. module: smile_webservice
+#: code:addons/smile_webservice/models/webservice_call.py:0
+#, python-format
+msgid "The xml_namespaces should be a dictionary"
+msgstr "Les xml namespaces doivent être un dictionnaire"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__type_request
+msgid "Type request"
+msgstr "Type de demande"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__url
+msgid "URL call"
+msgstr "URL d'appel"
+
+#. module: smile_webservice
+#: model:ir.actions.act_window,name:smile_webservice.action_webservice_call_view
+msgid "Webservice"
+msgstr "Webservices"
+
+#. module: smile_webservice
+#: model:ir.ui.menu,name:smile_webservice.menu_webservice_view
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_form
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_search
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_tree
+msgid "Webservice Calls"
+msgstr "Appels Webservices"
+
+#. module: smile_webservice
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_form
+msgid "Webservice errors"
+msgstr "Erreurs Webservices"
+
+#. module: smile_webservice
+#: model_terms:ir.ui.view,arch_db:smile_webservice.view_webservice_call_form
+msgid "Webservice informations"
+msgstr "Informations Webservices"
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__webservice_type
+msgid "Webservice type"
+msgstr "Type de WS"
+
+#. module: smile_webservice
+#: model:ir.model,name:smile_webservice.model_webservice_call
+#: model:ir.ui.menu,name:smile_webservice.menu_parent_webservice
+msgid "Webservices"
+msgstr ""
+
+#. module: smile_webservice
+#: model:ir.model.fields.selection,name:smile_webservice.selection__webservice_call__webservice_based_on__xml
+msgid "XML"
+msgstr ""
+
+#. module: smile_webservice
+#: model:ir.model.fields,field_description:smile_webservice.field_webservice_call__xml_namespaces
+msgid "XML namespaces"
+msgstr ""
