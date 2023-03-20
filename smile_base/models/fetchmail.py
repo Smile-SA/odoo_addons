@@ -6,6 +6,8 @@ from odoo import models, tools
 import logging
 
 _logger = logging.getLogger(__name__)
+
+
 class FetchmailServer(models.Model):
     _inherit = "fetchmail.server"
 

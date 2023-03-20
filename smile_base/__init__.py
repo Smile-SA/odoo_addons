@@ -7,9 +7,6 @@ from . import models
 from . import tools
 from . import wizard
 
-from dateutil.relativedelta import relativedelta
-
-from odoo import fields
 from odoo.api import Environment, SUPERUSER_ID
 
 
@@ -38,7 +35,8 @@ def add_act_window_id_in_context(cr):
 
 def set_default_lang(cr):
     env = Environment(cr, SUPERUSER_ID, {})
-    fr = env['res.lang'].with_context(active_test=False).search([('code', '=', 'fr_FR')])
+    fr = env['res.lang'].with_context(active_test=False).search(
+        [('code', '=', 'fr_FR')])
     wizard = env['base.language.install'].create({'lang_ids': fr.ids})
     wizard.lang_install()
     if fr:
@@ -90,4 +88,3 @@ def remove_menus(cr):
             env.ref(menu_id).unlink()
         except ValueError:
             pass
-

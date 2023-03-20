@@ -10,7 +10,6 @@ from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from unittest.mock import patch
 
 
-
 @contextmanager
 def config_to_enable_email_sending(enable_email_sending):
     init_config = {
@@ -27,7 +26,6 @@ def config_to_enable_email_sending(enable_email_sending):
 
 
 class BaseTest(TransactionCase):
-
     def setUp(self):
         super(BaseTest, self).setUp()
         self.model = self.env['res.partner.category']
