@@ -24,7 +24,7 @@ class SmileDBLogger:
 
         try:
             cr = registry(dbname).cursor()
-            cr.autocommit = True
+            cr._cnx.autocommit = True
             cr.execute(
                 "select relname from pg_class "
                 "where relname='smile_log_seq'")

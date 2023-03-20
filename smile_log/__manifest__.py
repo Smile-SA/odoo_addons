@@ -18,9 +18,6 @@ Notice
         import logging
         logger = SmileLogger(dbname, model_name, res_id, uid)
         logger.info(your_message)
-
-Suggestions & Feedback to: xavier.fernandez@smile.fr,
-corentin.pouhet-brunerie@smile.fr
 """,
     "depends": ['base'],
     "data": [
@@ -29,5 +26,5 @@ corentin.pouhet-brunerie@smile.fr
         "views/smile_log_view.xml",
     ],
     "installable": True,
-    "active": False,
+    "active": True,
 }
