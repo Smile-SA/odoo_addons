@@ -13,6 +13,7 @@ Webservice
 
 This module offers an interface to view the history of webservice calls. It allows you to view errors and to retry a call that would have failed.
 Inherit from webservice.call to:
+
 * add object to webservice_model field
 * add type to webservice_type field
 
