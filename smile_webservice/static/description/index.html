@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.16: http://docutils.sourceforge.net/" />
-<title>Webservice</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="generator" content="Docutils 0.16: http://docutils.sourceforge.net/"/>
+<title>Webservice calls</title>
 <style type="text/css">
 
 /*
@@ -276,11 +277,11 @@ pre.literal-block, pre.doctest-block, pre.math, pre.code {
   margin-right: 2em }
 
 pre.code .ln { color: grey; } /* line numbers */
-pre.code, code { background-color: #eeeeee }
+pre.code, code { background-color: #eeeeee;}
 pre.code .comment, code .comment { color: #5C6576 }
 pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
 pre.code .literal.string, code .literal.string { color: #0C5404 }
-pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .name.builtin, code .name.builtin { color: #352B84;}
 pre.code .deleted, code .deleted { background-color: #DEB0A1}
 pre.code .inserted, code .inserted { background-color: #A3D289}
 
@@ -357,80 +358,291 @@ h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
 ul.auto-toc {
   list-style-type: none }
 
-</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </style>
 </head>
 <body>
-<div class="document" id="webservice">
-<h1 class="title">Webservice</h1>
+<div class="document" id="access-control">
+    <h1 class="title">Webservice calls</h1>
 
-<p><a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/15.0/smile_webservice"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
-<p>This module offers an interface to view the history of webservice calls. It allows you to view errors and to retry a call that would have failed.
-  Inherit from webservice.call to:</p>
- <ul class="simple">
-   <li>add object to webservice_model field</li>
-   <li>add type to webservice_type field</li>
- </ul>
-<p>The module defines a <cite>_get_webservice_call</cite> method that can be called in every model in order to execute a webservice.</p>
-<p>Features:</p>
-<ul class="simple">
-<li>history of webservice calls</li>
-<li>retry webservice in errors</li>
-</ul>
-<p><strong>Table of contents</strong></p>
-<div class="contents local topic" id="contents">
-<ul class="simple">
-<li><a class="reference internal" href="#usage" id="id1">Usage</a></li>
-<li><a class="reference internal" href="#bug-tracker" id="id2">Bug Tracker</a></li>
-<li><a class="reference internal" href="#gdpr-eu-privacy" id="id3">GDPR / EU Privacy</a></li>
-<li><a class="reference internal" href="#credits" id="id4">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="id5">Authors</a></li>
-<li><a class="reference internal" href="#contributors" id="id6">Contributors</a></li>
-<li><a class="reference internal" href="#maintainers" id="id7">Maintainers</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="section" id="usage">
-<h1><a class="toc-backref" href="#id1">Usage</a></h1>
-<ul class="simple">
-<li>Go to new menu <strong>Settings &gt; Webservices</strong> to see webservice calls.</li>
-</ul>
-</div>
-<div class="section" id="bug-tracker">
-<h1><a class="toc-backref" href="#id2">Bug Tracker</a></h1>
-<p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
-In case of trouble, please check there if your issue has already been reported.
-If you spotted it first, help us smashing it by providing a detailed and welcomed
-<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_webservice%0Aversion:%2015.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
-<p>Do not contact contributors directly about support or help with technical issues.</p>
-</div>
-<div class="section" id="gdpr-eu-privacy">
-<h1><a class="toc-backref" href="#id3">GDPR / EU Privacy</a></h1>
-<p>This addons does not collect any data and does not set any browser cookies.</p>
-</div>
-<div class="section" id="credits">
-<h1><a class="toc-backref" href="#id4">Credits</a></h1>
-<div class="section" id="authors">
-<h2><a class="toc-backref" href="#id5">Authors</a></h2>
-<ul class="simple">
-<li>Smile SA</li>
-</ul>
-</div>
-<div class="section" id="contributors">
-<h2><a class="toc-backref" href="#id6">Contributors</a></h2>
-<ul class="simple">
-<li>Cyril De Faria</li>
-</ul>
-</div>
-<div class="section" id="maintainers">
-<h2><a class="toc-backref" href="#id7">Maintainers</a></h2>
-<p>This module is maintained by the Smile SA.</p>
-<p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
-<a class="reference external image-reference" href="https://www.smile.eu"><img alt="Smile SA" src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" /></a>
-<p>This module is part of the <a class="reference external" href="https://github.com/Smile-SA/odoo_addons">odoo-addons</a> project on GitHub.</p>
-<p>You are welcome to contribute.</p>
-</div>
-</div>
+    <p><a class="reference external"
+          href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img
+            alt="License: AGPL-3"
+            src="https://img.shields.io/badge/licence-AGPL--3-blue.png"/></a>
+        <a class="reference external"
+           href="https://github.com/Smile-SA/odoo_addons/tree/15.0/smile_webservice"><img
+                alt="Smile-SA/odoo_addons"
+                src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github"/></a>
+    </p>
+    <br/>
+    <p>The main goal of this module is to execute webservice calls.</p>
+    <br/>
+    <p>Sometimes Odoo needs to retrieve or send data to third party
+        applications, which this technical module is all about,
+        It helps the developer to create webservices call to be executed,
+        Then execute them whenever it's convenient.
+
+    </p>
+    <br/>
+    <p><strong>Features:</strong></p>
+    <ul class="simple">
+        <li>Create webservice calls for later execution.</li>
+        <li>Execute webservice calls.</li>
+        <li>Return state and response body after execution.</li>
+        <li>Possibility to retry the failed responses.</li>
+        <li>Support for XML communication protocol like SOAP.</li>
+    </ul>
+    <p><strong>Table of contents</strong></p>
+    <div class="contents local topic" id="contents">
+        <ul class="simple">
+            <li><a class="reference internal" href="#configuration" id="id1">Configuration</a>
+            </li>
+            <li><a class="reference internal" href="#usage" id="id2">Usage</a>
+            </li>
+            <li><a class="reference internal" href="#bug-tracker" id="id4">Bug
+                Tracker</a></li>
+            <li><a class="reference internal" href="#gdpr-eu-privacy" id="id5">GDPR
+                / EU Privacy</a></li>
+            <li><a class="reference internal" href="#credits"
+                   id="id6">Credits</a>
+                <ul>
+                    <li><a class="reference internal" href="#authors" id="id7">Authors</a>
+                    </li>
+                    <li><a class="reference internal" href="#contributors"
+                           id="id8">Contributors</a></li>
+                    <li><a class="reference internal" href="#maintainers"
+                           id="id9">Maintainers</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="section" id="configuration">
+        <h1><a class="toc-backref" href="#id1">Configuration</a></h1>
+        No configuration is required.
+        </ul>
+    </div>
+    <div class="section" id="usage">
+        <h1><a class="toc-backref" href="#id2">Usage</a></h1>
+        <ul class="simple">
+            <li> In order to create a webservice call, the method
+                <code>_get_webservice_call()</code>
+                needs to be called, the parameters of this
+                method are as follows.
+                <ul>
+                    <li>
+                        <pre class="d-inline">webservice_type</pre> : str, Functional webservice types, e.g
+                        : stock_update, product_modification, ... New
+                        webservice types can be added in <pre class="d-inline">webservice.call</pre> via
+                        inheritance.
+                    </li>
+                    <li>
+                        <pre class="d-inline">type_request</pre> : str, Takes two possible values only, post
+                        or get.
+                    </li>
+                    <li>
+                        <pre class="d-inline">name</pre> : str, a label.
+                    </li>
+                    <li>
+                        <pre class="d-inline">url</pre> : str, the URL of the third party.
+                    </li>
+                    <li>
+                        <pre class="d-inline">parameter</pre> : str, the body of the call, it can be in json
+                        or xml format.
+                    </li>
+                    <li>
+                        <pre class="d-inline">kwargs</pre> : not named argument dict, if there are any
+                        other additional infos, it can be specified here, like headers.
+                    </li>
+
+                </ul>
+                <p>
+                    Note that these parameters are in fact values of the
+                    webservice
+                    call record, In other words, a new record is created in
+                    <pre class="d-inline">webservice.call</pre> which is returned by the method.
+                </p>
+                <p>
+                    Also note that _get_webservice_call can be called from any
+                    class since it's declared in the <b>base</b> class.
+                </p>
+            </li>
+
+            <li>
+                Now, the webservice call is waiting execution, to view it, go
+                to
+                Settings > Webservices.
+            </li>
+
+            <li>
+                To execute the webservice, the method call_request needs to be
+                executed,
+                It returns the response after the execution.
+            </li>
+            <br/>
+            <div>
+                            <p><strong>XML calls:</strong></p>
+            Some third parties use legacy xml communication protocols like
+            SOAP,
+            For those types of communications, the process is the same as
+            mentioned
+            above, except:
+
+            <ul>
+
+                <li>
+                    Set the parameter <b>webservice_based_on</b> to
+                    'xml' in _get_webservice_call,
+                </li>
+
+                <li>
+                    If necessary, set <b>xml_namespaces</b> in _get_webservice_call,
+                    e.g :
+                    <br/>
+                    <pre>
+                        &lt;h:table xmlns:h="http://www.w3.org/TR/html4/"&gt;
+                        &lt;h:tr&gt;
+                        &lt;h:td>Apples&lt;/h:td&gt;
+                        &lt;h:td>Bananas&lt;/h:td&gt;
+                        &lt;/h:tr&gt;
+                        &lt;/h:table&gt;
+                    </pre>
+                    The xml_namespaces parameter in this case should be set to
+                    <pre>
+                        {'http://www.w3.org/TR/html4/': 'h'}
+                    </pre>
+                </li>
+
+                <li>
+                    Your body (the params attribute) must be in xml as
+                    requested by the third party.
+                </li>
+
+                <li>
+                    If the received response is of xml format, and you'd
+                    like to format it into a dictionary format,
+                    you can set <b>expected_response</b> in _get_webservice_call.
+                    <br/>
+
+                    <p>Example:</p>
+
+                    Your expected_response is: <br/>
+                    <pre>
+                        {'amount' : '/SaleID/SaleLineID/Amount'}
+                    </pre>
+                    Your response is : <br/>
+                    <pre>
+                        &lt;SaleID&gt;
+                        &lt;SaleLineID&gt;
+                        &lt;Amount>1000.0&lt;/Amount&gt;
+                        &lt;/SaleLineID&gt;
+                        &lt;/SaleID&gt;
+                    </pre>
+                    <br/>
+                    The converted response field will be: <br/>
+                    <pre>
+                        {'amount': 1000.0}
+                    </pre>
+                </li>
+            </ul>
+            </div>
+
+
+            <br/>
+            <div>
+                <p><strong>Session creation:</strong></p>
+                Some third parties request an authentication, you can inherit
+                <code>_get_authentication_data</code> from base, it must return:
+                <pre>
+                    {'login': 'your_login' , 'password' : 'your_password'}
+                </pre>
+
+                <br/>
+            </div>
+
+            <div>
+                <p><strong>Server connexion timeout:</strong></p>
+                For the connexion with the server timeout, the default value is <code>60</code>
+                seconds
+                You can customize it in the .conf file by the parameter
+                <code>webservice_call_timeout</code>
+            </div>
+
+        </ul>
+
+
+    </div>
+    <div class="section" id="bug-tracker">
+        <h1><a class="toc-backref" href="#id4">Bug Tracker</a></h1>
+        <p>Bugs are tracked on <a class="reference external"
+                                  href="https://github.com/Smile-SA/odoo_addons/issues">GitHub
+            Issues</a>.
+            In case of trouble, please check there if your issue has already
+            been reported.
+            If you spotted it first, help us smashing it by providing a
+            detailed and welcomed
+            <a class="reference external"
+               href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_webservice%0Aversion:%2015.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.
+        </p>
+        <p>Do not contact contributors directly about support or help with
+            technical issues.</p>
+    </div>
+    <div class="section" id="gdpr-eu-privacy">
+        <h1><a class="toc-backref" href="#id5">GDPR / EU Privacy</a></h1>
+        <p>This addons does not collect any data and does not set any browser
+            cookies.</p>
+    </div>
+    <div class="section" id="credits">
+        <h1><a class="toc-backref" href="#id6">Credits</a></h1>
+        <div class="section" id="authors">
+            <h2><a class="toc-backref" href="#id7">Authors</a></h2>
+            <ul class="simple">
+                <li>Smile SA</li>
+            </ul>
+        </div>
+        <div class="section" id="contributors">
+            <h2><a class="toc-backref" href="#id8">Contributors</a></h2>
+            <ul class="simple">
+                <li>Cyril DE FARIA</li>
+                <li>Mohammed AFMIR</li>
+            </ul>
+        </div>
+        <div class="section" id="maintainers">
+            <h2><a class="toc-backref" href="#id9">Maintainers</a></h2>
+            <p>This module is maintained by the Smile SA.</p>
+            <p>Since 1991 Smile has been a pioneer of technology and also the
+                European expert in open source solutions.</p>
+            <a class="reference external image-reference"
+               href="https://www.smile.eu"><img alt="Smile SA"
+                                                src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4"/></a>
+            <p>This module is part of the <a class="reference external"
+                                             href="https://github.com/Smile-SA/odoo_addons">odoo-addons</a>
+                project on GitHub.</p>
+            <p>You are welcome to contribute.</p>
+        </div>
+    </div>
 </div>
 </body>
 </html>
+
