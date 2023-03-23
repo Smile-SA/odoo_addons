@@ -96,7 +96,7 @@ class WebserviceCall(models.Model):
             resp.raise_for_status()
         except Exception as e:
             # If resp is a <Reponse [500]>, then resp is considered False, so we can't do something like "resp and ..."
-            error_message = '%s\n%s' % (e.args[0], resp_acquired and resp and str(resp.text) or '')
+            error_message = '%s\n%s' % (e.args[0], resp_acquired and resp.text and str(resp.text) or '')
             self.write({'state': 'error',
                         'error_code': resp_acquired and resp and resp.status_code or '',
                         'error_message': error_message})
