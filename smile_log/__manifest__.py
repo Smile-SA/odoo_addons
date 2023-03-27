@@ -4,7 +4,7 @@
 
 {
     "name": "Logging in database",
-    "version": "3.0",
+    "version": "14.0.1.0.0",
     "author": "Smile",
     "website": 'https://www.smile.eu',
     "category": "Tools",

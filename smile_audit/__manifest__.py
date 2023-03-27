@@ -4,7 +4,7 @@
 
 {
     "name": "Audit Trail",
-    "version": "0.1",
+    "version": "14.0.1.0.0",
     "sequence": 100,
     "category": "Tools",
     "author": "Smile",

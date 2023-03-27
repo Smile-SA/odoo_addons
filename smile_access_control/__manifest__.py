@@ -4,7 +4,7 @@
 
 {
     "name": "Access Control",
-    "version": "1.0",
+    "version": "14.0.1.0.0",
     "author": "Smile",
     "license": 'LGPL-3',
     "category": "Tools",

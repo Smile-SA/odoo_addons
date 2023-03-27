@@ -4,7 +4,7 @@
 
 {
     "name": "Database Upgrade",
-    "version": "13.0.1",
+    "version": "14.0.1.0.0",
     "depends": ["web"],
     "author": "Smile",
     "license": 'AGPL-3',

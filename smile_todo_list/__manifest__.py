@@ -21,7 +21,7 @@
 
 {
     "name": "Todo list",
-    "version": "0.1",
+    "version": "14.0.1.0.0",
     "depends": ['mail'],
     "author": "Smile",
     "license": 'AGPL-3',

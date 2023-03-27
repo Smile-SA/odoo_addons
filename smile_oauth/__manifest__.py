@@ -4,7 +4,7 @@
 
 {
     'name': 'Smile OAuth',
-    'version': '1.0.0',
+    'version': '14.0.1.0.0',
     'sequence': 0,
     'author': 'Smile',
     'license': 'AGPL-3',

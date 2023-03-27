@@ -21,7 +21,7 @@
 
 {
     "name": "Smile Isolation Level",
-    "version": "1.0.0",
+    "version": "14.0.1.0.0",
     "sequence": 100,
     "category": "Tools",
     "author": "Smile",

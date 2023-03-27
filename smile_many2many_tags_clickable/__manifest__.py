@@ -21,7 +21,7 @@
 
 {
     "name": "Many2many Tags Clickable",
-    "version": "0.1",
+    "version": "14.0.1.0.0",
     "category": "Hidden",
     "depends": [
         "web",

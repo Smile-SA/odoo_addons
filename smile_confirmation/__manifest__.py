@@ -4,7 +4,7 @@
 
 {
     "name": "Confirm/Alert pop-up before saving",
-    "version": "0.1",
+    "version": "14.0.1.0.0",
     "depends": ['web'],
     "author": "Smile",
     "license": 'AGPL-3',

@@ -4,7 +4,7 @@
 
 {
     'name': 'Customize data',
-    'version': '0.1',
+    'version': '14.0.1.0.0',
     'sequence': 0,
     'author': 'Smile',
     'license': 'LGPL-3',

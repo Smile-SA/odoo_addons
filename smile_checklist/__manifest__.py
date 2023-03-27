@@ -5,7 +5,7 @@
 
 {
     "name": "Checklist",
-    "version": "1.0",
+    "version": "14.0.1.0.0",
     "author": "Smile",
     "website": 'http://www.smile.fr',
     "category": "Tools",
