@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+smile_invoice_issued_manager,Generate invoice to be issued for sale managers,model_smile_invoice_issued,account.group_account_user,1,1,1,1
+smile_invoice_issued_user,Generate invoice to be issued for sale user,model_smile_invoice_issued,sales_team.group_sale_salesman,1,1,1,1

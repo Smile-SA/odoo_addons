@@ -1,0 +1,111 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_invoice_issued
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-03 14:31+0000\n"
+"PO-Revision-Date: 2023-04-03 14:31+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_invoice_issued
+#: model:ir.actions.act_window,name:smile_invoice_issued.account_account_invoice_issued_act_window
+msgid "Account Invoice Issued"
+msgstr "Factures à établir"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__account_credit_id
+msgid "Account to credit"
+msgstr "Compte à créditer"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__account_debit_id
+msgid "Account to debit"
+msgstr "Compte de TVA à débiter"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__accounting_date
+msgid "Accounting date"
+msgstr "Date de comptabilisation"
+
+#. module: smile_invoice_issued
+#: model_terms:ir.ui.view,arch_db:smile_invoice_issued.smile_account_invoice_generic_wizard_form_view
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: smile_invoice_issued
+#: model_terms:ir.ui.view,arch_db:smile_invoice_issued.smile_account_invoice_generic_wizard_form_view
+msgid "Generate"
+msgstr "Générer"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__journal_id
+msgid "Journal"
+msgstr ""
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__old_id
+msgid "Old"
+msgstr "Ancien"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__reversal_date
+msgid "Reversal date"
+msgstr "Date d'extourne"
+
+#. module: smile_invoice_issued
+#: model:ir.model.fields,field_description:smile_invoice_issued.field_smile_invoice_issued__sale_ids
+msgid "Sale"
+msgstr "Ventes"
+
+#. module: smile_invoice_issued
+#: model_terms:ir.ui.view,arch_db:smile_invoice_issued.smile_account_invoice_generic_wizard_form_view
+msgid "Invoice Issued Wizard"
+msgstr "Factures à établir"
+
+#. module: smile_invoice_issued
+#: model:ir.model,name:smile_invoice_issued.model_smile_invoice_issued
+msgid "smile.invoice.issued"
+msgstr ""
