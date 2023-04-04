@@ -11,7 +11,7 @@ Smile Invoice Issued
 
 |badge2| |badge3|
 
-This module provides a wizard to generate account moves for unreached purchase order lines.
+This module provides a wizard to generate account moves for invoice issued in sales order lines.
 
 Smile Invoice Issued
 ---------------------
