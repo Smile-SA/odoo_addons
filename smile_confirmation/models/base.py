@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (C) 2021 Smile (<https://www.smile.eu>)
+# (C) 2023 Smile (<https://www.smile.eu>)
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 from odoo import models
 
@@ -7,7 +7,7 @@ from odoo import models
 class BaseModel(models.AbstractModel):
     _inherit = 'base'
 
-    def get_message_informations(self, changes):
+    def get_message_informations(self, values=False):
         """
             This function gives us the possibility to know
             if we display the message or not
@@ -27,7 +27,7 @@ class BaseModel(models.AbstractModel):
             object_popup = []
 
             for msg in messages:
-                if any([item in msg.field_name for item in changes]):
+                if any([item in msg.field_name for item in values]):
                     dict_popup = {
                         'model_id': msg.model_id,
                         'model': msg.model,
