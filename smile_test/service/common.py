@@ -8,7 +8,7 @@ import websocket
 
 from odoo.service import common
 from odoo.service.db import check_super
-from odoo.tests.common import HttpCase, BaseCase
+from odoo.tests.common import HttpCase
 from odoo.tools import config
 
 from .. import tools
@@ -131,13 +131,3 @@ def new_dispatch(*args):
 
 
 common.dispatch = new_dispatch
-
-
-@classmethod
-def tearDownClass(cls):
-    cls.cr.close()
-    old_tearDownClass()
-
-
-old_tearDownClass = BaseCase.tearDownClass
-BaseCase.tearDownClass = tearDownClass
