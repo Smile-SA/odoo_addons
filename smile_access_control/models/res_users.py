@@ -11,9 +11,9 @@ class ResUsers(models.Model):
 
     @api.depends('groups_id')
     def _compute_share(self):
-        for user in self:
-            user.share = user.is_user_profile or \
-                not user.has_group('base.group_user')
+        super()._compute_share()
+        for user in self.filtered_domain([("is_user_profile", "=", True)]):
+            user.share = True
 
     @api.model
     def _get_default_field_ids(self):
