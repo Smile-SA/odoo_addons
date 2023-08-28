@@ -16,7 +16,7 @@ and to compute code coveraged by tests.
     "depends": ["base"],
     "auto_install": True,
     "external_dependencies": {
-        "python": ["coverage", "websocket-client"],
+        "python": ["coverage"],
         "bin": ["flake8"],
     },
 }

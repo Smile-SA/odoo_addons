@@ -4,11 +4,10 @@ import coverage
 import logging
 import os
 import threading
-import websocket
 
 from odoo.service import common
 from odoo.service.db import check_super
-from odoo.tests.common import HttpCase, BaseCase
+from odoo.tests.common import BaseCase
 from odoo.tools import config
 
 from .. import tools
@@ -102,22 +101,6 @@ additional_methods = [
     for attr in dir(NewServices)
     if not attr.startswith("_") and callable(getattr(NewServices, attr))
 ]
-
-
-if websocket is not None and "HttpCase" in dir():
-    # Launch HttpCase to execute tests concerning controllers
-    try:
-        HttpCase().start_browser()
-    except TypeError:
-        try:
-            HttpCase().start_browser(_logger)
-        except TypeError:
-            # TODO: Fix error
-            _logger.error("Chrome not initialized")
-    except Exception:
-        _logger.error("Unable to initialize Chrome browser.")
-    else:
-        _logger.info("Chrome initialized")
 
 
 def new_dispatch(*args):
