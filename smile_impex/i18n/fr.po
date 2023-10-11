@@ -1,0 +1,655 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_impex
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-13 14:39+0000\n"
+"PO-Revision-Date: 2020-07-13 14:39+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__record_count
+msgid "# Records"
+msgstr "# Enregistrements"
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+msgid "Advanced"
+msgstr "Avancé"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__args
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__args
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__args
+msgid "Arguments"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model.fields,help:smile_impex.field_ir_model_export_template__method
+#: model:ir.model.fields,help:smile_impex.field_ir_model_impex_template__method
+#: model:ir.model.fields,help:smile_impex.field_ir_model_import_template__method
+msgid ""
+"Arguments can be passed through Method args or received at import/export "
+"creation call"
+msgstr "Les arguments peuvent être passés au travers du champ 'Arguments de la méthode' ou reçus à la création de l'import/export"
+
+#. module: smile_impex
+#: model:ir.model.fields,help:smile_impex.field_ir_model_export_template__method_args
+#: model:ir.model.fields,help:smile_impex.field_ir_model_impex_template__method_args
+#: model:ir.model.fields,help:smile_impex.field_ir_model_import_template__method_args
+msgid ""
+"Arguments passed as a dictionary\n"
+"Example: {'code': '705000'}"
+msgstr "Arguments passés comme un dictionnaire\n"
+"Exemple: {'code': '705000'}"
+
+#. module: smile_impex
+#: model:ir.model.fields,help:smile_impex.field_ir_model_export_template__filter_domain
+msgid "Available variables: context, time, user"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export__log_level__50
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export_template__log_level__50
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex__log_level__50
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex_template__log_level__50
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import__log_level__50
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import_template__log_level__50
+msgid "CRITICAL"
+msgstr ""
+
+#. module: smile_impex
+#: code:addons/smile_impex/models/export_template.py:0
+#, python-format
+msgid "Can't find method: %s on object: %s"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__client_action
+msgid "Client Action"
+msgstr "Action client"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+msgid "Create Client Action"
+msgstr "Créer une action client"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+msgid "Create Scheduled Action"
+msgstr "Créer une action planifiée"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+msgid "Create Server Action"
+msgstr "Créer une action serveur"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__create_uid
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__create_date
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__create_date
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__create_date
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__create_date
+msgid "Creation Date"
+msgstr "Date de création"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__create_uid
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__create_uid
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__create_uid
+msgid "Creation User"
+msgstr "Créateur"
+
+#. module: smile_impex
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export__log_level__10
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export_template__log_level__10
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex__log_level__10
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex_template__log_level__10
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import__log_level__10
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import_template__log_level__10
+msgid "DEBUG"
+msgstr ""
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+msgid "Delete Client Action"
+msgstr "Supprimer l'action client"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+msgid "Delete Server Action"
+msgstr "Supprimer l'action serveur"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__display_name
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__display_name
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__display_name
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__display_name
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__display_name
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__display_name
+msgid "Display Name"
+msgstr "Afficher le nom"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__do_not_store_record_ids
+msgid "Do not store exported records"
+msgstr "Ne pas conserver les enregistrements exportés"
+
+#. module: smile_impex
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export_template__filter_type__domain
+msgid "Domain"
+msgstr "Domaine"
+
+#. module: smile_impex
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export__state__done
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex__state__done
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import__state__done
+msgid "Done"
+msgstr "Terminé"
+
+#. module: smile_impex
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export__log_level__40
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export_template__log_level__40
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex__log_level__40
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex_template__log_level__40
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import__log_level__40
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import_template__log_level__40
+msgid "ERROR"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__to_date
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__to_date
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__to_date
+msgid "End date"
+msgstr "Date de fin"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_form
+msgid "Entry Arguments"
+msgstr "Arguments en entrée"
+
+#. module: smile_impex
+#: model:ir.model.fields,help:smile_impex.field_ir_model_export_template__force_execute_action
+msgid "Even if there are no record to export"
+msgstr "Même s'il n'y a aucun enregistrement à exporter"
+
+#. module: smile_impex
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export__state__exception
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex__state__exception
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import__state__exception
+msgid "Exception"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_export
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+msgid "Export"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_export_template
+msgid "Export Template"
+msgstr "Modèle d'export"
+
+#. module: smile_impex
+#: code:addons/smile_impex/models/export_template.py:0
+#, python-format
+msgid "Export already in progress"
+msgstr "L'export est déjà en cours"
+
+#. module: smile_impex
+#: code:addons/smile_impex/models/export_template.py:0
+#, python-format
+msgid "Exported records storing is required if export must be unique"
+msgstr ""
+"La sauvegarde des enregistrements exportés est indispensable si leur export "
+"doit être unique"
+
+#. module: smile_impex
+#: model:ir.actions.act_window,name:smile_impex.action_export_template
+#: model:ir.actions.act_window,name:smile_impex.action_exports
+#: model:ir.actions.act_window,name:smile_impex.action_exports_from_template
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__export_ids
+#: model:ir.ui.menu,name:smile_impex.menu_export_template
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_tree
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_tree
+msgid "Exports"
+msgstr ""
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+msgid "Filter"
+msgstr "Filtres"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__filter_domain
+msgid "Filter Domain"
+msgstr "Domaine de filtre"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__filter_method
+msgid "Filter Method"
+msgstr "Méthode de filtre"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__filter_type
+msgid "Filter Type"
+msgstr "Type de filtre"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__force_execute_action
+msgid "Force Action Execution"
+msgstr "Force l'exécution de l'action"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__hostname
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__hostname
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__hostname
+msgid "Hostname"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export__log_level__20
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export_template__log_level__20
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex__log_level__20
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex_template__log_level__20
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import__log_level__20
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import_template__log_level__20
+msgid "INFO"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model.fields,help:smile_impex.field_ir_model_export_template__do_not_store_record_ids
+msgid "If checked, export regeneration will not be possible"
+msgstr "Si coché, la regénération de l'export ne sera pas possible"
+
+#. module: smile_impex
+#: model:ir.model.fields,help:smile_impex.field_ir_model_export_template__unique
+msgid "If unique, each record is exported only once"
+msgstr "Si coché, chaque enregistrement est exporté une seule fois"
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_import
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+msgid "Import"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.ui.menu,name:smile_impex.menu_impex_template
+msgid "Import / Export"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_import_template
+msgid "Import Template"
+msgstr "Modèle d'import"
+
+#. module: smile_impex
+#: code:addons/smile_impex/models/import_template.py:0
+#, python-format
+msgid "Import already in progress"
+msgstr "L'import est déjà en cours"
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_impex
+msgid "Import/Export"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model,name:smile_impex.model_ir_model_impex_template
+msgid "Import/Export Template"
+msgstr "Modèle d'import/export"
+
+#. module: smile_impex
+#: model:ir.actions.act_window,name:smile_impex.action_import_template
+#: model:ir.actions.act_window,name:smile_impex.action_imports
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__import_ids
+#: model:ir.ui.menu,name:smile_impex.menu_import_template
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_tree
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_tree
+msgid "Imports"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export__state__killed
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex__state__killed
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import__state__killed
+msgid "Killed"
+msgstr "Tué"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export____last_update
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template____last_update
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex____last_update
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template____last_update
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import____last_update
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__write_uid
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__write_uid
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__write_uid
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__write_date
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__write_date
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__write_date
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__limit
+msgid "Limit"
+msgstr "Limite"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__log_level
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__log_level
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__log_level
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__log_level
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__log_level
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__log_level
+msgid "Log Level"
+msgstr "Niveau de log"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__log_entry_args
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__log_entry_args
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__log_entry_args
+msgid "Log entry arguments"
+msgstr "Logguer les arguments en entrée"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__log_returns
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__log_returns
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__log_returns
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__log_returns
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__log_returns
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__log_returns
+msgid "Log returns"
+msgstr "Logguer les retours"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__log_ids
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__log_ids
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__log_ids
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__log_ids
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+msgid "Logs"
+msgstr "Historiques"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__max_offset
+msgid "Max Offset"
+msgstr "Offset max"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__method
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__method
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__method
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export_template__filter_type__method
+msgid "Method"
+msgstr "Méthode"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__method_args
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__method_args
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__method_args
+msgid "Method Args"
+msgstr "Arguments de méthode"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__model_id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__model_id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__model_id
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_impex
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export__log_level__0
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export_template__log_level__0
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex__log_level__0
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex_template__log_level__0
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import__log_level__0
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import_template__log_level__0
+msgid "NOTSET"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__name
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__name
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__name
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+msgid "New Export"
+msgstr "Nouvel export"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+msgid "New Import"
+msgstr "Nouvel import"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__new_thread
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__new_thread
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__new_thread
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__new_thread
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__new_thread
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__new_thread
+msgid "New Thread"
+msgstr "Nouveau thread"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__offset
+msgid "Offset"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__one_at_a_time
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__one_at_a_time
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__one_at_a_time
+msgid "One At A Time"
+msgstr "Un à la fois"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__order
+msgid "Order by"
+msgstr "Trier par"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__pid
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__pid
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__pid
+msgid "Process Id"
+msgstr "Id du processus"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__record_ids
+msgid "Records"
+msgstr "Enregistrements"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_tree
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_tree
+msgid "Regenerate"
+msgstr "Regénérer"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__returns
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__returns
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__returns
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_form
+msgid "Returns"
+msgstr "Retours"
+
+#. module: smile_impex
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export__state__running
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex__state__running
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import__state__running
+msgid "Running"
+msgstr "En cours"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__cron_id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__cron_id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__cron_id
+msgid "Scheduled Action"
+msgstr "Action planifiée"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_search
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_search
+msgid "Search"
+msgstr "Recherche"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__server_action_id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex_template__server_action_id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import_template__server_action_id
+msgid "Server action"
+msgstr "Action serveur"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__from_date
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__from_date
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__from_date
+msgid "Start date"
+msgstr "Date de début"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__state
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__state
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__state
+msgid "State"
+msgstr "État"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__export_tmpl_id
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__import_tmpl_id
+msgid "Template"
+msgstr "Modèle"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+msgid "Test Export"
+msgstr "Tester l'export"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+msgid "Test Import"
+msgstr "Tester l'import"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__test_mode
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__test_mode
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__test_mode
+msgid "Test Mode"
+msgstr "Mode test"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__time_human
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__time_human
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__time_human
+msgid "Time"
+msgstr "Durée"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export__time
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_impex__time
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_import__time
+msgid "Time (in seconds)"
+msgstr "Durée (en secondes)"
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+msgid "Triggers"
+msgstr "Déclencheurs"
+
+#. module: smile_impex
+#: model:ir.model.fields,field_description:smile_impex.field_ir_model_export_template__unique
+msgid "Unique"
+msgstr ""
+
+#. module: smile_impex
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export__log_level__30
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_export_template__log_level__30
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex__log_level__30
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_impex_template__log_level__30
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import__log_level__30
+#: model:ir.model.fields.selection,name:smile_impex.selection__ir_model_import_template__log_level__30
+msgid "WARNING"
+msgstr "WARNING"
+
+#. module: smile_impex
+#: code:addons/smile_impex/models/export.py:0
+#, python-format
+msgid ""
+"You cannot regenerate this export because records to export didn't store"
+msgstr ""
+"Vous ne pouvez pas regénérer cet export car la liste des enregistrements n'a"
+" pas été sauvegardée"
+
+#. module: smile_impex
+#: model:ir.model.fields,help:smile_impex.field_ir_model_export_template__filter_method
+msgid "signature: @api.model + *args"
+msgstr ""
+
+#. module: smile_impex
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_export_template_form
+#: model_terms:ir.ui.view,arch_db:smile_impex.view_import_template_form
+msgid "{'arg1': value1, 'arg2': ...}"
+msgstr ""
