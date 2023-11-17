@@ -4,20 +4,21 @@
 {
     "name": "Database Upgrade",
     "version": "16.0.0",
-    "depends": ['web'],
+    "depends": ["web"],
     "author": "Smile",
-    "license": 'AGPL-3',
+    "license": "AGPL-3",
     "description": "",
     "summary": "",
     "website": "",
-    "category": 'Tools',
+    "category": "Tools",
     "sequence": 20,
     "auto_install": True,
     "installable": True,
     "application": False,
-    'assets': {
-        'web.assets_backend': [
-            'smile_upgrade/static/src/**/*',
+    "assets": {
+        "web.assets_backend": [
+            "smile_upgrade/static/src/**/*",
         ],
     },
+    "images": ["static/description/banner.gif"],
 }
