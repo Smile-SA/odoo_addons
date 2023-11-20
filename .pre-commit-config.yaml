@@ -1,0 +1,37 @@
+default_language_version:
+  python: python3
+repos:
+  - repo: https://github.com/pycqa/flake8
+    rev: 4.0.1 # pick a git hash / tag to point to
+    hooks:
+      - id: flake8
+        additional_dependencies: [
+          flake8-builtins,
+          flake8-cognitive-complexity,
+          flake8-comprehensions,
+          flake8-debugger,
+          flake8-deprecated,
+          flake8-print,
+        ]
+        args:
+          [
+            "--enable=T",
+            "--max-line-length=79",
+            "--ignore=W503",
+          ]
+        exclude: (__init__.py)
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: debug-statements
+      - id: check-merge-conflict
+        args: ["--assume-in-merge"]
+        exclude: (.md|.rst)
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v6.8.0
+    hooks:
+      - id: eslint
+        additional_dependencies:
+          - babel-eslint@8.2.6
+          - eslint@4.19.1
+          - prettier@2.0.4
