@@ -1,0 +1,28 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_upgrade
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0-20231113\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-20 11:33+0000\n"
+"PO-Revision-Date: 2023-11-20 11:33+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_upgrade
+#. odoo-javascript
+#: code:addons/smile_upgrade/static/src/xml/code_version.xml:0
+#, python-format
+msgid "Close"
+msgstr "Fermer"
+
+#. module: smile_upgrade
+#: model:ir.model,name:smile_upgrade.model_ir_code_version
+msgid "Code Version"
+msgstr "Version de code"

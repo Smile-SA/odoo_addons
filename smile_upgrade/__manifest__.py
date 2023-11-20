@@ -1,9 +1,6 @@
-# (C) 2023 Smile (<https://www.smile.eu>)
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-
 {
     "name": "Database Upgrade",
-    "version": "16.0.0",
+    "version": "17.0.0.0.0",
     "depends": ["web"],
     "author": "Smile",
     "license": "AGPL-3",
