@@ -13,14 +13,14 @@ Access Control
 
 This module allows to manage users' rights using profiles.
 
-Odoo's groups are a coherent set of rules that functionally consistent. Profiles allow you to combine several groups and effectively tailor users' access to each user.
+Odoo's groups are a coherent set of rules that are functionally consistent. Profiles allow you to combine several groups and effectively tailor users' access to each user.
 
-Here an exemple :
+Here is an exemple :
 
 * accounting group : create an invoice, modify an invoice, cancel an invoice
 * business develloper group : create a lead, modify data of lead, close a deal
 
-The CEO of an SME will probably belong to both groups. Profils allows to combine the both groups in one profil.
+The CEO of an SME will probably belong to both groups. Profiles allow to combine the both groups in one profile.
 
 This is an alternative way to manage users rights by functional profiles.
 
