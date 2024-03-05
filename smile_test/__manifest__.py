@@ -2,7 +2,7 @@
 
 {
     "name": "Smile Test",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "category": "Tools",
     "description": """
 Module used to execute Odoo tests in webservice.

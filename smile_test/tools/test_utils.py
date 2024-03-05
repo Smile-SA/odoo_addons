@@ -11,7 +11,7 @@ import xmlrunner
 from xmlrpc.client import Fault
 
 from odoo import sql_db, tools
-from odoo.exceptions import except_orm
+from odoo.exceptions import RedirectWarning, UserError
 from odoo.modules.module import get_module_path
 from odoo.tests import common as tests_common
 
@@ -24,7 +24,7 @@ KEYS = ["module", "result", "code", "file", "line", "exception", "duration"]
 
 
 def _get_exception_message(e):
-    if isinstance(e, except_orm):
+    if isinstance(e, (RedirectWarning, UserError)):
         return tools.ustr(e.value)
     if isinstance(e, Fault):
         return tools.ustr(e.faultString)

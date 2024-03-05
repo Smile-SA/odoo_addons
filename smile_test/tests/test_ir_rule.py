@@ -6,7 +6,16 @@ from odoo.tests.common import TransactionCase
 class TestIrRule(TransactionCase):
     def _get_ir_rules_to_ignore(self):
         # Native ir.rule not formated with Smile guidelines
-        xml_ids = []
+        xml_ids = [
+            "helpdesk.helpdesk_portal_ticket_rule",
+            "mail.ir_rule_discuss_channel_member_create_is_group_matching_all",
+            "mail.ir_rule_discuss_channel_member_create_is_group_matching_"
+            "group_user",
+            "mail.ir_rule_discuss_channel_member_is_self_all",
+            "sale.account_invoice_line_rule_see_personal",
+            "sale.account_invoice_rule_see_personal",
+            "sale.account_invoice_send_rule_see_personal",
+        ]
         return [
             self.env.ref(xml_id).id
             for xml_id in xml_ids

@@ -74,7 +74,7 @@ class NewServices:
     def run_tests(dbname, modules=None, with_coverage=True):
         init_test_enable = config.get("test_enable")
         config["test_enable"] = True
-        threading.currentThread().dbname = dbname
+        threading.current_thread().dbname = dbname
         modules = tools.filter_modules_list(dbname, modules)
         tools.test_utils._remove_results_files()
         tools.run_unit_tests(dbname, modules)

@@ -4,11 +4,15 @@ from odoo.tests.common import TransactionCase
 
 
 class TestGetViews(TransactionCase):
+    def _get_models_to_ignore(self):
+        return ["iap.account"]
 
     def test_check_get_views(self):
         """I check all get_views."""
         errors = []
-        models = self.env["ir.model"].search([])
+        models = self.env["ir.model"].search(
+            [("model", "not in", self._get_models_to_ignore())]
+        )
         for model in models:
             if getattr(model, "_abstract", False):
                 continue

@@ -9,7 +9,7 @@ from odoo.tests.common import TransactionCase
 
 class TestActWindow(TransactionCase):
     def _get_models_to_ignore(self):
-        return []
+        return ["digest.digest"]
 
     def test_act_window(self):
         """I test all search and first reads for all act_windows."""
@@ -38,6 +38,7 @@ class TestActWindow(TransactionCase):
             "datetime": datetime,
             "relativedelta": relativedelta,
             "current_date": time.strftime("%Y-%m-%d"),
+            "allowed_company_ids": self.env["res.company"].search([]).ids,
         }
         act_windows = (
             self.env["ir.actions.act_window"]

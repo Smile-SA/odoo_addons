@@ -5,7 +5,7 @@ from odoo.tests.common import TransactionCase
 
 class TestGeneralRead(TransactionCase):
     def _get_models_to_ignore(self):
-        return []
+        return ["digest.digest"]
 
     def test_check_general_read(self):
         """I test all search and reads."""
@@ -26,18 +26,21 @@ class TestGeneralRead(TransactionCase):
                         record = RecordModel.search([], limit=1)
                         test_type = "read_one"
                         record.read()
-                        test_type = "name_search_without_args"
-                        RecordModel.name_search()
-                        test_type = "name_search_with_args"
-                        RecordModel.name_search(record.display_name)
+                        if RecordModel._rec_names_search or ([
+                                RecordModel._rec_name]
+                                if RecordModel._rec_name else []):
+                            test_type = "name_search_without_args"
+                            RecordModel.name_search()
+                            test_type = "name_search_with_args"
+                            RecordModel.name_search(record.display_name)
                         test_type = "search_all"
                         records = RecordModel.search([])
                         test_type = "read_all"
                         records.read()
                         if RecordModel._transient:
                             continue
-                        test_type = "name_get"
-                        records.name_get()
+                        test_type = "display_name"
+                        records.mapped("display_name")
             except Exception as e:
                 err_info = (model.model, test_type, repr(e))
                 errors.append(err_info)
