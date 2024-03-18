@@ -15,10 +15,11 @@ class ResCurrency(models.Model):
 
     @api.depends('rounding', 'display_rounding')
     def _get_display_decimal_places(self):
-        if not self.display_rounding:
-            self.display_decimal_places = self.decimal_places
-        elif 0 < self.display_rounding < 1:
-            self.display_decimal_places = \
-                int(math.ceil(math.log10(1 / self.display_rounding)))
-        else:
-            self.display_decimal_places = 0
+        for currency in self:
+            if not currency.display_rounding:
+                currency.display_decimal_places = currency.decimal_places
+            elif 0 < currency.display_rounding < 1:
+                currency.display_decimal_places = \
+                    int(math.ceil(math.log10(1 / currency.display_rounding)))
+            else:
+                currency.display_decimal_places = 0
