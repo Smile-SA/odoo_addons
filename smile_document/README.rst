@@ -12,8 +12,8 @@ It also allows to define an expiry date on documents and to archive them.
 Configuration
 =============
 
-If you want to add your own document types, add group 
-*Document / Manage Document* and go to menu *Document / Configuration / Documents types*.
+If you want to add your own document types, add your user to the "Manage Document" group.
+*Users -> your user -> Access Rights tab -> Other -> Document Management -> set to Manage Document*
 
 
 Bug Tracker
