@@ -30,7 +30,10 @@ def new(cls, db_name, force_demo=False, status=None, update_module=False):
         try:
             with UpgradeManager(db_name) as upgrade_manager:
                 upgrades = upgrade_manager.upgrades
-                if upgrades:
+                #  Get upgrade twice to refresh value if the first call was
+                #  made before advisory_lock.
+                #  This can lead to n upgrade in multi front configuration.
+                if upgrades and upgrade_manager._get_upgrades():
                     t0 = time.time()
                     _logger.info('loading %s upgrade...',
                                  upgrade_manager.code_version)
