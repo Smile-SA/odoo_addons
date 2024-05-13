@@ -89,6 +89,7 @@ Update your Odoo configuration file with the following options:
 
 * `upgrades_path` (required): path to the upgrades directory
 * `stop_after_upgrades` (default: False): stop server after upgrades if True
+* `no_upgrade_lock` (default: False): do not lock database during upgrade if True
 
 Execute upgrade
 ^^^^^^^^^^^^^^^
