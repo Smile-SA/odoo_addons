@@ -13,6 +13,7 @@ from odoo.exceptions import UserError
 import odoo.modules as addons
 from odoo.tools.func import lazy_property
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools import config
 
 from .config import configuration as upgrade_config
 
@@ -37,9 +38,23 @@ class UpgradeManager(object):
             self.upgrades[-1].modules_to_install_at_creation or []
 
     def __enter__(self):
+        if config.get('no_upgrade_lock'):
+            return self
+        #  Lock upgrade to avoid concurrent upgrade in multi front configuration
+        unlocked = False
+        while not unlocked:
+            self.cr.execute("SELECT pg_try_advisory_lock(5665)")
+            _logger.info('Locking upgrade...')
+            unlocked = self.cr.fetchone()[0]
+            if not unlocked:
+                _logger.warning('Waiting for unlock... ')
+                self.cr.execute("SELECT pg_sleep(5)")
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
+        if not config.get('no_upgrade_lock'):
+            _logger.info('Unlocking upgrade...')
+            self.cr.execute("SELECT pg_advisory_unlock(5665)")
         if exc_type is None:
             self.cr.commit()
         self.cr.close()
@@ -62,7 +77,7 @@ class UpgradeManager(object):
         _logger.debug('code version: %s', version)
         return LooseVersion(version)
 
-    @lazy_property
+    @property
     def db_version(self):
         if self.db_in_creation:
             return LooseVersion('0')
