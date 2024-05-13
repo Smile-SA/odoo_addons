@@ -32,6 +32,7 @@ import odoo.modules as addons
 from odoo.report.interface import report_int as ReportService
 from odoo.tools.safe_eval import safe_eval
 from odoo.workflow.service import WorkflowService
+from odoo.tools import config
 
 from config import configuration as upgrade_config
 import imp
@@ -69,9 +70,23 @@ class UpgradeManager(object):
         self.modules_to_install_at_creation = self.upgrades and self.upgrades[-1].modules_to_install_at_creation or []
 
     def __enter__(self):
+        if config.get('no_upgrade_lock'):
+            return self
+        #  Lock upgrade to avoid concurrent upgrade in multi front configuration
+        unlocked = False
+        while not unlocked:
+            self.cr.execute("SELECT pg_try_advisory_lock(5665)")
+            _logger.info('Locking upgrade...')
+            unlocked = self.cr.fetchone()[0]
+            if not unlocked:
+                _logger.warning('Waiting for unlock... ')
+                self.cr.execute("SELECT pg_sleep(5)")
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
+        if not config.get('no_upgrade_lock'):
+            _logger.info('Unlocking upgrade...')
+            self.cr.execute("SELECT pg_advisory_unlock(5665)")
         if exc_type is None:
             self.cr.commit()
         self.cr.close()
@@ -90,6 +105,7 @@ class UpgradeManager(object):
         _logger.debug('code version: %s', version)
         return LooseVersion(version)
 
+    @property
     def _get_db_version(self):
         if self.db_in_creation:
             return '0'
