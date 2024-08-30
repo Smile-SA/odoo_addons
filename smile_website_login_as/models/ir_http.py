@@ -40,7 +40,7 @@ class Http(models.AbstractModel):
     def _dispatch(cls):
         if cls._website_enabled():
             if not request.uid and request.context.get('uid'):
-                user = request.env['res.users'].browse(request.context['uid'])
+                user = request.env['res.users'].sudo().browse(request.context['uid']).exists()
             else:
                 user = request.env.user
             if user:
