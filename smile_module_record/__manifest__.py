@@ -5,7 +5,7 @@
 {
     "name": "Export Customizations as a Module",
     "version": "0.1",
-    "depends": ["base"],
+    "depends": ["base", "calendar"],
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """
