@@ -189,7 +189,7 @@ class AccountAssetAsset(models.Model):
         'Quantity', required=True, default=1.0,
         readonly=True, states={'draft': [('readonly', False)]})
     uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure', required=True, ondelete='restrict',
+        'uom.uom', 'Unit of Measure', required=True, ondelete='restrict',
         default=_get_default_uom,
         readonly=True, states={'draft': [('readonly', False)]})
     purchase_tax_ids = fields.Many2many(
