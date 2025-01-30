@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="0">
+
+		<!-- Parent -->
+		<menuitem id="menu_impex_template" name="Import / Export" parent="base.menu_administration"/>
+
+		<!-- Children -->
+		<menuitem id="menu_import_template" action="action_import_template" parent="menu_impex_template"/>
+		<menuitem id="menu_export_template" action="action_export_template" parent="menu_impex_template"/>
+
+	</data>
+</odoo>

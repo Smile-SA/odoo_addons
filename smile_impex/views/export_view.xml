@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="0">
+
+		<!-- Export template -->
+		<record id="view_export_template_form" model="ir.ui.view">
+			<field name="name">ir.model.export.template.form</field>
+			<field name="model">ir.model.export.template</field>
+			<field name="arch" type="xml">
+				<form string="Export">
+					<sheet>
+						<div class="oe_title">
+							<h1>
+								<field name="name" class="oe_inline" placeholder="Name"/>
+							</h1>
+						</div>
+						<group name="method" col="4">
+							<field name="model_id" colspan="4"/>
+							<field name="method"/>
+							<field name="method_args" nolabel="1" placeholder="{'arg1': value1, 'arg2': ...}"/>
+							<field name="filter_type" string="Filter" />
+							<field name="filter_domain" nolabel="1" invisible="filter_type != 'domain'" required="filter_type == 'domain'" />
+							<field name="filter_method" nolabel="1" invisible="filter_type != 'method'" required = "filter_type == 'method'" />
+							<field name="unique" string="Unique" />
+						</group>
+						<notebook colspan="4">
+							<page string="Exports">
+								<br/>
+								<button type="object" name="create_export" string="New Export" colspan="4" context="{'new_thread': True, 'force_use_new_cursor': True}" class="oe_highlight"/>
+								<button type="object" name="create_export" string="Test Export" colspan="4" context="{'test_mode': True, 'force_use_new_cursor': True}" class="oe_link"/>
+								<field name="export_ids" nolabel="1" colspan="4" readonly="1" context="{'export_template_form_view': True}" />
+							</page>
+							<page string="Triggers">
+								<group col="6">
+									<field name="cron_id" />
+									<button type="object" name="create_cron" string="Create Scheduled Action" colspan="2"
+										invisible="cron_id != False" class="oe_link"/>
+									<newline/>
+									<field name="client_action" />
+									<button type="object" name="create_client_action" string="Create Client Action" colspan="2"
+										invisible="client_action != False" class="oe_link"/>
+									<button type="object" name="unlink_client_action" string="Delete Client Action" colspan="2"
+										invisible="client_action == False" class="oe_link"/>
+									<newline/>
+									<field name="server_action_id" />
+									<button type="object" name="create_server_action" string="Create Server Action" colspan="2"
+										invisible="server_action_id != False" class="oe_link"/>
+									<button type="object" name="unlink_server_action" string="Delete Server Action" colspan="2"
+										invisible="server_action_id == False" class="oe_link"/>
+								</group>
+							</page>
+							<page string="Logs">
+								<group col="4">
+									<field name="log_level" />
+									<field name="log_returns" />
+								</group>
+								<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view', 'form_view_ref': 'smile_log.smile_log_simple_form_view'}" />
+							</page>
+							<page string="Advanced">
+								<group>
+									<group>
+										<field name="limit" />
+										<field name="max_offset" />
+										<field name="order" />
+										<field name="force_execute_action" />
+									</group>
+									<group>
+										<field name="new_thread" />
+										<field name="one_at_a_time" />
+									</group>
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_export_template_tree" model="ir.ui.view">
+			<field name="name">ir.model.export.template.tree</field>
+			<field name="model">ir.model.export.template</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<tree string="Exports">
+					<field name="name" />
+					<field name="model_id" />
+					<field name="unique" />
+					<field name="filter_type" />
+					<field name="method" />
+					<field name="server_action_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_export_template_search" model="ir.ui.view">
+			<field name="name">ir.model.export.template.search</field>
+			<field name="model">ir.model.export.template</field>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<group col="6" colspan="4">
+						<field name="name" />
+						<field name="model_id" />
+						<field name="filter_domain" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_export_template" model="ir.actions.act_window">
+			<field name="name">Exports</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ir.model.export.template</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="action_exports_from_template" model="ir.actions.act_window">
+			<field name="name">Exports</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ir.model.export</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('export_tmpl_id','=',active_id)]</field>
+			<field name="target">current</field>
+		</record>
+
+		<!-- Export -->
+		<record id="view_export_form" model="ir.ui.view">
+			<field name="name">ir.model.export.form</field>
+			<field name="model">ir.model.export</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<form string="Export">
+					<group col="4">
+						<field name="export_tmpl_id" invisible="context.get('export_template_form_view')" colspan="4" />
+						<field name="state" />
+						<field name="from_date" />
+						<field name="create_uid" />
+						<field name="time_human" />
+						<field name="log_returns" invisible="1"/>
+					</group>
+					<notebook colspan="4">
+						<page string="Logs">
+							<br/>
+							<button type="object" name="process" string="Regenerate" colspan="4" class="oe_highlight"/>
+							<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view', 'form_view_ref': 'smile_log.smile_log_simple_form_view'}" />
+						</page>
+						<page string="Returns" invisible="log_returns == False">
+							<field name="returns" colspan="4" nolabel="1" />
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_export_tree" model="ir.ui.view">
+			<field name="name">ir.model.export.tree</field>
+			<field name="model">ir.model.export</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<tree string="Exports" create="false">
+					<field name="export_tmpl_id" invisible="context.get('export_template_form_view')" />
+					<field name="create_date" />
+					<field name="create_uid" />
+					<field name="time_human" />
+					<field name="state" readonly="1" />
+					<button type="object" name="process" string="Regenerate" class="oe_link"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_exports" model="ir.actions.act_window">
+			<field name="name">Exports</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ir.model.export</field>
+			<field name="view_mode">tree,form</field>
+			<field name="limit">20</field>
+		</record>
+
+	</data>
+</odoo>

@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+ir_model_export_template_all,Export template,smile_impex.model_ir_model_export_template,,1,0,0,0
+ir_model_export_template_system,Export template,smile_impex.model_ir_model_export_template,base.group_system,1,1,1,0
+ir_model_export_all,Export,smile_impex.model_ir_model_export,,1,1,1,0
+ir_model_export_system,Export,smile_impex.model_ir_model_export,base.group_system,1,1,1,0
+ir_model_import_template_all,Import template,smile_impex.model_ir_model_import_template,,1,0,0,0
+ir_model_import_template_system,Import template,smile_impex.model_ir_model_import_template,base.group_system,1,1,1,0
+ir_model_import_all,Import,smile_impex.model_ir_model_import,,1,1,1,0
+ir_model_import_system,Import,smile_impex.model_ir_model_import,base.group_system,1,1,1,0

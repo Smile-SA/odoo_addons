@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="0">
+
+		<record id="view_import_template_form" model="ir.ui.view">
+			<field name="name">ir.model.import.template.form</field>
+			<field name="model">ir.model.import.template</field>
+			<field name="arch" type="xml">
+				<form string="Import">
+					<sheet>
+						<div class="oe_title">
+							<h1>
+								<field name="name" class="oe_inline" placeholder="Name"/>
+							</h1>
+						</div>
+						<group name="method" col="3">
+							<field name="model_id" colspan="3"/>
+							<field name="method" />
+							<field name="method_args" nolabel="1" placeholder="{'arg1': value1, 'arg2': ...}"/>
+						</group>
+						<notebook colspan="4">
+							<page string="Imports">
+								<br/>
+								<button type="object" name="create_import" string="New Import" colspan="4" context="{'new_thread':True, 'force_use_new_cursor': True}" class="oe_highlight"/>
+								<button type="object" name="create_import" string="Test Import" colspan="4" context="{'test_mode':True, 'force_use_new_cursor': True}" class="oe_link"/>
+								<field name="import_ids" nolabel="1" colspan="4" readonly="1" context="{'import_template_form_view': True}" />
+							</page>
+							<page string="Triggers">
+								<group col="6">
+									<field name="cron_id" />
+									<button type="object" name="create_cron" string="Create Scheduled Action" colspan="2"
+									invisible="cron_id != False" class="oe_link"/>
+									<newline/>
+									<field name="server_action_id" />
+									<button type="object" name="create_server_action" string="Create Server Action" colspan="2"
+									invisible="server_action_id !=  False" class="oe_link"/>
+									<button type="object" name="unlink_server_action" string="Delete Server Action" colspan="2"
+									invisible="server_action_id == False" class="oe_link"/>
+								</group>
+							</page>
+							<page string="Logs">
+								<group col="4">
+									<field name="log_level" />
+								</group>
+								<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view', 'form_view_ref': 'smile_log.smile_log_simple_form_view'}" />
+							</page>
+							<page string="Advanced">
+								<group>
+									<field name="new_thread" />
+									<field name="one_at_a_time" />
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="view_import_template_tree" model="ir.ui.view">
+			<field name="name">ir.model.import.template.tree</field>
+			<field name="model">ir.model.import.template</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<tree string="Imports">
+					<field name="name" />
+					<field name="model_id" />
+					<field name="method" />
+				</tree>
+			</field>
+		</record>
+		<record id="view_import_template_search" model="ir.ui.view">
+			<field name="name">ir.model.import.template.search</field>
+			<field name="model">ir.model.import.template</field>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<group col="6" colspan="4">
+						<field name="name" />
+						<field name="model_id" />
+						<field name="method" />
+					</group>
+				</search>
+			</field>
+		</record>
+		<record id="action_import_template" model="ir.actions.act_window">
+			<field name="name">Imports</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ir.model.import.template</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Import -->
+		<record id="view_import_form" model="ir.ui.view">
+			<field name="name">ir.model.import.form</field>
+			<field name="model">ir.model.import</field>
+			<field name="arch" type="xml">
+				<form string="Import">
+					<group col="4">
+						<field name="import_tmpl_id" colspan="4" invisible="context.get('import_template_form_view')" />
+						<field name="state" />
+						<field name="from_date" />
+						<field name="create_uid" />
+						<field name="time_human" />
+						<field name="log_returns" invisible="1"/>
+					</group>
+					<notebook colspan="4">
+						<page string="Logs">
+							<br/>
+							<button type="object" name="process" string="Regenerate" colspan="4" class="oe_highlight"/>
+							<field name="log_ids" colspan="4" nolabel="1" context="{'tree_view_ref': 'smile_log.smile_log_simple_tree_view', 'form_view_ref': 'smile_log.smile_log_simple_form_view'}" />
+						</page>
+						<page string="Entry Arguments">
+							<field name="args" colspan="4" nolabel="1" />
+						</page>
+						<page string="Returns" invisible="log_returns == False">
+							<field name="returns" colspan="4" nolabel="1" />
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+		<record id="view_import_tree" model="ir.ui.view">
+			<field name="name">ir.model.import.tree</field>
+			<field name="model">ir.model.import</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<tree string="Imports" create="false">
+					<field name="import_tmpl_id" invisible="context.get('import_template_form_view')" />
+					<field name="create_date" />
+					<field name="create_uid" />
+					<field name="time_human" />
+					<field name="test_mode" />
+					<field name="state" />
+					<button type="object" name="process" string="Regenerate" class="oe_link"/>
+				</tree>
+			</field>
+		</record>
+		<record id="action_imports" model="ir.actions.act_window">
+			<field name="name">Imports</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ir.model.import</field>
+			<field name="view_mode">tree,form</field>
+			<field name="limit">20</field>
+		</record>
+
+	</data>
+</odoo>
