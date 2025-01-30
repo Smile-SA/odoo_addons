@@ -1,0 +1,111 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_log
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-29 14:15+0000\n"
+"PO-Revision-Date: 2021-10-29 14:15+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_log
+#: model:ir.model.fields,field_description:smile_log.field_smile_log__log_date
+msgid "Date"
+msgstr "Date"
+
+#. module: smile_log
+#: model:ir.model.fields,field_description:smile_log.field_smile_log__display_name
+msgid "Display Name"
+msgstr "Afficher Nom"
+
+#. module: smile_log
+#: model_terms:ir.ui.view,arch_db:smile_log.smile_log_search_view
+msgid "Group By..."
+msgstr "Grouper par..."
+
+#. module: smile_log
+#: model:ir.model.fields,field_description:smile_log.field_smile_log__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_log
+#: model:ir.model.fields,field_description:smile_log.field_smile_log____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_log
+#: model:ir.model.fields,field_description:smile_log.field_smile_log__level
+msgid "Level"
+msgstr "Niveau"
+
+#. module: smile_log
+#: model:ir.ui.menu,name:smile_log.menu_logging
+msgid "Logging"
+msgstr "Historisation"
+
+#. module: smile_log
+#: model:ir.actions.act_window,name:smile_log.act_smile_log
+#: model:ir.ui.menu,name:smile_log.menu_smile_log
+#: model_terms:ir.ui.view,arch_db:smile_log.smile_log_search_view
+#: model_terms:ir.ui.view,arch_db:smile_log.smile_log_simple_tree_view
+#: model_terms:ir.ui.view,arch_db:smile_log.smile_log_tree_view
+msgid "Logs"
+msgstr "Historiques"
+
+#. module: smile_log
+#: model:ir.model.fields,field_description:smile_log.field_smile_log__message
+msgid "Message"
+msgstr ""
+
+#. module: smile_log
+#: model_terms:ir.ui.view,arch_db:smile_log.smile_log_search_view
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_log
+#: model:ir.model.fields,field_description:smile_log.field_smile_log__model_name
+msgid "Model name"
+msgstr "Nom du modèle"
+
+#. module: smile_log
+#: model_terms:ir.ui.view,arch_db:smile_log.smile_log_search_view
+msgid "PID"
+msgstr ""
+
+#. module: smile_log
+#: model:ir.model.fields,field_description:smile_log.field_smile_log__pid
+msgid "Pid"
+msgstr ""
+
+#. module: smile_log
+#: model:ir.model.fields,field_description:smile_log.field_smile_log__res_id
+msgid "Ressource id"
+msgstr "Id de la ressource"
+
+#. module: smile_log
+#: model:ir.model.fields,field_description:smile_log.field_smile_log__log_res_name
+msgid "Ressource name"
+msgstr "Nom de la ressource"
+
+#. module: smile_log
+#: model:ir.model,name:smile_log.model_smile_log
+msgid "Smile Logs"
+msgstr "Logs"
+
+#. module: smile_log
+#: model:res.groups,name:smile_log.group_smile_log_user
+msgid "Smile Logs / User"
+msgstr "Smile Logs / Utilisateur"
+
+#. module: smile_log
+#: model:ir.model.fields,field_description:smile_log.field_smile_log__log_uid
+#: model:ir.model.fields,field_description:smile_log.field_smile_log__log_user_name
+msgid "User"
+msgstr "Utilisateur"
