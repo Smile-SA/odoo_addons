@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Users -->
+        <!-- Add widget selection to choose a profile to apply -->
+
+        <record id="view_res_user_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form" />
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[hasclass('oe_title')]//field[@name='partner_id']" position="after">
+                        <field name="superuser_id" invisible="1"/>
+                        <field name="user_profile_id" domain="[('id','!=',superuser_id),('is_user_profile', '=', True), ('active', '=', False)]"
+                               context="{'active_test': False}"
+                               widget="selection" required="True" />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record id="base.action_res_users" model="ir.actions.act_window">
+            <field name="domain" eval="[('id', '!=', ref('base.user_root')), ('id', '!=', ref('base.user_admin')), ('is_user_profile', '=', False)]" />
+        </record>
+        <record id="base.action_res_users_view2" model="ir.actions.act_window.view">
+            <field name="view_id" ref="view_res_user_form" />
+        </record>
+        <record id="view_users_tree" model="ir.ui.view">
+            <field name="name">res.users.tree</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_tree" />
+            <field name="arch" type="xml">
+                <field name="login" position="after">
+                    <field name="user_profile_id" invisible="context.get('is_user_profile')" />
+                </field>
+            </field>
+        </record>
+
+        <!-- Profiles -->
+        <!-- Add page for technical profile configuration-->
+        <record id="action_res_users" model="ir.actions.act_window">
+            <field name="name">Users</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="base.view_users_tree" />
+            <field name="search_view_id" ref="base.view_users_search" />
+            <field name="domain">[('user_profile_id', '=', active_id)]</field>
+            <field name="context">{'default_user_profile_id': active_id}</field>
+            <field name="help"></field>
+        </record>
+
+        <record id="view_user_profile_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form" />
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="name" position="attributes">
+                        <attribute name="placeholder">Profile ...</attribute>
+                    </field>
+                    <div name="button_box" position="inside">
+                        <button class="oe_inline oe_stat_button" icon="fa-users" name="%(smile_access_control.action_res_users)d" type="action">
+                            <field string="Users" name="users_count" widget="statinfo" />
+                        </button>
+                    </div>
+                    <notebook position="inside">
+                        <page string="Configuration">
+                            <separator string="Options" colspan="4" />
+                            <field name="is_user_profile" invisible="1" />
+                            <field name="is_update_users" invisible="not is_user_profile" />
+                            <label for="is_update_users" />
+                            <separator string="Fields to update for linked users" colspan="4" />
+                            <field name="field_ids" nolabel="1" colspan="4" />
+                        </page>
+                    </notebook>
+                    <xpath expr="//header/button[2][@name='action_reset_password']" position="attributes">
+                        <attribute name="invisible">is_user_profile</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record id="action_res_user_profiles" model="ir.actions.act_window">
+            <field name="name">User Profiles</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="base.view_users_tree" />
+            <field name="search_view_id" ref="base.view_users_search" />
+            <field name="domain" eval="[('id', '!=', ref('base.user_root')), ('id', '!=', ref('base.user_admin')), ('is_user_profile', '=', True)]" />
+            <field name="context">{'active_test': False, 'default_active': False, 'default_is_user_profile': True, 'is_user_profile': True,'no_reset_password': True}</field>
+            <field name="help"/>
+        </record>
+        <record id="action_res_user_profiles_tree_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_users_tree" />
+            <field name="act_window_id" ref="action_res_user_profiles" />
+        </record>
+        <record id="action_res_user_profiles_form_view" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_user_profile_form" />
+            <field name="act_window_id" ref="action_res_user_profiles" />
+        </record>
+
+        <menuitem action="action_res_user_profiles" id="menu_action_res_user_profiles" parent="base.menu_users" sequence="40" />
+
+        <!-- Super Admin -->
+        <!-- Hide Create button for Super Admin menu -->
+
+        <record id="view_admin_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form" />
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//form" position="attributes">
+                        <attribute name="create">false</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record id="action_administrators" model="ir.actions.act_window">
+            <field name="name">Administrators</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="base.view_users_tree" />
+            <field name="search_view_id" ref="base.view_users_search" />
+            <field name="domain" eval="['|', ('id', '=', ref('base.user_root')), ('id', '=', ref('base.user_admin'))]" />
+            <field name="context" eval="{'active_test': False}" />
+            <field name="help"/>
+        </record>
+        <record id="action_administrators_tree_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_users_tree" />
+            <field name="act_window_id" ref="action_administrators" />
+        </record>
+        <record id="action_administrators_form_view" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_admin_form" />
+            <field name="act_window_id" ref="action_administrators" />
+        </record>
+
+        <menuitem action="action_administrators" id="menu_action_administrators" parent="base.menu_users" sequence="50" />
+
+        <record id="base.menu_action_res_groups" model="ir.ui.menu">
+            <field name="sequence">60</field>
+        </record>
+
+    </data>
+</odoo>
