@@ -1,0 +1,157 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_wsqueue
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-14 15:51+0000\n"
+"PO-Revision-Date: 2020-08-14 15:51+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields.selection,name:smile_wsqueue.selection__queue_job__state__canceled
+#: model_terms:ir.ui.view,arch_db:smile_wsqueue.view_job_search
+msgid "Canceled"
+msgstr "Annulé"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_queue_job__display_name
+msgid "Display Name"
+msgstr "Afficher Nom"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields.selection,name:smile_wsqueue.selection__queue_job__state__done
+#: model_terms:ir.ui.view,arch_db:smile_wsqueue.view_job_search
+msgid "Done"
+msgstr "Terminé"
+
+#. module: smile_wsqueue
+#: code:addons/smile_wsqueue/models/job.py:0
+#, python-format
+msgid "End execute_call"
+msgstr ""
+
+#. module: smile_wsqueue
+#: code:addons/smile_wsqueue/models/job.py:0
+#, python-format
+msgid "End {} on #{}"
+msgstr ""
+
+#. module: smile_wsqueue
+#: model:ir.model.fields.selection,name:smile_wsqueue.selection__queue_job__state__error
+#: model_terms:ir.ui.view,arch_db:smile_wsqueue.view_job_search
+msgid "Error"
+msgstr "Erreur"
+
+#. module: smile_wsqueue
+#: code:addons/smile_wsqueue/models/job.py:0
+#, python-format
+msgid "Error in {} on #{}: {}"
+msgstr ""
+
+#. module: smile_wsqueue
+#: code:addons/smile_wsqueue/models/job.py:0
+#, python-format
+msgid "Error with execute_call: {}"
+msgstr ""
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_queue_job__execute_date
+msgid "Execution date"
+msgstr "Date d'exécution"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_queue_job__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_wsqueue
+#: model:ir.model.fields.selection,name:smile_wsqueue.selection__queue_job__state__in_progress
+msgid "In progress"
+msgstr "En cours"
+
+#. module: smile_wsqueue
+#: model:ir.actions.act_window,name:smile_wsqueue.action_jobs_view
+#: model:ir.ui.menu,name:smile_wsqueue.menu_wsqueue_jobs
+#: model_terms:ir.ui.view,arch_db:smile_wsqueue.view_job_tree
+msgid "Jobs"
+msgstr "Jobs"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_queue_job____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_queue_job__max_tries
+msgid "Max. tries"
+msgstr "Nombre d'essais maximum"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_queue_job__method
+msgid "Method"
+msgstr "Méthode"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields.selection,name:smile_wsqueue.selection__queue_job__state__pending
+#: model_terms:ir.ui.view,arch_db:smile_wsqueue.view_job_search
+msgid "Pending"
+msgstr "En attente"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_queue_job__result
+msgid "Result"
+msgstr "Résultat"
+
+#. module: smile_wsqueue
+#: code:addons/smile_wsqueue/models/job.py:0
+#, python-format
+msgid "Start execute_call"
+msgstr ""
+
+#. module: smile_wsqueue
+#: code:addons/smile_wsqueue/models/job.py:0
+#, python-format
+msgid "Start job {} on #{}"
+msgstr ""
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_queue_job__state
+#: model_terms:ir.ui.view,arch_db:smile_wsqueue.view_job_search
+msgid "State"
+msgstr "État"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_queue_job__status_code
+#: model_terms:ir.ui.view,arch_db:smile_wsqueue.view_job_search
+msgid "Status code"
+msgstr "Code"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_job_test__total_tries
+#: model:ir.model.fields,field_description:smile_wsqueue.field_queue_job__total_tries
+msgid "Total tries"
+msgstr "Nombre d'essais total"
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_job_test__tries
+#: model:ir.model.fields,field_description:smile_wsqueue.field_queue_job__tries
+msgid "Tries"
+msgstr "Nombre d'essais"
+
+#. module: smile_wsqueue
+#: model:ir.model,name:smile_wsqueue.model_queue_job
+msgid "queue.job"
+msgstr ""
+
+#. module: smile_wsqueue
+#: model:ir.model.fields,field_description:smile_wsqueue.field_res_company__email_wsqueue
+msgid "Webservice error recipient"
+msgstr "Destinataire erreurs Webservice"
