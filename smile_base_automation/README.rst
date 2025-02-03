@@ -59,6 +59,7 @@ Contributors
 
 * Corentin Pouhet-Brunerie
 * Majda EL MARIOULI
+* Justinas Orechovas <jorechovas@archeti.com>
 
 Maintainers
 ~~~~~~~~~~~

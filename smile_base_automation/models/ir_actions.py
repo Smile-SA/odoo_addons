@@ -28,7 +28,7 @@ class ServerAction(models.Model):
 
     def run(self):
         res = False
-        for action in self:
+        for action in self.sudo():
             if action.execution_mode == 'synchronous' or \
                     self._context.get('force_execution'):
                 res = super(ServerAction, action).run()
