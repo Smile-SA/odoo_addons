@@ -4,7 +4,7 @@
 {
     "name": "Display Decimal Precision",
     "version": "0.3",
-    "depends": ["base"],
+    "depends": ["web","account"],
     "author": "Smile",
     "license": 'AGPL-3',
     "description": """
