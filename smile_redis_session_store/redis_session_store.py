@@ -94,10 +94,5 @@ if is_redis_session_store_activated():
         # Override to ignore file unlink because sessions are not stored in files
         pass
 
-    @lazy_property
-    def session_store(self):
-        # Override to use Redis instead of filestystem
-        return RedisSessionStore(session_class=http.OpenERPSession)
-
     http.session_gc = session_gc
-    http.Root.session_store = session_store
+    http.root.session_store = RedisSessionStore(session_class=http.OpenERPSession)
