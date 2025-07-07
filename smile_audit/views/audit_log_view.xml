@@ -60,6 +60,7 @@
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="user_id"/>
+                    <field name="res_id"/>
 	                <newline/>
     	            <group expand="0" string="Group By...">
                     	<filter name="group_by_user_id" string="User" context="{'group_by':'user_id'}"/>
