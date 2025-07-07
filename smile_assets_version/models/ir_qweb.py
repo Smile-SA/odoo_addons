@@ -1,6 +1,3 @@
-# (C) 2024 Smile (<http://www.smile.fr>)
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
-
 from odoo import models, api, tools
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 import hashlib

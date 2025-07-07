@@ -1,6 +1,3 @@
-# (C) 2023 Smile (<http://www.smile.fr>)
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-
 {
     "name": "Display Decimal Precision",
     "version": "17.0.1.0.0",
