@@ -1,12 +1,10 @@
 from dateutil import tz
-from datetime import datetime, timedelta
 import re
 from odoo.osv import expression
 
-from odoo import api, fields, models, _
+from odoo import fields, models, _
 from odoo.exceptions import UserError
-# TODO: check of to fix Python eror on 'datetime'
-from odoo.tools.safe_eval import safe_eval, datetime  # noqa: F811
+from odoo.tools.safe_eval import safe_eval, datetime
 
 import logging
 
@@ -39,20 +37,6 @@ class AuditLog(models.Model):
     method = fields.Char("Method", size=64, readonly=True)
     data = fields.Text("Data", readonly=True)
     data_html = fields.Html("HTML Data", readonly=True, compute="_render_html")
-
-    @api.model
-    def clean_old_logs(self, retention_days=365):
-        retention_date = datetime.now() - timedelta(days=retention_days)
-        old_logs = self.search([("create_date", "<", retention_date)])
-        old_logs_count = len(old_logs)
-        if old_logs_count:
-            old_logs.unlink()
-            _logger.info(
-                f"{old_logs_count} old audit logs deleted, older than "
-                f"{retention_days} days."
-            )
-        else:
-            _logger.info("No old audit logs to delete.")
 
     def _get_name(self):  # noqa: CCR001
         for rec in self:
