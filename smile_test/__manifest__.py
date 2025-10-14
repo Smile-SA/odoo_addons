@@ -14,7 +14,7 @@ and to compute code coveraged by tests.
     "website": "http://www.smile.fr",
     "license": "AGPL-3",
     "depends": ["base"],
-    "auto_install": True,
+    "auto_install": False,
     "external_dependencies": {
         "python": ["coverage"],
         "bin": ["flake8"],

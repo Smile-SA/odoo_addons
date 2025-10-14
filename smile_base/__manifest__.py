@@ -6,15 +6,15 @@
     "name": "Smile Base",
     "version": "0.2.3",
     "depends": [
-        'mail',
-        'web_editor',
+        "mail",
+        "web_editor",
     ],
     "author": "Smile",
-    "license": 'AGPL-3',
+    "license": "AGPL-3",
     "description": """""",
     "summary": "",
     "website": "",
-    "category": 'Tools',
+    "category": "Tools",
     "sequence": 20,
     "data": [
         "security/base_security.xml",
@@ -22,14 +22,13 @@
         "views/ir_actions_view.xml",
         "views/template.xml",
     ],
-
-    'assets': {
-        'web.assets_backend': [
-            'smile_base/static/src/js/user_menu_items.js',
+    "assets": {
+        "web.assets_backend": [
+            "smile_base/static/src/js/user_menu_items.js",
         ]
     },
-    "post_init_hook": 'post_init_hook',
-    "auto_install": True,
+    "post_init_hook": "post_init_hook",
+    "auto_install": False,
     "installable": True,
     "application": False,
 }

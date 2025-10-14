@@ -9,7 +9,7 @@
         "base",
     ],
     "author": "Smile",
-    "license": 'AGPL-3',
+    "license": "AGPL-3",
     "description": """
 Features:
 * Add old_id field in models, except from _old_id = False
@@ -21,11 +21,11 @@ Execution:
     """,
     "summary": "",
     "website": "https://www.smile.eu",
-    "category": 'Tools',
+    "category": "Tools",
     "sequence": 20,
     "data": [],
     "qweb": [],
-    "auto_install": True,
+    "auto_install": False,
     "installable": True,
     "application": False,
 }

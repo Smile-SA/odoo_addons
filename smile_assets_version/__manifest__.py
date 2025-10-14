@@ -16,6 +16,6 @@ code_version of smile_upgrade when server.environment == prod
     ],
     "data": [],
     "installable": True,
-    "auto_install": True,
+    "auto_install": False,
     "application": False,
 }
