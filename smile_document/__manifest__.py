@@ -10,6 +10,7 @@
         'attachment_indexation',
     ],
     'author': 'Smile',
+    'license': 'AGPL-3',
     'description': """
         Document Management
     """,
