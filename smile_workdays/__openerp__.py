@@ -20,24 +20,23 @@
 ##############################################################################
 
 {
-    'name': 'Smile Workdays',
-    'version': '0.1',
-    'category': 'Tools',
-    'description': """Defines objects that differenciates workdays from non-workdays
+    "name": "Smile Workdays",
+    "version": "0.1",
+    "category": "Tools",
+    "description": """Defines objects that differenciates workdays from non-workdays
 
     Development in progress
     """,
-    'author': 'Smile.fr',
-    'website': 'http://www.smile.fr',
-    'depends': ['base'],
-    'init_xml': [
+    "author": "Smile",
+    "website": "http://www.smile.fr",
+    "depends": ["base"],
+    "init_xml": [],
+    "update_xml": [
+        "security/ir.model.access.csv",
+        "view/workdays.xml",
     ],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'view/workdays.xml',
-    ],
-    'demo_xml': [],
-    'test': [],
-    'installable': True,
-    'active': False,
+    "demo_xml": [],
+    "test": [],
+    "installable": True,
+    "active": False,
 }
