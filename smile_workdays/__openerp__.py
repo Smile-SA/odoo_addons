@@ -20,24 +20,22 @@
 ##############################################################################
 
 {
-    'name': 'Workdays',
-    'version': '0.1',
-    'category': 'Tools',
-    "license": 'AGPL-3',
-    'description': """Defines objects that differenciates workdays from non-workdays
-
-    Suggestions & Feedback to: corentin.pouhet-brunerie@smile.fr
+    "name": "Workdays",
+    "version": "0.1",
+    "category": "Tools",
+    "license": "AGPL-3",
+    "description": """Defines objects that differenciates workdays from non-workdays
     """,
-    'author': 'Smile.fr',
-    'website': 'http://www.smile.fr',
-    'depends': ['base'],
-    'data': [
-        'security/ir.model.access.csv',
-        'views/workdays.xml',
-        'data/res.country.holiday.csv',
+    "author": "Smile",
+    "website": "http://www.smile.fr",
+    "depends": ["base"],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/workdays.xml",
+        "data/res.country.holiday.csv",
     ],
-    'demo_xml': [],
-    'test': [],
-    'installable': True,
-    'active': False,
+    "demo_xml": [],
+    "test": [],
+    "installable": True,
+    "active": False,
 }
