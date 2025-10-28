@@ -1,0 +1,11 @@
+.vscode/*
+!.vscode/launch.json
+.idea
+.project
+.settings
+.project
+.pydevproject
+.settings
+*.pyc
+*.pyo
+*~
