@@ -1,0 +1,15 @@
+{
+    "name": "Enable Email Features",
+    "version": "17.0.1.0.0",
+    "depends": ["mail"],
+    "author": "Smile",
+    "license": "AGPL-3",
+    "description": """""",
+    "summary": "",
+    "website": "",
+    "category": "Tools",
+    "sequence": 20,
+    "auto_install": False,
+    "installable": True,
+    "application": False,
+}
