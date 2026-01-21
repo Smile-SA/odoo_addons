@@ -111,7 +111,7 @@ class ProductUom(models.Model):
             from_unit, to_unit = uoms[0], uoms[-1]
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
-        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit, round, context)
+        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit, round, context=context)
 
     def _convert_qty(self, cr, uid, qty, unit, product, is_from_unit=True):
         import operator
