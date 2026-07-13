@@ -61,11 +61,15 @@
                             <field name="error_message"/>
                         </group>
 
-                        <group col="4" string="Webservice informations" name="webservice_informations">
-                            <field name="create_uid"/>
-                            <field name="create_date"/>
-                            <field name="write_uid"/>
-                            <field name="duration"/>
+                        <group string="Webservice informations" name="webservice_informations">
+                            <group>
+                                <field name="create_uid"/>
+                                <field name="write_uid"/>
+                            </group>
+                            <group>
+                                <field name="create_date"/>
+                                <field name="duration"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
