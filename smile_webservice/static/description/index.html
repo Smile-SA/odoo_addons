@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Docutils" />
+    <title>Smile Webservice</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <div class="document">
+        <p>
+            <img src="https://img.shields.io/badge/licence-AGPL--3-blue.svg" alt="License: AGPL-3" />
+            <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/18.0/smile_webservice">
+                <img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" />
+            </a>
+        </p>
+
+        <div class="section" id="smile-webservice">
+            <h1>Smile Webservice</h1>
+
+            <p>The smile_webservice module is designed to manage webservice calls within the Odoo environment. It provides an interface for creating, tracking, and managing webservice calls.</p>
+
+            <p><strong>Table of contents</strong></p>
+            <div class="contents local topic" id="contents">
+                <ul class="simple">
+                    <li><a class="reference internal" href="#features" id="toc-entry-1">Features</a></li>
+                    <li><a class="reference internal" href="#installation" id="toc-entry-2">Installation</a></li>
+                    <li><a class="reference internal" href="#usage" id="toc-entry-3">Usage</a></li>
+                    <li><a class="reference internal" href="#contributing" id="toc-entry-6">Contributing</a></li>
+                    <li><a class="reference internal" href="#bug-tracker" id="toc-entry-7">Bug Tracker</a></li>
+                    <li><a class="reference internal" href="#credits" id="toc-entry-8">Credits</a>
+                        <ul>
+                            <li><a class="reference internal" href="#contributors" id="toc-entry-9">Contributors</a></li>
+                            <li><a class="reference internal" href="#maintainer" id="toc-entry-10">Maintainer</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section" id="features">
+                <h2><a href="#toc-entry-1">Features</a></h2>
+                <ul>
+                    <li>List and form views for webservice calls.</li>
+                    <li>Status tracking with decorations for different states (error, in progress, done).</li>
+                    <li>Buttons for actions like force call, re-try, reset to draft, and force done.</li>
+                    <li>Detailed information on webservice calls including headers, parameters, and responses.</li>
+                </ul>
+            </div>
+
+            <div class="section" id="installation">
+                <h2><a href="#toc-entry-2">Installation</a></h2>
+                <ol>
+                    <li>Clone the repository or download the module files.</li>
+                    <li>Place the smile_webservice directory in your Odoo addons path.</li>
+                    <li>Update the app list in Odoo.</li>
+                    <li>Install the smile_webservice module from the Odoo apps interface.</li>
+                </ol>
+            </div>
+
+            <div class="section">
+                <h2><a href="#toc-entry-3">Usage</a></h2>
+                <p>Once installed, you can access the webservice calls through the "Webservices" menu in the Odoo settings back office. You can track their status, and manage their execution.</p>
+
+                <div class="section" id="how-to-manage-a-webservice-call">
+                    <ol>
+                        <li>Go to new menu **Settings > Webservices** to see webservice calls.
+                            <div class="image">
+                                <img src="webservice.png" alt="webservice in odoo" />
+                            </div>
+                        </li>
+                        <li>Use the list view to see all webservice calls and their statuses.
+                            <div class="image">
+                                <img src="webservice_list.png" alt="webservice in odoo" />
+                            </div>
+
+                        </li>
+                        <li>Use the form view to see detailed information and perform actions like re-try or force done.
+                            <div class="image">
+                                <img src="webservice_form.png" alt="webservice in odoo" />
+                            </div>
+
+                        </li>
+                    </ol>
+                </div>
+
+            </div>
+
+            <div class="section" id="contributing">
+                <h2><a href="#toc-entry-6">Contributing</a></h2>
+                <p>Contributions are welcome! Please submit a pull request or open an issue for any enhancements or bug fixes.</p>
+            </div>
+
+            <div class="section" id="bug-tracker">
+                <h2><a href="#toc-entry-7">Bug Tracker</a></h2>
+                <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
+                In case of trouble, please check there if your issue has already been reported.
+                If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
+                <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_webservice%0Aversion:%218.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
+                <p>Do not contact contributors directly about support or help with technical issues.</p>
+            </div>
+
+            <div class="section" id="credits">
+                <h2><a href="#toc-entry-8">Credits</a></h2>
+                <div class="section" id="contributors">
+                    <h3><a href="#toc-entry-9">Contributors</a></h3>
+                    <ul>
+                        <li>Smile SA Development Team</li>
+                    </ul>
+                </div>
+
+                <div class="section" id="maintainer">
+                    <h3><a href="#toc-entry-10">Maintainer</a></h3>
+                    <p>This module is maintained by Smile SA.</p>
+                    <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

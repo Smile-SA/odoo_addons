@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_webservice_call,Webservice call Manager,model_webservice_call,base.group_user,1,1,1,0
+access_webservice_call_portal,Webservice call Portal,model_webservice_call,base.group_portal,1,1,1,0
+access_webservice_call_public,Webservice call Public,model_webservice_call,base.group_public,1,1,1,0
