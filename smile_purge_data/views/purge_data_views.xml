@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- views and menus for puge.data model -->
+
+    <record id="view_purge_data_form" model="ir.ui.view">
+        <field name="name">purge.data.form</field>
+        <field name="model">purge.data</field>
+        <field name="arch" type="xml">
+            <form string="Purge Data">
+                <header>
+                    <button
+            name="action_purge_records"
+            type="object"
+            string="Purge"
+            class="oe_highlight"
+          />
+                    <field name="state" widget="statusbar" redonly="1" />
+                </header>
+                <sheet>
+                <group>
+                    <field name="name" required="1" />
+                    <field name="active" widget="boolean_toggle" />
+                    <field
+              name="model_id"
+              options="{'no_create': True, 'no_open': True}"
+            />
+                </group>
+                <group>
+                    <field name="use_date_range" invisible="1" />
+                    <field name="date_range" required="use_date_range" />
+                    <field name="date_range_type" required="use_date_range" />
+                    <field
+              name="field_id"
+              options="{'no_create': True, 'no_open': True}"
+              required="use_date_range"
+            />
+                </group>
+                <group>
+                    <field name="batch_size" required="1" />
+                    <field name="deleted_records" />
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_purge_data_tree" model="ir.ui.view">
+        <field name="name">purge.data.tree</field>
+        <field name="model">purge.data</field>
+        <field name="arch" type="xml">
+            <list string="Purge Data">
+                <field name="name" />
+                <field name="deleted_records" />
+                <field name="state" />
+            </list>
+        </field>
+    </record>
+
+        <record id="action_purge_data" model="ir.actions.act_window">
+            <field name="name">Purge Data</field>
+            <field name="res_model">purge.data</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem
+    id="menu_purge_data"
+    name="Purge Data"
+    parent="base.menu_administration"
+    sequence="99"
+  />
+        <menuitem
+    id="menu_purge_data_action"
+    name="Purge Data"
+    parent="menu_purge_data"
+    action="action_purge_data"
+  />
+</odoo>
