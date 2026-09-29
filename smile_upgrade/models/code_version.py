@@ -7,5 +7,5 @@ class CodeVersion(models.AbstractModel):
 
     @api.model
     def get_value(self):
-        return self.env["ir.config_parameter"].sudo().get_param(
+        return self.env["ir.config_parameter"].sudo().get_str(
             "code.version") or "?!"

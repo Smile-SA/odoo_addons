@@ -4,10 +4,11 @@ import os
 import psycopg2
 import functools
 
-from odoo import api, sql_db, SUPERUSER_ID, tools
+from odoo import api, sql_db, SUPERUSER_ID
 from odoo.exceptions import UserError
-import odoo.modules as addons
+import odoo.addons
 from odoo.tools import parse_version, config
+from odoo.tools.convert import convert_csv_import, convert_xml_import
 from odoo.tools.safe_eval import safe_eval
 
 from .config import configuration as upgrade_config
@@ -249,12 +250,14 @@ class Upgrade(object):
             if ext == ".py":
                 self._py_import(cr, f_obj)
             elif ext == ".csv":
-                tools.convert_csv_import(
-                    cr, module, fname=f_obj.name, csvcontent=f_obj.read(),
-                    mode="upgrade")
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                convert_csv_import(
+                    env, module, fname=f_obj.name,
+                    csvcontent=f_obj.read().encode(), mode="upgrade")
             elif ext == ".xml":
-                tools.convert_xml_import(
-                    cr, module, xmlfile=f_obj, mode="upgrade")
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                convert_xml_import(
+                    env, module, xmlfile=f_obj, mode="upgrade")
         else:
             _logger.error(
                 "%s extension is not supported in upgrade %sing", ext, mode)
@@ -284,7 +287,7 @@ class Upgrade(object):
         filepath = os.path.join(self.dir_path, f_name)
         module = "base"
         if not os.path.exists(filepath):
-            for adp in addons.module.ad_paths:
+            for adp in odoo.addons.__path__:
                 fp = os.path.join(adp, f_name)
                 if os.path.exists(fp):
                     module = fname.split("/")[0]

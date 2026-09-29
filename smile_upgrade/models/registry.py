@@ -1,19 +1,24 @@
 import inspect
 import logging
 import os
+import threading
 import time
-from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 from odoo.tools import config
 
 from collections.abc import Collection
 
-from odoo import tools
 from .upgrade import UpgradeManager
 
 _logger = logging.getLogger(__name__)
 
 native_new = Registry.new
+
+#  Registry.new can be called again while an upgrade is running (e.g. the
+#  registry reload triggered by api.Environment signaling check): delegate
+#  these nested calls to the native method to avoid a self-deadlock on the
+#  upgrade advisory lock.
+_upgrade_state = threading.local()
 
 
 @classmethod
@@ -26,18 +31,22 @@ def new(
         upgrade_modules: Collection[str] = (),
         reinit_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
+        lock_wait: int = 15,
 ):
-    if not _is_db_initialization():
+    if getattr(_upgrade_state, "running", False) \
+            or not _is_db_initialization():
         return native_new(
             db_name,
             install_modules=install_modules,
             upgrade_modules=upgrade_modules,
             update_module=update_module,
             reinit_modules=reinit_modules,
-            new_db_demo=new_db_demo
+            new_db_demo=new_db_demo,
+            lock_wait=lock_wait,
         )
     with cls._lock:
         upgrades = False
+        _upgrade_state.running = True
         try:
             with UpgradeManager(db_name) as upgrade_manager:
                 upgrades = upgrade_manager.upgrades
@@ -57,7 +66,8 @@ def new(
                         upgrade_modules=upgrade_modules,
                         update_module=update_module,
                         reinit_modules=reinit_modules,
-                        new_db_demo=new_db_demo
+                        new_db_demo=new_db_demo,
+                        lock_wait=lock_wait,
                     )
                     _run_upgrade_post(upgrade_manager, initial_config)
                     _logger.info("%s upgrade successfully loaded in %ss",
@@ -73,7 +83,8 @@ def new(
                 upgrade_modules=upgrade_modules,
                 update_module=update_module,
                 reinit_modules=reinit_modules,
-                new_db_demo=new_db_demo
+                new_db_demo=new_db_demo,
+                lock_wait=lock_wait,
             )
             if upgrades and config.get("stop_after_upgrades"):
                 _logger.info("Stopping Odoo server")
@@ -82,6 +93,8 @@ def new(
         except Exception as e:
             _manage_upgrade_errors(upgrades, e)
             raise
+        finally:
+            _upgrade_state.running = False
 
 
 def _is_db_initialization():
@@ -91,8 +104,7 @@ def _is_db_initialization():
 
 def _manage_upgrade_errors(upgrades, e):
     if upgrades and config.get("stop_after_upgrades"):
-        msg = isinstance(e, UserError) and e.value or e
-        _logger.error(tools.ustr(msg), exc_info=True)
+        _logger.error(str(e), exc_info=True)
         _logger.critical("Upgrade FAILED")
         _logger.info("Stopping Odoo server")
         os._exit(1)
