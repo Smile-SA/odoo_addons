@@ -25,6 +25,6 @@ Notice
         "security/ir.model.access.csv",
         "views/smile_log_view.xml",
     ],
-    "installable": True,
+    "installable": False,
     "active": True,
 }

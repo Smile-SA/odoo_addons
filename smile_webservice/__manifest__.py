@@ -21,7 +21,7 @@ interface, with input and output values, and replay error calls
         'views/webservice_call_view.xml',
     ],
     "auto_install": False,
-    "installable": True,
+    "installable": False,
     "application": False,
     'external_dependencies': {
         'python': ['requests', 'xmltodict'],
