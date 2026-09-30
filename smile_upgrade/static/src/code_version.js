@@ -2,14 +2,14 @@
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 class DisplayCodeVersion extends Component {
     setup() {
         this.orm = useService("orm");
         const self = this;
-        self.state = useState({
+        self.state = proxy({
             code_version: "",
         });
         self.orm.call("ir.code_version", "get_value").then(function (data) {
@@ -18,7 +18,6 @@ class DisplayCodeVersion extends Component {
     }
 }
 DisplayCodeVersion.template = "smile_upgrade.DisplayCodeVersion";
-DisplayCodeVersion.props = {};
 
 export const systrayItem = {
     Component: DisplayCodeVersion,

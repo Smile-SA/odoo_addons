@@ -4,7 +4,7 @@
     <t t-name="smile_upgrade.DisplayCodeVersion" owl="1">
         <div class="o_code_version o-dropdown dropdown-toggle dropdown dropdown-toggle">
             <a href="#" title="Version">
-                <i class="fa fa-code-fork mx-1"/> <span t-esc="state.code_version"/>
+                <i class="fa fa-code-fork mx-1"/> <span t-out="this.state.code_version"/>
             </a>
         </div>
     </t>
