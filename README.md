@@ -6,7 +6,7 @@ This repository contains a collection of Odoo modules.
 Requirements
 ------------------------
 
-* Odoo 19.0
+* Odoo 20.0
 
 # Add the banner.gif file
 
