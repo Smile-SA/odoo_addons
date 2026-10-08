@@ -1,0 +1,2 @@
+id,name,model_id,group_id/id,operation,domain
+access_webservice_call,Webservice call Manager,webservice.call,base.group_erp_manager,cru,

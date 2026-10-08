@@ -98,7 +98,8 @@ class WebserviceCall(models.Model):
         self.write({"state": "draft"})
 
     def action_re_try(self):
-        self.call_request()
+        for call in self:
+            call.call_request()
 
     def action_in_progress(self):
         self.write({"state": "in_progress"})
@@ -107,13 +108,22 @@ class WebserviceCall(models.Model):
         self.write({"state": "done"})
 
     def retry_error(self):
-        self.search([("state", "=", "error")]).action_force_done()
+        calls = self or self.search([("state", "=", "error")])
+        for call in calls.filtered(lambda c: c.state == "error"):
+            try:
+                call.with_context(retry=True).call_request()
+            except WebserviceError as e:
+                _logger.warning(
+                    "Retry of webservice call %s failed: %s", call.id, e)
 
     def call_request(self):
+        self.ensure_one()
         converted_response = ""
         resp_acquired = False
+        resp = None
+        start = fields.Datetime.now()
         self.write({"state": "in_progress"})
-        self._cr.commit()
+        self.env.cr.commit()
         try:
             resp = self.generate_call()
             resp_acquired = True
@@ -128,7 +138,7 @@ class WebserviceCall(models.Model):
         else:
             if self.webservice_based_on == "context":
                 self = self.with_context(webservice_based_on="")
-        duration = (fields.Datetime.now() - self.create_date).total_seconds()
+        duration = (fields.Datetime.now() - start).total_seconds()
         self.write(
             {
                 "response": response,
@@ -140,6 +150,7 @@ class WebserviceCall(models.Model):
         return converted_response or response
 
     def _handle_request_error(self, exception, resp_acquired, resp):
+        self.ensure_one()
         error_message = "%s\n%s" % (
             exception.args[0],
             resp_acquired and resp and str(resp.text) or "",
@@ -153,7 +164,7 @@ class WebserviceCall(models.Model):
                 "error_message": error_message,
             }
         )
-        self._cr.commit()
+        self.env.cr.commit()
         raise WebserviceError(error_message)
 
     def generate_call(self):
@@ -164,6 +175,7 @@ class WebserviceCall(models.Model):
         The file(s) is passed by the context to avoid being store in the Field
         files.
         """
+        self.ensure_one()
         webservice_based_on = self._get_webservice_based_on()
         timeout = self._get_webservice_timeout()
         return self._generate_call_by_type(webservice_based_on, timeout)
@@ -173,7 +185,7 @@ class WebserviceCall(models.Model):
             return self.execute_call(
                 url=self.url,
                 json=self.parameter and json.loads(self.parameter) or "",
-                headers=literal_eval(self.header),
+                headers=literal_eval(self.header or "{}"),
                 verify=self.is_verify_ssl,
                 timeout=timeout,
             )
@@ -181,7 +193,7 @@ class WebserviceCall(models.Model):
             return self.execute_call(
                 url=self.url,
                 data=self.parameter,
-                headers=literal_eval(self.header),
+                headers=literal_eval(self.header or "{}"),
                 verify=self.is_verify_ssl,
                 timeout=timeout,
             )
@@ -192,7 +204,7 @@ class WebserviceCall(models.Model):
             return self.execute_call(
                 url=self.url,
                 data=literal_eval(self.parameter),
-                headers=literal_eval(self.header),
+                headers=literal_eval(self.header or "{}"),
                 files=files,
                 verify=self.is_verify_ssl,
                 timeout=timeout,
@@ -200,6 +212,7 @@ class WebserviceCall(models.Model):
         return ""
 
     def execute_call(self, **kwargs):
+        self.ensure_one()
         resp = ""
         webservice_session = self._retrieve_webservice_session()
         if self.type_request == "post":
@@ -306,6 +319,7 @@ class WebserviceCall(models.Model):
         return self.access_value_from_dict(expected_response_list, value)
 
     def _get_webservice_based_on(self):
+        self.ensure_one()
         if self.webservice_based_on == "context":
             webservice_based_on = self.env.context.get(
                 "webservice_based_on", "json")

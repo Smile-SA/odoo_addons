@@ -4,7 +4,7 @@
 
 {
     "name": "Smile WebService",
-    "version": "19.0.1.0.0",
+    "version": "20.0.1.0.0",
     "depends": ['web'],
     "author": "Smile",
     "license": 'AGPL-3',
@@ -17,11 +17,11 @@ interface, with input and output values, and replay error calls
     "category": 'Tools',
     "sequence": 20,
     "data": [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
         'views/webservice_call_view.xml',
     ],
     "auto_install": False,
-    "installable": False,
+    "installable": True,
     "application": False,
     'external_dependencies': {
         'python': ['requests', 'xmltodict'],

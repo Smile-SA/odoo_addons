@@ -1,120 +1,548 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="generator" content="Docutils" />
-    <title>Smile Webservice</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils: https://docutils.sourceforge.io/" />
+<title>Smile WebService</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 9511 2024-01-13 09:50:07Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+Despite the name, some widely supported CSS2 features are used.
+
+See https://docutils.sourceforge.io/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: gray; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic, pre.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
 </head>
 <body>
-    <div class="document">
-        <p>
-            <img src="https://img.shields.io/badge/licence-AGPL--3-blue.svg" alt="License: AGPL-3" />
-            <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/18.0/smile_webservice">
-                <img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" />
-            </a>
-        </p>
+<div class="document" id="smile-webservice">
+<h1 class="title">Smile WebService</h1>
 
-        <div class="section" id="smile-webservice">
-            <h1>Smile Webservice</h1>
-
-            <p>The smile_webservice module is designed to manage webservice calls within the Odoo environment. It provides an interface for creating, tracking, and managing webservice calls.</p>
-
-            <p><strong>Table of contents</strong></p>
-            <div class="contents local topic" id="contents">
-                <ul class="simple">
-                    <li><a class="reference internal" href="#features" id="toc-entry-1">Features</a></li>
-                    <li><a class="reference internal" href="#installation" id="toc-entry-2">Installation</a></li>
-                    <li><a class="reference internal" href="#usage" id="toc-entry-3">Usage</a></li>
-                    <li><a class="reference internal" href="#contributing" id="toc-entry-6">Contributing</a></li>
-                    <li><a class="reference internal" href="#bug-tracker" id="toc-entry-7">Bug Tracker</a></li>
-                    <li><a class="reference internal" href="#credits" id="toc-entry-8">Credits</a>
-                        <ul>
-                            <li><a class="reference internal" href="#contributors" id="toc-entry-9">Contributors</a></li>
-                            <li><a class="reference internal" href="#maintainer" id="toc-entry-10">Maintainer</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="section" id="features">
-                <h2><a href="#toc-entry-1">Features</a></h2>
-                <ul>
-                    <li>List and form views for webservice calls.</li>
-                    <li>Status tracking with decorations for different states (error, in progress, done).</li>
-                    <li>Buttons for actions like force call, re-try, reset to draft, and force done.</li>
-                    <li>Detailed information on webservice calls including headers, parameters, and responses.</li>
-                </ul>
-            </div>
-
-            <div class="section" id="installation">
-                <h2><a href="#toc-entry-2">Installation</a></h2>
-                <ol>
-                    <li>Clone the repository or download the module files.</li>
-                    <li>Place the smile_webservice directory in your Odoo addons path.</li>
-                    <li>Update the app list in Odoo.</li>
-                    <li>Install the smile_webservice module from the Odoo apps interface.</li>
-                </ol>
-            </div>
-
-            <div class="section">
-                <h2><a href="#toc-entry-3">Usage</a></h2>
-                <p>Once installed, you can access the webservice calls through the "Webservices" menu in the Odoo settings back office. You can track their status, and manage their execution.</p>
-
-                <div class="section" id="how-to-manage-a-webservice-call">
-                    <ol>
-                        <li>Go to new menu **Settings > Webservices** to see webservice calls.
-                            <div class="image">
-                                <img src="webservice.png" alt="webservice in odoo" />
-                            </div>
-                        </li>
-                        <li>Use the list view to see all webservice calls and their statuses.
-                            <div class="image">
-                                <img src="webservice_list.png" alt="webservice in odoo" />
-                            </div>
-
-                        </li>
-                        <li>Use the form view to see detailed information and perform actions like re-try or force done.
-                            <div class="image">
-                                <img src="webservice_form.png" alt="webservice in odoo" />
-                            </div>
-
-                        </li>
-                    </ol>
-                </div>
-
-            </div>
-
-            <div class="section" id="contributing">
-                <h2><a href="#toc-entry-6">Contributing</a></h2>
-                <p>Contributions are welcome! Please submit a pull request or open an issue for any enhancements or bug fixes.</p>
-            </div>
-
-            <div class="section" id="bug-tracker">
-                <h2><a href="#toc-entry-7">Bug Tracker</a></h2>
-                <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
-                In case of trouble, please check there if your issue has already been reported.
-                If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
-                <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_webservice%0Aversion:%218.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
-                <p>Do not contact contributors directly about support or help with technical issues.</p>
-            </div>
-
-            <div class="section" id="credits">
-                <h2><a href="#toc-entry-8">Credits</a></h2>
-                <div class="section" id="contributors">
-                    <h3><a href="#toc-entry-9">Contributors</a></h3>
-                    <ul>
-                        <li>Smile SA Development Team</li>
-                    </ul>
-                </div>
-
-                <div class="section" id="maintainer">
-                    <h3><a href="#toc-entry-10">Maintainer</a></h3>
-                    <p>This module is maintained by Smile SA.</p>
-                    <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! This file is generated by oca-gen-addon-readme !!
+!! changes will be overwritten.                   !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! source digest: sha256:4eef5c0185d6cbe053ebbc1a971bd90741e4e75f30912ce73d70b7a2795b6a8a
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/license-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/Smile-SA/odoo_addons/tree/20.0/smile_webservice"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
+<p>This module records the HTTP calls Odoo makes to external systems. Each
+call is stored with its URL, headers, parameters, response, duration
+and, when it fails, the error code and message.</p>
+<p>Administrators can look through these calls in the back office. They can
+replay a call that failed, force a draft call to run, or change a call’s
+state by hand.</p>
+<p>The module also gives developers a small API. Any Odoo model can use it
+to create a traced call and send it as JSON, XML or multipart form data.
+Other modules are expected to build on it: on its own, the module sends
+nothing.</p>
+<p><strong>Table of contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#use-cases-context" id="toc-entry-1">Use Cases / Context</a></li>
+<li><a class="reference internal" href="#installation" id="toc-entry-2">Installation</a></li>
+<li><a class="reference internal" href="#configuration" id="toc-entry-3">Configuration</a></li>
+<li><a class="reference internal" href="#usage" id="toc-entry-4">Usage</a></li>
+<li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-5">Known issues / Roadmap</a></li>
+<li><a class="reference internal" href="#changelog" id="toc-entry-6">Changelog</a><ul>
+<li><a class="reference internal" href="#section-1" id="toc-entry-7">20.0.1.0.0 (2026-10-08)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-8">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-9">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-10">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-11">Contributors</a></li>
+<li><a class="reference internal" href="#other-credits" id="toc-entry-12">Other credits</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-13">Maintainers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="use-cases-context">
+<h1><a class="toc-backref" href="#toc-entry-1">Use Cases / Context</a></h1>
+<p>When an integration with a third-party system fails, it is hard to find
+out what was sent and what came back. This module keeps a record of
+every outgoing call in the database, so a failed call stays visible and
+can be replayed later.</p>
+<p>Project-specific modules create and send the calls. They add their own
+values to the <strong>Webservice type</strong> field and set up authentication for
+the remote service. This module handles the HTTP request, timeouts,
+errors and tracing.</p>
+<p>It depends only on the <tt class="docutils literal">web</tt> module.</p>
+</div>
+<div class="section" id="installation">
+<h1><a class="toc-backref" href="#toc-entry-2">Installation</a></h1>
+<p>This module requires the <tt class="docutils literal">requests</tt> and <tt class="docutils literal">xmltodict</tt> Python
+libraries:</p>
+<pre class="code shell literal-block">
+pip<span class="w"> </span>install<span class="w"> </span>requests<span class="w"> </span>xmltodict
+</pre>
+</div>
+<div class="section" id="configuration">
+<h1><a class="toc-backref" href="#toc-entry-3">Configuration</a></h1>
+<ul>
+<li><p class="first">Only users in the <strong>Access Rights</strong> group, or <strong>Administrator</strong>
+(Settings), can see the <strong>Webservices</strong> menu and read the calls. Users
+outside these groups cannot reach webservice calls. Modules that
+create calls for them must run with elevated rights.</p>
+</li>
+<li><p class="first">By default, an outgoing call times out after 60 seconds. To change
+this, set the <tt class="docutils literal">webservice_call_timeout</tt> option (in seconds) in the
+Odoo server configuration file, then restart the server:</p>
+<pre class="code ini literal-block">
+<span class="k">[options]</span><span class="w">
+</span><span class="na">webservice_call_timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">120</span>
+</pre>
+</li>
+</ul>
+</div>
+<div class="section" id="usage">
+<h1><a class="toc-backref" href="#toc-entry-4">Usage</a></h1>
+<ul>
+<li><p class="first">Go to <em>Settings &gt; Webservices &gt; Webservice Calls</em>.</p>
+<p><img alt="Webservices menu" src="https://raw.githubusercontent.com/Smile-SA/odoo_addons/20.0/smile_webservice/static/description/webservice.png" /></p>
+</li>
+<li><p class="first">The list shows the most recent calls first. Calls in <strong>Error</strong> are
+shown in red, calls <strong>In progress</strong> in blue, and calls that are
+<strong>Done</strong> in grey. Use the <strong>Draft</strong>, <strong>Done</strong> and <strong>Error</strong> filters,
+or group calls by <strong>Model</strong> (the call name), <strong>Request type</strong> or
+<strong>Status</strong>. Calls cannot be created or edited from the interface.</p>
+<p><img alt="Webservice calls list" src="https://raw.githubusercontent.com/Smile-SA/odoo_addons/20.0/smile_webservice/static/description/webservice_list.png" /></p>
+</li>
+<li><p class="first">Open a call to see its details: <strong>Header</strong>, <strong>Type request</strong>, <strong>Based
+on</strong>, <strong>URL call</strong>, <strong>Parameter</strong>, <strong>Response</strong>, <strong>Converted
+response</strong> and <strong>Duration (s)</strong>. For a failed call, the <strong>Webservice
+errors</strong> section shows the <strong>Error code</strong> and the <strong>Error message</strong>.</p>
+<p><img alt="Webservice call form" src="https://raw.githubusercontent.com/Smile-SA/odoo_addons/20.0/smile_webservice/static/description/webservice_form.png" /></p>
+</li>
+<li><p class="first">Use the buttons at the top of the form:</p>
+<ul class="simple">
+<li><strong>Force call</strong> (Draft) sends the request.</li>
+<li><strong>Re-Try</strong> (Error) sends the request again. On success the call
+becomes <strong>Done</strong> and stores the response. If it fails again, it
+stays in <strong>Error</strong> and the new error message is shown.</li>
+<li><strong>Reset to Draft</strong> (In progress) unblocks a call that never
+finished, for example after a server crash.</li>
+<li><strong>Force Done</strong> (Draft, In progress, Error) marks the call as done
+without sending anything.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="known-issues-roadmap">
+<h1><a class="toc-backref" href="#toc-entry-5">Known issues / Roadmap</a></h1>
+<ul class="simple">
+<li>Before and after each request, the call commits the database
+transaction. This saves the call’s state even when the request fails,
+but it also commits any pending changes made earlier in the same
+transaction.</li>
+<li>The <strong>Model</strong> and <strong>Files</strong> fields exist but are not used by the
+module. Files sent as multipart form data come from the context and
+are never stored on the call.</li>
+<li>If <strong>Expected response</strong> or <strong>XML namespaces</strong> contains text that
+cannot be evaluated, saving shows a raw evaluation error instead of a
+validation message.</li>
+<li>If no authentication data is provided by an inheriting module,
+requests are sent with an empty Basic Auth login and password.</li>
+<li>Search filters exist only for Draft, Done and Error. There is none for
+In progress.</li>
+</ul>
+</div>
+<div class="section" id="changelog">
+<h1><a class="toc-backref" href="#toc-entry-6">Changelog</a></h1>
+<div class="section" id="section-1">
+<h2><a class="toc-backref" href="#toc-entry-7">20.0.1.0.0 (2026-10-08)</a></h2>
+<ul class="simple">
+<li>[BREAKING] Access to webservice calls is restricted to the Access
+Rights group (internal, portal and public users no longer have
+access).</li>
+<li>[ADD] Migration to Odoo 20.0.</li>
+<li>[FIX] A call that fails before getting a response (network error,
+timeout, empty header) now goes to Error instead of staying In
+progress.</li>
+<li>[FIX] Retrying failed calls in bulk now replays them instead of
+marking them as done.</li>
+<li>[FIX] Duration is measured from the start of the request, not from the
+creation of the call.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="bug-tracker">
+<h1><a class="toc-backref" href="#toc-entry-8">Bug Tracker</a></h1>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us to smash it by providing a detailed and welcomed
+<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_webservice%0Aversion:%2020.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<p>Do not contact contributors directly about support or help with technical issues.</p>
+</div>
+<div class="section" id="credits">
+<h1><a class="toc-backref" href="#toc-entry-9">Credits</a></h1>
+<div class="section" id="authors">
+<h2><a class="toc-backref" href="#toc-entry-10">Authors</a></h2>
+<ul class="simple">
+<li>Smile</li>
+</ul>
+</div>
+<div class="section" id="contributors">
+<h2><a class="toc-backref" href="#toc-entry-11">Contributors</a></h2>
+<ul class="simple">
+<li>Smile</li>
+</ul>
+</div>
+<div class="section" id="other-credits">
+<h2><a class="toc-backref" href="#toc-entry-12">Other credits</a></h2>
+<p>This module is developed and maintained by Smile.</p>
+</div>
+<div class="section" id="maintainers">
+<h2><a class="toc-backref" href="#toc-entry-13">Maintainers</a></h2>
+<p>This module is part of the <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/20.0/smile_webservice">Smile-SA/odoo_addons</a> project on GitHub.</p>
+<p>You are welcome to contribute.</p>
+</div>
+</div>
+</div>
 </body>
 </html>
