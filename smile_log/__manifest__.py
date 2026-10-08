@@ -4,7 +4,7 @@
 
 {
     "name": "Logging in database",
-    "version": "19.0.0.0.0",
+    "version": "20.0.1.0.0",
     "author": "Smile",
     "website": 'http://www.smile.fr',
     "category": "Tools",
@@ -16,15 +16,15 @@ Notice
 
     * Following code will create a log in db with a unique pid per logger:
         from odoo.addons.smile_log.tools import SmileDBLogger
-        logger = SmileDBLogger(self._cr.dbname, model'res.partner', self.id, self._uid)
+        logger = SmileDBLogger(self.env.cr.dbname, 'res.partner', self.id, self.env.uid)
         logger.info(your_message)
 """,
     "depends": ['base'],
     "data": [
         "security/smile_log_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/smile_log_view.xml",
     ],
-    "installable": False,
-    "active": True,
+    "images": ["static/description/banner.gif"],
+    "installable": True,
 }

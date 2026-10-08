@@ -22,6 +22,7 @@ class SmileDBLogger:
 
         pid = 0
 
+        cr = None
         try:
             cr = Registry(dbname).cursor()
             cr._cnx.autocommit = True
@@ -33,7 +34,8 @@ class SmileDBLogger:
             res = cr.fetchone()
             pid = res and res[0] or 0
         finally:
-            cr.close()
+            if cr:
+                cr.close()
 
         self._logger_start = datetime.datetime.now()
         self._logger_args = {
@@ -63,8 +65,8 @@ class SmileDBLogger:
     def warning(self, msg):
         self._logger.warning(msg, self._logger_args)
 
-    def log(self, msg):
-        self._logger.log(msg, self._logger_args)
+    def log(self, msg, level=logging.INFO):
+        self._logger.log(level, msg, self._logger_args)
 
     @add_trace
     def error(self, msg):

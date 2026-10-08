@@ -4,5 +4,8 @@
 		<record id="group_smile_log_user" model="res.groups">
 			<field name="name">Smile Logs / User</field>
 		</record>
+		<record id="base.group_system" model="res.groups">
+			<field name="implied_ids" eval="[Command.link(ref('smile_log.group_smile_log_user'))]"/>
+		</record>
 	</data>
 </odoo>

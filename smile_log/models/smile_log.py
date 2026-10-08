@@ -28,8 +28,9 @@ class SmileLog(models.Model):
     def _get_res_name(self):
         for log in self:
             log.log_res_name = ""
-            res = self.env[log.model_name].browse(log.res_id)
-            log.log_res_name = res.display_name
+            if log.model_name in self.env:
+                res = self.env[log.model_name].browse(log.res_id).exists()
+                log.log_res_name = res.display_name or ""
 
     log_date = fields.Datetime("Date", readonly=True)
     log_uid = fields.Integer("User ID", readonly=True)

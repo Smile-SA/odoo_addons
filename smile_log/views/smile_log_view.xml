@@ -48,7 +48,7 @@
     <menuitem id="menu_logging" parent="base.menu_custom" name="Logging"
               sequence="110"/>
     <menuitem id="menu_smile_log" parent="menu_logging" name="Logs"
-              action="act_smile_log"/>
+              action="act_smile_log" groups="group_smile_log_user"/>
 
     <record id="smile_log_simple_list_view" model="ir.ui.view">
         <field name="name">Smile Log - List</field>

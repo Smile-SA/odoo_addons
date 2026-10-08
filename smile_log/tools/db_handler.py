@@ -22,6 +22,14 @@ class SmileDBHandler(logging.Handler):
             self._dbname_to_cr[dbname] = cr
         return cr
 
+    def _close_cursor(self, dbname):
+        cr = self._dbname_to_cr.pop(dbname, None)
+        if cr and not cr.closed:
+            try:
+                cr.close()
+            except Exception:
+                pass
+
     def emit(self, record):
         if not (record.args and isinstance(record.args, dict)):
             return False
@@ -49,7 +57,8 @@ class SmileDBHandler(logging.Handler):
         try:
             cr.execute(request, params)
         except Exception:
-            # retry
+            # retry with a fresh cursor
+            self._close_cursor(dbname)
             cr = self._get_cursor(dbname)
             try:
                 cr.execute(request, params)

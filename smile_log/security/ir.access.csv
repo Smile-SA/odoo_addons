@@ -1,0 +1,2 @@
+id,name,model_id,group_id/id,operation,domain
+smile_log_user,smile_log group_smile_log_user,smile.log,smile_log.group_smile_log_user,r,
