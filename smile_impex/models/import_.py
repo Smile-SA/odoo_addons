@@ -19,14 +19,15 @@ class IrModelImport(models.Model):
         ondelete='cascade', index=True)
     log_ids = fields.One2many(
         'smile.log', 'res_id', 'Logs', readonly=True,
+        groups='smile_log.group_smile_log_user',
         domain=[('model_name', '=', 'ir.model.import')])
 
     def _execute(self):
         self.ensure_one()
         model_obj = self.env[self.import_tmpl_id.model_id.model]
-        if self._context.get('original_cr') and \
-                not self._context.get('force_use_new_cursor'):
-            new_env = self.env(cr=self._context['original_cr'])
+        if self.env.context.get('original_cr') and \
+                not self.env.context.get('force_use_new_cursor'):
+            new_env = self.env(cr=self.env.context['original_cr'])
             model_obj = model_obj.with_env(new_env)
         args = safe_eval(self.args or '[]')
         kwargs = safe_eval(self.import_tmpl_id.method_args or '{}')

@@ -19,6 +19,7 @@ class IrModelExport(models.Model):
         ondelete='cascade', index=True)
     log_ids = fields.One2many(
         'smile.log', 'res_id', 'Logs', readonly=True,
+        groups='smile_log.group_smile_log_user',
         domain=[('model_name', '=', 'ir.model.export')])
     offset = fields.Integer()
     record_ids = fields.Text(
@@ -62,8 +63,8 @@ class IrModelExport(models.Model):
             record_ids).with_context(export_tmpl_id=self.export_tmpl_id.id)
         if self._should_use_original_cursor():
             new_env = self.env(
-                cr=self._context['original_cr'],
-                context=records._context)
+                cr=self.env.context['original_cr'],
+                context=records.env.context)
             records = records.with_env(new_env)
         return records
 
@@ -76,5 +77,5 @@ class IrModelExport(models.Model):
 
         :return: True if the original cursor should be used, False otherwise.
         """
-        return bool(self._context.get('original_cr')) and \
-            not self._context.get('force_use_new_cursor')
+        return bool(self.env.context.get('original_cr')) and \
+            not self.env.context.get('force_use_new_cursor')

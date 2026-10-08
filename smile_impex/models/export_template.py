@@ -22,6 +22,7 @@ class IrModelExportTemplate(models.Model):
     log_ids = fields.One2many(
         'smile.log', 'res_id', 'Logs',
         domain=[('model_name', '=', 'ir.model.export.template')],
+        groups='smile_log.group_smile_log_user',
         readonly=True, copy=False)
 
     client_action = fields.Boolean(compute='_get_client_action', store=True)
@@ -81,25 +82,28 @@ class IrModelExportTemplate(models.Model):
         return True
 
     def _get_eval_context(self):
-        return {'context': self._context, 'user': self.env.user}
+        return {'context': self.env.context, 'user': self.env.user}
 
     def _get_res_ids(self, *args):
         model_obj = self._get_model_obj()
         res_ids = self._get_filtered_res_ids(model_obj, *args)
-        if 'active_ids' in self._context:
-            res_ids &= set(self._context['active_ids'])
+        if 'active_ids' in self.env.context:
+            active_ids = set(self.env.context['active_ids'])
+            res_ids = [res_id for res_id in res_ids if res_id in active_ids]
         if self.unique:
-            res_ids -= self._get_already_exported_res_ids()
-        return list(res_ids)
+            exported_ids = self._get_already_exported_res_ids()
+            res_ids = [res_id for res_id in res_ids
+                       if res_id not in exported_ids]
+        return res_ids
 
     def _get_model_obj(self):
         """
         Returns the model object with the original cursor if necessary.
         """
         model_obj = self.env[self.model_id.model]
-        if self._context.get('original_cr'):
+        if self.env.context.get('original_cr'):
             model_obj = model_obj.with_env(
-                self.env(cr=self._context['original_cr']))
+                self.env(cr=self.env.context['original_cr']))
         return model_obj
 
     def _get_filtered_res_ids(self, model_obj, *args):
@@ -120,7 +124,7 @@ class IrModelExportTemplate(models.Model):
         domain = safe_eval(
             self.filter_domain or '[]', self._get_eval_context()
         )
-        return set(model_obj.search(domain, order=self.order or '')._ids)
+        return list(model_obj.search(domain, order=self.order or '')._ids)
 
     def _get_res_ids_from_method(self, model_obj, *args):
         """
@@ -137,7 +141,8 @@ class IrModelExportTemplate(models.Model):
                     self.filter_method, self.model_id.model
                 )
             )
-        return set(getattr(model_obj, self.filter_method)(*args))
+        return list(dict.fromkeys(
+            getattr(model_obj, self.filter_method)(*args)))
 
     def _get_already_exported_res_ids(self):
         """
@@ -173,7 +178,7 @@ class IrModelExportTemplate(models.Model):
             export_recs = self._create_export(*args)
         except Exception as e:
             tmpl_logger = SmileDBLogger(
-                self._cr.dbname, self._name, self.id, self._uid)
+                self.env.cr.dbname, self._name, self.id, self.env.uid)
             tmpl_logger.error(repr(e))
             raise UserError(repr(e))
         else:
@@ -197,8 +202,9 @@ class IrModelExportTemplate(models.Model):
         self.ensure_one()
         return {
             'export_tmpl_id': self.id,
-            'test_mode': self._context.get('test_mode'),
-            'new_thread': self._context.get('new_thread', self.new_thread),
+            'test_mode': self.env.context.get('test_mode'),
+            'new_thread': self.env.context.get(
+                'new_thread', self.new_thread),
             'args': repr(args),
             'log_level': self.log_level,
             'log_returns': self.log_returns,

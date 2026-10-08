@@ -4,7 +4,7 @@
 
 {
     "name": "Import / Export",
-    "version": "1.2",
+    "version": "20.0.1.0.0",
     "depends": [
         'mail',
         'smile_log',
@@ -33,13 +33,14 @@ Suggestions & Feedback to: Corentin Pouhet-Brunerie
     "category": 'Tools',
     "sequence": 20,
     "data": [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
         'data/ir_cron.xml',
         'views/export_view.xml',
         'views/import_view.xml',
         'views/menu_view.xml',
     ],
     "auto_install": False,
-    "installable": False,
+    "images": ["static/description/banner.gif"],
+    "installable": True,
     "application": False,
 }

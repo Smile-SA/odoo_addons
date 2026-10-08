@@ -1,119 +1,96 @@
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
-  <title>Import / Export</title>
-  <style type="text/css">
-    /*
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils: https://docutils.sourceforge.io/" />
+<title>Import / Export</title>
+<style type="text/css">
+
+/*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 7614 2013-02-21 15:55:51Z milde $
+:Id: $Id: html4css1.css 9511 2024-01-13 09:50:07Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
+Despite the name, some widely supported CSS2 features are used.
 
-See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+See https://docutils.sourceforge.io/docs/howto/html-stylesheets.html for how to
 customize this style sheet.
 */
 
-    /* used to remove borders from tables and images */
-    .borderless,
-    table.borderless td,
-    table.borderless th {
-      border: 0
-    }
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
 
-    table.borderless td,
-    table.borderless th {
-      /* Override padding for "table.docutils td" with "! important".
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
      The right padding separates the table cells. */
-      padding: 0 0.5em 0 0 ! important
-    }
+  padding: 0 0.5em 0 0 ! important }
 
-    .first {
-      /* Override more specific margin styles with "! important". */
-      margin-top: 0 ! important
-    }
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
 
-    .last,
-    .with-subtitle {
-      margin-bottom: 0 ! important
-    }
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
 
-    .hidden {
-      display: none
-    }
+.hidden {
+  display: none }
 
-    a.toc-backref {
-      text-decoration: none;
-      color: black
-    }
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
 
-    blockquote.epigraph {
-      margin: 2em 5em;
-    }
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
 
-    dl.docutils dd {
-      margin-bottom: 0.5em
-    }
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
 
-    object[type="image/svg+xml"],
-    object[type="application/x-shockwave-flash"] {
-      overflow: hidden;
-    }
+blockquote.epigraph {
+  margin: 2em 5em ; }
 
-    /* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
   font-weight: bold }
 */
 
-    div.abstract {
-      margin: 2em 5em
-    }
+div.abstract {
+  margin: 2em 5em }
 
-    div.abstract p.topic-title {
-      font-weight: bold;
-      text-align: center
-    }
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
 
-    div.admonition,
-    div.attention,
-    div.caution,
-    div.danger,
-    div.error,
-    div.hint,
-    div.important,
-    div.note,
-    div.tip,
-    div.warning {
-      margin: 2em;
-      border: medium outset;
-      padding: 1em
-    }
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
 
-    div.admonition p.admonition-title,
-    div.hint p.admonition-title,
-    div.important p.admonition-title,
-    div.note p.admonition-title,
-    div.tip p.admonition-title {
-      font-weight: bold;
-      font-family: sans-serif
-    }
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
 
-    div.attention p.admonition-title,
-    div.caution p.admonition-title,
-    div.danger p.admonition-title,
-    div.error p.admonition-title,
-    div.warning p.admonition-title,
-    .code .error {
-      color: red;
-      font-weight: bold;
-      font-family: sans-serif
-    }
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
 
-    /* Uncomment (and remove this text!) to get reduced vertical space in
+/* Uncomment (and remove this text!) to get reduced vertical space in
    compound paragraphs.
 div.compound .compound-first, div.compound .compound-middle {
   margin-bottom: 0.5em }
@@ -122,483 +99,494 @@ div.compound .compound-last, div.compound .compound-middle {
   margin-top: 0.5em }
 */
 
-    div.dedication {
-      margin: 2em 5em;
-      text-align: center;
-      font-style: italic
-    }
-
-    div.dedication p.topic-title {
-      font-weight: bold;
-      font-style: normal
-    }
-
-    div.figure {
-      margin-left: 2em;
-      margin-right: 2em
-    }
-
-    div.footer,
-    div.header {
-      clear: both;
-      font-size: smaller
-    }
-
-    div.line-block {
-      display: block;
-      margin-top: 1em;
-      margin-bottom: 1em
-    }
-
-    div.line-block div.line-block {
-      margin-top: 0;
-      margin-bottom: 0;
-      margin-left: 1.5em
-    }
-
-    div.sidebar {
-      margin: 0 0 0.5em 1em;
-      border: medium outset;
-      padding: 1em;
-      background-color: #ffffee;
-      width: 40%;
-      float: right;
-      clear: right
-    }
-
-    div.sidebar p.rubric {
-      font-family: sans-serif;
-      font-size: medium
-    }
-
-    div.system-messages {
-      margin: 5em
-    }
-
-    div.system-messages h1 {
-      color: red
-    }
-
-    div.system-message {
-      border: medium outset;
-      padding: 1em
-    }
-
-    div.system-message p.system-message-title {
-      color: red;
-      font-weight: bold
-    }
-
-    div.topic {
-      margin: 2em
-    }
-
-    h1.section-subtitle,
-    h2.section-subtitle,
-    h3.section-subtitle,
-    h4.section-subtitle,
-    h5.section-subtitle,
-    h6.section-subtitle {
-      margin-top: 0.4em
-    }
-
-    h1.title {
-      text-align: center
-    }
-
-    h2.subtitle {
-      text-align: center
-    }
-
-    hr.docutils {
-      width: 75%
-    }
-
-    img.align-left,
-    .figure.align-left,
-    object.align-left {
-      clear: left;
-      float: left;
-      margin-right: 1em
-    }
-
-    img.align-right,
-    .figure.align-right,
-    object.align-right {
-      clear: right;
-      float: right;
-      margin-left: 1em
-    }
-
-    img.align-center,
-    .figure.align-center,
-    object.align-center {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .align-left {
-      text-align: left
-    }
-
-    .align-center {
-      clear: both;
-      text-align: center
-    }
-
-    .align-right {
-      text-align: right
-    }
-
-    /* reset inner alignment in figures */
-    div.align-right {
-      text-align: inherit
-    }
-
-    /* div.align-center * { */
-    /*   text-align: left } */
-
-    ol.simple,
-    ul.simple {
-      margin-bottom: 1em
-    }
-
-    ol.arabic {
-      list-style: decimal
-    }
-
-    ol.loweralpha {
-      list-style: lower-alpha
-    }
-
-    ol.upperalpha {
-      list-style: upper-alpha
-    }
-
-    ol.lowerroman {
-      list-style: lower-roman
-    }
-
-    ol.upperroman {
-      list-style: upper-roman
-    }
-
-    p.attribution {
-      text-align: right;
-      margin-left: 50%
-    }
-
-    p.caption {
-      font-style: italic
-    }
-
-    p.credits {
-      font-style: italic;
-      font-size: smaller
-    }
-
-    p.label {
-      white-space: nowrap
-    }
-
-    p.rubric {
-      font-weight: bold;
-      font-size: larger;
-      color: maroon;
-      text-align: center
-    }
-
-    p.sidebar-title {
-      font-family: sans-serif;
-      font-weight: bold;
-      font-size: larger
-    }
-
-    p.sidebar-subtitle {
-      font-family: sans-serif;
-      font-weight: bold
-    }
-
-    p.topic-title {
-      font-weight: bold
-    }
-
-    pre.address {
-      margin-bottom: 0;
-      margin-top: 0;
-      font: inherit
-    }
-
-    pre.literal-block,
-    pre.doctest-block,
-    pre.math,
-    pre.code {
-      margin-left: 2em;
-      margin-right: 2em
-    }
-
-    pre.code .ln {
-      color: grey;
-    }
-
-    /* line numbers */
-    pre.code,
-    code {
-      background-color: #eeeeee
-    }
-
-    pre.code .comment,
-    code .comment {
-      color: #5C6576
-    }
-
-    pre.code .keyword,
-    code .keyword {
-      color: #3B0D06;
-      font-weight: bold
-    }
-
-    pre.code .literal.string,
-    code .literal.string {
-      color: #0C5404
-    }
-
-    pre.code .name.builtin,
-    code .name.builtin {
-      color: #352B84
-    }
-
-    pre.code .deleted,
-    code .deleted {
-      background-color: #DEB0A1
-    }
-
-    pre.code .inserted,
-    code .inserted {
-      background-color: #A3D289
-    }
-
-    span.classifier {
-      font-family: sans-serif;
-      font-style: oblique
-    }
-
-    span.classifier-delimiter {
-      font-family: sans-serif;
-      font-weight: bold
-    }
-
-    span.interpreted {
-      font-family: sans-serif
-    }
-
-    span.option {
-      white-space: nowrap
-    }
-
-    span.pre {
-      white-space: pre
-    }
-
-    span.problematic {
-      color: red
-    }
-
-    span.section-subtitle {
-      /* font-size relative to parent (h1..h6 element) */
-      font-size: 80%
-    }
-
-    table.citation {
-      border-left: solid 1px gray;
-      margin-left: 1px
-    }
-
-    table.docinfo {
-      margin: 2em 4em
-    }
-
-    table.docutils {
-      margin-top: 0.5em;
-      margin-bottom: 0.5em
-    }
-
-    table.footnote {
-      border-left: solid 1px black;
-      margin-left: 1px
-    }
-
-    table.docutils td,
-    table.docutils th,
-    table.docinfo td,
-    table.docinfo th {
-      padding-left: 0.5em;
-      padding-right: 0.5em;
-      vertical-align: top
-    }
-
-    table.docutils th.field-name,
-    table.docinfo th.docinfo-name {
-      font-weight: bold;
-      text-align: left;
-      white-space: nowrap;
-      padding-left: 0
-    }
-
-    /* "booktabs" style (no vertical lines) */
-    table.docutils.booktabs {
-      border: 0px;
-      border-top: 2px solid;
-      border-bottom: 2px solid;
-      border-collapse: collapse;
-    }
-
-    table.docutils.booktabs * {
-      border: 0px;
-    }
-
-    table.docutils.booktabs th {
-      border-bottom: thin solid;
-      text-align: left;
-    }
-
-    h1 tt.docutils,
-    h2 tt.docutils,
-    h3 tt.docutils,
-    h4 tt.docutils,
-    h5 tt.docutils,
-    h6 tt.docutils {
-      font-size: 100%
-    }
-
-    ul.auto-toc {
-      list-style-type: none
-    }
-  </style>
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: gray; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic, pre.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
 </head>
-
 <body>
-  <div class="document" id="import-export">
-    <h1 class="title">Import / Export</h1>
+<div class="document" id="import-export">
+<h1 class="title">Import / Export</h1>
 
-    <p><a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img
-          alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a
-        class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/13.0/smile_impex"><img
-          alt="Smile-SA/odoo_addons"
-          src="https://img.shields.io/badge/github-Smile_SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
-    <p>This module allows to track and record logs during the execution of import/export operations.</p>
-    <p>It could be useful especially during scheduled action, so instead of checking server logs, you could get the
-      information from interface when actions successfully done or understand the main causes when things go wrong
-      through logs.</p>
-    <p>To be able to track logs of import/export operations, make sure you give access rights to the user by adding him
-      to the rule <tt class="docutils literal">Smile Logs / User</tt> as follow:</p>
-    <ol class="arabic simple">
-      <li>Go to <tt class="docutils literal">Settings &gt; Users &amp; companies &gt; Users</tt> menu and select the
-        user.</li>
-      <li>In <tt class="docutils literal">Access Rights &gt; Others</tt> check the rule <tt
-          class="docutils literal">Smile Logs / User</tt>.</li>
-    </ol>
-    <p>Features:</p>
-    <ul>
-      <li>
-        <dl class="first docutils">
-          <dt>Define an import/export template:</dt>
-          <dd>
-            <ul class="first last simple">
-              <li>Choose a model</li>
-              <li>Define a method to import/export records</li>
-              <li>Define a domain to filter lines to export</li>
-            </ul>
-          </dd>
-        </dl>
-      </li>
-      <li>
-        <dl class="first docutils">
-          <dt>Create actions to generate a new import/export:</dt>
-          <dd>
-            <ul class="first last simple">
-              <li>A client action to generate an export on the fly from records list</li>
-              <li>A scheduled action to generate periodically a new import/export</li>
-            </ul>
-          </dd>
-        </dl>
-      </li>
-      <li>
-        <p class="first">Log execution</p>
-      </li>
-    </ul>
-    <p><strong>Table of contents</strong></p>
-    <div class="contents local topic" id="contents">
-      <ul class="simple">
-        <li><a class="reference internal" href="#usage" id="id1">Usage</a></li>
-        <li><a class="reference internal" href="#case-of-load-balancing" id="id2">Case of load balancing</a></li>
-        <li><a class="reference internal" href="#bug-tracker" id="id3">Bug Tracker</a></li>
-        <li><a class="reference internal" href="#credits" id="id4">Credits</a>
-          <ul>
-            <li><a class="reference internal" href="#authors" id="id5">Authors</a></li>
-            <li><a class="reference internal" href="#contributors" id="id6">Contributors</a></li>
-            <li><a class="reference internal" href="#maintainers" id="id7">Maintainers</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-    <div class="section" id="usage">
-      <h1><a class="toc-backref" href="#id1">Usage</a></h1>
-      <p><strong>Export Case</strong></p>
-      <div class="figure">
-        <img alt="Export" src="export.png" style="width: 100%;" />
-      </div>
-      <p><strong>Import Case</strong></p>
-      <div class="figure">
-        <img alt="Import" src="import.png" style="width: 100%;" />
-      </div>
-    </div>
-    <div class="section" id="case-of-load-balancing">
-      <h1><a class="toc-backref" href="#id2">Case of load balancing</a></h1>
-      <p>If Odoo runs with several servers, with load balancing, you need to set the option <cite>hostname</cite>
-        inside the configuration file of each server (default: <cite>localhost</cite>).</p>
-      <p>If you don't set it, as PID of process created on an host is not visible by the others,
-        at each restart of one of the other host, the import/export process will be marked as <em>Killed</em>.</p>
-    </div>
-    <div class="section" id="bug-tracker">
-      <h1><a class="toc-backref" href="#id3">Bug Tracker</a></h1>
-      <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub
-          Issues</a>.
-        In case of trouble, please check there if your issue has already been reported.
-        If you spotted it first, help us smashing it by providing a detailed and welcomed
-        <a class="reference external"
-          href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_impex%0Aversion:%2013.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.
-      </p>
-      <p>Do not contact contributors directly about support or help with technical issues.</p>
-    </div>
-    <div class="section" id="credits">
-      <h1><a class="toc-backref" href="#id4">Credits</a></h1>
-      <div class="section" id="authors">
-        <h2><a class="toc-backref" href="#id5">Authors</a></h2>
-        <ul class="simple">
-          <li>Smile SA</li>
-        </ul>
-      </div>
-      <div class="section" id="contributors">
-        <h2><a class="toc-backref" href="#id6">Contributors</a></h2>
-        <ul class="simple">
-          <li>Corentin Pouhet-Brunerie</li>
-          <li>Isabelle Richard</li>
-        </ul>
-      </div>
-      <div class="section" id="maintainers">
-        <h2><a class="toc-backref" href="#id7">Maintainers</a></h2>
-        <p>This module is maintained by the Smile SA.</p>
-        <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
-        <a class="reference external image-reference" href="http://smile.fr"><img alt="Smile SA"
-            src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" /></a>
-        <p>This module is part of the <a class="reference external"
-            href="https://github.com/Smile-SA/odoo_addons">odoo-addons</a> project on GitHub.</p>
-        <p>You are welcome to contribute.</p>
-      </div>
-    </div>
-  </div>
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! This file is generated by oca-gen-addon-readme !!
+!! changes will be overwritten.                   !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! source digest: sha256:df6bd61ba37b5957c171de745b647442bd7bdf45cfb4a566f88172496eadf8d6
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/license-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/Smile-SA/odoo_addons/tree/20.0/smile_impex"><img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" /></a></p>
+<p>This module provides a generic import/export engine driven by templates.
+Each template points to an Odoo model and a Python method to call. Every
+run is recorded with its state, duration, process ID, host, logs and,
+optionally, the value returned by the method.</p>
+<p>Import templates call the method on the model. Export templates first
+select the records to export, with a domain or a filter method, split
+them into batches, and call the method on each batch.</p>
+<p>A run can be started by hand from the template, by a scheduled action,
+or from the <em>Action</em> menu of the target model’s list view. Errors raised
+during a run are logged, so you can read them from the interface.</p>
+<p><strong>Table of contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#use-cases-context" id="toc-entry-1">Use Cases / Context</a></li>
+<li><a class="reference internal" href="#installation" id="toc-entry-2">Installation</a></li>
+<li><a class="reference internal" href="#configuration" id="toc-entry-3">Configuration</a></li>
+<li><a class="reference internal" href="#usage" id="toc-entry-4">Usage</a></li>
+<li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-5">Known issues / Roadmap</a></li>
+<li><a class="reference internal" href="#changelog" id="toc-entry-6">Changelog</a><ul>
+<li><a class="reference internal" href="#section-1" id="toc-entry-7">20.0.1.0.0 (2026-10-08)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-8">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-9">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-10">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-11">Contributors</a></li>
+<li><a class="reference internal" href="#other-credits" id="toc-entry-12">Other credits</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-13">Maintainers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="use-cases-context">
+<h1><a class="toc-backref" href="#toc-entry-1">Use Cases / Context</a></h1>
+<p>Projects often exchange data with other systems on a schedule. A plain
+scheduled action keeps no history of its runs, and when one fails, the
+cause is only in the server logs.</p>
+<p>With this module, the project code provides the actual import or export
+method. The module handles when it runs, which records it receives, and
+what happened during each run. Logs are stored with the module
+<em>smile_log</em>, so they can be read from the run itself.</p>
+<p>This is a technical module. It adds no business feature on its own and
+is meant to be used by project modules that implement the import and
+export methods.</p>
+<p>It depends on:</p>
+<ul class="simple">
+<li><em>mail</em></li>
+<li><em>smile_log</em>, which stores the execution logs</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h1><a class="toc-backref" href="#toc-entry-2">Installation</a></h1>
+<p>This module requires the Python library <tt class="docutils literal">psutil</tt>. It is part of the
+standard Odoo requirements, so it is usually already installed.</p>
+<p>If Odoo runs on several servers behind a load balancer, set the option
+<tt class="docutils literal">hostname</tt> in the configuration file of each server. The default value
+is <tt class="docutils literal">localhost</tt>.</p>
+<p>Each run records the ID of the process that executes it. A process ID
+created on one host cannot be seen from the others. Without a distinct
+<tt class="docutils literal">hostname</tt>, each time one of the servers restarts, imports and exports
+running on the other servers will be marked as <em>Killed</em>.</p>
+</div>
+<div class="section" id="configuration">
+<h1><a class="toc-backref" href="#toc-entry-3">Configuration</a></h1>
+<p>Import and export templates are reserved to administrators: all access
+rights of the module are granted to the group <em>Role / Administrator</em>
+only. This group also gives access to the execution logs.</p>
+<p>To configure an import:</p>
+<ul class="simple">
+<li>Go to <em>Settings &gt; Import / Export &gt; Imports</em> and create a template.</li>
+<li>Fill in the name, the <em>Model</em> and the <em>Method</em> to call on that model.</li>
+<li>Optionally, give the method arguments as a dictionary next to the
+method, for example <tt class="docutils literal">{'code': '705000'}</tt>.</li>
+<li>In the <em>Logs</em> tab, choose the log level.</li>
+<li>In the <em>Advanced</em> tab, check <em>New Thread</em> to run the import in the
+background, and <em>One At A Time</em> to prevent two runs of the same
+template at the same time.</li>
+</ul>
+<p>To configure an export:</p>
+<ul class="simple">
+<li>Go to <em>Settings &gt; Import / Export &gt; Exports</em> and create a template.</li>
+<li>Fill in the name, the <em>Model</em> and the <em>Method</em>. This method is called
+on the records to export.</li>
+<li>Choose the <em>Filter</em>: a domain, or a method that returns the records to
+export.</li>
+<li>Check <em>Unique</em> to export each record only once across all runs.</li>
+<li>In the <em>Logs</em> tab, choose the log level and check <em>Log returns</em> to
+store the value returned by the method.</li>
+<li>In the <em>Advanced</em> tab, set the batch size (<em>Limit</em>), the maximum
+number of batches (<em>Max Offset</em>), the sort order (<em>Order by</em>), and
+<em>Force Action Execution</em> to call the method even when there is no
+record to export.</li>
+</ul>
+<p>To trigger runs automatically, open the <em>Triggers</em> tab of the template:</p>
+<ul class="simple">
+<li>Click <em>Create Scheduled Action</em> to create a scheduled action, then set
+its frequency.</li>
+<li>On an export template, click <em>Create Client Action</em> to add the
+template to the <em>Action</em> menu of the target model’s list view.</li>
+<li>Click <em>Create Server Action</em> to create the server action alone.
+<em>Delete Server Action</em> and <em>Delete Client Action</em> remove it, together
+with the scheduled action linked to it.</li>
+</ul>
+<p><img alt="Export template" src="https://raw.githubusercontent.com/Smile-SA/odoo_addons/20.0/smile_impex/static/description/export.png" /></p>
+</div>
+<div class="section" id="usage">
+<h1><a class="toc-backref" href="#toc-entry-4">Usage</a></h1>
+<p>To run an import or an export by hand:</p>
+<ul class="simple">
+<li>Go to <em>Settings &gt; Import / Export &gt; Imports</em> or <em>Settings &gt; Import /
+Export &gt; Exports</em> and open a template.</li>
+<li>In the <em>Imports</em> or <em>Exports</em> tab, click <em>New Import</em> or <em>New Export</em>.
+The run is created at once and appears in the list with its state:
+running, done, exception or killed.</li>
+<li>Click <em>Test Import</em> or <em>Test Export</em> to run the method without keeping
+its changes. The run is still recorded, flagged as a test.</li>
+<li>Open a run to read its logs, its entry arguments and, if enabled, the
+value returned by the method.</li>
+<li>Click <em>Regenerate</em> on a run to replay it with the same arguments. For
+an export, the same records are exported again, which is only possible
+if their IDs were stored.</li>
+</ul>
+<p><img alt="Import template" src="https://raw.githubusercontent.com/Smile-SA/odoo_addons/20.0/smile_impex/static/description/import.png" /></p>
+<p>To export records from a list:</p>
+<ul class="simple">
+<li>On an export template with a client action, go to the list view of the
+target model.</li>
+<li>Select records, open the <em>Action</em> menu and click the template name.
+Only the selected records that also match the template filter are
+exported.</li>
+</ul>
+<p>Each export creates one run per batch. When the template is set to
+<em>Unique</em>, records already exported by a previous run are skipped.</p>
+<p>Two scheduled actions, <em>Remove old running imports</em> and <em>Remove old
+running exports</em>, run every day. They mark as <em>Killed</em> the runs that
+have been running for more than 24 hours and whose process no longer
+exists. The same cleanup happens when the module is updated.</p>
+</div>
+<div class="section" id="known-issues-roadmap">
+<h1><a class="toc-backref" href="#toc-entry-5">Known issues / Roadmap</a></h1>
+<ul class="simple">
+<li>When a run fails, the error is logged but the run stays in the
+<em>running</em> state instead of <em>exception</em>. It is marked as <em>Killed</em> by
+the daily cleanup.</li>
+<li>With <em>New Thread</em>, the <em>One At A Time</em> lock is released as soon as the
+run is started, not when the background run ends.</li>
+<li>Server actions created by earlier versions of the module are not
+restricted to administrators. Recreate them from the template to apply
+the restriction.</li>
+<li>Killed runs are detected from their process ID. A run executed in a
+thread shares the server process ID, so it is not detected while the
+server runs.</li>
+<li>The help of the export domain lists a <tt class="docutils literal">time</tt> variable that is not
+available. Only <tt class="docutils literal">context</tt> and <tt class="docutils literal">user</tt> can be used.</li>
+<li>The field <em>Log entry arguments</em> is not used.</li>
+<li>The French translation was generated for an old version and needs to
+be updated.</li>
+</ul>
+</div>
+<div class="section" id="changelog">
+<h1><a class="toc-backref" href="#toc-entry-6">Changelog</a></h1>
+<div class="section" id="section-1">
+<h2><a class="toc-backref" href="#toc-entry-7">20.0.1.0.0 (2026-10-08)</a></h2>
+<ul class="simple">
+<li>[BREAKING] Import and export templates, runs and their logs are now
+restricted to the group <em>Role / Administrator</em>. Other internal users
+no longer have access.</li>
+<li>[ADD] Migration to Odoo 20.0.</li>
+<li>[FIX] <em>Test Import</em> and <em>Test Export</em> no longer keep the changes made
+by the method.</li>
+<li>[FIX] The <em>One At A Time</em> option now really prevents two runs of the
+same template at the same time.</li>
+<li>[FIX] The <em>Order by</em> option of export templates is now respected.</li>
+<li>[FIX] Exports split into several batches no longer fail when run in a
+new thread.</li>
+<li>[FIX] Runs started in a new thread by a scheduled action or a client
+action no longer use a closed database cursor.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="bug-tracker">
+<h1><a class="toc-backref" href="#toc-entry-8">Bug Tracker</a></h1>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us to smash it by providing a detailed and welcomed
+<a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_impex%0Aversion:%2020.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<p>Do not contact contributors directly about support or help with technical issues.</p>
+</div>
+<div class="section" id="credits">
+<h1><a class="toc-backref" href="#toc-entry-9">Credits</a></h1>
+<div class="section" id="authors">
+<h2><a class="toc-backref" href="#toc-entry-10">Authors</a></h2>
+<ul class="simple">
+<li>Smile</li>
+</ul>
+</div>
+<div class="section" id="contributors">
+<h2><a class="toc-backref" href="#toc-entry-11">Contributors</a></h2>
+<ul class="simple">
+<li>Corentin Pouhet-Brunerie</li>
+<li>Isabelle Richard</li>
+<li>Cédric Leroy</li>
+</ul>
+</div>
+<div class="section" id="other-credits">
+<h2><a class="toc-backref" href="#toc-entry-12">Other credits</a></h2>
+<p>This module is maintained by Smile SA.</p>
+<p>Since 1991 Smile has been a pioneer of technology and also the European
+expert in open source solutions.</p>
+<p><a class="reference external image-reference" href="http://smile.fr"><img alt="Smile SA" src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" /></a></p>
+</div>
+<div class="section" id="maintainers">
+<h2><a class="toc-backref" href="#toc-entry-13">Maintainers</a></h2>
+<p>This module is part of the <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/20.0/smile_impex">Smile-SA/odoo_addons</a> project on GitHub.</p>
+<p>You are welcome to contribute.</p>
+</div>
+</div>
+</div>
 </body>
-
 </html>

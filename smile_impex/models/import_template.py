@@ -21,6 +21,7 @@ class IrModelImportTemplate(models.Model):
     log_ids = fields.One2many(
         'smile.log', 'res_id', 'Logs',
         domain=[('model_name', '=', 'ir.model.import.template')],
+        groups='smile_log.group_smile_log_user',
         readonly=True, copy=False)
 
     def _get_server_action_vals(self, **kwargs):
@@ -35,8 +36,8 @@ class IrModelImportTemplate(models.Model):
         try:
             import_rec = self._create_import(*args)
         except Exception as e:
-            tmpl_logger = SmileDBLogger(self._cr.dbname, self._name,
-                                        self.id, self._uid)
+            tmpl_logger = SmileDBLogger(self.env.cr.dbname, self._name,
+                                        self.id, self.env.uid)
             tmpl_logger.error(repr(e))
             raise UserError(repr(e))
         else:
@@ -50,8 +51,9 @@ class IrModelImportTemplate(models.Model):
         self.ensure_one()
         return {
             'import_tmpl_id': self.id,
-            'test_mode': self._context.get('test_mode'),
-            'new_thread': self._context.get('new_thread', self.new_thread),
+            'test_mode': self.env.context.get('test_mode'),
+            'new_thread': self.env.context.get(
+                'new_thread', self.new_thread),
             'args': repr(args),
             'log_level': self.log_level,
             'log_returns': self.log_returns,

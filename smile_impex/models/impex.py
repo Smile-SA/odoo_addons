@@ -40,8 +40,7 @@ class IrModelImpex(models.AbstractModel):
                 impex.time = 0
             else:
                 to_date = impex.to_date or fields.Datetime.now()
-                timedelta = fields.Datetime.from_string(to_date) \
-                    - fields.Datetime.from_string(impex.from_date)
+                timedelta = to_date - impex.from_date
                 impex.time = timedelta.total_seconds()
 
     def _convert_time_to_human(self):
@@ -71,7 +70,7 @@ class IrModelImpex(models.AbstractModel):
         for record in self:
             if record.new_thread or record.test_mode:
                 thread = Thread(target=IrModelImpex._process_with_new_cursor,
-                                args=(self,))
+                                args=(record,))
                 thread.start()
                 res.append((record.id, True))
             else:
@@ -80,29 +79,39 @@ class IrModelImpex(models.AbstractModel):
 
     @with_impex_cursor(autocommit=False)
     def _process_with_new_cursor(self):
-        self._process()
+        # The request cursor must not be used from another thread
+        self.with_context(original_cr=False)._process()
 
     def _process(self):
         self.ensure_one()
-        logger = SmileDBLogger(self._cr.dbname, self._name, self.id, self._uid)
+        logger = SmileDBLogger(
+            self.env.cr.dbname, self._name, self.id, self.env.uid)
         logger.setLevel(int(self.log_level))
         self = self.with_context(logger=logger)
         hostname = get_hostname()
         self.write({'state': 'running', 'from_date': fields.Datetime.now(),
                     'pid': os.getpid(), 'hostname': hostname,
                     'to_date': False})
+        if self.test_mode:
+            # Publish the running state before the work
+            # which will be rolled back at the end
+            self.env.cr.commit()
         try:
             result = self._execute()
+            if self.test_mode:
+                self.env.cr.rollback()
+                self.env.invalidate_all()
             vals = {'state': 'done', 'to_date': fields.Datetime.now()}
             if self.log_returns:
                 vals['returns'] = repr(result)
             self.write(vals)
-            if self.test_mode:
-                self._cr.rollback()
             return result
         except Exception as e:
             logger.error(repr(e))
             try:
+                if self.test_mode:
+                    self.env.cr.rollback()
+                    self.env.invalidate_all()
                 self.write({
                     'state': 'exception',
                     'to_date': fields.Datetime.now(),

@@ -6,6 +6,7 @@ import psycopg2
 
 from odoo import fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.modules.registry import Registry
 
 LOG_LEVELS = [
     ('0', 'NOTSET'),
@@ -43,14 +44,23 @@ class IrModelImpexTemplate(models.AbstractModel):
         self = self.filtered(lambda tmpl: tmpl.one_at_a_time)
         if not self:
             return
+        # The lock is taken on a dedicated non-autocommit cursor, kept
+        # open until the end of the impex call (see with_impex_cursor).
+        # NO KEY UPDATE: must not block the FOR KEY SHARE taken by the
+        # foreign key check when inserting ir.model.export/import rows
+        stack = self.env.context.get('impex_stack')
+        lock_cr = self.env.cr
+        if stack is not None:
+            lock_cr = stack.enter_context(
+                Registry(self.env.cr.dbname).cursor())
         try:
-            self._cr.execute("""SELECT id FROM "%s" WHERE id IN %%s
-            FOR UPDATE NOWAIT""" % self._table, (
+            lock_cr.execute("""SELECT id FROM "%s" WHERE id IN %%s
+            FOR NO KEY UPDATE NOWAIT""" % self._table, (
                 tuple(self.ids),), log_exceptions=False)
         except psycopg2.OperationalError:
             # INFO: Early rollback to allow translations
             # to work for the user feedback
-            self._cr.rollback()
+            lock_cr.rollback()
             if warning:
                 raise UserError(warning)
             raise
@@ -79,6 +89,7 @@ class IrModelImpexTemplate(models.AbstractModel):
             'name': self.name,
             'model_id': model.id,
             'state': 'code',
+            'group_ids': [(6, 0, [self.env.ref('base.group_system').id])],
         }
         vals.update(kwargs)
         return vals

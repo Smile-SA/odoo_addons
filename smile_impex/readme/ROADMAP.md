@@ -1,0 +1,7 @@
+- When a run fails, the error is logged but the run stays in the *running* state instead of *exception*. It is marked as *Killed* by the daily cleanup.
+- With *New Thread*, the *One At A Time* lock is released as soon as the run is started, not when the background run ends.
+- Server actions created by earlier versions of the module are not restricted to administrators. Recreate them from the template to apply the restriction.
+- Killed runs are detected from their process ID. A run executed in a thread shares the server process ID, so it is not detected while the server runs.
+- The help of the export domain lists a `time` variable that is not available. Only `context` and `user` can be used.
+- The field *Log entry arguments* is not used.
+- The French translation was generated for an old version and needs to be updated.
