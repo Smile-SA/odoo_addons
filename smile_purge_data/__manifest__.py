@@ -4,7 +4,7 @@
 
 {
     "name": "Smile Purge Data",
-    "version": "0.1",
+    "version": "20.0.1.0.0",
     "depends": ['base'],
     "author": "Smile",
     "license": 'AGPL-3',
@@ -15,10 +15,11 @@
     "category": 'Tools',
     "sequence": 20,
     "data": [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
         'views/purge_data_views.xml',
     ],
     "auto_install": False,
-    "installable": False,
+    "images": ["static/description/banner.gif"],
+    "installable": True,
     "application": False,
 }

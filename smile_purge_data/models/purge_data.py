@@ -5,7 +5,8 @@ import random
 import time
 from dateutil.relativedelta import relativedelta
 
-from odoo import models, fields
+from odoo import _, fields, models
+from odoo.exceptions import UserError
 
 
 _logger = logging.getLogger(__name__)
@@ -92,16 +93,23 @@ class PurgeData(models.Model):
                 _logger.warning("Purge data : no more records to delete")
                 break
             last_rec_ids = record_ids
-            dry_run_ids = record_ids.with_context(
-                soft_unlink=True, dry_run=True
-            ).unlink()
-            if isinstance(dry_run_ids, models.Model):
-                # if no record are supposed to be deleted, unlink return True
-                # that mean we have to reject all the ids
-                expect_deleted |= dry_run_ids
-            reject_ids += record_ids - expect_deleted
-
-        expect_deleted.unlink()
+            try:
+                with self.env.cr.savepoint():
+                    record_ids.unlink()
+                expect_deleted |= record_ids
+            except Exception:  # UserError, IntegrityError, AccessError...
+                # fall back one by one to isolate the blocked records
+                for record in record_ids:
+                    try:
+                        with self.env.cr.savepoint():
+                            record.unlink()
+                        expect_deleted |= record
+                    except Exception:
+                        _logger.info(
+                            "Purge data : %s %s cannot be deleted",
+                            record._name, record.id, exc_info=True,
+                        )
+                        reject_ids |= record
 
         _logger.info(
             "Purge data : done job for %s in %s sec. %s records deleted.",
@@ -120,34 +128,21 @@ class PurgeData(models.Model):
         self.ensure_one()
 
         if self.model_id and self.field_id:
-            domain = []
-            if self.date_range_type == "days":
-                domain = [
-                    (
-                        self.field_id.name,
-                        "<",
-                        fields.Datetime.now()
-                        - relativedelta(days=self.date_range),
-                    )
-                ]
-            elif self.date_range_type == "months":
-                domain = [
-                    (
-                        self.field_id.name,
-                        "<",
-                        fields.Datetime.now()
-                        - relativedelta(months=self.date_range),
-                    )
-                ]
-            elif self.date_range_type == "years":
-                domain = [
-                    (
-                        self.field_id.name,
-                        "<",
-                        fields.Datetime.now()
-                        - relativedelta(years=self.date_range),
-                    )
-                ]
+            if (
+                self.date_range_type not in ("days", "months", "years")
+                or self.date_range <= 0
+            ):
+                raise UserError(
+                    _("Please set a positive date range and its type.")
+                )
+            domain = [
+                (
+                    self.field_id.name,
+                    "<",
+                    fields.Datetime.now()
+                    - relativedelta(**{self.date_range_type: self.date_range}),
+                )
+            ]
             self._purge_data(domain)
 
     def action_purge_records(self):
@@ -160,8 +155,8 @@ class PurgeData(models.Model):
             if not rec.active:
                 continue
             if rec.use_domain:
-                return rec._purge_by_domain()
+                rec._purge_by_domain()
             elif rec.use_date_range:
-                return rec._purge_by_date_range()
+                rec._purge_by_date_range()
             else:
                 raise NotImplementedError("This method is not implemented yet")

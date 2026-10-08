@@ -14,7 +14,7 @@
             string="Purge"
             class="oe_highlight"
           />
-                    <field name="state" widget="statusbar" redonly="1" />
+                    <field name="state" widget="statusbar" readonly="1" />
                 </header>
                 <sheet>
                 <group>
