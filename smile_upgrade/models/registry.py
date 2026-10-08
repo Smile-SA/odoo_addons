@@ -6,47 +6,29 @@ import time
 from odoo.modules.registry import Registry
 from odoo.tools import config
 
-from collections.abc import Collection
-
 from .upgrade import UpgradeManager
 
 _logger = logging.getLogger(__name__)
 
 native_new = Registry.new
-
-#  Registry.new can be called again while an upgrade is running (e.g. the
-#  registry reload triggered by api.Environment signaling check): delegate
-#  these nested calls to the native method to avoid a self-deadlock on the
-#  upgrade advisory lock.
-_upgrade_state = threading.local()
+# Odoo 20.0: Environment() checks registry signaling and may call
+# Registry.new while an upgrade is running; such nested calls must not
+# start another upgrade (it would wait forever for the upgrade lock).
+_upgrade_running = threading.local()
 
 
 @classmethod
 def new(
         cls,
         db_name: str,
-        *,
-        update_module: bool = False,
-        install_modules: Collection[str] = (),
-        upgrade_modules: Collection[str] = (),
-        reinit_modules: Collection[str] = (),
-        new_db_demo: bool | None = None,
-        lock_wait: int = 15,
+        **kwargs,
 ):
-    if getattr(_upgrade_state, "running", False) \
-            or not _is_db_initialization():
-        return native_new(
-            db_name,
-            install_modules=install_modules,
-            upgrade_modules=upgrade_modules,
-            update_module=update_module,
-            reinit_modules=reinit_modules,
-            new_db_demo=new_db_demo,
-            lock_wait=lock_wait,
-        )
+    if not _is_db_initialization() or \
+            getattr(_upgrade_running, "value", False):
+        return native_new(db_name, **kwargs)
     with cls._lock:
+        _upgrade_running.value = True
         upgrades = False
-        _upgrade_state.running = True
         try:
             with UpgradeManager(db_name) as upgrade_manager:
                 upgrades = upgrade_manager.upgrades
@@ -60,15 +42,7 @@ def new(
                                  upgrade_manager.code_version)
                     initial_config = _get_initial_config()
                     _run_upgrade_pre(upgrade_manager)
-                    native_new(
-                        db_name,
-                        install_modules=install_modules,
-                        upgrade_modules=upgrade_modules,
-                        update_module=update_module,
-                        reinit_modules=reinit_modules,
-                        new_db_demo=new_db_demo,
-                        lock_wait=lock_wait,
-                    )
+                    native_new(db_name, **kwargs)
                     _run_upgrade_post(upgrade_manager, initial_config)
                     _logger.info("%s upgrade successfully loaded in %ss",
                                  upgrade_manager.code_version,
@@ -77,15 +51,7 @@ def new(
                     _logger.info("no upgrade to load")
             # Remove base from "init", to avoid update of the module
             config["init"].pop("base", None)
-            registry = native_new(
-                db_name,
-                install_modules=install_modules,
-                upgrade_modules=upgrade_modules,
-                update_module=update_module,
-                reinit_modules=reinit_modules,
-                new_db_demo=new_db_demo,
-                lock_wait=lock_wait,
-            )
+            registry = native_new(db_name, **kwargs)
             if upgrades and config.get("stop_after_upgrades"):
                 _logger.info("Stopping Odoo server")
                 os._exit(0)
@@ -94,7 +60,7 @@ def new(
             _manage_upgrade_errors(upgrades, e)
             raise
         finally:
-            _upgrade_state.running = False
+            _upgrade_running.value = False
 
 
 def _is_db_initialization():
