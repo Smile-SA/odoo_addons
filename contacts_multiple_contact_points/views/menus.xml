@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_contact_points"
+        name="Contact Points"
+        sequence="2"
+        parent="contacts.menu_contacts"
+    />
+    <record model="ir.ui.menu" id="contacts.res_partner_menu_config">
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="action_res_partner_contact_point" model="ir.actions.act_window">
+        <field name="res_model">res.partner.contact_point</field>
+        <field name="view_mode">list,form</field>
+        <field name="name">Contact Points</field>
+    </record>
+    <menuitem
+        id="menu_res_partner_contact_point"
+        name="Contact Points"
+        parent="menu_contact_points"
+        action="action_res_partner_contact_point"
+    />
+
+    <record id="action_res_partner_contact_point_tag" model="ir.actions.act_window">
+        <field name="res_model">res.partner.contact_point.tag</field>
+        <field name="view_mode">list,form</field>
+        <field name="name">Contact Point Tags</field>
+    </record>
+
+    <menuitem
+        id="menu_res_partner_contact_point_tag"
+        name="Contact Point Tags"
+        parent="menu_contact_points"
+        action="action_res_partner_contact_point_tag"
+    />
+
+</odoo>
