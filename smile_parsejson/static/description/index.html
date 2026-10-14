@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Docutils" />
+    <title>Smile Parse JSON</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <div class="document">
+        <p>
+            <img src="https://img.shields.io/badge/licence-AGPL--3-blue.svg" alt="License: AGPL-3" />
+            <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/18.0/smile_parsejson">
+                <img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" />
+            </a>
+        </p>
+
+        <div class="section" id="smile-parse-json">
+            <h1>Smile Parse JSON</h1>
+
+            <p>This module provides a mixin class to simplify JSON parsing in Odoo models. It allows developers to extract nested JSON elements dynamically and handle complex JSON structures with ease.</p>
+
+            <p><strong>Table of contents</strong></p>
+            <div class="contents local topic" id="contents">
+                <ul class="simple">
+                    <li><a class="reference internal" href="#usage" id="toc-entry-1">Usage</a></li>
+                    <li><a class="reference internal" href="#bug-tracker" id="toc-entry-2">Bug Tracker</a></li>
+                    <li><a class="reference internal" href="#credits" id="toc-entry-3">Credits</a>
+                        <ul>
+                            <li><a class="reference internal" href="#contributors" id="toc-entry-4">Contributors</a></li>
+                            <li><a class="reference internal" href="#maintainer" id="toc-entry-5">Maintainer</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section" id="usage">
+                <h2><a href="#toc-entry-1">Usage</a></h2>
+                <p>To use this module, follow these steps:</p>
+                <ol>
+                    <li>Inherit the `parse_json.mixin` class in your custom model.</li>
+                    <li>Store the JSON data in the `json_element` field.</li>
+                    <li>Use the `json_get` method to extract values from the JSON structure by providing a list of keys or properties.</li>
+                </ol>
+                <p>Example:</p>
+                <pre>
+{
+    "property": {
+        "HS_AFI_H_4864843": {
+            "name": "Regency Hotel Miami"
+        }
+    }
+}
+                </pre>
+                <p>Calling `json_get(['property', '_first_child', 'name'])` will return `"Regency Hotel Miami"`.</p>
+            </div>
+
+            <div class="section" id="bug-tracker">
+                <h2><a href="#toc-entry-2">Bug Tracker</a></h2>
+                <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
+                In case of trouble, please check there if your issue has already been reported.
+                If you spotted it first, help us smash it by providing detailed and welcomed feedback
+                <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_parsejson%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
+                <p>Do not contact contributors directly about support or help with technical issues.</p>
+            </div>
+
+            <div class="section" id="credits">
+                <h2><a href="#toc-entry-3">Credits</a></h2>
+                <div class="section" id="contributors">
+                    <h3><a href="#toc-entry-4">Contributors</a></h3>
+                    <ul>
+                        <li>Smile SA Development Team</li>
+                    </ul>
+                </div>
+
+                <div class="section" id="maintainer">
+                    <h3><a href="#toc-entry-5">Maintainer</a></h3>
+                    <p>This module is maintained by Smile SA.</p>
+                    <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
+                    <a class="reference external" href="http://smile.fr">
+                        <img alt="Smile SA" src="https://avatars0.githubusercontent.com/u/572339?s=200&amp;v=4" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
