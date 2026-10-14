@@ -1,0 +1,49 @@
+<odoo>
+    <record id="view_dynamic_action_rule_list" model="ir.ui.view">
+        <field name="name">dynamic.action.rule.list</field>
+        <field name="model">dynamic.action.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="action_id"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dynamic_action_rule_form" model="ir.ui.view">
+        <field name="name">dynamic.action.rule.form</field>
+        <field name="model">dynamic.action.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="sequence"/>
+                        <field name="model_id"/>
+                        <field name="action_id"/>
+                        <field name="condition" widget="text"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dynamic_action_rule" model="ir.actions.act_window">
+        <field name="name">Action Rules</field>
+        <field name="res_model">dynamic.action.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first dynamic action rule!
+            </p>
+            <p>
+                Define conditions to hide action at runtime.
+            </p>
+        </field>
+    </record>
+
+</odoo>

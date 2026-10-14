@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Docutils" />
+    <title>Smile Dynamic Action Visibility</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <div class="document">
+        <p>
+            <img src="https://img.shields.io/badge/licence-AGPL--3-blue.svg" alt="License: AGPL-3" />
+            <a class="reference external" href="https://github.com/Smile-SA/odoo_addons">
+                <img alt="Smile-SA/odoo_addons"
+                     src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" />
+            </a>
+        </p>
+
+        <div class="section" id="dynamic-action-visibility">
+            <h1>Smile Dynamic Action Visibility</h1>
+
+            <p>
+                This module allows administrators to dynamically control the visibility of
+                <strong>Actions</strong> and <strong>Reports</strong> in Odoo based on record
+                conditions. It replaces static, hardcoded visibility rules with a flexible,
+                database-driven rule engine.
+            </p>
+
+            <p>
+                Visibility rules are evaluated at runtime using Python expressions and are
+                fully compatible with Odoo 18 and the OWL framework.
+            </p>
+
+            <p><strong>Table of contents</strong></p>
+            <div class="contents local topic" id="contents">
+                <ul class="simple">
+                    <li><a class="reference internal" href="#features" id="toc-entry-1">Features</a></li>
+                    <li><a class="reference internal" href="#usage" id="toc-entry-2">Usage</a></li>
+                    <li><a class="reference internal" href="#examples" id="toc-entry-3">Examples</a></li>
+                    <li><a class="reference internal" href="#technical-details" id="toc-entry-4">Technical Details</a></li>
+                    <li><a class="reference internal" href="#bug-tracker" id="toc-entry-5">Bug Tracker</a></li>
+                    <li><a class="reference internal" href="#credits" id="toc-entry-6">Credits</a>
+                        <ul>
+                            <li><a class="reference internal" href="#contributors" id="toc-entry-7">Contributors</a></li>
+                            <li><a class="reference internal" href="#maintainer" id="toc-entry-8">Maintainer</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section" id="features">
+                <h2><a href="#toc-entry-1">Features</a></h2>
+                <ul>
+                    <li><strong>Dynamic Action Control:</strong> Show or hide server actions dynamically.</li>
+                    <li><strong>Report Visibility:</strong> Control availability of print reports in the UI.</li>
+                    <li><strong>Expression-Based Rules:</strong> Use Python expressions evaluated on the active record.</li>
+                    <li><strong>Multi-Record Support:</strong> Works in list views; if any selected record satisfies the rule, the action is hidden.</li>
+                    <li><strong>Model-Specific Rules:</strong> Bind actions to specific models.</li>
+                    <li><strong>OWL-Compatible:</strong> Fully integrated with Odoo 18 ActionMenus.</li>
+                    <li><strong>Safe Evaluation:</strong> Conditions are evaluated in a sandboxed environment.</li>
+                    <li><strong>Graceful Fallback:</strong> UI remains functional even if rule evaluation fails.</li>
+                </ul>
+            </div>
+
+            <div class="section" id="usage">
+                <h2><a href="#toc-entry-2">Usage</a></h2>
+                <ol>
+                    <li>Go to <strong>Settings &gt; Technical &gt; Actions &gt; Action Rules</strong>.</li>
+                    <li>Create a new rule and define a <strong>Name</strong>.</li>
+                    <li>Select the <strong>Target Model</strong>.</li>
+                    <li>Select the <strong>Action or Report</strong> to control.</li>
+                    <li>
+                        Define the <strong>Condition</strong> using a Python expression.
+                        <strong>When the condition evaluates to <code>True</code>, the action or report will be hidden.</strong>
+                        <ul>
+                            <li><code>record.state == 'draft'</code> → hide when the record is in draft</li>
+                            <li><code>record.amount_total &gt; 10000</code> → hide for high-value records</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Save the rule. The visibility is updated automatically in the UI.
+                    </li>
+                </ol>
+
+                <p>
+                    <strong>Note:</strong>
+                    * If no active record exists (e.g., list view without selection), all actions having rules defined for the model are hidden.
+                    * In multi-record selection, if any record satisfies the condition, the related action/report is hidden.
+                </p>
+            </div>
+
+            <div class="section" id="examples">
+                <h2><a href="#toc-entry-3">Examples</a></h2>
+                <ul>
+                    <li>
+                        <strong>Draft Protection:</strong>
+                        Hide the <em>Confirm</em> action on <code>sale.order</code> when
+                        <code>record.state == 'done'</code>.
+                    </li>
+                    <li>
+                        <strong>Conditional Reports:</strong>
+                        Hide invoice print reports when
+                        <code>record.state != 'posted'</code>.
+                    </li>
+                    <li>
+                        <strong>Workflow Enforcement:</strong>
+                        Hide cancellation actions once a document is validated.
+                    </li>
+                    <li>
+                        <strong>Financial Control:</strong>
+                        Hide high-impact actions when
+                        <code>record.amount_total &gt; 50000</code>.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section" id="technical-details">
+                <h2><a href="#toc-entry-4">Technical Details</a></h2>
+                <ul>
+                    <li>
+                        <strong>Backend Engine:</strong>
+                        Rules are stored in the <code>dynamic.action.rule</code> model.
+                    </li>
+                    <li>
+                        <strong>Evaluation:</strong>
+                        Conditions are evaluated using Python <code>eval</code> in a sandboxed context,
+                        exposing only the <code>record</code> variable.
+                    </li>
+                    <li>
+                        <strong>RPC Integration:</strong>
+                        The method <code>get_invisible_action_ids()</code> is called by the web client to filter actions.
+                    </li>
+                    <li>
+                        <strong>OWL Patch:</strong>
+                        The <code>ActionMenus</code> OWL component is patched to dynamically remove invisible actions and reports from dropdowns.
+                    </li>
+                    <li>
+                        <strong>Performance:</strong>
+                        Invisible action IDs are computed once per interaction and filtered client-side for efficiency.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section" id="bug-tracker">
+                <h2><a href="#toc-entry-5">Bug Tracker</a></h2>
+                <p>
+                    Bugs are tracked on
+                    <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">
+                        GitHub Issues
+                    </a>.
+                </p>
+            </div>
+
+            <div class="section" id="credits">
+                <h2><a href="#toc-entry-6">Credits</a></h2>
+
+                <div class="section" id="contributors">
+                    <h3><a href="#toc-entry-7">Contributors</a></h3>
+                    <ul>
+                        <li>Younes EL AHRACH</li>
+                        <li>Smile SA Development Team</li>
+                    </ul>
+                </div>
+
+                <div class="section" id="maintainer">
+                    <h3><a href="#toc-entry-8">Maintainer</a></h3>
+                    <p>This module is maintained by Smile SA.</p>
+                    <p>
+                        Since 1991, Smile has been a pioneer of technology and the European expert
+                        in open source solutions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

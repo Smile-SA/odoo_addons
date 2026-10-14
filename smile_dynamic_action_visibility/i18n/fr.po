@@ -1,0 +1,130 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_dynamic_action_visibility
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-09 15:03+0000\n"
+"PO-Revision-Date: 2026-01-09 15:03+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,help:smile_dynamic_action_visibility.field_dynamic_action_rule__condition
+msgid ""
+"\n"
+"                Python expression evaluated on record.\n"
+"                Available variable:\n"
+"                 - record\n"
+"                \n"
+"                Example:\n"
+"                record.state != 'validated'\n"
+"                record.service_type_id.id == 3\n"
+"                "
+msgstr ""
+"\n"
+"                Expression Python évaluée sur l'enregistrement.\n"
+"                Variable disponible :\n"
+"                 - record\n"
+"                \n"
+"                Exemple :\n"
+"                record.state != 'validated'\n"
+"                record.service_type_id.id == 3\n"
+"                "
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__action_id
+msgid "Action"
+msgstr "Action"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.actions.act_window,name:smile_dynamic_action_visibility.action_dynamic_action_rule
+#: model:ir.ui.menu,name:smile_dynamic_action_visibility.menu_dynamic_action_rule
+msgid "Action Rules"
+msgstr "Règles d'Action"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model,name:smile_dynamic_action_visibility.model_ir_actions_actions
+msgid "Actions"
+msgstr "Actions"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__active
+msgid "Active"
+msgstr "Actif"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__condition
+msgid "Condition"
+msgstr "Condition"
+
+#. module: smile_dynamic_action_visibility
+#: model_terms:ir.actions.act_window,help:smile_dynamic_action_visibility.action_dynamic_action_rule
+msgid "Create your first dynamic action rule!"
+msgstr "Créez votre première règle d'action dynamique !"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_dynamic_action_visibility
+#: model_terms:ir.actions.act_window,help:smile_dynamic_action_visibility.action_dynamic_action_rule
+msgid "Define conditions to hide action at runtime."
+msgstr "Définissez des conditions pour masquer l'action à l'exécution."
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: smile_dynamic_action_visibility
+#: model:res.groups,name:smile_dynamic_action_visibility.group_dynamic_action_rule_admin
+msgid "Dynamic Action Rule Administrator"
+msgstr "Administrateur des règles d'action dynamique"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model,name:smile_dynamic_action_visibility.model_dynamic_action_rule
+msgid "Dynamic Action Visibility Rule"
+msgstr "Règle de visibilité d'action dynamique"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__model_id
+msgid "Model"
+msgstr "Modèle"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_dynamic_action_visibility
+#: model:ir.model.fields,field_description:smile_dynamic_action_visibility.field_dynamic_action_rule__sequence
+msgid "Sequence"
+msgstr "Séquence"

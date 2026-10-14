@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dynamic_action_rule"
+              name="Action Rules"
+              action="action_dynamic_action_rule"
+              parent="base.next_id_6"
+              sequence="100"/>
+</odoo>

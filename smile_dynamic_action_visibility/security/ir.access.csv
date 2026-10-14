@@ -1,0 +1,3 @@
+id,name,model_id,group_id/id,operation,domain
+access_dynamic_action_rule_admin,dynamic.action.rule admin,dynamic.action.rule,group_dynamic_action_rule_admin,crud,
+access_dynamic_action_rule_user,dynamic.action.rule user,dynamic.action.rule,base.group_user,r,
