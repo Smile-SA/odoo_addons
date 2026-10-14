@@ -1,0 +1,53 @@
+<odoo>
+    <record id="view_feedback_list" model="ir.ui.view">
+        <field name="name">ux.feedback.list</field>
+        <field name="model">ux.feedback</field>
+        <field name="arch" type="xml">
+            <list string="User Feedback">
+                <field name="reference" />
+                <field name="user_id" />
+                <field name="timestamp" />
+                <field name="performance_id" />
+                <field name="conformity_id" />
+                <field name="satisfaction_id" />
+                <field name="feedback" />
+                <field name="url" widget="url" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_feedback_search" model="ir.ui.view">
+        <field name="name">ux.feedback.search</field>
+        <field name="model">ux.feedback</field>
+        <field name="arch" type="xml">
+            <search string="Search Feedback">
+                <field name="reference" />
+                <field name="user_id" />
+                <field name="timestamp" />
+                <field name="performance_id" />
+                <field name="conformity_id" />
+                <field name="satisfaction_id" />
+                <field name="feedback" />
+                <field name="url" widget="url" />
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_feedback" model="ir.actions.act_window">
+        <field name="name">Feedback</field>
+        <field name="res_model">ux.feedback</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_feedback_list" />
+        <field name="context">{'create':0}</field>
+        <field name="search_view_id" ref="view_feedback_list" />
+        <field name="domain">[]</field>
+        <field name="context">{'default_group_by': 'url'}</field>
+
+
+    </record>
+
+    <menuitem id="menu_ux_tracker_root" name="UX Tracker" sequence="10" />
+    <menuitem id="menu_ux_feedback" name="Feedback" parent="menu_ux_tracker_root"
+        action="action_feedback" sequence="10" />
+</odoo>

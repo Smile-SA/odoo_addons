@@ -1,0 +1,11 @@
+<templates xml:space="preserve">
+    <t t-name="smile_ux_feedback.FeedbackIcon" owl="1">
+        <t t-if="this.ShowFeedbackIcon" >
+            <div class="o_nav_entry" groups="smile_ux_feedback.group_ux_feedback_user">
+                            
+                <i class="oi" data-icon="thumb_up" t-on-click="this.openFeedbackWizard" title="Give Feedback" style="cursor: pointer;" ></i>
+
+            </div>
+        </t>
+    </t>
+</templates>

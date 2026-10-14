@@ -1,0 +1,283 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_ux_feedback
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0-20250218\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-27 16:01+0000\n"
+"PO-Revision-Date: 2025-02-27 16:01+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_ux_feedback
+#: model_terms:ir.ui.view,arch_db:smile_ux_feedback.view_feedback_wizard_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: smile_ux_feedback
+#: model:ux.conformity,name:smile_ux_feedback.conformity_1
+msgid "Compliant"
+msgstr "Conforme"
+
+#. module: smile_ux_feedback
+#: model:ir.ui.menu,name:smile_ux_feedback.menu_ux_configuration_root
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: smile_ux_feedback
+#: model:ir.actions.act_window,name:smile_ux_feedback.action_conformity
+#: model:ir.model,name:smile_ux_feedback.model_ux_conformity
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__conformity_id
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__conformity_id
+#: model:ir.ui.menu,name:smile_ux_feedback.menu_ux_conformity
+#: model_terms:ir.ui.view,arch_db:smile_ux_feedback.view_conformity_form
+#: model_terms:ir.ui.view,arch_db:smile_ux_feedback.view_conformity_list
+msgid "Conformity"
+msgstr "Conformité"
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_conformity__create_uid
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__create_uid
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__create_uid
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_performance__create_uid
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_satisfaction__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_conformity__create_date
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__create_date
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__create_date
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_performance__create_date
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_satisfaction__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__description
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__description
+msgid "Reference"
+msgstr "Reference"
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_conformity__display_name
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__display_name
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__display_name
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_performance__display_name
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_satisfaction__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: smile_ux_feedback
+#: model:ux.conformity,name:smile_ux_feedback.conformity_2
+msgid "Fairly Compliant"
+msgstr "Assez conforme"
+
+#. module: smile_ux_feedback
+#: model:ux.performance,name:smile_ux_feedback.performance_2
+msgid "Fairly Performant"
+msgstr "Assez performant"
+
+#. module: smile_ux_feedback
+#: model:ux.satisfaction,name:smile_ux_feedback.satisfaction_2
+msgid "Fairly Satisfactory"
+msgstr "Assez satisfaisant"
+
+#. module: smile_ux_feedback
+#: model:ir.actions.act_window,name:smile_ux_feedback.action_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__feedback
+#: model:ir.ui.menu,name:smile_ux_feedback.menu_ux_feedback
+msgid "Feedback"
+msgstr "Retour"
+
+#. module: smile_ux_feedback
+#: model:ir.actions.act_window,name:smile_ux_feedback.action_feedback_wizard
+msgid "Feedbacks"
+msgstr "Retour"
+
+#. module: smile_ux_feedback
+#. odoo-javascript
+#: code:addons/smile_ux_feedback/static/src/js/ux_feedback.xml:0
+msgid "Give Feedback"
+msgstr "Donner votre retour"
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_conformity__id
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__id
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__id
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_performance__id
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_satisfaction__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_conformity__write_uid
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__write_uid
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__write_uid
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_performance__write_uid
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_satisfaction__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_conformity__write_date
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__write_date
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__write_date
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_performance__write_date
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_satisfaction__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_conformity__name
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_performance__name
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_satisfaction__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_ux_feedback
+#: model:ux.conformity,name:smile_ux_feedback.conformity_4
+msgid "Not Compliant"
+msgstr "Non conforme"
+
+#. module: smile_ux_feedback
+#: model:ux.performance,name:smile_ux_feedback.performance_4
+msgid "Not Performant"
+msgstr "Pas performant"
+
+#. module: smile_ux_feedback
+#: model:ux.satisfaction,name:smile_ux_feedback.satisfaction_4
+msgid "Not Satisfactory"
+msgstr "Pas satisfaisant"
+
+#. module: smile_ux_feedback
+#: model:ux.conformity,name:smile_ux_feedback.conformity_3
+msgid "Not Very Compliant"
+msgstr "Pas très conforme"
+
+#. module: smile_ux_feedback
+#: model:ux.performance,name:smile_ux_feedback.performance_3
+msgid "Not Very Performant"
+msgstr "Pas très performant"
+
+#. module: smile_ux_feedback
+#: model:ux.satisfaction,name:smile_ux_feedback.satisfaction_3
+msgid "Not Very Satisfactory"
+msgstr "Pas très satisfaisant"
+
+#. module: smile_ux_feedback
+#: model:ir.actions.act_window,name:smile_ux_feedback.action_performance
+#: model:ir.model,name:smile_ux_feedback.model_ux_performance
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__performance_id
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__performance_id
+#: model:ir.ui.menu,name:smile_ux_feedback.menu_ux_performance
+#: model_terms:ir.ui.view,arch_db:smile_ux_feedback.view_performance_form
+#: model_terms:ir.ui.view,arch_db:smile_ux_feedback.view_performance_list
+msgid "Performance"
+msgstr ""
+
+#. module: smile_ux_feedback
+#. odoo-python
+#: code:addons/smile_ux_feedback/models/ux_feedback.py:0
+#: code:addons/smile_ux_feedback/wizard/ux_feedback_wizard.py:0
+msgid "Performance, Conformity, and Satisfaction fields must be filled."
+msgstr ""
+"Les champs Performance, Conformité et Satisfaction doivent être remplis."
+
+#. module: smile_ux_feedback
+#: model:ux.performance,name:smile_ux_feedback.performance_1
+msgid "Performant"
+msgstr ""
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__reference
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__reference
+msgid "Reference"
+msgstr "Reference"
+
+#. module: smile_ux_feedback
+#: model:ir.actions.act_window,name:smile_ux_feedback.action_satisfaction
+#: model:ir.model,name:smile_ux_feedback.model_ux_satisfaction
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__satisfaction_id
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__satisfaction_id
+#: model:ir.ui.menu,name:smile_ux_feedback.menu_ux_satisfaction
+#: model_terms:ir.ui.view,arch_db:smile_ux_feedback.view_satisfaction_form
+#: model_terms:ir.ui.view,arch_db:smile_ux_feedback.view_satisfaction_list
+msgid "Satisfaction"
+msgstr "Satisfaction"
+
+#. module: smile_ux_feedback
+#: model:ux.satisfaction,name:smile_ux_feedback.satisfaction_1
+msgid "Satisfactory"
+msgstr "Satisfaisant"
+
+#. module: smile_ux_feedback
+#: model_terms:ir.ui.view,arch_db:smile_ux_feedback.view_feedback_search
+msgid "Search Feedback"
+msgstr "Rechercher des retours"
+
+#. module: smile_ux_feedback
+#: model_terms:ir.ui.view,arch_db:smile_ux_feedback.view_feedback_wizard_form
+msgid "Submit"
+msgstr "Soumettre"
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__timestamp
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__timestamp
+msgid "Timestamp"
+msgstr "Horodatage"
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__url
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__url
+msgid "URL"
+msgstr ""
+
+#. module: smile_ux_feedback
+#: model:ir.module.category,name:smile_ux_feedback.ux_feedback_category
+msgid "UX Feedback"
+msgstr "UX Retours"
+
+#. module: smile_ux_feedback
+#: model:res.groups,name:smile_ux_feedback.group_ux_feedback_manager
+msgid "UX Feedback Manager"
+msgstr "Gestionnaire des retours UX"
+
+#. module: smile_ux_feedback
+#: model:res.groups,name:smile_ux_feedback.group_ux_feedback_user
+msgid "UX Feedback User"
+msgstr "Utilisateur des retours UX"
+
+#. module: smile_ux_feedback
+#: model:ir.ui.menu,name:smile_ux_feedback.menu_ux_tracker_root
+msgid "UX Tracker"
+msgstr "Traqueur UX"
+
+#. module: smile_ux_feedback
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback__user_id
+#: model:ir.model.fields,field_description:smile_ux_feedback.field_ux_feedback_wizard__user_id
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: smile_ux_feedback
+#: model:ir.model,name:smile_ux_feedback.model_ux_feedback
+msgid "User Experience Feedback"
+msgstr "Retours sur l'expérience utilisateur"
+
+#. module: smile_ux_feedback
+#: model_terms:ir.ui.view,arch_db:smile_ux_feedback.view_feedback_list
+#: model_terms:ir.ui.view,arch_db:smile_ux_feedback.view_feedback_wizard_form
+msgid "User Feedback"
+msgstr "Retours des utilisateurs"
+
+#. module: smile_ux_feedback
+#: model:ir.model,name:smile_ux_feedback.model_ux_feedback_wizard
+msgid "User Feedback Wizard"
+msgstr "Assistant des retours des utilisateurs"

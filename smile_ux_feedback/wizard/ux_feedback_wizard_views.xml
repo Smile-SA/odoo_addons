@@ -1,0 +1,32 @@
+<odoo>
+    <record id="action_feedback_wizard" model="ir.actions.act_window">
+        <field name="name">Feedbacks</field>
+        <field name="res_model">ux.feedback.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_feedback_wizard_form" model="ir.ui.view">
+        <field name="name">ux.feedback.wizard.form</field>
+        <field name="model">ux.feedback.wizard</field>
+        <field name="arch" type="xml">
+            <form string="User Feedback">
+                <group>
+                    <field name="reference" force-save="1" />
+                    <field name="performance_id" />
+                    <field name="conformity_id" />
+                    <field name="satisfaction_id" />
+                    <field name="feedback" />
+                    <field name="user_id" readonly="1" />
+                    <field name="timestamp" readonly="1" />
+                    <field name="url" readonly="1" />
+                </group>
+                <footer>
+                    <button string="Submit" type="object" name="action_submit_feedback"
+                        class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

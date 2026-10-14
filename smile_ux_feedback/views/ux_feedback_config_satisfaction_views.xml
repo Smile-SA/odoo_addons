@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_satisfaction_form" model="ir.ui.view">
+        <field name="name">ux.satisfaction.form</field>
+        <field name="model">ux.satisfaction</field>
+        <field name="arch" type="xml">
+            <form string="Satisfaction">
+                <group>
+                    <field name="name" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_satisfaction_list" model="ir.ui.view">
+        <field name="name">ux.satisfaction.list</field>
+        <field name="model">ux.satisfaction</field>
+        <field name="arch" type="xml">
+            <list string="Satisfaction" editable="bottom">
+                <field name="name" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_satisfaction" model="ir.actions.act_window">
+        <field name="name">Satisfaction</field>
+        <field name="res_model">ux.satisfaction</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_satisfaction_list" />
+    </record>
+
+
+</odoo>

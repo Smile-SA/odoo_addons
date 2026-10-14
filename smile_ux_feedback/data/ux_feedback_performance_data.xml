@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="performance_1" model="ux.performance">
+            <field name="name">Performant</field>
+        </record>
+        <record id="performance_2" model="ux.performance">
+            <field name="name">Fairly Performant</field>
+        </record>
+        <record id="performance_3" model="ux.performance">
+            <field name="name">Not Very Performant</field>
+        </record>
+        <record id="performance_4" model="ux.performance">
+            <field name="name">Not Performant</field>
+        </record>
+    </data>
+
+
+</odoo>

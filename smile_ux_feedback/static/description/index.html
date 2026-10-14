@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Docutils" />
+    <title>Smile UX Feedback</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <div class="document">
+        <p>
+            <img src="https://img.shields.io/badge/licence-AGPL--3-blue.svg" alt="License: AGPL-3" />
+            <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/18.0/smile_ux_feedback">
+                <img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" />
+            </a>
+        </p>
+
+        <div class="section" id="smile-ux-feedback">
+            <h1>Smile UX Feedback</h1>
+
+            <p>The ux_feedback module is designed to collect user feedback on various aspects of the Odoo back office. It provides an easy-to-use interface for users to submit their performance, conformity, satisfaction ratings, and additional feedback.</p>
+
+            <p><strong>Table of contents</strong></p>
+            <div class="contents local topic" id="contents">
+                <ul class="simple">
+                    <li><a class="reference internal" href="#features" id="toc-entry-1">Features</a></li>
+                    <li><a class="reference internal" href="#installation" id="toc-entry-2">Installation</a></li>
+                    <li><a class="reference internal" href="#usage" id="toc-entry-3">Usage</a>
+                        <ul>
+                            <li><a href="#how-to-make-a-feedback" id="toc-entry-4">How to make a Feedback</a></li>
+                            <li><a href="#how-to-view-all-the-feedbacks" id="toc-entry-5">How to view all the feedbacks</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="reference internal" href="#contributing" id="toc-entry-6">Contributing</a></li>
+                    <li><a class="reference internal" href="#bug-tracker" id="toc-entry-7">Bug Tracker</a></li>
+                    <li><a class="reference internal" href="#credits" id="toc-entry-8">Credits</a>
+                        <ul>
+                            <li><a class="reference internal" href="#contributors" id="toc-entry-9">Contributors</a></li>
+                            <li><a class="reference internal" href="#maintainer" id="toc-entry-10">Maintainer</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section" id="features">
+                <h2><a href="#toc-entry-1">Features</a></h2>
+                <ul>
+                    <li>Icon integration: A thumbs-up icon <i class="fa fa-thumbs-up"></i> is displayed on each page of the back office.</li>
+                    <li>Feedback pop-up: Users can input their feedback through a modal that collects:
+                        <ul>
+                            <li>Performance (Many2one)</li>
+                            <li>Conformity (Many2one)</li>
+                            <li>Satisfaction (Many2one)</li>
+                            <li>Feedback (free text)</li>
+                        </ul>
+                    </li>
+                    <li>Pre-filled fields:
+                        <ul>
+                            <li>User</li>
+                            <li>Timestamp</li>
+                            <li>URL (with the name of the concerned view)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section" id="installation">
+                <h2><a href="#toc-entry-2">Installation</a></h2>
+                <ol>
+                    <li>Clone the repository or download the module files.</li>
+                    <li>Place the ux_feedback directory in your Odoo addons path.</li>
+                    <li>Update the app list in Odoo.</li>
+                    <li>Install the ux_feedback module from the Odoo apps interface.</li>
+                </ol>
+            </div>
+
+            <div class="section">
+                <h2><a href="#toc-entry-3">Usage</a></h2>
+                <p>Once installed, the thumbs-up icon will appear on every page of the back office. Clicking the icon will open a pop-up modal where users can provide their feedback. All submitted feedback will be stored and can be reviewed by administrators.</p>
+
+                <div class="section" id="how-to-make-a-feedback">
+                    <h3><a href="#toc-entry-4">How to make a Feedback</a></h3>
+                    <ol>
+                        <li>Go to the page where you want to make a feedback</li>
+                        <li>On the top right of the Odoo back-office click on the "thums-up icon"
+                            <div class="image">
+                                <img src="feedback_icon.png" alt="Thumbs-up icon in Odoo" />
+                            </div>
+                        </li>
+                        <li>A popup is displayed, here you can rate the page you're in with differents criterias:
+                            <ul>
+                                <li><strong>Performance</strong>: Performant / Fairly Performant / Not Very Performant / Not Performant</li>
+                                <li><strong>Completion</strong>: Compliant / Fairly Compliant / Not Very Compliant / Not Compliant</li>
+                                <li><strong>Satisfaction</strong>: Satisfactory / Fairly Satisfactory / Not Very Satisfactory / Not Satisfactory</li>
+                                <li><strong>Feedback</strong>: Text field to write your feedback</li>
+                            </ul>
+                            <div class="image">
+                                <img src="feedback_popup.png" alt="Feedback popup in odoo" />
+                            </div>
+                        </li>
+                        <li>Click on the "Submit Button" Your feedback is now submitted</li>
+                    </ol>
+                </div>
+
+                <div class="section" id="how-to-view-all-the-feedbacks">
+                    <h3><a href="#toc-entry-5">How to view all the feedbacks</a></h3>
+                    <p>As an administrator</p>
+                    <ol>
+                        <li>Go to the "UX tracker" app
+                            <div class="image">
+                                <img src="ux_tracker_app.png" alt="UX tracker app in odoo" />
+                            </div>
+                        </li>
+                        <li>On this page you can see all the feedbacks that have been done
+                            <div class="image">
+                                <img src="feedbacks.png" alt="Feedbacks app in odoo" />
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="section" id="contributing">
+                <h2><a href="#toc-entry-6">Contributing</a></h2>
+                <p>Contributions are welcome! Please submit a pull request or open an issue for any enhancements or bug fixes.</p>
+            </div>
+
+            <div class="section" id="bug-tracker">
+                <h2><a href="#toc-entry-7">Bug Tracker</a></h2>
+                <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
+                In case of trouble, please check there if your issue has already been reported.
+                If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
+                <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_ux_feedback%0Aversion:%218.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
+                <p>Do not contact contributors directly about support or help with technical issues.</p>
+            </div>
+
+            <div class="section" id="credits">
+                <h2><a href="#toc-entry-8">Credits</a></h2>
+                <div class="section" id="contributors">
+                    <h3><a href="#toc-entry-9">Contributors</a></h3>
+                    <ul>
+                        <li>Smile</li>
+                        <li>SALIM Abdessamad</li>
+                        <li>AFMIR Mohammed</li>
+                    </ul>
+                </div>
+
+                <div class="section" id="maintainer">
+                    <h3><a href="#toc-entry-10">Maintainer</a></h3>
+                    <p>This module is maintained by Smile SA.</p>
+                    <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<odoo>
+
+    <menuitem id="menu_ux_configuration_root" name="Configuration" parent="menu_ux_tracker_root"
+        sequence="20" groups="smile_ux_feedback.group_ux_feedback_manager" />
+    <menuitem id="menu_ux_performance" name="Performance" parent="menu_ux_configuration_root"
+        action="action_performance" sequence="10" />
+    <menuitem id="menu_ux_conformity" name="Conformity" parent="menu_ux_configuration_root"
+        action="action_conformity" sequence="20" />
+    <menuitem id="menu_ux_satisfaction" name="Satisfaction" parent="menu_ux_configuration_root"
+        action="action_satisfaction" sequence="30" />
+
+</odoo>

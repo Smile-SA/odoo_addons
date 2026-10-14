@@ -1,0 +1,11 @@
+id,name,model_id,group_id/id,operation,domain
+access_ux_feedback_user,ux.feedback: own feedback,ux.feedback,group_ux_feedback_user,crud,"[('create_uid', '=', user.id)]"
+access_ux_feedback_manager,ux.feedback: all feedback,ux.feedback,group_ux_feedback_manager,crud,
+access_ux_feedback_wizard_user,ux.feedback.wizard user,ux.feedback.wizard,group_ux_feedback_user,cru,
+access_ux_feedback_wizard_manager,ux.feedback.wizard manager,ux.feedback.wizard,group_ux_feedback_manager,crud,
+access_ux_performance_user,ux.performance user,ux.performance,group_ux_feedback_user,r,
+access_ux_performance_manager,ux.performance manager,ux.performance,group_ux_feedback_manager,crud,
+access_ux_conformity_user,ux.conformity user,ux.conformity,group_ux_feedback_user,r,
+access_ux_conformity_manager,ux.conformity manager,ux.conformity,group_ux_feedback_manager,crud,
+access_ux_satisfaction_user,ux.satisfaction user,ux.satisfaction,group_ux_feedback_user,r,
+access_ux_satisfaction_manager,ux.satisfaction manager,ux.satisfaction,group_ux_feedback_manager,crud,
