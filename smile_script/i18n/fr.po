@@ -1,0 +1,316 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_script
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0-20250401\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-09 08:22+0000\n"
+"PO-Revision-Date: 2025-04-09 08:22+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_script
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_form_view
+msgid ""
+"<span invisible=\"type != 'python'\">\n"
+"                                        <i>You can use the following variables: self, fields,\n"
+"                                            logger,\n"
+"                                            tools. To display a result, use the variable\n"
+"                                            \"result\".\n"
+"                                        </i>\n"
+"                                    </span>"
+msgstr ""
+"<span invisible=\"type != 'python'\">\n"
+"                                    <i>Vous pouvez utiliser les variables suivantes : self, champs, enregistreur,\n"
+"                                        outils. Pour afficher un résultat, utilisez la variable\n"
+"                                        \"résultat\".</i>\n"
+"                                </span>"
+
+#. module: smile_script
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_form_view
+msgid "Are you sure you want to perform a new intervention ?"
+msgstr "Etes-vous sûr de vouloir jouer une nouvelle intervention ?"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__code
+msgid "Code"
+msgstr "Code"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__description
+msgid "Description"
+msgstr "Description"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__display_name
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: smile_script
+#: model:ir.model.fields.selection,name:smile_script.selection__smile_script_intervention__state__done
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_search_view
+msgid "Done"
+msgstr "Validé"
+
+#. module: smile_script
+#: model:ir.model.fields.selection,name:smile_script.selection__smile_script__state__draft
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_search_view
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__end_date
+msgid "End date"
+msgstr "Date de fin"
+
+#. module: smile_script
+#: model:ir.model.fields.selection,name:smile_script.selection__smile_script_intervention__state__exception
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_search_view
+msgid "Exception"
+msgstr "Exception"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__expect_result
+msgid "Expect a result"
+msgstr "Attendez-vous à un résultat"
+
+#. module: smile_script
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_search_view
+msgid "Group By..."
+msgstr "Regrouper par..."
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__id
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__id
+msgid "ID"
+msgstr ""
+
+#. module: smile_script
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_form_view
+msgid "Infos"
+msgstr ""
+
+#. module: smile_script
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_form_view
+msgid "Intervention"
+msgstr "Intervention"
+
+#. module: smile_script
+#. odoo-python
+#: code:addons/smile_script/models/script_intervention.py:0
+msgid "Intervention cannot be deleted"
+msgstr "L'intervention ne peut pas être supprimée"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__intervention_ids
+#: model:ir.ui.menu,name:smile_script.menu_smile_script_intervention
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_form_view
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_search_view
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_tree_view
+msgid "Interventions"
+msgstr "Interventions"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__write_uid
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__write_date
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__log_ids
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_form_view
+msgid "Logs"
+msgstr "Journaux"
+
+#. module: smile_script
+#: model:ir.ui.menu,name:smile_script.menu_interventions
+msgid "Maintenance"
+msgstr "Maintenance"
+
+#. module: smile_script
+#: model:ir.model,name:smile_script.model_smile_script_intervention
+msgid "Maintenance Intervention"
+msgstr "Intervention de maintenance"
+
+#. module: smile_script
+#: model:ir.actions.act_window,name:smile_script.act_smile_script_intervention
+msgid "Maintenance Interventions"
+msgstr "Interventions de maintenance"
+
+#. module: smile_script
+#: model:ir.model,name:smile_script.model_smile_script
+msgid "Maintenance Script"
+msgstr "Script de maintenance"
+
+#. module: smile_script
+#: model:ir.actions.act_window,name:smile_script.act_smile_script
+msgid "Maintenance Scripts"
+msgstr "Scripts de maintenance"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: smile_script
+#: model:ir.model.fields.selection,name:smile_script.selection__smile_script__type__python
+msgid "Python"
+msgstr "Python"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__result
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_form_view
+msgid "Result"
+msgstr "Résultat"
+
+#. module: smile_script
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_form_view
+msgid "Run"
+msgstr "Exécuter"
+
+#. module: smile_script
+#: model:ir.model.fields.selection,name:smile_script.selection__smile_script_intervention__state__running
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_search_view
+msgid "Running"
+msgstr "En cours"
+
+#. module: smile_script
+#: model:ir.model.fields.selection,name:smile_script.selection__smile_script__type__sql
+msgid "SQL"
+msgstr "SQL"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__script_id
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_form_view
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_search_view
+msgid "Script"
+msgstr "Scénario"
+
+#. module: smile_script
+#: model:ir.ui.menu,name:smile_script.menu_smile_script
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_search_view
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_tree_view
+msgid "Scripts"
+msgstr ""
+
+#. module: smile_script
+#: model:res.groups,name:smile_script.group_smile_script_user
+msgid "Smile Script / User"
+msgstr "Smile Script / Utilisateur"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__create_date
+msgid "Start date"
+msgstr "Date de début"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__state
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__state
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_search_view
+msgid "State"
+msgstr "État"
+
+#. module: smile_script
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_form_view
+msgid "Test"
+msgstr "Tester"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__test_mode
+msgid "Test Mode"
+msgstr "Mode test"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__type
+msgid "Type"
+msgstr "Type"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script_intervention__create_uid
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_search_view
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: smile_script
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_form_view
+msgid "Validate"
+msgstr "Valider"
+
+#. module: smile_script
+#: model:ir.model.fields.selection,name:smile_script.selection__smile_script__state__validated
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_search_view
+msgid "Validated"
+msgstr "Validé"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__validation_user_id
+msgid "Validated by"
+msgstr "Validé par"
+
+#. module: smile_script
+#: model:ir.model.fields,field_description:smile_script.field_smile_script__validation_date
+msgid "Validated on"
+msgstr "Validé le"
+
+#. module: smile_script
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_intervention_search_view
+msgid "Validated script"
+msgstr "Script validé"
+
+#. module: smile_script
+#: model:ir.model.fields.selection,name:smile_script.selection__smile_script__type__xml
+msgid "XML"
+msgstr "XML"
+
+#. module: smile_script
+#. odoo-python
+#: code:addons/smile_script/models/script.py:0
+msgid "You can only delete draft scripts!"
+msgstr "Vous ne pouvez supprimer que les brouillons de scripts !"
+
+#. module: smile_script
+#. odoo-python
+#: code:addons/smile_script/models/script.py:0
+msgid "You can only modify draft scripts!"
+msgstr "Vous ne pouvez modifier que les brouillons de scripts !"
+
+#. module: smile_script
+#. odoo-python
+#: code:addons/smile_script/models/script.py:0
+msgid "You can only run validated scripts!"
+msgstr "Vous ne pouvez exécuter que des scripts validés !"
+
+#. module: smile_script
+#. odoo-python
+#: code:addons/smile_script/models/script.py:0
+msgid "You can only validate draft scripts!"
+msgstr "Vous ne pouvez valider que les brouillons de scripts !"
+
+#. module: smile_script
+#: model_terms:ir.ui.view,arch_db:smile_script.smile_script_form_view
+msgid "result = 'String displayed in the result column of intervention'"
+msgstr ""
+"result = 'Chaîne de caractère affichée au sein de la colonne Résultat'"

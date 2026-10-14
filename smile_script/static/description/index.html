@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Docutils" />
+    <title>Smile Script</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <div class="document">
+        <p>
+            <img src="https://img.shields.io/badge/licence-AGPL--3-blue.svg" alt="License: AGPL-3" />
+            <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/tree/18.0/smile_script">
+                <img alt="Smile-SA/odoo_addons" src="https://img.shields.io/badge/github-Smile--SA%2Fodoo_addons-lightgray.png?logo=github" />
+            </a>
+        </p>
+
+        <div class="section" id="smile-script">
+            <h1>Smile Script</h1>
+
+            <p>This module allows users to create and run maintenance scripts. After each script's execution, interventions are logged in the database.</p>
+
+            <p><strong>Features:</strong></p>
+            <ul>
+                <li>Add access rights for users to create and track maintenance scripts.</li>
+                <li>Create maintenance scripts in Python, SQL, or XML with predefined variables like <code>self</code>, <code>fields</code>, <code>logger</code>, and <code>tools</code>.</li>
+                <li>Test scripts in "Test Mode" and validate them before execution.</li>
+                <li>Track logs of maintenance interventions.</li>
+                <li>Validated scripts and interventions cannot be deleted.</li>
+            </ul>
+
+            <p><strong>Table of contents</strong></p>
+            <div class="contents local topic" id="contents">
+                <ul class="simple">
+                    <li><a class="reference internal" href="#usage" id="toc-entry-1">Usage</a></li>
+                    <li><a class="reference internal" href="#bug-tracker" id="toc-entry-2">Bug Tracker</a></li>
+                    <li><a class="reference internal" href="#credits" id="toc-entry-3">Credits</a>
+                        <ul>
+                            <li><a class="reference internal" href="#contributors" id="toc-entry-4">Contributors</a></li>
+                            <li><a class="reference internal" href="#maintainer" id="toc-entry-5">Maintainer</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section" id="usage">
+                <h2><a href="#toc-entry-1">Usage</a></h2>
+                <p>Follow these steps to use the Smile Script module:</p>
+                <ol>
+                    <li>Go to <strong>Settings > Users & Companies > Users</strong> and assign the <strong>Smile Script</strong> and <strong>Smile Logs</strong> access rights to the user.</li>
+                    <li>Create a maintenance script:
+                        <ul>
+                            <li>Go to <strong>Settings > Technical > Maintenance > Scripts</strong>.</li>
+                            <li>Click <strong>Create</strong> and fill in the fields: Name, Description, Type (Python, SQL, or XML), and the script code.</li>
+                            <li>Click <strong>Save</strong> and <strong>Test</strong> to validate the script.</li>
+                        </ul>
+                    </li>
+                    <li>Run the script:
+                        <ul>
+                            <li>Click the <strong>Run</strong> button to execute the script.</li>
+                            <li>Go to <strong>Settings > Technical > Maintenance > Interventions</strong> to view the results.</li>
+                        </ul>
+                    </li>
+                    <li>Track logs of maintenance interventions:
+                        <ul>
+                            <li>Go to <strong>Settings > Technical > Logging > Logs</strong>.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <div class="image">
+                    <img src="add_access_rights.png" alt="Add Access Rights" style="width: 850px;" />
+                </div>
+                <div class="image">
+                    <img src="create_test_validate_script.png" alt="Create, Test, and Validate Script" style="width: 850px;" />
+                </div>
+                                <div class="image">
+                    <img src="python_test.png" alt="Create, Test, and Validate Script" style="width: 850px;" />
+                </div>
+                                <div class="image">
+                    <img src="sql_test.png" alt="Create, Test, and Validate Script" style="width: 850px;" />
+                </div>
+                                <div class="image">
+                    <img src="xml_test.png" alt="Create, Test, and Validate Script" style="width: 850px;" />
+                </div>
+                <div class="image">
+                    <img src="run_script.png" alt="Run Script" style="width: 850px;" />
+                </div>
+                <div class="image">
+                    <img src="track_interventions_log.png" alt="Track Intervention Logs" style="width: 850px;" />
+                </div>
+            </div>
+
+            <div class="section" id="bug-tracker">
+                <h2><a href="#toc-entry-2">Bug Tracker</a></h2>
+                <p>Bugs are tracked on <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues">GitHub Issues</a>.
+                In case of trouble, please check there if your issue has already been reported.
+                If you spotted it first, help us smash it by providing detailed and welcomed feedback
+                <a class="reference external" href="https://github.com/Smile-SA/odoo_addons/issues/new?body=module:%20smile_script%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">here</a>.</p>
+                <p>Do not contact contributors directly about support or help with technical issues.</p>
+            </div>
+
+            <div class="section" id="credits">
+                <h2><a href="#toc-entry-3">Credits</a></h2>
+                <div class="section" id="contributors">
+                    <h3><a href="#toc-entry-4">Contributors</a></h3>
+                    <ul>
+                        <li>Smile Devlopment Team </li>
+                        <li>Corentin Pouhet-Brunerie</li>
+                    </ul>
+                </div>
+
+                <div class="section" id="maintainer">
+                    <h3><a href="#toc-entry-5">Maintainer</a></h3>
+                    <p>This module is maintained by Smile SA.</p>
+                    <p>Since 1991 Smile has been a pioneer of technology and also the European expert in open source solutions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

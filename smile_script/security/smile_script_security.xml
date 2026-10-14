@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="group_smile_script_user" model="res.groups">
+            <field name="name">Smile Script / User</field>
+        </record>
+
+    </data>
+</odoo>

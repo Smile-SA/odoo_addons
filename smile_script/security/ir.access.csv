@@ -1,0 +1,3 @@
+id,name,model_id,group_id/id,operation,domain
+smile_script_user,smile_script group_user,smile.script,group_smile_script_user,crud,
+smile_intervention_user,smile_script_intervention group_user,smile.script.intervention,group_smile_script_user,cru,
