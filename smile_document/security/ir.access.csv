@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+access_read_ir_attachment,ir.attachment read,ir.attachment,group_read_document,r,"[('res_access_read', '=', True)]"
+access_manage_ir_attachment,ir.attachment manage,ir.attachment,group_manage_document,cud,"[('res_access_write', '=', True)]"
+access_read_ir_attachment_type,ir.attachment.type read,ir.attachment.type,group_read_document,r,
+access_manage_ir_attachment_type,ir.attachment.type manage,ir.attachment.type,group_manage_document,crud,
+access_res_partner_reader,res.partner reader,res.partner,group_read_document,r,

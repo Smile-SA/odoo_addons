@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Document Management Category -->
+        <record id="module_category_document_management" model="ir.module.category">
+            <field name="name">Document Management</field>
+            <field name="description">Helps you manage your documents.</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="res_groups_privilege_document_management" model="res.groups.privilege">
+            <field name="name">Document Management</field>
+            <field name="category_id" ref="module_category_document_management"/>
+        </record>
+
+        <!-- Read Documents -->
+        <record id="group_read_document" model="res.groups">
+            <field name="name">Read Document</field>
+            <field name="privilege_id" ref="res_groups_privilege_document_management"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="menu_access" eval="[(6,0, [ref('menu_document_type'),
+                                                    ref('menu_document_configuration'),
+                                                    ref('menu_document'),
+                                                    ref('menu_document_management_documents'),
+                                                    ref('menu_document_management_config')])]"/>
+        </record>
+
+        <!-- Manage Documents -->
+        <record id="group_manage_document" model="res.groups">
+            <field name="name">Manage Document</field>
+            <field name="privilege_id" ref="res_groups_privilege_document_management"/>
+            <field name="implied_ids" eval="[(4, ref('group_read_document'))]"/>
+            <field name="user_ids" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <!-- Internal users are read-only on attachments (as in 18.0): Manage Document gets the write access -->
+        <record id="base.ir_attachment_res_access_write" model="ir.access">
+            <field name="active" eval="False"/>
+        </record>
+
+    </data>
+</odoo>
