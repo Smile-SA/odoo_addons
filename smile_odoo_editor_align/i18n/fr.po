@@ -1,0 +1,52 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_odoo_editor_align
+#
+
+#. module: smile_odoo_editor_align
+#. odoo-javascript
+#: code:addons/smile_odoo_editor_align/static/src/js/align_plugin.js:0
+msgid "Align Left"
+msgstr "Aligner à gauche"
+
+#. module: smile_odoo_editor_align
+#. odoo-javascript
+#: code:addons/smile_odoo_editor_align/static/src/js/align_plugin.js:0
+msgid "Align Center"
+msgstr "Aligner au centre"
+
+#. module: smile_odoo_editor_align
+#. odoo-javascript
+#: code:addons/smile_odoo_editor_align/static/src/js/align_plugin.js:0
+msgid "Align Right"
+msgstr "Aligner à droite"
+
+#. module: smile_odoo_editor_align
+#. odoo-javascript
+#: code:addons/smile_odoo_editor_align/static/src/js/align_plugin.js:0
+msgid "Justify"
+msgstr "Justifier"
+
+#. module: smile_odoo_editor_align
+#. odoo-javascript
+#: code:addons/smile_odoo_editor_align/static/src/js/align_plugin.js:0
+msgid "Align text to the left"
+msgstr "Aligner le texte à gauche"
+
+#. module: smile_odoo_editor_align
+#. odoo-javascript
+#: code:addons/smile_odoo_editor_align/static/src/js/align_plugin.js:0
+msgid "Center align text"
+msgstr "Centrer le texte"
+
+#. module: smile_odoo_editor_align
+#. odoo-javascript
+#: code:addons/smile_odoo_editor_align/static/src/js/align_plugin.js:0
+msgid "Align text to the right"
+msgstr "Aligner le texte à droite"
+
+#. module: smile_odoo_editor_align
+#. odoo-javascript
+#: code:addons/smile_odoo_editor_align/static/src/js/align_plugin.js:0
+msgid "Justify text"
+msgstr "Justifier le texte"
