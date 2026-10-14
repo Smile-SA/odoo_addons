@@ -1,0 +1,46 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* smile_decimal_precision
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-15 08:50+0000\n"
+"PO-Revision-Date: 2025-05-15 08:50+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: smile_decimal_precision
+#: model:ir.model,name:smile_decimal_precision.model_res_currency
+msgid "Currency"
+msgstr "Devise"
+
+#. module: smile_decimal_precision
+#: model:ir.model,name:smile_decimal_precision.model_decimal_precision
+msgid "Decimal Precision"
+msgstr "Précision décimale"
+
+#. module: smile_decimal_precision
+#: model:ir.model.fields,field_description:smile_decimal_precision.field_res_currency__display_decimal_places
+msgid "Display Decimal Places"
+msgstr "Afficher les décimales"
+
+#. module: smile_decimal_precision
+#: model:ir.model.fields,field_description:smile_decimal_precision.field_decimal_precision__display_digits
+msgid "Display Digits"
+msgstr "Afficher les chiffres"
+
+#. module: smile_decimal_precision
+#: model:ir.model.fields,field_description:smile_decimal_precision.field_res_currency__display_rounding
+msgid "Display Rounding Factor"
+msgstr "Afficher le facteur d'arrondi"
+
+#. module: smile_decimal_precision
+#: model:ir.model,name:smile_decimal_precision.model_ir_http
+msgid "HTTP Routing"
+msgstr "Routage HTTP"
