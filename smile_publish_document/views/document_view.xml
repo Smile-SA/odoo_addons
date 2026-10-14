@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_publish_attachment_form_inherit" model="ir.ui.view">
+        <field name="name">Document publish attachment</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="arch" type="xml">
+            <field name="website_id" position="after">
+                <field name="website_published"/>
+            </field>
+        </field>
+    </record>
+</odoo>

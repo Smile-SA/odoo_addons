@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="attachment_template" name="Attachment Page">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container">
+                    <div class="row">
+                        <t t-foreach="attachments" t-as="element">
+                            <div class="mb-4 mt-4">
+                                <h4 class="fw-bold text-primary mb-3 border-bottom pb-2">
+                                    <i class="oi me-2" data-icon="folder"/>
+                                    <t t-out="element"/>
+                                </h4>
+
+                                <ul class="list-group list-group-flush">
+                                    <t t-foreach="element_value" t-as="val">
+                                        <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <i class="oi text-muted me-3" data-icon="description"/>
+                                                <a t-attf-href="attachment/download?attachment_id=#{val.id}"
+                                                   class="text-decoration-none text-dark hover-primary">
+                                                    <span t-out="val.name"/>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </t>
+
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
