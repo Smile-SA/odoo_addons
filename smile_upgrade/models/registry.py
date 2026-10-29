@@ -26,6 +26,7 @@ def new(
         upgrade_modules: Collection[str] = (),
         reinit_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
+        models_to_check: set[str] | None = None,
 ):
     if not _is_db_initialization():
         return native_new(
@@ -34,7 +35,8 @@ def new(
             upgrade_modules=upgrade_modules,
             update_module=update_module,
             reinit_modules=reinit_modules,
-            new_db_demo=new_db_demo
+            new_db_demo=new_db_demo,
+            models_to_check=models_to_check,
         )
     with cls._lock:
         upgrades = False
@@ -57,7 +59,8 @@ def new(
                         upgrade_modules=upgrade_modules,
                         update_module=update_module,
                         reinit_modules=reinit_modules,
-                        new_db_demo=new_db_demo
+                        new_db_demo=new_db_demo,
+                        models_to_check=models_to_check,
                     )
                     _run_upgrade_post(upgrade_manager, initial_config)
                     _logger.info("%s upgrade successfully loaded in %ss",
@@ -73,7 +76,8 @@ def new(
                 upgrade_modules=upgrade_modules,
                 update_module=update_module,
                 reinit_modules=reinit_modules,
-                new_db_demo=new_db_demo
+                new_db_demo=new_db_demo,
+                models_to_check=models_to_check,
             )
             if upgrades and config.get("stop_after_upgrades"):
                 _logger.info("Stopping Odoo server")
