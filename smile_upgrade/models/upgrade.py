@@ -7,10 +7,10 @@ import functools
 from odoo import api, sql_db, SUPERUSER_ID, tools
 from odoo.exceptions import UserError
 import odoo.modules as addons
-from odoo.tools import parse_version, config
+from odoo.tools import parse_version
 from odoo.tools.safe_eval import safe_eval
 
-from .config import configuration as upgrade_config
+from .config import configuration as upgrade_config, get_odoo_bool_option
 
 _logger = logging.getLogger(__package__)
 
@@ -34,7 +34,7 @@ class UpgradeManager(object):
             self.upgrades[-1].modules_to_install_at_creation or []
 
     def __enter__(self):
-        if config.get('no_upgrade_lock'):
+        if get_odoo_bool_option('no_upgrade_lock'):
             return self
         #  Lock upgrade to avoid concurrent upgrade in multi front
         #  configuration
@@ -50,7 +50,7 @@ class UpgradeManager(object):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if not config.get('no_upgrade_lock'):
+        if not get_odoo_bool_option('no_upgrade_lock'):
             _logger.info('Unlocking upgrade...')
             self.cr.execute("SELECT pg_advisory_unlock(5665)")
         if exc_type is None:

@@ -9,6 +9,7 @@ from odoo.tools import config
 from collections.abc import Collection
 
 from odoo import tools
+from .config import get_odoo_bool_option
 from .upgrade import UpgradeManager
 
 _logger = logging.getLogger(__name__)
@@ -79,7 +80,7 @@ def new(
                 new_db_demo=new_db_demo,
                 models_to_check=models_to_check,
             )
-            if upgrades and config.get("stop_after_upgrades"):
+            if upgrades and get_odoo_bool_option("stop_after_upgrades"):
                 _logger.info("Stopping Odoo server")
                 os._exit(0)
             return registry
@@ -94,7 +95,7 @@ def _is_db_initialization():
 
 
 def _manage_upgrade_errors(upgrades, e):
-    if upgrades and config.get("stop_after_upgrades"):
+    if upgrades and get_odoo_bool_option("stop_after_upgrades"):
         msg = isinstance(e, UserError) and e.value or e
         _logger.error(tools.ustr(msg), exc_info=True)
         _logger.critical("Upgrade FAILED")

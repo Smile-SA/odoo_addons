@@ -85,11 +85,17 @@ Execute an upgrade
 Odoo configuration
 ^^^^^^^^^^^^^^^^^^
 
-Update your Odoo configuration file with the following options:
+Update your Odoo configuration file with the following options, in a
+*[smile_upgrade]* section (since Odoo 19, Odoo logs a warning for each unknown
+option of the *[options]* section, which is still read for compatibility)::
+
+        [smile_upgrade]
+        upgrades_path=upgrades
 
 * `upgrades_path` (required): path to the upgrades directory
 * `stop_after_upgrades` (default: False): stop server after upgrades if True
 * `no_upgrade_lock` (default: False): do not lock database during upgrade if True
+* `force_reload_upgrade` (default: False): reload the current upgrade if True
 
 
 Execute upgrade
